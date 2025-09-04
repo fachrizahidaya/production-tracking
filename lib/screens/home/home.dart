@@ -1,0 +1,123 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:production_tracking/components/master/layout/app_drawer.dart';
+import 'package:production_tracking/components/master/layout/nav_bar.dart';
+import 'package:production_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:production_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:production_tracking/providers/user_provider.dart';
+import 'package:production_tracking/screens/home/dashboard.dart';
+import 'package:production_tracking/screens/home/notification_list.dart';
+import 'package:production_tracking/screens/home/profile.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
+class Home extends StatefulWidget {
+  const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  int _selectedIndex = 0;
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+
+  final List<Widget> _screens = [
+    Dashboard(),
+    NotificationList(),
+    Profile(),
+  ];
+
+  Future<void> _handleExit(BuildContext context) async {
+    String url = '${dotenv.env['API_URL']}/logout';
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final isLoading = ValueNotifier<bool>(false);
+
+    Navigator.pushReplacementNamed(context, '/');
+
+    // if (token != null) {
+    //   try {
+    //     isLoading.value = true;
+
+    //     final res = await http.post(Uri.parse(url),
+    //         headers: {'Authorization': 'Bearer $token'}, body: null);
+    //     await prefs.remove('token');
+
+    //     if (res.statusCode == 200) {
+    //       if (context.mounted) {
+    //         Provider.of<UserProvider>(context, listen: false).handleLogout();
+    //         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    //       } else {
+    //         if (context.mounted) {
+    //           showAlertDialog(
+    //               context: context, title: 'Error', message: 'Logout failed');
+    //         }
+    //       }
+    //     }
+    //   } catch (e) {
+    //     throw Exception(e);
+    //   } finally {
+    //     isLoading.value = false;
+    //   }
+    // } else {
+    //   showAlertDialog(
+    //       context: context, title: 'Error', message: 'Logout failed');
+    // }
+  }
+
+  Future<void> _handleLogout(BuildContext context) async {
+    if (context.mounted) {
+      showConfirmationDialog(
+          context: context,
+          isLoading: _isLoading.value,
+          onConfirm: () {
+            _handleExit(context);
+          },
+          title: 'Log Out',
+          message: 'Anda yakin ingin keluar aplikasi?');
+    }
+  }
+
+  void _handleNavigateScreens(int index) {
+    if (_selectedIndex != index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<String?>(
+        future: SharedPreferences.getInstance()
+            .then((prefs) => prefs.getString('token')),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: Text('Error fetch token'),
+            );
+          }
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Production Tracking'),
+            ),
+            drawer: AppDrawer(
+              handleLogout: () => _handleLogout(context),
+            ),
+            body: _screens[_selectedIndex],
+            bottomNavigationBar: NavBar(
+                currentIndex: _selectedIndex,
+                handleNavigate: _handleNavigateScreens),
+          );
+        });
+  }
+}

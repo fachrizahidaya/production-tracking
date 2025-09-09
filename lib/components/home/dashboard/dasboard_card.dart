@@ -11,7 +11,7 @@ class DasboardCard extends StatelessWidget {
       children: [
         Card(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Padding(
             padding: PaddingColumn.screen,

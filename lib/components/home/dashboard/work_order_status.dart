@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/dashboard/dasboard_card.dart';
+import 'package:production_tracking/components/home/dashboard/dasboard_card.dart';
 import 'package:production_tracking/components/master/text/custom_title.dart';
 import 'package:production_tracking/helpers/util/separated_column.dart';
 

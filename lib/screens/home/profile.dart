@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/layout/custom_list.dart';
-import 'package:production_tracking/helpers/util/padding_column.dart';
+import 'package:production_tracking/components/home/profile/profle_list.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -25,7 +24,7 @@ class _ProfileState extends State<Profile> {
           children: [
             Padding(
                 padding: const EdgeInsets.all(8),
-                child: CustomList<Map<String, String>>(
+                child: ProfleList<Map<String, String>>(
                   onTapItem: (item) {
                     if (item != null) {
                       if (item['title'] == 'Change Password') {

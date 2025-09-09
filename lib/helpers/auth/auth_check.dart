@@ -23,7 +23,7 @@ class _AuthCheckState extends State<AuthCheck> {
 
   Future<void> _handleCheckLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+    String? token = prefs.getString('access_token');
 
     if (token != null) {
       if (mounted) {
@@ -52,7 +52,7 @@ class _AuthCheckState extends State<AuthCheck> {
   @override
   Widget build(BuildContext context) {
     if (_isAuthenticated) {
-      WidgetsBinding.instance.addPersistentFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacementNamed(context, '/dashboard');
       });
       return const SizedBox.shrink();

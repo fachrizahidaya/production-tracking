@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:production_tracking/components/master/layout/app_drawer.dart';
+import 'package:production_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:production_tracking/components/master/layout/nav_bar.dart';
 import 'package:production_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:production_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -30,42 +31,42 @@ class _HomeState extends State<Home> {
   ];
 
   Future<void> _handleExit(BuildContext context) async {
-    String url = '${dotenv.env['API_URL']}/logout';
+    String url = '${dotenv.env['API_URL_DEV']}/logout';
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+    String? token = prefs.getString('access_token');
     final isLoading = ValueNotifier<bool>(false);
 
-    Navigator.pushReplacementNamed(context, '/');
+    // Navigator.pushReplacementNamed(context, '/');
 
-    // if (token != null) {
-    //   try {
-    //     isLoading.value = true;
+    if (token != null) {
+      try {
+        isLoading.value = true;
 
-    //     final res = await http.post(Uri.parse(url),
-    //         headers: {'Authorization': 'Bearer $token'}, body: null);
-    //     await prefs.remove('token');
+        final res = await http.post(Uri.parse(url),
+            headers: {'Authorization': 'Bearer $token'}, body: null);
+        await prefs.remove('access_token');
 
-    //     if (res.statusCode == 200) {
-    //       if (context.mounted) {
-    //         Provider.of<UserProvider>(context, listen: false).handleLogout();
-    //         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-    //       } else {
-    //         if (context.mounted) {
-    //           showAlertDialog(
-    //               context: context, title: 'Error', message: 'Logout failed');
-    //         }
-    //       }
-    //     }
-    //   } catch (e) {
-    //     throw Exception(e);
-    //   } finally {
-    //     isLoading.value = false;
-    //   }
-    // } else {
-    //   showAlertDialog(
-    //       context: context, title: 'Error', message: 'Logout failed');
-    // }
+        if (res.statusCode == 200) {
+          if (context.mounted) {
+            Provider.of<UserProvider>(context, listen: false).handleLogout();
+            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          } else {
+            if (context.mounted) {
+              showAlertDialog(
+                  context: context, title: 'Error', message: 'Logout failed');
+            }
+          }
+        }
+      } catch (e) {
+        throw Exception(e);
+      } finally {
+        isLoading.value = false;
+      }
+    } else {
+      showAlertDialog(
+          context: context, title: 'Error', message: 'Logout failed');
+    }
   }
 
   Future<void> _handleLogout(BuildContext context) async {
@@ -98,25 +99,25 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return FutureBuilder<String?>(
         future: SharedPreferences.getInstance()
-            .then((prefs) => prefs.getString('token')),
+            .then((prefs) => prefs.getString('access_token')),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError || !snapshot.hasData) {
             return const Center(
               child: Text('Error fetch token'),
             );
           }
 
           return Scaffold(
-            appBar: AppBar(
-              title: Text('Production Tracking'),
-            ),
+            appBar: CustomAppBar(title: 'Production Tracking'),
             drawer: AppDrawer(
               handleLogout: () => _handleLogout(context),
             ),
             body: _screens[_selectedIndex],
-            bottomNavigationBar: NavBar(
-                currentIndex: _selectedIndex,
-                handleNavigate: _handleNavigateScreens),
           );
         });
   }

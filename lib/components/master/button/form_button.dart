@@ -21,10 +21,11 @@ class FormButton extends StatelessWidget {
       child: ElevatedButton(
           onPressed: isDisabled || isLoading ? null : onPressed,
           style: ElevatedButton.styleFrom(
-            backgroundColor: isDisabled || isLoading
-                ? Colors.grey
-                : (backgroundColor ?? Colors.blue),
-          ),
+              backgroundColor: isDisabled || isLoading
+                  ? Colors.grey
+                  : (backgroundColor ?? Colors.blue),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8))),
           child: isLoading
               ? SizedBox(
                   height: 20,

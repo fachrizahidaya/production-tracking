@@ -4,8 +4,9 @@ import 'package:production_tracking/helpers/util/padding_column.dart';
 
 class MenuItem {
   final String title;
+  final String route;
 
-  MenuItem({required this.title});
+  MenuItem({required this.title, required this.route});
 }
 
 class AppDrawer extends StatefulWidget {
@@ -28,16 +29,16 @@ class _AppDrawerState extends State<AppDrawer> {
 
   Future<List<MenuItem>> _loadMenuItems() async {
     return [
-      MenuItem(title: 'Dyeing'),
-      MenuItem(title: 'Press Tumbler'),
-      MenuItem(title: 'Stenter'),
-      MenuItem(title: 'Long Sitting'),
-      MenuItem(title: 'Long Hemming'),
-      MenuItem(title: 'Cross Cutting'),
-      MenuItem(title: 'Sewing'),
-      MenuItem(title: 'Emborideries'),
-      MenuItem(title: 'Sorting'),
-      MenuItem(title: 'Packing'),
+      MenuItem(title: 'Dyeing', route: '/dye'),
+      MenuItem(title: 'Press Tumbler', route: '/press'),
+      MenuItem(title: 'Stenter', route: '/stent'),
+      // MenuItem(title: 'Long Sitting', route: ),
+      // MenuItem(title: 'Long Hemming', route: ),
+      // MenuItem(title: 'Cross Cutting', route: ),
+      // MenuItem(title: 'Sewing', route: ),
+      // MenuItem(title: 'Embroideries', route: ),
+      // MenuItem(title: 'Sorting', route: ),
+      // MenuItem(title: 'Packing', route: ),
     ];
   }
 
@@ -85,6 +86,7 @@ class _AppDrawerState extends State<AppDrawer> {
                           title: Text(item.title),
                           onTap: () {
                             Navigator.pop(context);
+                            Navigator.pushNamed(context, item.route);
                           },
                         );
                       },

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:production_tracking/helpers/auth/auth_check.dart';
 import 'package:production_tracking/providers/user_provider.dart';
+import 'package:production_tracking/screens/dyeing/index.dart';
 import 'package:production_tracking/screens/home/home.dart';
+import 'package:production_tracking/screens/press-tumbler/index.dart';
+import 'package:production_tracking/screens/stenter/index.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -45,6 +48,16 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const AuthCheck(),
         '/dashboard': (context) => const Home(),
+        '/dye': (context) => const Dyeing(),
+        '/press': (context) => const PressTumbler(),
+        '/stent': (context) => const Stenter(),
+        // '/long-sit': (context) => const (),
+        // '/long-hem': (context) => const (),
+        // '/cut': (context) => const (),
+        // '/sew': (context) => const (),
+        // '/embroidery': (context) => const (),
+        // '/sort': (context) => const (),
+        // '/pack': (context) => const (),
       },
     );
   }

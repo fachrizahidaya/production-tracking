@@ -1,0 +1,90 @@
+import 'package:flutter/material.dart';
+import 'package:production_tracking/components/master/form/group_form.dart';
+import 'package:production_tracking/components/master/theme.dart';
+
+class SelectForm extends StatefulWidget {
+  final String label;
+  final VoidCallback onTap;
+  final List<Map<String, dynamic>> selectedItems;
+  final bool required;
+  final bool? isDisabled;
+  final Function(Map<String, dynamic>)? onRemoveItem;
+  final VoidCallback? onClearAll;
+
+  const SelectForm({
+    super.key,
+    required this.label,
+    required this.onTap,
+    required this.selectedItems,
+    required this.required,
+    this.isDisabled,
+    this.onRemoveItem,
+    this.onClearAll,
+  });
+
+  @override
+  State<SelectForm> createState() => _SelectFormState();
+}
+
+class _SelectFormState extends State<SelectForm> {
+  @override
+  Widget build(BuildContext context) {
+    return GroupForm(
+      label: widget.label,
+      formControl: GestureDetector(
+        onTap: widget.isDisabled == true ? null : widget.onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: CustomTheme().inputStaticDecorationRequired(),
+          child: widget.selectedItems.isEmpty
+              ? Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Pilih ${widget.label}",
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    Icon(Icons.arrow_drop_down,
+                        size: 18, color: CustomTheme().colors('base'))
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: widget.selectedItems.map((item) {
+                        return InputChip(
+                          label: Text(item['label']),
+                          onDeleted: () {
+                            widget.onRemoveItem?.call(item);
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: widget.onClearAll,
+                          child: const Text("Hapus semua"),
+                        ),
+                        Icon(Icons.arrow_drop_down,
+                            size: 18, color: CustomTheme().colors('base'))
+                      ],
+                    )
+                  ],
+                ),
+        ),
+      ),
+      req: widget.required,
+    );
+  }
+}

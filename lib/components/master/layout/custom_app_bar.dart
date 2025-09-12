@@ -4,9 +4,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? onReturn;
   final List<Widget>? actions;
+  final bool isWithNotification;
 
   const CustomAppBar(
-      {super.key, required this.title, this.onReturn, this.actions});
+      {super.key,
+      required this.title,
+      this.onReturn,
+      this.actions,
+      this.isWithNotification = false});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +24,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: const TextStyle(fontSize: 18),
       ),
-      actions: actions,
+      actions: [
+        if (isWithNotification)
+          IconButton(
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed: () {
+              Navigator.pushNamed(context, '/notification');
+            },
+          ),
+        ...?actions
+      ],
     );
   }
 

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:production_tracking/components/auth/login_form.dart';
 import 'package:production_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:production_tracking/helpers/util/padding_column.dart';
@@ -48,12 +49,15 @@ class _LoginState extends State<Login> {
     final token = prefs.getString('access_token');
     final username = prefs.getString('username');
 
-    if (token != null) {
+    if (token != null && !JwtDecoder.isExpired(token)) {
       if (context.mounted) {
         Provider.of<UserProvider>(context, listen: false)
             .handleLogin(username ?? '', token);
         Navigator.pushReplacementNamed(context, '/dashboard');
       }
+    } else {
+      await prefs.remove('access_token');
+      await prefs.remove('username');
     }
   }
 
@@ -92,7 +96,7 @@ class _LoginState extends State<Login> {
         } else {
           if (context.mounted) {
             showAlertDialog(
-                context: context, title: 'Error', message: 'Login failed');
+                context: context, title: 'Error', message: 'Login error');
           }
         }
       } else {
@@ -152,9 +156,7 @@ class _LoginState extends State<Login> {
               isDisabled: !_isFormValid,
               isLoading: _isLoading,
               handlePress: () {
-                // if (_key.currentState!.validate()) {
                 _handleSubmit(context);
-                // }
               },
             )),
       ),

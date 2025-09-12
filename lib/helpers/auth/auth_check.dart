@@ -25,7 +25,7 @@ class _AuthCheckState extends State<AuthCheck> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('access_token');
 
-    if (token != null) {
+    if (token != null && !isTokenExpired(token)) {
       if (mounted) {
         Provider.of<UserProvider>(context, listen: false).setToken(token);
         setState(() {

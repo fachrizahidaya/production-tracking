@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:production_tracking/helpers/auth/auth_check.dart';
+import 'package:production_tracking/models/master/unit.dart';
+import 'package:production_tracking/models/option/option_machine.dart';
+import 'package:production_tracking/models/option/option_operator.dart';
+import 'package:production_tracking/models/option/option_unit.dart';
+import 'package:production_tracking/models/process/dyeing.dart';
 import 'package:production_tracking/providers/user_provider.dart';
 import 'package:production_tracking/screens/dyeing/index.dart';
-import 'package:production_tracking/screens/home/home.dart';
+import 'package:production_tracking/screens/home/index.dart';
+import 'package:production_tracking/screens/notification/index.dart';
 import 'package:production_tracking/screens/press-tumbler/index.dart';
+import 'package:production_tracking/screens/profile/index.dart';
 import 'package:production_tracking/screens/stenter/index.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  runApp(MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
-      child: const MyApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => UserProvider()),
+    ChangeNotifierProvider(create: (_) => DyeingService()),
+    ChangeNotifierProvider(create: (_) => UnitService()),
+    ChangeNotifierProvider(create: (_) => OptionUnitService()),
+    ChangeNotifierProvider(create: (_) => OptionMachineService()),
+    ChangeNotifierProvider(create: (_) => OptionOperatorService()),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -48,7 +60,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const AuthCheck(),
         '/dashboard': (context) => const Home(),
-        '/dye': (context) => const Dyeing(),
+        '/profile': (context) => const Profile(),
+        '/notification': (context) => const NotificationList(),
+        '/dye': (context) => const DyeingScreen(),
         '/press': (context) => const PressTumbler(),
         '/stent': (context) => const Stenter(),
         // '/long-sit': (context) => const (),

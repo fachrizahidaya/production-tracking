@@ -6,83 +6,52 @@ import 'package:production_tracking/helpers/service/base_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class Dyeing {
-  final int? id;
-  final String? dyeing_no;
-  final String? start_time;
-  final String? end_time;
-  final String? qty;
-  final String? width;
-  final String? length;
-  final String? notes;
-  final String? status;
-  final bool? rework;
-  final int? unit_id;
+class OptionUnit {
+  // final int? id;
+  // final String? code;
+  // final String? name;
+  final int? value;
+  final String? label;
 
-  Dyeing(
-      {this.id,
-      this.dyeing_no,
-      this.start_time,
-      this.end_time,
-      this.qty,
-      this.width,
-      this.length,
-      this.notes,
-      this.status,
-      this.rework,
-      this.unit_id});
+  OptionUnit(
+      {
+      // this.id, required this.name, this.code,
+      this.value,
+      this.label});
 
-  factory Dyeing.fromJson(Map<String, dynamic> json) {
-    return Dyeing(
-      id: json['id'] as int,
-      unit_id: json['id'] as int,
-      dyeing_no: json['dyeing_no'] ?? '',
-      start_time: json['start_time'] ?? '',
-      end_time: json['end_time'] ?? '',
-      qty: json['qty'] ?? '',
-      width: json['width'] ?? '',
-      length: json['length'] ?? '',
-      status: json['status'] ?? '',
-      rework: json['rework'] as bool?,
+  factory OptionUnit.fromJson(Map<String, dynamic> json) {
+    return OptionUnit(
+      // id: json['id'] as int,
+      // name: json['name'] ?? '',
+      // code: json['code'] ?? '',
+      value: json['value'] as int,
+      label: json['label'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'unit_id': unit_id,
-      'dyeing_no': dyeing_no,
-      'start_time': start_time,
-      'end_time': end_time,
-      'qty': qty,
-      'width': width,
-      'length': length,
-      'status': status,
-      'rework': rework,
+      // 'id': id,
+      // 'code': code,
+      // 'name': name,
+      'value': value,
+      'label': label,
     };
   }
 }
 
-class DyeingService extends BaseService<Dyeing> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/dyeings';
+class OptionUnitService extends BaseService<OptionUnit> {
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/units';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
   int _currentPage = 1;
   final int _itemsPerPage = 20;
-  // final List<Dyeing> _dyeings = [];
-  // List<dynamic> _dataList = [];
-  // List<dynamic> _dataListOpen = [];
-  // final List<dynamic> _dataView = [];
-  // final List<dynamic> _listOption = [];
+  final List<OptionUnit> _units = [];
 
   bool get isLoading => _isLoading;
   bool get hasMoreData => _hasMoreData;
-  // List<Dyeing> get dyeings => _dyeings;
-  // List get dataView => _dataView;
-  // List<dynamic> get dataList => _dataList;
-  // List<dynamic> get dataListOpen => _dataListOpen;
-  // List<dynamic> get listOption => _listOption;
+  List<OptionUnit> get options => _units;
 
   @override
   Future<void> fetchItems(
@@ -115,31 +84,22 @@ class DyeingService extends BaseService<Dyeing> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         final List<dynamic> dataList = responseData['data'];
 
-        List<Dyeing> newItems =
-            dataList.map((item) => Dyeing.fromJson(item)).toList();
+        List<OptionUnit> newItems =
+            dataList.map((item) => OptionUnit.fromJson(item)).toList();
 
-        if (newItems.length < _itemsPerPage) {
+        if (newItems.length < _itemsPerPage || newItems.isEmpty) {
           hasMoreData = false;
         }
-
-        final existingIds = items.map((e) => e.id).toSet();
-        for (var newItem in newItems) {
-          if (!existingIds.contains(newItem.id)) {
-            items.add(newItem);
-          }
-        }
-        // items.addAll(newItems);
 
         if (newItems.isNotEmpty) {
+          items.addAll(newItems);
           _currentPage++;
-        } else {
-          hasMoreData = false;
         }
       } else {
-        throw Exception('Failed to load dyeings');
+        throw Exception('Failed to load units');
       }
     } catch (e) {
-      throw Exception("Error fetching dyeings: $e");
+      throw Exception("Error fetching units: $e");
     } finally {
       isLoading = false;
       notifyListeners();
@@ -154,7 +114,7 @@ class DyeingService extends BaseService<Dyeing> {
 
   @override
   Future<void> addItem(
-      Dyeing newDyeing, ValueNotifier<bool> isSubmitting) async {
+      OptionUnit newUnit, ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -167,7 +127,7 @@ class DyeingService extends BaseService<Dyeing> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(newDyeing.toJson()),
+        body: jsonEncode(newUnit.toJson()),
       );
 
       if (response.statusCode == 200) {
@@ -177,18 +137,18 @@ class DyeingService extends BaseService<Dyeing> {
         return responseData['message'];
       } else {
         final errorData = jsonDecode(response.body);
-        throw Exception(errorData['message'] ?? 'Failed to add dyeings');
+        throw Exception(errorData['message'] ?? 'Failed to add units');
       }
     } catch (e) {
-      throw Exception('Error adding dyeings: $e');
+      throw Exception('Error adding units: $e');
     } finally {
       isSubmitting.value = false;
     }
   }
 
   @override
-  Future<void> updateItem(
-      String id, Dyeing updatedDyeing, ValueNotifier<bool> isSubmitting) async {
+  Future<void> updateItem(String id, OptionUnit updatedUnit,
+      ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -201,7 +161,7 @@ class DyeingService extends BaseService<Dyeing> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(updatedDyeing.toJson()),
+        body: jsonEncode(updatedUnit.toJson()),
       );
 
       if (response.statusCode == 200) {
@@ -211,10 +171,10 @@ class DyeingService extends BaseService<Dyeing> {
         return responseData['message'];
       } else {
         final errorData = jsonDecode(response.body);
-        throw Exception(errorData['message'] ?? 'Failed to update dyeing');
+        throw Exception(errorData['message'] ?? 'Failed to update unit');
       }
     } catch (e) {
-      throw Exception("Error updating dyeing: $e");
+      throw Exception("Error updating unit: $e");
     } finally {
       isSubmitting.value = false;
     }
@@ -243,12 +203,79 @@ class DyeingService extends BaseService<Dyeing> {
         return responseData['message'];
       } else {
         final errorData = jsonDecode(response.body);
-        throw Exception(errorData['message'] ?? 'Failed to delete dyeing');
+        throw Exception(errorData['message'] ?? 'Failed to delete unit');
       }
     } catch (e) {
-      throw Exception("Error deleting dyeing: $e");
+      throw Exception("Error deleting unit: $e");
     } finally {
       isSubmitting.value = false;
+    }
+  }
+
+  Future<void> fetchOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
+
+    if (isInitialLoad) {
+      _currentPage = 1;
+      _hasMoreData = true;
+      _units.clear();
+    }
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http
+          .get(Uri.parse('${dotenv.env['API_URL_DEV']}/unit/option'), headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+
+        final List<dynamic> dataList;
+
+        if (decoded is List) {
+          dataList = decoded;
+        } else if (decoded is Map<String, dynamic> &&
+            decoded.containsKey('data')) {
+          dataList = decoded['data'];
+        } else {
+          throw Exception("Unexpected response format: $decoded");
+        }
+
+        List<OptionUnit> newUnits =
+            dataList.map((item) => OptionUnit.fromJson(item)).toList();
+
+        _units.clear();
+        _units.addAll(newUnits);
+        _hasMoreData = false;
+
+        // if (newUnits.length < _itemsPerPage) {
+        //   _hasMoreData = false;
+        // }
+
+        // _units.addAll(newUnits);
+        // _currentPage++;
+      } else {
+        throw Exception('Failed to load units');
+      }
+    } catch (e) {
+      throw Exception('Error fetching units: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 }

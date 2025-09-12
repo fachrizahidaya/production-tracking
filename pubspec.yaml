@@ -39,6 +39,9 @@ dependencies:
   flutter_dotenv: ^6.0.0
   jwt_decoder: ^2.0.1
   http: ^1.5.0
+  easy_localization: ^3.0.8
+  file_picker: ^10.3.2
+  dropdown_search: ^6.0.2
 
 dev_dependencies:
   flutter_test:

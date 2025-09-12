@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/helpers/util/padding_column.dart';
+import 'package:production_tracking/helpers/util/margin_card.dart';
 
 class CustomCard extends StatelessWidget {
   final Widget child;
@@ -9,12 +9,11 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Padding(
-        padding: PaddingColumn.screen,
-        child: isLoading ? const CircularProgressIndicator() : child,
-      ),
-    );
+    return Padding(
+        padding: MarginCard.screen,
+        child: Card(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          child: isLoading ? const CircularProgressIndicator() : child,
+        ));
   }
 }

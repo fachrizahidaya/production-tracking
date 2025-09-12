@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:production_tracking/components/master/layout/app_drawer.dart';
 import 'package:production_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:production_tracking/components/master/layout/nav_bar.dart';
 import 'package:production_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:production_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:production_tracking/providers/user_provider.dart';
-import 'package:production_tracking/screens/home/dashboard.dart';
-import 'package:production_tracking/screens/home/notification_list.dart';
-import 'package:production_tracking/screens/home/profile.dart';
+import 'package:production_tracking/screens/dashboard/index.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -24,11 +21,7 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
-  final List<Widget> _screens = [
-    Dashboard(),
-    NotificationList(),
-    Profile(),
-  ];
+  final List<Widget> _screens = [Dashboard()];
 
   Future<void> _handleExit(BuildContext context) async {
     String url = '${dotenv.env['API_URL_DEV']}/logout';
@@ -36,8 +29,6 @@ class _HomeState extends State<Home> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('access_token');
     final isLoading = ValueNotifier<bool>(false);
-
-    // Navigator.pushReplacementNamed(context, '/');
 
     if (token != null) {
       try {
@@ -82,14 +73,6 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void _handleNavigateScreens(int index) {
-    if (_selectedIndex != index) {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -113,7 +96,10 @@ class _HomeState extends State<Home> {
           }
 
           return Scaffold(
-            appBar: CustomAppBar(title: 'Production Tracking'),
+            appBar: CustomAppBar(
+              title: 'Production Tracking',
+              isWithNotification: true,
+            ),
             drawer: AppDrawer(
               handleLogout: () => _handleLogout(context),
             ),

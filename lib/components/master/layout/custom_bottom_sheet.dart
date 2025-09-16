@@ -454,7 +454,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                               if (field.selectedValues == null ||
                                   field.selectedValues!.isEmpty)
                                 Text(
-                                  field.hint ?? 'Select options',
+                                  field.hint,
                                   style: const TextStyle(
                                       color: Colors.grey, fontSize: 14),
                                 ),

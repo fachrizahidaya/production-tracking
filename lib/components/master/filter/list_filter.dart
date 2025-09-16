@@ -171,7 +171,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                         }
                       },
                       selectedItems: selectedMachines,
-                      required: true,
+                      required: false,
                       onRemoveItem: (item) {
                         setState(() {
                           selectedMachines.remove(item);
@@ -203,7 +203,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                       widget.onHandleFilter('dari_tanggal', '');
                                       dariTanggalInput.text = '';
                                     })
-                                  }),
+                                  },
+                              hintTextString: 'Pilih tanggal'),
                           keyboardType: TextInputType.datetime,
                           readOnly: true,
                           onTap: () async {
@@ -256,7 +257,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                           'sampai_tanggal', '');
                                       sampaiTanggalInput.text = '';
                                     })
-                                  }),
+                                  },
+                              hintTextString: 'Pilih tanggal'),
                           keyboardType: TextInputType.datetime,
                           readOnly: true,
                           onTap: () async {
@@ -334,7 +336,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                     }
                   },
                   selectedItems: selectedStatuses,
-                  required: true,
+                  required: false,
                   onRemoveItem: (item) {
                     setState(() {
                       selectedStatuses.remove(item);

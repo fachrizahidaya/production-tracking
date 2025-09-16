@@ -35,7 +35,10 @@ class _SelectFormState extends State<SelectForm> {
         onTap: widget.isDisabled == true ? null : widget.onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: CustomTheme().inputStaticDecorationRequired(),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade400, width: 1)),
           child: widget.selectedItems.isEmpty
               ? Row(
                   children: [

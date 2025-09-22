@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:production_tracking/components/dyeing/item_dyeing.dart';
 import 'package:production_tracking/components/master/filter/list_filter.dart';
 import 'package:production_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:production_tracking/components/master/layout/custom_bottom_sheet.dart';
 import 'package:production_tracking/components/master/layout/custom_list.dart';
-import 'package:production_tracking/components/master/layout/custom_search_bar.dart';
 import 'package:production_tracking/helpers/util/margin_card.dart';
 import 'package:production_tracking/models/option/option_unit.dart';
 import 'package:production_tracking/models/process/dyeing.dart';
+import 'package:production_tracking/screens/dyeing/%5Bdyeing_id%5D.dart';
 import 'package:provider/provider.dart';
 
 class DyeingScreen extends StatefulWidget {
@@ -20,7 +18,6 @@ class DyeingScreen extends StatefulWidget {
 
 class _DyeingScreenState extends State<DyeingScreen> {
   String _searchQuery = '';
-  final DyeingService _dyeingService = DyeingService();
   final OptionUnitService _unitService = OptionUnitService();
   bool _isFiltered = false;
   bool avaiableCreate = false;
@@ -37,13 +34,20 @@ class _DyeingScreenState extends State<DyeingScreen> {
   void initState() {
     super.initState();
     _unitService.fetchOptions(isInitialLoad: true);
+    setState(() {
+      params = {'search': _search, 'page': '0'};
+    });
+    Future.delayed(Duration.zero, () {
+      _loadMore();
+    });
   }
 
-  void _handleChangeSearch(String value) {
+  Future<void> _handleSearch(String value) async {
     setState(() {
-      _searchQuery = value;
+      params = {'search': value.toString(), 'page': '0'};
     });
-    _dyeingService.fetchItems(isInitialLoad: true, searchQuery: _searchQuery);
+
+    _loadMore();
   }
 
   Future<void> _handleFilter(key, value) async {
@@ -56,10 +60,10 @@ class _DyeingScreenState extends State<DyeingScreen> {
       }
     });
 
-    if (params['dari_tanggal'] == null &&
-        params['sampai_tanggal'] == null &&
-        params['pemasok_id'] == null &&
-        params['status'] == null) {
+    if (
+        // params['dari_tanggal'] == null &&
+        //   params['sampai_tanggal'] == null &&
+        params['mesin_id'] == null && params['status'] == null) {
       setState(() {
         _isFiltered = false;
       });
@@ -88,33 +92,35 @@ class _DyeingScreenState extends State<DyeingScreen> {
       });
     }
 
-    String newPage = (int.parse(params['page']!) + 1).toString();
-    setState(() {
-      params['page'] = newPage;
-    });
+    // String newPage = (int.parse(params['page']!) + 1).toString();
+    // setState(() {
+    //   params['page'] = newPage;
+    // });
 
-    // await Provider.of<PurchaseOrderProviderService>(context, listen: false)
-    //     .getDataList(params);
+    final currentPage = int.parse(params['page']!);
 
-    // ignore: use_build_context_synchronously
-    // List<dynamic> loadData =
-    // ignore: use_build_context_synchronously
-    // Provider.of<PurchaseOrderProviderService>(context, listen: false)
-    //     .dataList;
+    List<Dyeing> loadData =
+        await Provider.of<DyeingService>(context, listen: false)
+            .getDataList(params);
 
-    // if (loadData.isEmpty) {
-    //   setState(() {
-    //     _firstLoading = false;
-    //     _isLoadMore = false;
-    //     _hasMore = false;
-    //   });
-    // } else {
-    //   setState(() {
-    //     _dataList.addAll(loadData);
-    //     _firstLoading = false;
-    //     _isLoadMore = false;
-    //   });
-    // }
+    if (loadData.isEmpty) {
+      setState(() {
+        _firstLoading = false;
+        _isLoadMore = false;
+        _hasMore = false;
+      });
+    } else {
+      setState(() {
+        _dataList.addAll(loadData);
+        _firstLoading = false;
+        _isLoadMore = false;
+        params['page'] = (currentPage + 1).toString();
+
+        if (loadData.length < 10) {
+          _hasMore = false;
+        }
+      });
+    }
   }
 
   _refetch() {
@@ -124,26 +130,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
       });
       _loadMore();
     });
-  }
-
-  void _showFilterSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      enableDrag: true,
-      isDismissible: true,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return ListFilter(
-          title: 'Filter',
-          params: params,
-          onHandleFilter: _handleFilter,
-          onSubmitFilter: _submitFilter,
-        );
-      },
-    );
   }
 
   @override
@@ -165,14 +151,12 @@ class _DyeingScreenState extends State<DyeingScreen> {
         color: const Color(0xFFEBEBEB),
         child: Column(
           children: [
-            CustomSearchBar(
-              handleSearchChange: _handleChangeSearch,
-              showFilter: () {
-                _showFilterSheet(context);
-              },
-            ),
             Expanded(
                 child: CustomList(
+              fetchData: (params) async {
+                return await Provider.of<DyeingService>(context, listen: false)
+                    .getDataList(params);
+              },
               service: DyeingService(),
               searchQuery: _searchQuery,
               canCreate: true,
@@ -181,6 +165,37 @@ class _DyeingScreenState extends State<DyeingScreen> {
                 item: item,
                 unitOptions: _unitService.options,
               ),
+              onItemTap: (context, item) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DyeingDetail(
+                        id: item.id.toString(),
+                        no: item.dyeing_no.toString(),
+                      ),
+                    )).then((value) {
+                  if (value == true) {
+                    _refetch();
+                  } else {
+                    return null;
+                  }
+                });
+              },
+              filterWidget: ListFilter(
+                title: 'Filter',
+                params: params,
+                onHandleFilter: _handleFilter,
+                onSubmitFilter: () {
+                  _submitFilter();
+                },
+              ),
+              handleRefetch: _refetch,
+              handleLoadMore: _loadMore,
+              handleSearch: _handleSearch,
+              dataList: _dataList,
+              firstLoading: _firstLoading,
+              hasMore: _hasMore,
+              isFiltered: _isFiltered,
             ))
           ],
         ),

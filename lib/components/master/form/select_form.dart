@@ -10,17 +10,18 @@ class SelectForm extends StatefulWidget {
   final bool? isDisabled;
   final Function(Map<String, dynamic>)? onRemoveItem;
   final VoidCallback? onClearAll;
+  final Function(List<Map<String, dynamic>>) onSelectionChanged;
 
-  const SelectForm({
-    super.key,
-    required this.label,
-    required this.onTap,
-    required this.selectedItems,
-    required this.required,
-    this.isDisabled,
-    this.onRemoveItem,
-    this.onClearAll,
-  });
+  const SelectForm(
+      {super.key,
+      required this.label,
+      required this.onTap,
+      required this.selectedItems,
+      required this.required,
+      this.isDisabled,
+      this.onRemoveItem,
+      this.onClearAll,
+      required this.onSelectionChanged});
 
   @override
   State<SelectForm> createState() => _SelectFormState();
@@ -59,25 +60,22 @@ class _SelectFormState extends State<SelectForm> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 4,
-                      children: widget.selectedItems.map((item) {
-                        return InputChip(
-                          label: Text(item['label']),
-                          onDeleted: () {
-                            widget.onRemoveItem?.call(item);
-                          },
-                        );
-                      }).toList(),
-                    ),
                     const SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        TextButton(
-                          onPressed: widget.onClearAll,
-                          child: const Text("Hapus semua"),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 4,
+                          children: widget.selectedItems.map((item) {
+                            return InputChip(
+                              label: Text(item['label']),
+                              onDeleted: () {
+                                widget.onRemoveItem?.call(item);
+                                widget.onSelectionChanged(widget.selectedItems);
+                              },
+                            );
+                          }).toList(),
                         ),
                         Icon(Icons.arrow_drop_down,
                             size: 18, color: CustomTheme().colors('base'))

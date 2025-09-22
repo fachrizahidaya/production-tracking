@@ -5,13 +5,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onReturn;
   final List<Widget>? actions;
   final bool isWithNotification;
+  final tab;
 
   const CustomAppBar(
       {super.key,
       required this.title,
       this.onReturn,
       this.actions,
-      this.isWithNotification = false});
+      this.isWithNotification = false,
+      this.tab});
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ...?actions
       ],
+      bottom: tab,
     );
   }
 

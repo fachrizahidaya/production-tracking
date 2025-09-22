@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:production_tracking/components/master/button/form_button.dart';
 import 'package:production_tracking/helpers/util/padding_column.dart';
-
-class MenuItem {
-  final String title;
-  final String route;
-
-  MenuItem({required this.title, required this.route});
-}
+import 'package:production_tracking/screens/home/index.dart';
 
 class AppDrawer extends StatefulWidget {
   final Function() handleLogout;
+  final handleFetchMenu;
 
-  const AppDrawer({super.key, required this.handleLogout});
+  const AppDrawer(
+      {super.key, required this.handleLogout, this.handleFetchMenu});
 
   @override
   State<AppDrawer> createState() => _AppDrawerState();
@@ -23,23 +19,8 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   void initState() {
-    menuItems = _loadMenuItems();
+    menuItems = widget.handleFetchMenu();
     super.initState();
-  }
-
-  Future<List<MenuItem>> _loadMenuItems() async {
-    return [
-      MenuItem(title: 'Dyeing', route: '/dye'),
-      MenuItem(title: 'Press Tumbler', route: '/press'),
-      MenuItem(title: 'Stenter', route: '/stent'),
-      // MenuItem(title: 'Long Sitting', route: ),
-      // MenuItem(title: 'Long Hemming', route: ),
-      // MenuItem(title: 'Cross Cutting', route: ),
-      // MenuItem(title: 'Sewing', route: ),
-      // MenuItem(title: 'Embroideries', route: ),
-      // MenuItem(title: 'Sorting', route: ),
-      // MenuItem(title: 'Packing', route: ),
-    ];
   }
 
   @override
@@ -84,6 +65,17 @@ class _AppDrawerState extends State<AppDrawer> {
                         final item = snapshot.data![index];
                         return ListTile(
                           title: Text(item.title),
+                          leading: item.title == 'Pencelupan (Dyeing)'
+                              ? Icon(Icons.water_drop_outlined)
+                              : item.title == 'Press Tumbler'
+                                  ? Icon(Icons.layers_outlined)
+                                  : item.title == 'Stenter'
+                                      ? Icon(Icons.dry_cleaning_outlined)
+                                      : item.title == 'Long Hemming'
+                                          ? Icon(Icons.cut_outlined)
+                                          : item.title == 'Jahit (Sewing)'
+                                              ? Icon(Icons.straighten_outlined)
+                                              : Icon(Icons.telegram_outlined),
                           onTap: () {
                             Navigator.pop(context);
                             Navigator.pushNamed(context, item.route);

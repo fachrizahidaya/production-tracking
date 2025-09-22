@@ -103,12 +103,16 @@ class _CustomListState<T> extends State<CustomList<T>> {
                                 (widget.hasMore ? 1 : 0),
                             itemBuilder: (context, index) {
                               if (index == widget.dataList.length) {
-                                // Show loader only if hasMore = true
-                                return const Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Center(
-                                      child: CircularProgressIndicator()),
-                                );
+                                if (widget.hasMore &&
+                                    widget.dataList.isNotEmpty) {
+                                  return const Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: Center(
+                                        child: CircularProgressIndicator()),
+                                  );
+                                } else {
+                                  return const SizedBox.shrink();
+                                }
                               }
 
                               final item = widget.dataList[index];

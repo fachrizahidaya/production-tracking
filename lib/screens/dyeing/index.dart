@@ -114,9 +114,10 @@ class _DyeingScreenState extends State<DyeingScreen> {
         _dataList.addAll(loadData);
         _firstLoading = false;
         _isLoadMore = false;
+
         params['page'] = (currentPage + 1).toString();
 
-        if (loadData.length < 10) {
+        if (loadData.length < 20) {
           _hasMore = false;
         }
       });

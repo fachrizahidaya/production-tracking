@@ -5,6 +5,7 @@ import 'package:production_tracking/components/master/layout/custom_app_bar.dart
 import 'package:production_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:production_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:production_tracking/providers/user_provider.dart';
+import 'package:production_tracking/screens/auth/user_menu.dart';
 import 'package:production_tracking/screens/dashboard/index.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,6 +74,36 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Future<List<MenuItem>> _handleFetchMenu() async {
+    UserMenu userMenu = UserMenu();
+    await userMenu.handleLoadMenu();
+
+    try {
+      List<dynamic> menuData = userMenu.menus;
+      final filteredData = menuData
+          .where((menu) =>
+              menu['name'] != 'Dashboard' &&
+              menu['name'] != 'SPK' &&
+              menu['name'] != 'Work Order' &&
+              menu['name'] != 'Pengguna' &&
+              menu['name'] != 'Pelanggan' &&
+              menu['name'] != 'Mesin' &&
+              menu['name'] != 'Barang' &&
+              menu['name'] != 'Satuan' &&
+              menu['name'] != 'Grade Barang')
+          .toList();
+
+      return filteredData
+          .map<MenuItem>((menu) {
+            return MenuItem(title: menu['name'], route: menu['url']);
+          })
+          .whereType<MenuItem>()
+          .toList();
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -102,9 +133,17 @@ class _HomeState extends State<Home> {
             ),
             drawer: AppDrawer(
               handleLogout: () => _handleLogout(context),
+              handleFetchMenu: () => _handleFetchMenu(),
             ),
             body: _screens[_selectedIndex],
           );
         });
   }
+}
+
+class MenuItem {
+  final String title;
+  final String route;
+
+  MenuItem({required this.title, required this.route});
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:production_tracking/helpers/auth/storage.dart';
 import 'package:production_tracking/models/master/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -51,5 +52,8 @@ class UserProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('username');
     await prefs.remove('access_token');
+
+    await Storage.instance.clearUserData();
+    await Storage.instance.clearMenus();
   }
 }

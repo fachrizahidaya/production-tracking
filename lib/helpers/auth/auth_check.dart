@@ -33,6 +33,7 @@ class _AuthCheckState extends State<AuthCheck> {
         });
       }
     } else {
+      await Provider.of<UserProvider>(context, listen: false).handleLogout();
       if (mounted) {
         setState(() {
           _isAuthenticated = false;

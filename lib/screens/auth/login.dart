@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:production_tracking/components/auth/login_form.dart';
+import 'package:production_tracking/helpers/auth/storage.dart';
 import 'package:production_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:production_tracking/helpers/util/padding_column.dart';
 import 'package:production_tracking/providers/user_provider.dart';
+import 'package:production_tracking/screens/auth/user_menu.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -80,15 +82,19 @@ class _LoginState extends State<Login> {
         final Map<String, dynamic> response = jsonDecode(res.body);
 
         if (response['access_token'] != null) {
-          final String email = response['username'] ?? '';
+          final String username = response['username'] ?? '';
           final String token = response['access_token'] ?? '';
+          // final String userId = response['user_id'].toString();
+          // final String name = response['name'] ?? '';
 
+          await Storage.instance.insertUserData(response);
+          await MenuService().handleFetchMenu();
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('access_token', token);
 
           if (context.mounted) {
             Provider.of<UserProvider>(context, listen: false)
-                .handleLogin(email, token);
+                .handleLogin(username, token);
             Navigator.pushReplacementNamed(context, '/dashboard');
             _username.clear();
             _password.clear();

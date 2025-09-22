@@ -6,39 +6,49 @@ import 'package:production_tracking/helpers/service/base_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class OptionUnit {
-  final int? value;
-  final String? label;
+class Spk {
+  final int? id;
+  final String? spk_no;
+  final String? status;
+  final int? user_id;
+  final int? customer_id;
 
-  OptionUnit({this.value, this.label});
+  Spk({this.id, this.spk_no, this.status, this.user_id, this.customer_id});
 
-  factory OptionUnit.fromJson(Map<String, dynamic> json) {
-    return OptionUnit(
-      value: json['value'] as int,
-      label: json['label'] ?? '',
-    );
+  factory Spk.fromJson(Map<String, dynamic> json) {
+    return Spk(
+        id: json['id'] as int,
+        spk_no: json['spk_no'] ?? '',
+        status: json['status'] ?? '',
+        user_id: json['user_id'] as int,
+        customer_id: json['customer_id'] as int);
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'value': value,
-      'label': label,
+      'id': id,
+      'spk_no': spk_no,
+      'status': status,
+      'user_id': user_id,
+      'customer_id': customer_id
     };
   }
 }
 
-class OptionUnitService extends BaseService<OptionUnit> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/units';
+class SpkService extends BaseService<Spk> {
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/spk';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
   int _currentPage = 1;
   final int _itemsPerPage = 20;
-  final List<OptionUnit> _units = [];
+  List<dynamic> _dataList = [];
+  Map<String, dynamic> _dataView = {};
 
   bool get isLoading => _isLoading;
   bool get hasMoreData => _hasMoreData;
-  List<OptionUnit> get options => _units;
+  List<dynamic> get dataList => _dataList;
+  Map<String, dynamic> get dataView => _dataView;
 
   @override
   Future<void> fetchItems(
@@ -71,25 +81,91 @@ class OptionUnitService extends BaseService<OptionUnit> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         final List<dynamic> dataList = responseData['data'];
 
-        List<OptionUnit> newItems =
-            dataList.map((item) => OptionUnit.fromJson(item)).toList();
+        List<Spk> newItems =
+            dataList.map((item) => Spk.fromJson(item)).toList();
 
-        if (newItems.length < _itemsPerPage || newItems.isEmpty) {
+        if (newItems.length < _itemsPerPage) {
           hasMoreData = false;
         }
 
+        final existingIds = items.map((e) => e.id).toSet();
+        for (var newItem in newItems) {
+          if (!existingIds.contains(newItem.id)) {
+            items.add(newItem);
+          }
+        }
+        // items.addAll(newItems);
+
         if (newItems.isNotEmpty) {
-          items.addAll(newItems);
           _currentPage++;
+        } else {
+          hasMoreData = false;
         }
       } else {
-        throw Exception('Failed to load units');
+        throw Exception('Failed to load spk');
       }
     } catch (e) {
-      throw Exception("Error fetching units: $e");
+      throw Exception("Error fetching spk: $e");
     } finally {
       isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> getDataView(id) async {
+    final url = Uri.parse('$baseUrl/$id');
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token').toString();
+
+    try {
+      _dataView = {};
+      notifyListeners();
+
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
+
+      final responseData = json.decode(response.body);
+      switch (response.statusCode) {
+        case 200:
+          if (responseData != null) {
+            _dataView = responseData as Map<String, dynamic>;
+          }
+          notifyListeners();
+          break;
+        default:
+          throw responseData['message'];
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> getDataList(Map<String, dynamic> params) async {
+    final url = Uri.parse(baseUrl).replace(queryParameters: params);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token').toString();
+
+    try {
+      _dataList.clear();
+      notifyListeners();
+
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
+      final responseData = jsonDecode(response.body);
+      switch (response.statusCode) {
+        case 200:
+          if (responseData['data'] != null) {
+            _dataList = responseData['data'];
+          }
+          notifyListeners();
+          break;
+        default:
+          throw responseData['message'];
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -100,8 +176,7 @@ class OptionUnitService extends BaseService<OptionUnit> {
   }
 
   @override
-  Future<void> addItem(
-      OptionUnit newUnit, ValueNotifier<bool> isSubmitting) async {
+  Future<void> addItem(Spk newSpk, ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -114,7 +189,7 @@ class OptionUnitService extends BaseService<OptionUnit> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(newUnit.toJson()),
+        body: jsonEncode(newSpk.toJson()),
       );
 
       if (response.statusCode == 200) {
@@ -124,18 +199,18 @@ class OptionUnitService extends BaseService<OptionUnit> {
         return responseData['message'];
       } else {
         final errorData = jsonDecode(response.body);
-        throw Exception(errorData['message'] ?? 'Failed to add units');
+        throw Exception(errorData['message'] ?? 'Failed to add spk');
       }
     } catch (e) {
-      throw Exception('Error adding units: $e');
+      throw Exception('Error adding spk: $e');
     } finally {
       isSubmitting.value = false;
     }
   }
 
   @override
-  Future<void> updateItem(String id, OptionUnit updatedUnit,
-      ValueNotifier<bool> isSubmitting) async {
+  Future<void> updateItem(
+      String id, Spk updatedSpk, ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -148,7 +223,7 @@ class OptionUnitService extends BaseService<OptionUnit> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(updatedUnit.toJson()),
+        body: jsonEncode(updatedSpk.toJson()),
       );
 
       if (response.statusCode == 200) {
@@ -158,10 +233,10 @@ class OptionUnitService extends BaseService<OptionUnit> {
         return responseData['message'];
       } else {
         final errorData = jsonDecode(response.body);
-        throw Exception(errorData['message'] ?? 'Failed to update unit');
+        throw Exception(errorData['message'] ?? 'Failed to update spk');
       }
     } catch (e) {
-      throw Exception("Error updating unit: $e");
+      throw Exception("Error updating spk: $e");
     } finally {
       isSubmitting.value = false;
     }
@@ -190,72 +265,12 @@ class OptionUnitService extends BaseService<OptionUnit> {
         return responseData['message'];
       } else {
         final errorData = jsonDecode(response.body);
-        throw Exception(errorData['message'] ?? 'Failed to delete unit');
+        throw Exception(errorData['message'] ?? 'Failed to delete spk');
       }
     } catch (e) {
-      throw Exception("Error deleting unit: $e");
+      throw Exception("Error deleting spk: $e");
     } finally {
       isSubmitting.value = false;
-    }
-  }
-
-  Future<void> fetchOptions({
-    bool isInitialLoad = false,
-    String searchQuery = '',
-  }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _units.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http
-          .get(Uri.parse('${dotenv.env['API_URL_DEV']}/unit/option'), headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-
-        final List<dynamic> dataList;
-
-        if (decoded is List) {
-          dataList = decoded;
-        } else if (decoded is Map<String, dynamic> &&
-            decoded.containsKey('data')) {
-          dataList = decoded['data'];
-        } else {
-          throw Exception("Unexpected response format: $decoded");
-        }
-
-        List<OptionUnit> newUnits =
-            dataList.map((item) => OptionUnit.fromJson(item)).toList();
-
-        _units.clear();
-        _units.addAll(newUnits);
-        _hasMoreData = false;
-      } else {
-        throw Exception('Failed to load units');
-      }
-    } catch (e) {
-      throw Exception('Error fetching units: $e');
-    } finally {
-      _isLoading = false;
-      notifyListeners();
     }
   }
 }

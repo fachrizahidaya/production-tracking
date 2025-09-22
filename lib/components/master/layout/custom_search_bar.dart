@@ -4,8 +4,13 @@ import 'package:production_tracking/helpers/util/margin_search.dart';
 class CustomSearchBar extends StatefulWidget {
   final Function(String) handleSearchChange;
   final Function() showFilter;
+  final isFiltered;
+
   const CustomSearchBar(
-      {super.key, required this.handleSearchChange, required this.showFilter});
+      {super.key,
+      required this.handleSearchChange,
+      required this.showFilter,
+      this.isFiltered});
 
   @override
   State<CustomSearchBar> createState() => _CustomSearchBarState();
@@ -61,8 +66,22 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8)),
                   child: IconButton(
-                    icon: const Icon(
-                      Icons.tune,
+                    icon: Stack(
+                      children: [
+                        const Icon(
+                          Icons.tune,
+                        ),
+                        if (widget.isFiltered)
+                          Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                    color: Colors.red, shape: BoxShape.circle),
+                              ))
+                      ],
                     ),
                     onPressed: () {
                       widget.showFilter();

@@ -1,9 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/button/form_button.dart';
-import 'package:production_tracking/components/master/form/group_form.dart';
 import 'package:production_tracking/components/master/form/select_form.dart';
-import 'package:production_tracking/components/master/theme.dart';
 import 'package:production_tracking/helpers/util/margin_card.dart';
 import 'package:production_tracking/helpers/util/padding_column.dart';
 import 'package:production_tracking/helpers/util/separated_column.dart';
@@ -84,9 +80,28 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
 
   @override
   void initState() {
-    _getOperator();
-    _getMachine();
     super.initState();
+    // _getOperator();
+    _getMachine();
+
+    if (widget.params['status'] != null) {
+      final activeStatuses = widget.params['status'].split(',');
+      selectedStatuses = statusOption
+          .where((s) => activeStatuses.contains(s['value']))
+          .map((s) => Map<String, dynamic>.from(s))
+          .toList();
+    }
+
+    dariTanggalInput.text = widget.params['dari_tanggal'] ?? '';
+    sampaiTanggalInput.text = widget.params['sampai_tanggal'] ?? '';
+
+    if (widget.params['mesin_id'] != null) {
+      final activeMachines = widget.params['mesin_id'].split(',');
+      selectedMachines = machineOption
+          .where((m) => activeMachines.contains(m['value'].toString()))
+          .toList()
+          .cast<Map<String, dynamic>>();
+    }
   }
 
   Future<void> _getMachine() async {
@@ -134,169 +149,182 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SelectForm(
-                      label: "Mesin",
-                      onTap: () async {
-                        final result =
-                            await showDialog<List<Map<String, dynamic>>>(
-                          context: context,
-                          builder: (_) {
-                            return SimpleDialog(
-                              title: const Text("Pilih Mesin"),
-                              children: machineOption.map((machine) {
-                                final isSelected =
-                                    selectedMachines.contains(machine);
-                                return CheckboxListTile(
-                                  value: isSelected,
-                                  title: Text(machine['label']),
-                                  onChanged: (checked) {
-                                    setState(() {
-                                      if (checked == true) {
-                                        selectedMachines.add(machine);
-                                      } else {
-                                        selectedMachines.remove(machine);
-                                      }
-                                    });
-                                    Navigator.pop(context, selectedMachines);
-                                  },
-                                );
-                              }).toList(),
-                            );
-                          },
-                        );
+                        label: "Mesin",
+                        onTap: () async {
+                          final result =
+                              await showDialog<List<Map<String, dynamic>>>(
+                            context: context,
+                            builder: (_) {
+                              return SimpleDialog(
+                                title: const Text("Pilih Mesin"),
+                                children: machineOption.map((machine) {
+                                  final isSelected =
+                                      selectedMachines.contains(machine);
+                                  return CheckboxListTile(
+                                    value: isSelected,
+                                    title: Text(machine['label']),
+                                    onChanged: (checked) {
+                                      setState(() {
+                                        if (checked == true) {
+                                          selectedMachines.add(machine);
+                                        } else {
+                                          selectedMachines.remove(machine);
+                                        }
+                                      });
+                                      Navigator.pop(context, selectedMachines);
+                                    },
+                                  );
+                                }).toList(),
+                              );
+                            },
+                          );
 
-                        if (result != null) {
+                          if (result != null) {
+                            setState(() {
+                              selectedMachines = result;
+                            });
+                            widget.onHandleFilter("status",
+                                result.map((e) => e['value']).join(","));
+                          }
+                        },
+                        selectedItems: selectedMachines,
+                        required: false,
+                        onRemoveItem: (item) {
                           setState(() {
-                            selectedMachines = result;
+                            selectedMachines.remove(item);
                           });
-                        }
-                      },
-                      selectedItems: selectedMachines,
-                      required: true,
-                      onRemoveItem: (item) {
-                        setState(() {
-                          selectedMachines.remove(item);
-                        });
-                      },
-                      onClearAll: () {
-                        setState(() {
-                          selectedMachines.clear();
-                        });
-                      },
-                    ),
+                          widget.onHandleFilter(
+                              "status",
+                              selectedStatuses
+                                  .map((e) => e['value'])
+                                  .join(","));
+                        },
+                        onClearAll: () {
+                          setState(() {
+                            selectedMachines.clear();
+                          });
+                          widget.onHandleFilter("status", "");
+                        },
+                        onSelectionChanged: (selected) {
+                          widget.onHandleFilter("mesin_id",
+                              selected.map((e) => e['value']).join(","));
+                        }),
                   ],
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: GroupForm(
-                        label: 'Dari Tanggal',
-                        formControl: TextFormField(
-                          controller: dariTanggalInput,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
-                          decoration: CustomTheme().inputDateDecoration(
-                              clearable:
-                                  dariTanggalInput.text != '' ? true : false,
-                              onPressClear: () => {
-                                    setState(() {
-                                      widget.onHandleFilter('dari_tanggal', '');
-                                      dariTanggalInput.text = '';
-                                    })
-                                  }),
-                          keyboardType: TextInputType.datetime,
-                          readOnly: true,
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2101),
-                              builder: (context, child) {
-                                return Theme(
-                                  data: ThemeData.light().copyWith(
-                                    colorScheme: ColorScheme.light(
-                                      primary: CustomTheme().colors('base'),
-                                      onPrimary: Colors.white,
-                                      onSurface: Colors.black87,
-                                    ),
-                                  ),
-                                  child: child!,
-                                );
-                              },
-                            );
+                // Row(
+                //   children: [
+                // Expanded(
+                //   child: GroupForm(
+                //     label: 'Dari Tanggal',
+                //     formControl: TextFormField(
+                //       controller: dariTanggalInput,
+                //       style: const TextStyle(
+                //         fontSize: 16,
+                //       ),
+                //       decoration: CustomTheme().inputDateDecoration(
+                //           clearable:
+                //               dariTanggalInput.text != '' ? true : false,
+                //           onPressClear: () => {
+                //                 setState(() {
+                //                   widget.onHandleFilter('dari_tanggal', '');
+                //                   dariTanggalInput.text = '';
+                //                 })
+                //               },
+                //           hintTextString: 'Pilih tanggal'),
+                //       keyboardType: TextInputType.datetime,
+                //       readOnly: true,
+                //       onTap: () async {
+                //         DateTime? pickedDate = await showDatePicker(
+                //           context: context,
+                //           initialDate: DateTime.now(),
+                //           firstDate: DateTime(2020),
+                //           lastDate: DateTime(2101),
+                //           builder: (context, child) {
+                //             return Theme(
+                //               data: ThemeData.light().copyWith(
+                //                 colorScheme: ColorScheme.light(
+                //                   primary: CustomTheme().colors('base'),
+                //                   onPrimary: Colors.white,
+                //                   onSurface: Colors.black87,
+                //                 ),
+                //               ),
+                //               child: child!,
+                //             );
+                //           },
+                //         );
 
-                            if (pickedDate != null) {
-                              String formattedDate =
-                                  DateFormat('yyyy-MM-dd').format(pickedDate);
-                              setState(() {
-                                dariTanggalInput.text = formattedDate;
-                                widget.onHandleFilter(
-                                    'dari_tanggal', formattedDate);
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: GroupForm(
-                        label: 'Sampai Tanggal',
-                        formControl: TextFormField(
-                          controller: sampaiTanggalInput,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
-                          decoration: CustomTheme().inputDateDecoration(
-                              clearable:
-                                  sampaiTanggalInput.text != '' ? true : false,
-                              onPressClear: () => {
-                                    setState(() {
-                                      widget.onHandleFilter(
-                                          'sampai_tanggal', '');
-                                      sampaiTanggalInput.text = '';
-                                    })
-                                  }),
-                          keyboardType: TextInputType.datetime,
-                          readOnly: true,
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2101),
-                              builder: (context, child) {
-                                return Theme(
-                                  data: ThemeData.light().copyWith(
-                                    colorScheme: ColorScheme.light(
-                                      primary: CustomTheme()
-                                          .colors('base'), // <-- SEE HERE
-                                      onPrimary: Colors.white, // <-- SEE HERE
-                                      onSurface: Colors.black87, // <-- SEE HERE
-                                    ),
-                                  ),
-                                  child: child!,
-                                );
-                              },
-                            );
+                //         if (pickedDate != null) {
+                //           String formattedDate =
+                //               DateFormat('yyyy-MM-dd').format(pickedDate);
+                //           setState(() {
+                //             dariTanggalInput.text = formattedDate;
+                //             widget.onHandleFilter(
+                //                 'dari_tanggal', formattedDate);
+                //           });
+                //         }
+                //       },
+                //     ),
+                //   ),
+                // ),
+                // Expanded(
+                //   child: GroupForm(
+                //     label: 'Sampai Tanggal',
+                //     formControl: TextFormField(
+                //       controller: sampaiTanggalInput,
+                //       style: const TextStyle(
+                //         fontSize: 16,
+                //       ),
+                //       decoration: CustomTheme().inputDateDecoration(
+                //           clearable:
+                //               sampaiTanggalInput.text != '' ? true : false,
+                //           onPressClear: () => {
+                //                 setState(() {
+                //                   widget.onHandleFilter(
+                //                       'sampai_tanggal', '');
+                //                   sampaiTanggalInput.text = '';
+                //                 })
+                //               },
+                //           hintTextString: 'Pilih tanggal'),
+                //       keyboardType: TextInputType.datetime,
+                //       readOnly: true,
+                //       onTap: () async {
+                //         DateTime? pickedDate = await showDatePicker(
+                //           context: context,
+                //           initialDate: DateTime.now(),
+                //           firstDate: DateTime(2020),
+                //           lastDate: DateTime(2101),
+                //           builder: (context, child) {
+                //             return Theme(
+                //               data: ThemeData.light().copyWith(
+                //                 colorScheme: ColorScheme.light(
+                //                   primary: CustomTheme()
+                //                       .colors('base'),
+                //                   onPrimary: Colors.white,
+                //                   onSurface: Colors.black87,
+                //                 ),
+                //               ),
+                //               child: child!,
+                //             );
+                //           },
+                //         );
 
-                            if (pickedDate != null) {
-                              String formattedDate =
-                                  DateFormat('yyyy-MM-dd').format(pickedDate);
-                              setState(() {
-                                sampaiTanggalInput.text = formattedDate;
-                                widget.onHandleFilter(
-                                    'sampai_tanggal', formattedDate);
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ].separatedBy(SizedBox(
-                    width: 16,
-                  )),
-                ),
+                //         if (pickedDate != null) {
+                //           String formattedDate =
+                //               DateFormat('yyyy-MM-dd').format(pickedDate);
+                //           setState(() {
+                //             sampaiTanggalInput.text = formattedDate;
+                //             widget.onHandleFilter(
+                //                 'sampai_tanggal', formattedDate);
+                //           });
+                //         }
+                //       },
+                //     ),
+                //   ),
+                // ),
+                //   ].separatedBy(SizedBox(
+                //     width: 16,
+                //   )),
+                // ),
                 SelectForm(
                   label: "Status",
                   onTap: () async {
@@ -331,25 +359,30 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                       setState(() {
                         selectedStatuses = result;
                       });
+                      widget.onHandleFilter(
+                          "status", result.map((e) => e['value']).join(","));
                     }
                   },
                   selectedItems: selectedStatuses,
-                  required: true,
+                  required: false,
                   onRemoveItem: (item) {
                     setState(() {
                       selectedStatuses.remove(item);
                     });
+                    widget.onHandleFilter("status",
+                        selectedStatuses.map((e) => e['value']).join(","));
                   },
                   onClearAll: () {
                     setState(() {
                       selectedStatuses.clear();
                     });
+                    widget.onHandleFilter("status", "");
+                  },
+                  onSelectionChanged: (selected) {
+                    widget.onHandleFilter(
+                        "status", selected.map((e) => e['value']).join(","));
                   },
                 ),
-                FormButton(
-                  label: 'Submit',
-                  onPressed: () {},
-                )
               ].separatedBy(SizedBox(
                 height: 16,
               )),

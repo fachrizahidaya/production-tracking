@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:production_tracking/components/master/button/custom_floating_button.dart';
-import 'package:production_tracking/components/master/text/no_data.dart';
+import 'package:production_tracking/components/master/layout/custom_search_bar.dart';
 import 'package:production_tracking/helpers/service/base_service.dart';
-import 'package:provider/provider.dart';
 
 class CustomList<T> extends StatefulWidget {
   final BaseService<T> service;
@@ -11,16 +10,35 @@ class CustomList<T> extends StatefulWidget {
   final bool? canCreate;
   final Widget Function(T item) itemBuilder;
   final Future<void> Function(BuildContext context, T? currentItem)? onForm;
+  final void Function(BuildContext context, T item)? onItemTap;
+  final Future<List<T>> Function(Map<String, String> params) fetchData;
+  final Widget? filterWidget;
+  final dataList;
+  final handleRefetch;
+  final handleLoadMore;
+  final handleSearch;
+  final firstLoading;
+  final hasMore;
+  final isFiltered;
 
-  const CustomList({
-    super.key,
-    required this.service,
-    required this.searchQuery,
-    required this.itemBuilder,
-    this.canUpdate = false,
-    this.canCreate = false,
-    this.onForm,
-  });
+  const CustomList(
+      {super.key,
+      required this.service,
+      required this.searchQuery,
+      required this.itemBuilder,
+      this.canUpdate = false,
+      this.canCreate = false,
+      this.onForm,
+      this.onItemTap,
+      required this.fetchData,
+      this.filterWidget,
+      this.handleRefetch,
+      this.handleLoadMore,
+      this.handleSearch,
+      this.dataList,
+      this.firstLoading,
+      this.hasMore,
+      this.isFiltered});
 
   @override
   State<CustomList<T>> createState() => _CustomListState<T>();
@@ -32,39 +50,6 @@ class _CustomListState<T> extends State<CustomList<T>> {
   @override
   void initState() {
     super.initState();
-    _fetchInitial();
-    // widget.service.fetchItems(isInitialLoad: true);
-    _scrollController.addListener(() {
-      if (_scrollController.position.maxScrollExtent > 0 &&
-          _scrollController.position.pixels >=
-              _scrollController.position.maxScrollExtent - 100 &&
-          !widget.service.isLoading &&
-          widget.service.hasMoreData) {
-        // widget.service.fetchItems();
-        _fetchNextPage();
-      }
-    });
-  }
-
-  void _fetchInitial() {
-    widget.service
-        .fetchItems(isInitialLoad: true, searchQuery: widget.searchQuery);
-  }
-
-  void _fetchNextPage() {
-    widget.service.fetchItems(searchQuery: widget.searchQuery);
-  }
-
-  @override
-  void didUpdateWidget(covariant CustomList<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.searchQuery != widget.searchQuery) {
-      // widget.service.fetchItems(
-      //   isInitialLoad: true,
-      //   searchQuery: widget.searchQuery,
-      // );
-      _fetchInitial();
-    }
   }
 
   @override
@@ -73,73 +58,87 @@ class _CustomListState<T> extends State<CustomList<T>> {
     super.dispose();
   }
 
+  void _openFilter() {
+    if (widget.filterWidget != null) {
+      showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        enableDrag: true,
+        isDismissible: true,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return widget.filterWidget!;
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
-        ChangeNotifierProvider.value(
-          value: widget.service,
-          child: Consumer<BaseService<T>>(
-            builder: (context, service, _) {
-              return RefreshIndicator(
-                  onRefresh: service.refetchItems,
-                  child: service.items.isEmpty
-                      ? ListView(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          children: const [
-                            SizedBox(
-                              height: 200,
-                            ),
-                            Center(
-                              child: NoData(
-                                fontSize: 24,
-                              ),
-                            )
-                          ],
-                        )
-                      : ListView.separated(
-                          controller: _scrollController,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          itemCount: service.hasMoreData
-                              ? service.items.length + 1
-                              : service.items.length,
-                          itemBuilder: (context, index) {
-                            if (index < service.items.length) {
-                              final item = service.items[index];
+        CustomSearchBar(
+          handleSearchChange: widget.handleSearch,
+          showFilter: _openFilter,
+          isFiltered: widget.isFiltered,
+        ),
+        Expanded(
+          child: widget.firstLoading
+              ? const Center(child: CircularProgressIndicator())
+              : widget.dataList.isEmpty
+                  ? const Center(child: Text('No Data'))
+                  : Stack(
+                      children: [
+                        RefreshIndicator(
+                          onRefresh: () async {
+                            widget.handleRefetch();
+                          },
+                          child: ListView.separated(
+                            controller: _scrollController,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding: const EdgeInsets.all(8),
+                            itemCount: widget.dataList.length +
+                                (widget.hasMore ? 1 : 0),
+                            itemBuilder: (context, index) {
+                              if (index == widget.dataList.length) {
+                                // Show loader only if hasMore = true
+                                return const Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
+                                );
+                              }
+
+                              final item = widget.dataList[index];
                               return GestureDetector(
-                                onTap: widget.canUpdate == true
-                                    ? () => widget.onForm?.call(context, item)
-                                    : null,
+                                onTap: () =>
+                                    widget.onItemTap?.call(context, item),
                                 child: widget.itemBuilder(item),
                               );
-                            } else {
-                              return const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            }
-                          },
-                          separatorBuilder: (context, index) => SizedBox(
-                            height: 16,
+                            },
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 16),
                           ),
-                        ));
-            },
-          ),
+                        ),
+                        if (widget.canCreate!)
+                          Positioned(
+                            bottom: 16,
+                            right: 16,
+                            child: CustomFloatingButton(
+                              onPressed: () =>
+                                  widget.onForm?.call(context, null),
+                              icon: const Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                size: 48,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
         ),
-        if (widget.canCreate == true)
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: CustomFloatingButton(
-                onPressed: () => widget.onForm?.call(context, null),
-                icon: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 48,
-                )),
-          )
       ],
     );
   }

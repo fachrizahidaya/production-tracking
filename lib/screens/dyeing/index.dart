@@ -92,11 +92,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
       });
     }
 
-    // String newPage = (int.parse(params['page']!) + 1).toString();
-    // setState(() {
-    //   params['page'] = newPage;
-    // });
-
     final currentPage = int.parse(params['page']!);
 
     List<Dyeing> loadData =

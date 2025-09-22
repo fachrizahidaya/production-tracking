@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:production_tracking/components/master/layout/custom_badge.dart';
 import 'package:production_tracking/components/master/layout/custom_card.dart';
 import 'package:production_tracking/helpers/util/padding_column.dart';
-import 'package:production_tracking/helpers/util/separated_column.dart';
 import 'package:production_tracking/models/option/option_unit.dart';
 import 'package:production_tracking/models/process/dyeing.dart';
 
@@ -38,15 +37,13 @@ class ItemDyeing extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  // flex: 1,
                   child: Text(
-                    ' ${NumberFormat("#,###").format(int.parse(
+                    '${NumberFormat("#,###").format(int.parse(
                       item.qty!,
                     ))} $unitLabel',
                   ),
                 ),
                 Expanded(
-                  // flex: 1,
                   child: Text(
                     DateFormat("dd MMM yyyy HH:mm").format(DateTime.parse(
                       item.start_time!,

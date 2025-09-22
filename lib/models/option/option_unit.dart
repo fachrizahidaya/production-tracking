@@ -7,23 +7,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class OptionUnit {
-  // final int? id;
-  // final String? code;
-  // final String? name;
   final int? value;
   final String? label;
 
-  OptionUnit(
-      {
-      // this.id, required this.name, this.code,
-      this.value,
-      this.label});
+  OptionUnit({this.value, this.label});
 
   factory OptionUnit.fromJson(Map<String, dynamic> json) {
     return OptionUnit(
-      // id: json['id'] as int,
-      // name: json['name'] ?? '',
-      // code: json['code'] ?? '',
       value: json['value'] as int,
       label: json['label'] ?? '',
     );
@@ -31,9 +21,6 @@ class OptionUnit {
 
   Map<String, dynamic> toJson() {
     return {
-      // 'id': id,
-      // 'code': code,
-      // 'name': name,
       'value': value,
       'label': label,
     };
@@ -261,13 +248,6 @@ class OptionUnitService extends BaseService<OptionUnit> {
         _units.clear();
         _units.addAll(newUnits);
         _hasMoreData = false;
-
-        // if (newUnits.length < _itemsPerPage) {
-        //   _hasMoreData = false;
-        // }
-
-        // _units.addAll(newUnits);
-        // _currentPage++;
       } else {
         throw Exception('Failed to load units');
       }

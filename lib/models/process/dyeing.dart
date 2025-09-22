@@ -34,17 +34,17 @@ class Dyeing {
 
   factory Dyeing.fromJson(Map<String, dynamic> json) {
     return Dyeing(
-      id: json['id'] as int,
-      unit_id: json['id'] as int,
-      dyeing_no: json['dyeing_no'] ?? '',
-      start_time: json['start_time'] ?? '',
-      end_time: json['end_time'] ?? '',
-      qty: json['qty'] ?? '',
-      width: json['width'] ?? '',
-      length: json['length'] ?? '',
-      status: json['status'] ?? '',
-      rework: json['rework'] as bool?,
-    );
+        id: json['id'] as int,
+        unit_id: json['unit_id'] as int,
+        dyeing_no: json['dyeing_no'] ?? '',
+        start_time: json['start_time'] ?? '',
+        end_time: json['end_time'] ?? '',
+        qty: json['qty'] ?? '',
+        width: json['width'] ?? '',
+        length: json['length'] ?? '',
+        status: json['status'] ?? '',
+        rework: json['rework'] as bool?,
+        notes: json['notes'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -71,17 +71,17 @@ class DyeingService extends BaseService<Dyeing> {
   int _currentPage = 1;
   final int _itemsPerPage = 20;
   // final List<Dyeing> _dyeings = [];
-  // List<dynamic> _dataList = [];
+  List<dynamic> _dataList = [];
   // List<dynamic> _dataListOpen = [];
-  // final List<dynamic> _dataView = [];
+  Map<String, dynamic> _dataView = {};
   // final List<dynamic> _listOption = [];
 
   bool get isLoading => _isLoading;
   bool get hasMoreData => _hasMoreData;
   // List<Dyeing> get dyeings => _dyeings;
-  // List get dataView => _dataView;
-  // List<dynamic> get dataList => _dataList;
+  List<dynamic> get dataList => _dataList;
   // List<dynamic> get dataListOpen => _dataListOpen;
+  Map<String, dynamic> get dataView => _dataView;
   // List<dynamic> get listOption => _listOption;
 
   @override
@@ -143,6 +143,63 @@ class DyeingService extends BaseService<Dyeing> {
     } finally {
       isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> getDataView(id) async {
+    final url = Uri.parse('$baseUrl/$id');
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token').toString();
+
+    try {
+      _dataView = {};
+      notifyListeners();
+
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
+
+      final responseData = json.decode(response.body);
+      switch (response.statusCode) {
+        case 200:
+          if (responseData != null) {
+            _dataView = responseData as Map<String, dynamic>;
+          }
+          notifyListeners();
+          break;
+        default:
+          throw responseData['message'];
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Dyeing>> getDataList(Map<String, String> params) async {
+    final url = Uri.parse(baseUrl).replace(queryParameters: params);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token').toString();
+
+    try {
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
+
+      final responseData = jsonDecode(response.body);
+
+      switch (response.statusCode) {
+        case 200:
+          if (responseData['data'] != null) {
+            return (responseData['data'] as List)
+                .map((item) => Dyeing.fromJson(item))
+                .toList();
+          }
+          return [];
+        default:
+          throw responseData['message'];
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 

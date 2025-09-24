@@ -70,19 +70,13 @@ class DyeingService extends BaseService<Dyeing> {
   bool _hasMoreData = true;
   int _currentPage = 1;
   final int _itemsPerPage = 20;
-  // final List<Dyeing> _dyeings = [];
   List<dynamic> _dataList = [];
-  // List<dynamic> _dataListOpen = [];
   Map<String, dynamic> _dataView = {};
-  // final List<dynamic> _listOption = [];
 
   bool get isLoading => _isLoading;
   bool get hasMoreData => _hasMoreData;
-  // List<Dyeing> get dyeings => _dyeings;
   List<dynamic> get dataList => _dataList;
-  // List<dynamic> get dataListOpen => _dataListOpen;
   Map<String, dynamic> get dataView => _dataView;
-  // List<dynamic> get listOption => _listOption;
 
   @override
   Future<void> fetchItems(

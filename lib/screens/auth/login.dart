@@ -87,6 +87,11 @@ class _LoginState extends State<Login> {
           // final String userId = response['user_id'].toString();
           // final String name = response['name'] ?? '';
 
+          // StoreProvider.of<AppState>(context)
+          //     .dispatch(LoginAction(username, token));
+
+          // final menus = await MenuService().handleFetchMenu();
+
           await Storage.instance.insertUserData(response);
           await MenuService().handleFetchMenu();
           SharedPreferences prefs = await SharedPreferences.getInstance();

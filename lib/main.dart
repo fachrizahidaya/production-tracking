@@ -18,22 +18,35 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => UserProvider()),
-    ChangeNotifierProvider(create: (_) => DyeingService()),
-    ChangeNotifierProvider(create: (_) => UnitService()),
-    ChangeNotifierProvider(create: (_) => OptionUnitService()),
-    ChangeNotifierProvider(create: (_) => OptionMachineService()),
-    ChangeNotifierProvider(create: (_) => OptionOperatorService()),
-  ], child: const MyApp()));
+  // final store = Store(appReducer, initialState: AppState.initial());
+  runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => DyeingService()),
+        ChangeNotifierProvider(create: (_) => UnitService()),
+        ChangeNotifierProvider(create: (_) => OptionUnitService()),
+        ChangeNotifierProvider(create: (_) => OptionMachineService()),
+        ChangeNotifierProvider(create: (_) => OptionOperatorService()),
+      ],
+      child: MyApp(
+          // store: store
+          )));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // final Store<AppState> store;
+  const MyApp({
+    super.key,
+    // required this.store
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return
+        // StoreProvider<AppState>(
+        //     store: store,
+        //     child:
+        MaterialApp(
       title: 'Production Tracking',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -74,5 +87,6 @@ class MyApp extends StatelessWidget {
         // '/packings': (context) => const (),
       },
     );
+    // );
   }
 }

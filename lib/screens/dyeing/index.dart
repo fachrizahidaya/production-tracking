@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:production_tracking/components/dyeing/item_dyeing.dart';
 import 'package:production_tracking/components/master/filter/list_filter.dart';
 import 'package:production_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:production_tracking/components/master/layout/custom_list.dart';
+import 'package:production_tracking/components/master/layout/main_list.dart';
 import 'package:production_tracking/helpers/util/margin_card.dart';
 import 'package:production_tracking/models/option/option_unit.dart';
 import 'package:production_tracking/models/process/dyeing.dart';
+import 'package:production_tracking/screens/auth/user_menu.dart';
 import 'package:production_tracking/screens/dyeing/%5Bdyeing_id%5D.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,8 @@ class DyeingScreen extends StatefulWidget {
 class _DyeingScreenState extends State<DyeingScreen> {
   String _searchQuery = '';
   final OptionUnitService _unitService = OptionUnitService();
+  final MenuService _menuService = MenuService();
+  final UserMenu _userMenu = UserMenu();
   bool _isFiltered = false;
   bool avaiableCreate = false;
   bool _firstLoading = true;
@@ -26,6 +29,8 @@ class _DyeingScreenState extends State<DyeingScreen> {
 
   bool _isLoadMore = true;
   bool _hasMore = true;
+  bool _canRead = false;
+  bool _canCreate = false;
   String _search = '';
   int page = 0;
   Map<String, String> params = {'search': '', 'page': '0'};
@@ -40,6 +45,21 @@ class _DyeingScreenState extends State<DyeingScreen> {
     Future.delayed(Duration.zero, () {
       _loadMore();
     });
+    _intializeMenus();
+  }
+
+  Future<void> _intializeMenus() async {
+    try {
+      await _menuService.handleFetchMenu();
+      await _userMenu.handleLoadMenu();
+
+      setState(() {
+        _canRead = _userMenu.checkMenu('Pencelupan (Dyeing)', 'read');
+        _canCreate = _userMenu.checkMenu('Pencelupan (Dyeing)', 'create');
+      });
+    } catch (e) {
+      throw Exception('Error initializing menus: $e');
+    }
   }
 
   Future<void> _handleSearch(String value) async {
@@ -148,14 +168,15 @@ class _DyeingScreenState extends State<DyeingScreen> {
         child: Column(
           children: [
             Expanded(
-                child: CustomList(
+                child: MainList(
               fetchData: (params) async {
                 return await Provider.of<DyeingService>(context, listen: false)
                     .getDataList(params);
               },
               service: DyeingService(),
-              searchQuery: _searchQuery,
-              canCreate: true,
+              searchQuery: _search,
+              canCreate: _canCreate,
+              canRead: _canRead,
               canUpdate: null,
               itemBuilder: (item) => ItemDyeing(
                 item: item,

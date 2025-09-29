@@ -144,33 +144,38 @@ class _LoginState extends State<Login> {
         isPortrait ? size.height * 0.5 : size.height * 0.8;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFEBEBEB),
-      body: Center(
-        child: Container(
-            width: dockWidth,
-            height: dockHeight,
-            padding: PaddingColumn.screen,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 6,
-                    offset: const Offset(0, 3),
-                  )
-                ]),
-            child: LoginForm(
-              key: _key,
-              username: _username,
-              password: _password,
-              isDisabled: !_isFormValid,
-              isLoading: _isLoading,
-              handlePress: () {
-                _handleSubmit(context);
-              },
-            )),
-      ),
-    );
+        backgroundColor: const Color(0xFFEBEBEB),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          behavior: HitTestBehavior.opaque,
+          child: Center(
+            child: Container(
+                width: dockWidth,
+                height: dockHeight,
+                padding: PaddingColumn.screen,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      )
+                    ]),
+                child: LoginForm(
+                  key: _key,
+                  username: _username,
+                  password: _password,
+                  isDisabled: !_isFormValid,
+                  isLoading: _isLoading,
+                  handlePress: () {
+                    _handleSubmit(context);
+                  },
+                )),
+          ),
+        ));
   }
 }

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:production_tracking/helpers/auth/auth_check.dart';
 import 'package:production_tracking/models/master/unit.dart';
+import 'package:production_tracking/models/option/option_dyeing.dart';
 import 'package:production_tracking/models/option/option_machine.dart';
 import 'package:production_tracking/models/option/option_operator.dart';
 import 'package:production_tracking/models/option/option_unit.dart';
+import 'package:production_tracking/models/option/option_work_order.dart';
 import 'package:production_tracking/models/process/dyeing.dart';
 import 'package:production_tracking/providers/user_provider.dart';
 import 'package:production_tracking/screens/dyeing/index.dart';
@@ -27,6 +29,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => OptionUnitService()),
         ChangeNotifierProvider(create: (_) => OptionMachineService()),
         ChangeNotifierProvider(create: (_) => OptionOperatorService()),
+        ChangeNotifierProvider(create: (_) => OptionWorkOrderService()),
+        ChangeNotifierProvider(create: (_) => OptionDyeingService()),
       ],
       child: MyApp(
           // store: store
@@ -47,7 +51,7 @@ class MyApp extends StatelessWidget {
         //     store: store,
         //     child:
         MaterialApp(
-      title: 'Production Tracking',
+      title: 'Textile Tracking',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         appBarTheme: const AppBarTheme(

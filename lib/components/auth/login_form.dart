@@ -40,7 +40,7 @@ class _LoginFormState extends State<LoginForm> {
                 fit: BoxFit.contain,
               ),
               Text(
-                'Production Tracking',
+                'Textile Tracking',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),

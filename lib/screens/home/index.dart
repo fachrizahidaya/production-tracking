@@ -129,7 +129,7 @@ class _HomeState extends State<Home> {
 
           return Scaffold(
             appBar: CustomAppBar(
-              title: 'Production Tracking',
+              title: 'Textile Tracking',
               isWithNotification: true,
             ),
             drawer: AppDrawer(

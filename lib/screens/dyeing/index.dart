@@ -83,7 +83,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
     if (
         // params['dari_tanggal'] == null &&
         //   params['sampai_tanggal'] == null &&
-        params['mesin_id'] == null && params['status'] == null) {
+        params['machine_id'] == null && params['status'] == null) {
       setState(() {
         _isFiltered = false;
       });
@@ -156,6 +156,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFEBEBEB),
       appBar: CustomAppBar(
         title: 'Dyeing',
         onReturn: () {
@@ -164,7 +165,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
       ),
       body: Container(
         padding: MarginCard.screen,
-        color: const Color(0xFFEBEBEB),
         child: Column(
           children: [
             Expanded(

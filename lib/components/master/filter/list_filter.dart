@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/form/select_form.dart';
+import 'package:production_tracking/components/master/form/filter_select_form.dart';
 import 'package:production_tracking/helpers/util/margin_card.dart';
 import 'package:production_tracking/helpers/util/padding_column.dart';
 import 'package:production_tracking/helpers/util/separated_column.dart';
@@ -95,8 +95,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
     dariTanggalInput.text = widget.params['dari_tanggal'] ?? '';
     sampaiTanggalInput.text = widget.params['sampai_tanggal'] ?? '';
 
-    if (widget.params['mesin_id'] != null) {
-      final activeMachines = widget.params['mesin_id'].split(',');
+    if (widget.params['machine_id'] != null) {
+      final activeMachines = widget.params['machine_id'].split(',');
       selectedMachines = machineOption
           .where((m) => activeMachines.contains(m['value'].toString()))
           .toList()
@@ -148,7 +148,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SelectForm(
+                    FilterSelectForm(
                         label: "Mesin",
                         onTap: () async {
                           final result =
@@ -183,7 +183,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                             setState(() {
                               selectedMachines = result;
                             });
-                            widget.onHandleFilter("status",
+                            widget.onHandleFilter("machine_id",
                                 result.map((e) => e['value']).join(","));
                           }
                         },
@@ -194,7 +194,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                             selectedMachines.remove(item);
                           });
                           widget.onHandleFilter(
-                              "status",
+                              "machine_id",
                               selectedStatuses
                                   .map((e) => e['value'])
                                   .join(","));
@@ -203,10 +203,10 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                           setState(() {
                             selectedMachines.clear();
                           });
-                          widget.onHandleFilter("status", "");
+                          widget.onHandleFilter("machine_id", "");
                         },
                         onSelectionChanged: (selected) {
-                          widget.onHandleFilter("mesin_id",
+                          widget.onHandleFilter("machine_id",
                               selected.map((e) => e['value']).join(","));
                         }),
                   ],
@@ -325,7 +325,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                 //     width: 16,
                 //   )),
                 // ),
-                SelectForm(
+                FilterSelectForm(
                   label: "Status",
                   onTap: () async {
                     final result = await showDialog<List<Map<String, dynamic>>>(

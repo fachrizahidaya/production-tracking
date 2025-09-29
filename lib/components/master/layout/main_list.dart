@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:production_tracking/components/master/button/custom_floating_button.dart';
 import 'package:production_tracking/components/master/layout/custom_search_bar.dart';
 import 'package:production_tracking/helpers/service/base_service.dart';
+import 'package:production_tracking/screens/dyeing/create_dyeing.dart';
 
 class MainList<T> extends StatefulWidget {
   final BaseService<T> service;
@@ -135,8 +136,12 @@ class _MainListState<T> extends State<MainList<T>> {
                                 bottom: 16,
                                 right: 16,
                                 child: CustomFloatingButton(
-                                  onPressed: () =>
-                                      widget.onForm?.call(context, null),
+                                  onPressed: () => Navigator.of(context)
+                                      .push(MaterialPageRoute(
+                                    builder: (context) => CreateDyeing(),
+                                  ))
+                                  //     widget.onForm?.call(context, null)
+                                  ,
                                   icon: const Icon(
                                     Icons.add,
                                     color: Colors.white,

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:production_tracking/helpers/auth/auth_check.dart';
 import 'package:production_tracking/models/master/unit.dart';
+import 'package:production_tracking/models/option/option_dyeing.dart';
 import 'package:production_tracking/models/option/option_machine.dart';
 import 'package:production_tracking/models/option/option_operator.dart';
 import 'package:production_tracking/models/option/option_unit.dart';
+import 'package:production_tracking/models/option/option_work_order.dart';
 import 'package:production_tracking/models/process/dyeing.dart';
 import 'package:production_tracking/providers/user_provider.dart';
 import 'package:production_tracking/screens/dyeing/index.dart';
@@ -18,23 +20,38 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => UserProvider()),
-    ChangeNotifierProvider(create: (_) => DyeingService()),
-    ChangeNotifierProvider(create: (_) => UnitService()),
-    ChangeNotifierProvider(create: (_) => OptionUnitService()),
-    ChangeNotifierProvider(create: (_) => OptionMachineService()),
-    ChangeNotifierProvider(create: (_) => OptionOperatorService()),
-  ], child: const MyApp()));
+  // final store = Store(appReducer, initialState: AppState.initial());
+  runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => DyeingService()),
+        ChangeNotifierProvider(create: (_) => UnitService()),
+        ChangeNotifierProvider(create: (_) => OptionUnitService()),
+        ChangeNotifierProvider(create: (_) => OptionMachineService()),
+        ChangeNotifierProvider(create: (_) => OptionOperatorService()),
+        ChangeNotifierProvider(create: (_) => OptionWorkOrderService()),
+        ChangeNotifierProvider(create: (_) => OptionDyeingService()),
+      ],
+      child: MyApp(
+          // store: store
+          )));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // final Store<AppState> store;
+  const MyApp({
+    super.key,
+    // required this.store
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Production Tracking',
+    return
+        // StoreProvider<AppState>(
+        //     store: store,
+        //     child:
+        MaterialApp(
+      title: 'Textile Tracking',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         appBarTheme: const AppBarTheme(
@@ -74,5 +91,6 @@ class MyApp extends StatelessWidget {
         // '/packings': (context) => const (),
       },
     );
+    // );
   }
 }

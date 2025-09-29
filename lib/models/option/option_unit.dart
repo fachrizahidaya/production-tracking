@@ -35,10 +35,12 @@ class OptionUnitService extends BaseService<OptionUnit> {
   int _currentPage = 1;
   final int _itemsPerPage = 20;
   final List<OptionUnit> _units = [];
+  List<dynamic> _dataListOption = [];
 
   bool get isLoading => _isLoading;
   bool get hasMoreData => _hasMoreData;
   List<OptionUnit> get options => _units;
+  List<dynamic> get dataListOption => _dataListOption;
 
   @override
   Future<void> fetchItems(
@@ -248,6 +250,58 @@ class OptionUnitService extends BaseService<OptionUnit> {
         _units.clear();
         _units.addAll(newUnits);
         _hasMoreData = false;
+      } else {
+        throw Exception('Failed to load units');
+      }
+    } catch (e) {
+      throw Exception('Error fetching units: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> getDataListOption({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
+
+    if (isInitialLoad) {
+      _currentPage = 1;
+      _hasMoreData = true;
+      _units.clear();
+    }
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http
+          .get(Uri.parse('${dotenv.env['API_URL_DEV']}/unit/option'), headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListOption = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
       } else {
         throw Exception('Failed to load units');
       }

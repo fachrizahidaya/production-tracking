@@ -18,10 +18,7 @@ class DyeingDetail extends StatefulWidget {
 }
 
 class _DyeingDetailState extends State<DyeingDetail> {
-  String _searchQuery = '';
   final DyeingService _dyeingService = DyeingService();
-  bool _isFiltered = false;
-  bool avaiableCreate = false;
   bool _firstLoading = true;
   final List<dynamic> _dataList = [];
 
@@ -34,57 +31,34 @@ class _DyeingDetailState extends State<DyeingDetail> {
   Map<String, dynamic> data = {};
 
   Future<void> _getDataView() async {
+    setState(() {
+      _firstLoading = true;
+    });
+
     await _dyeingService.getDataView(widget.id);
 
     setState(() {
       data = _dyeingService.dataView;
+      _firstLoading = false;
     });
   }
 
-  void _handleChangeSearch(String value) {
+  Future<void> _refetch() async {
+    // Future.delayed(Duration.zero, () {
+    //   setState(() {
+    //     params = {'search': _search, 'page': '0'};
+    //   });
+    //   _loadMore();
+    // });
     setState(() {
-      _searchQuery = value;
+      _firstLoading = true;
     });
-    _dyeingService.fetchItems(isInitialLoad: true, searchQuery: _searchQuery);
-  }
 
-  Future<void> _handleFilter(key, value) async {
+    await _dyeingService.getDataView(widget.id);
+
     setState(() {
-      params['page'] = '0';
-      if (value.toString() != '') {
-        params[key.toString()] = value.toString();
-      } else {
-        params.remove(key.toString());
-      }
-    });
-
-    if (params['dari_tanggal'] == null &&
-        params['sampai_tanggal'] == null &&
-        params['pemasok_id'] == null &&
-        params['status'] == null) {
-      setState(() {
-        _isFiltered = false;
-      });
-    } else {
-      setState(() {
-        _isFiltered = true;
-      });
-    }
-
-    _loadMore();
-  }
-
-  Future<void> _submitFilter() async {
-    Navigator.pop(context);
-    _loadMore();
-  }
-
-  _refetch() {
-    Future.delayed(Duration.zero, () {
-      setState(() {
-        params = {'search': _search, 'page': '0'};
-      });
-      _loadMore();
+      data = _dyeingService.dataView;
+      _firstLoading = false;
     });
   }
 
@@ -121,6 +95,10 @@ class _DyeingDetailState extends State<DyeingDetail> {
         _dataList.addAll(loadData);
         _firstLoading = false;
         _isLoadMore = false;
+
+        if (loadData.length < 20) {
+          _hasMore = false;
+        }
       });
     }
   }
@@ -152,9 +130,12 @@ class _DyeingDetailState extends State<DyeingDetail> {
                   child: TabBarView(children: [
                 InfoTab(
                   data: data,
+                  isLoading: _firstLoading,
                 ),
                 AttachmentTab(
                   data: data,
+                  refetch: _refetch,
+                  hasMore: _hasMore,
                 )
               ]))
             ],

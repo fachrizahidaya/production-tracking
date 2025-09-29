@@ -40,87 +40,87 @@ class _SelectDialogState extends State<SelectDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: CustomTheme().containerBottomSheetDecoration(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomTheme().horizontalLineBottomSheet(),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 16.0,
-              right: 16,
-              bottom: 16,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.label.toString(),
-                  style: TextStyle(
-                    fontSize: CustomTheme().fontSize('xl'),
-                    fontWeight: CustomTheme().fontWeight('bold'),
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                SizedBox(
-                  height: 40,
-                  child: TextFormField(
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.85, // 85% of screen width
+        height:
+            MediaQuery.of(context).size.height * 0.6, // 60% of screen height
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.label.toString(),
                     style: TextStyle(
-                      fontSize: CustomTheme().fontSize('md'),
+                      fontSize: CustomTheme().fontSize('xl'),
+                      fontWeight: CustomTheme().fontWeight('bold'),
                     ),
-                    decoration: CustomTheme().inputDecoration('Pencarian...'),
-                    keyboardType: TextInputType.text,
-                    onChanged: (value) {
-                      _searchDataOption(value);
-                    },
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    height: 40,
+                    child: TextFormField(
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('md'),
+                      ),
+                      decoration: CustomTheme().inputDecoration('Pencarian...'),
+                      keyboardType: TextInputType.text,
+                      onChanged: (value) {
+                        _searchDataOption(value);
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Expanded(
+            Expanded(
               child: Scrollbar(
-            thickness: 4,
-            child: ListView.separated(
-              physics: const AlwaysScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: _dataList.length,
-              itemBuilder: (BuildContext context, index) => GestureDetector(
-                onTap: () {
-                  widget.handleChangeValue(_dataList[index]);
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.all(16),
-                  color: Colors.white,
-                  child: Text(
-                    '${_dataList[index]["label"]}',
-                    style: TextStyle(
-                      fontWeight: _dataList[index]["value"].toString() ==
-                              widget.selected
-                          ? FontWeight.w800
-                          : FontWeight.w400,
-                      color: Colors.black,
-                      fontSize: CustomTheme().fontSize('md'),
+                thickness: 4,
+                child: ListView.separated(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: _dataList.length,
+                  itemBuilder: (BuildContext context, index) => GestureDetector(
+                    onTap: () {
+                      widget.handleChangeValue(_dataList[index]);
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        '${_dataList[index]["label"]}',
+                        style: TextStyle(
+                          fontWeight: _dataList[index]["value"].toString() ==
+                                  widget.selected
+                              ? FontWeight.w800
+                              : FontWeight.w400,
+                          color: Colors.black,
+                          fontSize: CustomTheme().fontSize('md'),
+                        ),
+                      ),
                     ),
                   ),
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const Divider(
+                      height: 0,
+                      thickness: 0.5,
+                    );
+                  },
                 ),
               ),
-              separatorBuilder: (BuildContext context, int index) {
-                return const Divider(
-                  height: 0,
-                  thickness: 0.5,
-                );
-              },
             ),
-          )),
-        ],
+          ],
+        ),
       ),
     );
   }

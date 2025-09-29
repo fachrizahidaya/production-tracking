@@ -4,12 +4,14 @@ class CustomForm extends StatefulWidget {
   final String hintText;
   final bool isPassword;
   final TextEditingController controller;
+  final handleChange;
 
   const CustomForm(
       {super.key,
       required this.hintText,
       this.isPassword = false,
-      required this.controller});
+      required this.controller,
+      this.handleChange});
 
   @override
   State<CustomForm> createState() => _CustomFormState();
@@ -57,7 +59,7 @@ class _CustomFormState extends State<CustomForm> {
       decoration: InputDecoration(
           hintText: widget.hintText,
           hintStyle: TextStyle(color: Colors.grey),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          border: OutlineInputBorder(),
           suffixIcon: renderSuffix()),
       validator: renderValidate,
     );

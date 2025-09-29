@@ -5,7 +5,6 @@ import 'package:production_tracking/components/master/layout/custom_app_bar.dart
 import 'package:production_tracking/components/work-order/attachment_tab.dart';
 import 'package:production_tracking/components/work-order/info_tab.dart';
 import 'package:production_tracking/components/work-order/item_tab.dart';
-import 'package:production_tracking/models/master/spk.dart';
 import 'package:production_tracking/models/master/work_order.dart';
 import 'package:production_tracking/models/option/option_spk.dart';
 import 'package:provider/provider.dart';
@@ -23,12 +22,8 @@ class WorkOrderDetail extends StatefulWidget {
 }
 
 class _WorkOrderDetailState extends State<WorkOrderDetail> {
-  String _searchQuery = '';
   final WorkOrderService _workOrderService = WorkOrderService();
-  final SpkService _spkService = SpkService();
   final OptionSpkService _optionSpkService = OptionSpkService();
-  bool _isFiltered = false;
-  bool avaiableCreate = false;
   bool _firstLoading = true;
   final List<dynamic> _dataList = [];
 
@@ -56,51 +51,22 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
     });
   }
 
-  void _handleChangeSearch(String value) {
+  Future<void> _refetch() async {
+    // await Future.delayed(Duration.zero, () {
+    //   setState(() {
+    //     params = {'search': _search, 'page': '0'};
+    //   });
+    //   _loadMore();
+    // });
     setState(() {
-      _searchQuery = value;
-    });
-    _workOrderService.fetchItems(
-        isInitialLoad: true, searchQuery: _searchQuery);
-  }
-
-  Future<void> _handleFilter(key, value) async {
-    setState(() {
-      params['page'] = '0';
-      if (value.toString() != '') {
-        params[key.toString()] = value.toString();
-      } else {
-        params.remove(key.toString());
-      }
+      _firstLoading = true;
     });
 
-    if (params['dari_tanggal'] == null &&
-        params['sampai_tanggal'] == null &&
-        params['pemasok_id'] == null &&
-        params['status'] == null) {
-      setState(() {
-        _isFiltered = false;
-      });
-    } else {
-      setState(() {
-        _isFiltered = true;
-      });
-    }
+    await _workOrderService.getDataView(widget.id);
 
-    _loadMore();
-  }
-
-  Future<void> _submitFilter() async {
-    Navigator.pop(context);
-    _loadMore();
-  }
-
-  _refetch() {
-    Future.delayed(Duration.zero, () {
-      setState(() {
-        params = {'search': _search, 'page': '0'};
-      });
-      _loadMore();
+    setState(() {
+      data = _workOrderService.dataView;
+      _firstLoading = false;
     });
   }
 
@@ -137,6 +103,10 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
         _dataList.addAll(loadData);
         _firstLoading = false;
         _isLoadMore = false;
+
+        if (loadData.length < 20) {
+          _hasMore = false;
+        }
       });
     }
   }
@@ -174,9 +144,13 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
                   ItemTab(
                     data: data,
                     handleSpk: _getSpkLabel,
+                    refetch: _refetch,
+                    hasMore: _hasMore,
                   ),
                   AttachmentTab(
                     data: data,
+                    refetch: _refetch,
+                    hasMore: _hasMore,
                   )
                 ]))
               ],

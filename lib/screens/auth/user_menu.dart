@@ -19,6 +19,7 @@ class MenuService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<dynamic> menus = data ?? [];
+
         await Storage.instance.insertMenus(menus);
         return menus;
       } else {

@@ -1,4 +1,4 @@
-name: production_tracking
+name: textile_tracking
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -47,7 +47,6 @@ dependencies:
   sqflite: ^2.4.1
   flutter_redux: ^0.10.0
   redux: ^5.0.0
-  mobile_scanner: ^6.0.11
 
 dev_dependencies:
   flutter_test:

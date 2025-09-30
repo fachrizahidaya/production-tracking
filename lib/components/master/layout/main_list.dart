@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/button/custom_floating_button.dart';
-import 'package:production_tracking/components/master/layout/custom_search_bar.dart';
-import 'package:production_tracking/helpers/service/base_service.dart';
-import 'package:production_tracking/screens/dyeing/create_dyeing.dart';
+import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
+import 'package:textile_tracking/components/master/layout/custom_search_bar.dart';
+import 'package:textile_tracking/helpers/service/base_service.dart';
+import 'package:textile_tracking/screens/dyeing/create_dyeing.dart';
 
 class MainList<T> extends StatefulWidget {
   final BaseService<T> service;

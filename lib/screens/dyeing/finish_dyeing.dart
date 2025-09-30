@@ -1,14 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/dyeing/create_form.dart';
-import 'package:production_tracking/components/master/dialog/select_dialog.dart';
-import 'package:production_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:production_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:production_tracking/models/option/option_dyeing.dart';
-import 'package:production_tracking/models/option/option_machine.dart';
-import 'package:production_tracking/models/option/option_unit.dart';
-import 'package:production_tracking/models/option/option_work_order.dart';
-import 'package:production_tracking/models/process/dyeing.dart';
+import 'package:textile_tracking/components/dyeing/create_form.dart';
+import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
+import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/models/option/option_dyeing.dart';
+import 'package:textile_tracking/models/option/option_machine.dart';
+import 'package:textile_tracking/models/option/option_unit.dart';
+import 'package:textile_tracking/models/option/option_work_order.dart';
+import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:provider/provider.dart';
 
 class FinishDyeing extends StatefulWidget {

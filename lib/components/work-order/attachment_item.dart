@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/layout/custom_card.dart';
-import 'package:production_tracking/helpers/util/padding_column.dart';
-import 'package:production_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/components/master/layout/custom_card.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:path/path.dart' as p;
 
 class AttachmentItem extends StatelessWidget {

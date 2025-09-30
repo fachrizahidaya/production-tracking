@@ -1,12 +1,12 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:production_tracking/components/work-order/attachment_tab.dart';
-import 'package:production_tracking/components/work-order/info_tab.dart';
-import 'package:production_tracking/components/work-order/item_tab.dart';
-import 'package:production_tracking/models/master/work_order.dart';
-import 'package:production_tracking/models/option/option_spk.dart';
+import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/components/work-order/attachment_tab.dart';
+import 'package:textile_tracking/components/work-order/info_tab.dart';
+import 'package:textile_tracking/components/work-order/item_tab.dart';
+import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/models/option/option_spk.dart';
 import 'package:provider/provider.dart';
 
 class WorkOrderDetail extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:production_tracking/helpers/util/margin_card.dart';
+import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/helpers/util/margin_card.dart';
 
 class NotificationList extends StatefulWidget {
   const NotificationList({super.key});

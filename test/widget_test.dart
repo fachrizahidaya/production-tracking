@@ -8,8 +8,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:production_tracking/main.dart';
-import 'package:production_tracking/providers/app_state.dart';
+import 'package:textile_tracking/main.dart';
+import 'package:textile_tracking/providers/app_state.dart';
 import 'package:redux/redux.dart';
 
 void main() {

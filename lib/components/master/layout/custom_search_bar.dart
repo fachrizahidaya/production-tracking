@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/helpers/util/margin_search.dart';
+import 'package:textile_tracking/helpers/util/margin_search.dart';
 
 class CustomSearchBar extends StatefulWidget {
   final Function(String) handleSearchChange;

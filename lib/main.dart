@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:production_tracking/helpers/auth/auth_check.dart';
-import 'package:production_tracking/models/master/unit.dart';
-import 'package:production_tracking/models/option/option_dyeing.dart';
-import 'package:production_tracking/models/option/option_machine.dart';
-import 'package:production_tracking/models/option/option_operator.dart';
-import 'package:production_tracking/models/option/option_unit.dart';
-import 'package:production_tracking/models/option/option_work_order.dart';
-import 'package:production_tracking/models/process/dyeing.dart';
-import 'package:production_tracking/providers/user_provider.dart';
-import 'package:production_tracking/screens/dyeing/index.dart';
-import 'package:production_tracking/screens/home/index.dart';
-import 'package:production_tracking/screens/notification/index.dart';
-import 'package:production_tracking/screens/press-tumbler/index.dart';
-import 'package:production_tracking/screens/profile/index.dart';
-import 'package:production_tracking/screens/stenter/index.dart';
+import 'package:textile_tracking/helpers/auth/auth_check.dart';
+import 'package:textile_tracking/models/master/unit.dart';
+import 'package:textile_tracking/models/option/option_dyeing.dart';
+import 'package:textile_tracking/models/option/option_machine.dart';
+import 'package:textile_tracking/models/option/option_operator.dart';
+import 'package:textile_tracking/models/option/option_unit.dart';
+import 'package:textile_tracking/models/option/option_work_order.dart';
+import 'package:textile_tracking/models/process/dyeing.dart';
+import 'package:textile_tracking/providers/user_provider.dart';
+import 'package:textile_tracking/screens/dyeing/index.dart';
+import 'package:textile_tracking/screens/home/index.dart';
+import 'package:textile_tracking/screens/notification/index.dart';
+import 'package:textile_tracking/screens/press-tumbler/index.dart';
+import 'package:textile_tracking/screens/profile/index.dart';
+import 'package:textile_tracking/screens/stenter/index.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
         bottomSheetTheme:
             const BottomSheetThemeData(backgroundColor: Colors.white),
         scaffoldBackgroundColor: Colors.white,
-        cardTheme: const CardTheme(
+        cardTheme: const CardThemeData(
           color: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(8))),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/helpers/auth/storage.dart';
-import 'package:production_tracking/models/master/user.dart';
+import 'package:textile_tracking/helpers/auth/storage.dart';
+import 'package:textile_tracking/models/master/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider with ChangeNotifier {

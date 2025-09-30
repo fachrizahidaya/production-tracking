@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/dialog/confirmation_dialog.dart';
+import 'package:textile_tracking/components/master/dialog/confirmation_dialog.dart';
 
 void showConfirmationDialog(
     {required BuildContext context,

@@ -1,11 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/layout/custom_card.dart';
-import 'package:production_tracking/components/master/text/no_data.dart';
-import 'package:production_tracking/components/master/text/view_text.dart';
-import 'package:production_tracking/helpers/util/padding_column.dart';
-import 'package:production_tracking/helpers/util/separated_column.dart';
-import 'package:production_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
+import 'package:textile_tracking/components/master/layout/custom_card.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
+import 'package:textile_tracking/components/master/text/view_text.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class InfoTab extends StatefulWidget {
   final data;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/layout/tab_list.dart';
-import 'package:production_tracking/components/work-order/list_item.dart';
-import 'package:production_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/master/layout/tab_list.dart';
+import 'package:textile_tracking/components/work-order/list_item.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
 
 class ItemTab extends StatefulWidget {
   final data;

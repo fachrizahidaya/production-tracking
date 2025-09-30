@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/theme.dart';
-import 'package:production_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class TextForm extends StatelessWidget {
   final label;

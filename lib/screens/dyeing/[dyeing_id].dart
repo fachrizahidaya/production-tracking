@@ -1,11 +1,11 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/dyeing/attachment_tab.dart';
-import 'package:production_tracking/components/dyeing/info_tab.dart';
-import 'package:production_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:production_tracking/models/master/work_order.dart';
-import 'package:production_tracking/models/process/dyeing.dart';
+import 'package:textile_tracking/components/dyeing/attachment_tab.dart';
+import 'package:textile_tracking/components/dyeing/info_tab.dart';
+import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:provider/provider.dart';
 
 class DyeingDetail extends StatefulWidget {

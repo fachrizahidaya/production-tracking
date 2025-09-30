@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/home/profile/profle_list.dart';
+import 'package:textile_tracking/components/home/profile/profle_list.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});

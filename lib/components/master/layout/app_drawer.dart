@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/button/form_button.dart';
-import 'package:production_tracking/helpers/util/padding_column.dart';
-import 'package:production_tracking/screens/home/index.dart';
+import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/screens/home/index.dart';
 
 class AppDrawer extends StatefulWidget {
   final Function() handleLogout;

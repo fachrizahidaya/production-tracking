@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/home/dashboard/dasboard_card.dart';
-import 'package:production_tracking/components/master/text/custom_title.dart';
-import 'package:production_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/components/home/dashboard/dasboard_card.dart';
+import 'package:textile_tracking/components/master/text/custom_title.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderStatus extends StatefulWidget {
   const WorkOrderStatus({super.key});

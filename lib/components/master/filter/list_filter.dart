@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/form/filter_select_form.dart';
-import 'package:production_tracking/helpers/util/margin_card.dart';
-import 'package:production_tracking/helpers/util/padding_column.dart';
-import 'package:production_tracking/helpers/util/separated_column.dart';
-import 'package:production_tracking/models/option/option_machine.dart';
-import 'package:production_tracking/models/option/option_operator.dart';
+import 'package:textile_tracking/components/master/form/filter_select_form.dart';
+import 'package:textile_tracking/helpers/util/margin_card.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/models/option/option_machine.dart';
+import 'package:textile_tracking/models/option/option_operator.dart';
 import 'package:provider/provider.dart';
 
 class DropdownConfig<T> {

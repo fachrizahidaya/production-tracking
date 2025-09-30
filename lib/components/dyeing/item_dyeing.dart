@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:production_tracking/components/master/layout/custom_badge.dart';
-import 'package:production_tracking/components/master/layout/custom_card.dart';
-import 'package:production_tracking/helpers/util/padding_column.dart';
-import 'package:production_tracking/models/option/option_unit.dart';
-import 'package:production_tracking/models/process/dyeing.dart';
+import 'package:textile_tracking/components/master/layout/custom_badge.dart';
+import 'package:textile_tracking/components/master/layout/custom_card.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/models/option/option_unit.dart';
+import 'package:textile_tracking/models/process/dyeing.dart';
 
 class ItemDyeing extends StatelessWidget {
   final Dyeing item;

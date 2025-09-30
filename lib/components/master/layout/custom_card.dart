@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/helpers/util/margin_card.dart';
+import 'package:textile_tracking/helpers/util/margin_card.dart';
 
 class CustomCard extends StatelessWidget {
   final Widget child;

@@ -16,6 +16,7 @@ class CreateDyeing extends StatefulWidget {
 class _CreateDyeingState extends State<CreateDyeing> {
   final MobileScannerController _controller = MobileScannerController();
   bool _isLoading = false;
+  int number = 0;
 
   final WorkOrderService _workOrderService = WorkOrderService();
 
@@ -26,6 +27,9 @@ class _CreateDyeingState extends State<CreateDyeing> {
 
     try {
       final scannedId = code;
+      setState(() {
+        number = code;
+      });
 
       await _workOrderService.getDataView(scannedId);
 
@@ -90,7 +94,6 @@ class _CreateDyeingState extends State<CreateDyeing> {
 
                                     if (int.tryParse(code) != null) {
                                       int id = int.parse(code);
-                                      _controller.stop();
                                       _handleScan(
                                           id); // pass int instead of string if your function expects an int
                                     } else {
@@ -110,6 +113,10 @@ class _CreateDyeingState extends State<CreateDyeing> {
                       // flex: 1,
                       child: Column(
                     children: [
+                      Text(
+                        number.toString(),
+                        style: TextStyle(fontSize: 18),
+                      ),
                       Text(
                         "Scan QR Work Order",
                         style: TextStyle(fontSize: 18),

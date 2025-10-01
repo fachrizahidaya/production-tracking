@@ -14,13 +14,12 @@ class CreateDyeing extends StatefulWidget {
 }
 
 class _CreateDyeingState extends State<CreateDyeing> {
-  String? _scannedCode;
   final MobileScannerController _controller = MobileScannerController();
   bool _isLoading = false;
 
   final WorkOrderService _workOrderService = WorkOrderService();
 
-  Future<void> _handleScan(String code) async {
+  Future<void> _handleScan(int code) async {
     setState(() {
       _isLoading = true;
     });
@@ -28,7 +27,6 @@ class _CreateDyeingState extends State<CreateDyeing> {
     try {
       final scannedId = code;
 
-      // fetch data detail from API
       await _workOrderService.getDataView(scannedId);
 
       final data = _workOrderService.dataView;
@@ -37,7 +35,6 @@ class _CreateDyeingState extends State<CreateDyeing> {
         _isLoading = false;
       });
 
-      // navigate to OrderForm and pass the data
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -90,17 +87,18 @@ class _CreateDyeingState extends State<CreateDyeing> {
                                   for (final barcode in barcodes) {
                                     final String code =
                                         barcode.rawValue ?? "---";
-                                    _controller.stop();
-                                    _handleScan(code);
+
+                                    if (int.tryParse(code) != null) {
+                                      int id = int.parse(code);
+                                      _controller.stop();
+                                      _handleScan(
+                                          id); // pass int instead of string if your function expects an int
+                                    } else {
+                                      // Not a number, handle error or ignore
+                                      debugPrint("QR is not a number: $code");
+                                    }
+
                                     break;
-                                    // setState(() {
-                                    //   _scannedCode = code;
-                                    // });
-
-                                    // _controller.stop();
-
-                                    // If you want to auto-close:
-                                    // Navigator.pop(context, code);
                                   }
                                 },
                               ),

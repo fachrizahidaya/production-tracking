@@ -20,7 +20,7 @@ class _CreateDyeingState extends State<CreateDyeing> {
 
   final WorkOrderService _workOrderService = WorkOrderService();
 
-  Future<void> _handleScan(int code) async {
+  Future<void> _handleScan(code) async {
     setState(() {
       _isLoading = true;
     });
@@ -94,8 +94,9 @@ class _CreateDyeingState extends State<CreateDyeing> {
 
                                     if (int.tryParse(code) != null) {
                                       int id = int.parse(code);
+                                      _controller.stop();
                                       _handleScan(
-                                          id); // pass int instead of string if your function expects an int
+                                          code); // pass int instead of string if your function expects an int
                                     } else {
                                       // Not a number, handle error or ignore
                                       debugPrint("QR is not a number: $code");

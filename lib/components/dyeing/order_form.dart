@@ -6,6 +6,7 @@ import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/custom_card.dart';
+import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/helpers/util/margin_search.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -134,12 +135,6 @@ class _OrderFormState extends State<OrderForm> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.id != null && widget.data == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
     return Scaffold(
         backgroundColor: const Color(0xFFEBEBEB),
         appBar: CustomAppBar(
@@ -157,15 +152,46 @@ class _OrderFormState extends State<OrderForm> {
                     padding: PaddingColumn.screen,
                     child: Column(
                       children: [
-                        if (widget.id !=
-                            null) // only show if QR scan / prefilled
-                          Text("Work Order ID: ${widget.data?['id']}"),
-                        SelectForm(
-                            label: 'Work Order',
-                            onTap: () => _selectWorkOrder(),
-                            selectedLabel: _form['no_wo'] ?? '',
-                            selectedValue: _form['wo_id']?.toString() ?? '',
-                            required: false),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (widget.id != null)
+                              ViewText(
+                                  viewLabel: 'Nomor',
+                                  viewValue: widget.data?['wo_no']),
+                            ViewText(
+                                viewLabel: 'User',
+                                viewValue: widget.data?['user']?['name']),
+                            ViewText(
+                                viewLabel: 'Tanggal',
+                                viewValue: widget.data?['wo_date'] != null
+                                    ? DateFormat("dd MMM yyyy").format(
+                                        DateTime.parse(widget.data?['wo_date']))
+                                    : '-'),
+                            ViewText(
+                                viewLabel: 'Catatan',
+                                viewValue: widget.data?['notes']),
+                            ViewText(
+                                viewLabel: 'Jumlah Greige',
+                                viewValue: widget.data?['greige_qty'] != null &&
+                                        widget.data!['greige_qty']
+                                            .toString()
+                                            .isNotEmpty
+                                    ? '${NumberFormat("#,###.#").format(double.tryParse(widget.data!['greige_qty'].toString()) ?? 0)} ${widget.data!['greige_unit']?['code'] ?? ''}'
+                                    : '-'),
+                            ViewText(
+                                viewLabel: 'Status',
+                                viewValue: widget.data?['status'])
+                          ],
+                        ),
+                        if (widget.data == null)
+                          SelectForm(
+                              label: 'Work Order',
+                              onTap: () => _selectWorkOrder(),
+                              selectedLabel: _form['no_wo'] ?? '',
+                              selectedValue: _form['wo_id']?.toString() ?? '',
+                              required: false),
                         SelectForm(
                             label: 'Mesin',
                             onTap: () => _selectMachine(),

@@ -16,6 +16,7 @@ class CreateDyeing extends StatefulWidget {
 class _CreateDyeingState extends State<CreateDyeing> {
   final MobileScannerController _controller = MobileScannerController();
   bool _isLoading = false;
+  bool _isScannerStopped = false;
   int number = 0;
 
   final WorkOrderService _workOrderService = WorkOrderService();
@@ -27,9 +28,6 @@ class _CreateDyeingState extends State<CreateDyeing> {
 
     try {
       final scannedId = code;
-      setState(() {
-        number = code;
-      });
 
       await _workOrderService.getDataView(scannedId);
 
@@ -44,7 +42,7 @@ class _CreateDyeingState extends State<CreateDyeing> {
         MaterialPageRoute(
           builder: (context) => OrderForm(
             id: scannedId,
-            data: data, // pass full data here
+            data: data,
           ),
         ),
       );
@@ -83,57 +81,69 @@ class _CreateDyeingState extends State<CreateDyeing> {
                             width: scanSize,
                             height: scanSize,
                             child: ClipRRect(
-                              child: MobileScanner(
-                                controller: _controller,
-                                onDetect: (BarcodeCapture capture) {
-                                  final List<Barcode> barcodes =
-                                      capture.barcodes;
-                                  for (final barcode in barcodes) {
-                                    final String code =
-                                        barcode.rawValue ?? "---";
+                                child: Stack(
+                              children: [
+                                MobileScanner(
+                                  controller: _controller,
+                                  onDetect: (BarcodeCapture capture) {
+                                    final List<Barcode> barcodes =
+                                        capture.barcodes;
+                                    for (final barcode in barcodes) {
+                                      final String code =
+                                          barcode.rawValue ?? "---";
 
-                                    if (int.tryParse(code) != null) {
-                                      int id = int.parse(code);
-                                      _controller.stop();
-                                      _handleScan(
-                                          code); // pass int instead of string if your function expects an int
-                                    } else {
-                                      // Not a number, handle error or ignore
-                                      debugPrint("QR is not a number: $code");
+                                      if (int.tryParse(code) != null) {
+                                        int id = int.parse(code);
+                                        _controller.stop();
+                                        setState(() {
+                                          _isScannerStopped = true;
+                                        });
+                                        _handleScan(id);
+                                      } else {
+                                        debugPrint("QR is not a number: $code");
+                                      }
+
+                                      break;
                                     }
-
-                                    break;
-                                  }
-                                },
-                              ),
-                            ),
+                                  },
+                                ),
+                                if (_isScannerStopped)
+                                  Center(
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.refresh,
+                                        size: 48,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        _controller.start();
+                                        setState(() {
+                                          _isScannerStopped = false;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                              ],
+                            )),
                           );
                         },
                       ))),
                   Expanded(
-                      // flex: 1,
                       child: Column(
                     children: [
-                      Text(
-                        number.toString(),
-                        style: TextStyle(fontSize: 18),
-                      ),
                       Text(
                         "Scan QR Work Order",
                         style: TextStyle(fontSize: 18),
                       ),
                       ElevatedButton.icon(
                         icon: const Icon(Icons.edit),
-                        label: const Text("Fill Form"),
+                        label: const Text("Isi Manual"),
                         onPressed: () async {
                           final result =
                               await Navigator.of(context).push(_createRoute());
 
                           if (result != null && result.isNotEmpty) {
                             _handleScan(result);
-                            // setState(() {
-                            //   _scannedCode = result;
-                            // });
                           }
                         },
                       ),

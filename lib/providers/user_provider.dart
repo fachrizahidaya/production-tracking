@@ -21,21 +21,27 @@ class UserProvider with ChangeNotifier {
 
     if (_token != null) {
       String? username = prefs.getString('username');
+      String? id = prefs.getString('user_id');
 
       if (username != null) {
-        _user = User(username: username, token: token!);
+        _user = User(
+          username: username,
+          id: id!,
+          token: token!,
+        );
       }
       notifyListeners();
     }
   }
 
-  void handleLogin(String username, String token) async {
-    _user = User(username: username, token: token);
+  void handleLogin(String username, String token, String id) async {
+    _user = User(username: username, token: token, id: id);
     _token = token;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', username);
     await prefs.setString('access_token', token);
+    await prefs.setString('user_id', id);
 
     notifyListeners();
   }
@@ -52,6 +58,7 @@ class UserProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('username');
     await prefs.remove('access_token');
+    await prefs.remove('user_id');
 
     await Storage.instance.clearUserData();
     await Storage.instance.clearMenus();

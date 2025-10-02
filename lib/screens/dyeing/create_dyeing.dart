@@ -1,6 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:textile_tracking/components/dyeing/order_form.dart';
+import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/models/process/dyeing.dart';
+import 'package:textile_tracking/providers/user_provider.dart';
+import 'package:textile_tracking/screens/dyeing/order_dyeing.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/helpers/util/margin_search.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -18,8 +23,42 @@ class _CreateDyeingState extends State<CreateDyeing> {
   bool _isLoading = false;
   bool _isScannerStopped = false;
   int number = 0;
+  late final List<dynamic> _addItems = [];
+  final ValueNotifier<bool> _firstLoading = ValueNotifier(false);
 
   final WorkOrderService _workOrderService = WorkOrderService();
+
+  @override
+  void initState() {
+    final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
+    super.initState();
+
+    setState(() {
+      _form['start_by_id'] = loggedInUser?.id;
+    });
+  }
+
+  final Map<String, dynamic> _form = {
+    'wo_id': null,
+    'machine_id': null,
+    'unit_id': null,
+    'rework_reference_id': null,
+    'start_by_id': null,
+    'end_by_id': null,
+    'qty': null,
+    'width': null,
+    'length': null,
+    'notes': '',
+    'rework': null,
+    'status': null,
+    'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+    'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+    'attachments': [],
+    'no_wo': '',
+    'no_dyeing': '',
+    'nama_mesin': '',
+    'nama_satuan': '',
+  };
 
   Future<void> _handleScan(code) async {
     setState(() {
@@ -33,6 +72,9 @@ class _CreateDyeingState extends State<CreateDyeing> {
 
       final data = _workOrderService.dataView;
 
+      _form['wo_id'] = data['id']?.toString();
+      _form['no_wo'] = data['wo_no']?.toString() ?? '';
+
       setState(() {
         _isLoading = false;
       });
@@ -40,9 +82,11 @@ class _CreateDyeingState extends State<CreateDyeing> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => OrderForm(
+          builder: (context) => OrderDyeing(
             id: scannedId,
             data: data,
+            form: _form,
+            handleSubmit: _handleSubmit,
           ),
         ),
       );
@@ -54,6 +98,62 @@ class _CreateDyeingState extends State<CreateDyeing> {
         SnackBar(content: Text("Error: ${e.toString()}")),
       );
     }
+  }
+
+  Future<void> _handleSubmit() async {
+    try {
+      // if (_addItems.isNotEmpty) {
+      final dyeing = Dyeing(
+          wo_id: _form['wo_id'] != null
+              ? int.tryParse(_form['wo_id'].toString())
+              : null,
+          unit_id: _form['unit_id'] != null
+              ? int.tryParse(_form['unit_id'].toString())
+              : null,
+          machine_id: _form['machine_id'] != null
+              ? int.tryParse(_form['machine_id'].toString())
+              : null,
+          rework_reference_id: _form['rework_reference_id'] != null
+              ? int.tryParse(_form['rework_reference_id'].toString())
+              : null,
+          qty: _form['qty'],
+          width: _form['width'],
+          length: _form['length'],
+          notes: _form['notes'],
+          rework: _form['rework'],
+          status: _form['status'],
+          start_time: _form['start_time'],
+          end_time: _form['end_time'],
+          start_by_id: _form['start_by_id'] != null
+              ? int.tryParse(_form['start_by_id'].toString())
+              : null,
+          end_by_id: _form['end_by_id'],
+          attachments: _form['attachments']);
+      await Provider.of<DyeingService>(context, listen: false)
+          .addItem(dyeing, _firstLoading);
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/dyeings',
+        (Route<dynamic> route) => false,
+      );
+
+      // } else {
+      //   showAlertDialog(
+      //       context: context,
+      //       title: 'Failed',
+      //       message: 'Data tidak boleh kosong!');
+      // }
+    } catch (e) {
+      // Navigator.pop(context);
+      showAlertDialog(context: context, title: 'Error', message: e.toString());
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -99,8 +199,6 @@ class _CreateDyeingState extends State<CreateDyeing> {
                                           _isScannerStopped = true;
                                         });
                                         _handleScan(id);
-                                      } else {
-                                        debugPrint("QR is not a number: $code");
                                       }
 
                                       break;
@@ -139,8 +237,8 @@ class _CreateDyeingState extends State<CreateDyeing> {
                         icon: const Icon(Icons.edit),
                         label: const Text("Isi Manual"),
                         onPressed: () async {
-                          final result =
-                              await Navigator.of(context).push(_createRoute());
+                          final result = await Navigator.of(context)
+                              .push(_createRoute(_form, _handleSubmit));
 
                           if (result != null && result.isNotEmpty) {
                             _handleScan(result);
@@ -168,9 +266,14 @@ class _CreateDyeingState extends State<CreateDyeing> {
   }
 }
 
-Route _createRoute() {
+Route _createRoute(dynamic form, handleSubmit) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const OrderForm(),
+    pageBuilder: (context, animation, secondaryAnimation) => OrderDyeing(
+      id: null,
+      data: null,
+      form: form,
+      handleSubmit: handleSubmit,
+    ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);
       const end = Offset.zero;

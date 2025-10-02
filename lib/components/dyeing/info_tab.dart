@@ -54,7 +54,7 @@ class _InfoTabState extends State<InfoTab> {
                                           '-',
                                       item: widget.data['work_orders'],
                                       onItemTap: (context, workOrder) {
-                                        if (workOrder?['id'] != null) {
+                                        if (workOrder['id'] != null) {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -117,19 +117,32 @@ class _InfoTabState extends State<InfoTab> {
                                           : '-',
                                     ),
                                     ViewText(
-                                        viewLabel: 'Panjang',
-                                        viewValue:
-                                            '${NumberFormat("#,###").format(int.parse(widget.data['length'].toString()))} ${widget.data['unit']['code']}'),
+                                      viewLabel: 'Panjang',
+                                      viewValue: widget.data['length'] != null
+                                          ? '${NumberFormat("#,###").format(
+                                              int.tryParse(widget.data['length']
+                                                      .toString()) ??
+                                                  0,
+                                            )} ${widget.data['unit']?['code'] ?? ''}'
+                                          : '-',
+                                    ),
                                     ViewText(
-                                        viewLabel: 'Lebar',
-                                        viewValue:
-                                            '${NumberFormat("#,###").format(int.parse(widget.data['width']))} ${widget.data['unit']['code']}'),
+                                      viewLabel: 'Lebar',
+                                      viewValue: widget.data['width'] != null
+                                          ? '${NumberFormat("#,###").format(
+                                              int.tryParse(widget.data['width']
+                                                      .toString()) ??
+                                                  0,
+                                            )} ${widget.data['unit']?['code'] ?? ''}'
+                                          : '-',
+                                    ),
                                     ViewText(
                                         viewLabel: 'Catatan',
-                                        viewValue: widget.data['notes']),
+                                        viewValue: widget.data['notes'] ?? '-'),
                                     ViewText(
                                         viewLabel: 'Status',
-                                        viewValue: widget.data['status']),
+                                        viewValue:
+                                            widget.data['status'] ?? '-'),
                                   ].separatedBy(SizedBox(
                                     height: 16,
                                   )),

@@ -12,17 +12,17 @@ class ItemDyeing extends StatelessWidget {
 
   const ItemDyeing({super.key, required this.item, required this.unitOptions});
 
-  String _getUnitLabel(int unitId) {
-    final match = unitOptions.firstWhere(
-      (opt) => opt.value == unitId,
-      orElse: () => OptionUnit(value: -1, label: ''),
-    );
-    return match.label ?? '';
-  }
+  // String _getUnitLabel(int unitId) {
+  //   final match = unitOptions.firstWhere(
+  //     (opt) => opt.value == unitId,
+  //     orElse: () => OptionUnit(value: -1, label: ''),
+  //   );
+  //   return match.label ?? '';
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final unitLabel = _getUnitLabel(item.unit_id!);
+    // final unitLabel = _getUnitLabel(item.unit_id!);
 
     return CustomCard(
         child: Padding(
@@ -36,13 +36,13 @@ class ItemDyeing extends StatelessWidget {
                     item.dyeing_no!,
                   ),
                 ),
-                Expanded(
-                  child: Text(
-                    '${NumberFormat("#,###").format(int.parse(
-                      item.qty!,
-                    ))} $unitLabel',
-                  ),
-                ),
+                // Expanded(
+                //   child: Text(
+                //     '${NumberFormat("#,###").format(int.parse(
+                //       item.qty!,
+                //     ))} $unitLabel',
+                //   ),
+                // ),
                 Expanded(
                   child: Text(
                     DateFormat("dd MMM yyyy HH:mm").format(DateTime.parse(

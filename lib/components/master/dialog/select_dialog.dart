@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
 class SelectDialog extends StatefulWidget {
@@ -85,39 +86,45 @@ class _SelectDialogState extends State<SelectDialog> {
               ),
             ),
             Expanded(
-              child: Scrollbar(
-                thickness: 4,
-                child: ListView.separated(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: _dataList.length,
-                  itemBuilder: (BuildContext context, index) => GestureDetector(
-                    onTap: () {
-                      widget.handleChangeValue(_dataList[index]);
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      child: Text(
-                        '${_dataList[index]["label"]}',
-                        style: TextStyle(
-                          fontWeight: _dataList[index]["value"].toString() ==
-                                  widget.selected
-                              ? FontWeight.w800
-                              : FontWeight.w400,
-                          color: Colors.black,
-                          fontSize: CustomTheme().fontSize('md'),
+              child: _dataList.isEmpty
+                  ? Center(
+                      child: NoData(),
+                    )
+                  : Scrollbar(
+                      thickness: 4,
+                      child: ListView.separated(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: _dataList.length,
+                        itemBuilder: (BuildContext context, index) =>
+                            GestureDetector(
+                          onTap: () {
+                            widget.handleChangeValue(_dataList[index]);
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              '${_dataList[index]["label"]}',
+                              style: TextStyle(
+                                fontWeight:
+                                    _dataList[index]["value"].toString() ==
+                                            widget.selected
+                                        ? FontWeight.w800
+                                        : FontWeight.w400,
+                                color: Colors.black,
+                                fontSize: CustomTheme().fontSize('md'),
+                              ),
+                            ),
+                          ),
                         ),
+                        separatorBuilder: (BuildContext context, int index) {
+                          return const Divider(
+                            height: 0,
+                            thickness: 0.5,
+                          );
+                        },
                       ),
                     ),
-                  ),
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const Divider(
-                      height: 0,
-                      thickness: 0.5,
-                    );
-                  },
-                ),
-              ),
             ),
           ],
         ),

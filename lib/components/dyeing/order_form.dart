@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
@@ -172,11 +173,11 @@ class _OrderFormState extends State<OrderForm> {
                             selectedValue:
                                 _form['machine_id']?.toString() ?? '',
                             required: false),
-                        ElevatedButton(
+                        FormButton(
+                          label: 'Simpan',
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: const Text("Simpan"),
                         )
                       ].separatedBy(SizedBox(
                         height: 16,

@@ -148,7 +148,7 @@ class _CreateFormState extends State<CreateForm> {
                   ),
                   FormButton(
                     label: 'Submit',
-                    onPressed: () => widget.handleSubmit,
+                    onPressed: () => widget.handleSubmit(),
                   )
                 ].separatedBy(SizedBox(
                   height: 16,

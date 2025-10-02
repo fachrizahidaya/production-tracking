@@ -245,7 +245,7 @@ class DyeingService extends BaseService<Dyeing> {
         body: jsonEncode(newDyeing.toJson()),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         await refetchItems();
         notifyListeners();
         final responseData = jsonDecode(response.body);

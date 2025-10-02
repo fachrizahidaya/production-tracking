@@ -17,6 +17,8 @@ import 'package:textile_tracking/screens/profile/index.dart';
 import 'package:textile_tracking/screens/stenter/index.dart';
 import 'package:provider/provider.dart';
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
@@ -39,6 +41,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   // final Store<AppState> store;
+
   const MyApp({
     super.key,
     // required this.store
@@ -51,6 +54,7 @@ class MyApp extends StatelessWidget {
         //     store: store,
         //     child:
         MaterialApp(
+      navigatorObservers: [routeObserver],
       title: 'Textile Tracking',
       theme: ThemeData(
         primarySwatch: Colors.blue,

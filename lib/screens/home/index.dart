@@ -128,16 +128,18 @@ class _HomeState extends State<Home> {
           }
 
           return Scaffold(
-            appBar: CustomAppBar(
-              title: 'Textile Tracking',
-              isWithNotification: true,
-            ),
-            drawer: AppDrawer(
-              handleLogout: () => _handleLogout(context),
-              handleFetchMenu: () => _handleFetchMenu(),
-            ),
-            body: _screens[_selectedIndex],
-          );
+              appBar: CustomAppBar(
+                title: 'Textile Tracking',
+                isWithNotification: true,
+              ),
+              drawer: AppDrawer(
+                handleLogout: () => _handleLogout(context),
+                handleFetchMenu: () => _handleFetchMenu(),
+              ),
+              body: Scaffold(
+                backgroundColor: const Color(0xFFEBEBEB),
+                body: _screens[_selectedIndex],
+              ));
         });
   }
 }

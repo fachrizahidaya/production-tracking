@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/attachment_tab.dart';
 import 'package:textile_tracking/components/dyeing/info_tab.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,15 @@ import 'package:provider/provider.dart';
 class DyeingDetail extends StatefulWidget {
   final String id;
   final String no;
-  const DyeingDetail({super.key, required this.id, required this.no});
+  final canDelete;
+  final canUpdate;
+
+  const DyeingDetail(
+      {super.key,
+      required this.id,
+      required this.no,
+      this.canDelete,
+      this.canUpdate});
 
   @override
   State<DyeingDetail> createState() => _DyeingDetailState();
@@ -21,6 +30,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
   final DyeingService _dyeingService = DyeingService();
   bool _firstLoading = true;
   final List<dynamic> _dataList = [];
+  final ValueNotifier<bool> _processLoading = ValueNotifier(false);
 
   bool _isLoadMore = true;
   bool _hasMore = true;
@@ -103,6 +113,33 @@ class _DyeingDetailState extends State<DyeingDetail> {
     }
   }
 
+  Future<void> _handleDelete(id) async {
+    showConfirmationDialog(
+        context: context,
+        onConfirm: () async {
+          try {
+            await Provider.of<DyeingService>(context, listen: false)
+                .deleteItem(id, _processLoading);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Dyeing berhasil dihapus")),
+            );
+
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/dyeings',
+              (Route<dynamic> route) => false,
+            );
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Error: ${e.toString()}")),
+            );
+          }
+        },
+        title: 'Hapus Dyeing',
+        message: 'Anda yakin ingin menghapus Dyeing ${data['dyeing_no']}');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -119,6 +156,10 @@ class _DyeingDetailState extends State<DyeingDetail> {
             onReturn: () {
               Navigator.pop(context);
             },
+            canDelete: widget.canDelete,
+            canUpdate: widget.canUpdate,
+            handleDelete: _handleDelete,
+            id: data['id'],
           ),
           body: Column(
             children: [

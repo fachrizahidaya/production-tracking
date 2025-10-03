@@ -76,6 +76,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
   List<dynamic> statusOption = [
     {'label': 'Completed', 'value': 'Completed'},
     {'label': 'On Progress', 'value': 'On Progress'},
+    {'label': 'Diproses', 'value': 'Diproses'},
+    {'label': 'Selesai', 'value': 'Selesai'},
   ];
 
   @override

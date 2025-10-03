@@ -4,6 +4,7 @@ import 'package:textile_tracking/components/master/layout/custom_search_bar.dart
 import 'package:textile_tracking/helpers/service/base_service.dart';
 import 'package:textile_tracking/screens/dyeing/create_dyeing.dart';
 import 'package:textile_tracking/screens/dyeing/finish_dyeing.dart';
+import 'package:textile_tracking/screens/dyeing/rework_dyeing.dart';
 
 class MainList<T> extends StatefulWidget {
   final BaseService<T> service;
@@ -176,18 +177,22 @@ class _MainListState<T> extends State<MainList<T>> {
                                                 );
                                               },
                                             ),
-                                            // ListTile(
-                                            //   leading: const Icon(Icons.replay_circle_filled, color: Colors.orange),
-                                            //   title: const Text("Rework Dyeing"),
-                                            //   onTap: () {
-                                            //     Navigator.pop(context);
-                                            //     Navigator.of(context).push(
-                                            //       MaterialPageRoute(
-                                            //         builder: (context) => const ReworkDyeing(),
-                                            //       ),
-                                            //     );
-                                            //   },
-                                            // ),
+                                            ListTile(
+                                              leading: const Icon(
+                                                  Icons.replay_circle_filled,
+                                                  color: Colors.orange),
+                                              title:
+                                                  const Text("Rework Dyeing"),
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const ReworkDyeing(),
+                                                  ),
+                                                );
+                                              },
+                                            ),
                                           ],
                                         );
                                       },

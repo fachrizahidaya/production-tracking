@@ -11,13 +11,16 @@ void showBottomSheet(
     VoidCallback? onDelete,
     bool isLoading = false,
     bool isDisabled = false,
-    bool isAllowed = false}) {
+    bool isAllowed = false,
+    bool isDismissible = false,
+    bool isScrollControlled = false}) {
   showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
           borderRadius:
               BorderRadiusDirectional.vertical(top: Radius.circular(8))),
       isScrollControlled: true,
+      isDismissible: true,
       builder: (context) => Padding(
             padding: PaddingColumn.screen,
             child: CustomBottomSheet(

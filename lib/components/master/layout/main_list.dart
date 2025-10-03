@@ -3,6 +3,7 @@ import 'package:textile_tracking/components/master/button/custom_floating_button
 import 'package:textile_tracking/components/master/layout/custom_search_bar.dart';
 import 'package:textile_tracking/helpers/service/base_service.dart';
 import 'package:textile_tracking/screens/dyeing/create_dyeing.dart';
+import 'package:textile_tracking/screens/dyeing/finish_dyeing.dart';
 
 class MainList<T> extends StatefulWidget {
   final BaseService<T> service;
@@ -136,11 +137,66 @@ class _MainListState<T> extends State<MainList<T>> {
                                 bottom: 16,
                                 right: 16,
                                 child: CustomFloatingButton(
-                                  onPressed: () => Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                    builder: (context) => CreateDyeing(),
-                                  ))
-                                  //     widget.onForm?.call(context, null)
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) {
+                                        return Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            ListTile(
+                                              leading: const Icon(Icons.add,
+                                                  color: Colors.blue),
+                                              title:
+                                                  const Text("Create Dyeing"),
+                                              onTap: () {
+                                                Navigator.pop(
+                                                    context); // close bottom sheet
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const CreateDyeing(),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            ListTile(
+                                              leading: const Icon(
+                                                  Icons.check_circle,
+                                                  color: Colors.green),
+                                              title:
+                                                  const Text("Finish Dyeing"),
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const FinishDyeing(),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            // ListTile(
+                                            //   leading: const Icon(Icons.replay_circle_filled, color: Colors.orange),
+                                            //   title: const Text("Rework Dyeing"),
+                                            //   onTap: () {
+                                            //     Navigator.pop(context);
+                                            //     Navigator.of(context).push(
+                                            //       MaterialPageRoute(
+                                            //         builder: (context) => const ReworkDyeing(),
+                                            //       ),
+                                            //     );
+                                            //   },
+                                            // ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                  // () => Navigator.of(context)
+                                  //     .push(MaterialPageRoute(
+                                  //   builder: (context) => CreateDyeing(),
+                                  // ))
                                   ,
                                   icon: const Icon(
                                     Icons.add,

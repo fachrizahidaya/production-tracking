@@ -43,7 +43,7 @@ class _InfoTabState extends State<InfoTab> {
                               : '-'),
                       ViewText(
                           viewLabel: 'Catatan',
-                          viewValue: widget.data?['notes']),
+                          viewValue: widget.data?['notes'] ?? '-'),
                       ViewText(
                           viewLabel: 'Jumlah Greige',
                           viewValue: widget.data['greige_qty'] != null &&
@@ -54,7 +54,7 @@ class _InfoTabState extends State<InfoTab> {
                               : '-'),
                       ViewText(
                           viewLabel: 'Status',
-                          viewValue: widget.data?['status']),
+                          viewValue: widget.data?['status'] ?? '-'),
                     ].separatedBy(SizedBox(
                       height: 16,
                     )),

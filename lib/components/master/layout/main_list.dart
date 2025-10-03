@@ -7,8 +7,8 @@ import 'package:textile_tracking/screens/dyeing/create_dyeing.dart';
 class MainList<T> extends StatefulWidget {
   final BaseService<T> service;
   final String searchQuery;
-  final bool? canUpdate;
   final bool? canCreate;
+  final bool? canDelete;
   final Widget Function(T item) itemBuilder;
   final Future<void> Function(BuildContext context, T? currentItem)? onForm;
   final void Function(BuildContext context, T item)? onItemTap;
@@ -28,7 +28,6 @@ class MainList<T> extends StatefulWidget {
       required this.service,
       required this.searchQuery,
       required this.itemBuilder,
-      this.canUpdate = false,
       this.canCreate = false,
       this.onForm,
       this.onItemTap,
@@ -41,7 +40,8 @@ class MainList<T> extends StatefulWidget {
       this.firstLoading,
       this.hasMore,
       this.isFiltered,
-      this.canRead});
+      this.canRead,
+      this.canDelete});
 
   @override
   State<MainList<T>> createState() => _MainListState<T>();

@@ -35,12 +35,14 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
   int _currentPage = 1;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
+  List<dynamic> _dataListRework = [];
   final List<OptionWorkOrder> _wo = [];
 
   bool get isLoading => _isLoading;
   bool get hasMoreData => _hasMoreData;
   List<dynamic> get listOption => _listOption;
   List<dynamic> get dataListOption => _dataListOption;
+  List<dynamic> get dataListRework => _dataListRework;
   List<OptionWorkOrder> get options => _wo;
 
   @override
@@ -99,6 +101,62 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
           case 200:
             if (decoded['data'] != null) {
               _dataListOption = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
+      } else {
+        throw Exception('Failed to load work order');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchReworkOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
+
+    if (isInitialLoad) {
+      _currentPage = 1;
+      _hasMoreData = true;
+      _wo.clear();
+    }
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/work-order/option')
+              .replace(queryParameters: {
+            'wo_status': 'Diproses',
+            'dyeing_status': 'Selesai',
+          }),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListRework = decoded['data'];
             }
             notifyListeners();
             break;

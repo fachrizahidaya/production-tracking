@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/dyeing/order_dyeing.dart';
@@ -23,14 +24,15 @@ class _CreateDyeingState extends State<CreateDyeing> {
   bool _isLoading = false;
   bool _isScannerStopped = false;
   int number = 0;
-  late final List<dynamic> _addItems = [];
   final ValueNotifier<bool> _firstLoading = ValueNotifier(false);
 
   final WorkOrderService _workOrderService = WorkOrderService();
+  late List<dynamic> workOrderOption = [];
 
   @override
   void initState() {
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
+    _handleFetchWorkOrder();
     super.initState();
 
     setState(() {
@@ -60,13 +62,39 @@ class _CreateDyeingState extends State<CreateDyeing> {
     'nama_satuan': '',
   };
 
+  Future<void> _handleFetchWorkOrder() async {
+    await Provider.of<OptionWorkOrderService>(context, listen: false)
+        .fetchOptions();
+    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
+        .dataListOption;
+
+    setState(() {
+      workOrderOption = result;
+    });
+  }
+
   Future<void> _handleScan(code) async {
     setState(() {
       _isLoading = true;
     });
 
     try {
-      final scannedId = code;
+      final scannedId = code.toString();
+
+      final workOrderExists =
+          workOrderOption.any((item) => item['value'].toString() == scannedId);
+
+      if (!workOrderExists) {
+        setState(() {
+          _isLoading = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Work Order not found")),
+        );
+
+        return;
+      }
 
       await _workOrderService.getDataView(scannedId);
 
@@ -102,7 +130,6 @@ class _CreateDyeingState extends State<CreateDyeing> {
 
   Future<void> _handleSubmit() async {
     try {
-      // if (_addItems.isNotEmpty) {
       final dyeing = Dyeing(
           wo_id: _form['wo_id'] != null
               ? int.tryParse(_form['wo_id'].toString())
@@ -132,27 +159,22 @@ class _CreateDyeingState extends State<CreateDyeing> {
       await Provider.of<DyeingService>(context, listen: false)
           .addItem(dyeing, _firstLoading);
 
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Dyeing berhasil dibuat")),
+      );
+
       Navigator.pushNamedAndRemoveUntil(
         context,
         '/dyeings',
         (Route<dynamic> route) => false,
       );
-
-      // } else {
-      //   showAlertDialog(
-      //       context: context,
-      //       title: 'Failed',
-      //       message: 'Data tidak boleh kosong!');
-      // }
     } catch (e) {
-      // Navigator.pop(context);
       showAlertDialog(context: context, title: 'Error', message: e.toString());
     }
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 

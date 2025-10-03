@@ -18,7 +18,6 @@ class DyeingScreen extends StatefulWidget {
 }
 
 class _DyeingScreenState extends State<DyeingScreen> {
-  String _searchQuery = '';
   final OptionUnitService _unitService = OptionUnitService();
   final MenuService _menuService = MenuService();
   final UserMenu _userMenu = UserMenu();
@@ -27,10 +26,11 @@ class _DyeingScreenState extends State<DyeingScreen> {
   bool _firstLoading = true;
   final List<dynamic> _dataList = [];
 
-  bool _isLoadMore = true;
   bool _hasMore = true;
   bool _canRead = false;
   bool _canCreate = false;
+  bool _canDelete = false;
+  bool _canUpdate = false;
   String _search = '';
   int page = 0;
   Map<String, String> params = {'search': '', 'page': '0'};
@@ -56,6 +56,8 @@ class _DyeingScreenState extends State<DyeingScreen> {
       setState(() {
         _canRead = _userMenu.checkMenu('Pencelupan (Dyeing)', 'read');
         _canCreate = _userMenu.checkMenu('Pencelupan (Dyeing)', 'create');
+        _canDelete = _userMenu.checkMenu('Pencelupan (Dyeing)', 'delete');
+        _canUpdate = _userMenu.checkMenu('Pencelupan (Dyeing)', 'update');
       });
     } catch (e) {
       throw Exception('Error initializing menus: $e');
@@ -102,8 +104,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
   }
 
   Future<void> _loadMore() async {
-    _isLoadMore = true;
-
     if (params['page'] == '0') {
       setState(() {
         _dataList.clear();
@@ -121,14 +121,12 @@ class _DyeingScreenState extends State<DyeingScreen> {
     if (loadData.isEmpty) {
       setState(() {
         _firstLoading = false;
-        _isLoadMore = false;
         _hasMore = false;
       });
     } else {
       setState(() {
         _dataList.addAll(loadData);
         _firstLoading = false;
-        _isLoadMore = false;
 
         params['page'] = (currentPage + 1).toString();
 
@@ -177,7 +175,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
               searchQuery: _search,
               canCreate: _canCreate,
               canRead: _canRead,
-              canUpdate: null,
               itemBuilder: (item) => ItemDyeing(
                 item: item,
                 unitOptions: _unitService.options,
@@ -189,6 +186,8 @@ class _DyeingScreenState extends State<DyeingScreen> {
                       builder: (context) => DyeingDetail(
                         id: item.id.toString(),
                         no: item.dyeing_no.toString(),
+                        canDelete: _canDelete,
+                        canUpdate: _canUpdate,
                       ),
                     )).then((value) {
                   if (value == true) {

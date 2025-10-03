@@ -6,7 +6,7 @@ import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
-import 'package:textile_tracking/screens/dyeing/order_dyeing.dart';
+import 'package:textile_tracking/screens/dyeing/create_dyeing_manual.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/helpers/util/margin_search.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -110,7 +110,7 @@ class _CreateDyeingState extends State<CreateDyeing> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => OrderDyeing(
+          builder: (context) => CreateDyeingManual(
             id: scannedId,
             data: data,
             form: _form,
@@ -233,7 +233,7 @@ class _CreateDyeingState extends State<CreateDyeing> {
                                       icon: const Icon(
                                         Icons.refresh,
                                         size: 48,
-                                        color: Colors.white,
+                                        color: Colors.black,
                                       ),
                                       onPressed: () {
                                         _controller.start();
@@ -290,7 +290,7 @@ class _CreateDyeingState extends State<CreateDyeing> {
 
 Route _createRoute(dynamic form, handleSubmit) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => OrderDyeing(
+    pageBuilder: (context, animation, secondaryAnimation) => CreateDyeingManual(
       id: null,
       data: null,
       form: form,

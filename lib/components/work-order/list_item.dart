@@ -20,14 +20,14 @@ class ListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    handleSpk(item['spk_item']?['spk_id']),
+                    handleSpk(item['spk_item']?['spk_id'] ?? '-'),
                   ),
                   ViewText(
                       viewLabel: 'Name',
-                      viewValue: item['spk_item']?['design']),
+                      viewValue: item['spk_item']?['design'] ?? '-'),
                   ViewText(
                       viewLabel: 'Warna',
-                      viewValue: item['spk_item']?['color']),
+                      viewValue: item['spk_item']?['color'] ?? '-'),
                 ].separatedBy(SizedBox(
                   height: 8,
                 )))));

@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/attachment_tab.dart';
 import 'package:textile_tracking/components/dyeing/info_tab.dart';
@@ -31,6 +32,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
   bool _firstLoading = true;
   final List<dynamic> _dataList = [];
   final ValueNotifier<bool> _processLoading = ValueNotifier(false);
+  final TextEditingController _qtyController = TextEditingController();
 
   bool _isLoadMore = true;
   bool _hasMore = true;
@@ -39,6 +41,34 @@ class _DyeingDetailState extends State<DyeingDetail> {
   Map<String, String> params = {'search': '', 'page': '0'};
 
   Map<String, dynamic> data = {};
+
+  final Map<String, dynamic> _form = {
+    'wo_id': null,
+    'machine_id': null,
+    'unit_id': null,
+    'rework_reference_id': null,
+    'start_by_id': null,
+    'end_by_id': null,
+    'qty': null,
+    'width': null,
+    'length': null,
+    'notes': '',
+    'rework': null,
+    'status': null,
+    'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+    'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+    'attachments': [],
+    'no_wo': '',
+    'no_dyeing': '',
+    'nama_mesin': '',
+    'nama_satuan': '',
+  };
+
+  void _handleChangeInput(fieldName, value) {
+    setState(() {
+      _form[fieldName] = value;
+    });
+  }
 
   Future<void> _getDataView() async {
     setState(() {
@@ -49,6 +79,11 @@ class _DyeingDetailState extends State<DyeingDetail> {
 
     setState(() {
       data = _dyeingService.dataView;
+      if (data['qty'] != null) {
+        _qtyController.text = data['qty'].toString();
+        _form['qty'] = data['qty'];
+      }
+
       _firstLoading = false;
     });
   }
@@ -143,6 +178,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
   @override
   void initState() {
     super.initState();
+    _qtyController.text = _form['qty']?.toString() ?? '';
     _getDataView();
   }
 
@@ -172,6 +208,9 @@ class _DyeingDetailState extends State<DyeingDetail> {
                 InfoTab(
                   data: data,
                   isLoading: _firstLoading,
+                  handleChangeInput: _handleChangeInput,
+                  qty: _qtyController,
+                  form: _form,
                 ),
                 AttachmentTab(
                   data: data,

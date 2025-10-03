@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_card.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
@@ -10,8 +11,17 @@ import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 class InfoTab extends StatefulWidget {
   final data;
   final isLoading;
+  final qty;
+  final form;
+  final handleChangeInput;
 
-  const InfoTab({super.key, this.data, this.isLoading});
+  const InfoTab(
+      {super.key,
+      this.data,
+      this.isLoading,
+      this.qty,
+      this.form,
+      this.handleChangeInput});
 
   @override
   State<InfoTab> createState() => _InfoTabState();
@@ -29,129 +39,138 @@ class _InfoTabState extends State<InfoTab> {
                     child: CircularProgressIndicator(),
                   )
                 : CustomCard(
-                    child: Container(
+                    child: SingleChildScrollView(
                         padding: PaddingColumn.screen,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                            // Row(
+                            //   children: [
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ViewText(
-                                      viewLabel: 'Nomor',
-                                      viewValue: widget.data['dyeing_no']
-                                              ?.toString() ??
+                                ViewText(
+                                  viewLabel: 'Nomor',
+                                  viewValue:
+                                      widget.data['dyeing_no']?.toString() ??
                                           '-',
-                                    ),
-                                    ViewText<Map<String, dynamic>>(
-                                      viewLabel: 'Work Order',
-                                      viewValue: widget.data['work_orders']
-                                                  ?['wo_no']
-                                              ?.toString() ??
-                                          '-',
-                                      item: widget.data['work_orders'],
-                                      onItemTap: (context, workOrder) {
-                                        if (workOrder['id'] != null) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  WorkOrderDetail(
-                                                id: workOrder['id'].toString(),
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                    ViewText(
-                                      viewLabel: 'Tanggal',
-                                      viewValue: widget.data['start_time'] !=
-                                              null
-                                          ? DateFormat("dd MMM yyyy").format(
-                                              DateTime.parse(
-                                                  widget.data['start_time']))
-                                          : '-',
-                                    ),
-                                    ViewText(
-                                      viewLabel: 'Rework',
-                                      viewValue: widget.data['rework'] == true
-                                          ? 'Yes'
-                                          : 'No',
-                                    ),
-                                    ViewText(
-                                      viewLabel: 'Mesin',
-                                      viewValue:
-                                          '${widget.data['machine']?['code'] ?? ''} - ${widget.data['machine']?['name'] ?? ''}',
-                                    ),
-                                    ViewText(
-                                      viewLabel: 'Mulai',
-                                      viewValue: widget.data['start_time'] !=
-                                              null
-                                          ? '${DateFormat("HH:mm").format(DateTime.parse(widget.data['start_time']))} by ${widget.data['start_by']?['name'] ?? '-'}'
-                                          : '-',
-                                    ),
-                                    ViewText(
-                                      viewLabel: 'Selesai',
-                                      viewValue: widget.data['end_time'] != null
-                                          ? '${DateFormat("HH:mm").format(DateTime.parse(widget.data['end_time']))} by ${widget.data['end_by']?['name'] ?? '-'}'
-                                          : '-',
-                                    ),
-                                  ].separatedBy(SizedBox(
-                                    height: 16,
-                                  )),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ViewText(
-                                      viewLabel: 'Jumlah',
-                                      viewValue: widget.data['qty'] != null
-                                          ? NumberFormat("#,###").format(
-                                              int.tryParse(widget.data['qty']
-                                                      .toString()) ??
-                                                  0)
-                                          : '-',
-                                    ),
-                                    ViewText(
-                                      viewLabel: 'Panjang',
-                                      viewValue: widget.data['length'] != null
-                                          ? '${NumberFormat("#,###").format(
-                                              int.tryParse(widget.data['length']
-                                                      .toString()) ??
-                                                  0,
-                                            )} ${widget.data['unit']?['code'] ?? ''}'
-                                          : '-',
-                                    ),
-                                    ViewText(
-                                      viewLabel: 'Lebar',
-                                      viewValue: widget.data['width'] != null
-                                          ? '${NumberFormat("#,###").format(
-                                              int.tryParse(widget.data['width']
-                                                      .toString()) ??
-                                                  0,
-                                            )} ${widget.data['unit']?['code'] ?? ''}'
-                                          : '-',
-                                    ),
-                                    ViewText(
-                                        viewLabel: 'Catatan',
-                                        viewValue: widget.data['notes'] ?? '-'),
-                                    ViewText(
-                                        viewLabel: 'Status',
-                                        viewValue:
-                                            widget.data['status'] ?? '-'),
-                                  ].separatedBy(SizedBox(
-                                    height: 16,
-                                  )),
+                                ViewText<Map<String, dynamic>>(
+                                  viewLabel: 'Work Order',
+                                  viewValue: widget.data['work_orders']
+                                              ?['wo_no']
+                                          ?.toString() ??
+                                      '-',
+                                  item: widget.data['work_orders'],
+                                  onItemTap: (context, workOrder) {
+                                    if (workOrder['id'] != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => WorkOrderDetail(
+                                            id: workOrder['id'].toString(),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                                ViewText(
+                                  viewLabel: 'Tanggal',
+                                  viewValue: widget.data['start_time'] != null
+                                      ? DateFormat("dd MMM yyyy").format(
+                                          DateTime.parse(
+                                              widget.data['start_time']))
+                                      : '-',
+                                ),
+                                ViewText(
+                                  viewLabel: 'Rework',
+                                  viewValue: widget.data['rework'] == true
+                                      ? 'Yes'
+                                      : 'No',
+                                ),
+                                ViewText(
+                                  viewLabel: 'Mesin',
+                                  viewValue:
+                                      '${widget.data['machine']?['code'] ?? ''} - ${widget.data['machine']?['name'] ?? ''}',
+                                ),
+                                ViewText(
+                                  viewLabel: 'Mulai',
+                                  viewValue: widget.data['start_time'] != null
+                                      ? '${DateFormat("HH:mm").format(DateTime.parse(widget.data['start_time']))} by ${widget.data['start_by']?['name'] ?? '-'}'
+                                      : '-',
+                                ),
+                                ViewText(
+                                  viewLabel: 'Selesai',
+                                  viewValue: widget.data['end_time'] != null
+                                      ? '${DateFormat("HH:mm").format(DateTime.parse(widget.data['end_time']))} by ${widget.data['end_by']?['name'] ?? '-'}'
+                                      : '-',
                                 ),
                               ].separatedBy(SizedBox(
-                                width: 80,
+                                height: 16,
                               )),
                             ),
-                          ],
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // ViewText(
+                                //   viewLabel: 'Jumlah',
+                                //   viewValue: widget.data['qty'] != null
+                                //       ? NumberFormat("#,###").format(
+                                //           int.tryParse(widget.data['qty']
+                                //                   .toString()) ??
+                                //               0)
+                                //       : '-',
+                                // ),
+                                TextForm(
+                                  label: 'Jumlah',
+                                  req: false,
+                                  controller: widget.qty,
+                                  handleChange: (value) {
+                                    setState(() {
+                                      widget.qty.text = value.toString();
+                                      widget.handleChangeInput('qty', value);
+                                    });
+                                  },
+                                ),
+                                ViewText(
+                                  viewLabel: 'Panjang',
+                                  viewValue: widget.data['length'] != null
+                                      ? '${NumberFormat("#,###").format(
+                                          int.tryParse(widget.data['length']
+                                                  .toString()) ??
+                                              0,
+                                        )} ${widget.data['unit']?['code'] ?? ''}'
+                                      : '-',
+                                ),
+                                ViewText(
+                                  viewLabel: 'Lebar',
+                                  viewValue: widget.data['width'] != null
+                                      ? '${NumberFormat("#,###").format(
+                                          int.tryParse(widget.data['width']
+                                                  .toString()) ??
+                                              0,
+                                        )} ${widget.data['unit']?['code'] ?? ''}'
+                                      : '-',
+                                ),
+                                ViewText(
+                                    viewLabel: 'Catatan',
+                                    viewValue: widget.data['notes'] ?? '-'),
+                                ViewText(
+                                    viewLabel: 'Status',
+                                    viewValue: widget.data['status'] ?? '-'),
+                              ].separatedBy(SizedBox(
+                                height: 16,
+                              )),
+                            ),
+                            //   ].separatedBy(SizedBox(
+                            //     width: 80,
+                            //   )),
+                            // ),
+                          ].separatedBy(SizedBox(
+                            height: 16,
+                          )),
                         ))),
           )
         : Container(

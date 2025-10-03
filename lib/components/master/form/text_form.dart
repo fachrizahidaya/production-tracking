@@ -51,7 +51,7 @@ class TextForm extends StatelessWidget {
           decoration: CustomTheme().inputDecoration(),
           keyboardType: TextInputType.number,
           onChanged: (value) {
-            handleChange();
+            handleChange(value);
           },
         )
       ].separatedBy(SizedBox(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/item_dyeing.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
@@ -31,7 +33,9 @@ class _DyeingScreenState extends State<DyeingScreen> {
   bool _canCreate = false;
   bool _canDelete = false;
   bool _canUpdate = false;
+  bool _isLoading = false;
   String _search = '';
+  Timer? _debounce;
   int page = 0;
   Map<String, String> params = {'search': '', 'page': '0'};
 
@@ -65,11 +69,14 @@ class _DyeingScreenState extends State<DyeingScreen> {
   }
 
   Future<void> _handleSearch(String value) async {
-    setState(() {
-      params = {'search': value.toString(), 'page': '0'};
-    });
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _loadMore();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      setState(() {
+        params = {'search': value, 'page': '0'};
+      });
+      _loadMore();
+    });
   }
 
   Future<void> _handleFilter(key, value) async {
@@ -104,6 +111,9 @@ class _DyeingScreenState extends State<DyeingScreen> {
   }
 
   Future<void> _loadMore() async {
+    if (_isLoading) return;
+    _isLoading = true;
+
     if (params['page'] == '0') {
       setState(() {
         _dataList.clear();
@@ -114,26 +124,28 @@ class _DyeingScreenState extends State<DyeingScreen> {
 
     final currentPage = int.parse(params['page']!);
 
-    List<Dyeing> loadData =
-        await Provider.of<DyeingService>(context, listen: false)
-            .getDataList(params);
+    try {
+      List<Dyeing> loadData =
+          await Provider.of<DyeingService>(context, listen: false)
+              .getDataList(params);
 
-    if (loadData.isEmpty) {
-      setState(() {
-        _firstLoading = false;
-        _hasMore = false;
-      });
-    } else {
-      setState(() {
-        _dataList.addAll(loadData);
-        _firstLoading = false;
-
-        params['page'] = (currentPage + 1).toString();
-
-        if (loadData.length < 20) {
+      if (loadData.isEmpty) {
+        setState(() {
+          _firstLoading = false;
           _hasMore = false;
-        }
-      });
+        });
+      } else {
+        setState(() {
+          _dataList.addAll(loadData);
+          _firstLoading = false;
+          params['page'] = (currentPage + 1).toString();
+          if (loadData.length < 20) {
+            _hasMore = false;
+          }
+        });
+      }
+    } finally {
+      _isLoading = false;
     }
   }
 
@@ -149,6 +161,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
   @override
   void dispose() {
     super.dispose();
+    _debounce?.cancel();
   }
 
   @override

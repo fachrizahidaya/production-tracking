@@ -26,42 +26,39 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
+    return Center(
         child: SingleChildScrollView(
-          padding: PaddingColumn.screen,
-          child: Form(
-              child: Column(
-            children: [
-              Image.asset(
-                'assets/images/login_logo.png',
-                height: 100,
-                width: 100,
-                fit: BoxFit.contain,
-              ),
-              Text(
-                'Textile Tracking',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              CustomForm(hintText: 'Username', controller: widget.username),
-              CustomForm(
-                hintText: 'Password',
-                controller: widget.password,
-                isPassword: true,
-              ),
-              FormButton(
-                label: 'LOG IN',
-                onPressed: widget.handlePress,
-                isDisabled: widget.isDisabled,
-                isLoading: widget.isLoading,
-              )
-            ].separatedBy(SizedBox(
-              height: 16,
-            )),
-          )),
-        ),
-      ),
-    );
+      padding: PaddingColumn.screen,
+      child: Form(
+          child: Column(
+        children: [
+          Image.asset(
+            'assets/images/login_logo.png',
+            height: 100,
+            width: 100,
+            fit: BoxFit.contain,
+          ),
+          Text(
+            'Textile Tracking',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+          CustomForm(hintText: 'Username', controller: widget.username),
+          CustomForm(
+            hintText: 'Password',
+            controller: widget.password,
+            isPassword: true,
+          ),
+          FormButton(
+            label: 'LOG IN',
+            onPressed: widget.handlePress,
+            isDisabled: widget.isDisabled,
+            isLoading: widget.isLoading,
+          )
+        ].separatedBy(SizedBox(
+          height: 16,
+        )),
+      )),
+    ));
   }
 }

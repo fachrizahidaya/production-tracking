@@ -25,12 +25,12 @@ class _HomeState extends State<Home> {
 
   final List<Widget> _screens = [Dashboard()];
 
-  Future<void> _handleExit(BuildContext context) async {
+  Future<void> _handleExit(
+      BuildContext context, ValueNotifier<bool> isLoading) async {
     String url = '${dotenv.env['API_URL_DEV']}/logout';
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('access_token');
-    final isLoading = ValueNotifier<bool>(false);
 
     if (token != null) {
       try {
@@ -43,6 +43,8 @@ class _HomeState extends State<Home> {
         if (res.statusCode == 200) {
           if (context.mounted) {
             Provider.of<UserProvider>(context, listen: false).handleLogout();
+
+            await Future.delayed(const Duration(milliseconds: 200));
             Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
           } else {
             if (context.mounted) {
@@ -66,9 +68,9 @@ class _HomeState extends State<Home> {
     if (context.mounted) {
       showConfirmationDialog(
           context: context,
-          isLoading: _isLoading.value,
+          isLoading: _isLoading,
           onConfirm: () {
-            _handleExit(context);
+            _handleExit(context, _isLoading);
           },
           title: 'Log Out',
           message: 'Anda yakin ingin keluar aplikasi?');

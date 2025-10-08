@@ -44,18 +44,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             onSelected: (value) {
               final String stringId = id.toString();
 
-              if (value == 'update' && canUpdate == true) {
-                handleUpdate(stringId);
-              } else if (value == 'delete' && canDelete == true) {
+              // if (value == 'update' && canUpdate == true) {
+              //   handleUpdate(stringId);
+              // }
+              if (value == 'delete' && canDelete == true) {
                 handleDelete(stringId);
               }
             },
             itemBuilder: (context) => [
-              if (canUpdate == true)
-                const PopupMenuItem(
-                  value: 'update',
-                  child: Text('Update'),
-                ),
+              // if (canUpdate == true)
+              //   const PopupMenuItem(
+              //     value: 'update',
+              //     child: Text('Update'),
+              //   ),
               if (canDelete == true)
                 const PopupMenuItem(
                   value: 'delete',

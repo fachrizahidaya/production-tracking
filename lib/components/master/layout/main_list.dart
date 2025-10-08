@@ -148,11 +148,9 @@ class _MainListState<T> extends State<MainList<T>> {
                                             ListTile(
                                               leading: const Icon(Icons.add,
                                                   color: Colors.blue),
-                                              title:
-                                                  const Text("Create Dyeing"),
+                                              title: const Text("Buat Dyeing"),
                                               onTap: () {
-                                                Navigator.pop(
-                                                    context); // close bottom sheet
+                                                Navigator.pop(context);
                                                 Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                     builder: (context) =>
@@ -166,7 +164,7 @@ class _MainListState<T> extends State<MainList<T>> {
                                                   Icons.check_circle,
                                                   color: Colors.green),
                                               title:
-                                                  const Text("Finish Dyeing"),
+                                                  const Text("Selesai Dyeing"),
                                               onTap: () {
                                                 Navigator.pop(context);
                                                 Navigator.of(context).push(
@@ -197,16 +195,11 @@ class _MainListState<T> extends State<MainList<T>> {
                                         );
                                       },
                                     );
-                                  }
-                                  // () => Navigator.of(context)
-                                  //     .push(MaterialPageRoute(
-                                  //   builder: (context) => CreateDyeing(),
-                                  // ))
-                                  ,
+                                  },
                                   icon: const Icon(
                                     Icons.add,
                                     color: Colors.white,
-                                    size: 48,
+                                    // size: 48,
                                   ),
                                 ),
                               ),

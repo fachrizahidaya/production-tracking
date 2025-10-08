@@ -18,25 +18,28 @@ class FormButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      child: ElevatedButton(
-          onPressed: isDisabled || isLoading ? null : onPressed,
-          style: ElevatedButton.styleFrom(
-              backgroundColor: isDisabled || isLoading
-                  ? Colors.grey
-                  : (backgroundColor ?? Colors.blue),
-              shape: RoundedRectangleBorder()),
-          child: isLoading
-              ? SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                  ))
-              : Text(
-                  label,
-                  style:
-                      TextStyle(color: isDisabled ? Colors.grey : Colors.white),
-                )),
-    );
+        child: ElevatedButton(
+      onPressed: isDisabled || isLoading ? null : onPressed,
+      style: ElevatedButton.styleFrom(
+          backgroundColor: isDisabled || isLoading
+              ? Colors.grey
+              : (backgroundColor ?? Colors.blue),
+          shape: RoundedRectangleBorder()),
+      child: isLoading
+          ? const SizedBox(
+              height: 24,
+              width: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          : Text(
+              label,
+              style: TextStyle(
+                color: isDisabled ? Colors.grey : Colors.white,
+              ),
+            ),
+    ));
   }
 }

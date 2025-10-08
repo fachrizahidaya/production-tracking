@@ -20,7 +20,6 @@ class ConfirmationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
         backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(),
         child: LayoutBuilder(
           builder: (context, constraints) {
             final screenWidth = MediaQuery.of(context).size.width;
@@ -57,7 +56,6 @@ class ConfirmationDialog extends StatelessWidget {
                         style: TextButton.styleFrom(
                             backgroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
                                 side: const BorderSide(color: Colors.grey))),
                         child: const Text(
                           'Tidak',
@@ -71,12 +69,11 @@ class ConfirmationDialog extends StatelessWidget {
                           onPressed: isLoading ? null : onConfirm,
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.indigo,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8))),
+                              shape: RoundedRectangleBorder()),
                           child: isLoading
                               ? const SizedBox(
-                                  height: 10,
-                                  width: 10,
+                                  height: 20,
+                                  width: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                   ),

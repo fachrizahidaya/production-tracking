@@ -38,7 +38,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                   child: TextField(
                     controller: _controller,
                     decoration: InputDecoration(
-                      hintText: 'Search',
+                      hintText: 'Cari',
                       prefixIcon: const Icon(Icons.search),
                       suffixIcon: _controller.text.isNotEmpty
                           ? IconButton(

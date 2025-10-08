@@ -48,7 +48,8 @@ class TextForm extends StatelessWidget {
         TextFormField(
           controller: controller,
           style: TextStyle(fontSize: 16),
-          decoration: CustomTheme().inputDecoration(),
+          decoration:
+              CustomTheme().inputDecoration().copyWith(hintText: 'Isi $label'),
           keyboardType: TextInputType.number,
           onChanged: (value) {
             handleChange(value);

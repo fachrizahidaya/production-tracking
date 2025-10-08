@@ -62,11 +62,17 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
     'nama_satuan': '',
   };
 
+  void _handleChangeInput(fieldName, value) {
+    setState(() {
+      _form[fieldName] = value;
+    });
+  }
+
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchOptions();
+        .fetchReworkOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
+        .dataListRework;
 
     setState(() {
       workOrderOption = result;
@@ -115,6 +121,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
             data: data,
             form: _form,
             handleSubmit: _handleSubmit,
+            handleChangeInput: _handleChangeInput,
           ),
         ),
       );
@@ -128,7 +135,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
     }
   }
 
-  Future<void> _handleSubmit() async {
+  Future<void> _handleSubmit(id) async {
     try {
       final dyeing = Dyeing(
           wo_id: _form['wo_id'] != null
@@ -157,10 +164,10 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
           end_by_id: _form['end_by_id'],
           attachments: _form['attachments']);
       await Provider.of<DyeingService>(context, listen: false)
-          .addItem(dyeing, _firstLoading);
+          .reworkItem(id, dyeing, _firstLoading);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Dyeing berhasil dibuat")),
+        SnackBar(content: Text("Dyeing berhasil rework")),
       );
 
       Navigator.pushNamedAndRemoveUntil(
@@ -175,6 +182,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
 
   @override
   void dispose() {
+    _form.clear();
     super.dispose();
   }
 
@@ -183,7 +191,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
     return Scaffold(
         backgroundColor: const Color(0xFFEBEBEB),
         appBar: CustomAppBar(
-          title: 'Create Dyeing',
+          title: 'Rework Dyeing',
           onReturn: () {
             Navigator.pop(context);
           },
@@ -259,8 +267,9 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
                         icon: const Icon(Icons.edit),
                         label: const Text("Isi Manual"),
                         onPressed: () async {
-                          final result = await Navigator.of(context)
-                              .push(_createRoute(_form, _handleSubmit));
+                          final result = await Navigator.of(context).push(
+                              _createRoute(
+                                  _form, _handleSubmit, _handleChangeInput));
 
                           if (result != null && result.isNotEmpty) {
                             _handleScan(result);
@@ -288,13 +297,14 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
   }
 }
 
-Route _createRoute(dynamic form, handleSubmit) {
+Route _createRoute(dynamic form, handleSubmit, handleChangeInput) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => ReworkDyeingManual(
       id: null,
       data: null,
       form: form,
       handleSubmit: handleSubmit,
+      handleChangeInput: handleChangeInput,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);

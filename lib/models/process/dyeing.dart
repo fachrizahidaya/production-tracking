@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 class Dyeing {
   final int? id;
   final String? dyeing_no;
+  final String? wo_no;
   final String? start_time;
   final int? start_by_id;
   final int? end_by_id;
@@ -24,6 +25,9 @@ class Dyeing {
   final int? machine_id;
   final int? rework_reference_id;
   final attachments;
+  final dynamic work_orders;
+  final dynamic start_by;
+  final dynamic end_by;
 
   Dyeing(
       {this.id,
@@ -42,27 +46,35 @@ class Dyeing {
       this.rework_reference_id,
       this.start_by_id,
       this.end_by_id,
-      this.attachments});
+      this.attachments,
+      this.wo_no,
+      this.work_orders,
+      this.start_by,
+      this.end_by});
 
   factory Dyeing.fromJson(Map<String, dynamic> json) {
     return Dyeing(
-        id: json['id'] as int?,
-        unit_id: json['unit_id'] as int?,
-        wo_id: json['wo_id'] as int?,
-        machine_id: json['machine_id'] as int?,
-        start_by_id: json['start_by_id'] as int?,
-        end_by_id: json['end_by_id'] as int?,
-        rework_reference_id: json['rework_reference_id'] as int?,
-        dyeing_no: json['dyeing_no'] ?? '',
-        start_time: json['start_time'] ?? '',
-        end_time: json['end_time'] ?? '',
-        qty: json['qty'] ?? '',
-        width: json['width'] ?? '',
-        length: json['length'] ?? '',
-        status: json['status'] ?? '',
-        rework: json['rework'] as bool?,
-        notes: json['notes'] ?? '',
-        attachments: json['attachments'] ?? []);
+      id: json['id'] as int?,
+      unit_id: json['unit_id'] as int?,
+      wo_id: json['wo_id'] as int?,
+      machine_id: json['machine_id'] as int?,
+      start_by_id: json['start_by_id'] as int?,
+      end_by_id: json['end_by_id'] as int?,
+      rework_reference_id: json['rework_reference_id'] as int?,
+      dyeing_no: json['dyeing_no'] ?? '',
+      start_time: json['start_time'] ?? '',
+      end_time: json['end_time'] ?? '',
+      qty: json['qty'] ?? '',
+      width: json['width'] ?? '',
+      length: json['length'] ?? '',
+      status: json['status'] ?? '',
+      rework: json['rework'] as bool?,
+      notes: json['notes'] ?? '',
+      attachments: json['attachments'] ?? [],
+      work_orders: json['work_orders'],
+      start_by: json['start_by'],
+      end_by: json['end_by'],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -82,7 +94,10 @@ class Dyeing {
       'length': length,
       'status': status,
       'rework': rework,
-      // 'attachments': attachments,
+      'attachments': attachments,
+      'work_orders': work_orders,
+      'start_by': start_by,
+      'end_by': end_by,
     };
   }
 }
@@ -290,6 +305,72 @@ class DyeingService extends BaseService<Dyeing> {
       }
     } catch (e) {
       throw Exception("Error updating dyeing: $e");
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
+  Future<void> finishItem(String id, Dyeing finishedDyeing,
+      ValueNotifier<bool> isSubmitting) async {
+    try {
+      isSubmitting.value = true;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      final response = await http.patch(
+        Uri.parse('$baseUrl/$id/complete'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(finishedDyeing.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        await refetchItems();
+        notifyListeners();
+        final responseData = jsonDecode(response.body);
+        return responseData['message'];
+      } else {
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData['message'] ?? 'Failed to finish dyeing');
+      }
+    } catch (e) {
+      throw Exception("Error finishing dyeing: $e");
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
+  Future<void> reworkItem(
+      String id, Dyeing reworkDyeing, ValueNotifier<bool> isSubmitting) async {
+    try {
+      isSubmitting.value = true;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/$id/rework'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(reworkDyeing.toJson()),
+      );
+
+      if (response.statusCode == 201) {
+        await refetchItems();
+        notifyListeners();
+        final responseData = jsonDecode(response.body);
+        return responseData['message'];
+      } else {
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData['message'] ?? 'Failed to rework dyeing');
+      }
+    } catch (e) {
+      throw Exception("Error rework dyeing: $e");
     } finally {
       isSubmitting.value = false;
     }

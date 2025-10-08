@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/dyeing/item_dyeing.dart';
+import 'package:textile_tracking/components/dyeing/detail/item_dyeing.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/main_list.dart';
 import 'package:textile_tracking/helpers/util/margin_card.dart';
-import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/dyeing/%5Bdyeing_id%5D.dart';
@@ -20,7 +19,6 @@ class DyeingScreen extends StatefulWidget {
 }
 
 class _DyeingScreenState extends State<DyeingScreen> {
-  final OptionUnitService _unitService = OptionUnitService();
   final MenuService _menuService = MenuService();
   final UserMenu _userMenu = UserMenu();
   bool _isFiltered = false;
@@ -42,7 +40,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
   @override
   void initState() {
     super.initState();
-    _unitService.fetchOptions(isInitialLoad: true);
     setState(() {
       params = {'search': _search, 'page': '0'};
     });
@@ -171,7 +168,11 @@ class _DyeingScreenState extends State<DyeingScreen> {
       appBar: CustomAppBar(
         title: 'Dyeing',
         onReturn: () {
-          Navigator.pop(context);
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          } else {
+            Navigator.pushReplacementNamed(context, '/dashboard');
+          }
         },
       ),
       body: Container(
@@ -190,7 +191,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
               canRead: _canRead,
               itemBuilder: (item) => ItemDyeing(
                 item: item,
-                unitOptions: _unitService.options,
               ),
               onItemTap: (context, item) {
                 Navigator.push(

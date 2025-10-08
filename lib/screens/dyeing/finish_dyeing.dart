@@ -62,11 +62,17 @@ class _FinishDyeingState extends State<FinishDyeing> {
     'nama_satuan': '',
   };
 
+  void _handleChangeInput(fieldName, value) {
+    setState(() {
+      _form[fieldName] = value;
+    });
+  }
+
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchOptions();
+        .fetchFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
+        .dataListFinish;
 
     setState(() {
       workOrderOption = result;
@@ -115,6 +121,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
             data: data,
             form: _form,
             handleSubmit: _handleSubmit,
+            handleChangeInput: _handleChangeInput,
           ),
         ),
       );
@@ -128,7 +135,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
     }
   }
 
-  Future<void> _handleSubmit() async {
+  Future<void> _handleSubmit(id) async {
     try {
       final dyeing = Dyeing(
           wo_id: _form['wo_id'] != null
@@ -143,9 +150,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
           rework_reference_id: _form['rework_reference_id'] != null
               ? int.tryParse(_form['rework_reference_id'].toString())
               : null,
-          qty: _form['qty'],
-          width: _form['width'],
-          length: _form['length'],
+          qty: (_form['qty']),
+          width: (_form['width']),
+          length: (_form['length']),
           notes: _form['notes'],
           rework: _form['rework'],
           status: _form['status'],
@@ -157,10 +164,10 @@ class _FinishDyeingState extends State<FinishDyeing> {
           end_by_id: _form['end_by_id'],
           attachments: _form['attachments']);
       await Provider.of<DyeingService>(context, listen: false)
-          .addItem(dyeing, _firstLoading);
+          .finishItem(id, dyeing, _firstLoading);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Dyeing berhasil dibuat")),
+        SnackBar(content: Text("Dyeing selesai")),
       );
 
       Navigator.pushNamedAndRemoveUntil(
@@ -175,6 +182,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
 
   @override
   void dispose() {
+    _form.clear();
     super.dispose();
   }
 
@@ -259,8 +267,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
                         icon: const Icon(Icons.edit),
                         label: const Text("Isi Manual"),
                         onPressed: () async {
-                          final result = await Navigator.of(context)
-                              .push(_createRoute(_form, _handleSubmit));
+                          final result = await Navigator.of(context).push(
+                              _createRoute(
+                                  _form, _handleSubmit, _handleChangeInput));
 
                           if (result != null && result.isNotEmpty) {
                             _handleScan(result);
@@ -288,13 +297,14 @@ class _FinishDyeingState extends State<FinishDyeing> {
   }
 }
 
-Route _createRoute(dynamic form, handleSubmit) {
+Route _createRoute(dynamic form, handleSubmit, handleChangeInput) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => FinishDyeingManual(
       id: null,
       data: null,
       form: form,
       handleSubmit: handleSubmit,
+      handleChangeInput: handleChangeInput,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);

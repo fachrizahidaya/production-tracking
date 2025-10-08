@@ -1,5 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/master/form/multiline_form.dart';
+import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_card.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
@@ -12,16 +15,26 @@ class InfoTab extends StatefulWidget {
   final data;
   final isLoading;
   final qty;
+  final length;
+  final width;
+  final note;
   final form;
   final handleChangeInput;
+  final handleSelectUnit;
+  final handleUpdate;
 
   const InfoTab(
       {super.key,
       this.data,
       this.isLoading,
       this.qty,
+      this.length,
+      this.width,
+      this.note,
       this.form,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.handleSelectUnit,
+      this.handleUpdate});
 
   @override
   State<InfoTab> createState() => _InfoTabState();
@@ -45,8 +58,6 @@ class _InfoTabState extends State<InfoTab> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Row(
-                            //   children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -98,65 +109,15 @@ class _InfoTabState extends State<InfoTab> {
                                 ViewText(
                                   viewLabel: 'Mulai',
                                   viewValue: widget.data['start_time'] != null
-                                      ? '${DateFormat("HH:mm").format(DateTime.parse(widget.data['start_time']))} by ${widget.data['start_by']?['name'] ?? '-'}'
+                                      ? '${DateFormat("HH:mm").format(DateTime.parse(widget.data['start_time']))} Oleh ${widget.data['start_by']?['name'] ?? '-'}'
                                       : '-',
                                 ),
                                 ViewText(
                                   viewLabel: 'Selesai',
                                   viewValue: widget.data['end_time'] != null
-                                      ? '${DateFormat("HH:mm").format(DateTime.parse(widget.data['end_time']))} by ${widget.data['end_by']?['name'] ?? '-'}'
+                                      ? '${DateFormat("HH:mm").format(DateTime.parse(widget.data['end_time']))} Oleh ${widget.data['end_by']?['name'] ?? '-'}'
                                       : '-',
                                 ),
-                              ].separatedBy(SizedBox(
-                                height: 16,
-                              )),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // ViewText(
-                                //   viewLabel: 'Jumlah',
-                                //   viewValue: widget.data['qty'] != null
-                                //       ? NumberFormat("#,###").format(
-                                //           int.tryParse(widget.data['qty']
-                                //                   .toString()) ??
-                                //               0)
-                                //       : '-',
-                                // ),
-                                TextForm(
-                                  label: 'Jumlah',
-                                  req: false,
-                                  controller: widget.qty,
-                                  handleChange: (value) {
-                                    setState(() {
-                                      widget.qty.text = value.toString();
-                                      widget.handleChangeInput('qty', value);
-                                    });
-                                  },
-                                ),
-                                ViewText(
-                                  viewLabel: 'Panjang',
-                                  viewValue: widget.data['length'] != null
-                                      ? '${NumberFormat("#,###").format(
-                                          int.tryParse(widget.data['length']
-                                                  .toString()) ??
-                                              0,
-                                        )} ${widget.data['unit']?['code'] ?? ''}'
-                                      : '-',
-                                ),
-                                ViewText(
-                                  viewLabel: 'Lebar',
-                                  viewValue: widget.data['width'] != null
-                                      ? '${NumberFormat("#,###").format(
-                                          int.tryParse(widget.data['width']
-                                                  .toString()) ??
-                                              0,
-                                        )} ${widget.data['unit']?['code'] ?? ''}'
-                                      : '-',
-                                ),
-                                ViewText(
-                                    viewLabel: 'Catatan',
-                                    viewValue: widget.data['notes'] ?? '-'),
                                 ViewText(
                                     viewLabel: 'Status',
                                     viewValue: widget.data['status'] ?? '-'),
@@ -164,10 +125,102 @@ class _InfoTabState extends State<InfoTab> {
                                 height: 16,
                               )),
                             ),
-                            //   ].separatedBy(SizedBox(
-                            //     width: 80,
-                            //   )),
-                            // ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: TextForm(
+                                        label: 'Panjang',
+                                        req: false,
+                                        controller: widget.length,
+                                        handleChange: (value) {
+                                          setState(() {
+                                            widget.length.text =
+                                                value.toString();
+                                            widget.handleChangeInput(
+                                                'length', value);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: TextForm(
+                                        label: 'Lebar',
+                                        req: false,
+                                        controller: widget.width,
+                                        handleChange: (value) {
+                                          setState(() {
+                                            widget.width.text =
+                                                value.toString();
+                                            widget.handleChangeInput(
+                                                'width', value);
+                                          });
+                                        },
+                                      ),
+                                    )
+                                  ].separatedBy(SizedBox(
+                                    width: 16,
+                                  )),
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: TextForm(
+                                        label: 'Jumlah',
+                                        req: false,
+                                        controller: widget.qty,
+                                        handleChange: (value) {
+                                          setState(() {
+                                            widget.qty.text = value.toString();
+                                            widget.handleChangeInput(
+                                                'qty', value);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Expanded(
+                                        flex: 1,
+                                        child: SelectForm(
+                                            label: 'Satuan',
+                                            onTap: () =>
+                                                widget.handleSelectUnit(),
+                                            selectedLabel:
+                                                widget.form['nama_satuan'] ??
+                                                    '',
+                                            selectedValue: widget
+                                                    .form['unit_id']
+                                                    ?.toString() ??
+                                                '',
+                                            required: false))
+                                  ].separatedBy(SizedBox(
+                                    width: 16,
+                                  )),
+                                ),
+                                MultilineForm(
+                                  label: 'Catatan',
+                                  req: false,
+                                  controller: widget.note,
+                                  handleChange: (value) {
+                                    setState(() {
+                                      widget.note.text = value.toString();
+                                      widget.handleChangeInput('notes', value);
+                                    });
+                                  },
+                                ),
+                                FormButton(
+                                  label: 'Simpan',
+                                  onPressed: () => widget.handleUpdate(
+                                      widget.data['id'].toString()),
+                                )
+                              ].separatedBy(SizedBox(
+                                height: 16,
+                              )),
+                            ),
                           ].separatedBy(SizedBox(
                             height: 16,
                           )),

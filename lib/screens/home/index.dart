@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/layout/app_drawer.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
@@ -24,6 +25,18 @@ class _HomeState extends State<Home> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   final List<Widget> _screens = [Dashboard()];
+
+  String user = '';
+
+  @override
+  void initState() {
+    final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
+    super.initState();
+
+    setState(() {
+      user = loggedInUser?.username ?? '';
+    });
+  }
 
   Future<void> _handleExit(
       BuildContext context, ValueNotifier<bool> isLoading) async {
@@ -73,7 +86,8 @@ class _HomeState extends State<Home> {
             _handleExit(context, _isLoading);
           },
           title: 'Log Out',
-          message: 'Anda yakin ingin keluar aplikasi?');
+          message: 'Anda yakin ingin keluar aplikasi?',
+          buttonBackground: CustomTheme().buttonColor('danger'));
     }
   }
 
@@ -133,6 +147,9 @@ class _HomeState extends State<Home> {
               appBar: CustomAppBar(
                 title: 'Textile Tracking',
                 isWithNotification: true,
+                handleLogout: () => _handleLogout(context),
+                isWithAccount: true,
+                user: user,
               ),
               drawer: AppDrawer(
                 handleLogout: () => _handleLogout(context),

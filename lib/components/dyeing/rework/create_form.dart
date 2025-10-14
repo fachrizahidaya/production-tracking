@@ -1,13 +1,8 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/button/form_button.dart';
-import 'package:textile_tracking/components/master/form/multiline_form.dart';
-import 'package:textile_tracking/components/master/form/select_form.dart';
+import 'package:textile_tracking/components/dyeing/rework/list_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_card.dart';
-import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/helpers/util/margin_search.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class CreateForm extends StatefulWidget {
   final formKey;
@@ -25,6 +20,7 @@ class CreateForm extends StatefulWidget {
   final dyeingId;
   final dyeingData;
   final selectMachine;
+  final isLoading;
 
   const CreateForm(
       {super.key,
@@ -42,27 +38,136 @@ class CreateForm extends StatefulWidget {
       this.data,
       this.dyeingData,
       this.dyeingId,
-      this.selectMachine});
+      this.selectMachine,
+      this.isLoading});
 
   @override
   State<CreateForm> createState() => _CreateFormState();
 }
 
 class _CreateFormState extends State<CreateForm> {
-  bool get _isFormIncomplete {
-    final woId = widget.form?['wo_id'];
-    final machineId = widget.form?['machine_id'];
+  final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
-    return woId == null || machineId == null;
-  }
+  bool _isChanged = false;
+  late String _initialQty;
+  late String _initialLength;
+  late String _initialNotes;
+  late String _initialWidth;
 
   @override
   void initState() {
     super.initState();
+    _initialQty = widget.data['qty']?.toString() ?? '';
+    _initialLength = widget.data['length']?.toString() ?? '';
+    _initialWidth = widget.data['width']?.toString() ?? '';
+    _initialNotes = widget.data['notes']?.toString() ?? '';
+
+    widget.qty.text = _initialQty;
+    widget.note.text = _initialNotes;
+    widget.length.text = _initialLength;
+    widget.width.text = _initialWidth;
+  }
+
+  @override
+  void didUpdateWidget(covariant CreateForm oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.dyeingData != oldWidget.dyeingData &&
+        widget.dyeingData.isNotEmpty) {
+      setState(() {
+        _initialQty = widget.dyeingData['qty']?.toString() ?? '';
+        _initialLength = widget.dyeingData['length']?.toString() ?? '';
+        _initialWidth = widget.dyeingData['width']?.toString() ?? '';
+        _initialNotes = widget.dyeingData['notes']?.toString() ?? '';
+
+        widget.qty.text = _initialQty;
+        widget.length.text = _initialLength;
+        widget.width.text = _initialWidth;
+        widget.note.text = _initialNotes;
+
+        _isChanged = false;
+      });
+    }
+  }
+
+  void _checkForChanges() {
+    setState(() {
+      _isChanged = widget.qty.text != _initialQty ||
+          widget.length.text != _initialLength ||
+          widget.note.text != _initialNotes ||
+          widget.width.text != _initialWidth;
+    });
+  }
+
+  bool get _isFormIncomplete {
+    final woId = widget.form?['wo_id'];
+    final machineId = widget.form?['machine_id'];
+    final qty = widget.form?['qty'];
+    final width = widget.form?['width'];
+    final length = widget.form?['length'];
+    final unitId = widget.form?['unit_id'];
+
+    return woId == null ||
+        machineId == null ||
+        qty == null ||
+        width == null ||
+        length == null ||
+        unitId == null;
+  }
+
+  Future<void> _pickAttachments() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
+        allowMultiple: true,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        setState(() {
+          final currentFormAttachments =
+              List<Map<String, dynamic>>.from(widget.form['attachments'] ?? []);
+
+          final newFiles = result.files.map((file) {
+            return {
+              'name': file.name,
+              'path': file.path,
+              'extension': file.extension,
+            };
+          }).toList();
+
+          widget.form['attachments'] = [
+            ...currentFormAttachments,
+            ...newFiles,
+          ];
+        });
+      }
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error picking file: $e")),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final existing = (widget.data?['attachments'] ?? []) as List<dynamic>;
+    final newOnes = (widget.form['attachments'] ?? []) as List<dynamic>;
+    final allAttachments = [
+      ...existing.cast<Map<String, dynamic>>(),
+      ...newOnes.cast<Map<String, dynamic>>(),
+      {'is_add_button': true},
+    ];
+
+    if (widget.isLoading) {
+      return Container(
+        color: Colors.white,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     if (widget.dyeingData != null &&
         widget.note.text !=
             'Rework dari Dyeing ${widget.dyeingData['dyeing_no']}') {
@@ -78,86 +183,30 @@ class _CreateFormState extends State<CreateForm> {
     return Container(
         padding: MarginSearch.screen,
         child: CustomCard(
-          child: Form(
-            key: widget.formKey,
-            child: SingleChildScrollView(
-              padding: PaddingColumn.screen,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  if (widget.id == null)
-                    SelectForm(
-                        label: 'Work Order',
-                        onTap: () => widget.handleSelectWo(),
-                        selectedLabel: widget.form['no_wo'] ?? '',
-                        selectedValue: widget.form['wo_id']?.toString() ?? '',
-                        required: false),
-                  if (widget.form?['wo_id'] != null)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        ViewText(
-                            viewLabel: 'Nomor',
-                            viewValue: widget.data['wo_no']?.toString() ?? '-'),
-                        ViewText(
-                            viewLabel: 'User',
-                            viewValue:
-                                widget.data['user']?['name']?.toString() ??
-                                    '-'),
-                        ViewText(
-                            viewLabel: 'Tanggal',
-                            viewValue: widget.data['wo_date'] != null
-                                ? DateFormat("dd MMM yyyy").format(
-                                    DateTime.parse(widget.data['wo_date']))
-                                : '-'),
-                        ViewText(
-                            viewLabel: 'Catatan',
-                            viewValue: widget.data['notes']?.toString() ?? '-'),
-                        ViewText(
-                            viewLabel: 'Jumlah Greige',
-                            viewValue: widget.data['greige_qty'] != null &&
-                                    widget.data['greige_qty']
-                                        .toString()
-                                        .isNotEmpty
-                                ? '${NumberFormat("#,###.#").format(double.tryParse(widget.data['greige_qty'].toString()) ?? 0)} ${widget.data['greige_unit']?['code'] ?? ''}'
-                                : '-'),
-                        ViewText(
-                            viewLabel: 'Status',
-                            viewValue:
-                                widget.data['status']?.toString() ?? '-'),
-                        MultilineForm(
-                          label: 'Catatan',
-                          req: false,
-                          controller: widget.note,
-                          handleChange: (value) {
-                            setState(() {
-                              widget.note.text = value.toString();
-                              widget.handleChangeInput('notes', value);
-                            });
-                          },
-                        ),
-                      ].separatedBy(SizedBox(
-                        height: 16,
-                      )),
-                    ),
-                  SelectForm(
-                    label: 'Mesin',
-                    onTap: () => widget.selectMachine(),
-                    selectedLabel: widget.form['nama_mesin'] ?? '',
-                    selectedValue: widget.form['machine_id'].toString(),
-                    required: false,
-                  ),
-                  FormButton(
-                    label: 'Submit',
-                    onPressed: () => widget.handleSubmit(widget.dyeingId),
-                    isDisabled: _isFormIncomplete,
-                  )
-                ].separatedBy(SizedBox(
-                  height: 16,
-                )),
-              ),
-            ),
+          child: ListForm(
+            formKey: widget.formKey,
+            form: widget.form,
+            data: widget.data,
+            id: widget.id,
+            dyeingId: widget.dyeingId,
+            length: widget.length,
+            width: widget.width,
+            qty: widget.qty,
+            note: widget.note,
+            handleSelectWo: widget.handleSelectWo,
+            handleChangeInput: widget.handleChangeInput,
+            handleSelectUnit: widget.handleSelectUnit,
+            handleSelectMachine: widget.selectMachine,
+            isSubmitting: _isSubmitting,
+            handleSubmit: widget.handleSubmit,
+            isFormIncomplete: _isFormIncomplete,
+            isChanged: _isChanged,
+            initialQty: _initialQty,
+            initialLength: _initialLength,
+            initialWidth: _initialWidth,
+            initialNotes: _initialNotes,
+            allAttachments: allAttachments,
+            handlePickAttachments: _pickAttachments,
           ),
         ));
   }

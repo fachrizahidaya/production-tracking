@@ -23,6 +23,7 @@ class CreateDyeingManual extends StatefulWidget {
 class _CreateDyeingManualState extends State<CreateDyeingManual> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final WorkOrderService _workOrderService = WorkOrderService();
+  bool _firstLoading = false;
 
   late List<dynamic> workOrderOption = [];
   late List<dynamic> machineOption = [];
@@ -43,6 +44,7 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchOptions();
+    // ignore: use_build_context_synchronously
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
         .dataListOption;
 
@@ -54,6 +56,7 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
   Future<void> _handleFetchMachine() async {
     await Provider.of<OptionMachineService>(context, listen: false)
         .fetchOptions();
+    // ignore: use_build_context_synchronously
     final result = Provider.of<OptionMachineService>(context, listen: false)
         .dataListOption;
 
@@ -63,10 +66,15 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
   }
 
   Future<void> _getDataView(id) async {
+    setState(() {
+      _firstLoading = true;
+    });
+
     await _workOrderService.getDataView(id);
 
     setState(() {
       woData = _workOrderService.dataView;
+      _firstLoading = false;
     });
   }
 
@@ -129,7 +137,7 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
     return Scaffold(
         backgroundColor: const Color(0xFFEBEBEB),
         appBar: CustomAppBar(
-          title: 'Create Dyeing',
+          title: 'Buat Dyeing',
           onReturn: () {
             Navigator.pop(context);
           },
@@ -142,6 +150,7 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
           selectWorkOrder: _selectWorkOrder,
           selectMachine: _selectMachine,
           id: widget.id,
+          isLoading: _firstLoading,
         ));
   }
 }

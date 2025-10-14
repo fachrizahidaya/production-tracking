@@ -30,6 +30,7 @@ class FinishDyeingManual extends StatefulWidget {
 class _FinishDyeingManualState extends State<FinishDyeingManual> {
   final WorkOrderService _workOrderService = WorkOrderService();
   final DyeingService _dyeingService = DyeingService();
+  bool _firstLoading = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController _noteController = TextEditingController();
@@ -55,6 +56,7 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
     if (widget.data != null) {
       woData = widget.data!;
     }
+
     _handleFetchWorkOrder();
     _handleFetchUnit();
     super.initState();
@@ -63,6 +65,7 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchFinishOptions();
+    // ignore: use_build_context_synchronously
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
         .dataListFinish;
 
@@ -75,6 +78,7 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
     await Provider.of<OptionUnitService>(context, listen: false)
         .getDataListOption();
     final result =
+        // ignore: use_build_context_synchronously
         Provider.of<OptionUnitService>(context, listen: false).dataListOption;
 
     setState(() {
@@ -83,10 +87,15 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
   }
 
   Future<void> _getDataView(id) async {
+    setState(() {
+      _firstLoading = true;
+    });
+
     await _workOrderService.getDataView(id);
 
     setState(() {
       woData = _workOrderService.dataView;
+      _firstLoading = false;
     });
   }
 
@@ -95,6 +104,34 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
 
     setState(() {
       dyeingData = _dyeingService.dataView;
+
+      if (dyeingData['length'] != null) {
+        _lengthController.text = dyeingData['length'].toString();
+        widget.form?['length'] = dyeingData['length'];
+      }
+      if (dyeingData['width'] != null) {
+        _widthController.text = dyeingData['width'].toString();
+        widget.form?['width'] = dyeingData['width'];
+      }
+      if (dyeingData['qty'] != null) {
+        _qtyController.text = dyeingData['qty'].toString();
+        widget.form?['qty'] = dyeingData['qty'];
+      }
+      if (dyeingData['notes'] != null) {
+        _noteController.text = dyeingData['notes'].toString();
+        widget.form?['notes'] = dyeingData['notes'];
+      }
+      if (dyeingData['machine'] != null) {
+        widget.form?['machine_id'] = dyeingData['machine']['id'].toString();
+        widget.form?['nama_mesin'] = dyeingData['machine']['name'].toString();
+      }
+      if (dyeingData['unit'] != null) {
+        widget.form?['unit_id'] = dyeingData['unit']['id'].toString();
+        widget.form?['nama_satuan'] = dyeingData['unit']['name'].toString();
+      }
+      if (dyeingData['attachments'] != null) {
+        widget.form?['attachments'] = List.from(dyeingData['attachments']);
+      }
     });
   }
 
@@ -177,6 +214,7 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
         data: woData,
         dyeingId: dyeingId,
         dyeingData: dyeingData,
+        isLoading: _firstLoading,
       ),
     );
   }

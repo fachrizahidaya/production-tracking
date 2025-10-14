@@ -2,13 +2,13 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/dyeing/detail/attachment_tab.dart';
 import 'package:textile_tracking/components/dyeing/detail/info_tab.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +42,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   late List<dynamic> unitOption = [];
+  late List<dynamic> machineOption = [];
 
   bool _isLoadMore = true;
   bool _hasMore = true;
@@ -61,7 +62,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
     'qty': null,
     'width': null,
     'length': null,
-    'notes': '',
+    'notes': null,
     'rework': null,
     'status': null,
     'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
@@ -83,10 +84,23 @@ class _DyeingDetailState extends State<DyeingDetail> {
     await Provider.of<OptionUnitService>(context, listen: false)
         .getDataListOption();
     final result =
+        // ignore: use_build_context_synchronously
         Provider.of<OptionUnitService>(context, listen: false).dataListOption;
 
     setState(() {
       unitOption = result;
+    });
+  }
+
+  Future<void> _handleFetchMachine() async {
+    await Provider.of<OptionMachineService>(context, listen: false)
+        .fetchOptions();
+    // ignore: use_build_context_synchronously
+    final result = Provider.of<OptionMachineService>(context, listen: false)
+        .dataListOption;
+
+    setState(() {
+      machineOption = result;
     });
   }
 
@@ -111,9 +125,20 @@ class _DyeingDetailState extends State<DyeingDetail> {
         _widthController.text = data['width'].toString();
         _form['width'] = data['width'];
       }
+      if (data['notes'] != null) {
+        _noteController.text = data['notes'].toString();
+        _form['notes'] = data['notes'];
+      }
       if (data['unit'] != null) {
         _form['unit_id'] = data['unit']['id'].toString();
         _form['nama_satuan'] = data['unit']['name'].toString();
+      }
+      if (data['machine'] != null) {
+        _form['machine_id'] = data['machine']['id'].toString();
+        _form['nama_mesin'] = data['machine']['name'].toString();
+      }
+      if (data['attachments'] != null) {
+        _form['attachments'] = List.from(data['attachments']);
       }
 
       _firstLoading = false;
@@ -183,26 +208,41 @@ class _DyeingDetailState extends State<DyeingDetail> {
   Future<void> _handleUpdate(id) async {
     try {
       final dyeing = Dyeing(
-          wo_id: data['wo_id'],
-          unit_id: data['unit_id'],
-          machine_id: data['machine_id'],
-          rework_reference_id: data['rework_reference_id'],
-          qty: (data['qty']),
-          width: (data['width']),
-          length: (data['length']),
-          notes: data['notes'],
-          rework: data['rework'],
-          status: data['status'],
-          start_time: data['start_time'],
-          end_time: data['end_time'],
-          start_by_id: data['start_by_id'],
-          end_by_id: data['end_by_id'],
-          attachments: data['attachments']);
-      await Provider.of<DyeingService>(context, listen: false)
+        wo_id: _form['wo_id'] != null
+            ? int.tryParse(_form['wo_id'].toString())
+            : data['wo_id'],
+        unit_id: _form['unit_id'] != null
+            ? int.tryParse(_form['unit_id'].toString())
+            : data['unit_id'],
+        machine_id: _form['machine_id'] != null
+            ? int.tryParse(_form['machine_id'].toString())
+            : data['machine_id'],
+        rework_reference_id: _form['rework_reference_id'] != null
+            ? int.tryParse(_form['rework_reference_id'].toString())
+            : data['rework_reference_id'],
+        qty: _form['qty'] ?? data['qty'],
+        width: _form['width'] ?? data['width'],
+        length: _form['length'] ?? data['length'],
+        notes: _form['notes'] ?? data['notes'],
+        rework: _form['rework'] ?? data['rework'],
+        status: _form['status'] ?? data['status'],
+        start_time: _form['start_time'] ?? data['start_time'],
+        end_time: _form['end_time'] ?? data['end_time'],
+        start_by_id: _form['start_by_id'] ?? data['start_by_id'],
+        end_by_id: _form['end_by_id'] != null
+            ? int.tryParse(_form['end_by_id'].toString())
+            : data['end_by_id'],
+        attachments: [
+          ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
+          ...List<Map<String, dynamic>>.from(_form['attachments'] ?? []),
+        ],
+      );
+
+      final message = await Provider.of<DyeingService>(context, listen: false)
           .updateItem(id, dyeing, _isLoading);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Data telah diubah")),
+        SnackBar(content: Text(message)),
       );
 
       Navigator.pushNamedAndRemoveUntil(
@@ -211,36 +251,46 @@ class _DyeingDetailState extends State<DyeingDetail> {
         (Route<dynamic> route) => false,
       );
     } catch (e) {
-      showAlertDialog(context: context, title: 'Error', message: e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
     }
   }
 
   Future<void> _handleDelete(id) async {
-    showConfirmationDialog(
-        context: context,
-        onConfirm: () async {
-          try {
-            await Provider.of<DyeingService>(context, listen: false)
-                .deleteItem(id, _processLoading);
+    try {
+      showConfirmationDialog(
+          context: context,
+          onConfirm: () async {
+            try {
+              final message =
+                  await Provider.of<DyeingService>(context, listen: false)
+                      .deleteItem(id, _processLoading);
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Dyeing berhasil dihapus")),
-            );
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message)),
+              );
 
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/dyeings',
-              (Route<dynamic> route) => false,
-            );
-          } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Error: ${e.toString()}")),
-            );
-          }
-        },
-        title: 'Hapus Dyeing',
-        message: 'Anda yakin ingin menghapus Dyeing ${data['dyeing_no']}',
-        isLoading: _processLoading);
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/dyeings',
+                (Route<dynamic> route) => false,
+              );
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Error: ${e.toString()}")),
+              );
+            }
+          },
+          title: 'Hapus Dyeing',
+          message: 'Anda yakin ingin menghapus Dyeing ${data['dyeing_no']}',
+          isLoading: _processLoading,
+          buttonBackground: CustomTheme().buttonColor('danger'));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    }
   }
 
   _selectUnit() {
@@ -264,6 +314,29 @@ class _DyeingDetailState extends State<DyeingDetail> {
     );
   }
 
+  _selectMachine() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return SelectDialog(
+          label: 'Mesin',
+          options: machineOption
+              .where((item) => item['value'].toString() == '1')
+              .toList(),
+          selected: _form['machine_id'].toString(),
+          handleChangeValue: (e) {
+            setState(() {
+              _form['machine_id'] = e['value'].toString();
+              _form['nama_mesin'] = e['label'].toString();
+            });
+          },
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -273,51 +346,43 @@ class _DyeingDetailState extends State<DyeingDetail> {
     _noteController.text = _form['notes']?.toString() ?? '';
     _getDataView();
     _handleFetchUnit();
+    _handleFetchMachine();
   }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: CustomAppBar(
-            title: 'Dyeing Detail',
-            onReturn: () {
-              Navigator.pop(context);
-            },
-            canDelete: widget.canDelete,
-            canUpdate: widget.canUpdate,
-            handleDelete: _handleDelete,
-            id: data['id'],
-          ),
-          body: Column(
-            children: [
-              TabBar(tabs: [
-                Tab(text: 'Informasi'),
-                Tab(text: 'Attachments'),
-              ]),
-              Expanded(
-                  child: TabBarView(children: [
-                InfoTab(
-                  data: data,
-                  isLoading: _firstLoading,
-                  handleChangeInput: _handleChangeInput,
-                  qty: _qtyController,
-                  length: _lengthController,
-                  form: _form,
-                  width: _widthController,
-                  note: _noteController,
-                  handleSelectUnit: _selectUnit,
-                  handleUpdate: _handleUpdate,
-                ),
-                AttachmentTab(
-                  data: data,
-                  refetch: _refetch,
-                  hasMore: _hasMore,
-                )
-              ]))
-            ],
-          ),
-        ));
+    return Scaffold(
+      appBar: CustomAppBar(
+        title: 'Dyeing Detail',
+        onReturn: () {
+          Navigator.pop(context);
+        },
+        canDelete: widget.canDelete,
+        canUpdate: widget.canUpdate,
+        handleDelete: _handleDelete,
+        id: data['id'],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: InfoTab(
+              data: data,
+              isLoading: _firstLoading,
+              handleChangeInput: _handleChangeInput,
+              qty: _qtyController,
+              length: _lengthController,
+              form: _form,
+              width: _widthController,
+              note: _noteController,
+              handleSelectUnit: _selectUnit,
+              handleSelectMachine: _selectMachine,
+              handleUpdate: _handleUpdate,
+              hasMore: _hasMore,
+              refetch: _refetch,
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

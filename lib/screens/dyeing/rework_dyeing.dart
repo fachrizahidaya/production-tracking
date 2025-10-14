@@ -2,13 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/components/dyeing/rework/submit_section.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/helpers/util/margin_search.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/screens/dyeing/rework_dyeing_manual.dart';
 
@@ -36,7 +34,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
     super.initState();
 
     setState(() {
-      _form['start_by_id'] = loggedInUser?.id;
+      _form['end_by_id'] = loggedInUser?.id;
     });
   }
 
@@ -71,6 +69,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchReworkOptions();
+    // ignore: use_build_context_synchronously
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
         .dataListRework;
 
@@ -114,6 +113,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
       });
 
       Navigator.push(
+        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
           builder: (context) => ReworkDyeingManual(
@@ -129,6 +129,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
       setState(() {
         _isLoading = false;
       });
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: ${e.toString()}")),
       );
@@ -161,22 +162,29 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
           start_by_id: _form['start_by_id'] != null
               ? int.tryParse(_form['start_by_id'].toString())
               : null,
-          end_by_id: _form['end_by_id'],
+          end_by_id: _form['end_by_id'] != null
+              ? int.tryParse(_form['end_by_id'])
+              : null,
           attachments: _form['attachments']);
-      await Provider.of<DyeingService>(context, listen: false)
+      final message = await Provider.of<DyeingService>(context, listen: false)
           .reworkItem(id, dyeing, _firstLoading);
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Dyeing berhasil rework")),
+        SnackBar(content: Text(message)),
       );
 
       Navigator.pushNamedAndRemoveUntil(
+        // ignore: use_build_context_synchronously
         context,
         '/dyeings',
         (Route<dynamic> route) => false,
       );
     } catch (e) {
-      showAlertDialog(context: context, title: 'Error', message: e.toString());
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
     }
   }
 
@@ -196,103 +204,15 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
             Navigator.pop(context);
           },
         ),
-        body: Stack(
-          children: [
-            Container(
-              padding: MarginSearch.screen,
-              child: Column(
-                children: [
-                  Expanded(
-                      flex: 2,
-                      child: Center(child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          double scanSize = constraints.maxWidth * 0.7;
-                          return SizedBox(
-                            width: scanSize,
-                            height: scanSize,
-                            child: ClipRRect(
-                                child: Stack(
-                              children: [
-                                MobileScanner(
-                                  controller: _controller,
-                                  onDetect: (BarcodeCapture capture) {
-                                    final List<Barcode> barcodes =
-                                        capture.barcodes;
-                                    for (final barcode in barcodes) {
-                                      final String code =
-                                          barcode.rawValue ?? "---";
-
-                                      if (int.tryParse(code) != null) {
-                                        int id = int.parse(code);
-                                        _controller.stop();
-                                        setState(() {
-                                          _isScannerStopped = true;
-                                        });
-                                        _handleScan(id);
-                                      }
-
-                                      break;
-                                    }
-                                  },
-                                ),
-                                if (_isScannerStopped)
-                                  Center(
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.refresh,
-                                        size: 48,
-                                        color: Colors.black,
-                                      ),
-                                      onPressed: () {
-                                        _controller.start();
-                                        setState(() {
-                                          _isScannerStopped = false;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                              ],
-                            )),
-                          );
-                        },
-                      ))),
-                  Expanded(
-                      child: Column(
-                    children: [
-                      Text(
-                        "Scan QR Work Order",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.edit),
-                        label: const Text("Isi Manual"),
-                        onPressed: () async {
-                          final result = await Navigator.of(context).push(
-                              _createRoute(
-                                  _form, _handleSubmit, _handleChangeInput));
-
-                          if (result != null && result.isNotEmpty) {
-                            _handleScan(result);
-                          }
-                        },
-                      ),
-                    ].separatedBy(SizedBox(
-                      height: 16,
-                    )),
-                  )),
-                ].separatedBy(SizedBox(
-                  height: 16,
-                )),
-              ),
-            ),
-            if (_isLoading)
-              Container(
-                color: Colors.black54,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-          ],
+        body: SubmitSection(
+          isScannerStopped: _isScannerStopped,
+          form: _form,
+          controller: _controller,
+          handleScan: _handleScan,
+          handleSubmit: _handleSubmit,
+          handleRoute: _createRoute,
+          isLoading: _isLoading,
+          handleChangeInput: _handleChangeInput,
         ));
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/custom_form.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -39,9 +40,10 @@ class _LoginFormState extends State<LoginForm> {
             fit: BoxFit.contain,
           ),
           Text(
-            'Textile Tracking',
+            'Textile Automation Tracking',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.grey),
+            style: TextStyle(
+                fontSize: 16, color: CustomTheme().colors('text-primary')),
           ),
           CustomForm(hintText: 'Username', controller: widget.username),
           CustomForm(
@@ -54,6 +56,7 @@ class _LoginFormState extends State<LoginForm> {
             onPressed: widget.handlePress,
             isDisabled: widget.isDisabled,
             isLoading: widget.isLoading,
+            backgroundColor: CustomTheme().buttonColor('primary'),
           )
         ].separatedBy(SizedBox(
           height: 16,

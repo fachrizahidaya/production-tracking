@@ -36,7 +36,7 @@ class TextForm extends StatelessWidget {
               Text(
                 '*',
                 style: TextStyle(
-                  color: Colors.red,
+                  color: CustomTheme().colors('danger'),
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),

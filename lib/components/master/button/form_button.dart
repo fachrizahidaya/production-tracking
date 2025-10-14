@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class FormButton extends StatelessWidget {
   final String label;
   final bool isLoading;
   final bool isDisabled;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color? backgroundColor;
 
   const FormButton(
@@ -22,22 +23,25 @@ class FormButton extends StatelessWidget {
       onPressed: isDisabled || isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
           backgroundColor: isDisabled || isLoading
-              ? Colors.grey
-              : (backgroundColor ?? Colors.blue),
+              ? CustomTheme().buttonColor('In Progress')
+              : (backgroundColor ?? CustomTheme().buttonColor('primary')),
           shape: RoundedRectangleBorder()),
       child: isLoading
-          ? const SizedBox(
-              height: 24,
-              width: 24,
+          ? SizedBox(
+              height: 20,
+              width: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    CustomTheme().colors('secondary')),
               ),
             )
           : Text(
               label,
               style: TextStyle(
-                color: isDisabled ? Colors.grey : Colors.white,
+                color: isDisabled
+                    ? CustomTheme().colors('secondary')
+                    : Colors.white,
               ),
             ),
     ));

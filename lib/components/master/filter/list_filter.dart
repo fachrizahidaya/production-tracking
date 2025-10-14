@@ -109,6 +109,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
   Future<void> _getMachine() async {
     await Provider.of<OptionMachineService>(context, listen: false)
         .fetchOptions();
+    // ignore: use_build_context_synchronously
     final result = Provider.of<OptionMachineService>(context, listen: false)
         .dataListOption;
 
@@ -120,6 +121,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
   Future<void> _getOperator() async {
     await Provider.of<OptionOperatorService>(context, listen: false)
         .fetchOptions();
+    // ignore: use_build_context_synchronously
     final result = Provider.of<OptionOperatorService>(context, listen: false)
         .dataListOption;
 

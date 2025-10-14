@@ -8,6 +8,7 @@ void showConfirmationDialog({
   required String title,
   required String message,
   required ValueNotifier<bool> isLoading,
+  buttonBackground,
 }) {
   showDialog(
     context: context,
@@ -21,6 +22,7 @@ void showConfirmationDialog({
             onConfirm: onConfirm,
             onCancel: () => Navigator.pop(context),
             isLoading: loading,
+            buttonBackground: buttonBackground,
           );
         },
       );

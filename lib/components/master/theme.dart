@@ -396,15 +396,17 @@ class CustomTheme {
       case 'base':
         return const Color.fromRGBO(18, 69, 115, 1);
       case 'primary':
-        return const Color.fromRGBO(79, 121, 219, 1);
+        return const Color.fromRGBO(69, 97, 219, 1);
+      case 'warning':
+        return const Color.fromRGBO(209, 135, 0, 1);
       case 'In Progress':
         return const Color.fromRGBO(28, 183, 214, 1);
       case 'Finish':
       case 'Completed':
         return const Color.fromRGBO(23, 199, 113, 1);
-      case 'Canceled':
+      case 'danger':
       case 'Closed':
-        return const Color.fromRGBO(244, 63, 94, 1);
+        return const Color.fromRGBO(231, 0, 11, 1);
       default:
         return const Color.fromRGBO(148, 163, 184, 1);
     }
@@ -416,15 +418,15 @@ class CustomTheme {
         // return const Color.fromRGBO(30, 41, 59, 1);
         return const Color.fromRGBO(18, 69, 115, 1);
       case 'primary':
-        return const Color.fromRGBO(79, 121, 219, 1);
+        return const Color.fromRGBO(69, 97, 219, 1);
       case 'secondary':
-        return const Color.fromRGBO(28, 183, 214, 1);
+        return const Color.fromRGBO(113, 113, 123, 1);
       case 'warning':
         return const Color.fromRGBO(255, 141, 52, 1);
       case 'success':
         return const Color.fromRGBO(23, 199, 113, 1);
       case 'danger':
-        return const Color.fromRGBO(244, 63, 94, 1);
+        return const Color.fromRGBO(231, 0, 11, 1);
       case 'info':
         return const Color.fromRGBO(148, 163, 184, 1);
       case 'text-primary':

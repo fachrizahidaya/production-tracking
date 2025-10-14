@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
 import 'package:textile_tracking/components/master/layout/custom_search_bar.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/service/base_service.dart';
 import 'package:textile_tracking/screens/dyeing/create_dyeing.dart';
 import 'package:textile_tracking/screens/dyeing/finish_dyeing.dart';
@@ -146,8 +147,9 @@ class _MainListState<T> extends State<MainList<T>> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             ListTile(
-                                              leading: const Icon(Icons.add,
-                                                  color: Colors.blue),
+                                              leading: Icon(Icons.add,
+                                                  color: CustomTheme()
+                                                      .buttonColor('primary')),
                                               title: const Text("Buat Dyeing"),
                                               onTap: () {
                                                 Navigator.pop(context);
@@ -160,9 +162,9 @@ class _MainListState<T> extends State<MainList<T>> {
                                               },
                                             ),
                                             ListTile(
-                                              leading: const Icon(
-                                                  Icons.check_circle,
-                                                  color: Colors.green),
+                                              leading: Icon(Icons.check_circle,
+                                                  color: CustomTheme()
+                                                      .buttonColor('warning')),
                                               title:
                                                   const Text("Selesai Dyeing"),
                                               onTap: () {
@@ -176,9 +178,9 @@ class _MainListState<T> extends State<MainList<T>> {
                                               },
                                             ),
                                             ListTile(
-                                              leading: const Icon(
+                                              leading: Icon(
                                                   Icons.replay_circle_filled,
-                                                  color: Colors.orange),
+                                                  color: Colors.green),
                                               title:
                                                   const Text("Rework Dyeing"),
                                               onTap: () {

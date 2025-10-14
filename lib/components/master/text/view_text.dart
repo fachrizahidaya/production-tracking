@@ -3,16 +3,18 @@ import 'package:textile_tracking/components/master/theme.dart';
 
 class ViewText<T> extends StatelessWidget {
   final String viewLabel;
-  final String viewValue;
+  final viewValue;
+  final childValue;
   final T? item;
   final void Function(BuildContext context, T item)? onItemTap;
 
   const ViewText({
     super.key,
     required this.viewLabel,
-    required this.viewValue,
+    this.viewValue,
     this.item,
     this.onItemTap,
+    this.childValue,
   });
 
   @override
@@ -32,15 +34,21 @@ class ViewText<T> extends StatelessWidget {
         CustomTheme().vGap('xs'),
         GestureDetector(
           onTap: isClickable ? () => onItemTap!(context, item as T) : null,
-          child: Text(
-            viewValue,
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('lg'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: isClickable ? Colors.blue : Colors.black,
-              decoration: isClickable ? TextDecoration.underline : null,
-            ),
-          ),
+          child: childValue ??
+              Text(
+                viewValue ?? '',
+                style: TextStyle(
+                  fontSize: CustomTheme().fontSize('lg'),
+                  fontWeight: CustomTheme().fontWeight('semibold'),
+                  color: isClickable
+                      ? CustomTheme().colors('primary')
+                      : CustomTheme().colors('text-primary'),
+                  decoration: isClickable ? TextDecoration.underline : null,
+                ),
+                softWrap: true,
+                overflow: TextOverflow.visible,
+                maxLines: null,
+              ),
         ),
       ],
     );

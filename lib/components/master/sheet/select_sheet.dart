@@ -92,7 +92,8 @@ class _SelectSheetState extends State<SelectSheet> {
                                               widget.selected
                                           ? FontWeight.w800
                                           : FontWeight.w400,
-                                      color: Colors.black,
+                                      color:
+                                          CustomTheme().colors('text-primary'),
                                       fontSize: 14),
                                 )),
                           ),

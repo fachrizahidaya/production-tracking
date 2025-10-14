@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class CustomAlertDialog extends StatelessWidget {
@@ -44,7 +45,8 @@ class CustomAlertDialog extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () => Navigator.pop(context),
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.indigo,
+                            backgroundColor:
+                                CustomTheme().buttonColor('primary'),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8))),
                         child: Text(

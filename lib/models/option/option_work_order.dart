@@ -91,11 +91,10 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
         throw Exception('Access token is missing');
       }
 
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/work-order/option'),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
+      final response = await http
+          .get(Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option'), headers: {
+        'Authorization': 'Bearer $token',
+      });
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
@@ -144,11 +143,9 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       }
 
       final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/work-order/option')
+          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'wo_status': 'Diproses',
-            'dyeing_status': 'Selesai',
-            'include_dyeing': 'true',
+            'type': 'dyeing_rework',
           }),
           headers: {
             'Authorization': 'Bearer $token',
@@ -201,11 +198,9 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       }
 
       final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/work-order/option')
+          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'wo_status': 'Diproses',
-            'dyeing_status': 'Diproses',
-            'include_dyeing': 'true',
+            'type': 'dyeing_finish',
           }),
           headers: {
             'Authorization': 'Bearer $token',

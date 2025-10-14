@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ConfirmationDialog extends StatelessWidget {
@@ -7,6 +8,7 @@ class ConfirmationDialog extends StatelessWidget {
   final VoidCallback onConfirm;
   final VoidCallback onCancel;
   final bool isLoading;
+  final buttonBackground;
 
   const ConfirmationDialog(
       {super.key,
@@ -14,7 +16,8 @@ class ConfirmationDialog extends StatelessWidget {
       required this.message,
       required this.onConfirm,
       required this.onCancel,
-      required this.isLoading});
+      required this.isLoading,
+      this.buttonBackground});
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +60,10 @@ class ConfirmationDialog extends StatelessWidget {
                             backgroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                                 side: const BorderSide(color: Colors.grey))),
-                        child: const Text(
+                        child: Text(
                           'Tidak',
-                          style: TextStyle(color: Colors.red),
+                          style:
+                              TextStyle(color: CustomTheme().colors('danger')),
                         ),
                       ),
                       const SizedBox(
@@ -68,7 +72,8 @@ class ConfirmationDialog extends StatelessWidget {
                       ElevatedButton(
                           onPressed: isLoading ? null : onConfirm,
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.indigo,
+                              backgroundColor: buttonBackground ??
+                                  CustomTheme().buttonColor('primary'),
                               shape: RoundedRectangleBorder()),
                           child: isLoading
                               ? const SizedBox(

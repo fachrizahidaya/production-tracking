@@ -37,7 +37,7 @@ class GroupForm extends StatelessWidget {
               Text(
                 '*',
                 style: TextStyle(
-                  color: Colors.red,
+                  color: CustomTheme().colors('danger'),
                   fontSize: 16,
                 ),
               ),

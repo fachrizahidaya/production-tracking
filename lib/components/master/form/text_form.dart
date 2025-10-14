@@ -36,7 +36,7 @@ class TextForm extends StatelessWidget {
               Text(
                 '*',
                 style: TextStyle(
-                  color: Colors.red,
+                  color: CustomTheme().colors('danger'),
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
@@ -48,7 +48,8 @@ class TextForm extends StatelessWidget {
         TextFormField(
           controller: controller,
           style: TextStyle(fontSize: 16),
-          decoration: CustomTheme().inputDecoration(),
+          decoration:
+              CustomTheme().inputDecoration().copyWith(hintText: 'Isi $label'),
           keyboardType: TextInputType.number,
           onChanged: (value) {
             handleChange(value);

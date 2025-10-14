@@ -111,7 +111,7 @@ class _SelectDialogState extends State<SelectDialog> {
                                             widget.selected
                                         ? FontWeight.w800
                                         : FontWeight.w400,
-                                color: Colors.black,
+                                color: CustomTheme().colors('text-primary'),
                                 fontSize: CustomTheme().fontSize('md'),
                               ),
                             ),

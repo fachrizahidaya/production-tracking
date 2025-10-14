@@ -17,7 +17,7 @@ class SelectForm extends StatefulWidget {
       required this.selectedLabel,
       required this.selectedValue,
       required this.required,
-      this.isDisabled});
+      this.isDisabled = false});
 
   @override
   State<SelectForm> createState() => _SelectFormState();
@@ -66,11 +66,12 @@ class _SelectFormState extends State<SelectForm> {
                             : 'Pilih ${widget.label}',
                       ),
                     ),
-                    Icon(
-                      Icons.arrow_drop_down,
-                      size: 18,
-                      color: CustomTheme().colors('base'),
-                    )
+                    if (widget.isDisabled == false)
+                      Icon(
+                        Icons.arrow_drop_down,
+                        size: 18,
+                        color: CustomTheme().colors('base'),
+                      )
                   ],
                 ),
               ),

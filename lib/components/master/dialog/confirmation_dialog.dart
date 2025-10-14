@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ConfirmationDialog extends StatelessWidget {
@@ -7,6 +8,7 @@ class ConfirmationDialog extends StatelessWidget {
   final VoidCallback onConfirm;
   final VoidCallback onCancel;
   final bool isLoading;
+  final buttonBackground;
 
   const ConfirmationDialog(
       {super.key,
@@ -14,13 +16,13 @@ class ConfirmationDialog extends StatelessWidget {
       required this.message,
       required this.onConfirm,
       required this.onCancel,
-      required this.isLoading});
+      required this.isLoading,
+      this.buttonBackground});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
         backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(),
         child: LayoutBuilder(
           builder: (context, constraints) {
             final screenWidth = MediaQuery.of(context).size.width;
@@ -57,11 +59,11 @@ class ConfirmationDialog extends StatelessWidget {
                         style: TextButton.styleFrom(
                             backgroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
                                 side: const BorderSide(color: Colors.grey))),
-                        child: const Text(
+                        child: Text(
                           'Tidak',
-                          style: TextStyle(color: Colors.red),
+                          style:
+                              TextStyle(color: CustomTheme().colors('danger')),
                         ),
                       ),
                       const SizedBox(
@@ -70,13 +72,13 @@ class ConfirmationDialog extends StatelessWidget {
                       ElevatedButton(
                           onPressed: isLoading ? null : onConfirm,
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.indigo,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8))),
+                              backgroundColor: buttonBackground ??
+                                  CustomTheme().buttonColor('primary'),
+                              shape: RoundedRectangleBorder()),
                           child: isLoading
                               ? const SizedBox(
-                                  height: 10,
-                                  width: 10,
+                                  height: 20,
+                                  width: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                   ),

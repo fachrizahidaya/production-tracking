@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class NavBar extends StatelessWidget {
   final int currentIndex;
@@ -20,8 +21,8 @@ class NavBar extends StatelessWidget {
       items: navItems,
       backgroundColor: Colors.white,
       currentIndex: currentIndex,
-      selectedItemColor: Colors.blue,
-      unselectedItemColor: Colors.grey,
+      selectedItemColor: CustomTheme().buttonColor('primary'),
+      unselectedItemColor: CustomTheme().colors('secondary'),
       showSelectedLabels: false,
       showUnselectedLabels: false,
       type: BottomNavigationBarType.fixed,

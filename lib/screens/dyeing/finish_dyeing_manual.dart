@@ -1,65 +1,50 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/dyeing/create_form.dart';
+import 'package:textile_tracking/components/dyeing/finish/create_form.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/models/option/option_dyeing.dart';
-import 'package:textile_tracking/models/option/option_machine.dart';
+import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
-import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/models/process/dyeing.dart';
 
 class FinishDyeingManual extends StatefulWidget {
   final id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
   final handleSubmit;
+  final handleChangeInput;
 
   const FinishDyeingManual(
-      {super.key, this.id, this.data, this.form, this.handleSubmit});
+      {super.key,
+      this.id,
+      this.data,
+      this.form,
+      this.handleSubmit,
+      this.handleChangeInput});
 
   @override
   State<FinishDyeingManual> createState() => _FinishDyeingManualState();
 }
 
 class _FinishDyeingManualState extends State<FinishDyeingManual> {
-  final ValueNotifier<bool> _firstLoading = ValueNotifier(false);
+  final WorkOrderService _workOrderService = WorkOrderService();
+  final DyeingService _dyeingService = DyeingService();
+  bool _firstLoading = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey();
-  late final List<dynamic> _addItems = [];
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _qtyController = TextEditingController();
   final TextEditingController _lengthController = TextEditingController();
   final TextEditingController _widthController = TextEditingController();
 
   late List<dynamic> workOrderOption = [];
-  late List<dynamic> machineOption = [];
   late List<dynamic> unitOption = [];
-  late List<dynamic> dyeingOption = [];
 
-  final Map<String, dynamic> _form = {
-    'wo_id': null,
-    'machine_id': null,
-    'unit_id': null,
-    'rework_reference_id': null,
-    'start_by_id': null,
-    'end_by_id': null,
-    'qty': null,
-    'width': null,
-    'length': null,
-    'notes': '',
-    'rework': null,
-    'status': null,
-    'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-    'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-    'attachments': [],
-    'no_wo': '',
-    'no_dyeing': '',
-    'nama_mesin': '',
-    'nama_satuan': '',
-  };
+  Map<String, dynamic> woData = {};
+  Map<String, dynamic> dyeingData = {};
+
+  var dyeingId = '';
 
   @override
   void initState() {
@@ -68,38 +53,24 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
     _widthController.text = widget.form?['width']?.toString() ?? '';
     _noteController.text = widget.form?['notes']?.toString() ?? '';
 
-    _handleFetchWorkOrder();
-    _handleFetchMachine();
-    _handleFetchUnit();
-    _handleFetchDyeing();
-    super.initState();
-  }
+    if (widget.data != null) {
+      woData = widget.data!;
+    }
 
-  void _handleChangeInput(fieldName, value) {
-    setState(() {
-      _form[fieldName] = value;
-    });
+    _handleFetchWorkOrder();
+    _handleFetchUnit();
+    super.initState();
   }
 
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchOptions();
+        .fetchFinishOptions();
+    // ignore: use_build_context_synchronously
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
+        .dataListFinish;
 
     setState(() {
       workOrderOption = result;
-    });
-  }
-
-  Future<void> _handleFetchMachine() async {
-    await Provider.of<OptionMachineService>(context, listen: false)
-        .fetchOptions();
-    final result = Provider.of<OptionMachineService>(context, listen: false)
-        .dataListOption;
-
-    setState(() {
-      machineOption = result;
     });
   }
 
@@ -107,6 +78,7 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
     await Provider.of<OptionUnitService>(context, listen: false)
         .getDataListOption();
     final result =
+        // ignore: use_build_context_synchronously
         Provider.of<OptionUnitService>(context, listen: false).dataListOption;
 
     setState(() {
@@ -114,49 +86,53 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
     });
   }
 
-  Future<void> _handleFetchDyeing() async {
-    await Provider.of<OptionDyeingService>(context, listen: false)
-        .fetchOptions();
-    final result =
-        Provider.of<OptionDyeingService>(context, listen: false).dataListOption;
+  Future<void> _getDataView(id) async {
+    setState(() {
+      _firstLoading = true;
+    });
+
+    await _workOrderService.getDataView(id);
 
     setState(() {
-      dyeingOption = result;
+      woData = _workOrderService.dataView;
+      _firstLoading = false;
     });
   }
 
-  Future<void> _handleSubmit() async {
-    try {
-      if (_addItems.isNotEmpty) {
-        final dyeing = Dyeing(
-            wo_id: _form['wo_id'],
-            unit_id: _form['unit_id'],
-            machine_id: _form['machine_id'],
-            rework_reference_id: _form['rework_reference_id'],
-            qty: _form['qty'],
-            width: _form['width'],
-            length: _form['length'],
-            notes: _form['notes'],
-            rework: _form['rework'],
-            status: _form['status'],
-            start_time: _form['start_time'],
-            end_time: _form['end_time'],
-            start_by_id: _form['start_by_id'],
-            end_by_id: _form['end_by_id'],
-            attachments: _form['attachments']);
-        await Provider.of<DyeingService>(context, listen: false)
-            .addItem(dyeing, _firstLoading);
-        Navigator.pop(context);
-      } else {
-        showAlertDialog(
-            context: context,
-            title: 'Failed',
-            message: 'Data tidak boleh kosong!');
+  Future<void> _getDyeingView(id) async {
+    await _dyeingService.getDataView(id);
+
+    setState(() {
+      dyeingData = _dyeingService.dataView;
+
+      if (dyeingData['length'] != null) {
+        _lengthController.text = dyeingData['length'].toString();
+        widget.form?['length'] = dyeingData['length'];
       }
-    } catch (e) {
-      Navigator.pop(context);
-      showAlertDialog(context: context, title: 'Error', message: e.toString());
-    }
+      if (dyeingData['width'] != null) {
+        _widthController.text = dyeingData['width'].toString();
+        widget.form?['width'] = dyeingData['width'];
+      }
+      if (dyeingData['qty'] != null) {
+        _qtyController.text = dyeingData['qty'].toString();
+        widget.form?['qty'] = dyeingData['qty'];
+      }
+      if (dyeingData['notes'] != null) {
+        _noteController.text = dyeingData['notes'].toString();
+        widget.form?['notes'] = dyeingData['notes'];
+      }
+      if (dyeingData['machine'] != null) {
+        widget.form?['machine_id'] = dyeingData['machine']['id'].toString();
+        widget.form?['nama_mesin'] = dyeingData['machine']['name'].toString();
+      }
+      if (dyeingData['unit'] != null) {
+        widget.form?['unit_id'] = dyeingData['unit']['id'].toString();
+        widget.form?['nama_satuan'] = dyeingData['unit']['name'].toString();
+      }
+      if (dyeingData['attachments'] != null) {
+        widget.form?['attachments'] = List.from(dyeingData['attachments']);
+      }
+    });
   }
 
   _selectWorkOrder() {
@@ -168,54 +144,16 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
         return SelectDialog(
           label: 'Work Order',
           options: workOrderOption,
-          selected: _form['wo_id'].toString(),
+          selected: widget.form?['wo_id'].toString() ?? '',
           handleChangeValue: (e) {
             setState(() {
-              _form['wo_id'] = e['value'].toString();
-              _form['no_wo'] = e['label'].toString();
+              widget.form?['wo_id'] = e['value'].toString();
+              widget.form?['no_wo'] = e['label'].toString();
+              dyeingId = e['dyeing_id'].toString();
             });
-          },
-        );
-      },
-    );
-  }
 
-  _selectDyeing() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      useSafeArea: true,
-      builder: (BuildContext context) {
-        return SelectDialog(
-          label: 'Dyeing',
-          options: dyeingOption,
-          selected: _form['rework_reference_id'].toString(),
-          handleChangeValue: (e) {
-            setState(() {
-              _form['rework_reference_id'] = e['value'].toString();
-              _form['no_dyeing'] = e['label'].toString();
-            });
-          },
-        );
-      },
-    );
-  }
-
-  _selectMachine() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      useSafeArea: true,
-      builder: (BuildContext context) {
-        return SelectDialog(
-          label: 'Mesin',
-          options: machineOption,
-          selected: _form['machine_id'].toString(),
-          handleChangeValue: (e) {
-            setState(() {
-              _form['machine_id'] = e['value'].toString();
-              _form['nama_mesin'] = e['label'].toString();
-            });
+            _getDataView(e['value'].toString());
+            _getDyeingView(e['dyeing_id'].toString());
           },
         );
       },
@@ -231,11 +169,11 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
         return SelectDialog(
           label: 'Satuan',
           options: unitOption,
-          selected: _form['unit_id'].toString(),
+          selected: widget.form?['unit_id'].toString() ?? '',
           handleChangeValue: (e) {
             setState(() {
-              _form['unit_id'] = e['value'].toString();
-              _form['nama_satuan'] = e['label'].toString();
+              widget.form?['unit_id'] = e['value'].toString();
+              widget.form?['nama_satuan'] = e['label'].toString();
             });
           },
         );
@@ -245,6 +183,9 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
 
   @override
   void dispose() {
+    if (widget.form != null) {
+      widget.form!.clear();
+    }
     super.dispose();
   }
 
@@ -260,17 +201,20 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
       ),
       body: CreateForm(
         formKey: _formKey,
-        form: _form,
+        form: widget.form,
         note: _noteController,
         qty: _qtyController,
         width: _widthController,
         length: _lengthController,
         handleSelectWo: _selectWorkOrder,
-        handleSelectDyeing: _selectDyeing,
         handleSelectUnit: _selectUnit,
-        handleSelectMachine: _selectMachine,
-        handleChangeInput: _handleChangeInput,
-        handleSubmit: _handleSubmit,
+        handleChangeInput: widget.handleChangeInput,
+        handleSubmit: widget.handleSubmit,
+        id: widget.id,
+        data: woData,
+        dyeingId: dyeingId,
+        dyeingData: dyeingData,
+        isLoading: _firstLoading,
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/margin_search.dart';
 
 class CustomSearchBar extends StatefulWidget {
@@ -38,7 +39,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                   child: TextField(
                     controller: _controller,
                     decoration: InputDecoration(
-                      hintText: 'Search',
+                      hintText: 'Cari',
                       prefixIcon: const Icon(Icons.search),
                       suffixIcon: _controller.text.isNotEmpty
                           ? IconButton(
@@ -79,7 +80,8 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                 width: 10,
                                 height: 10,
                                 decoration: BoxDecoration(
-                                    color: Colors.red, shape: BoxShape.circle),
+                                    color: CustomTheme().buttonColor('danger'),
+                                    shape: BoxShape.circle),
                               ))
                       ],
                     ),

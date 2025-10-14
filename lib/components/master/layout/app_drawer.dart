@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/screens/home/index.dart';
 
@@ -84,11 +83,6 @@ class _AppDrawerState extends State<AppDrawer> {
                       },
                     );
                   })),
-          const Divider(),
-          Padding(
-            padding: PaddingColumn.screen,
-            child: FormButton(label: 'LOG OUT', onPressed: widget.handleLogout),
-          )
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class CustomFloatingButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -12,9 +13,9 @@ class CustomFloatingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton.large(
+    return FloatingActionButton(
       onPressed: onPressed,
-      backgroundColor: backgroundColor ?? Colors.indigo,
+      backgroundColor: backgroundColor ?? CustomTheme().buttonColor('primary'),
       child: icon,
     );
   }

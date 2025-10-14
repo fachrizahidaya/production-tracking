@@ -1,27 +1,28 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/dyeing/rework/create_form.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/layout/custom_card.dart';
-import 'package:textile_tracking/components/master/text/view_text.dart';
-import 'package:textile_tracking/helpers/util/margin_search.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
+import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
+import 'package:textile_tracking/models/process/dyeing.dart';
 
 class ReworkDyeingManual extends StatefulWidget {
   final id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
   final handleSubmit;
+  final handleChangeInput;
 
   const ReworkDyeingManual(
-      {super.key, this.id, this.data, this.form, this.handleSubmit});
+      {super.key,
+      this.id,
+      this.data,
+      this.form,
+      this.handleSubmit,
+      this.handleChangeInput});
 
   @override
   State<ReworkDyeingManual> createState() => _ReworkDyeingManualState();
@@ -30,37 +31,68 @@ class ReworkDyeingManual extends StatefulWidget {
 class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final WorkOrderService _workOrderService = WorkOrderService();
+  final DyeingService _dyeingService = DyeingService();
+  bool _firstLoading = false;
+
+  final TextEditingController _noteController = TextEditingController();
+  final TextEditingController _qtyController = TextEditingController();
+  final TextEditingController _lengthController = TextEditingController();
+  final TextEditingController _widthController = TextEditingController();
 
   late List<dynamic> workOrderOption = [];
   late List<dynamic> machineOption = [];
+  late List<dynamic> unitOption = [];
 
-  Map<String, dynamic> data = {};
+  Map<String, dynamic> woData = {};
+  Map<String, dynamic> dyeingData = {};
+
+  var dyeingId = '';
 
   @override
   void initState() {
     _handleFetchWorkOrder();
+    _handleFetchUnit();
     _handleFetchMachine();
 
+    _qtyController.text = widget.form?['qty']?.toString() ?? '';
+    _lengthController.text = widget.form?['length']?.toString() ?? '';
+    _widthController.text = widget.form?['width']?.toString() ?? '';
+    _noteController.text = widget.form?['notes']?.toString() ?? '';
+
     if (widget.data != null) {
-      data = widget.data!;
+      woData = widget.data!;
     }
     super.initState();
   }
 
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchOptions();
+        .fetchReworkOptions();
+    // ignore: use_build_context_synchronously
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
+        .dataListRework;
 
     setState(() {
       workOrderOption = result;
     });
   }
 
+  Future<void> _handleFetchUnit() async {
+    await Provider.of<OptionUnitService>(context, listen: false)
+        .getDataListOption();
+    final result =
+        // ignore: use_build_context_synchronously
+        Provider.of<OptionUnitService>(context, listen: false).dataListOption;
+
+    setState(() {
+      unitOption = result;
+    });
+  }
+
   Future<void> _handleFetchMachine() async {
     await Provider.of<OptionMachineService>(context, listen: false)
         .fetchOptions();
+    // ignore: use_build_context_synchronously
     final result = Provider.of<OptionMachineService>(context, listen: false)
         .dataListOption;
 
@@ -70,10 +102,47 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   }
 
   Future<void> _getDataView(id) async {
+    setState(() {
+      _firstLoading = true;
+    });
+
     await _workOrderService.getDataView(id);
 
     setState(() {
-      data = _workOrderService.dataView;
+      woData = _workOrderService.dataView;
+      _firstLoading = false;
+    });
+  }
+
+  Future<void> _getDyeingView(id) async {
+    await _dyeingService.getDataView(id);
+
+    setState(() {
+      dyeingData = _dyeingService.dataView;
+
+      if (dyeingData['length'] != null) {
+        _lengthController.text = dyeingData['length'].toString();
+        widget.form?['length'] = dyeingData['length'];
+      }
+      if (dyeingData['width'] != null) {
+        _widthController.text = dyeingData['width'].toString();
+        widget.form?['width'] = dyeingData['width'];
+      }
+      if (dyeingData['qty'] != null) {
+        _qtyController.text = dyeingData['qty'].toString();
+        widget.form?['qty'] = dyeingData['qty'];
+      }
+      if (dyeingData['notes'] != null) {
+        _noteController.text = dyeingData['notes'].toString();
+        widget.form?['notes'] = dyeingData['notes'];
+      }
+      if (dyeingData['unit'] != null) {
+        widget.form?['unit_id'] = dyeingData['unit']['id'].toString();
+        widget.form?['nama_satuan'] = dyeingData['unit']['name'].toString();
+      }
+      if (dyeingData['attachments'] != null) {
+        widget.form?['attachments'] = List.from(dyeingData['attachments']);
+      }
     });
   }
 
@@ -91,9 +160,32 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
             setState(() {
               widget.form?['wo_id'] = e['value'].toString();
               widget.form?['no_wo'] = e['label'].toString();
+              dyeingId = e['dyeing_id'].toString();
             });
 
             _getDataView(e['value'].toString());
+            _getDyeingView(e['dyeing_id'].toString());
+          },
+        );
+      },
+    );
+  }
+
+  _selectUnit() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return SelectDialog(
+          label: 'Satuan',
+          options: unitOption,
+          selected: widget.form?['unit_id'].toString() ?? '',
+          handleChangeValue: (e) {
+            setState(() {
+              widget.form?['unit_id'] = e['value'].toString();
+              widget.form?['nama_satuan'] = e['label'].toString();
+            });
           },
         );
       },
@@ -108,7 +200,9 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
       builder: (BuildContext context) {
         return SelectDialog(
           label: 'Mesin',
-          options: machineOption,
+          options: machineOption
+              .where((item) => item['value'].toString() == '1')
+              .toList(),
           selected: widget.form?['machine_id'].toString() ?? '',
           handleChangeValue: (e) {
             setState(() {
@@ -134,123 +228,27 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
     return Scaffold(
         backgroundColor: const Color(0xFFEBEBEB),
         appBar: CustomAppBar(
-          title: 'Create Dyeing',
+          title: 'Rework Dyeing',
           onReturn: () {
             Navigator.pop(context);
           },
         ),
-        body: Container(
-          padding: MarginSearch.screen,
-          child: CustomCard(
-              child: Form(
-                  key: _formKey,
-                  child: SingleChildScrollView(
-                    padding: PaddingColumn.screen,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        // if (widget.id != null)
-                        // Column(
-                        //   mainAxisAlignment: MainAxisAlignment.start,
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   children: [
-                        //     ViewText(
-                        //         viewLabel: 'Nomor',
-                        //         viewValue: widget.data?['wo_no'] ?? ''),
-                        //     ViewText(
-                        //         viewLabel: 'User',
-                        //         viewValue:
-                        //             widget.data?['user']?['name'] ?? ''),
-                        //     ViewText(
-                        //         viewLabel: 'Tanggal',
-                        //         viewValue: widget.data?['wo_date'] != null
-                        //             ? DateFormat("dd MMM yyyy").format(
-                        //                 DateTime.parse(
-                        //                     widget.data?['wo_date']))
-                        //             : '-'),
-                        //     ViewText(
-                        //         viewLabel: 'Catatan',
-                        //         viewValue: widget.data?['notes'] ?? ''),
-                        //     ViewText(
-                        //         viewLabel: 'Jumlah Greige',
-                        //         viewValue: widget.data?['greige_qty'] !=
-                        //                     null &&
-                        //                 widget.data!['greige_qty']
-                        //                     .toString()
-                        //                     .isNotEmpty
-                        //             ? '${NumberFormat("#,###.#").format(double.tryParse(widget.data!['greige_qty'].toString()) ?? 0)} ${widget.data!['greige_unit']?['code'] ?? ''}'
-                        //             : '-'),
-                        //     ViewText(
-                        //         viewLabel: 'Status',
-                        //         viewValue: widget.data?['status'] ?? '')
-                        //   ].separatedBy(SizedBox(
-                        //     height: 16,
-                        //   )),
-                        // ),
-                        if (widget.id == null)
-                          SelectForm(
-                              label: 'Work Order',
-                              onTap: () => _selectWorkOrder(),
-                              selectedLabel: widget.form?['no_wo'] ?? '',
-                              selectedValue:
-                                  widget.form?['wo_id']?.toString() ?? '',
-                              required: false),
-                        if (widget.form?['wo_id'] != null)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ViewText(
-                                  viewLabel: 'Nomor',
-                                  viewValue: data['wo_no']?.toString() ?? ''),
-                              ViewText(
-                                  viewLabel: 'User',
-                                  viewValue:
-                                      data['user']?['name']?.toString() ?? ''),
-                              ViewText(
-                                  viewLabel: 'Tanggal',
-                                  viewValue: data['wo_date'] != null
-                                      ? DateFormat("dd MMM yyyy").format(
-                                          DateTime.parse(data['wo_date']))
-                                      : '-'),
-                              ViewText(
-                                  viewLabel: 'Catatan',
-                                  viewValue: data['notes']?.toString() ?? ''),
-                              ViewText(
-                                  viewLabel: 'Jumlah Greige',
-                                  viewValue: data['greige_qty'] != null &&
-                                          data['greige_qty']
-                                              .toString()
-                                              .isNotEmpty
-                                      ? '${NumberFormat("#,###.#").format(double.tryParse(data['greige_qty'].toString()) ?? 0)} ${data['greige_unit']?['code'] ?? ''}'
-                                      : '-'),
-                              ViewText(
-                                  viewLabel: 'Status',
-                                  viewValue: data['status']?.toString() ?? '')
-                            ].separatedBy(SizedBox(height: 16)),
-                          ),
-                        SelectForm(
-                            label: 'Mesin',
-                            onTap: () => _selectMachine(),
-                            selectedLabel: widget.form?['nama_mesin'] ?? '',
-                            selectedValue:
-                                widget.form?['machine_id']?.toString() ?? '',
-                            required: false),
-                        Align(
-                          alignment: Alignment.center,
-                          child: FormButton(
-                            label: 'Simpan',
-                            onPressed: () {
-                              widget.handleSubmit();
-                              // Navigator.pop(context);
-                            },
-                          ),
-                        )
-                      ].separatedBy(SizedBox(
-                        height: 16,
-                      )),
-                    ),
-                  ))),
+        body: CreateForm(
+          data: woData,
+          form: widget.form,
+          formKey: _formKey,
+          note: _noteController,
+          qty: _qtyController,
+          width: _widthController,
+          length: _lengthController,
+          handleSelectWo: _selectWorkOrder,
+          handleSelectUnit: _selectUnit,
+          handleChangeInput: widget.handleChangeInput,
+          handleSubmit: widget.handleSubmit,
+          dyeingId: dyeingId,
+          dyeingData: dyeingData,
+          selectMachine: _selectMachine,
+          isLoading: _firstLoading,
         ));
   }
 }

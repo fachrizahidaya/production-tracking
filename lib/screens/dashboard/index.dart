@@ -17,18 +17,17 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFEBEBEB),
-      body: Expanded(
-        // padding: PaddingColumn.screen,
-        child: dashboardSections.isEmpty
-            ? Center(
-                child: NoData(
-                fontSize: 24,
-              ))
-            : Column(
-                children: dashboardSections.separatedBy(SizedBox(
-                height: 16,
-              ))),
-      ),
+      body: dashboardSections.isEmpty
+          ? const Center(
+              child: NoData(fontSize: 24),
+            )
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children:
+                    dashboardSections.separatedBy(const SizedBox(height: 16)),
+              ),
+            ),
     );
   }
 }

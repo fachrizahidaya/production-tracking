@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/custom_form.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -26,42 +27,41 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
+    return Center(
         child: SingleChildScrollView(
-          padding: PaddingColumn.screen,
-          child: Form(
-              child: Column(
-            children: [
-              Image.asset(
-                'assets/images/login_logo.png',
-                height: 100,
-                width: 100,
-                fit: BoxFit.contain,
-              ),
-              Text(
-                'Textile Tracking',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              CustomForm(hintText: 'Username', controller: widget.username),
-              CustomForm(
-                hintText: 'Password',
-                controller: widget.password,
-                isPassword: true,
-              ),
-              FormButton(
-                label: 'LOG IN',
-                onPressed: widget.handlePress,
-                isDisabled: widget.isDisabled,
-                isLoading: widget.isLoading,
-              )
-            ].separatedBy(SizedBox(
-              height: 16,
-            )),
-          )),
-        ),
-      ),
-    );
+      padding: PaddingColumn.screen,
+      child: Form(
+          child: Column(
+        children: [
+          Image.asset(
+            'assets/images/login_logo.png',
+            height: 100,
+            width: 100,
+            fit: BoxFit.contain,
+          ),
+          Text(
+            'Textile Automation Tracking',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 16, color: CustomTheme().colors('text-primary')),
+          ),
+          CustomForm(hintText: 'Username', controller: widget.username),
+          CustomForm(
+            hintText: 'Password',
+            controller: widget.password,
+            isPassword: true,
+          ),
+          FormButton(
+            label: 'LOG IN',
+            onPressed: widget.handlePress,
+            isDisabled: widget.isDisabled,
+            isLoading: widget.isLoading,
+            backgroundColor: CustomTheme().buttonColor('primary'),
+          )
+        ].separatedBy(SizedBox(
+          height: 16,
+        )),
+      )),
+    ));
   }
 }

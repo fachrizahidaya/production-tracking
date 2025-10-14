@@ -39,7 +39,7 @@ class _FilterSelectFormState extends State<FilterSelectForm> {
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade400, width: 1)),
+              border: Border.all(color: Colors.grey, width: 1)),
           child: widget.selectedItems.isEmpty
               ? Row(
                   children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 
 class NoData extends StatelessWidget {
@@ -13,7 +14,8 @@ class NoData extends StatelessWidget {
       padding: PaddingColumn.screen,
       child: Text(
         'No Data',
-        style: TextStyle(fontSize: fontSize, color: Colors.black),
+        style: TextStyle(
+            fontSize: fontSize, color: CustomTheme().colors('text-primary')),
       ),
     );
   }

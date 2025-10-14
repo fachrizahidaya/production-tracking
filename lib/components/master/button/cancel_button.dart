@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class CancelButton extends StatelessWidget {
   final String label;
@@ -33,7 +34,7 @@ class CancelButton extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: const TextStyle(color: Colors.red),
+        style: TextStyle(color: CustomTheme().colors('danger')),
       ),
     );
   }

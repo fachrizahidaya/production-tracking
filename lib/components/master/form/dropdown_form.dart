@@ -44,9 +44,9 @@ class _DropdownFormState extends State<DropdownForm> {
       isExpanded: true,
       decoration: CustomTheme().inputDecoration(),
       dropdownColor: Colors.white,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 16,
-        color: Colors.black,
+        color: CustomTheme().colors('text-primary'),
         fontWeight: FontWeight.w400,
         overflow: TextOverflow.ellipsis,
       ),

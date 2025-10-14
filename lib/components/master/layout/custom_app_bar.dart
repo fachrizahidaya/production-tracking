@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? onReturn;
   final List<Widget>? actions;
   final bool isWithNotification;
+  final bool isWithAccount;
   final tab;
   final bool? canDelete;
   final bool? canUpdate;
   final handleDelete;
   final handleUpdate;
+  final handleLogout;
   final id;
+  final String? label;
+  final user;
 
   const CustomAppBar(
       {super.key,
@@ -18,12 +23,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onReturn,
       this.actions,
       this.isWithNotification = false,
+      this.isWithAccount = false,
       this.tab,
       this.canDelete,
       this.canUpdate,
       this.handleDelete,
       this.handleUpdate,
-      this.id});
+      this.id,
+      this.label,
+      this.handleLogout,
+      this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -44,31 +53,55 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             onSelected: (value) {
               final String stringId = id.toString();
 
-              if (value == 'update' && canUpdate == true) {
-                handleUpdate(stringId);
-              } else if (value == 'delete' && canDelete == true) {
+              if (value == 'delete' && canDelete == true) {
                 handleDelete(stringId);
               }
             },
             itemBuilder: (context) => [
-              if (canUpdate == true)
-                const PopupMenuItem(
-                  value: 'update',
-                  child: Text('Update'),
-                ),
               if (canDelete == true)
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'delete',
-                  child: Text('Delete'),
+                  child: Text('Hapus'),
                 ),
             ],
-          )
-        else if (isWithNotification)
+          ),
+        if (isWithNotification)
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
             onPressed: () {
               Navigator.pushNamed(context, '/notification');
             },
+          ),
+        if (isWithAccount)
+          PopupMenuButton<String>(
+            icon: Icon(Icons.account_circle_outlined),
+            color: Colors.white,
+            onSelected: (value) {
+              if (value == 'logout') {
+                handleLogout();
+              }
+              if (value == 'user') {
+                handleLogout();
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'logout',
+                child: Column(
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(user),
+                  ].separatedBy(SizedBox(
+                    height: 8,
+                  )),
+                ),
+              ),
+              PopupMenuItem(
+                value: 'logout',
+                child: Text('Log Out'),
+              ),
+            ],
           ),
         ...?actions
       ],

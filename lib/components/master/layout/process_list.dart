@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
 import 'package:textile_tracking/components/master/layout/custom_search_bar.dart';
-import 'package:textile_tracking/helpers/service/base_service.dart';
+import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 
-class MainList<T> extends StatefulWidget {
-  final BaseService<T> service;
+class ProcessList<T> extends StatefulWidget {
+  final BaseCrudService<T> service;
   final String searchQuery;
   final bool? canCreate;
   final bool? canDelete;
@@ -23,7 +23,7 @@ class MainList<T> extends StatefulWidget {
   final canRead;
   final showActions;
 
-  const MainList(
+  const ProcessList(
       {super.key,
       required this.service,
       required this.searchQuery,
@@ -45,10 +45,10 @@ class MainList<T> extends StatefulWidget {
       this.showActions});
 
   @override
-  State<MainList<T>> createState() => _MainListState<T>();
+  State<ProcessList<T>> createState() => _ProcessListState<T>();
 }
 
-class _MainListState<T> extends State<MainList<T>> {
+class _ProcessListState<T> extends State<ProcessList<T>> {
   final ScrollController _scrollController = ScrollController();
 
   @override

@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/detail/list_info.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
@@ -81,58 +80,9 @@ class _InfoTabState extends State<InfoTab> {
     }
   }
 
-  void _checkForChanges() {
-    setState(() {
-      _isChanged = widget.qty.text != _initialQty ||
-          widget.length.text != _initialLength ||
-          widget.note.text != _initialNotes ||
-          widget.width.text != _initialWidth;
-    });
-  }
-
-  Future<void> _pickAttachments() async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
-        allowMultiple: true,
-      );
-
-      if (result != null && result.files.isNotEmpty) {
-        setState(() {
-          final currentFormAttachments =
-              List<Map<String, dynamic>>.from(widget.form['attachments'] ?? []);
-
-          final newFiles = result.files.map((file) {
-            return {
-              'name': file.name,
-              'path': file.path,
-              'extension': file.extension,
-            };
-          }).toList();
-
-          widget.form['attachments'] = [
-            ...currentFormAttachments,
-            ...newFiles,
-          ];
-        });
-      }
-    } catch (e) {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error picking file: $e")),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final existing = (widget.data?['attachments'] ?? []) as List<dynamic>;
-    final newOnes = (widget.form['attachments'] ?? []) as List<dynamic>;
-    final allAttachments = [
-      ...existing.cast<Map<String, dynamic>>(),
-      {'is_add_button': true},
-    ];
 
     if (widget.isLoading) {
       return Container(
@@ -167,6 +117,7 @@ class _InfoTabState extends State<InfoTab> {
       qty: widget.qty,
       note: widget.note,
       handleSelectMachine: widget.handleSelectMachine,
+      handleChangeInput: widget.handleChangeInput,
     );
   }
 }

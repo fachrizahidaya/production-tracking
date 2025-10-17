@@ -189,7 +189,7 @@ class _CreateDyeingState extends State<CreateDyeing> {
     return Scaffold(
         backgroundColor: const Color(0xFFEBEBEB),
         appBar: CustomAppBar(
-          title: 'Buat Dyeing',
+          title: 'Mulai Dyeing',
           onReturn: () {
             Navigator.pop(context);
           },

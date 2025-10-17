@@ -1,15 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/dyeing/detail/item_dyeing.dart';
+import 'package:textile_tracking/components/dyeing/item_dyeing.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/main_list.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/margin_card.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/dyeing/%5Bdyeing_id%5D.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/screens/dyeing/create_dyeing.dart';
+import 'package:textile_tracking/screens/dyeing/finish_dyeing.dart';
 
 class DyeingScreen extends StatefulWidget {
   const DyeingScreen({super.key});
@@ -225,6 +228,57 @@ class _DyeingScreenState extends State<DyeingScreen> {
               firstLoading: _firstLoading,
               hasMore: _hasMore,
               isFiltered: _isFiltered,
+              showActions: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.add,
+                              color: CustomTheme().buttonColor('primary')),
+                          title: const Text("Mulai Dyeing"),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const CreateDyeing(),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.check_circle,
+                              color: CustomTheme().buttonColor('warning')),
+                          title: const Text("Selesai Dyeing"),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const FinishDyeing(),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.replay_outlined,
+                              color: CustomTheme().buttonColor('warning')),
+                          title: const Text("Rework Dyeing"),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const FinishDyeing(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
             ))
           ],
         ),

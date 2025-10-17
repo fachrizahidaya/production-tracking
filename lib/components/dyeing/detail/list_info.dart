@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
+import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/custom_card.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
@@ -30,6 +31,7 @@ class ListInfo extends StatefulWidget {
   final qty;
   final note;
   final handleSelectMachine;
+  final handleChangeInput;
 
   const ListInfo(
       {super.key,
@@ -47,7 +49,8 @@ class ListInfo extends StatefulWidget {
       this.note,
       this.width,
       this.qty,
-      this.handleSelectMachine});
+      this.handleSelectMachine,
+      this.handleChangeInput});
 
   @override
   State<ListInfo> createState() => _ListInfoState();
@@ -196,232 +199,235 @@ class _ListInfoState extends State<ListInfo> {
                               ),
                             ],
                           ),
-                          if (widget.data['status'] == 'Diproses')
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ViewText(
-                                  viewLabel: 'Mesin',
-                                  viewValue:
-                                      '${widget.data['machine']?['code'] ?? ''} - ${widget.data['machine']?['name'] ?? ''}',
-                                ),
-                                ViewText(
-                                  viewLabel: 'Lokasi',
-                                  viewValue:
-                                      '${widget.data['machine']?['location'] ?? ''}',
-                                ),
-                              ].separatedBy(SizedBox(
-                                height: 8,
-                              )),
-                            )
                         ],
                       ),
                     ))),
-                Expanded(
-                    flex: 1,
-                    child: CustomCard(
-                        child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ViewText(
-                            viewLabel: 'Panjang',
-                            viewValue: widget.data['length'] ?? '-',
-                          ),
-                          ViewText(
-                            viewLabel: 'Lebar',
-                            viewValue: widget.data['width'] ?? '-',
-                          ),
-                          ViewText(
-                            viewLabel: 'Jumlah Hasil Dyeing',
-                            viewValue: widget.data['qty'] != null &&
-                                    widget.data['unit']?['code'] != null
-                                ? '${widget.data['qty']} ${widget.data['unit']['code']}'
-                                : '-',
-                          )
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
-                      ),
-                    ))),
-              ],
-            ),
-            if (widget.data['status'] != 'Diproses')
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                if (widget.data['status'] == 'Diproses')
                   Expanded(
-                      flex: 2,
+                      flex: 1,
                       child: CustomCard(
                           child: Padding(
                         padding: PaddingColumn.screen,
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SelectForm(
-                                  label: 'Mesin',
-                                  onTap: () => widget.handleSelectMachine(),
-                                  selectedLabel:
-                                      widget.form['nama_mesin'] ?? '',
-                                  selectedValue:
-                                      widget.form['machine_id'].toString(),
-                                  required: false,
-                                ),
-                              ].separatedBy(SizedBox(
-                                height: 16,
-                              )),
+                            ViewText(
+                              viewLabel: 'Panjang',
+                              viewValue: widget.data['length'] ?? '-',
                             ),
+                            ViewText(
+                              viewLabel: 'Lebar',
+                              viewValue: widget.data['width'] ?? '-',
+                            ),
+                            ViewText(
+                              viewLabel: 'Jumlah Hasil Dyeing',
+                              viewValue: widget.data['qty'] != null &&
+                                      widget.data['unit']?['code'] != null
+                                  ? '${widget.data['qty']} ${widget.data['unit']['code']}'
+                                  : '-',
+                            )
                           ].separatedBy(SizedBox(
-                            height: 16,
+                            height: 8,
                           )),
                         ),
                       ))),
-                ],
-              ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                    flex: 2,
-                    child: CustomCard(
-                        child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ViewText(
-                                    viewLabel: 'Dimulai oleh',
-                                    viewValue: widget.data['start_time'] != null
-                                        ? '${widget.data['start_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['start_time']))}'
-                                        : '-',
-                                  ),
-                                  ViewText(
-                                    viewLabel: 'Selesai oleh',
-                                    viewValue: widget.data['end_time'] != null
-                                        ? '${widget.data['end_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['end_time']))}'
-                                        : '-',
-                                  ),
-                                  ViewText(
-                                    viewLabel: 'Catatan',
-                                    viewValue:
-                                        widget.data['notes']?.toString() ?? '-',
-                                  ),
-                                ].separatedBy(SizedBox(
-                                  height: 16,
-                                )),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ))),
               ],
             ),
             CustomCard(
                 child: Padding(
               padding: PaddingColumn.screen,
+              child: SelectForm(
+                label: 'Mesin',
+                onTap: () => widget.handleSelectMachine(),
+                selectedLabel: widget.form['nama_mesin'] ?? '',
+                selectedValue: widget.form['machine_id'].toString(),
+                required: false,
+              ),
+            )),
+            if (widget.data['status'] != 'Diproses')
+              CustomCard(
+                  child: Padding(
+                padding: PaddingColumn.screen,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: TextForm(
+                            label: 'Panjang',
+                            req: false,
+                            controller: widget.length,
+                            handleChange: (value) {
+                              setState(() {
+                                widget.length.text = value.toString();
+                                widget.handleChangeInput('length', value);
+                              });
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: TextForm(
+                            label: 'Lebar',
+                            req: false,
+                            controller: widget.length,
+                            handleChange: (value) {
+                              setState(() {
+                                widget.length.text = value.toString();
+                                widget.handleChangeInput('length', value);
+                              });
+                            },
+                          ),
+                        ),
+                      ].separatedBy(SizedBox(
+                        width: 16,
+                      )),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: TextForm(
+                            label: 'Jumlah',
+                            req: false,
+                            controller: widget.qty,
+                            handleChange: (value) {
+                              setState(() {
+                                widget.qty.text = value.toString();
+                                widget.handleChangeInput('qty', value);
+                              });
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: SelectForm(
+                              label: 'Satuan',
+                              onTap: () => null,
+                              selectedLabel: widget.form['nama_satuan'] ?? '',
+                              selectedValue:
+                                  widget.form['unit_id']?.toString() ?? '',
+                              required: false),
+                        ),
+                      ].separatedBy(SizedBox(
+                        width: 16,
+                      )),
+                    ),
+                  ].separatedBy(SizedBox(
+                    height: 8,
+                  )),
+                ),
+              )),
+            CustomCard(
+                child: Padding(
+              padding: PaddingColumn.screen,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Lampiran',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          CustomTheme().hGap('sm'),
-                        ],
-                      ),
-                      if (widget.existingAttachment.isEmpty)
-                        const NoData()
-                      else
-                        ...List.generate(widget.existingAttachment.length,
-                            (index) {
-                          final item = widget.existingAttachment[index];
-
-                          if (item['is_add_button'] == true) {
-                            return const SizedBox.shrink();
-                          }
-
-                          final bool isNew = item.containsKey('path');
-                          final String? filePath =
-                              isNew ? item['path'] : item['file_path'];
-                          final String fileName = isNew
-                              ? item['name']
-                              : (item['file_name'] ??
-                                  filePath?.split('/').last ??
-                                  '');
-                          final String extension =
-                              fileName.split('.').last.toLowerCase();
-
-                          final String baseUrl =
-                              '${dotenv.env['IMAGE_URL_DEV']}';
-
-                          Widget previewWidget;
-                          if (extension == 'pdf') {
-                            previewWidget = const Icon(Icons.picture_as_pdf,
-                                color: Colors.red, size: 60);
-                          } else if (isNew && filePath != null) {
-                            previewWidget =
-                                Image.file(File(filePath), fit: BoxFit.cover);
-                          } else if (filePath != null) {
-                            final bool isImage = ['png', 'jpg', 'jpeg', 'gif']
-                                .contains(extension);
-                            if (isImage) {
-                              previewWidget = Image.network(
-                                '$baseUrl$filePath',
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(Icons.broken_image, size: 60),
-                              );
-                            } else {
-                              previewWidget =
-                                  const Icon(Icons.insert_drive_file, size: 60);
-                            }
-                          } else {
-                            previewWidget =
-                                const Icon(Icons.insert_drive_file, size: 60);
-                          }
-
-                          return Stack(
-                            alignment: Alignment.topRight,
-                            children: [
-                              Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                ),
-                                child: previewWidget,
-                              ),
-                            ],
-                          );
-                        }),
-                    ],
+                  ViewText(
+                    viewLabel: 'Dimulai oleh',
+                    viewValue: widget.data['start_time'] != null
+                        ? '${widget.data['start_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['start_time']))}'
+                        : '-',
+                  ),
+                  ViewText(
+                    viewLabel: 'Selesai oleh',
+                    viewValue: widget.data['end_time'] != null
+                        ? '${widget.data['end_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['end_time']))}'
+                        : '-',
+                  ),
+                  ViewText(
+                    viewLabel: 'Catatan',
+                    viewValue: widget.data['notes']?.toString() ?? '-',
                   ),
                 ].separatedBy(SizedBox(
                   height: 16,
                 )),
+              ),
+            )),
+            CustomCard(
+                child: Padding(
+              padding: PaddingColumn.screen,
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Lampiran',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      CustomTheme().hGap('sm'),
+                    ],
+                  ),
+                  if (widget.existingAttachment.isEmpty)
+                    const NoData()
+                  else
+                    ...List.generate(widget.existingAttachment.length, (index) {
+                      final item = widget.existingAttachment[index];
+
+                      if (item['is_add_button'] == true) {
+                        return const SizedBox.shrink();
+                      }
+
+                      final bool isNew = item.containsKey('path');
+                      final String? filePath =
+                          isNew ? item['path'] : item['file_path'];
+                      final String fileName = isNew
+                          ? item['name']
+                          : (item['file_name'] ??
+                              filePath?.split('/').last ??
+                              '');
+                      final String extension =
+                          fileName.split('.').last.toLowerCase();
+
+                      final String baseUrl = '${dotenv.env['IMAGE_URL_DEV']}';
+
+                      Widget previewWidget;
+                      if (extension == 'pdf') {
+                        previewWidget = const Icon(Icons.picture_as_pdf,
+                            color: Colors.red, size: 60);
+                      } else if (isNew && filePath != null) {
+                        previewWidget =
+                            Image.file(File(filePath), fit: BoxFit.cover);
+                      } else if (filePath != null) {
+                        final bool isImage =
+                            ['png', 'jpg', 'jpeg', 'gif'].contains(extension);
+                        if (isImage) {
+                          previewWidget = Image.network(
+                            '$baseUrl$filePath',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.broken_image, size: 60),
+                          );
+                        } else {
+                          previewWidget =
+                              const Icon(Icons.insert_drive_file, size: 60);
+                        }
+                      } else {
+                        previewWidget =
+                            const Icon(Icons.insert_drive_file, size: 60);
+                      }
+
+                      return Stack(
+                        alignment: Alignment.topRight,
+                        children: [
+                          Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: previewWidget,
+                          ),
+                        ],
+                      );
+                    }),
+                ],
               ),
             )),
             if (widget.data['status'] != 'Diproses')

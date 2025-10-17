@@ -184,6 +184,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
         .getDataList(params);
 
     List<dynamic> loadData =
+        // ignore: use_build_context_synchronously
         Provider.of<WorkOrderService>(context, listen: false).dataList;
 
     if (loadData.isEmpty) {
@@ -241,16 +242,19 @@ class _DyeingDetailState extends State<DyeingDetail> {
       final message = await Provider.of<DyeingService>(context, listen: false)
           .updateItem(id, dyeing, _isLoading);
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
       );
 
       Navigator.pushNamedAndRemoveUntil(
+        // ignore: use_build_context_synchronously
         context,
         '/dyeings',
         (Route<dynamic> route) => false,
       );
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );
@@ -267,16 +271,19 @@ class _DyeingDetailState extends State<DyeingDetail> {
                   await Provider.of<DyeingService>(context, listen: false)
                       .deleteItem(id, _processLoading);
 
+              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(message)),
               );
 
               Navigator.pushNamedAndRemoveUntil(
+                // ignore: use_build_context_synchronously
                 context,
                 '/dyeings',
                 (Route<dynamic> route) => false,
               );
             } catch (e) {
+              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("Error: ${e.toString()}")),
               );

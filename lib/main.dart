@@ -8,6 +8,7 @@ import 'package:textile_tracking/models/option/option_operator.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
+import 'package:textile_tracking/models/process/press_tumbler.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/dyeing/index.dart';
 import 'package:textile_tracking/screens/home/index.dart';
@@ -25,6 +26,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => DyeingService()),
+        ChangeNotifierProvider(create: (_) => PressTumblerService()),
         ChangeNotifierProvider(create: (_) => UnitService()),
         ChangeNotifierProvider(create: (_) => OptionUnitService()),
         ChangeNotifierProvider(create: (_) => OptionMachineService()),
@@ -81,7 +83,7 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => const Profile(),
         '/notification': (context) => const NotificationList(),
         '/dyeings': (context) => const DyeingScreen(),
-        '/press-tumblers': (context) => const PressTumbler(),
+        '/press-tumblers': (context) => const PressTumblerScreen(),
         '/stenters': (context) => const Stenter(),
         // '/long-sittings': (context) => const (),
         // '/long-hemmings': (context) => const (),

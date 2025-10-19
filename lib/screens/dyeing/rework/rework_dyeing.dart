@@ -2,22 +2,22 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/create/submit_section.dart';
+import 'package:textile_tracking/components/dyeing/rework/submit_section.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
-import 'package:textile_tracking/screens/dyeing/create_dyeing_manual.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/screens/dyeing/rework/rework_dyeing_manual.dart';
 
-class CreateDyeing extends StatefulWidget {
-  const CreateDyeing({super.key});
+class ReworkDyeing extends StatefulWidget {
+  const ReworkDyeing({super.key});
 
   @override
-  State<CreateDyeing> createState() => _CreateDyeingState();
+  State<ReworkDyeing> createState() => _ReworkDyeingState();
 }
 
-class _CreateDyeingState extends State<CreateDyeing> {
+class _ReworkDyeingState extends State<ReworkDyeing> {
   final MobileScannerController _controller = MobileScannerController();
   bool _isLoading = false;
   bool _isScannerStopped = false;
@@ -34,7 +34,7 @@ class _CreateDyeingState extends State<CreateDyeing> {
     super.initState();
 
     setState(() {
-      _form['start_by_id'] = loggedInUser?.id;
+      _form['end_by_id'] = loggedInUser?.id;
     });
   }
 
@@ -60,12 +60,18 @@ class _CreateDyeingState extends State<CreateDyeing> {
     'nama_satuan': '',
   };
 
+  void _handleChangeInput(fieldName, value) {
+    setState(() {
+      _form[fieldName] = value;
+    });
+  }
+
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchOptions();
+        .fetchReworkOptions();
     // ignore: use_build_context_synchronously
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
+        .dataListRework;
 
     setState(() {
       workOrderOption = result;
@@ -110,11 +116,12 @@ class _CreateDyeingState extends State<CreateDyeing> {
         // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
-          builder: (context) => CreateDyeingManual(
+          builder: (context) => ReworkDyeingManual(
             id: scannedId,
             data: data,
             form: _form,
             handleSubmit: _handleSubmit,
+            handleChangeInput: _handleChangeInput,
           ),
         ),
       );
@@ -129,7 +136,7 @@ class _CreateDyeingState extends State<CreateDyeing> {
     }
   }
 
-  Future<void> _handleSubmit() async {
+  Future<void> _handleSubmit(id) async {
     try {
       final dyeing = Dyeing(
           wo_id: _form['wo_id'] != null
@@ -155,10 +162,12 @@ class _CreateDyeingState extends State<CreateDyeing> {
           start_by_id: _form['start_by_id'] != null
               ? int.tryParse(_form['start_by_id'].toString())
               : null,
-          end_by_id: _form['end_by_id'],
+          end_by_id: _form['end_by_id'] != null
+              ? int.tryParse(_form['end_by_id'])
+              : null,
           attachments: _form['attachments']);
       final message = await Provider.of<DyeingService>(context, listen: false)
-          .addItem(dyeing, _firstLoading);
+          .reworkItem(id, dyeing, _firstLoading);
 
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
@@ -181,6 +190,7 @@ class _CreateDyeingState extends State<CreateDyeing> {
 
   @override
   void dispose() {
+    _form.clear();
     super.dispose();
   }
 
@@ -189,7 +199,7 @@ class _CreateDyeingState extends State<CreateDyeing> {
     return Scaffold(
         backgroundColor: const Color(0xFFEBEBEB),
         appBar: CustomAppBar(
-          title: 'Mulai Dyeing',
+          title: 'Rework Dyeing',
           onReturn: () {
             Navigator.pop(context);
           },
@@ -202,17 +212,19 @@ class _CreateDyeingState extends State<CreateDyeing> {
           handleSubmit: _handleSubmit,
           handleRoute: _createRoute,
           isLoading: _isLoading,
+          handleChangeInput: _handleChangeInput,
         ));
   }
 }
 
-Route _createRoute(dynamic form, handleSubmit) {
+Route _createRoute(dynamic form, handleSubmit, handleChangeInput) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => CreateDyeingManual(
+    pageBuilder: (context, animation, secondaryAnimation) => ReworkDyeingManual(
       id: null,
       data: null,
       form: form,
       handleSubmit: handleSubmit,
+      handleChangeInput: handleChangeInput,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);

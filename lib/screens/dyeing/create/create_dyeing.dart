@@ -2,22 +2,22 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/finish/submit_section.dart';
+import 'package:textile_tracking/components/dyeing/create/submit_section.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
+import 'package:textile_tracking/screens/dyeing/create/create_dyeing_manual.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
-import 'package:textile_tracking/screens/dyeing/finish_dyeing_manual.dart';
 
-class FinishDyeing extends StatefulWidget {
-  const FinishDyeing({super.key});
+class CreateDyeing extends StatefulWidget {
+  const CreateDyeing({super.key});
 
   @override
-  State<FinishDyeing> createState() => _FinishDyeingState();
+  State<CreateDyeing> createState() => _CreateDyeingState();
 }
 
-class _FinishDyeingState extends State<FinishDyeing> {
+class _CreateDyeingState extends State<CreateDyeing> {
   final MobileScannerController _controller = MobileScannerController();
   bool _isLoading = false;
   bool _isScannerStopped = false;
@@ -34,7 +34,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
     super.initState();
 
     setState(() {
-      _form['end_by_id'] = loggedInUser?.id;
+      _form['start_by_id'] = loggedInUser?.id;
     });
   }
 
@@ -60,17 +60,12 @@ class _FinishDyeingState extends State<FinishDyeing> {
     'nama_satuan': '',
   };
 
-  void _handleChangeInput(fieldName, value) {
-    setState(() {
-      _form[fieldName] = value;
-    });
-  }
-
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchFinishOptions();
+        .fetchOptions();
+    // ignore: use_build_context_synchronously
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListFinish;
+        .dataListOption;
 
     setState(() {
       workOrderOption = result;
@@ -112,14 +107,14 @@ class _FinishDyeingState extends State<FinishDyeing> {
       });
 
       Navigator.push(
+        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
-          builder: (context) => FinishDyeingManual(
+          builder: (context) => CreateDyeingManual(
             id: scannedId,
             data: data,
             form: _form,
             handleSubmit: _handleSubmit,
-            handleChangeInput: _handleChangeInput,
           ),
         ),
       );
@@ -127,13 +122,14 @@ class _FinishDyeingState extends State<FinishDyeing> {
       setState(() {
         _isLoading = false;
       });
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: ${e.toString()}")),
       );
     }
   }
 
-  Future<void> _handleSubmit(id) async {
+  Future<void> _handleSubmit() async {
     try {
       final dyeing = Dyeing(
           wo_id: _form['wo_id'] != null
@@ -148,9 +144,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
           rework_reference_id: _form['rework_reference_id'] != null
               ? int.tryParse(_form['rework_reference_id'].toString())
               : null,
-          qty: (_form['qty']),
-          width: (_form['width']),
-          length: (_form['length']),
+          qty: _form['qty'],
+          width: _form['width'],
+          length: _form['length'],
           notes: _form['notes'],
           rework: _form['rework'],
           status: _form['status'],
@@ -159,24 +155,24 @@ class _FinishDyeingState extends State<FinishDyeing> {
           start_by_id: _form['start_by_id'] != null
               ? int.tryParse(_form['start_by_id'].toString())
               : null,
-          end_by_id: _form['end_by_id'] != null
-              ? int.tryParse(_form['end_by_id'])
-              : null,
+          end_by_id: _form['end_by_id'],
           attachments: _form['attachments']);
-
       final message = await Provider.of<DyeingService>(context, listen: false)
-          .finishItem(id, dyeing, _firstLoading);
+          .addItem(dyeing, _firstLoading);
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
       );
 
       Navigator.pushNamedAndRemoveUntil(
+        // ignore: use_build_context_synchronously
         context,
         '/dyeings',
         (Route<dynamic> route) => false,
       );
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );
@@ -185,7 +181,6 @@ class _FinishDyeingState extends State<FinishDyeing> {
 
   @override
   void dispose() {
-    _form.clear();
     super.dispose();
   }
 
@@ -194,7 +189,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
     return Scaffold(
         backgroundColor: const Color(0xFFEBEBEB),
         appBar: CustomAppBar(
-          title: 'Finish Dyeing',
+          title: 'Mulai Dyeing',
           onReturn: () {
             Navigator.pop(context);
           },
@@ -207,19 +202,17 @@ class _FinishDyeingState extends State<FinishDyeing> {
           handleSubmit: _handleSubmit,
           handleRoute: _createRoute,
           isLoading: _isLoading,
-          handleChangeInput: _handleChangeInput,
         ));
   }
 }
 
-Route _createRoute(dynamic form, handleSubmit, handleChangeInput) {
+Route _createRoute(dynamic form, handleSubmit) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => FinishDyeingManual(
+    pageBuilder: (context, animation, secondaryAnimation) => CreateDyeingManual(
       id: null,
       data: null,
       form: form,
       handleSubmit: handleSubmit,
-      handleChangeInput: handleChangeInput,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);

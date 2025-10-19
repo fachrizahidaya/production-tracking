@@ -39,6 +39,8 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
   List<dynamic> _dataListFinish = [];
   List<dynamic> _dataListPressTumbler = [];
   List<dynamic> _dataListPressFinish = [];
+  List<dynamic> _dataListStenter = [];
+  List<dynamic> _dataListStenterFinish = [];
   final List<OptionWorkOrder> _wo = [];
 
   bool get isLoading => _isLoading;
@@ -49,6 +51,8 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
   List<dynamic> get dataListFinish => _dataListFinish;
   List<dynamic> get dataListPressTumbler => _dataListPressTumbler;
   List<dynamic> get dataListPressFinish => _dataListPressFinish;
+  List<dynamic> get dataListStenter => _dataListStenter;
+  List<dynamic> get dataListStenterFinish => _dataListStenterFinish;
   List<OptionWorkOrder> get options => _wo;
 
   @override
@@ -326,6 +330,116 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
           case 200:
             if (decoded['data'] != null) {
               _dataListPressFinish = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
+      } else {
+        throw Exception('Failed to load work order');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchStenterOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
+
+    if (isInitialLoad) {
+      _currentPage = 1;
+      _hasMoreData = true;
+      _wo.clear();
+    }
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
+              .replace(queryParameters: {
+            'type': 'stenter',
+          }),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListStenter = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
+      } else {
+        throw Exception('Failed to load work order');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchStenterFinishOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
+
+    if (isInitialLoad) {
+      _currentPage = 1;
+      _hasMoreData = true;
+      _wo.clear();
+    }
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
+              .replace(queryParameters: {
+            'type': 'stenter_finish',
+          }),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListStenterFinish = decoded['data'];
             }
             notifyListeners();
             break;

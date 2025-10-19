@@ -2,22 +2,23 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/create/submit_section.dart';
-import 'package:textile_tracking/models/option/option_work_order.dart';
-import 'package:textile_tracking/models/process/dyeing.dart';
-import 'package:textile_tracking/providers/user_provider.dart';
-import 'package:textile_tracking/screens/dyeing/create_dyeing_manual.dart';
+import 'package:textile_tracking/components/dyeing/finish/submit_section.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/helpers/service/finish_process.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/models/option/option_work_order.dart';
+import 'package:textile_tracking/models/process/press_tumbler.dart';
+import 'package:textile_tracking/providers/user_provider.dart';
+import 'package:textile_tracking/screens/press-tumbler/finish/finish_press_tumbler_manual.dart';
 
-class CreateDyeing extends StatefulWidget {
-  const CreateDyeing({super.key});
+class FinishPressTumbler extends StatefulWidget {
+  const FinishPressTumbler({super.key});
 
   @override
-  State<CreateDyeing> createState() => _CreateDyeingState();
+  State<FinishPressTumbler> createState() => _FinishPressTumblerState();
 }
 
-class _CreateDyeingState extends State<CreateDyeing> {
+class _FinishPressTumblerState extends State<FinishPressTumbler> {
   final MobileScannerController _controller = MobileScannerController();
   bool _isLoading = false;
   bool _isScannerStopped = false;
@@ -34,18 +35,20 @@ class _CreateDyeingState extends State<CreateDyeing> {
     super.initState();
 
     setState(() {
-      _form['start_by_id'] = loggedInUser?.id;
+      _form['end_by_id'] = loggedInUser?.id;
     });
   }
 
   final Map<String, dynamic> _form = {
     'wo_id': null,
     'machine_id': null,
-    'unit_id': null,
+    'weight_unit_id': null,
+    'width_unit_id': null,
+    'length_unit_id': null,
     'rework_reference_id': null,
     'start_by_id': null,
     'end_by_id': null,
-    'qty': null,
+    'weight': null,
     'width': null,
     'length': null,
     'notes': '',
@@ -55,17 +58,25 @@ class _CreateDyeingState extends State<CreateDyeing> {
     'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     'attachments': [],
     'no_wo': '',
-    'no_dyeing': '',
+    'no_pt': '',
     'nama_mesin': '',
+    'nama_satuan_berat': '',
+    'nama_satuan_panjang': '',
+    'nama_satuan_lebar': '',
     'nama_satuan': '',
   };
 
+  void _handleChangeInput(fieldName, value) {
+    setState(() {
+      _form[fieldName] = value;
+    });
+  }
+
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchOptions();
-    // ignore: use_build_context_synchronously
+        .fetchPressFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
+        .dataListPressFinish;
 
     setState(() {
       workOrderOption = result;
@@ -107,14 +118,14 @@ class _CreateDyeingState extends State<CreateDyeing> {
       });
 
       Navigator.push(
-        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
-          builder: (context) => CreateDyeingManual(
+          builder: (context) => FinishPressTumblerManual(
             id: scannedId,
             data: data,
             form: _form,
             handleSubmit: _handleSubmit,
+            handleChangeInput: _handleChangeInput,
           ),
         ),
       );
@@ -122,57 +133,59 @@ class _CreateDyeingState extends State<CreateDyeing> {
       setState(() {
         _isLoading = false;
       });
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: ${e.toString()}")),
       );
     }
   }
 
-  Future<void> _handleSubmit() async {
+  Future<void> _handleSubmit(id) async {
     try {
-      final dyeing = Dyeing(
+      final pressTumbler = PressTumbler(
           wo_id: _form['wo_id'] != null
               ? int.tryParse(_form['wo_id'].toString())
               : null,
-          unit_id: _form['unit_id'] != null
-              ? int.tryParse(_form['unit_id'].toString())
+          weight_unit_id: _form['weight_unit_id'] != null
+              ? int.tryParse(_form['weight_unit_id'].toString())
+              : null,
+          width_unit_id: _form['weight_unit_id'] != null
+              ? int.tryParse(_form['weight_unit_id'].toString())
+              : null,
+          length_unit_id: _form['weight_unit_id'] != null
+              ? int.tryParse(_form['weight_unit_id'].toString())
               : null,
           machine_id: _form['machine_id'] != null
               ? int.tryParse(_form['machine_id'].toString())
               : null,
-          rework_reference_id: _form['rework_reference_id'] != null
-              ? int.tryParse(_form['rework_reference_id'].toString())
-              : null,
-          qty: _form['qty'],
-          width: _form['width'],
-          length: _form['length'],
+          weight: (_form['weight']),
+          width: (_form['width']),
+          length: (_form['length']),
           notes: _form['notes'],
-          rework: _form['rework'],
           status: _form['status'],
           start_time: _form['start_time'],
           end_time: _form['end_time'],
           start_by_id: _form['start_by_id'] != null
               ? int.tryParse(_form['start_by_id'].toString())
               : null,
-          end_by_id: _form['end_by_id'],
+          end_by_id: _form['end_by_id'] != null
+              ? int.tryParse(_form['end_by_id'])
+              : null,
           attachments: _form['attachments']);
-      final message = await Provider.of<DyeingService>(context, listen: false)
-          .addItem(dyeing, _firstLoading);
 
-      // ignore: use_build_context_synchronously
+      final message =
+          await Provider.of<PressTumblerService>(context, listen: false)
+              .finishItem(id, pressTumbler, _firstLoading);
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
       );
 
       Navigator.pushNamedAndRemoveUntil(
-        // ignore: use_build_context_synchronously
         context,
-        '/dyeings',
+        '/press-tumblers',
         (Route<dynamic> route) => false,
       );
     } catch (e) {
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );
@@ -181,6 +194,7 @@ class _CreateDyeingState extends State<CreateDyeing> {
 
   @override
   void dispose() {
+    _form.clear();
     super.dispose();
   }
 
@@ -189,7 +203,7 @@ class _CreateDyeingState extends State<CreateDyeing> {
     return Scaffold(
         backgroundColor: const Color(0xFFEBEBEB),
         appBar: CustomAppBar(
-          title: 'Mulai Dyeing',
+          title: 'Selesai Press Tumbler',
           onReturn: () {
             Navigator.pop(context);
           },
@@ -202,17 +216,20 @@ class _CreateDyeingState extends State<CreateDyeing> {
           handleSubmit: _handleSubmit,
           handleRoute: _createRoute,
           isLoading: _isLoading,
+          handleChangeInput: _handleChangeInput,
         ));
   }
 }
 
-Route _createRoute(dynamic form, handleSubmit) {
+Route _createRoute(dynamic form, handleSubmit, handleChangeInput) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => CreateDyeingManual(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        FinishPressTumblerManual(
       id: null,
       data: null,
       form: form,
       handleSubmit: handleSubmit,
+      handleChangeInput: handleChangeInput,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);

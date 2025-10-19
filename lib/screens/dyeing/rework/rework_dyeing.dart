@@ -2,22 +2,22 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/finish/submit_section.dart';
+import 'package:textile_tracking/components/dyeing/rework/submit_section.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
-import 'package:textile_tracking/screens/dyeing/finish_dyeing_manual.dart';
+import 'package:textile_tracking/screens/dyeing/rework/rework_dyeing_manual.dart';
 
-class FinishDyeing extends StatefulWidget {
-  const FinishDyeing({super.key});
+class ReworkDyeing extends StatefulWidget {
+  const ReworkDyeing({super.key});
 
   @override
-  State<FinishDyeing> createState() => _FinishDyeingState();
+  State<ReworkDyeing> createState() => _ReworkDyeingState();
 }
 
-class _FinishDyeingState extends State<FinishDyeing> {
+class _ReworkDyeingState extends State<ReworkDyeing> {
   final MobileScannerController _controller = MobileScannerController();
   bool _isLoading = false;
   bool _isScannerStopped = false;
@@ -68,9 +68,10 @@ class _FinishDyeingState extends State<FinishDyeing> {
 
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchFinishOptions();
+        .fetchReworkOptions();
+    // ignore: use_build_context_synchronously
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListFinish;
+        .dataListRework;
 
     setState(() {
       workOrderOption = result;
@@ -112,9 +113,10 @@ class _FinishDyeingState extends State<FinishDyeing> {
       });
 
       Navigator.push(
+        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
-          builder: (context) => FinishDyeingManual(
+          builder: (context) => ReworkDyeingManual(
             id: scannedId,
             data: data,
             form: _form,
@@ -127,6 +129,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
       setState(() {
         _isLoading = false;
       });
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: ${e.toString()}")),
       );
@@ -148,9 +151,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
           rework_reference_id: _form['rework_reference_id'] != null
               ? int.tryParse(_form['rework_reference_id'].toString())
               : null,
-          qty: (_form['qty']),
-          width: (_form['width']),
-          length: (_form['length']),
+          qty: _form['qty'],
+          width: _form['width'],
+          length: _form['length'],
           notes: _form['notes'],
           rework: _form['rework'],
           status: _form['status'],
@@ -163,20 +166,22 @@ class _FinishDyeingState extends State<FinishDyeing> {
               ? int.tryParse(_form['end_by_id'])
               : null,
           attachments: _form['attachments']);
-
       final message = await Provider.of<DyeingService>(context, listen: false)
-          .finishItem(id, dyeing, _firstLoading);
+          .reworkItem(id, dyeing, _firstLoading);
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
       );
 
       Navigator.pushNamedAndRemoveUntil(
+        // ignore: use_build_context_synchronously
         context,
         '/dyeings',
         (Route<dynamic> route) => false,
       );
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );
@@ -194,7 +199,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
     return Scaffold(
         backgroundColor: const Color(0xFFEBEBEB),
         appBar: CustomAppBar(
-          title: 'Finish Dyeing',
+          title: 'Rework Dyeing',
           onReturn: () {
             Navigator.pop(context);
           },
@@ -214,7 +219,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
 
 Route _createRoute(dynamic form, handleSubmit, handleChangeInput) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => FinishDyeingManual(
+    pageBuilder: (context, animation, secondaryAnimation) => ReworkDyeingManual(
       id: null,
       data: null,
       form: form,

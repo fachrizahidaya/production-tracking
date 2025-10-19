@@ -4,21 +4,20 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/dyeing/finish/submit_section.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/helpers/service/finish_process.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
-import 'package:textile_tracking/models/process/press_tumbler.dart';
+import 'package:textile_tracking/models/process/stenter.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
-import 'package:textile_tracking/screens/press-tumbler/finish_press_tumbler_manual.dart';
+import 'package:textile_tracking/screens/stenter/finish/finish_stenter_manual.dart';
 
-class FinishPressTumbler extends StatefulWidget {
-  const FinishPressTumbler({super.key});
+class FinishStenter extends StatefulWidget {
+  const FinishStenter({super.key});
 
   @override
-  State<FinishPressTumbler> createState() => _FinishPressTumblerState();
+  State<FinishStenter> createState() => _FinishStenterState();
 }
 
-class _FinishPressTumblerState extends State<FinishPressTumbler> {
+class _FinishStenterState extends State<FinishStenter> {
   final MobileScannerController _controller = MobileScannerController();
   bool _isLoading = false;
   bool _isScannerStopped = false;
@@ -27,17 +26,6 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
 
   final WorkOrderService _workOrderService = WorkOrderService();
   late List<dynamic> workOrderOption = [];
-
-  @override
-  void initState() {
-    final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
-    _handleFetchWorkOrder();
-    super.initState();
-
-    setState(() {
-      _form['end_by_id'] = loggedInUser?.id;
-    });
-  }
 
   final Map<String, dynamic> _form = {
     'wo_id': null,
@@ -66,6 +54,17 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
     'nama_satuan': '',
   };
 
+  @override
+  void initState() {
+    final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
+    _handleFetchWorkOrder();
+    super.initState();
+
+    setState(() {
+      _form['end_by_id'] = loggedInUser?.id;
+    });
+  }
+
   void _handleChangeInput(fieldName, value) {
     setState(() {
       _form[fieldName] = value;
@@ -74,9 +73,9 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
 
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchPressFinishOptions();
+        .fetchStenterFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListPressFinish;
+        .dataListStenterFinish;
 
     setState(() {
       workOrderOption = result;
@@ -120,7 +119,7 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => FinishPressTumblerManual(
+          builder: (context) => FinishStenterManual(
             id: scannedId,
             data: data,
             form: _form,
@@ -141,7 +140,7 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
 
   Future<void> _handleSubmit(id) async {
     try {
-      final pressTumbler = PressTumbler(
+      final stenter = Stenter(
           wo_id: _form['wo_id'] != null
               ? int.tryParse(_form['wo_id'].toString())
               : null,
@@ -172,9 +171,8 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
               : null,
           attachments: _form['attachments']);
 
-      final message =
-          await Provider.of<PressTumblerService>(context, listen: false)
-              .finishItem(id, pressTumbler, _firstLoading);
+      final message = await Provider.of<StenterService>(context, listen: false)
+          .finishItem(id, stenter, _firstLoading);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
@@ -182,7 +180,7 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
 
       Navigator.pushNamedAndRemoveUntil(
         context,
-        '/press-tumblers',
+        '/stenters',
         (Route<dynamic> route) => false,
       );
     } catch (e) {
@@ -203,7 +201,7 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
     return Scaffold(
         backgroundColor: const Color(0xFFEBEBEB),
         appBar: CustomAppBar(
-          title: 'Selesai Press Tumbler',
+          title: 'Selesai Stenter',
           onReturn: () {
             Navigator.pop(context);
           },
@@ -224,7 +222,7 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
 Route _createRoute(dynamic form, handleSubmit, handleChangeInput) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
-        FinishPressTumblerManual(
+        FinishStenterManual(
       id: null,
       data: null,
       form: form,

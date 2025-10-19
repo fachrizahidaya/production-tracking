@@ -324,28 +324,40 @@ class _ListInfoState extends State<ListInfo> {
             CustomCard(
                 child: Padding(
               padding: PaddingColumn.screen,
-              child: Column(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ViewText(
-                    viewLabel: 'Dimulai oleh',
-                    viewValue: widget.data['start_time'] != null
-                        ? '${widget.data['start_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['start_time']))}'
-                        : '-',
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ViewText(
+                            viewLabel: 'Dimulai oleh',
+                            viewValue: widget.data['start_time'] != null
+                                ? '${widget.data['start_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['start_time']))}'
+                                : '-',
+                          ),
+                          ViewText(
+                            viewLabel: 'Selesai oleh',
+                            viewValue: widget.data['end_time'] != null
+                                ? '${widget.data['end_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['end_time']))}'
+                                : '-',
+                          ),
+                          ViewText(
+                            viewLabel: 'Catatan',
+                            viewValue: widget.data['notes']?.toString() ?? '-',
+                          ),
+                        ].separatedBy(SizedBox(
+                          height: 16,
+                        )),
+                      ),
+                    ],
                   ),
-                  ViewText(
-                    viewLabel: 'Selesai oleh',
-                    viewValue: widget.data['end_time'] != null
-                        ? '${widget.data['end_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['end_time']))}'
-                        : '-',
-                  ),
-                  ViewText(
-                    viewLabel: 'Catatan',
-                    viewValue: widget.data['notes']?.toString() ?? '-',
-                  ),
-                ].separatedBy(SizedBox(
-                  height: 16,
-                )),
+                ],
               ),
             )),
             CustomCard(

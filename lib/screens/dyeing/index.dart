@@ -11,8 +11,8 @@ import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/dyeing/%5Bdyeing_id%5D.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/screens/dyeing/create_dyeing.dart';
-import 'package:textile_tracking/screens/dyeing/finish_dyeing.dart';
+import 'package:textile_tracking/screens/dyeing/create/create_dyeing.dart';
+import 'package:textile_tracking/screens/dyeing/finish/finish_dyeing.dart';
 
 class DyeingScreen extends StatefulWidget {
   const DyeingScreen({super.key});

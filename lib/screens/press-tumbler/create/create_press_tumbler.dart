@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/service/create_process.dart';
 import 'package:textile_tracking/models/process/press_tumbler.dart';
-import 'package:textile_tracking/screens/press-tumbler/create_press_tumbler_manual.dart';
+import 'package:textile_tracking/screens/press-tumbler/create/create_press_tumbler_manual.dart';
 
 class CreatePressTumbler extends StatelessWidget {
   const CreatePressTumbler({super.key});

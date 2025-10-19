@@ -9,7 +9,7 @@ import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/press_tumbler.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
-import 'package:textile_tracking/screens/press-tumbler/finish_press_tumbler_manual.dart';
+import 'package:textile_tracking/screens/press-tumbler/finish/finish_press_tumbler_manual.dart';
 
 class FinishPressTumbler extends StatefulWidget {
   const FinishPressTumbler({super.key});

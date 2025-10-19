@@ -2,9 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/components/work-order/attachment_tab.dart';
 import 'package:textile_tracking/components/work-order/info_tab.dart';
-import 'package:textile_tracking/components/work-order/item_tab.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_spk.dart';
 import 'package:provider/provider.dart';
@@ -44,10 +42,15 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
   }
 
   Future<void> _getDataView() async {
+    setState(() {
+      _firstLoading = true;
+    });
+
     await _workOrderService.getDataView(widget.id);
 
     setState(() {
       data = _workOrderService.dataView;
+      _firstLoading = false;
     });
   }
 
@@ -120,40 +123,22 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 3,
-        child: Scaffold(
-            appBar: CustomAppBar(
-              title: 'Work Order Detail',
-              onReturn: () {
-                Navigator.pop(context);
-              },
-            ),
-            body: Column(
-              children: [
-                TabBar(tabs: [
-                  Tab(text: 'Informasi'),
-                  Tab(text: 'Daftar Item'),
-                  Tab(text: 'Attachments'),
-                ]),
-                Expanded(
-                    child: TabBarView(children: [
-                  InfoTab(
-                    data: data,
-                  ),
-                  ItemTab(
-                    data: data,
-                    handleSpk: _getSpkLabel,
-                    refetch: _refetch,
-                    hasMore: _hasMore,
-                  ),
-                  AttachmentTab(
-                    data: data,
-                    refetch: _refetch,
-                    hasMore: _hasMore,
-                  )
-                ]))
-              ],
-            )));
+    return Scaffold(
+        appBar: CustomAppBar(
+          title: 'Work Order Detail',
+          onReturn: () {
+            Navigator.pop(context);
+          },
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: InfoTab(
+                data: data,
+                isLoading: _firstLoading,
+              ),
+            )
+          ],
+        ));
   }
 }

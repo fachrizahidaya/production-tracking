@@ -148,16 +148,25 @@ class _InfoTabState extends State<InfoTab> {
 
   @override
   Widget build(BuildContext context) {
+    final existingAttachments =
+        (widget.data['attachments'] ?? []) as List<dynamic>;
+
     if (widget.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Container(
+        color: const Color(0xFFEBEBEB),
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
 
     if (widget.data.isEmpty) {
-      return const Center(child: NoData());
+      return Container(
+        color: const Color(0xFFEBEBEB),
+        alignment: Alignment.center,
+        child: const NoData(),
+      );
     }
-
-    final existingAttachments =
-        (widget.data['attachments'] ?? []) as List<dynamic>;
 
     return ListInfoSection(
       data: widget.data,

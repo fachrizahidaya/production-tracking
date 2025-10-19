@@ -14,8 +14,8 @@ import 'package:textile_tracking/helpers/util/margin_card.dart';
 import 'package:textile_tracking/models/process/press_tumbler.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/press-tumbler/%5Bpress_tumbler_id%5D.dart';
-import 'package:textile_tracking/screens/press-tumbler/create_press_tumbler.dart';
-import 'package:textile_tracking/screens/press-tumbler/finish_press_tumbler.dart';
+import 'package:textile_tracking/screens/press-tumbler/create/create_press_tumbler.dart';
+import 'package:textile_tracking/screens/press-tumbler/finish/finish_press_tumbler.dart';
 
 class PressTumblerScreen extends StatefulWidget {
   const PressTumblerScreen({super.key});

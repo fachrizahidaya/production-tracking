@@ -10,6 +10,8 @@ class InfoTab extends StatefulWidget {
   final ValueNotifier<bool>? isSubmitting;
   final Function(String field, dynamic value)? handleChangeInput;
   final VoidCallback? handleSelectUnit;
+  final VoidCallback? handleSelectLengthUnit;
+  final VoidCallback? handleSelectWidthUnit;
   final VoidCallback? handleSelectMachine;
   final Future<void> Function(String id)? handleUpdate;
   final Future<void> Function()? refetch;
@@ -44,7 +46,9 @@ class InfoTab extends StatefulWidget {
       this.note,
       this.weight,
       this.width,
-      this.no});
+      this.no,
+      this.handleSelectLengthUnit,
+      this.handleSelectWidthUnit});
 
   @override
   State<InfoTab> createState() => _InfoTabState();
@@ -179,6 +183,8 @@ class _InfoTabState extends State<InfoTab> {
       fieldControllers: widget.fieldControllers,
       handleSelectMachine: widget.handleSelectMachine,
       handleSelectUnit: widget.handleSelectUnit,
+      handleSelectLengthUnit: widget.handleSelectLengthUnit,
+      handleSelectWidthUnit: widget.handleSelectWidthUnit,
       handlePickAttachments: _pickAttachments,
       handleChangeInput: widget.handleChangeInput,
       checkForChanges: _checkForChanges,

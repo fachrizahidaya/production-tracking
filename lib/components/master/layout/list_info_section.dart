@@ -40,6 +40,8 @@ class ListInfoSection extends StatefulWidget {
   final fieldConfigs;
   final fieldControllers;
   final handleSelectUnit;
+  final handleSelectLengthUnit;
+  final handleSelectWidthUnit;
   final handlePickAttachments;
   final handleChangeInput;
   final checkForChanges;
@@ -70,7 +72,9 @@ class ListInfoSection extends StatefulWidget {
       this.handlePickAttachments,
       this.handleChangeInput,
       this.checkForChanges,
-      this.no});
+      this.no,
+      this.handleSelectLengthUnit,
+      this.handleSelectWidthUnit});
 
   @override
   State<ListInfoSection> createState() => _ListInfoSectionState();
@@ -192,11 +196,17 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                           children: [
                             ViewText(
                               viewLabel: 'Panjang',
-                              viewValue: data['length']?.toString() ?? '-',
+                              viewValue: data['length'] != null &&
+                                      data['length_unit']?['code'] != null
+                                  ? '${data['length']} ${data['length_unit']['code']}'
+                                  : '-',
                             ),
                             ViewText(
                               viewLabel: 'Lebar',
-                              viewValue: data['width']?.toString() ?? '-',
+                              viewValue: data['width'] != null &&
+                                      data['width_unit']?['code'] != null
+                                  ? '${data['width']} ${data['width_unit']['code']}'
+                                  : '-',
                             ),
                             ViewText(
                               viewLabel: 'Berat',
@@ -227,83 +237,118 @@ class _ListInfoSectionState extends State<ListInfoSection> {
               ),
             ),
             if (widget.data['status'] != 'Diproses')
-              if (widget.data['status'] != 'Diproses')
-                CustomCard(
-                    child: Padding(
-                  padding: PaddingColumn.screen,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: TextForm(
-                              label: 'Panjang',
-                              req: false,
-                              controller: widget.length,
-                              handleChange: (value) {
-                                setState(() {
-                                  widget.length.text = value.toString();
-                                  widget.handleChangeInput('length', value);
-                                });
-                              },
-                            ),
+              CustomCard(
+                  child: Padding(
+                padding: PaddingColumn.screen,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: TextForm(
+                            label: 'Panjang',
+                            req: false,
+                            controller: widget.length,
+                            handleChange: (value) {
+                              setState(() {
+                                widget.length.text = value.toString();
+                                widget.handleChangeInput('length', value);
+                              });
+                            },
                           ),
-                          Expanded(
-                            child: TextForm(
-                              label: 'Lebar',
-                              req: false,
-                              controller: widget.length,
-                              handleChange: (value) {
-                                setState(() {
-                                  widget.length.text = value.toString();
-                                  widget.handleChangeInput('length', value);
-                                });
-                              },
-                            ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: SelectForm(
+                              label: 'Satuan Panjang',
+                              onTap: () => widget.handleSelectLengthUnit(),
+                              selectedLabel:
+                                  widget.form['nama_satuan_panjang'] ?? '',
+                              selectedValue:
+                                  widget.form['length_unit_id']?.toString() ??
+                                      '',
+                              required: false),
+                        ),
+                      ].separatedBy(SizedBox(
+                        width: 16,
+                      )),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: TextForm(
+                            label: 'Lebar',
+                            req: false,
+                            controller: widget.width,
+                            handleChange: (value) {
+                              setState(() {
+                                widget.length.text = value.toString();
+                                widget.handleChangeInput('width', value);
+                              });
+                            },
                           ),
-                        ].separatedBy(SizedBox(
-                          width: 16,
-                        )),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: TextForm(
-                              label: 'Berat',
-                              req: false,
-                              controller: widget.weight,
-                              handleChange: (value) {
-                                setState(() {
-                                  widget.weight.text = value.toString();
-                                  widget.handleChangeInput('weight', value);
-                                });
-                              },
-                            ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: SelectForm(
+                              label: 'Satuan Lebar',
+                              onTap: () => widget.handleSelectWidthUnit(),
+                              selectedLabel:
+                                  widget.form['nama_satuan_lebar'] ?? '',
+                              selectedValue:
+                                  widget.form['width_unit_id']?.toString() ??
+                                      '',
+                              required: false),
+                        ),
+                      ].separatedBy(SizedBox(
+                        width: 16,
+                      )),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: TextForm(
+                            label: 'Berat',
+                            req: false,
+                            controller: widget.weight,
+                            handleChange: (value) {
+                              setState(() {
+                                widget.weight.text = value.toString();
+                                widget.handleChangeInput('weight', value);
+                              });
+                            },
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: SelectForm(
-                                label: 'Satuan',
-                                onTap: () => null,
-                                selectedLabel: widget.form['nama_satuan'] ?? '',
-                                selectedValue:
-                                    widget.form['unit_id']?.toString() ?? '',
-                                required: false),
-                          ),
-                        ].separatedBy(SizedBox(
-                          width: 16,
-                        )),
-                      ),
-                    ].separatedBy(SizedBox(
-                      height: 8,
-                    )),
-                  ),
-                )),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: SelectForm(
+                              label: 'Satuan',
+                              onTap: () => null,
+                              selectedLabel:
+                                  widget.form['nama_satuan_berat'] ?? '',
+                              selectedValue:
+                                  widget.form['weight_unit_id']?.toString() ??
+                                      '',
+                              required: false),
+                        ),
+                      ].separatedBy(SizedBox(
+                        width: 16,
+                      )),
+                    ),
+                  ].separatedBy(SizedBox(
+                    height: 8,
+                  )),
+                ),
+              )),
             CustomCard(
               child: Padding(
                 padding: PaddingColumn.screen,

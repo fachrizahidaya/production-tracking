@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/dyeing/finish/create_form.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/helpers/service/finish_process.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -14,7 +15,7 @@ class FinishProcessManual extends StatefulWidget {
   final dynamic id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
-  final Future<void> Function()? handleSubmit;
+  final handleSubmit;
   final Future<void> Function(dynamic service)? fetchWorkOrder;
   final List<dynamic> Function(dynamic service)? getWorkOrderOptions;
   final void Function(String fieldName, dynamic value)? handleChangeInput;
@@ -207,29 +208,23 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFEBEBEB),
-      appBar: CustomAppBar(
-        title: widget.title,
-        onReturn: () => Navigator.pop(context),
+    return FinishProcess(
+      title: 'Selesai Manual Process',
+      fetchWorkOrder: (service) async => await service.fetchOptions(),
+      getWorkOrderOptions: (service) => service.dataListOption,
+      formPageBuilder:
+          (context, id, data, form, handleSubmit, handleChangeInput) =>
+              FinishProcessManual(
+        title: 'Selesai Manual Process',
+        id: id,
+        data: data,
+        form: form,
+        handleSubmit: handleSubmit,
+        handleChangeInput: handleChangeInput,
       ),
-      body: CreateForm(
-        formKey: _formKey,
-        form: widget.form,
-        handleSubmit: widget.handleSubmit,
-        data: woData,
-        id: widget.id,
-        isLoading: _firstLoading,
-        handleChangeInput: widget.handleChangeInput,
-        handleSelectWo: _selectWorkOrder,
-        note: _noteController,
-        qty: _qtyController,
-        width: _widthController,
-        length: _lengthController,
-        handleSelectUnit: _selectUnit,
-        dyeingData: dyeingData,
-        dyeingId: dyeingId,
-      ),
+      handleSubmitToService: (context, id, form, isLoading) async {
+        // Your manual submission logic
+      },
     );
   }
 }

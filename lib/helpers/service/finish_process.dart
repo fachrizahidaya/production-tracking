@@ -10,25 +10,39 @@ import 'package:textile_tracking/providers/user_provider.dart';
 
 class FinishProcess extends StatefulWidget {
   final String title;
+
+  /// This builds the manual form page when the QR code is scanned or manually entered
   final Widget Function(
     BuildContext context,
     dynamic id,
     Map<String, dynamic> data,
     Map<String, dynamic> form,
-    Future<void> Function(String dyeingId) handleSubmit,
+    Future<void> Function(String id) handleSubmit,
     void Function(String fieldName, dynamic value) handleChangeInput,
   ) formPageBuilder;
-  final handleSubmitToService;
-  final fetchWorkOrder;
-  final getWorkOrderOptions;
 
-  const FinishProcess(
-      {super.key,
-      required this.title,
-      required this.formPageBuilder,
-      this.handleSubmitToService,
-      this.fetchWorkOrder,
-      this.getWorkOrderOptions});
+  /// Function for submission to service (context, id, form, loading)
+  final Future<void> Function(
+      BuildContext context,
+      dynamic id,
+      Map<String, dynamic> form,
+      ValueNotifier<bool> isLoading)? handleSubmitToService;
+
+  /// Function to fetch the work order options (custom per process)
+  final Future<void> Function(OptionWorkOrderService service)? fetchWorkOrder;
+
+  /// Function to get the work order option list (custom per process)
+  final List<dynamic> Function(OptionWorkOrderService service)?
+      getWorkOrderOptions;
+
+  const FinishProcess({
+    super.key,
+    required this.title,
+    required this.formPageBuilder,
+    this.handleSubmitToService,
+    this.fetchWorkOrder,
+    this.getWorkOrderOptions,
+  });
 
   @override
   State<FinishProcess> createState() => _FinishProcessState();
@@ -36,11 +50,13 @@ class FinishProcess extends StatefulWidget {
 
 class _FinishProcessState extends State<FinishProcess> {
   final MobileScannerController _controller = MobileScannerController();
+  final WorkOrderService _workOrderService = WorkOrderService();
+
+  final ValueNotifier<bool> _firstLoading = ValueNotifier(false);
   bool _isLoading = false;
   bool _isScannerStopped = false;
-  final WorkOrderService _workOrderService = WorkOrderService();
-  late List<dynamic> workOrderOption = [];
-  final ValueNotifier<bool> _firstLoading = ValueNotifier(false);
+
+  List<dynamic> workOrderOption = [];
   String id = '';
 
   final Map<String, dynamic> _form = {
@@ -58,7 +74,6 @@ class _FinishProcessState extends State<FinishProcess> {
     'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     'attachments': [],
     'no_wo': '',
-    'no_process': '',
     'nama_mesin': '',
     'nama_satuan': '',
   };
@@ -66,15 +81,13 @@ class _FinishProcessState extends State<FinishProcess> {
   @override
   void initState() {
     super.initState();
-    _handleFetchWorkOrder();
-    final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
-    _form['end_by_id'] = loggedInUser?.id;
+    _initialize();
   }
 
-  void _handleChangeInput(fieldName, value) {
-    setState(() {
-      _form[fieldName] = value;
-    });
+  Future<void> _initialize() async {
+    final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
+    _form['end_by_id'] = loggedInUser?.id;
+    await _handleFetchWorkOrder();
   }
 
   Future<void> _handleFetchWorkOrder() async {
@@ -86,23 +99,29 @@ class _FinishProcessState extends State<FinishProcess> {
       await service.fetchOptions();
     }
 
-    final data = widget.getWorkOrderOptions != null
+    final options = widget.getWorkOrderOptions != null
         ? widget.getWorkOrderOptions!(service)
         : service.dataListOption;
 
     setState(() {
-      workOrderOption = data;
+      workOrderOption = options;
+    });
+  }
+
+  void _handleChangeInput(String field, dynamic value) {
+    setState(() {
+      _form[field] = value;
     });
   }
 
   Future<void> _handleScan(String code) async {
     setState(() => _isLoading = true);
     try {
-      final scannedId = code.toString();
-      final workOrderExists =
-          workOrderOption.any((item) => item['value'].toString() == scannedId);
+      final scannedId = code.trim();
+      final exists =
+          workOrderOption.any((e) => e['value'].toString() == scannedId);
 
-      if (!workOrderExists) {
+      if (!exists) {
         _showSnackBar("Work Order not found");
         setState(() => _isLoading = false);
         return;
@@ -118,17 +137,21 @@ class _FinishProcessState extends State<FinishProcess> {
 
       Navigator.push(
           context,
-          _createRoute(
-            widget.formPageBuilder(context, scannedId, data, _form,
-                _handleSubmit, _handleChangeInput),
-          ));
+          _createRoute(widget.formPageBuilder(
+            context,
+            scannedId,
+            data,
+            _form,
+            _handleSubmit,
+            _handleChangeInput,
+          )));
     } catch (e) {
       _showSnackBar("Error: ${e.toString()}");
       setState(() => _isLoading = false);
     }
   }
 
-  Future<void> _handleSubmit(String dyeindId) async {
+  Future<void> _handleSubmit(String id) async {
     try {
       if (widget.handleSubmitToService != null) {
         await widget.handleSubmitToService!(context, id, _form, _firstLoading);
@@ -142,24 +165,20 @@ class _FinishProcessState extends State<FinishProcess> {
 
   Route _createRoute(Widget child) {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => child,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(0.0, 1.0);
+      pageBuilder: (_, __, ___) => child,
+      transitionsBuilder: (_, animation, __, child) {
+        const begin = Offset(0, 1);
         const end = Offset.zero;
         const curve = Curves.ease;
-
-        var tween =
+        final tween =
             Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-        var offsetAnimation = animation.drive(tween);
-
-        return SlideTransition(position: offsetAnimation, child: child);
+        return SlideTransition(position: animation.drive(tween), child: child);
       },
     );
   }
 
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+  void _showSnackBar(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override

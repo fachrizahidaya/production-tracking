@@ -60,6 +60,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     'wo_id': null,
     'machine_id': null,
     'weight_unit_id': null,
+    'length_unit_id': null,
+    'width_unit_id': null,
     'weight': null,
     'width': null,
     'length': null,
@@ -105,6 +107,14 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     if (d['weight_unit'] != null) {
       _form['weight_unit_id'] = d['weight_unit']['id'].toString();
       _form['nama_satuan_berat'] = d['weight_unit']['name'].toString();
+    }
+    if (d['length_unit'] != null) {
+      _form['length_unit_id'] = d['length_unit']['id'].toString();
+      _form['nama_satuan_panjang'] = d['length_unit']['name'].toString();
+    }
+    if (d['width_unit'] != null) {
+      _form['width_unit_id'] = d['width_unit']['id'].toString();
+      _form['nama_satuan_lebar'] = d['width_unit']['name'].toString();
     }
     if (d['machine'] != null) {
       _form['machine_id'] = d['machine']['id'].toString();
@@ -185,6 +195,48 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     );
   }
 
+  _selectLengthUnit() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return SelectDialog(
+          label: 'Satuan Panjang',
+          options: unitOption,
+          selected: _form['length_unit_id'].toString(),
+          handleChangeValue: (e) {
+            setState(() {
+              _form['length_unit_id'] = e['value'].toString();
+              _form['nama_satuan_panjang'] = e['label'].toString();
+            });
+          },
+        );
+      },
+    );
+  }
+
+  _selectWidthUnit() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return SelectDialog(
+          label: 'Satuan Lebar',
+          options: unitOption,
+          selected: _form['width_unit_id'].toString(),
+          handleChangeValue: (e) {
+            setState(() {
+              _form['width_unit_id'] = e['value'].toString();
+              _form['nama_satuan_lebar'] = e['label'].toString();
+            });
+          },
+        );
+      },
+    );
+  }
+
   _selectMachine() {
     showDialog(
       context: context,
@@ -234,6 +286,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
                 note: _noteController,
                 form: _form,
                 handleSelectUnit: _selectUnit,
+                handleSelectLengthUnit: _selectLengthUnit,
+                handleSelectWidthUnit: _selectWidthUnit,
                 handleSelectMachine: _selectMachine,
                 handleUpdate: _handleUpdate,
                 refetch: _getDataView,

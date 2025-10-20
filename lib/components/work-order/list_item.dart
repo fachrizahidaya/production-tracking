@@ -47,8 +47,7 @@ class ListItem extends StatelessWidget {
                           viewValue: item['spk_item']?['color'] ?? '-'),
                       ViewText(
                           viewLabel: 'Jumlah',
-                          viewValue:
-                              '${item['qty']} ${item['unit']['code']}' ?? '-'),
+                          viewValue: '${item['qty']} ${item['unit']['code']}'),
                     ].separatedBy(SizedBox(
                       height: 8,
                     )))

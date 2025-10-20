@@ -7,15 +7,23 @@ import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_operator.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
+import 'package:textile_tracking/models/process/cross_cutting.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
+import 'package:textile_tracking/models/process/long_hemming.dart';
+import 'package:textile_tracking/models/process/long_sitting.dart';
 import 'package:textile_tracking/models/process/press_tumbler.dart';
+import 'package:textile_tracking/models/process/sewing.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
+import 'package:textile_tracking/screens/cross-cutting/index.dart';
 import 'package:textile_tracking/screens/dyeing/index.dart';
 import 'package:textile_tracking/screens/home/index.dart';
+import 'package:textile_tracking/screens/long-hemming/index.dart';
+import 'package:textile_tracking/screens/long-sitting/index.dart';
 import 'package:textile_tracking/screens/notification/index.dart';
 import 'package:textile_tracking/screens/press-tumbler/index.dart';
 import 'package:textile_tracking/screens/profile/index.dart';
+import 'package:textile_tracking/screens/sewing/index.dart';
 import 'package:textile_tracking/screens/stenter/index.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +37,10 @@ void main() async {
         ChangeNotifierProvider(create: (_) => DyeingService()),
         ChangeNotifierProvider(create: (_) => PressTumblerService()),
         ChangeNotifierProvider(create: (_) => StenterService()),
+        ChangeNotifierProvider(create: (_) => LongSittingService()),
+        ChangeNotifierProvider(create: (_) => LongHemmingService()),
+        ChangeNotifierProvider(create: (_) => CrossCuttingService()),
+        ChangeNotifierProvider(create: (_) => SewingService()),
         ChangeNotifierProvider(create: (_) => UnitService()),
         ChangeNotifierProvider(create: (_) => OptionUnitService()),
         ChangeNotifierProvider(create: (_) => OptionMachineService()),
@@ -87,10 +99,10 @@ class MyApp extends StatelessWidget {
         '/dyeings': (context) => const DyeingScreen(),
         '/press-tumblers': (context) => const PressTumblerScreen(),
         '/stenters': (context) => const StenterScreen(),
-        // '/long-sittings': (context) => const (),
-        // '/long-hemmings': (context) => const (),
-        // '/cross-cuttings': (context) => const (),
-        // '/sewings': (context) => const (),
+        '/long-sittings': (context) => const LongSittingScreen(),
+        '/long-hemmings': (context) => const LongHemmingScreen(),
+        '/cross-cuttings': (context) => const CrossCuttingScreen(),
+        '/sewings': (context) => const SewingScreen(),
         // '/embroideries': (context) => const (),
         // '/sortings': (context) => const (),
         // '/packings': (context) => const (),

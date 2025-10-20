@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/press-tumbler/finish/create_form.dart';
-import 'package:textile_tracking/helpers/service/finish_process_manual.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -274,8 +273,8 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
         handleSubmit: widget.handleSubmit,
         id: widget.id,
         data: woData,
-        dyeingId: ptId,
-        dyeingData: pressTumblerData,
+        ptId: ptId,
+        ptData: pressTumblerData,
         isLoading: _firstLoading,
         handleSelectLengthUnit: _selectLengthUnit,
         handleSelectWidthUnit: _selectWidthUnit,

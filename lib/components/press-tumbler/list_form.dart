@@ -16,7 +16,7 @@ class ListForm extends StatefulWidget {
   final form;
   final data;
   final id;
-  final dyeingId;
+  final ptId;
   final length;
   final width;
   final weight;
@@ -37,7 +37,7 @@ class ListForm extends StatefulWidget {
   final initialNotes;
   final allAttachments;
   final handlePickAttachments;
-  final dyeingData;
+  final ptData;
 
   const ListForm(
       {super.key,
@@ -58,7 +58,7 @@ class ListForm extends StatefulWidget {
       this.handleSelectMachine,
       this.handleSubmit,
       this.isFormIncomplete,
-      this.dyeingId,
+      this.ptId,
       this.isChanged,
       this.initialWeight,
       this.initialLength,
@@ -66,7 +66,7 @@ class ListForm extends StatefulWidget {
       this.initialNotes,
       this.allAttachments,
       this.handlePickAttachments,
-      this.dyeingData});
+      this.ptData});
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -360,7 +360,7 @@ class _ListFormState extends State<ListForm> {
                     onPressed: () async {
                       widget.isSubmitting.value = true;
                       try {
-                        await widget.handleSubmit(widget.dyeingId.toString());
+                        await widget.handleSubmit(widget.ptId.toString());
                         setState(() {
                           _initialWeight = widget.weight.text;
                           _initialLength = widget.length.text;

@@ -15,18 +15,43 @@ class ListItem extends StatelessWidget {
     return CustomCard(
         child: Padding(
             padding: PaddingColumn.screen,
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ViewText(
-                      viewLabel: 'Name',
-                      viewValue: item['spk_item']?['design'] ?? '-'),
-                  ViewText(
-                      viewLabel: 'Warna',
-                      viewValue: item['spk_item']?['color'] ?? '-'),
-                ].separatedBy(SizedBox(
-                  height: 8,
-                )))));
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ViewText(
+                          viewLabel: 'SKU',
+                          viewValue: item['spk_item']?['item']['sku'] ?? '-'),
+                      ViewText(
+                          viewLabel: 'Nama',
+                          viewValue: item['spk_item']?['item']['name'] ?? '-'),
+                      ViewText(
+                          viewLabel: 'SPK',
+                          viewValue: item['spk_item']?['spk']['spk_no'] ?? '-'),
+                    ].separatedBy(SizedBox(
+                      height: 8,
+                    ))),
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ViewText(
+                          viewLabel: 'Name',
+                          viewValue: item['spk_item']?['design'] ?? '-'),
+                      ViewText(
+                          viewLabel: 'Warna',
+                          viewValue: item['spk_item']?['color'] ?? '-'),
+                      ViewText(
+                          viewLabel: 'Jumlah',
+                          viewValue: '${item['qty']} ${item['unit']['code']}'),
+                    ].separatedBy(SizedBox(
+                      height: 8,
+                    )))
+              ],
+            )));
   }
 }

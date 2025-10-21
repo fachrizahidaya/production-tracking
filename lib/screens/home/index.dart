@@ -106,7 +106,9 @@ class _HomeState extends State<Home> {
               menu['name'] != 'Mesin' &&
               menu['name'] != 'Barang' &&
               menu['name'] != 'Satuan' &&
-              menu['name'] != 'Grade Barang')
+              menu['name'] != 'Grade Barang' &&
+              menu['name'] != 'Material' &&
+              menu['name'] != 'Grade Material')
           .toList();
 
       return filteredData

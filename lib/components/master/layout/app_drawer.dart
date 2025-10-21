@@ -74,7 +74,24 @@ class _AppDrawerState extends State<AppDrawer> {
                                           ? Icon(Icons.cut_outlined)
                                           : item.title == 'Jahit (Sewing)'
                                               ? Icon(Icons.straighten_outlined)
-                                              : Icon(Icons.telegram_outlined),
+                                              : item.title == 'Packing'
+                                                  ? Icon(Icons.archive_outlined)
+                                                  : item.title == 'Sorting'
+                                                      ? Icon(Icons.sort)
+                                                      : item.title ==
+                                                              'Bordir (Embroidery)'
+                                                          ? Icon(Icons
+                                                              .design_services_outlined)
+                                                          : item.title ==
+                                                                  'Cross Cutting'
+                                                              ? Icon(Icons
+                                                                  .cut_outlined)
+                                                              : item.title ==
+                                                                      'Long Sitting'
+                                                                  ? Icon(Icons
+                                                                      .straighten_outlined)
+                                                                  : Icon(Icons
+                                                                      .telegram_outlined),
                           onTap: () {
                             Navigator.pop(context);
                             Navigator.pushNamed(context, item.route);

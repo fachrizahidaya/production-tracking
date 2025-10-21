@@ -148,11 +148,11 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
           weight_unit_id: _form['weight_unit_id'] != null
               ? int.tryParse(_form['weight_unit_id'].toString())
               : null,
-          width_unit_id: _form['weight_unit_id'] != null
-              ? int.tryParse(_form['weight_unit_id'].toString())
+          width_unit_id: _form['width_unit_id'] != null
+              ? int.tryParse(_form['width_unit_id'].toString())
               : null,
-          length_unit_id: _form['weight_unit_id'] != null
-              ? int.tryParse(_form['weight_unit_id'].toString())
+          length_unit_id: _form['length_unit_id'] != null
+              ? int.tryParse(_form['length_unit_id'].toString())
               : null,
           machine_id: _form['machine_id'] != null
               ? int.tryParse(_form['machine_id'].toString())
@@ -200,24 +200,50 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: const Color(0xFFEBEBEB),
-        appBar: CustomAppBar(
-          title: 'Selesai Press Tumbler',
-          onReturn: () {
-            Navigator.pop(context);
-          },
-        ),
-        body: SubmitSection(
-          isScannerStopped: _isScannerStopped,
-          form: _form,
-          controller: _controller,
-          handleScan: _handleScan,
-          handleSubmit: _handleSubmit,
-          handleRoute: _createRoute,
-          isLoading: _isLoading,
-          handleChangeInput: _handleChangeInput,
-        ));
+    return FinishProcess(
+      title: 'Selesai Stenter',
+      fetchWorkOrder: (service) async =>
+          await service.fetchStenterFinishOptions(),
+      getWorkOrderOptions: (service) => service.dataListStenterFinish,
+      formPageBuilder:
+          (context, id, data, form, handleSubmit, handleChangeInput) =>
+              FinishPressTumblerManual(
+        id: id,
+        data: data,
+        form: form,
+        handleSubmit: handleSubmit,
+        handleChangeInput: handleChangeInput,
+      ),
+      handleSubmitToService: (context, id, form, isLoading) async {
+        final stenter = PressTumbler(
+          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+          weight_unit_id:
+              int.tryParse(form['weight_unit_id']?.toString() ?? ''),
+          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
+          length_unit_id:
+              int.tryParse(form['length_unit_id']?.toString() ?? ''),
+          weight: form['weight'],
+          width: form['width'],
+          length: form['length'],
+          notes: form['notes'],
+          start_time: form['start_time'],
+          end_time: form['end_time'],
+          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+          attachments: form['attachments'],
+        );
+
+        final message =
+            await Provider.of<PressTumblerService>(context, listen: false)
+                .finishItem(id, stenter, isLoading);
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(message)));
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/press-tumblers', (_) => false);
+      },
+    );
   }
 }
 

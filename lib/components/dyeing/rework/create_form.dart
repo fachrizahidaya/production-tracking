@@ -89,15 +89,6 @@ class _CreateFormState extends State<CreateForm> {
     }
   }
 
-  void _checkForChanges() {
-    setState(() {
-      _isChanged = widget.qty.text != _initialQty ||
-          widget.length.text != _initialLength ||
-          widget.note.text != _initialNotes ||
-          widget.width.text != _initialWidth;
-    });
-  }
-
   bool get _isFormIncomplete {
     final woId = widget.form?['wo_id'];
     final machineId = widget.form?['machine_id'];

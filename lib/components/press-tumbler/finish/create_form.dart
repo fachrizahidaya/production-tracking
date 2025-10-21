@@ -19,8 +19,8 @@ class CreateForm extends StatefulWidget {
   final handleSubmit;
   final id;
   final data;
-  final dyeingId;
-  final dyeingData;
+  final ptId;
+  final ptData;
   final isLoading;
 
   const CreateForm(
@@ -39,8 +39,8 @@ class CreateForm extends StatefulWidget {
       this.handleSubmit,
       this.id,
       this.data,
-      this.dyeingData,
-      this.dyeingId,
+      this.ptData,
+      this.ptId,
       this.isLoading});
 
   @override
@@ -73,13 +73,12 @@ class _CreateFormState extends State<CreateForm> {
   @override
   void didUpdateWidget(covariant CreateForm oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.dyeingData != oldWidget.dyeingData &&
-        widget.dyeingData.isNotEmpty) {
+    if (widget.ptData != oldWidget.ptData && widget.ptData.isNotEmpty) {
       setState(() {
-        _initialWeight = widget.dyeingData['weight']?.toString() ?? '';
-        _initialLength = widget.dyeingData['length']?.toString() ?? '';
-        _initialWidth = widget.dyeingData['width']?.toString() ?? '';
-        _initialNotes = widget.dyeingData['notes']?.toString() ?? '';
+        _initialWeight = widget.ptData['weight']?.toString() ?? '';
+        _initialLength = widget.ptData['length']?.toString() ?? '';
+        _initialWidth = widget.ptData['width']?.toString() ?? '';
+        _initialNotes = widget.ptData['notes']?.toString() ?? '';
 
         widget.weight.text = _initialWeight;
         widget.length.text = _initialLength;
@@ -89,15 +88,6 @@ class _CreateFormState extends State<CreateForm> {
         _isChanged = false;
       });
     }
-  }
-
-  void _checkForChanges() {
-    setState(() {
-      _isChanged = widget.weight.text != _initialWeight ||
-          widget.length.text != _initialLength ||
-          widget.note.text != _initialNotes ||
-          widget.width.text != _initialWidth;
-    });
   }
 
   bool get _isFormIncomplete {
@@ -178,7 +168,7 @@ class _CreateFormState extends State<CreateForm> {
             form: widget.form,
             data: widget.data,
             id: widget.id,
-            dyeingId: widget.dyeingId,
+            ptId: widget.ptId,
             length: widget.length,
             width: widget.width,
             weight: widget.weight,
@@ -196,7 +186,7 @@ class _CreateFormState extends State<CreateForm> {
             initialNotes: _initialNotes,
             allAttachments: allAttachments,
             handlePickAttachments: _pickAttachments,
-            dyeingData: widget.dyeingData,
+            ptData: widget.ptData,
             handleSelectLengthUnit: widget.handleSelectLengthUnit,
             handleSelectWidthUnit: widget.handleSelectWidthUnit,
           ),

@@ -91,15 +91,6 @@ class _CreateFormState extends State<CreateForm> {
     }
   }
 
-  void _checkForChanges() {
-    setState(() {
-      _isChanged = widget.weight.text != _initialWeight ||
-          widget.length.text != _initialLength ||
-          widget.note.text != _initialNotes ||
-          widget.width.text != _initialWidth;
-    });
-  }
-
   bool get _isFormIncomplete {
     final weight = widget.form?['weight'];
     final width = widget.form?['width'];

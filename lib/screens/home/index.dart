@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/layout/app_drawer.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -107,7 +106,9 @@ class _HomeState extends State<Home> {
               menu['name'] != 'Mesin' &&
               menu['name'] != 'Barang' &&
               menu['name'] != 'Satuan' &&
-              menu['name'] != 'Grade Barang')
+              menu['name'] != 'Grade Barang' &&
+              menu['name'] != 'Material' &&
+              menu['name'] != 'Grade Material')
           .toList();
 
       return filteredData

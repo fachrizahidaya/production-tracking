@@ -39,6 +39,8 @@ class _PressTumblerDetailState extends State<PressTumblerDetail> {
       modelBuilder: (form, data) => PressTumbler(
         wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
         weight_unit_id: int.tryParse(form['weight_unit_id']?.toString() ?? ''),
+        length_unit_id: int.tryParse(form['length_unit_id']?.toString() ?? ''),
+        width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
         machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
         weight: form['weight'] ?? data['weight'],
         width: form['width'] ?? data['width'],

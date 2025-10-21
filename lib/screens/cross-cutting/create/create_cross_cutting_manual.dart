@@ -25,8 +25,8 @@ class CreateCrossCuttingManual extends StatelessWidget {
       form: form,
       handleSubmit: handleSubmit,
       machineFilterValue: '2',
-      fetchWorkOrder: (service) => service.fetchLongHemmingOptions(),
-      getWorkOrderOptions: (service) => service.dataListLongHemming,
+      fetchWorkOrder: (service) => service.fetchCrossCuttingOptions(),
+      getWorkOrderOptions: (service) => service.dataListCrossCutting,
     );
   }
 }

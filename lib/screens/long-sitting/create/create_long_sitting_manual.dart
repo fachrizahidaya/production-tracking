@@ -25,8 +25,8 @@ class CreateLongSittingManual extends StatelessWidget {
       form: form,
       handleSubmit: handleSubmit,
       machineFilterValue: '2',
-      fetchWorkOrder: (service) => service.fetchSittingFinishOptions(),
-      getWorkOrderOptions: (service) => service.dataListSittingFinish,
+      fetchWorkOrder: (service) => service.fetchLongSittingOptions(),
+      getWorkOrderOptions: (service) => service.dataListLongSitting,
     );
   }
 }

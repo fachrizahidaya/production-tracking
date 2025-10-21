@@ -9,7 +9,7 @@ class CreateLongSitting extends StatelessWidget {
 
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
-    final stenter = LongSitting(
+    final longSitting = LongSitting(
       wo_id:
           form['wo_id'] != null ? int.tryParse(form['wo_id'].toString()) : null,
       weight_unit_id: form['unit_id'] != null
@@ -34,7 +34,7 @@ class CreateLongSitting extends StatelessWidget {
 
     final message =
         await Provider.of<LongSittingService>(context, listen: false)
-            .addItem(stenter, isLoading);
+            .addItem(longSitting, isLoading);
 
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));

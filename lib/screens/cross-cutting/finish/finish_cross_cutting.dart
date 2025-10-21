@@ -72,9 +72,9 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
 
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchHemmingFinishOptions();
+        .fetchCuttingFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListHemmingFinish;
+        .dataListCuttingFinish;
 
     setState(() {
       workOrderOption = result;

@@ -25,8 +25,8 @@ class CreateSewingManual extends StatelessWidget {
       form: form,
       handleSubmit: handleSubmit,
       machineFilterValue: '2',
-      fetchWorkOrder: (service) => service(),
-      getWorkOrderOptions: (service) => service.dataListLongHemming,
+      fetchWorkOrder: (service) => service.fetchSewingOptions(),
+      getWorkOrderOptions: (service) => service.dataListSewing,
     );
   }
 }

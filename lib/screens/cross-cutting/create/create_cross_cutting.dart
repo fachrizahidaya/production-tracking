@@ -54,11 +54,11 @@ class CreateCrossCutting extends StatelessWidget {
           data: data,
           form: form,
           handleSubmit: handleSubmit,
-          fetchWorkOrder: (service) => service.fetchLongHemmingOptions(id),
+          fetchWorkOrder: (service) => service.fetchCrossCuttingOptions(id),
         );
       },
-      fetchWorkOrder: (service) => service.fetchLongHemmingOptions(),
-      getWorkOrderOptions: (service) => service.dataListLongHemming,
+      fetchWorkOrder: (service) => service.fetchCrossCuttingOptions(),
+      getWorkOrderOptions: (service) => service.dataListCrossCutting,
     );
   }
 }

@@ -200,8 +200,8 @@ class _FinishSewingState extends State<FinishSewing> {
     return FinishProcess(
       title: 'Selesai Sewing',
       fetchWorkOrder: (service) async =>
-          await service.fetchHemmingFinishOptions(),
-      getWorkOrderOptions: (service) => service.dataListHemmingFinish,
+          await service.fetchSewingFinishOptions(),
+      getWorkOrderOptions: (service) => service.dataListSewingFinish,
       formPageBuilder:
           (context, id, data, form, handleSubmit, handleChangeInput) =>
               FinishSewingManual(

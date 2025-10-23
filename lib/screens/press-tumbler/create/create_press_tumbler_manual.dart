@@ -27,6 +27,8 @@ class CreatePressTumblerManual extends StatelessWidget {
       machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchPressTumblerOptions(),
       getWorkOrderOptions: (service) => service.dataListPressTumbler,
+      fetchMachine: (service) => service.fetchOptionsPressTumbler(),
+      getMachineOptions: (service) => service.dataListOption,
     );
   }
 }

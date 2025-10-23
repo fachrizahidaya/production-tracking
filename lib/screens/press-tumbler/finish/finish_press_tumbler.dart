@@ -2,8 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/finish/submit_section.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/helpers/service/finish_process.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -201,7 +199,7 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
   @override
   Widget build(BuildContext context) {
     return FinishProcess(
-      title: 'Selesai Stenter',
+      title: 'Selesai Press Tumbler',
       fetchWorkOrder: (service) async =>
           await service.fetchStenterFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListStenterFinish,

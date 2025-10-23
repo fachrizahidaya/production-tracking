@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
+import 'package:textile_tracking/components/master/form/finish/create_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/components/press-tumbler/finish/create_form.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -32,6 +32,7 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
   final WorkOrderService _workOrderService = WorkOrderService();
   final PressTumblerService _pressTumblerService = PressTumblerService();
   bool _firstLoading = false;
+  bool _isFetchingWorkOrder = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController _noteController = TextEditingController();
@@ -64,15 +65,27 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
   }
 
   Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchPressFinishOptions();
-    // ignore: use_build_context_synchronously
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListPressFinish;
-
     setState(() {
-      workOrderOption = result;
+      _isFetchingWorkOrder = true;
     });
+
+    try {
+      await Provider.of<OptionWorkOrderService>(context, listen: false)
+          .fetchPressFinishOptions();
+      // ignore: use_build_context_synchronously
+      final result = Provider.of<OptionWorkOrderService>(context, listen: false)
+          .dataListPressFinish;
+
+      setState(() {
+        workOrderOption = result;
+      });
+    } catch (e) {
+      debugPrint("Error fetching work orders: $e");
+    } finally {
+      setState(() {
+        _isFetchingWorkOrder = false;
+      });
+    }
   }
 
   Future<void> _handleFetchUnit() async {
@@ -155,6 +168,17 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
   }
 
   _selectWorkOrder() {
+    if (_isFetchingWorkOrder) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -273,8 +297,8 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
         handleSubmit: widget.handleSubmit,
         id: widget.id,
         data: woData,
-        ptId: ptId,
-        ptData: pressTumblerData,
+        processId: ptId,
+        processData: pressTumblerData,
         isLoading: _firstLoading,
         handleSelectLengthUnit: _selectLengthUnit,
         handleSelectWidthUnit: _selectWidthUnit,

@@ -119,4 +119,434 @@ class OptionMachineService extends BaseService<OptionMachine> {
       notifyListeners();
     }
   }
+
+  Future<void> fetchOptionsDyeing() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
+    if (_isLoading || (!_hasMoreData)) return;
+
+    try {
+      _dataListOption.clear();
+      notifyListeners();
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
+              .replace(queryParameters: {'process': 'dyeing'}),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListOption = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
+      } else {
+        throw Exception('Failed to load machines');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchOptionsPressTumbler() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
+    if (_isLoading || (!_hasMoreData)) return;
+
+    try {
+      _dataListOption.clear();
+      notifyListeners();
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
+              .replace(queryParameters: {'process': 'press_tumbler'}),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListOption = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
+      } else {
+        throw Exception('Failed to load machines');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchOptionsStenter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
+    if (_isLoading || (!_hasMoreData)) return;
+
+    try {
+      _dataListOption.clear();
+      notifyListeners();
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
+              .replace(queryParameters: {'process': 'stenter'}),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListOption = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
+      } else {
+        throw Exception('Failed to load machines');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchOptionsLongSitting() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
+    if (_isLoading || (!_hasMoreData)) return;
+
+    try {
+      _dataListOption.clear();
+      notifyListeners();
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
+              .replace(queryParameters: {'process': 'long_sitting'}),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListOption = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
+      } else {
+        throw Exception('Failed to load machines');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchOptionsLongHemming() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
+    if (_isLoading || (!_hasMoreData)) return;
+
+    try {
+      _dataListOption.clear();
+      notifyListeners();
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
+              .replace(queryParameters: {'process': 'long_hemming'}),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListOption = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
+      } else {
+        throw Exception('Failed to load machines');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchOptionsCrossCutting() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
+    if (_isLoading || (!_hasMoreData)) return;
+
+    try {
+      _dataListOption.clear();
+      notifyListeners();
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
+              .replace(queryParameters: {'process': 'cross_cutting'}),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListOption = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
+      } else {
+        throw Exception('Failed to load machines');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchOptionsSewing() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
+    if (_isLoading || (!_hasMoreData)) return;
+
+    try {
+      _dataListOption.clear();
+      notifyListeners();
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
+              .replace(queryParameters: {'process': 'sewing'}),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListOption = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
+      } else {
+        throw Exception('Failed to load machines');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchOptionsEmbroidery() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
+    if (_isLoading || (!_hasMoreData)) return;
+
+    try {
+      _dataListOption.clear();
+      notifyListeners();
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
+              .replace(queryParameters: {'process': 'embroidery'}),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListOption = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
+      } else {
+        throw Exception('Failed to load machines');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchOptionsSorting() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
+    if (_isLoading || (!_hasMoreData)) return;
+
+    try {
+      _dataListOption.clear();
+      notifyListeners();
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
+              .replace(queryParameters: {'process': ''}),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListOption = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
+      } else {
+        throw Exception('Failed to load machines');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchOptionsPacking() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
+    if (_isLoading || (!_hasMoreData)) return;
+
+    try {
+      _dataListOption.clear();
+      notifyListeners();
+
+      if (token == null) {
+        throw Exception('Access token is missing');
+      }
+
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
+              .replace(queryParameters: {'process': ''}),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        switch (response.statusCode) {
+          case 200:
+            if (decoded['data'] != null) {
+              _dataListOption = decoded['data'];
+            }
+            notifyListeners();
+            break;
+          default:
+            throw decoded['message'];
+        }
+      } else {
+        throw Exception('Failed to load machines');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }

@@ -13,6 +13,7 @@ import 'package:textile_tracking/screens/dyeing/%5Bdyeing_id%5D.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/screens/dyeing/create/create_dyeing.dart';
 import 'package:textile_tracking/screens/dyeing/finish/finish_dyeing.dart';
+import 'package:textile_tracking/screens/dyeing/rework/rework_dyeing.dart';
 
 class DyeingScreen extends StatefulWidget {
   const DyeingScreen({super.key});
@@ -269,7 +270,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
                             Navigator.pop(context);
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const FinishDyeing(),
+                                builder: (context) => const ReworkDyeing(),
                               ),
                             );
                           },

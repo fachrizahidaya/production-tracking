@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/components/stenter/finish/create_form.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
+import 'package:textile_tracking/components/master/form/finish/create_form.dart';
 
 class FinishLongSittingManual extends StatefulWidget {
   final id;
@@ -32,6 +32,7 @@ class _FinishLongSittingManualState extends State<FinishLongSittingManual> {
   final WorkOrderService _workOrderService = WorkOrderService();
   final LongSittingService _longSittingService = LongSittingService();
   bool _firstLoading = false;
+  bool _isFetchingWorkOrder = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController _noteController = TextEditingController();
@@ -64,15 +65,27 @@ class _FinishLongSittingManualState extends State<FinishLongSittingManual> {
   }
 
   Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchSittingFinishOptions();
-    // ignore: use_build_context_synchronously
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListSittingFinish;
-
     setState(() {
-      workOrderOption = result;
+      _isFetchingWorkOrder = true;
     });
+
+    try {
+      await Provider.of<OptionWorkOrderService>(context, listen: false)
+          .fetchSittingFinishOptions();
+      // ignore: use_build_context_synchronously
+      final result = Provider.of<OptionWorkOrderService>(context, listen: false)
+          .dataListSittingFinish;
+
+      setState(() {
+        workOrderOption = result;
+      });
+    } catch (e) {
+      debugPrint("Error fetching work orders: $e");
+    } finally {
+      setState(() {
+        _isFetchingWorkOrder = false;
+      });
+    }
   }
 
   Future<void> _handleFetchUnit() async {
@@ -154,6 +167,17 @@ class _FinishLongSittingManualState extends State<FinishLongSittingManual> {
   }
 
   _selectWorkOrder() {
+    if (_isFetchingWorkOrder) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -167,11 +191,11 @@ class _FinishLongSittingManualState extends State<FinishLongSittingManual> {
             setState(() {
               widget.form?['wo_id'] = e['value'].toString();
               widget.form?['no_wo'] = e['label'].toString();
-              lsId = e['ls_id'].toString();
+              lsId = e['long_sitting_id'].toString();
             });
 
             _getDataView(e['value'].toString());
-            _getLongSittingView(e['ls_id'].toString());
+            _getLongSittingView(e['long_sitting_id'].toString());
           },
         );
       },
@@ -272,8 +296,8 @@ class _FinishLongSittingManualState extends State<FinishLongSittingManual> {
         handleSubmit: widget.handleSubmit,
         id: widget.id,
         data: woData,
-        stenterId: lsId,
-        stenterData: longSittingData,
+        processId: lsId,
+        processData: longSittingData,
         isLoading: _firstLoading,
         handleSelectLengthUnit: _selectLengthUnit,
         handleSelectWidthUnit: _selectWidthUnit,

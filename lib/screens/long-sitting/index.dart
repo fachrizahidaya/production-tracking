@@ -199,7 +199,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                 itemBuilder: (item) => ItemProcessCard(
                   label: 'Long Sitting No',
                   item: item,
-                  titleKey: 'long_sitting_no',
+                  titleKey: 'ls_no',
                   subtitleKey: 'work_orders',
                   subtitleField: 'wo_no',
                   isRework: (item) => item.rework == false,
@@ -251,7 +251,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                         ),
                       ),
                       BottomSheetOption(
-                        title: "Selesai Stenter",
+                        title: "Selesai Long Sitting",
                         icon: Icons.check_circle,
                         iconColor: CustomTheme().buttonColor('warning'),
                         onTap: () => Navigator.push(

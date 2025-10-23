@@ -1,7 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/form/finish/list_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_card.dart';
-import 'package:textile_tracking/components/press-tumbler/list_form.dart';
 import 'package:textile_tracking/helpers/util/margin_search.dart';
 
 class CreateForm extends StatefulWidget {
@@ -153,7 +153,7 @@ class _CreateFormState extends State<CreateForm> {
 
     if (widget.isLoading) {
       return Container(
-        color: Colors.white,
+        color: const Color(0xFFEBEBEB),
         child: Center(
           child: CircularProgressIndicator(),
         ),
@@ -168,7 +168,7 @@ class _CreateFormState extends State<CreateForm> {
             form: widget.form,
             data: widget.data,
             id: widget.id,
-            ptId: widget.ptId,
+            processId: widget.ptId,
             length: widget.length,
             width: widget.width,
             weight: widget.weight,
@@ -186,7 +186,7 @@ class _CreateFormState extends State<CreateForm> {
             initialNotes: _initialNotes,
             allAttachments: allAttachments,
             handlePickAttachments: _pickAttachments,
-            ptData: widget.ptData,
+            processData: widget.ptData,
             handleSelectLengthUnit: widget.handleSelectLengthUnit,
             handleSelectWidthUnit: widget.handleSelectWidthUnit,
           ),

@@ -27,6 +27,8 @@ class CreateEmborideryManual extends StatelessWidget {
       machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchEmbroideryOptions(),
       getWorkOrderOptions: (service) => service.dataListEmbroidery,
+      fetchMachine: (service) => service.fetchOptionsEmbroidery(),
+      getMachineOptions: (service) => service.dataListOption,
     );
   }
 }

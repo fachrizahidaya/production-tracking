@@ -566,7 +566,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final response = await http.get(
           Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'type': 'stenter_finish',
+            'type': 'long_sitting_finish',
           }),
           headers: {
             'Authorization': 'Bearer $token',
@@ -621,7 +621,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final response = await http.get(
           Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'type': 'stenter',
+            'type': 'long_hemming',
           }),
           headers: {
             'Authorization': 'Bearer $token',
@@ -676,7 +676,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final response = await http.get(
           Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'type': 'stenter_finish',
+            'type': 'long_hemming_finish',
           }),
           headers: {
             'Authorization': 'Bearer $token',
@@ -731,7 +731,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final response = await http.get(
           Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'type': 'stenter',
+            'type': 'cross_cutting',
           }),
           headers: {
             'Authorization': 'Bearer $token',
@@ -786,7 +786,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final response = await http.get(
           Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'type': 'stenter_finish',
+            'type': 'cross_cutting_finish',
           }),
           headers: {
             'Authorization': 'Bearer $token',
@@ -841,7 +841,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final response = await http.get(
           Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'type': 'stenter',
+            'type': 'sewing',
           }),
           headers: {
             'Authorization': 'Bearer $token',
@@ -896,7 +896,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final response = await http.get(
           Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'type': 'stenter_finish',
+            'type': 'sewing_finish',
           }),
           headers: {
             'Authorization': 'Bearer $token',
@@ -951,7 +951,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final response = await http.get(
           Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'type': 'stenter',
+            'type': 'embroidery',
           }),
           headers: {
             'Authorization': 'Bearer $token',
@@ -1006,7 +1006,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final response = await http.get(
           Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'type': 'stenter_finish',
+            'type': 'embroidery_finish',
           }),
           headers: {
             'Authorization': 'Bearer $token',
@@ -1061,7 +1061,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final response = await http.get(
           Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'type': 'stenter',
+            'type': 'sorting',
           }),
           headers: {
             'Authorization': 'Bearer $token',
@@ -1116,7 +1116,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final response = await http.get(
           Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'type': 'stenter_finish',
+            'type': 'sorting_finish',
           }),
           headers: {
             'Authorization': 'Bearer $token',
@@ -1171,7 +1171,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final response = await http.get(
           Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'type': 'stenter',
+            'type': 'packing',
           }),
           headers: {
             'Authorization': 'Bearer $token',
@@ -1226,7 +1226,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final response = await http.get(
           Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
               .replace(queryParameters: {
-            'type': 'stenter_finish',
+            'type': 'packing_finish',
           }),
           headers: {
             'Authorization': 'Bearer $token',

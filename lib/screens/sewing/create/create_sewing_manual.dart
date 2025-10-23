@@ -18,15 +18,21 @@ class CreateSewingManual extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _maklonController = TextEditingController();
+
     return CreateProcessManual(
       title: 'Mulai Sewing',
       id: id,
       data: data,
       form: form,
+      maklon: _maklonController,
+      isMaklon: true,
       handleSubmit: handleSubmit,
       machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchSewingOptions(),
       getWorkOrderOptions: (service) => service.dataListSewing,
+      fetchMachine: (service) => service.fetchOptionsSewing(),
+      getMachineOptions: (service) => service.dataListOption,
     );
   }
 }

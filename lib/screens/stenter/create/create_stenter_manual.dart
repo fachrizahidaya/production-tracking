@@ -27,6 +27,8 @@ class CreateStenterManual extends StatelessWidget {
       machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchStenterOptions(),
       getWorkOrderOptions: (service) => service.dataListStenter,
+      fetchMachine: (service) => service.fetchOptionsStenter(),
+      getMachineOptions: (service) => service.dataListOption,
     );
   }
 }

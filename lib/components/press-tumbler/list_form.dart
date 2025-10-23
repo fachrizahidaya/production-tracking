@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/dyeing/create/info_tab.dart';
-import 'package:textile_tracking/components/dyeing/create/item_tab.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/form/multiline_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
+import 'package:textile_tracking/components/master/layout/finish_info_tab.dart';
+import 'package:textile_tracking/components/master/layout/finish_item_tab.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -125,10 +125,10 @@ class _ListFormState extends State<ListForm> {
                           SizedBox(
                             height: 400,
                             child: TabBarView(children: [
-                              InfoTab(
+                              FinishInfoTab(
                                 data: widget.data,
                               ),
-                              ItemTab(
+                              FinishItemTab(
                                 data: widget.data,
                               )
                             ]),

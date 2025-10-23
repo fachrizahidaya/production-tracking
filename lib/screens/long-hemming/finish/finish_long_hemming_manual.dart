@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
+import 'package:textile_tracking/components/master/form/finish/create_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/components/stenter/finish/create_form.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -272,8 +272,8 @@ class _FinishLongHemmingManualState extends State<FinishLongHemmingManual> {
         handleSubmit: widget.handleSubmit,
         id: widget.id,
         data: woData,
-        stenterId: lhId,
-        stenterData: longHemmingData,
+        processId: lhId,
+        processData: longHemmingData,
         isLoading: _firstLoading,
         handleSelectLengthUnit: _selectLengthUnit,
         handleSelectWidthUnit: _selectWidthUnit,

@@ -58,30 +58,42 @@ class _ListFormState extends State<ListForm> {
                   ),
                 if (widget.form?['wo_id'] != null)
                   DefaultTabController(
-                    length: 2,
-                    child: Column(
-                      children: [
-                        TabBar(tabs: [
-                          Tab(
-                            text: 'Informasi',
-                          ),
-                          Tab(
-                            text: 'Barang',
-                          ),
-                        ]),
-                        SizedBox(
-                            height: 400,
-                            child: TabBarView(children: [
-                              InfoTab(
-                                data: widget.data,
-                              ),
-                              ItemTab(
-                                data: widget.data,
-                              )
-                            ]))
-                      ],
-                    ),
-                  ),
+                      length: 2,
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isPortrait =
+                              MediaQuery.of(context).orientation ==
+                                  Orientation.portrait;
+                          final screenHeight =
+                              MediaQuery.of(context).size.height;
+
+                          final boxHeight = isPortrait
+                              ? screenHeight * 0.45
+                              : screenHeight * 0.7;
+                          return Column(
+                            children: [
+                              TabBar(tabs: [
+                                Tab(
+                                  text: 'Informasi',
+                                ),
+                                Tab(
+                                  text: 'Barang',
+                                ),
+                              ]),
+                              SizedBox(
+                                  height: boxHeight,
+                                  child: TabBarView(children: [
+                                    InfoTab(
+                                      data: widget.data,
+                                    ),
+                                    ItemTab(
+                                      data: widget.data,
+                                    )
+                                  ]))
+                            ],
+                          );
+                        },
+                      )),
                 SelectForm(
                   label: 'Mesin',
                   onTap: () => widget.selectMachine(),

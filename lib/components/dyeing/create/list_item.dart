@@ -40,7 +40,7 @@ class ListItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ViewText(
-                          viewLabel: 'Name',
+                          viewLabel: 'Desain',
                           viewValue: item['spk_item']?['design'] ?? '-'),
                       ViewText(
                           viewLabel: 'Warna',

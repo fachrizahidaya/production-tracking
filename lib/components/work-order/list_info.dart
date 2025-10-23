@@ -85,28 +85,40 @@ class _ListInfoState extends State<ListInfo> {
               CustomCard(
                 child: DefaultTabController(
                     length: 2,
-                    child: Column(
-                      children: [
-                        TabBar(tabs: [
-                          Tab(
-                            text: 'Barang',
-                          ),
-                          Tab(
-                            text: 'Lampiran',
-                          )
-                        ]),
-                        SizedBox(
-                          height: 400,
-                          child: TabBarView(children: [
-                            ItemTab(
-                              data: widget.data,
-                            ),
-                            AttachmentTab(
-                              existingAttachment: widget.existingAttachment,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final isPortrait = MediaQuery.of(context).orientation ==
+                            Orientation.portrait;
+                        final screenHeight = MediaQuery.of(context).size.height;
+
+                        final boxHeight = isPortrait
+                            ? screenHeight * 0.45
+                            : screenHeight * 0.7;
+
+                        return Column(
+                          children: [
+                            TabBar(tabs: [
+                              Tab(
+                                text: 'Barang',
+                              ),
+                              Tab(
+                                text: 'Lampiran',
+                              )
+                            ]),
+                            SizedBox(
+                              height: boxHeight,
+                              child: TabBarView(children: [
+                                ItemTab(
+                                  data: widget.data,
+                                ),
+                                AttachmentTab(
+                                  existingAttachment: widget.existingAttachment,
+                                )
+                              ]),
                             )
-                          ]),
-                        )
-                      ],
+                          ],
+                        );
+                      },
                     )),
               )
             ].separatedBy(SizedBox(

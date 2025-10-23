@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/work-order/list_item.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
 
 class ItemTab extends StatefulWidget {
   final data;
@@ -26,7 +25,7 @@ class _ItemTabState extends State<ItemTab> {
       child: items.isEmpty
           ? const Center(child: Text('No Data'))
           : ListView.separated(
-              padding: PaddingColumn.screen,
+              padding: EdgeInsets.only(top: 8),
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final item = items[index];

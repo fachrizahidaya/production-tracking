@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/create/create_form.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
+import 'package:textile_tracking/components/master/form/create/create_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
@@ -16,6 +16,10 @@ class CreateProcessManual extends StatefulWidget {
   final handleSubmit;
   final fetchWorkOrder;
   final getWorkOrderOptions;
+  final fetchMachine;
+  final getMachineOptions;
+  final maklon;
+  final isMaklon;
 
   const CreateProcessManual(
       {super.key,
@@ -26,7 +30,11 @@ class CreateProcessManual extends StatefulWidget {
       this.form,
       this.handleSubmit,
       this.fetchWorkOrder,
-      this.getWorkOrderOptions});
+      this.getWorkOrderOptions,
+      this.fetchMachine,
+      this.getMachineOptions,
+      this.maklon,
+      this.isMaklon});
 
   @override
   State<CreateProcessManual> createState() => _CreateProcessManualState();
@@ -71,21 +79,28 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   }
 
   Future<void> _fetchMachine() async {
-    final machineService =
-        Provider.of<OptionMachineService>(context, listen: false);
-    await machineService.fetchOptions();
-    var result = machineService.dataListOption;
+    final service = Provider.of<OptionMachineService>(context, listen: false);
 
-    if (widget.machineFilterValue != null &&
-        widget.machineFilterValue!.isNotEmpty) {
-      result = result
-          .where((item) =>
-              item['value'].toString() == widget.machineFilterValue.toString())
-          .toList();
+    if (widget.fetchMachine != null) {
+      await widget.fetchMachine!(service);
+    } else {
+      await service.fetchOptionsPressTumbler();
     }
 
+    // await service.fetchOptionsPressTumbler();
+    // var result = service.dataListOption;
+
+    // if (widget.machineFilterValue != null &&
+    //     widget.machineFilterValue!.isNotEmpty) {
+    //   result = result.toList();
+    // }
+
+    final data = widget.getMachineOptions != null
+        ? widget.getMachineOptions!(service)
+        : service.dataListOption;
+
     setState(() {
-      machineOption = result;
+      machineOption = data;
     });
   }
 
@@ -162,6 +177,8 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
       body: CreateForm(
         formKey: _formKey,
         form: widget.form,
+        maklon: widget.maklon,
+        isMaklon: widget.isMaklon,
         handleSubmit: widget.handleSubmit,
         data: woData,
         selectWorkOrder: _selectWorkOrder,

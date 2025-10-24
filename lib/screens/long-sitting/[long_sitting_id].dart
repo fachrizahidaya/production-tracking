@@ -51,6 +51,7 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      route: '/long-sittings',
     );
   }
 }

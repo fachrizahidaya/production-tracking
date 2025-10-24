@@ -74,7 +74,7 @@ class _FinishPackingState extends State<FinishPacking> {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchPackingFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListPackingFinish;
+        .dataListOption;
 
     setState(() {
       workOrderOption = result;
@@ -201,7 +201,7 @@ class _FinishPackingState extends State<FinishPacking> {
       title: 'Selesai Packing',
       fetchWorkOrder: (service) async =>
           await service.fetchPackingFinishOptions(),
-      getWorkOrderOptions: (service) => service.dataListPackingFinish,
+      getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder:
           (context, id, data, form, handleSubmit, handleChangeInput) =>
               FinishPackingManual(

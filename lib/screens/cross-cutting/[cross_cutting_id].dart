@@ -53,6 +53,7 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      route: '/cross-cuttings',
     );
   }
 }

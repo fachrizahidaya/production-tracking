@@ -56,7 +56,7 @@ class CreateStenter extends StatelessWidget {
         );
       },
       fetchWorkOrder: (service) => service.fetchStenterOptions(),
-      getWorkOrderOptions: (service) => service.dataListStenter,
+      getWorkOrderOptions: (service) => service.dataListOption,
     );
   }
 }

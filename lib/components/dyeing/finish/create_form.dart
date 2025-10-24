@@ -143,7 +143,7 @@ class _CreateFormState extends State<CreateForm> {
 
     if (widget.isLoading) {
       return Container(
-        color: Colors.white,
+        color: const Color(0xFFEBEBEB),
         child: Center(
           child: CircularProgressIndicator(),
         ),

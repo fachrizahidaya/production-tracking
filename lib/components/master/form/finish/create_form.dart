@@ -19,8 +19,8 @@ class CreateForm extends StatefulWidget {
   final handleSubmit;
   final id;
   final data;
-  final ptId;
-  final ptData;
+  final processId;
+  final processData;
   final isLoading;
 
   const CreateForm(
@@ -39,8 +39,8 @@ class CreateForm extends StatefulWidget {
       this.handleSubmit,
       this.id,
       this.data,
-      this.ptData,
-      this.ptId,
+      this.processData,
+      this.processId,
       this.isLoading});
 
   @override
@@ -73,12 +73,13 @@ class _CreateFormState extends State<CreateForm> {
   @override
   void didUpdateWidget(covariant CreateForm oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.ptData != oldWidget.ptData && widget.ptData.isNotEmpty) {
+    if (widget.processData != oldWidget.processData &&
+        widget.processData.isNotEmpty) {
       setState(() {
-        _initialWeight = widget.ptData['weight']?.toString() ?? '';
-        _initialLength = widget.ptData['length']?.toString() ?? '';
-        _initialWidth = widget.ptData['width']?.toString() ?? '';
-        _initialNotes = widget.ptData['notes']?.toString() ?? '';
+        _initialWeight = widget.processData['weight']?.toString() ?? '';
+        _initialLength = widget.processData['length']?.toString() ?? '';
+        _initialWidth = widget.processData['width']?.toString() ?? '';
+        _initialNotes = widget.processData['notes']?.toString() ?? '';
 
         widget.weight.text = _initialWeight;
         widget.length.text = _initialLength;
@@ -168,7 +169,7 @@ class _CreateFormState extends State<CreateForm> {
             form: widget.form,
             data: widget.data,
             id: widget.id,
-            processId: widget.ptId,
+            processId: widget.processId,
             length: widget.length,
             width: widget.width,
             weight: widget.weight,
@@ -186,7 +187,7 @@ class _CreateFormState extends State<CreateForm> {
             initialNotes: _initialNotes,
             allAttachments: allAttachments,
             handlePickAttachments: _pickAttachments,
-            processData: widget.ptData,
+            processData: widget.processData,
             handleSelectLengthUnit: widget.handleSelectLengthUnit,
             handleSelectWidthUnit: widget.handleSelectWidthUnit,
           ),

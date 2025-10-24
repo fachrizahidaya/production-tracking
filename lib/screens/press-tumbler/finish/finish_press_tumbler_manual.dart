@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/components/press-tumbler/finish/create_form.dart';
+import 'package:textile_tracking/helpers/service/finish_process_manual.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -32,6 +31,7 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
   final WorkOrderService _workOrderService = WorkOrderService();
   final PressTumblerService _pressTumblerService = PressTumblerService();
   bool _firstLoading = false;
+  bool _isFetchingWorkOrder = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController _noteController = TextEditingController();
@@ -64,15 +64,27 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
   }
 
   Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchPressFinishOptions();
-    // ignore: use_build_context_synchronously
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListPressFinish;
-
     setState(() {
-      workOrderOption = result;
+      _isFetchingWorkOrder = true;
     });
+
+    try {
+      await Provider.of<OptionWorkOrderService>(context, listen: false)
+          .fetchPressFinishOptions();
+      // ignore: use_build_context_synchronously
+      final result = Provider.of<OptionWorkOrderService>(context, listen: false)
+          .dataListOption;
+
+      setState(() {
+        workOrderOption = result;
+      });
+    } catch (e) {
+      debugPrint("Error fetching work orders: $e");
+    } finally {
+      setState(() {
+        _isFetchingWorkOrder = false;
+      });
+    }
   }
 
   Future<void> _handleFetchUnit() async {
@@ -155,6 +167,17 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
   }
 
   _selectWorkOrder() {
+    if (_isFetchingWorkOrder) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -252,33 +275,18 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFEBEBEB),
-      appBar: CustomAppBar(
-        title: 'Selesai Press Tumbler',
-        onReturn: () {
-          Navigator.pop(context);
-        },
-      ),
-      body: CreateForm(
-        formKey: _formKey,
-        form: widget.form,
-        note: _noteController,
-        weight: _weightController,
-        width: _widthController,
-        length: _lengthController,
-        handleSelectWo: _selectWorkOrder,
-        handleSelectUnit: _selectUnit,
-        handleChangeInput: widget.handleChangeInput,
-        handleSubmit: widget.handleSubmit,
-        id: widget.id,
-        data: woData,
-        ptId: ptId,
-        ptData: pressTumblerData,
-        isLoading: _firstLoading,
-        handleSelectLengthUnit: _selectLengthUnit,
-        handleSelectWidthUnit: _selectWidthUnit,
-      ),
+    return FinishProcessManual(
+      title: 'Selesai Press Tumber',
+      id: widget.id,
+      data: widget.data,
+      form: widget.form,
+      handleSubmit: widget.handleSubmit,
+      machineFilterValue: '2',
+      fetchWorkOrder: (service) => service.fetchPressFinishOptions(),
+      getWorkOrderOptions: (service) => service.dataListOption,
+      processService: _pressTumblerService,
+      handleChangeInput: widget.handleChangeInput,
+      idProcess: 'press_tumbler_id',
     );
   }
 }

@@ -29,6 +29,7 @@ class ProcessDetail<T> extends StatefulWidget {
   final T Function(Map<String, dynamic> form, Map<String, dynamic> data)
       modelBuilder;
   final label;
+  final route;
 
   const ProcessDetail(
       {super.key,
@@ -40,7 +41,8 @@ class ProcessDetail<T> extends StatefulWidget {
       required this.modelBuilder,
       this.canDelete = false,
       this.canUpdate = false,
-      this.label});
+      this.label,
+      this.route});
 
   @override
   State<ProcessDetail<T>> createState() => _ProcessDetailState<T>();
@@ -129,8 +131,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           await widget.handleUpdateService(context, id, item, _isLoading);
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(message)));
-      Navigator.pushNamedAndRemoveUntil(
-          context, '/press-tumblers', (_) => false);
+      Navigator.pushNamedAndRemoveUntil(context, widget.route, (_) => false);
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
@@ -151,7 +152,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(message)));
           Navigator.pushNamedAndRemoveUntil(
-              context, '/press-tumblers', (_) => false);
+              context, widget.route, (_) => false);
         } catch (e) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));

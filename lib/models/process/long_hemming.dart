@@ -81,7 +81,7 @@ class LongHemming {
       'machine_id': machine_id,
       'start_by_id': start_by_id,
       'end_by_id': end_by_id,
-      'stenter_no': lh_no,
+      'lh_no': lh_no,
       'start_time': start_time,
       'end_time': end_time,
       'wo_no': wo_no,

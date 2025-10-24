@@ -56,7 +56,7 @@ class CreateSewing extends StatelessWidget {
         );
       },
       fetchWorkOrder: (service) => service.fetchSewingOptions(),
-      getWorkOrderOptions: (service) => service.dataListSewing,
+      getWorkOrderOptions: (service) => service.dataListOption,
     );
   }
 }

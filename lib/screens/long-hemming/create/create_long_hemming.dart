@@ -58,7 +58,7 @@ class CreateLongHemming extends StatelessWidget {
         );
       },
       fetchWorkOrder: (service) => service.fetchLongHemmingOptions(),
-      getWorkOrderOptions: (service) => service.dataListLongHemming,
+      getWorkOrderOptions: (service) => service.dataListOption,
     );
   }
 }

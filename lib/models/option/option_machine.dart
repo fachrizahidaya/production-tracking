@@ -61,62 +61,81 @@ class OptionMachineService extends BaseService<OptionMachine> {
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
 
-  Future<void> fetchOptions() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('access_token');
-    if (_isLoading || (!_hasMoreData)) return;
+  Future<void> _fetchOptionsGeneric({
+    String? process,
+    String searchQuery = '',
+    bool clearBeforeFetch = true,
+  }) async {
+    if (_isLoading || !_hasMoreData) return;
+
+    _isLoading = true;
+    if (clearBeforeFetch) _dataListOption.clear();
+    notifyListeners();
 
     try {
-      _dataListOption.clear();
-      notifyListeners();
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('access_token');
+      if (token == null) throw Exception('Access token is missing');
 
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
+      final uri = Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
+          .replace(queryParameters: {
+        if (process != null && process.isNotEmpty) 'process': process,
+        if (searchQuery.isNotEmpty) 'search': searchQuery,
+      });
 
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option'),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
+      final response = await http.get(uri, headers: {
+        'Authorization': 'Bearer $token',
+      });
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListOption = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
+
+        if (decoded['data'] != null) {
+          _dataListOption = decoded['data'];
         }
-        // final List<dynamic> dataList;
 
-        // if (decoded is List) {
-        //   dataList = decoded;
-        // } else if (decoded is Map<String, dynamic> &&
-        //     decoded.containsKey('data')) {
-        //   dataList = decoded['data'];
-        // } else {
-        //   throw Exception("Unexpected response format: $decoded");
-        // }
-
-        // List<OptionMachine> newUnits =
-        //     dataList.map((item) => OptionMachine.fromJson(item)).toList();
-
-        // _machines.clear();
-        // _machines.addAll(newUnits);
-        // _hasMoreData = false;
+        notifyListeners();
       } else {
-        throw Exception('Failed to load machines');
+        throw Exception('Failed to load machines: ${response.statusCode}');
       }
     } catch (e) {
+      debugPrint('Error fetching machine options: $e');
       rethrow;
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<void> fetchOptions() async {
+    await _fetchOptionsGeneric();
+  }
+
+  Future<void> fetchOptionsDyeing() async {
+    await _fetchOptionsGeneric(process: 'dyeing');
+  }
+
+  Future<void> fetchOptionsPressTumbler() async {
+    await _fetchOptionsGeneric(process: 'press_tumbler');
+  }
+
+  Future<void> fetchOptionsStenter() async {
+    await _fetchOptionsGeneric(process: 'stenter');
+  }
+
+  Future<void> fetchOptionsLongSitting() async {
+    await _fetchOptionsGeneric(process: 'long_sitting');
+  }
+
+  Future<void> fetchOptionsLongHemming() async {
+    await _fetchOptionsGeneric(process: 'long_hemming');
+  }
+
+  Future<void> fetchOptionsCrossCutting() async {
+    await _fetchOptionsGeneric(process: 'cross_cutting');
+  }
+
+  Future<void> fetchOptionsSewing() async {
+    await _fetchOptionsGeneric(process: 'sewing');
   }
 }

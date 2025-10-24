@@ -74,7 +74,7 @@ class _FinishEmbroideryState extends State<FinishEmbroidery> {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchEmbroideryFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListEmbroideryFinish;
+        .dataListOption;
 
     setState(() {
       workOrderOption = result;
@@ -202,7 +202,7 @@ class _FinishEmbroideryState extends State<FinishEmbroidery> {
       title: 'Selesai Embroidery',
       fetchWorkOrder: (service) async =>
           await service.fetchEmbroideryFinishOptions(),
-      getWorkOrderOptions: (service) => service.dataListEmbroideryFinish,
+      getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder:
           (context, id, data, form, handleSubmit, handleChangeInput) =>
               FinishEmbroideryManual(

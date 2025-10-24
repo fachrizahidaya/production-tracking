@@ -53,6 +53,7 @@ class _PackingDetailState extends State<PackingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      route: '/packings',
     );
   }
 }

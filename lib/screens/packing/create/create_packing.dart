@@ -56,7 +56,7 @@ class CreatePacking extends StatelessWidget {
         );
       },
       fetchWorkOrder: (service) => service.fetchPackingOptions(),
-      getWorkOrderOptions: (service) => service.dataListPacking,
+      getWorkOrderOptions: (service) => service.dataListOption,
     );
   }
 }

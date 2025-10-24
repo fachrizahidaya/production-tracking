@@ -1,6 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/dyeing/create/list_form.dart';
+import 'package:textile_tracking/components/master/form/create/list_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_card.dart';
 import 'package:textile_tracking/helpers/util/margin_search.dart';
 
@@ -13,6 +13,8 @@ class CreateForm extends StatefulWidget {
   final selectMachine;
   final id;
   final isLoading;
+  final maklon;
+  final isMaklon;
 
   const CreateForm(
       {super.key,
@@ -23,7 +25,9 @@ class CreateForm extends StatefulWidget {
       this.selectWorkOrder,
       this.selectMachine,
       this.id,
-      this.isLoading});
+      this.isLoading,
+      this.maklon,
+      this.isMaklon});
 
   @override
   State<CreateForm> createState() => _CreateFormState();
@@ -35,8 +39,13 @@ class _CreateFormState extends State<CreateForm> {
   bool get _isFormIncomplete {
     final woId = widget.form?['wo_id'];
     final machineId = widget.form?['machine_id'];
+    final maklon = widget.form?['maklon'];
 
-    return woId == null || machineId == null;
+    if (widget.isMaklon == true) {
+      return maklon == null || machineId == null;
+    } else {
+      return woId == null || machineId == null;
+    }
   }
 
   Future<void> _pickAttachments() async {
@@ -87,10 +96,12 @@ class _CreateFormState extends State<CreateForm> {
       child: CustomCard(
           child: ListForm(
         formKey: widget.formKey,
+        isMaklon: widget.isMaklon,
         id: widget.id,
         form: widget.form,
         data: widget.data,
         attachments: attachments,
+        maklon: widget.maklon,
         selectWorkOrder: widget.selectWorkOrder,
         selectMachine: widget.selectMachine,
         isSubmitting: _isSubmitting,

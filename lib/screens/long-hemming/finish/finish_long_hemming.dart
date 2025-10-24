@@ -74,7 +74,7 @@ class _FinishLongHemmingState extends State<FinishLongHemming> {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchHemmingFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListHemmingFinish;
+        .dataListOption;
 
     setState(() {
       workOrderOption = result;
@@ -202,7 +202,7 @@ class _FinishLongHemmingState extends State<FinishLongHemming> {
       title: 'Selesai Long Hemming',
       fetchWorkOrder: (service) async =>
           await service.fetchHemmingFinishOptions(),
-      getWorkOrderOptions: (service) => service.dataListHemmingFinish,
+      getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder:
           (context, id, data, form, handleSubmit, handleChangeInput) =>
               FinishLongHemmingManual(

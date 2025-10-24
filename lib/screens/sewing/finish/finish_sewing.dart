@@ -74,7 +74,7 @@ class _FinishSewingState extends State<FinishSewing> {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchSewingFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListSewingFinish;
+        .dataListOption;
 
     setState(() {
       workOrderOption = result;
@@ -201,7 +201,7 @@ class _FinishSewingState extends State<FinishSewing> {
       title: 'Selesai Sewing',
       fetchWorkOrder: (service) async =>
           await service.fetchSewingFinishOptions(),
-      getWorkOrderOptions: (service) => service.dataListSewingFinish,
+      getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder:
           (context, id, data, form, handleSubmit, handleChangeInput) =>
               FinishSewingManual(

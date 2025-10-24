@@ -56,7 +56,7 @@ class CreateSorting extends StatelessWidget {
         );
       },
       fetchWorkOrder: (service) => service.fetchSortingOptions(),
-      getWorkOrderOptions: (service) => service.dataListSorting,
+      getWorkOrderOptions: (service) => service.dataListOption,
     );
   }
 }

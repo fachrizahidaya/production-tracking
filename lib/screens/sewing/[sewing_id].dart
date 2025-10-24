@@ -53,6 +53,7 @@ class _SewingDetailState extends State<SewingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      route: '/sewings',
     );
   }
 }

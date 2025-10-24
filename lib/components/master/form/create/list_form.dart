@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/dyeing/create/info_tab.dart';
-import 'package:textile_tracking/components/dyeing/create/item_tab.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
+import 'package:textile_tracking/components/master/form/text_form.dart';
+import 'package:textile_tracking/components/master/layout/finish_info_tab.dart';
+import 'package:textile_tracking/components/master/layout/finish_item_tab.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -18,6 +19,8 @@ class ListForm extends StatefulWidget {
   final isFormIncomplete;
   final handleSubmit;
   final handlePickAttachments;
+  final isMaklon;
+  final maklon;
 
   const ListForm(
       {super.key,
@@ -31,13 +34,17 @@ class ListForm extends StatefulWidget {
       this.isFormIncomplete,
       this.handleSubmit,
       this.handlePickAttachments,
-      this.attachments});
+      this.attachments,
+      this.maklon,
+      this.isMaklon = false});
 
   @override
   State<ListForm> createState() => _ListFormState();
 }
 
 class _ListFormState extends State<ListForm> {
+  bool _isMaklonYes = false;
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -83,10 +90,10 @@ class _ListFormState extends State<ListForm> {
                               SizedBox(
                                   height: boxHeight,
                                   child: TabBarView(children: [
-                                    InfoTab(
+                                    FinishInfoTab(
                                       data: widget.data,
                                     ),
-                                    ItemTab(
+                                    FinishItemTab(
                                       data: widget.data,
                                     )
                                   ]))
@@ -94,13 +101,54 @@ class _ListFormState extends State<ListForm> {
                           );
                         },
                       )),
-                SelectForm(
-                  label: 'Mesin',
-                  onTap: () => widget.selectMachine(),
-                  selectedLabel: widget.form['nama_mesin'] ?? '',
-                  selectedValue: widget.form['machine_id'].toString(),
-                  required: false,
-                ),
+                (widget.isMaklon == true)
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Maklon',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Switch(
+                                value: _isMaklonYes,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _isMaklonYes = value;
+                                    widget.form['maklon'] = value;
+                                  });
+                                },
+                                activeColor: Colors.green,
+                                inactiveThumbColor: Colors.redAccent,
+                              ),
+                              Text(_isMaklonYes ? 'Yes' : 'No'),
+                            ].separatedBy(SizedBox(
+                              width: 8,
+                            )),
+                          ),
+                        ],
+                      )
+                    : SelectForm(
+                        label: 'Mesin',
+                        onTap: () => widget.selectMachine(),
+                        selectedLabel: widget.form['nama_mesin'] ?? '',
+                        selectedValue: widget.form['machine_id'].toString(),
+                        required: false,
+                      ),
+                if (_isMaklonYes)
+                  TextForm(
+                    label: 'Nama Maklon',
+                    req: false,
+                    controller: widget.maklon,
+                    handleChange: (value) {
+                      setState(() {
+                        widget.form['maklon_name'] = value.toString();
+                      });
+                    },
+                  ),
                 ValueListenableBuilder<bool>(
                   valueListenable: widget.isSubmitting,
                   builder: (context, isSubmitting, _) {

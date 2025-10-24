@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/create/submit_section.dart';
+import 'package:textile_tracking/components/master/form/create/create_submit_section.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -167,7 +167,7 @@ class _CreateProcessState extends State<CreateProcess> {
         title: widget.title,
         onReturn: () => Navigator.pop(context),
       ),
-      body: SubmitSection(
+      body: CreateSubmitSection(
         isScannerStopped: _isScannerStopped,
         form: _form,
         controller: _controller,

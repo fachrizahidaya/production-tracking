@@ -35,52 +35,14 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
   int _currentPage = 1;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
-  List<dynamic> _dataListRework = [];
-  List<dynamic> _dataListFinish = [];
-  List<dynamic> _dataListPressTumbler = [];
-  List<dynamic> _dataListPressFinish = [];
-  List<dynamic> _dataListStenter = [];
-  List<dynamic> _dataListStenterFinish = [];
-  List<dynamic> _dataListLongSitting = [];
-  List<dynamic> _dataListSittingFinish = [];
-  List<dynamic> _dataListLongHemming = [];
-  List<dynamic> _dataListHemmingFinish = [];
-  List<dynamic> _dataListCrossCutting = [];
-  List<dynamic> _dataListCuttingFinish = [];
-  List<dynamic> _dataListSewing = [];
-  List<dynamic> _dataListSewingFinish = [];
-  List<dynamic> _dataListEmbroidery = [];
-  List<dynamic> _dataListEmbroideryFinish = [];
-  List<dynamic> _dataListSorting = [];
-  List<dynamic> _dataListSortingFinish = [];
-  List<dynamic> _dataListPacking = [];
-  List<dynamic> _dataListPackingFinish = [];
+
   final List<OptionWorkOrder> _wo = [];
 
   bool get isLoading => _isLoading;
   bool get hasMoreData => _hasMoreData;
   List<dynamic> get listOption => _listOption;
   List<dynamic> get dataListOption => _dataListOption;
-  List<dynamic> get dataListRework => _dataListRework;
-  List<dynamic> get dataListFinish => _dataListFinish;
-  List<dynamic> get dataListPressTumbler => _dataListPressTumbler;
-  List<dynamic> get dataListPressFinish => _dataListPressFinish;
-  List<dynamic> get dataListStenter => _dataListStenter;
-  List<dynamic> get dataListStenterFinish => _dataListStenterFinish;
-  List<dynamic> get dataListLongSitting => _dataListLongSitting;
-  List<dynamic> get dataListSittingFinish => _dataListSittingFinish;
-  List<dynamic> get dataListLongHemming => _dataListLongHemming;
-  List<dynamic> get dataListHemmingFinish => _dataListHemmingFinish;
-  List<dynamic> get dataListCrossCutting => _dataListCrossCutting;
-  List<dynamic> get dataListCuttingFinish => _dataListCuttingFinish;
-  List<dynamic> get dataListSewing => _dataListSewing;
-  List<dynamic> get dataListSewingFinish => _dataListSewingFinish;
-  List<dynamic> get dataListEmbroidery => _dataListEmbroidery;
-  List<dynamic> get dataListEmbroideryFinish => _dataListEmbroideryFinish;
-  List<dynamic> get dataListSorting => _dataListSorting;
-  List<dynamic> get dataListSortingFinish => _dataListSortingFinish;
-  List<dynamic> get dataListPacking => _dataListPacking;
-  List<dynamic> get dataListPackingFinish => _dataListPackingFinish;
+
   List<OptionWorkOrder> get options => _wo;
 
   @override
@@ -104,8 +66,9 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
 
-  Future<void> fetchOptions({
+  Future<void> _fetchOptionsGeneric({
     bool isInitialLoad = false,
+    String? type,
     String searchQuery = '',
   }) async {
     if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
@@ -120,1138 +83,266 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
     notifyListeners();
 
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('access_token');
+      if (token == null) throw Exception('Access token is missing');
 
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
+      final uri = Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
+          .replace(queryParameters: {
+        if (type != null && type.isNotEmpty) 'type': type,
+        if (searchQuery.isNotEmpty) 'search': searchQuery,
+      });
 
-      final response = await http
-          .get(Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option'), headers: {
+      final response = await http.get(uri, headers: {
         'Authorization': 'Bearer $token',
       });
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListOption = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
+        if (decoded['data'] != null) {
+          _dataListOption = decoded['data'];
         }
+        notifyListeners();
       } else {
-        throw Exception('Failed to load work order');
+        throw Exception('Failed to load work order: ${response.statusCode}');
       }
     } catch (e) {
+      debugPrint('Error fetching work order options: $e');
       rethrow;
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<void> fetchOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'dyeing',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchReworkOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'dyeing_rework',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListRework = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'dyeing_rework',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchFinishOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'dyeing_finish',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListFinish = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'dyeing_finish',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchPressTumblerOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'press_tumbler',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListPressTumbler = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'press_tumbler',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchPressFinishOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'press_tumbler_finish',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListPressFinish = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'press_tumbler_finish',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchStenterOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListStenter = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'stenter',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchStenterFinishOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter_finish',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListStenterFinish = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'stenter_finish',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchLongSittingOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListLongSitting = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'long_sitting',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchSittingFinishOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter_finish',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListSittingFinish = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'long_sitting_finish',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchLongHemmingOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListLongHemming = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'long_hemming',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchHemmingFinishOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter_finish',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListHemmingFinish = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'long_hemming_finish',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchCrossCuttingOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListCrossCutting = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'cross_cutting',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchCuttingFinishOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter_finish',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListCuttingFinish = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'cross_cutting_finish',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchSewingOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListSewing = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'sewing',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchSewingFinishOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter_finish',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListSewingFinish = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'sewing_finish',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchEmbroideryOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListEmbroidery = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'embroidery',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchEmbroideryFinishOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter_finish',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListEmbroideryFinish = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'embroidery_finish',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchSortingOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListSorting = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'sorting',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchSortingFinishOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter_finish',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListSortingFinish = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'sorting_finish',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchPackingOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListPacking = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'packing',
+      searchQuery: searchQuery,
+    );
   }
 
   Future<void> fetchPackingFinishOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _wo.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
-              .replace(queryParameters: {
-            'type': 'stenter_finish',
-          }),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-        switch (response.statusCode) {
-          case 200:
-            if (decoded['data'] != null) {
-              _dataListPackingFinish = decoded['data'];
-            }
-            notifyListeners();
-            break;
-          default:
-            throw decoded['message'];
-        }
-      } else {
-        throw Exception('Failed to load work order');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'packing_finish',
+      searchQuery: searchQuery,
+    );
   }
 }

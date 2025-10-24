@@ -58,7 +58,7 @@ class CreateLongSitting extends StatelessWidget {
         );
       },
       fetchWorkOrder: (service) => service.fetchLongSittingOptions(),
-      getWorkOrderOptions: (service) => service.dataListLongSitting,
+      getWorkOrderOptions: (service) => service.dataListOption,
     );
   }
 }

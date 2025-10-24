@@ -61,10 +61,10 @@ class _SewingScreenState extends State<SewingScreen> {
       await _userMenu.handleLoadMenu();
 
       setState(() {
-        _canRead = _userMenu.checkMenu('Sewing', 'read');
-        _canCreate = _userMenu.checkMenu('Sewing', 'create');
-        _canDelete = _userMenu.checkMenu('Sewing', 'delete');
-        _canUpdate = _userMenu.checkMenu('Sewing', 'update');
+        _canRead = _userMenu.checkMenu('Jahit (Sewing)', 'read');
+        _canCreate = _userMenu.checkMenu('Jahit (Sewing)', 'create');
+        _canDelete = _userMenu.checkMenu('Jahit (Sewing)', 'delete');
+        _canUpdate = _userMenu.checkMenu('Jahit (Sewing)', 'update');
       });
     } catch (e) {
       throw Exception('Error initializing menus: $e');

@@ -53,6 +53,7 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      route: '/long-hemming',
     );
   }
 }

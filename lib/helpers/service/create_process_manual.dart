@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/create/create_form.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
+import 'package:textile_tracking/components/master/form/create/create_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
@@ -16,6 +16,10 @@ class CreateProcessManual extends StatefulWidget {
   final handleSubmit;
   final fetchWorkOrder;
   final getWorkOrderOptions;
+  final fetchMachine;
+  final getMachineOptions;
+  final maklon;
+  final isMaklon;
 
   const CreateProcessManual(
       {super.key,
@@ -26,7 +30,11 @@ class CreateProcessManual extends StatefulWidget {
       this.form,
       this.handleSubmit,
       this.fetchWorkOrder,
-      this.getWorkOrderOptions});
+      this.getWorkOrderOptions,
+      this.fetchMachine,
+      this.getMachineOptions,
+      this.maklon,
+      this.isMaklon});
 
   @override
   State<CreateProcessManual> createState() => _CreateProcessManualState();
@@ -37,6 +45,8 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   final WorkOrderService _workOrderService = WorkOrderService();
 
   bool _firstLoading = false;
+  bool _isFetchingWorkOrder = false;
+  bool _isFetchingMachine = false;
   List<dynamic> workOrderOption = [];
   List<dynamic> machineOption = [];
   Map<String, dynamic> woData = {};
@@ -53,40 +63,71 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   }
 
   Future<void> _fetchWorkOrder() async {
+    setState(() {
+      _isFetchingWorkOrder = true;
+    });
+
     final service = Provider.of<OptionWorkOrderService>(context, listen: false);
 
-    if (widget.fetchWorkOrder != null) {
-      await widget.fetchWorkOrder!(service);
-    } else {
-      await service.fetchOptions();
+    try {
+      if (widget.fetchWorkOrder != null) {
+        await widget.fetchWorkOrder!(service);
+      } else {
+        await service.fetchOptions();
+      }
+
+      final data = widget.getWorkOrderOptions != null
+          ? widget.getWorkOrderOptions!(service)
+          : service.dataListOption;
+
+      setState(() {
+        workOrderOption = data;
+      });
+    } catch (e) {
+      debugPrint("Error fetching work orders: $e");
+    } finally {
+      setState(() {
+        _isFetchingWorkOrder = false;
+      });
     }
-
-    final data = widget.getWorkOrderOptions != null
-        ? widget.getWorkOrderOptions!(service)
-        : service.dataListOption;
-
-    setState(() {
-      workOrderOption = data;
-    });
   }
 
   Future<void> _fetchMachine() async {
-    final machineService =
-        Provider.of<OptionMachineService>(context, listen: false);
-    await machineService.fetchOptions();
-    var result = machineService.dataListOption;
-
-    if (widget.machineFilterValue != null &&
-        widget.machineFilterValue!.isNotEmpty) {
-      result = result
-          .where((item) =>
-              item['value'].toString() == widget.machineFilterValue.toString())
-          .toList();
-    }
-
     setState(() {
-      machineOption = result;
+      _isFetchingMachine = true;
     });
+
+    final service = Provider.of<OptionMachineService>(context, listen: false);
+
+    try {
+      if (widget.fetchMachine != null) {
+        await widget.fetchMachine!(service);
+      } else {
+        await service.fetchOptions();
+      }
+
+      // await service.fetchOptionsPressTumbler();
+      // var result = service.dataListOption;
+
+      // if (widget.machineFilterValue != null &&
+      //     widget.machineFilterValue!.isNotEmpty) {
+      //   result = result.toList();
+      // }
+
+      final data = widget.getMachineOptions != null
+          ? widget.getMachineOptions!(service)
+          : service.dataListOption;
+
+      setState(() {
+        machineOption = data;
+      });
+    } catch (e) {
+      debugPrint("Error fetching work orders: $e");
+    } finally {
+      setState(() {
+        _isFetchingMachine = false;
+      });
+    }
   }
 
   Future<void> _getDataView(String id) async {
@@ -103,6 +144,17 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   }
 
   void _selectWorkOrder() {
+    if (_isFetchingWorkOrder) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -125,6 +177,17 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   }
 
   void _selectMachine() {
+    if (_isFetchingMachine) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -162,6 +225,8 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
       body: CreateForm(
         formKey: _formKey,
         form: widget.form,
+        maklon: widget.maklon,
+        isMaklon: widget.isMaklon,
         handleSubmit: widget.handleSubmit,
         data: woData,
         selectWorkOrder: _selectWorkOrder,

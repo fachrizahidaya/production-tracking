@@ -33,6 +33,8 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   final WorkOrderService _workOrderService = WorkOrderService();
   final DyeingService _dyeingService = DyeingService();
   bool _firstLoading = false;
+  bool _isFetchingMachine = false;
+  bool _isFetchingWorkOrder = false;
 
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _qtyController = TextEditingController();
@@ -66,15 +68,27 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   }
 
   Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchReworkOptions();
-    // ignore: use_build_context_synchronously
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListRework;
-
     setState(() {
-      workOrderOption = result;
+      _isFetchingWorkOrder = true;
     });
+
+    try {
+      await Provider.of<OptionWorkOrderService>(context, listen: false)
+          .fetchReworkOptions();
+      // ignore: use_build_context_synchronously
+      final result = Provider.of<OptionWorkOrderService>(context, listen: false)
+          .dataListOption;
+
+      setState(() {
+        workOrderOption = result;
+      });
+    } catch (e) {
+      debugPrint("Error fetching work orders: $e");
+    } finally {
+      setState(() {
+        _isFetchingMachine = false;
+      });
+    }
   }
 
   Future<void> _handleFetchUnit() async {
@@ -90,15 +104,27 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   }
 
   Future<void> _handleFetchMachine() async {
-    await Provider.of<OptionMachineService>(context, listen: false)
-        .fetchOptions();
-    // ignore: use_build_context_synchronously
-    final result = Provider.of<OptionMachineService>(context, listen: false)
-        .dataListOption;
-
     setState(() {
-      machineOption = result;
+      _isFetchingMachine = true;
     });
+
+    try {
+      await Provider.of<OptionMachineService>(context, listen: false)
+          .fetchOptionsDyeing();
+      // ignore: use_build_context_synchronously
+      final result = Provider.of<OptionMachineService>(context, listen: false)
+          .dataListOption;
+
+      setState(() {
+        machineOption = result;
+      });
+    } catch (e) {
+      debugPrint("Error fetching machines: $e");
+    } finally {
+      setState(() {
+        _isFetchingWorkOrder = false;
+      });
+    }
   }
 
   Future<void> _getDataView(id) async {
@@ -147,6 +173,17 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   }
 
   _selectWorkOrder() {
+    if (_isFetchingWorkOrder) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -193,6 +230,17 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   }
 
   _selectMachine() {
+    if (_isFetchingMachine) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -200,9 +248,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
       builder: (BuildContext context) {
         return SelectDialog(
           label: 'Mesin',
-          options: machineOption
-              .where((item) => item['value'].toString() == '1')
-              .toList(),
+          options: machineOption.toList(),
           selected: widget.form?['machine_id'].toString() ?? '',
           handleChangeValue: (e) {
             setState(() {

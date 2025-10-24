@@ -94,7 +94,6 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
               ? const Center(child: CircularProgressIndicator())
               : Stack(
                   children: [
-                    // Handle empty state
                     if (widget.dataList.isEmpty)
                       const Center(child: Text('No Data'))
                     else
@@ -135,7 +134,6 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                               const SizedBox(height: 16),
                         ),
                       ),
-
                     if (widget.canCreate)
                       Positioned(
                         bottom: 16,

@@ -350,41 +350,79 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                 ),
               )),
             CustomCard(
+                child: Padding(
+              padding: PaddingColumn.screen,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ViewText(
+                            viewLabel: 'Dimulai oleh',
+                            viewValue: widget.data['start_time'] != null
+                                ? '${widget.data['start_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['start_time']))}'
+                                : '-',
+                          ),
+                          ViewText(
+                            viewLabel: 'Selesai oleh',
+                            viewValue: widget.data['end_time'] != null
+                                ? '${widget.data['end_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['end_time']))}'
+                                : '-',
+                          ),
+                          ViewText(
+                            viewLabel: 'Catatan',
+                            viewValue: widget.data['notes']?.toString() ?? '-',
+                          ),
+                        ].separatedBy(SizedBox(
+                          height: 16,
+                        )),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )),
+            CustomCard(
               child: Padding(
                 padding: PaddingColumn.screen,
                 child: _buildAttachmentList(context),
               ),
             ),
-            if (data['status'] != 'Diproses')
-              ValueListenableBuilder<bool>(
-                valueListenable: widget.isSubmitting,
-                builder: (context, isSubmitting, _) {
-                  return Align(
-                    alignment: Alignment.center,
-                    child: FormButton(
-                      label: 'Simpan',
-                      isLoading: isSubmitting,
-                      onPressed: () async {
-                        if (widget.handleUpdate == null) return;
-                        widget.isSubmitting.value = true;
-                        try {
-                          await widget.handleUpdate!(data['id'].toString())
-                              .timeout(const Duration(seconds: 10));
-                          setState(() {
-                            _initialWeight = widget.weight?.text ?? '';
-                            _initialLength = widget.length?.text ?? '';
-                            _initialWidth = widget.width?.text ?? '';
-                            _initialNotes = widget.note?.text ?? '';
-                            _isChanged = false;
-                          });
-                        } finally {
-                          widget.isSubmitting.value = false;
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
+            ValueListenableBuilder<bool>(
+              valueListenable: widget.isSubmitting,
+              builder: (context, isSubmitting, _) {
+                return Align(
+                  alignment: Alignment.center,
+                  child: FormButton(
+                    label: 'Simpan',
+                    isLoading: isSubmitting,
+                    onPressed: () async {
+                      if (widget.handleUpdate == null) return;
+                      widget.isSubmitting.value = true;
+                      try {
+                        await widget.handleUpdate!(data['id'].toString())
+                            .timeout(const Duration(seconds: 10));
+                        setState(() {
+                          _initialWeight = widget.weight?.text ?? '';
+                          _initialLength = widget.length?.text ?? '';
+                          _initialWidth = widget.width?.text ?? '';
+                          _initialNotes = widget.note?.text ?? '';
+                          _isChanged = false;
+                        });
+                      } finally {
+                        widget.isSubmitting.value = false;
+                      }
+                    },
+                  ),
+                );
+              },
+            ),
           ].separatedBy(SizedBox(
             height: 16,
           )),

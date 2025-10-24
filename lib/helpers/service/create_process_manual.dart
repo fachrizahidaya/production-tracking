@@ -45,6 +45,8 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   final WorkOrderService _workOrderService = WorkOrderService();
 
   bool _firstLoading = false;
+  bool _isFetchingWorkOrder = false;
+  bool _isFetchingMachine = false;
   List<dynamic> workOrderOption = [];
   List<dynamic> machineOption = [];
   Map<String, dynamic> woData = {};
@@ -61,47 +63,71 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   }
 
   Future<void> _fetchWorkOrder() async {
+    setState(() {
+      _isFetchingWorkOrder = true;
+    });
+
     final service = Provider.of<OptionWorkOrderService>(context, listen: false);
 
-    if (widget.fetchWorkOrder != null) {
-      await widget.fetchWorkOrder!(service);
-    } else {
-      await service.fetchOptions();
+    try {
+      if (widget.fetchWorkOrder != null) {
+        await widget.fetchWorkOrder!(service);
+      } else {
+        await service.fetchOptions();
+      }
+
+      final data = widget.getWorkOrderOptions != null
+          ? widget.getWorkOrderOptions!(service)
+          : service.dataListOption;
+
+      setState(() {
+        workOrderOption = data;
+      });
+    } catch (e) {
+      debugPrint("Error fetching work orders: $e");
+    } finally {
+      setState(() {
+        _isFetchingWorkOrder = false;
+      });
     }
-
-    final data = widget.getWorkOrderOptions != null
-        ? widget.getWorkOrderOptions!(service)
-        : service.dataListOption;
-
-    setState(() {
-      workOrderOption = data;
-    });
   }
 
   Future<void> _fetchMachine() async {
+    setState(() {
+      _isFetchingMachine = true;
+    });
+
     final service = Provider.of<OptionMachineService>(context, listen: false);
 
-    if (widget.fetchMachine != null) {
-      await widget.fetchMachine!(service);
-    } else {
-      await service.fetchOptionsPressTumbler();
+    try {
+      if (widget.fetchMachine != null) {
+        await widget.fetchMachine!(service);
+      } else {
+        await service.fetchOptions();
+      }
+
+      // await service.fetchOptionsPressTumbler();
+      // var result = service.dataListOption;
+
+      // if (widget.machineFilterValue != null &&
+      //     widget.machineFilterValue!.isNotEmpty) {
+      //   result = result.toList();
+      // }
+
+      final data = widget.getMachineOptions != null
+          ? widget.getMachineOptions!(service)
+          : service.dataListOption;
+
+      setState(() {
+        machineOption = data;
+      });
+    } catch (e) {
+      debugPrint("Error fetching work orders: $e");
+    } finally {
+      setState(() {
+        _isFetchingMachine = false;
+      });
     }
-
-    // await service.fetchOptionsPressTumbler();
-    // var result = service.dataListOption;
-
-    // if (widget.machineFilterValue != null &&
-    //     widget.machineFilterValue!.isNotEmpty) {
-    //   result = result.toList();
-    // }
-
-    final data = widget.getMachineOptions != null
-        ? widget.getMachineOptions!(service)
-        : service.dataListOption;
-
-    setState(() {
-      machineOption = data;
-    });
   }
 
   Future<void> _getDataView(String id) async {
@@ -118,6 +144,17 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   }
 
   void _selectWorkOrder() {
+    if (_isFetchingWorkOrder) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -140,6 +177,17 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   }
 
   void _selectMachine() {
+    if (_isFetchingMachine) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,

@@ -1,153 +1,217 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/finish/create_form.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
+import 'package:textile_tracking/components/master/form/finish/create_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/helpers/service/finish_process.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
-import 'package:textile_tracking/models/process/dyeing.dart';
 
 class FinishProcessManual extends StatefulWidget {
-  final String title;
+  final title;
   final String? machineFilterValue;
   final dynamic id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
   final handleSubmit;
-  final Future<void> Function(dynamic service)? fetchWorkOrder;
-  final List<dynamic> Function(dynamic service)? getWorkOrderOptions;
+  final fetchWorkOrder;
+  final getWorkOrderOptions;
   final void Function(String fieldName, dynamic value)? handleChangeInput;
+  final label;
+  final processService;
+  final idProcess;
 
-  const FinishProcessManual({
-    super.key,
-    required this.title,
-    this.machineFilterValue,
-    this.id,
-    this.data,
-    this.form,
-    this.handleSubmit,
-    this.fetchWorkOrder,
-    this.getWorkOrderOptions,
-    this.handleChangeInput,
-  });
+  const FinishProcessManual(
+      {super.key,
+      this.title,
+      this.machineFilterValue,
+      this.id,
+      this.data,
+      this.form,
+      this.handleSubmit,
+      this.fetchWorkOrder,
+      this.getWorkOrderOptions,
+      this.handleChangeInput,
+      this.label,
+      this.processService,
+      this.idProcess});
 
   @override
   State<FinishProcessManual> createState() => _FinishProcessManualState();
 }
 
 class _FinishProcessManualState extends State<FinishProcessManual> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final WorkOrderService _workOrderService = WorkOrderService();
-  final DyeingService _dyeingService = DyeingService();
+  bool _firstLoading = false;
+  bool _isFetchingWorkOrder = false;
+  bool _isFetchingUnit = false;
 
+  final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController _noteController = TextEditingController();
-  final TextEditingController _qtyController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
   final TextEditingController _lengthController = TextEditingController();
   final TextEditingController _widthController = TextEditingController();
 
-  bool _firstLoading = false;
-  List<dynamic> workOrderOption = [];
-  List<dynamic> unitOption = [];
-  Map<String, dynamic> woData = {};
-  Map<String, dynamic> dyeingData = {};
+  late List<dynamic> workOrderOption = [];
+  late List<dynamic> unitOption = [];
 
-  String dyeingId = '';
+  Map<String, dynamic> woData = {};
+  Map<String, dynamic> data = {};
+
+  var processId = '';
 
   @override
   void initState() {
-    super.initState();
-
-    _qtyController.text = widget.form?['qty']?.toString() ?? '';
+    _weightController.text = widget.form?['weight']?.toString() ?? '';
     _lengthController.text = widget.form?['length']?.toString() ?? '';
     _widthController.text = widget.form?['width']?.toString() ?? '';
     _noteController.text = widget.form?['notes']?.toString() ?? '';
 
-    _fetchWorkOrder();
-    _handleFetchUnit();
-
     if (widget.data != null) {
       woData = widget.data!;
     }
+
+    _handleFetchWorkOrder();
+    _handleFetchUnit();
+    super.initState();
   }
 
-  Future<void> _fetchWorkOrder() async {
-    final service = Provider.of<OptionWorkOrderService>(context, listen: false);
-    if (widget.fetchWorkOrder != null) {
-      await widget.fetchWorkOrder!(service);
-    } else {
-      await service.fetchOptions();
-    }
-
-    final data = widget.getWorkOrderOptions != null
-        ? widget.getWorkOrderOptions!(service)
-        : service.dataListOption;
-
+  Future<void> _handleFetchWorkOrder() async {
     setState(() {
-      workOrderOption = data;
+      _isFetchingWorkOrder = true;
     });
+
+    final service = Provider.of<OptionWorkOrderService>(context, listen: false);
+
+    try {
+      if (widget.fetchWorkOrder != null) {
+        await widget.fetchWorkOrder!(service);
+      } else {
+        await service.fetchOptions();
+      }
+
+      final data = widget.getWorkOrderOptions != null
+          ? widget.getWorkOrderOptions!(service)
+          : service.dataListOption;
+
+      setState(() {
+        workOrderOption = data;
+      });
+      // await Provider.of<OptionWorkOrderService>(context, listen: false)
+      //     .fetchPressFinishOptions();
+      // // ignore: use_build_context_synchronously
+      // final result = Provider.of<OptionWorkOrderService>(context, listen: false)
+      //     .dataListPressFinish;
+
+      // setState(() {
+      //   workOrderOption = result;
+      // });
+    } catch (e) {
+      debugPrint("Error fetching work orders: $e");
+    } finally {
+      setState(() {
+        _isFetchingWorkOrder = false;
+      });
+    }
   }
 
   Future<void> _handleFetchUnit() async {
-    await Provider.of<OptionUnitService>(context, listen: false)
-        .getDataListOption();
-    final result =
-        Provider.of<OptionUnitService>(context, listen: false).dataListOption;
-
     setState(() {
-      unitOption = result;
+      _isFetchingWorkOrder = true;
     });
+
+    try {
+      await Provider.of<OptionUnitService>(context, listen: false)
+          .getDataListOption();
+      final result =
+          // ignore: use_build_context_synchronously
+          Provider.of<OptionUnitService>(context, listen: false).dataListOption;
+
+      setState(() {
+        unitOption = result;
+      });
+    } catch (e) {
+      debugPrint("Error fetching work units: $e");
+    } finally {
+      setState(() {
+        _isFetchingUnit = false;
+      });
+    }
   }
 
-  Future<void> _getDataView(String id) async {
-    setState(() => _firstLoading = true);
+  Future<void> _getDataView(id) async {
+    setState(() {
+      _firstLoading = true;
+    });
+
     await _workOrderService.getDataView(id);
+
     setState(() {
       woData = _workOrderService.dataView;
       _firstLoading = false;
     });
   }
 
-  Future<void> _getDyeingView(String id) async {
-    await _dyeingService.getDataView(id);
-    final dyeing = _dyeingService.dataView;
+  Future<void> _getProcessView(id) async {
+    await widget.processService.getDataView(id);
 
     setState(() {
-      dyeingData = dyeing;
+      data = widget.processService.dataView;
 
-      void updateField(String key, dynamic value) {
-        if (value != null) {
-          widget.form?[key] = value;
-        }
+      if (data['length'] != null) {
+        _lengthController.text = data['length'].toString();
+        widget.form?['length'] = data['length'];
+      }
+      if (data['width'] != null) {
+        _widthController.text = data['width'].toString();
+        widget.form?['width'] = data['width'];
+      }
+      if (data['weight'] != null) {
+        _weightController.text = data['weight'].toString();
+        widget.form?['weight'] = data['weight'];
+      }
+      if (data['notes'] != null) {
+        _noteController.text = data['notes'].toString();
+        widget.form?['notes'] = data['notes'];
+      }
+      if (data['machine'] != null) {
+        widget.form?['machine_id'] = data['machine']['id'].toString();
+        widget.form?['nama_mesin'] = data['machine']['name'].toString();
+      }
+      if (data['weight_unit'] != null) {
+        widget.form?['weight_unit_id'] = data['weight_unit']['id'].toString();
+        widget.form?['nama_satuan_berat'] =
+            data['weight_unit']['name'].toString();
+      }
+      if (data['length_unit'] != null) {
+        widget.form?['length_unit_id'] = data['length_unit']['id'].toString();
+        widget.form?['nama_satuan_panjang'] =
+            data['length_unit']['name'].toString();
+      }
+      if (data['width_unit'] != null) {
+        widget.form?['width_unit_id'] = data['width_unit']['id'].toString();
+        widget.form?['nama_satuan_lebar'] =
+            data['width_unit']['name'].toString();
       }
 
-      updateField('length', dyeing['length']);
-      updateField('width', dyeing['width']);
-      updateField('qty', dyeing['qty']);
-      updateField('notes', dyeing['notes']);
-
-      if (dyeing['machine'] != null) {
-        widget.form?['machine_id'] = dyeing['machine']['id'].toString();
-        widget.form?['nama_mesin'] = dyeing['machine']['name'].toString();
+      if (data['attachments'] != null) {
+        widget.form?['attachments'] = List.from(data['attachments']);
       }
-      if (dyeing['unit'] != null) {
-        widget.form?['unit_id'] = dyeing['unit']['id'].toString();
-        widget.form?['nama_satuan'] = dyeing['unit']['name'].toString();
-      }
-      if (dyeing['attachments'] != null) {
-        widget.form?['attachments'] = List.from(dyeing['attachments']);
-      }
-
-      // Update controllers
-      _lengthController.text = dyeing['length']?.toString() ?? '';
-      _widthController.text = dyeing['width']?.toString() ?? '';
-      _qtyController.text = dyeing['qty']?.toString() ?? '';
-      _noteController.text = dyeing['notes']?.toString() ?? '';
     });
   }
 
-  void _selectWorkOrder() {
+  _selectWorkOrder() {
+    if (_isFetchingWorkOrder) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -156,40 +220,88 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         return SelectDialog(
           label: 'Work Order',
           options: workOrderOption,
-          selected: widget.form?['wo_id']?.toString() ?? '',
-          handleChangeValue: (selected) async {
-            final selectedId = selected['value'].toString();
-            final selectedDyeingId = selected['dyeing_id']?.toString();
-
+          selected: widget.form?['wo_id'].toString() ?? '',
+          handleChangeValue: (e) {
             setState(() {
-              widget.form?['wo_id'] = selectedId;
-              widget.form?['no_wo'] = selected['label'].toString();
+              widget.form?['wo_id'] = e['value'].toString();
+              widget.form?['no_wo'] = e['label'].toString();
+              processId = e[widget.idProcess].toString();
             });
 
-            await _getDataView(selectedId);
-            if (selectedDyeingId != null) {
-              await _getDyeingView(selectedDyeingId);
-            }
+            _getDataView(e['value'].toString());
+            _getProcessView(e[widget.idProcess].toString());
           },
         );
       },
     );
   }
 
-  void _selectUnit() {
+  _selectUnit() {
+    if (_isFetchingUnit) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
     showDialog(
       context: context,
       barrierDismissible: true,
       useSafeArea: true,
       builder: (BuildContext context) {
         return SelectDialog(
-          label: 'Satuan',
+          label: 'Satuan Berat',
           options: unitOption,
-          selected: widget.form?['unit_id']?.toString() ?? '',
+          selected: widget.form?['weight_unit_id'].toString() ?? '',
           handleChangeValue: (e) {
             setState(() {
-              widget.form?['unit_id'] = e['value'].toString();
-              widget.form?['nama_satuan'] = e['label'].toString();
+              widget.form?['weight_unit_id'] = e['value'].toString();
+              widget.form?['nama_satuan_berat'] = e['label'].toString();
+            });
+          },
+        );
+      },
+    );
+  }
+
+  _selectLengthUnit() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return SelectDialog(
+          label: 'Satuan Panjang',
+          options: unitOption,
+          selected: widget.form?['length_unit_id'].toString() ?? '',
+          handleChangeValue: (e) {
+            setState(() {
+              widget.form?['length_unit_id'] = e['value'].toString();
+              widget.form?['nama_satuan_panjang'] = e['label'].toString();
+            });
+          },
+        );
+      },
+    );
+  }
+
+  _selectWidthUnit() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return SelectDialog(
+          label: 'Satuan Lebar',
+          options: unitOption,
+          selected: widget.form?['width_unit_id'].toString() ?? '',
+          handleChangeValue: (e) {
+            setState(() {
+              widget.form?['width_unit_id'] = e['value'].toString();
+              widget.form?['nama_satuan_lebar'] = e['label'].toString();
             });
           },
         );
@@ -199,32 +311,41 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   @override
   void dispose() {
-    _noteController.dispose();
-    _qtyController.dispose();
-    _lengthController.dispose();
-    _widthController.dispose();
+    if (widget.form != null) {
+      widget.form!.clear();
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FinishProcess(
-      title: 'Selesai Manual Process',
-      fetchWorkOrder: (service) async => await service.fetchOptions(),
-      getWorkOrderOptions: (service) => service.dataListOption,
-      formPageBuilder:
-          (context, id, data, form, handleSubmit, handleChangeInput) =>
-              FinishProcessManual(
-        title: 'Selesai Manual Process',
-        id: id,
-        data: data,
-        form: form,
-        handleSubmit: handleSubmit,
-        handleChangeInput: handleChangeInput,
+    return Scaffold(
+      backgroundColor: const Color(0xFFEBEBEB),
+      appBar: CustomAppBar(
+        title: widget.title,
+        onReturn: () {
+          Navigator.pop(context);
+        },
       ),
-      handleSubmitToService: (context, id, form, isLoading) async {
-        // Your manual submission logic
-      },
+      body: CreateForm(
+        formKey: _formKey,
+        form: widget.form,
+        note: _noteController,
+        weight: _weightController,
+        width: _widthController,
+        length: _lengthController,
+        handleSelectWo: _selectWorkOrder,
+        handleSelectUnit: _selectUnit,
+        handleChangeInput: widget.handleChangeInput,
+        handleSubmit: widget.handleSubmit,
+        id: widget.id,
+        data: woData,
+        processId: processId,
+        processData: data,
+        isLoading: _firstLoading,
+        handleSelectLengthUnit: _selectLengthUnit,
+        handleSelectWidthUnit: _selectWidthUnit,
+      ),
     );
   }
 }

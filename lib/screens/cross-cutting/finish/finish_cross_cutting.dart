@@ -74,7 +74,7 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchCuttingFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListCuttingFinish;
+        .dataListOption;
 
     setState(() {
       workOrderOption = result;
@@ -202,7 +202,7 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
       title: 'Selesai Cross Cutting',
       fetchWorkOrder: (service) async =>
           await service.fetchCuttingFinishOptions(),
-      getWorkOrderOptions: (service) => service.dataListCuttingFinish,
+      getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder:
           (context, id, data, form, handleSubmit, handleChangeInput) =>
               FinishCrossCuttingManual(

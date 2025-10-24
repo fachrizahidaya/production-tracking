@@ -58,7 +58,7 @@ class CreateCrossCutting extends StatelessWidget {
         );
       },
       fetchWorkOrder: (service) => service.fetchCrossCuttingOptions(),
-      getWorkOrderOptions: (service) => service.dataListCrossCutting,
+      getWorkOrderOptions: (service) => service.dataListOption,
     );
   }
 }

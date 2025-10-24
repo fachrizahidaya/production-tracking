@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/form/finish/create_form.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/helpers/service/finish_process_manual.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -74,7 +73,7 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
           .fetchPressFinishOptions();
       // ignore: use_build_context_synchronously
       final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-          .dataListPressFinish;
+          .dataListOption;
 
       setState(() {
         workOrderOption = result;
@@ -276,33 +275,18 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFEBEBEB),
-      appBar: CustomAppBar(
-        title: 'Selesai Press Tumbler',
-        onReturn: () {
-          Navigator.pop(context);
-        },
-      ),
-      body: CreateForm(
-        formKey: _formKey,
-        form: widget.form,
-        note: _noteController,
-        weight: _weightController,
-        width: _widthController,
-        length: _lengthController,
-        handleSelectWo: _selectWorkOrder,
-        handleSelectUnit: _selectUnit,
-        handleChangeInput: widget.handleChangeInput,
-        handleSubmit: widget.handleSubmit,
-        id: widget.id,
-        data: woData,
-        processId: ptId,
-        processData: pressTumblerData,
-        isLoading: _firstLoading,
-        handleSelectLengthUnit: _selectLengthUnit,
-        handleSelectWidthUnit: _selectWidthUnit,
-      ),
+    return FinishProcessManual(
+      title: 'Selesai Press Tumber',
+      id: widget.id,
+      data: widget.data,
+      form: widget.form,
+      handleSubmit: widget.handleSubmit,
+      machineFilterValue: '2',
+      fetchWorkOrder: (service) => service.fetchPressFinishOptions(),
+      getWorkOrderOptions: (service) => service.dataListOption,
+      processService: _pressTumblerService,
+      handleChangeInput: widget.handleChangeInput,
+      idProcess: 'press_tumbler_id',
     );
   }
 }

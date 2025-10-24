@@ -66,6 +66,8 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
         _canDelete = _userMenu.checkMenu('Long Hemming', 'delete');
         _canUpdate = _userMenu.checkMenu('Long Hemming', 'update');
       });
+      print('r: $_canRead');
+      print('c: $_canCreate');
     } catch (e) {
       throw Exception('Error initializing menus: $e');
     }

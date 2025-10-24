@@ -58,7 +58,7 @@ class CreatePressTumbler extends StatelessWidget {
         );
       },
       fetchWorkOrder: (service) => service.fetchPressTumblerOptions(),
-      getWorkOrderOptions: (service) => service.dataListPressTumbler,
+      getWorkOrderOptions: (service) => service.dataListOption,
     );
   }
 }

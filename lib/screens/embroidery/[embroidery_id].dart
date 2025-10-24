@@ -53,6 +53,7 @@ class _EmbroideryDetailState extends State<EmbroideryDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      route: '/embroideries',
     );
   }
 }

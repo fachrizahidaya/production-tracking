@@ -53,6 +53,7 @@ class _StenterDetailState extends State<StenterDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      route: '/stenters',
     );
   }
 }

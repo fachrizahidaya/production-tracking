@@ -74,7 +74,7 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchSittingFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListSittingFinish;
+        .dataListOption;
 
     setState(() {
       workOrderOption = result;
@@ -202,7 +202,7 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
       title: 'Selesai Long Sitting',
       fetchWorkOrder: (service) async =>
           await service.fetchSittingFinishOptions(),
-      getWorkOrderOptions: (service) => service.dataListSittingFinish,
+      getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder:
           (context, id, data, form, handleSubmit, handleChangeInput) =>
               FinishLongSittingManual(

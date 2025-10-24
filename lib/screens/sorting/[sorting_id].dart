@@ -53,6 +53,7 @@ class _SortingDetailState extends State<SortingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      route: '/sortings',
     );
   }
 }

@@ -75,10 +75,9 @@ class _ListInfoState extends State<ListInfo> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFFEBEBEB),
-      padding: PaddingColumn.screen,
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: Container(
+        color: const Color(0xFFEBEBEB),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -442,40 +441,39 @@ class _ListInfoState extends State<ListInfo> {
                 ],
               ),
             )),
-            if (widget.data['status'] != 'Diproses')
-              ValueListenableBuilder<bool>(
-                valueListenable: widget.isSubmitting,
-                builder: (context, isSubmitting, _) {
-                  return Align(
-                      alignment: Alignment.center,
-                      child: FormButton(
-                        label: 'Simpan',
-                        isLoading: isSubmitting,
-                        // isDisabled: !_isChanged || isSubmitting,
-                        onPressed:
-                            // _isChanged
-                            //     ?
-                            () async {
-                          widget.isSubmitting.value = true;
-                          try {
-                            await widget
-                                .handleUpdate(widget.data['id'].toString());
-                            setState(() {
-                              _initialQty = widget.qty.text;
-                              _initialLength = widget.length.text;
-                              _initialWidth = widget.width.text;
-                              _initialNotes = widget.note.text;
-                              _isChanged = false;
-                            });
-                          } finally {
-                            widget.isSubmitting.value = false;
-                          }
+            ValueListenableBuilder<bool>(
+              valueListenable: widget.isSubmitting,
+              builder: (context, isSubmitting, _) {
+                return Align(
+                    alignment: Alignment.center,
+                    child: FormButton(
+                      label: 'Simpan',
+                      isLoading: isSubmitting,
+                      // isDisabled: !_isChanged || isSubmitting,
+                      onPressed:
+                          // _isChanged
+                          //     ?
+                          () async {
+                        widget.isSubmitting.value = true;
+                        try {
+                          await widget
+                              .handleUpdate(widget.data['id'].toString());
+                          setState(() {
+                            _initialQty = widget.qty.text;
+                            _initialLength = widget.length.text;
+                            _initialWidth = widget.width.text;
+                            _initialNotes = widget.note.text;
+                            _isChanged = false;
+                          });
+                        } finally {
+                          widget.isSubmitting.value = false;
                         }
-                        // : null
-                        ,
-                      ));
-                },
-              )
+                      }
+                      // : null
+                      ,
+                    ));
+              },
+            )
           ].separatedBy(SizedBox(
             height: 16,
           )),

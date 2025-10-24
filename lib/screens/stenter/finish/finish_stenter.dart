@@ -74,7 +74,7 @@ class _FinishStenterState extends State<FinishStenter> {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchStenterFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListStenterFinish;
+        .dataListOption;
 
     setState(() {
       workOrderOption = result;
@@ -201,7 +201,7 @@ class _FinishStenterState extends State<FinishStenter> {
       title: 'Selesai Stenter',
       fetchWorkOrder: (service) async =>
           await service.fetchStenterFinishOptions(),
-      getWorkOrderOptions: (service) => service.dataListStenterFinish,
+      getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder:
           (context, id, data, form, handleSubmit, handleChangeInput) =>
               FinishStenterManual(

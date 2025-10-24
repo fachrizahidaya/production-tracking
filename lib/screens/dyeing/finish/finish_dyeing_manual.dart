@@ -73,7 +73,7 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
           .fetchFinishOptions();
       // ignore: use_build_context_synchronously
       final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-          .dataListFinish;
+          .dataListOption;
 
       setState(() {
         workOrderOption = result;

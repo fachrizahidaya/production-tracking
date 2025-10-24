@@ -74,7 +74,7 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchPressFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListPressFinish;
+        .dataListOption;
 
     setState(() {
       workOrderOption = result;
@@ -202,7 +202,7 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
       title: 'Selesai Press Tumbler',
       fetchWorkOrder: (service) async =>
           await service.fetchStenterFinishOptions(),
-      getWorkOrderOptions: (service) => service.dataListStenterFinish,
+      getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder:
           (context, id, data, form, handleSubmit, handleChangeInput) =>
               FinishPressTumblerManual(

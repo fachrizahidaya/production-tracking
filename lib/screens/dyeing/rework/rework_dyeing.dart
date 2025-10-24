@@ -71,7 +71,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
         .fetchReworkOptions();
     // ignore: use_build_context_synchronously
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListRework;
+        .dataListOption;
 
     setState(() {
       workOrderOption = result;

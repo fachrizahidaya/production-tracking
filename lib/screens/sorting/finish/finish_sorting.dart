@@ -74,7 +74,7 @@ class _FinishSortingState extends State<FinishSorting> {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchSortingFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListSortingFinish;
+        .dataListOption;
 
     setState(() {
       workOrderOption = result;
@@ -201,7 +201,7 @@ class _FinishSortingState extends State<FinishSorting> {
       title: 'Selesai Sorting',
       fetchWorkOrder: (service) async =>
           await service.fetchSortingFinishOptions(),
-      getWorkOrderOptions: (service) => service.dataListSortingFinish,
+      getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder:
           (context, id, data, form, handleSubmit, handleChangeInput) =>
               FinishSortingManual(

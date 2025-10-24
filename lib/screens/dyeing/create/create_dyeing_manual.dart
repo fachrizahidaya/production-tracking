@@ -25,6 +25,7 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
   final WorkOrderService _workOrderService = WorkOrderService();
   bool _firstLoading = false;
   bool _isFetchingMachine = false;
+  bool _isFetchingWorkOrder = false;
 
   late List<dynamic> workOrderOption = [];
   late List<dynamic> machineOption = [];
@@ -43,15 +44,27 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
   }
 
   Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchOptions();
-    // ignore: use_build_context_synchronously
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
-
     setState(() {
-      workOrderOption = result;
+      _isFetchingWorkOrder = true;
     });
+
+    try {
+      await Provider.of<OptionWorkOrderService>(context, listen: false)
+          .fetchOptions();
+      // ignore: use_build_context_synchronously
+      final result = Provider.of<OptionWorkOrderService>(context, listen: false)
+          .dataListOption;
+
+      setState(() {
+        workOrderOption = result;
+      });
+    } catch (e) {
+      debugPrint("Error fetching work orders: $e");
+    } finally {
+      setState(() {
+        _isFetchingWorkOrder = false;
+      });
+    }
   }
 
   Future<void> _handleFetchMachine() async {
@@ -92,6 +105,17 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
   }
 
   _selectWorkOrder() {
+    if (_isFetchingWorkOrder) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,

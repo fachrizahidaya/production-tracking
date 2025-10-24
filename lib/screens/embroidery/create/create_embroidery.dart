@@ -45,19 +45,18 @@ class CreateEmbroidery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CreateProcess(
-      title: 'Mulai Embroidery',
-      handleSubmitToService: _submitToService,
-      formPageBuilder: (context, id, data, form, handleSubmit) {
-        return CreateEmborideryManual(
-          id: id,
-          data: data,
-          form: form,
-          handleSubmit: handleSubmit,
-          fetchWorkOrder: (service) => service.fetchEmbroideryOptions(id),
-        );
-      },
-      fetchWorkOrder: (service) => service.fetchEmbroideryOptions(),
-      getWorkOrderOptions: (service) => service.dataListEmbroidery,
-    );
+        title: 'Mulai Embroidery',
+        handleSubmitToService: _submitToService,
+        formPageBuilder: (context, id, data, form, handleSubmit) {
+          return CreateEmborideryManual(
+            id: id,
+            data: data,
+            form: form,
+            handleSubmit: handleSubmit,
+            fetchWorkOrder: (service) => service.fetchEmbroideryOptions(id),
+          );
+        },
+        fetchWorkOrder: (service) => service.fetchEmbroideryOptions(),
+        getWorkOrderOptions: (service) => service.dataListOption);
   }
 }

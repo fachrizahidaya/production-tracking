@@ -70,7 +70,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListFinish;
+        .dataListOption;
 
     setState(() {
       workOrderOption = result;

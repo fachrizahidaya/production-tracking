@@ -235,6 +235,8 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
                   onSubmitFilter: () {
                     _submitFilter();
                   },
+                  fetchMachine: (service) => service.fetchOptionsCrossCutting(),
+                  getMachineOptions: (service) => service.dataListOption,
                 ),
                 showActions: () {
                   ProcessSheet.showOptions(

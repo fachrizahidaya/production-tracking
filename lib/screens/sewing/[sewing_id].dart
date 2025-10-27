@@ -54,6 +54,8 @@ class _SewingDetailState extends State<SewingDetail> {
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/sewings',
+      fetchMachine: (service) => service.fetchOptionsSewing(),
+      getMachineOptions: (service) => service.dataListOption,
     );
   }
 }

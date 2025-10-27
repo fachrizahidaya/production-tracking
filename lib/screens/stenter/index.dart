@@ -235,6 +235,8 @@ class _StenterScreenState extends State<StenterScreen> {
                   onSubmitFilter: () {
                     _submitFilter();
                   },
+                  fetchMachine: (service) => service.fetchOptionsStenter(),
+                  getMachineOptions: (service) => service.dataListOption,
                 ),
                 showActions: () {
                   ProcessSheet.showOptions(

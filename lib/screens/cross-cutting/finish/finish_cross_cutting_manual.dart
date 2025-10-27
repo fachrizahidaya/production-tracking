@@ -44,7 +44,7 @@ class _FinishCrossCuttingManualState extends State<FinishCrossCuttingManual> {
       form: widget.form,
       handleSubmit: widget.handleSubmit,
       machineFilterValue: '2',
-      fetchWorkOrder: (service) => service.fetchStenterFinishOptions(),
+      fetchWorkOrder: (service) => service.fetchCuttingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       processService: _crossCuttingService,
       handleChangeInput: widget.handleChangeInput,

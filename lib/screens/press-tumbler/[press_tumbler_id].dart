@@ -54,6 +54,8 @@ class _PressTumblerDetailState extends State<PressTumblerDetail> {
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/press-tumbler',
+      fetchMachine: (service) => service.fetchOptionsPressTumbler(),
+      getMachineOptions: (service) => service.dataListOption,
     );
   }
 }

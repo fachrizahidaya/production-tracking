@@ -40,6 +40,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
   final TextEditingController _widthController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+  bool _isFetchingMachine = false;
 
   late List<dynamic> unitOption = [];
   late List<dynamic> machineOption = [];
@@ -93,15 +94,27 @@ class _DyeingDetailState extends State<DyeingDetail> {
   }
 
   Future<void> _handleFetchMachine() async {
-    await Provider.of<OptionMachineService>(context, listen: false)
-        .fetchOptions();
-    // ignore: use_build_context_synchronously
-    final result = Provider.of<OptionMachineService>(context, listen: false)
-        .dataListOption;
-
     setState(() {
-      machineOption = result;
+      _isFetchingMachine = true;
     });
+
+    try {
+      await Provider.of<OptionMachineService>(context, listen: false)
+          .fetchOptionsDyeing();
+      // ignore: use_build_context_synchronously
+      final result = Provider.of<OptionMachineService>(context, listen: false)
+          .dataListOption;
+
+      setState(() {
+        machineOption = result;
+      });
+    } catch (e) {
+      debugPrint("Error fetching machines: $e");
+    } finally {
+      setState(() {
+        _isFetchingMachine = false;
+      });
+    }
   }
 
   Future<void> _getDataView() async {
@@ -322,6 +335,17 @@ class _DyeingDetailState extends State<DyeingDetail> {
   }
 
   _selectMachine() {
+    if (_isFetchingMachine) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -329,9 +353,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
       builder: (BuildContext context) {
         return SelectDialog(
           label: 'Mesin',
-          options: machineOption
-              .where((item) => item['value'].toString() == '1')
-              .toList(),
+          options: machineOption.toList(),
           selected: _form['machine_id'].toString(),
           handleChangeValue: (e) {
             setState(() {

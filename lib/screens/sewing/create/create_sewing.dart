@@ -30,6 +30,8 @@ class CreateSewing extends StatelessWidget {
           : null,
       end_by_id: form['end_by_id'],
       attachments: form['attachments'],
+      maklon: form['maklon'],
+      maklon_name: form['maklon_name'],
     );
 
     final message = await Provider.of<SewingService>(context, listen: false)

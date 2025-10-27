@@ -18,7 +18,7 @@ class MenuService {
       });
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        List<dynamic> menus = data ?? [];
+        List<dynamic> menus = data['data'] ?? [];
 
         await Storage.instance.insertMenus(menus);
         return menus;
@@ -42,18 +42,24 @@ class UserMenu {
 
   bool checkMenu(String name, String action) {
     try {
-      final menu = menus.firstWhere(
-        (m) => m['name'] == name,
-        orElse: () => null,
-      );
-
-      if (menu == null) return false;
-
-      final List<dynamic> actions = menu['actions'] ?? [];
-
-      return actions.contains(action);
+      return _searchMenu(menus, name, action);
     } catch (e) {
       throw Exception('Error checking action: $e');
     }
+  }
+
+  bool _searchMenu(List<dynamic> menuList, String name, String action) {
+    for (var menu in menuList) {
+      if (menu['name'] == name) {
+        final List<dynamic> actions = menu['actions'] ?? [];
+        return actions.contains(action);
+      }
+
+      if (menu['children'] != null && menu['children'].isNotEmpty) {
+        bool found = _searchMenu(menu['children'], name, action);
+        if (found) return true;
+      }
+    }
+    return false;
   }
 }

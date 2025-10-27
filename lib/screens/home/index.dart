@@ -96,26 +96,23 @@ class _HomeState extends State<Home> {
 
     try {
       List<dynamic> menuData = userMenu.menus;
+
       final filteredData = menuData
           .where((menu) =>
-              menu['name'] != 'Dashboard' &&
-              menu['name'] != 'SPK' &&
-              menu['name'] != 'Work Order' &&
-              menu['name'] != 'Pengguna' &&
+              menu['name'] != 'SPK & Work Order' &&
               menu['name'] != 'Pelanggan' &&
               menu['name'] != 'Mesin' &&
               menu['name'] != 'Barang' &&
               menu['name'] != 'Satuan' &&
               menu['name'] != 'Grade Barang' &&
               menu['name'] != 'Material' &&
-              menu['name'] != 'Grade Material')
+              menu['name'] != 'Grade Material' &&
+              menu['name'] != 'Master Data' &&
+              menu['name'] != 'User Management')
           .toList();
 
       return filteredData
-          .map<MenuItem>((menu) {
-            return MenuItem(title: menu['name'], route: menu['url']);
-          })
-          .whereType<MenuItem>()
+          .map<MenuItem>((item) => MenuItem.fromJson(item))
           .toList();
     } catch (e) {
       throw Exception(e);
@@ -166,7 +163,39 @@ class _HomeState extends State<Home> {
 
 class MenuItem {
   final String title;
-  final String route;
+  final String? route;
+  final List<SubMenuItem> subMenuItems;
 
-  MenuItem({required this.title, required this.route});
+  MenuItem({
+    required this.title,
+    this.route,
+    this.subMenuItems = const [],
+  });
+
+  factory MenuItem.fromJson(Map<String, dynamic> json) {
+    final children = json['children'] as List<dynamic>? ?? [];
+    return MenuItem(
+      title: json['name'] ?? '',
+      route: json['url'], // can be null
+      subMenuItems:
+          children.map((child) => SubMenuItem.fromJson(child)).toList(),
+    );
+  }
+}
+
+class SubMenuItem {
+  final String title;
+  final String? route;
+
+  SubMenuItem({
+    required this.title,
+    this.route,
+  });
+
+  factory SubMenuItem.fromJson(Map<String, dynamic> json) {
+    return SubMenuItem(
+      title: json['name'] ?? '',
+      route: json['url'], // can be null
+    );
+  }
 }

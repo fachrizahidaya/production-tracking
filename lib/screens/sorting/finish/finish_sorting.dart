@@ -45,7 +45,7 @@ class _FinishSortingState extends State<FinishSorting> {
     'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     'attachments': [],
     'no_wo': '',
-    'no_lh': '',
+    'no_sorting': '',
     'nama_mesin': '',
     'nama_satuan_berat': '',
     'nama_satuan_panjang': '',

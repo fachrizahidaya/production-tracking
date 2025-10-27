@@ -237,6 +237,8 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
                   onSubmitFilter: () {
                     _submitFilter();
                   },
+                  fetchMachine: (service) => service.fetchOptionsLongHemming(),
+                  getMachineOptions: (service) => service.dataListOption,
                 ),
                 showActions: () {
                   ProcessSheet.showOptions(

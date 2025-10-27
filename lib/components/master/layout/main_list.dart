@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
 import 'package:textile_tracking/components/master/layout/custom_search_bar.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/helpers/service/base_service.dart';
 
 class MainList<T> extends StatefulWidget {
@@ -89,64 +90,67 @@ class _MainListState<T> extends State<MainList<T>> {
           isFiltered: widget.isFiltered,
         ),
         Expanded(
-          child: widget.firstLoading
-              ? const Center(child: CircularProgressIndicator())
-              : !widget.canRead
-                  ? const Center(child: Text('No Access'))
-                  : widget.dataList.isEmpty
-                      ? const Center(child: Text('No Data'))
-                      : Stack(
-                          children: [
-                            RefreshIndicator(
-                              onRefresh: () async {
-                                widget.handleRefetch();
-                              },
-                              child: ListView.separated(
-                                controller: _scrollController,
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                padding: const EdgeInsets.all(8),
-                                itemCount: widget.dataList.length +
-                                    (widget.hasMore ? 1 : 0),
-                                itemBuilder: (context, index) {
-                                  if (index == widget.dataList.length) {
-                                    if (widget.hasMore &&
-                                        widget.dataList.isNotEmpty) {
-                                      return const Padding(
-                                        padding: EdgeInsets.all(16.0),
-                                        child: Center(
-                                            child: CircularProgressIndicator()),
-                                      );
-                                    } else {
-                                      return const SizedBox.shrink();
-                                    }
+          child: !widget.canRead
+              ? const Center(child: Text('No Access'))
+              : widget.firstLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Stack(
+                      children: [
+                        if (widget.dataList.isEmpty)
+                          const Center(child: NoData())
+                        else
+                          RefreshIndicator(
+                            onRefresh: () async {
+                              widget.handleRefetch();
+                            },
+                            child: ListView.separated(
+                              controller: _scrollController,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              padding: const EdgeInsets.all(8),
+                              itemCount: widget.dataList.length +
+                                  (widget.hasMore ? 1 : 0),
+                              itemBuilder: (context, index) {
+                                if (!widget.canRead) {
+                                  return const Center(child: Text('No Access'));
+                                } else if (index == widget.dataList.length) {
+                                  if (widget.hasMore &&
+                                      widget.dataList.isNotEmpty) {
+                                    return const Padding(
+                                      padding: EdgeInsets.all(16.0),
+                                      child: Center(
+                                          child: CircularProgressIndicator()),
+                                    );
+                                  } else {
+                                    return const SizedBox.shrink();
                                   }
+                                }
 
-                                  final item = widget.dataList[index];
-                                  return GestureDetector(
-                                    onTap: () =>
-                                        widget.onItemTap?.call(context, item),
-                                    child: widget.itemBuilder(item),
-                                  );
-                                },
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(height: 16),
+                                final item = widget.dataList[index];
+                                return GestureDetector(
+                                  onTap: () =>
+                                      widget.onItemTap?.call(context, item),
+                                  child: widget.itemBuilder(item),
+                                );
+                              },
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 16),
+                            ),
+                          ),
+                        if (widget.canCreate!)
+                          Positioned(
+                            bottom: 16,
+                            right: 16,
+                            child: CustomFloatingButton(
+                              onPressed: widget.showActions,
+                              icon: const Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                // size: 48,
                               ),
                             ),
-                            if (widget.canCreate!)
-                              Positioned(
-                                bottom: 16,
-                                right: 16,
-                                child: CustomFloatingButton(
-                                  onPressed: widget.showActions,
-                                  icon: const Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                    // size: 48,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
+                          ),
+                      ],
+                    ),
         ),
       ],
     );

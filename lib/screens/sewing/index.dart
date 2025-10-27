@@ -235,6 +235,8 @@ class _SewingScreenState extends State<SewingScreen> {
                   onSubmitFilter: () {
                     _submitFilter();
                   },
+                  fetchMachine: (service) => service.fetchOptionsSewing(),
+                  getMachineOptions: (service) => service.dataListOption,
                 ),
                 showActions: () {
                   ProcessSheet.showOptions(

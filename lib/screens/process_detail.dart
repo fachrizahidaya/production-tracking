@@ -30,6 +30,8 @@ class ProcessDetail<T> extends StatefulWidget {
       modelBuilder;
   final label;
   final route;
+  final fetchMachine;
+  final getMachineOptions;
 
   const ProcessDetail(
       {super.key,
@@ -42,7 +44,9 @@ class ProcessDetail<T> extends StatefulWidget {
       this.canDelete = false,
       this.canUpdate = false,
       this.label,
-      this.route});
+      this.route,
+      this.fetchMachine,
+      this.getMachineOptions});
 
   @override
   State<ProcessDetail<T>> createState() => _ProcessDetailState<T>();
@@ -50,6 +54,8 @@ class ProcessDetail<T> extends StatefulWidget {
 
 class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   bool _firstLoading = true;
+  bool _isFetchingMachine = false;
+  bool _isFetchingUnit = false;
   final ValueNotifier<bool> _processLoading = ValueNotifier(false);
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
   final TextEditingController _weightController = TextEditingController();
@@ -162,24 +168,76 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   Future<void> _handleFetchUnit() async {
-    await Provider.of<OptionUnitService>(context, listen: false)
-        .getDataListOption();
     setState(() {
-      unitOption =
-          Provider.of<OptionUnitService>(context, listen: false).dataListOption;
+      _isFetchingUnit = true;
     });
+
+    try {
+      await Provider.of<OptionUnitService>(context, listen: false)
+          .getDataListOption();
+      setState(() {
+        unitOption = Provider.of<OptionUnitService>(context, listen: false)
+            .dataListOption;
+      });
+    } catch (e) {
+      debugPrint("Error fetching work units: $e");
+    } finally {
+      setState(() {
+        _isFetchingUnit = false;
+      });
+    }
   }
 
   Future<void> _handleFetchMachine() async {
-    await Provider.of<OptionMachineService>(context, listen: false)
-        .fetchOptions();
     setState(() {
-      machineOption = Provider.of<OptionMachineService>(context, listen: false)
-          .dataListOption;
+      _isFetchingMachine = true;
     });
+
+    final service = Provider.of<OptionMachineService>(context, listen: false);
+
+    try {
+      if (widget.fetchMachine != null) {
+        await widget.fetchMachine!(service);
+      } else {
+        await service.fetchOptions();
+      }
+
+      // await Provider.of<OptionMachineService>(context, listen: false)
+      //     .fetchOptions();
+      // setState(() {
+      //   machineOption =
+      //       Provider.of<OptionMachineService>(context, listen: false)
+      //           .dataListOption;
+      // });
+
+      final data = widget.getMachineOptions != null
+          ? widget.getMachineOptions!(service)
+          : service.dataListOption;
+
+      setState(() {
+        machineOption = data;
+      });
+    } catch (e) {
+      debugPrint("Error fetching machines: $e");
+    } finally {
+      setState(() {
+        _isFetchingMachine = false;
+      });
+    }
   }
 
   _selectUnit() {
+    if (_isFetchingUnit) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       builder: (_) => SelectDialog(
@@ -197,6 +255,17 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   _selectLengthUnit() {
+    if (_isFetchingMachine) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -239,6 +308,17 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   _selectMachine() {
+    if (_isFetchingMachine) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       builder: (_) => SelectDialog(

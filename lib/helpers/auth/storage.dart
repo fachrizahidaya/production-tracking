@@ -90,20 +90,25 @@ class Storage {
 
   Future<void> insertMenus(List<dynamic> menus) async {
     final db = await instance.database;
-    String menusJson = jsonEncode(menus);
 
     await db.transaction((txn) async {
-      await txn.delete('menus'); // Ensure only one entry
-      await txn.insert('menus', {'menu_data': menusJson});
+      await txn.delete('menus'); // Clear old data
+
+      for (var menu in menus) {
+        await txn.insert('menus', {
+          'menu_data': jsonEncode(menu),
+        });
+      }
     });
   }
 
   Future<List<dynamic>> getMenus() async {
     final db = await instance.database;
-    final result = await db.query('menus', columns: ['menu_data'], limit: 1);
-    return result.isNotEmpty
-        ? jsonDecode(result.first['menu_data'] as String)
-        : [];
+    final result = await db.query('menus', columns: ['menu_data']);
+    if (result.isEmpty) return [];
+
+    // Decode each stored JSON menu
+    return result.map((row) => jsonDecode(row['menu_data'] as String)).toList();
   }
 
   Future<void> clearMenus() async {

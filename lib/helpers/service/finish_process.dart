@@ -76,6 +76,8 @@ class _FinishProcessState extends State<FinishProcess> {
     'no_wo': '',
     'nama_mesin': '',
     'nama_satuan': '',
+    'maklon': false,
+    'maklon_name': ''
   };
 
   @override

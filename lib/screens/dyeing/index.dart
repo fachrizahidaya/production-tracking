@@ -221,6 +221,8 @@ class _DyeingScreenState extends State<DyeingScreen> {
                 onSubmitFilter: () {
                   _submitFilter();
                 },
+                fetchMachine: (service) => service.fetchOptionsDyeing(),
+                getMachineOptions: (service) => service.dataListOption,
               ),
               handleRefetch: _refetch,
               handleLoadMore: _loadMore,

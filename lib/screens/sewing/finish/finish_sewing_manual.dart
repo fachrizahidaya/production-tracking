@@ -43,7 +43,7 @@ class _FinishSewingManualState extends State<FinishSewingManual> {
       form: widget.form,
       handleSubmit: widget.handleSubmit,
       machineFilterValue: '2',
-      fetchWorkOrder: (service) => service.fetchStenterFinishOptions(),
+      fetchWorkOrder: (service) => service.fetchSewingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       processService: _sewingService,
       handleChangeInput: widget.handleChangeInput,

@@ -80,13 +80,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               if (value == 'logout') {
                 handleLogout();
               }
-              if (value == 'user') {
-                handleLogout();
-              }
+              if (value == 'user') {}
             },
             itemBuilder: (context) => [
               PopupMenuItem(
-                value: 'logout',
+                value: 'user',
                 child: Column(
                   // crossAxisAlignment: CrossAxisAlignment.center,
                   // mainAxisAlignment: MainAxisAlignment.center,
@@ -97,10 +95,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   )),
                 ),
               ),
-              PopupMenuItem(
-                value: 'logout',
-                child: Text('Log Out'),
-              ),
+              // PopupMenuItem(
+              //   value: 'logout',
+              //   child: Text('Log Out'),
+              // ),
             ],
           ),
         ...?actions

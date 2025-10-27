@@ -15,92 +15,100 @@ class AppDrawer extends StatefulWidget {
 
 class _AppDrawerState extends State<AppDrawer> {
   late Future<List<MenuItem>> menuItems;
+  late Future<List<MenuItem>> _menuFuture;
 
   @override
   void initState() {
     menuItems = widget.handleFetchMenu();
+    _menuFuture = widget.handleFetchMenu();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Column(
-        children: [
-          DrawerHeader(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/login_logo.png',
-                height: 50,
-                width: 50,
-                fit: BoxFit.contain,
-              )
-            ],
-          )),
-          Expanded(
+      child: SafeArea(
+        child: Column(
+          children: [
+            DrawerHeader(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/login_logo.png',
+                  height: 50,
+                  width: 50,
+                  fit: BoxFit.contain,
+                )
+              ],
+            )),
+            Expanded(
               child: FutureBuilder<List<MenuItem>>(
-                  future: menuItems,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                        child: Text('No menu items found'),
-                      );
-                    }
+                future: _menuFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No menu found'));
+                  }
 
-                    return ListView.builder(
-                      padding: PaddingColumn.screen,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        final item = snapshot.data![index];
+                  final menus = snapshot.data!;
+                  return ListView.builder(
+                    padding: PaddingColumn.screen,
+                    itemCount: menus.length,
+                    itemBuilder: (context, index) {
+                      final item = menus[index];
+
+                      if (item.subMenuItems.isEmpty) {
+                        // Regular menu (no children)
                         return ListTile(
                           title: Text(item.title),
-                          leading: item.title == 'Pencelupan (Dyeing)'
-                              ? Icon(Icons.water_drop_outlined)
-                              : item.title == 'Press Tumbler'
-                                  ? Icon(Icons.layers_outlined)
-                                  : item.title == 'Stenter'
-                                      ? Icon(Icons.dry_cleaning_outlined)
-                                      : item.title == 'Long Hemming'
-                                          ? Icon(Icons.cut_outlined)
-                                          : item.title == 'Jahit (Sewing)'
-                                              ? Icon(Icons.straighten_outlined)
-                                              : item.title == 'Packing'
-                                                  ? Icon(Icons.archive_outlined)
-                                                  : item.title == 'Sorting'
-                                                      ? Icon(Icons.sort)
-                                                      : item.title ==
-                                                              'Bordir (Embroidery)'
-                                                          ? Icon(Icons
-                                                              .design_services_outlined)
-                                                          : item.title ==
-                                                                  'Cross Cutting'
-                                                              ? Icon(Icons
-                                                                  .cut_outlined)
-                                                              : item.title ==
-                                                                      'Long Sitting'
-                                                                  ? Icon(Icons
-                                                                      .straighten_outlined)
-                                                                  : Icon(Icons
-                                                                      .telegram_outlined),
                           onTap: () {
-                            Navigator.pop(context);
-                            Navigator.pushNamed(context, item.route);
+                            if (item.route != null && item.route!.isNotEmpty) {
+                              Navigator.pushNamed(context, item.route!);
+                            }
                           },
                         );
-                      },
-                    );
-                  })),
-        ],
+                      } else {
+                        // Menu with children
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            dividerColor: Colors.transparent,
+                          ),
+                          child: ExpansionTile(
+                            title: Text(item.title),
+                            children: item.subMenuItems.map((sub) {
+                              return ListTile(
+                                title: Padding(
+                                  padding: const EdgeInsets.only(left: 16.0),
+                                  child: Text(sub.title),
+                                ),
+                                onTap: () {
+                                  if (sub.route != null &&
+                                      sub.route!.isNotEmpty) {
+                                    Navigator.pushNamed(context, sub.route!);
+                                  }
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              ),
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.logout, color: Colors.red),
+              title: const Text('Logout'),
+              onTap: widget.handleLogout,
+            ),
+          ],
+        ),
       ),
     );
   }

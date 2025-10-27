@@ -235,6 +235,8 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                   onSubmitFilter: () {
                     _submitFilter();
                   },
+                  fetchMachine: (service) => service.fetchOptionsLongSitting(),
+                  getMachineOptions: (service) => service.dataListOption,
                 ),
                 showActions: () {
                   ProcessSheet.showOptions(

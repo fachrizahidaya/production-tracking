@@ -20,6 +20,7 @@ class CreateProcessManual extends StatefulWidget {
   final getMachineOptions;
   final maklon;
   final isMaklon;
+  final canMaklonAndMachine;
 
   const CreateProcessManual(
       {super.key,
@@ -34,7 +35,8 @@ class CreateProcessManual extends StatefulWidget {
       this.fetchMachine,
       this.getMachineOptions,
       this.maklon,
-      this.isMaklon});
+      this.isMaklon,
+      this.canMaklonAndMachine});
 
   @override
   State<CreateProcessManual> createState() => _CreateProcessManualState();
@@ -233,6 +235,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
         selectMachine: _selectMachine,
         id: widget.id,
         isLoading: _firstLoading,
+        canMaklonAndMachine: widget.canMaklonAndMachine,
       ),
     );
   }

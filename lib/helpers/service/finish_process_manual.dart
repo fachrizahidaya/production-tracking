@@ -117,7 +117,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   Future<void> _handleFetchUnit() async {
     setState(() {
-      _isFetchingWorkOrder = true;
+      _isFetchingUnit = true;
     });
 
     try {
@@ -197,6 +197,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       if (data['attachments'] != null) {
         widget.form?['attachments'] = List.from(data['attachments']);
       }
+      if (data['maklon'] != null) {
+        widget.form?['maklon'] = List.from(data['maklon']);
+      }
+      if (data['maklon_name'] != null) {
+        widget.form?['maklon_name'] = List.from(data['maklon_name']);
+      }
     });
   }
 
@@ -247,6 +253,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       );
       return;
     }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -268,6 +275,17 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   _selectLengthUnit() {
+    if (_isFetchingUnit) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -289,6 +307,17 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   _selectWidthUnit() {
+    if (_isFetchingUnit) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,

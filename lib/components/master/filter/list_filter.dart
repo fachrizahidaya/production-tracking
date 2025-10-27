@@ -39,6 +39,8 @@ class ListFilter<T> extends StatefulWidget {
   final params;
   final onHandleFilter;
   final onSubmitFilter;
+  final fetchMachine;
+  final getMachineOptions;
 
   const ListFilter(
       {super.key,
@@ -51,7 +53,9 @@ class ListFilter<T> extends StatefulWidget {
       this.onEndDateChanged,
       this.params,
       this.onHandleFilter,
-      this.onSubmitFilter});
+      this.onSubmitFilter,
+      this.fetchMachine,
+      this.getMachineOptions});
 
   @override
   State<ListFilter<T>> createState() => _ListFilterState<T>();
@@ -60,7 +64,7 @@ class ListFilter<T> extends StatefulWidget {
 class _ListFilterState<T> extends State<ListFilter<T>> {
   TextEditingController dariTanggalInput = TextEditingController();
   TextEditingController sampaiTanggalInput = TextEditingController();
-
+  bool _isFetchingMachine = false;
   int? operatorId;
   String? namaOperator = '';
   int? machineId;
@@ -107,15 +111,33 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
   }
 
   Future<void> _getMachine() async {
-    await Provider.of<OptionMachineService>(context, listen: false)
-        .fetchOptions();
-    // ignore: use_build_context_synchronously
-    final result = Provider.of<OptionMachineService>(context, listen: false)
-        .dataListOption;
-
     setState(() {
-      machineOption = result;
+      _isFetchingMachine = true;
     });
+
+    final service = Provider.of<OptionMachineService>(context, listen: false);
+
+    try {
+      if (widget.fetchMachine != null) {
+        await widget.fetchMachine!(service);
+      } else {
+        await service.fetchOptions();
+      }
+
+      final data = widget.getMachineOptions != null
+          ? widget.getMachineOptions!(service)
+          : service.dataListOption;
+
+      setState(() {
+        machineOption = data;
+      });
+    } catch (e) {
+      debugPrint("Error fetching machines: $e");
+    } finally {
+      setState(() {
+        _isFetchingMachine = false;
+      });
+    }
   }
 
   Future<void> _getOperator() async {

@@ -15,6 +15,7 @@ class CreateForm extends StatefulWidget {
   final isLoading;
   final maklon;
   final isMaklon;
+  final canMaklonAndMachine;
 
   const CreateForm(
       {super.key,
@@ -27,7 +28,8 @@ class CreateForm extends StatefulWidget {
       this.id,
       this.isLoading,
       this.maklon,
-      this.isMaklon});
+      this.isMaklon,
+      this.canMaklonAndMachine});
 
   @override
   State<CreateForm> createState() => _CreateFormState();
@@ -39,12 +41,12 @@ class _CreateFormState extends State<CreateForm> {
   bool get _isFormIncomplete {
     final woId = widget.form?['wo_id'];
     final machineId = widget.form?['machine_id'];
-    final maklon = widget.form?['maklon'];
+    final maklon = widget.form?['maklon_name'];
 
     if (widget.isMaklon == true) {
-      return maklon == null || machineId == null;
-    } else {
       return woId == null || machineId == null;
+    } else {
+      return woId == null || maklon == null;
     }
   }
 
@@ -108,6 +110,7 @@ class _CreateFormState extends State<CreateForm> {
         isFormIncomplete: _isFormIncomplete,
         handleSubmit: widget.handleSubmit,
         handlePickAttachments: _pickAttachments,
+        canMaklonAndMachine: widget.canMaklonAndMachine,
       )),
     );
   }

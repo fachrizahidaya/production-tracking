@@ -214,7 +214,7 @@ class _CreateFormState extends State<CreateForm> {
       handleSelectWidthUnit: widget.handleSelectWidthUnit,
       handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
       withItemGrade: widget.withItemGrade,
-      itemGradeOption: widget.itemGradeOption,
+      itemGradeOption: widget.itemGradeOption ?? [],
       handleSelectQtyUnit: widget.handleSelectQtyUnit,
       notes: widget.notes,
       qty: widget.qty,

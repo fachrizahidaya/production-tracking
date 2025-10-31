@@ -432,7 +432,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     );
   }
 
-  _selectQtyUnit(int index) {
+  _selectQtyUnit(int index) async {
     if (_isFetchingUnit) {
       showDialog(
         context: context,
@@ -444,18 +444,39 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       return;
     }
 
-    showDialog(
+    // Fetch current selected unit label (if any)
+    final currentUnitName =
+        widget.form?['grades']?[index]?['unit']?['name']?.toString() ?? '';
+
+    await showDialog(
       context: context,
       builder: (_) => SelectDialog(
         label: 'Satuan',
         options: unitOption,
-        // 👇 Preselect current unit for this grade
-        selected: '',
-        handleChangeValue: (e) {
+        selected: currentUnitName,
+        handleChangeValue: (selected) {
           setState(() {
-            widget.form?['grades'][index]['unit_id'] = e['value'].toString();
-            widget.form?['grades'][index]['unit']['name'] =
-                e['label'].toString();
+            // Ensure grades list exists
+            widget.form?['grades'] ??= [];
+
+            // Ensure index exists (avoid out-of-range)
+            while (widget.form!['grades'].length <= index) {
+              widget.form!['grades'].add({
+                'item_grade_id': '',
+                'unit_id': '',
+                'unit': {},
+                'qty': '',
+                'notes': '',
+              });
+            }
+
+            // Update the selected grade row
+            widget.form!['grades'][index]['unit_id'] =
+                selected['value'].toString();
+
+            // Store the label for display
+            widget.form!['grades'][index]
+                ['unit'] = {'name': selected['label'].toString()};
           });
         },
       ),

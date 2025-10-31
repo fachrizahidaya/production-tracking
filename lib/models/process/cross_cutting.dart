@@ -8,11 +8,13 @@ class CrossCutting {
   final int? start_by_id;
   final int? end_by_id;
   final String? end_time;
+  final String? qty;
   final String? weight;
   final String? width;
   final String? length;
   final String? notes;
   final String? status;
+  final int? unit_id;
   final int? weight_unit_id;
   final int? width_unit_id;
   final int? length_unit_id;
@@ -44,7 +46,9 @@ class CrossCutting {
       this.wo_no,
       this.work_orders,
       this.start_by,
-      this.end_by});
+      this.end_by,
+      this.qty,
+      this.unit_id});
 
   factory CrossCutting.fromJson(Map<String, dynamic> json) {
     return CrossCutting(
@@ -52,6 +56,7 @@ class CrossCutting {
       weight_unit_id: json['weight_unit_id'] as int?,
       length_unit_id: json['length_unit_id'] as int?,
       width_unit_id: json['width_unit_id'] as int?,
+      unit_id: json['item_unit_id'] as int?,
       wo_id: json['wo_id'] as int?,
       machine_id: json['machine_id'] as int?,
       start_by_id: json['start_by_id'] as int?,
@@ -59,6 +64,7 @@ class CrossCutting {
       cc_no: json['cc_no'] ?? '',
       start_time: json['start_time'] ?? '',
       end_time: json['end_time'] ?? '',
+      qty: json['item_qty'] ?? '',
       weight: json['weight'] ?? '',
       width: json['width'] ?? '',
       length: json['length'] ?? '',
@@ -74,6 +80,7 @@ class CrossCutting {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'item_unit_id': unit_id,
       'weight_unit_id': weight_unit_id,
       'length_unit_id': length_unit_id,
       'width_unit_id': width_unit_id,
@@ -85,6 +92,7 @@ class CrossCutting {
       'start_time': start_time,
       'end_time': end_time,
       'wo_no': wo_no,
+      'item_qty': qty,
       'weight': weight,
       'width': width,
       'length': length,

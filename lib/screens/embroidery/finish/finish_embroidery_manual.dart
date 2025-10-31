@@ -43,11 +43,13 @@ class _FinishEmbroideryManualState extends State<FinishEmbroideryManual> {
       form: widget.form,
       handleSubmit: widget.handleSubmit,
       machineFilterValue: '2',
-      fetchWorkOrder: (service) => service.fetchStenterFinishOptions(),
+      fetchWorkOrder: (service) => service.fetchEmbroideryFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       processService: _embroideryService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'embroidery_id',
+      withItemGrade: false,
+      withQtyAndWeight: true,
     );
   }
 }

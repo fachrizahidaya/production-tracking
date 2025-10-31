@@ -19,6 +19,7 @@ class Packing {
   final int? wo_id;
   final int? machine_id;
   final attachments;
+  final grades;
   final dynamic work_orders;
   final dynamic start_by;
   final dynamic end_by;
@@ -44,7 +45,8 @@ class Packing {
       this.wo_no,
       this.work_orders,
       this.start_by,
-      this.end_by});
+      this.end_by,
+      this.grades});
 
   factory Packing.fromJson(Map<String, dynamic> json) {
     return Packing(
@@ -68,6 +70,7 @@ class Packing {
       work_orders: json['work_orders'],
       start_by: json['start_by'],
       end_by: json['end_by'],
+      grades: json['grades'] ?? [],
     );
   }
 
@@ -94,6 +97,7 @@ class Packing {
       'start_by': start_by,
       'end_by': end_by,
       'work_orders': work_orders,
+      'grades': grades,
     };
   }
 }

@@ -239,6 +239,8 @@ class _FinishPackingState extends State<FinishPacking> {
             .showSnackBar(SnackBar(content: Text(message)));
         Navigator.pushNamedAndRemoveUntil(context, '/packings', (_) => false);
       },
+      fetchItemGrade: (service) => service.fetchOptions(),
+      getItemGradeOptions: (service) => service.dataListOption,
     );
   }
 }

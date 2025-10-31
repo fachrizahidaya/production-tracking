@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/helpers/service/create_process_manual.dart';
 
-class CreatePackingManual extends StatelessWidget {
+class CreatePrintingManual extends StatelessWidget {
   final dynamic id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
   final handleSubmit;
   final fetchWorkOrder;
 
-  const CreatePackingManual(
+  const CreatePrintingManual(
       {super.key,
       this.id,
       this.data,
@@ -19,15 +19,15 @@ class CreatePackingManual extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CreateProcessManual(
-      title: 'Mulai Packing',
+      title: 'Mulai Printing',
       id: id,
       data: data,
       form: form,
       handleSubmit: handleSubmit,
       machineFilterValue: '2',
-      fetchWorkOrder: (service) => service.fetchPackingOptions(),
+      fetchWorkOrder: (service) => service.fetchPrintingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
-      withNoMaklonOrMachine: true,
+      withOnlyMaklon: true,
     );
   }
 }

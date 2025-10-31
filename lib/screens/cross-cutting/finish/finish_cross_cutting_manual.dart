@@ -49,6 +49,8 @@ class _FinishCrossCuttingManualState extends State<FinishCrossCuttingManual> {
       processService: _crossCuttingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'cross_cutting_id',
+      withItemGrade: false,
+      withQtyAndWeight: true,
     );
   }
 }

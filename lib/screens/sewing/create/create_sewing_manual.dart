@@ -33,7 +33,7 @@ class CreateSewingManual extends StatelessWidget {
       getWorkOrderOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsSewing(),
       getMachineOptions: (service) => service.dataListOption,
-      canMaklonAndMachine: true,
+      withMaklonOrMachine: true,
     );
   }
 }

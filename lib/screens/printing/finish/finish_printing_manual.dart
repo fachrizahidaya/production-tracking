@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/helpers/service/finish_process_manual.dart';
-import 'package:textile_tracking/models/process/sewing.dart';
+import 'package:textile_tracking/models/process/printing.dart';
 
-class FinishSewingManual extends StatefulWidget {
+class FinishPrintingManual extends StatefulWidget {
   final id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
   final handleSubmit;
   final handleChangeInput;
 
-  const FinishSewingManual(
+  const FinishPrintingManual(
       {super.key,
       this.id,
       this.data,
@@ -18,11 +18,11 @@ class FinishSewingManual extends StatefulWidget {
       this.handleChangeInput});
 
   @override
-  State<FinishSewingManual> createState() => _FinishSewingManualState();
+  State<FinishPrintingManual> createState() => _FinishPrintingManualState();
 }
 
-class _FinishSewingManualState extends State<FinishSewingManual> {
-  final SewingService _sewingService = SewingService();
+class _FinishPrintingManualState extends State<FinishPrintingManual> {
+  final PrintingService _printingService = PrintingService();
 
   @override
   void initState() {
@@ -37,17 +37,17 @@ class _FinishSewingManualState extends State<FinishSewingManual> {
   @override
   Widget build(BuildContext context) {
     return FinishProcessManual(
-      title: 'Selesai Sewing',
+      title: 'Selesai Printing',
       id: widget.id,
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,
       machineFilterValue: '2',
-      fetchWorkOrder: (service) => service.fetchSewingFinishOptions(),
+      fetchWorkOrder: (service) => service.fetchPrintingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
-      processService: _sewingService,
+      processService: _printingService,
       handleChangeInput: widget.handleChangeInput,
-      idProcess: 'sewing_id',
+      idProcess: 'printing_id',
       withItemGrade: false,
       withQtyAndWeight: true,
     );

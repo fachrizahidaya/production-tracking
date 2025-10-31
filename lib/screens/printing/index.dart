@@ -10,20 +10,20 @@ import 'package:textile_tracking/components/master/layout/process_list.dart';
 import 'package:textile_tracking/components/master/sheet/process_sheet.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_date_safe.dart';
-import 'package:textile_tracking/models/process/sewing.dart';
+import 'package:textile_tracking/models/process/printing.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
-import 'package:textile_tracking/screens/sewing/%5Bsewing_id%5D.dart';
-import 'package:textile_tracking/screens/sewing/create/create_sewing.dart';
-import 'package:textile_tracking/screens/sewing/finish/finish_sewing.dart';
+import 'package:textile_tracking/screens/printing/%5Bprinting_id%5D.dart';
+import 'package:textile_tracking/screens/printing/create/create_printing.dart';
+import 'package:textile_tracking/screens/printing/finish/finish_printing.dart';
 
-class SewingScreen extends StatefulWidget {
-  const SewingScreen({super.key});
+class PrintingScreen extends StatefulWidget {
+  const PrintingScreen({super.key});
 
   @override
-  State<SewingScreen> createState() => _SewingScreenState();
+  State<PrintingScreen> createState() => _PrintingScreenState();
 }
 
-class _SewingScreenState extends State<SewingScreen> {
+class _PrintingScreenState extends State<PrintingScreen> {
   final MenuService _menuService = MenuService();
   final UserMenu _userMenu = UserMenu();
   bool _isFiltered = false;
@@ -60,10 +60,10 @@ class _SewingScreenState extends State<SewingScreen> {
       await _userMenu.handleLoadMenu();
 
       setState(() {
-        _canRead = _userMenu.checkMenu('Jahit (Sewing)', 'read');
-        _canCreate = _userMenu.checkMenu('Jahit (Sewing)', 'create');
-        _canDelete = _userMenu.checkMenu('Jahit (Sewing)', 'delete');
-        _canUpdate = _userMenu.checkMenu('Jahit (Sewing)', 'update');
+        _canRead = _userMenu.checkMenu('Printing', 'read');
+        _canCreate = _userMenu.checkMenu('Printing', 'create');
+        _canDelete = _userMenu.checkMenu('Printing', 'delete');
+        _canUpdate = _userMenu.checkMenu('Printing', 'update');
       });
     } catch (e) {
       throw Exception('Error initializing menus: $e');
@@ -127,8 +127,8 @@ class _SewingScreenState extends State<SewingScreen> {
     final currentPage = int.parse(params['page']!);
 
     try {
-      List<Sewing> loadData =
-          await Provider.of<SewingService>(context, listen: false)
+      List<Printing> loadData =
+          await Provider.of<PrintingService>(context, listen: false)
               .getDataList(params);
 
       if (loadData.isEmpty) {
@@ -171,7 +171,7 @@ class _SewingScreenState extends State<SewingScreen> {
     return Scaffold(
         backgroundColor: const Color(0xFFEBEBEB),
         appBar: CustomAppBar(
-          title: 'Sewing',
+          title: 'Printing',
           onReturn: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
@@ -185,17 +185,18 @@ class _SewingScreenState extends State<SewingScreen> {
             Expanded(
                 child: ProcessList(
               fetchData: (params) async {
-                return await Provider.of<SewingService>(context, listen: false)
+                return await Provider.of<PrintingService>(context,
+                        listen: false)
                     .getDataList(params);
               },
-              service: SewingService(),
+              service: PrintingService(),
               searchQuery: _search,
               canCreate: _canCreate,
               canRead: _canRead,
               itemBuilder: (item) => ItemProcessCard(
-                label: 'Sewing No',
+                label: 'Printing No',
                 item: item,
-                titleKey: 'sewing_no',
+                titleKey: 'print_no',
                 subtitleKey: 'work_orders',
                 subtitleField: 'wo_no',
                 isRework: (item) => item.rework == false,
@@ -210,9 +211,9 @@ class _SewingScreenState extends State<SewingScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SewingDetail(
+                      builder: (context) => PrintingDetail(
                         id: item.id.toString(),
-                        no: item.sewing_no.toString(),
+                        no: item.print_no.toString(),
                         canDelete: _canDelete,
                         canUpdate: _canUpdate,
                       ),
@@ -231,29 +232,29 @@ class _SewingScreenState extends State<SewingScreen> {
                 onSubmitFilter: () {
                   _submitFilter();
                 },
-                fetchMachine: (service) => service.fetchOptionsSewing(),
-                getMachineOptions: (service) => service.dataListOption,
               ),
               showActions: () {
                 ProcessSheet.showOptions(
                   context,
                   options: [
                     BottomSheetOption(
-                      title: "Mulai Sewing",
+                      title: "Mulai Printing",
                       icon: Icons.add,
                       iconColor: CustomTheme().buttonColor('primary'),
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const CreateSewing()),
+                        MaterialPageRoute(
+                            builder: (_) => const CreatePrinting()),
                       ),
                     ),
                     BottomSheetOption(
-                      title: "Selesai Sewing",
+                      title: "Selesai Printing",
                       icon: Icons.check_circle,
                       iconColor: CustomTheme().buttonColor('warning'),
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const FinishSewing()),
+                        MaterialPageRoute(
+                            builder: (_) => const FinishPrinting()),
                       ),
                     ),
                   ],

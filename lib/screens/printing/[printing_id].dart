@@ -2,16 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/models/process/embroidery.dart';
+import 'package:textile_tracking/models/process/printing.dart';
 import 'package:textile_tracking/screens/process_detail.dart';
 
-class EmbroideryDetail extends StatefulWidget {
+class PrintingDetail extends StatefulWidget {
   final String id;
   final String no;
   final canDelete;
   final canUpdate;
 
-  const EmbroideryDetail(
+  const PrintingDetail(
       {super.key,
       required this.id,
       required this.no,
@@ -19,24 +19,24 @@ class EmbroideryDetail extends StatefulWidget {
       this.canUpdate});
 
   @override
-  State<EmbroideryDetail> createState() => _EmbroideryDetailState();
+  State<PrintingDetail> createState() => _PrintingDetailState();
 }
 
-class _EmbroideryDetailState extends State<EmbroideryDetail> {
+class _PrintingDetailState extends State<PrintingDetail> {
   @override
   Widget build(BuildContext context) {
-    return ProcessDetail<Embroidery>(
+    return ProcessDetail<Printing>(
       id: widget.id,
       no: widget.no,
-      label: 'Embroidery',
-      service: Provider.of<EmbroideryService>(context, listen: false),
+      label: 'Printing',
+      service: Provider.of<PrintingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
-          Provider.of<EmbroideryService>(context, listen: false)
+          Provider.of<PrintingService>(context, listen: false)
               .updateItem(id, item, isLoading),
       handleDeleteService: (context, id, isLoading) =>
-          Provider.of<EmbroideryService>(context, listen: false)
+          Provider.of<PrintingService>(context, listen: false)
               .deleteItem(id, isLoading),
-      modelBuilder: (form, data) => Embroidery(
+      modelBuilder: (form, data) => Printing(
           wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
           unit_id: form['item_unit_id'] != null
               ? int.tryParse(form['item_unit_id'].toString())
@@ -64,9 +64,10 @@ class _EmbroideryDetailState extends State<EmbroideryDetail> {
           maklon_name: form['maklon_name']),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
-      route: '/embroideries',
+      route: '/printings',
       withItemGrade: false,
       withQtyAndWeight: true,
+      withMaklon: true,
     );
   }
 }

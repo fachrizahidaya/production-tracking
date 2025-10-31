@@ -5,18 +5,18 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/service/finish_process.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
-import 'package:textile_tracking/models/process/cross_cutting.dart';
+import 'package:textile_tracking/models/process/printing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
-import 'package:textile_tracking/screens/cross-cutting/finish/finish_cross_cutting_manual.dart';
+import 'package:textile_tracking/screens/printing/finish/finish_printing_manual.dart';
 
-class FinishCrossCutting extends StatefulWidget {
-  const FinishCrossCutting({super.key});
+class FinishPrinting extends StatefulWidget {
+  const FinishPrinting({super.key});
 
   @override
-  State<FinishCrossCutting> createState() => _FinishCrossCuttingState();
+  State<FinishPrinting> createState() => _FinishPrintingState();
 }
 
-class _FinishCrossCuttingState extends State<FinishCrossCutting> {
+class _FinishPrintingState extends State<FinishPrinting> {
   final MobileScannerController _controller = MobileScannerController();
   bool _isLoading = false;
   bool _isScannerStopped = false;
@@ -47,12 +47,14 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
     'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     'attachments': [],
     'no_wo': '',
-    'no_cc': '',
+    'no_printing': '',
     'nama_mesin': '',
     'nama_satuan_berat': '',
     'nama_satuan_panjang': '',
     'nama_satuan_lebar': '',
     'nama_satuan': '',
+    'maklon': false,
+    'maklon_name': ''
   };
 
   @override
@@ -74,7 +76,7 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
 
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchCuttingFinishOptions();
+        .fetchPrintingFinishOptions();
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
         .dataListOption;
 
@@ -120,7 +122,7 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => FinishCrossCuttingManual(
+          builder: (context) => FinishPrintingManual(
             id: scannedId,
             data: data,
             form: _form,
@@ -141,7 +143,7 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
 
   Future<void> _handleSubmit(id) async {
     try {
-      final crossCutting = CrossCutting(
+      final printing = Printing(
           wo_id: _form['wo_id'] != null
               ? int.tryParse(_form['wo_id'].toString())
               : null,
@@ -174,11 +176,12 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
           end_by_id: _form['end_by_id'] != null
               ? int.tryParse(_form['end_by_id'])
               : null,
-          attachments: _form['attachments']);
+          attachments: _form['attachments'],
+          maklon: (_form['maklon']),
+          maklon_name: (_form['maklon_name']));
 
-      final message =
-          await Provider.of<CrossCuttingService>(context, listen: false)
-              .finishItem(id, crossCutting, _firstLoading);
+      final message = await Provider.of<PrintingService>(context, listen: false)
+          .finishItem(id, printing, _firstLoading);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
@@ -186,7 +189,7 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
 
       Navigator.pushNamedAndRemoveUntil(
         context,
-        '/cross-cuttings',
+        '/printings',
         (Route<dynamic> route) => false,
       );
     } catch (e) {
@@ -205,13 +208,13 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
   @override
   Widget build(BuildContext context) {
     return FinishProcess(
-      title: 'Selesai Cross Cutting',
+      title: 'Selesai Printing',
       fetchWorkOrder: (service) async =>
-          await service.fetchCuttingFinishOptions(),
+          await service.fetchPrintingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder:
           (context, id, data, form, handleSubmit, handleChangeInput) =>
-              FinishCrossCuttingManual(
+              FinishPrintingManual(
         id: id,
         data: data,
         form: form,
@@ -219,35 +222,36 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
         handleChangeInput: handleChangeInput,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
-        final crossCutting = CrossCutting(
-          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-          unit_id: int.tryParse(form['item_unit_id']?.toString() ?? ''),
-          weight_unit_id:
-              int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
-          length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? ''),
-          qty: form['item_qty'],
-          weight: form['weight'],
-          width: form['width'],
-          length: form['length'],
-          notes: form['notes'],
-          start_time: form['start_time'],
-          end_time: form['end_time'],
-          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
-          attachments: form['attachments'],
-        );
+        final printing = Printing(
+            wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+            machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+            unit_id: int.tryParse(form['item_unit_id']?.toString() ?? ''),
+            weight_unit_id:
+                int.tryParse(form['weight_unit_id']?.toString() ?? ''),
+            width_unit_id:
+                int.tryParse(form['width_unit_id']?.toString() ?? ''),
+            length_unit_id:
+                int.tryParse(form['length_unit_id']?.toString() ?? ''),
+            qty: form['item_qty'],
+            weight: form['weight'],
+            width: form['width'],
+            length: form['length'],
+            notes: form['notes'],
+            start_time: form['start_time'],
+            end_time: form['end_time'],
+            start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+            end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+            attachments: form['attachments'],
+            maklon: form['maklon'],
+            maklon_name: form['maklon_name']);
 
         final message =
-            await Provider.of<CrossCuttingService>(context, listen: false)
-                .finishItem(id, crossCutting, isLoading);
+            await Provider.of<PrintingService>(context, listen: false)
+                .finishItem(id, printing, isLoading);
 
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(message)));
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/cross-cuttings', (_) => false);
+        Navigator.pushNamedAndRemoveUntil(context, '/printings', (_) => false);
       },
     );
   }

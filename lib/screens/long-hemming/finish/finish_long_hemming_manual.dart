@@ -49,6 +49,7 @@ class _FinishLongHemmingManualState extends State<FinishLongHemmingManual> {
       processService: _longHemmingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'long_hemming_id',
+      withItemGrade: false,
     );
   }
 }

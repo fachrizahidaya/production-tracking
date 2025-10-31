@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/service/create_process.dart';
-import 'package:textile_tracking/models/process/embroidery.dart';
-import 'package:textile_tracking/screens/embroidery/create/create_emboridery_manual.dart';
+import 'package:textile_tracking/models/process/printing.dart';
+import 'package:textile_tracking/screens/printing/create/create_printing_manual.dart';
 
-class CreateEmbroidery extends StatelessWidget {
-  const CreateEmbroidery({super.key});
+class CreatePrinting extends StatelessWidget {
+  const CreatePrinting({super.key});
 
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
-    final embroidery = Embroidery(
+    final printing = Printing(
       wo_id:
           form['wo_id'] != null ? int.tryParse(form['wo_id'].toString()) : null,
       weight_unit_id: form['unit_id'] != null
@@ -34,31 +34,30 @@ class CreateEmbroidery extends StatelessWidget {
       maklon_name: form['maklon_name'],
     );
 
-    final message = await Provider.of<EmbroideryService>(context, listen: false)
-        .addItem(embroidery, isLoading);
+    final message = await Provider.of<PrintingService>(context, listen: false)
+        .addItem(printing, isLoading);
 
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
 
-    Navigator.pushNamedAndRemoveUntil(
-        context, '/embroideries', (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/printings', (route) => false);
   }
 
   @override
   Widget build(BuildContext context) {
     return CreateProcess(
-        title: 'Mulai Embroidery',
+        title: 'Mulai Printing',
         handleSubmitToService: _submitToService,
         formPageBuilder: (context, id, data, form, handleSubmit) {
-          return CreateEmborideryManual(
+          return CreatePrintingManual(
             id: id,
             data: data,
             form: form,
             handleSubmit: handleSubmit,
-            fetchWorkOrder: (service) => service.fetchEmbroideryOptions(id),
+            fetchWorkOrder: (service) => service.fetchPrintingOptions(id),
           );
         },
-        fetchWorkOrder: (service) => service.fetchEmbroideryOptions(),
+        fetchWorkOrder: (service) => service.fetchPrintingOptions(),
         getWorkOrderOptions: (service) => service.dataListOption);
   }
 }

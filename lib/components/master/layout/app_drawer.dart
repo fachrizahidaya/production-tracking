@@ -35,7 +35,7 @@ class _AppDrawerState extends State<AppDrawer> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/login_logo.png',
+                  'assets/images/ic_launcher.png',
                   height: 50,
                   width: 50,
                   fit: BoxFit.contain,

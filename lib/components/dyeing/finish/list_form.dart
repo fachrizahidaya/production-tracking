@@ -167,21 +167,21 @@ class _ListFormState extends State<ListForm> {
                                       },
                                     ),
                                   ),
-                                  // Expanded(
-                                  //   flex: 1,
-                                  //   child: SelectForm(
-                                  //       label: 'Satuan Panjang',
-                                  //       onTap: () =>
-                                  //           widget.handleSelectLengthUnit(),
-                                  //       selectedLabel: widget
-                                  //               .form['nama_satuan_panjang'] ??
-                                  //           '',
-                                  //       selectedValue: widget
-                                  //               .form['length_unit_id']
-                                  //               ?.toString() ??
-                                  //           '',
-                                  //       required: false),
-                                  // ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: SelectForm(
+                                        label: 'Satuan Panjang',
+                                        onTap: () =>
+                                            widget.handleSelectLengthUnit(),
+                                        selectedLabel: widget
+                                                .form['nama_satuan_panjang'] ??
+                                            '',
+                                        selectedValue: widget
+                                                .form['length_unit_id']
+                                                ?.toString() ??
+                                            '',
+                                        required: false),
+                                  ),
                                 ].separatedBy(SizedBox(
                                   width: 16,
                                 )),
@@ -203,21 +203,21 @@ class _ListFormState extends State<ListForm> {
                                       },
                                     ),
                                   ),
-                                  // Expanded(
-                                  //   flex: 1,
-                                  //   child: SelectForm(
-                                  //       label: 'Satuan Lebar',
-                                  //       onTap: () =>
-                                  //           widget.handleSelectWidthUnit(),
-                                  //       selectedLabel:
-                                  //           widget.form['nama_satuan_lebar'] ??
-                                  //               '',
-                                  //       selectedValue: widget
-                                  //               .form['width_unit_id']
-                                  //               ?.toString() ??
-                                  //           '',
-                                  //       required: false),
-                                  // ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: SelectForm(
+                                        label: 'Satuan Lebar',
+                                        onTap: () =>
+                                            widget.handleSelectWidthUnit(),
+                                        selectedLabel:
+                                            widget.form['nama_satuan_lebar'] ??
+                                                '',
+                                        selectedValue: widget
+                                                .form['width_unit_id']
+                                                ?.toString() ??
+                                            '',
+                                        required: false),
+                                  ),
                                 ].separatedBy(SizedBox(
                                   width: 16,
                                 )),

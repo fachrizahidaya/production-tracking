@@ -152,7 +152,7 @@ class _FinishProcessState extends State<FinishProcess> {
   Future<void> _handleScan(code) async {
     setState(() => _isLoading = true);
     try {
-      final scannedId = code.trim();
+      final scannedId = code.toString();
       final exists =
           workOrderOption.any((e) => e['value'].toString() == scannedId);
 

@@ -88,7 +88,7 @@ class _CreateProcessState extends State<CreateProcess> {
     });
   }
 
-  Future<void> _handleScan(String code) async {
+  Future<void> _handleScan(code) async {
     setState(() => _isLoading = true);
     try {
       final scannedId = code.toString();

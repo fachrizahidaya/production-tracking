@@ -84,6 +84,8 @@ class _CreateDyeingState extends State<CreateDyeing> {
           workOrderOption.any((item) => item['value'].toString() == scannedId);
 
       if (!workOrderExists) {
+        _showSnackBar("Work Order not found");
+
         setState(() {
           _isLoading = false;
         });
@@ -177,6 +179,11 @@ class _CreateDyeingState extends State<CreateDyeing> {
         SnackBar(content: Text(e.toString())),
       );
     }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override

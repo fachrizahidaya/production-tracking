@@ -43,7 +43,7 @@ class _FinishPackingManualState extends State<FinishPackingManual> {
       form: widget.form,
       handleSubmit: widget.handleSubmit,
       machineFilterValue: '2',
-      fetchWorkOrder: (service) => service.fetchStenterFinishOptions(),
+      fetchWorkOrder: (service) => service.fetchPackingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       processService: _packingService,
       handleChangeInput: widget.handleChangeInput,

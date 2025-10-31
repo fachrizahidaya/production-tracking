@@ -110,40 +110,54 @@ class _ListFormState extends State<ListForm> {
     _initialWidth = widget.initialWidth ?? '';
     _initialNotes = widget.initialNotes ?? '';
     _isChanged = widget.isChanged ?? false;
-    // _grades = (widget.form['grades'] ?? [])
-    //     .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
-    //     .toList();
-    // _syncGradesWithOptions();
+    _grades = (widget.form['grades'] ?? [])
+        .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
+        .toList();
+    _syncGradesWithOptions();
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant ListForm oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // _syncGradesWithOptions();
+    if (oldWidget.itemGradeOption != widget.itemGradeOption) {
+      _syncGradesWithOptions();
+    }
   }
 
   void _syncGradesWithOptions() {
-    for (var grade in widget.itemGradeOption) {
-      final exists = _grades
-          .any((g) => g['grade_id'].toString() == grade['value'].toString());
-      if (!exists) {
-        _grades.add({
-          'item_grade_id': grade['value'],
-          'qty': '',
-          'unit_id': '',
-          'note': '',
-        });
-      }
+    final List<Map<String, dynamic>> updated = [];
+
+    for (var grade in widget.itemGradeOption ?? []) {
+      final existing = _grades.firstWhere(
+        (g) => g['item_grade_id'].toString() == grade['value'].toString(),
+        orElse: () => {},
+      );
+
+      updated.add({
+        'item_grade_id': grade['value'],
+        'unit_id': existing['unit_id'] ?? '',
+        'notes': existing['notes'] ?? '',
+        'qty': existing['qty'] ?? '',
+      });
     }
 
-    widget.handleChangeInput('grades', _grades);
+    // ✅ Schedule state update safely after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          _grades = updated;
+        });
+        widget.handleChangeInput('grades', _grades);
+      }
+    });
   }
 
   void _updateGrade(int index, String key, dynamic value) {
     setState(() {
       _grades[index][key] = value;
     });
+
     widget.handleChangeInput('grades', _grades);
   }
 
@@ -202,88 +216,81 @@ class _ListFormState extends State<ListForm> {
                           ],
                         )),
                   )),
-                  // if (widget.withItemGrade == true)
-                  // CustomCard(
-                  //     child: Padding(
-                  //   padding: PaddingColumn.screen,
-                  //   child: Column(
-                  //     children: [
-                  //       for (int i = 0;
-                  //           i < widget.itemGradeOption.length;
-                  //           i++)
-                  //         Row(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //           crossAxisAlignment: CrossAxisAlignment.center,
-                  //           children: [
-                  // Expanded(
-                  //   flex: 1,
-                  //   child: ViewText(
-                  //       viewLabel: widget.itemGradeOption[i]
-                  //                   ['label']
-                  //               ?.split('-')
-                  //               .first
-                  //               .trim() ??
-                  //           '',
-                  //       viewValue: widget.itemGradeOption[i]
-                  //                   ['label']
-                  //               ?.split('-')
-                  //               .last
-                  //               .trim() ??
-                  //           ''),
-                  // ),
-                  // Expanded(
-                  //   flex: 1,
-                  //   child: TextForm(
-                  //     label: 'Jumlah',
-                  //     req: false,
-                  //     controller: widget.qtyItem[i],
-                  //     handleChange: (value) {
-                  //       setState(() {
-                  //         widget.qtyItem[i].text =
-                  //             value.toString();
-                  //         widget.handleChangeInput(
-                  //             'qty_${i}', value);
-                  //       });
-                  //     },
-                  //   ),
-                  // ),
-                  // Expanded(
-                  //   flex: 1,
-                  //   child: SelectForm(
-                  //       label: 'Satuan',
-                  //       onTap: () =>
-                  //           widget.handleSelectQtyUnit(i),
-                  //       selectedLabel:
-                  //           widget.form['nama_satuan'] ?? '',
-                  //       selectedValue:
-                  //           widget.form['unit_id']?.toString() ??
-                  //               '',
-                  //       required: false),
-                  // ),
-                  // Expanded(
-                  //   flex: 1,
-                  //   child: TextForm(
-                  //     label: 'Catatan',
-                  //     req: false,
-                  //     controller: widget.notes[i],
-                  //     handleChange: (value) {
-                  //       setState(() {
-                  //         widget.notes[i].text = value.toString();
-                  //         widget.handleChangeInput(
-                  //             'notes_${i}', value);
-                  //       });
-                  //     },
-                  //   ),
-                  // ),
-                  //           ].separatedBy(SizedBox(
-                  //             width: 16,
-                  //           )),
-                  //         ),
-                  //     ].separatedBy(SizedBox(
-                  //       height: 16,
-                  //     )),
-                  //   ),
-                  // )),
+                  if (widget.withItemGrade == true)
+                    CustomCard(
+                        child: Padding(
+                      padding: PaddingColumn.screen,
+                      child: Column(
+                        children: [
+                          if ((widget.itemGradeOption ?? []).isNotEmpty &&
+                              _grades.isNotEmpty &&
+                              _grades.length >= widget.itemGradeOption.length)
+                            for (int i = 0;
+                                i < widget.itemGradeOption.length;
+                                i++)
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: ViewText(
+                                      viewLabel: 'Grade',
+                                      viewValue:
+                                          (widget.itemGradeOption.firstWhere(
+                                                (e) =>
+                                                    e['value'].toString() ==
+                                                    _grades[i]['item_grade_id']
+                                                        .toString(),
+                                                orElse: () => {'label': ''},
+                                              )['label']) ??
+                                              '',
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: TextForm(
+                                      label: 'Jumlah',
+                                      req: false,
+                                      handleChange: (val) =>
+                                          _updateGrade(i, 'qty', val),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: SelectForm(
+                                      label: 'Satuan',
+                                      onTap: () =>
+                                          widget.handleSelectQtyUnit(i),
+                                      selectedLabel: widget.form['grades']?[i]
+                                              ?['unit']?['name'] ??
+                                          '',
+                                      selectedValue: widget.form['grades']?[i]
+                                                  ?['unit_id']
+                                              ?.toString() ??
+                                          '',
+                                      required: false,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: TextForm(
+                                      label: 'Catatan',
+                                      req: false,
+                                      handleChange: (val) =>
+                                          _updateGrade(i, 'notes', val),
+                                    ),
+                                  ),
+                                ].separatedBy(SizedBox(
+                                  width: 16,
+                                )),
+                              ),
+                        ].separatedBy(SizedBox(
+                          height: 16,
+                        )),
+                      ),
+                    )),
                   if (widget.withItemGrade == false)
                     CustomCard(
                         child: Padding(

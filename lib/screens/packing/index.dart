@@ -248,7 +248,7 @@ class _PackingScreenState extends State<PackingScreen> {
                       ),
                     ),
                     BottomSheetOption(
-                      title: "Selesai Sorting",
+                      title: "Selesai Packing",
                       icon: Icons.check_circle,
                       iconColor: CustomTheme().buttonColor('warning'),
                       onTap: () => Navigator.push(

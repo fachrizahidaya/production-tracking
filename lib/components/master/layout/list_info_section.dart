@@ -211,7 +211,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                   ),
                 ),
               ),
-              if (widget.data['status'] == 'Diproses')
+              if (widget.data['status'] == 'Diproses' &&
+                  widget.withItemGrade == false)
                 Expanded(
                   flex: 1,
                   child: CustomCard(
@@ -291,7 +292,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                 ),
               ),
             ),
-          if (widget.withItemGrade == true)
+          if (widget.withItemGrade == true &&
+              widget.data['status'] != 'Diproses')
             CustomCard(
                 child: Padding(
                     padding: PaddingColumn.screen,

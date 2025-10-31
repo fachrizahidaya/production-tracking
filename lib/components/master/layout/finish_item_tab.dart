@@ -20,7 +20,6 @@ class _FinishItemTabState extends State<FinishItemTab> {
         (widget.data?['items'] ?? []).cast<Map<String, dynamic>>();
 
     return Container(
-      color: const Color(0xFFEBEBEB),
       child: items.isEmpty
           ? const Center(child: Text('No Data'))
           : ListView.separated(

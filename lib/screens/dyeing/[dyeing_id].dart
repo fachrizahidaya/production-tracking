@@ -3,10 +3,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/detail/info_tab.dart';
+import 'package:textile_tracking/components/master/button/cancel_button.dart';
+import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
@@ -41,6 +45,8 @@ class _DyeingDetailState extends State<DyeingDetail> {
   final TextEditingController _noteController = TextEditingController();
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
   bool _isFetchingMachine = false;
+  final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
+  bool _isFetchingUnit = false;
 
   late List<dynamic> unitOption = [];
   late List<dynamic> machineOption = [];
@@ -56,6 +62,8 @@ class _DyeingDetailState extends State<DyeingDetail> {
   final Map<String, dynamic> _form = {
     'wo_id': null,
     'machine_id': null,
+    'length_unit_id': null,
+    'width_unit_id': null,
     'unit_id': null,
     'rework_reference_id': null,
     'start_by_id': null,
@@ -73,6 +81,8 @@ class _DyeingDetailState extends State<DyeingDetail> {
     'no_dyeing': '',
     'nama_mesin': '',
     'nama_satuan': '',
+    'nama_satuan_panjang': '',
+    'nama_satuan_lebar': '',
   };
 
   void _handleChangeInput(fieldName, value) {
@@ -145,6 +155,14 @@ class _DyeingDetailState extends State<DyeingDetail> {
       if (data['unit'] != null) {
         _form['unit_id'] = data['unit']['id'].toString();
         _form['nama_satuan'] = data['unit']['name'].toString();
+      }
+      if (data['width_unit'] != null) {
+        _form['width_unit_id'] = data['width_unit']['id'].toString();
+        _form['nama_satuan_lebar'] = data['width_unit']['name'].toString();
+      }
+      if (data['length_unit'] != null) {
+        _form['length_unit_id'] = data['length_unit']['id'].toString();
+        _form['nama_satuan_panjang'] = data['length_unit']['name'].toString();
       }
       if (data['machine'] != null) {
         _form['machine_id'] = data['machine']['id'].toString();
@@ -227,15 +245,21 @@ class _DyeingDetailState extends State<DyeingDetail> {
             : data['wo_id'],
         unit_id: _form['unit_id'] != null
             ? int.tryParse(_form['unit_id'].toString())
-            : data['unit_id'],
+            : 1,
+        length_unit_id: _form['length_unit_id'] != null
+            ? int.tryParse(_form['length_unit_id'].toString())
+            : data['length_unit_id'],
+        width_unit_id: _form['width_unit_id'] != null
+            ? int.tryParse(_form['width_unit_id'].toString())
+            : data['width_unit_id'],
         machine_id: _form['machine_id'] != null
             ? int.tryParse(_form['machine_id'].toString())
             : data['machine_id'],
         rework_reference_id: _form['rework_reference_id'] != null
             ? int.tryParse(_form['rework_reference_id'].toString())
             : data['rework_reference_id'],
-        qty: _form['qty'] ?? data['qty'],
-        width: _form['width'] ?? data['width'],
+        qty: _form['qty'] ?? '0',
+        width: _form['width'] ?? '0',
         length: _form['length'] ?? data['length'],
         notes: _form['notes'] ?? data['notes'],
         rework: _form['rework'] ?? data['rework'],
@@ -314,6 +338,17 @@ class _DyeingDetailState extends State<DyeingDetail> {
   }
 
   _selectUnit() {
+    if (_isFetchingUnit) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -327,6 +362,70 @@ class _DyeingDetailState extends State<DyeingDetail> {
             setState(() {
               _form['unit_id'] = e['value'].toString();
               _form['nama_satuan'] = e['label'].toString();
+            });
+          },
+        );
+      },
+    );
+  }
+
+  _selectLengthUnit() {
+    if (_isFetchingUnit) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return SelectDialog(
+          label: 'Satuan Panjang',
+          options: unitOption,
+          selected: _form['length_unit_id'].toString(),
+          handleChangeValue: (e) {
+            setState(() {
+              _form['length_unit_id'] = e['value'].toString();
+              _form['nama_satuan_panjang'] = e['label'].toString();
+            });
+          },
+        );
+      },
+    );
+  }
+
+  _selectWidthUnit() {
+    if (_isFetchingUnit) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return SelectDialog(
+          label: 'Satuan Lebar',
+          options: unitOption,
+          selected: _form['width_unit_id'].toString(),
+          handleChangeValue: (e) {
+            setState(() {
+              _form['width_unit_id'] = e['value'].toString();
+              _form['nama_satuan_lebar'] = e['label'].toString();
             });
           },
         );
@@ -408,9 +507,53 @@ class _DyeingDetailState extends State<DyeingDetail> {
               handleUpdate: _handleUpdate,
               hasMore: _hasMore,
               refetch: _refetch,
+              handleSelectLengthUnit: _selectLengthUnit,
+              handleSelectWidthUnit: _selectWidthUnit,
             ),
           )
         ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: PaddingColumn.screen,
+          child: ValueListenableBuilder<bool>(
+            valueListenable: _isSubmitting,
+            builder: (context, isSubmitting, _) {
+              return Row(
+                children: [
+                  Expanded(
+                    child: CancelButton(
+                      label: 'Batal',
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                  Expanded(
+                      child: FormButton(
+                    label: 'Simpan',
+                    isLoading: isSubmitting,
+                    onPressed: () async {
+                      _isSubmitting.value = true;
+                      try {
+                        await _handleUpdate(data['id'].toString());
+                        setState(() {
+                          // _initialQty = _qtyController.text;
+                          // _initialLength = _lengthController.text;
+                          // _initialWidth = _widthController.text;
+                          // _initialNotes = _noteController.text;
+                          // _isChanged = false;
+                        });
+                      } finally {
+                        _isSubmitting.value = false;
+                      }
+                    },
+                  ))
+                ].separatedBy(SizedBox(
+                  width: 16,
+                )),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

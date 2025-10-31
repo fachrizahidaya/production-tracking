@@ -48,6 +48,8 @@ class _FinishSewingManualState extends State<FinishSewingManual> {
       processService: _sewingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'sewing_id',
+      withItemGrade: false,
+      withQtyAndWeight: true,
     );
   }
 }

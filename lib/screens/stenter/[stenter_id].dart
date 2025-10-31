@@ -38,13 +38,19 @@ class _StenterDetailState extends State<StenterDetail> {
               .deleteItem(id, isLoading),
       modelBuilder: (form, data) => Stenter(
         wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-        weight_unit_id: int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-        length_unit_id: int.tryParse(form['length_unit_id']?.toString() ?? ''),
-        width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
+        weight_unit_id: form['weight_unit_id'] != null
+            ? int.tryParse(form['weight_unit_id'].toString())
+            : 1,
+        length_unit_id: form['length_unit_id'] != null
+            ? int.tryParse(form['length_unit_id'].toString())
+            : 1,
+        width_unit_id: form['width_unit_id'] != null
+            ? int.tryParse(form['width_unit_id'].toString())
+            : 1,
         machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-        weight: form['weight'] ?? data['weight'],
-        width: form['width'] ?? data['width'],
-        length: form['length'] ?? data['length'],
+        weight: form['weight'] ?? '0',
+        width: form['width'] ?? '0',
+        length: form['length'] ?? '0',
         notes: form['notes'] ?? data['notes'],
         attachments: [
           ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
@@ -56,6 +62,7 @@ class _StenterDetailState extends State<StenterDetail> {
       route: '/stenters',
       fetchMachine: (service) => service.fetchOptionsStenter(),
       getMachineOptions: (service) => service.dataListOption,
+      withItemGrade: false,
     );
   }
 }

@@ -27,6 +27,7 @@ class CreatePackingManual extends StatelessWidget {
       machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchPackingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
+      withNoMaklonOrMachine: true,
     );
   }
 }

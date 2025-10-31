@@ -29,12 +29,14 @@ class _FinishSewingState extends State<FinishSewing> {
   final Map<String, dynamic> _form = {
     'wo_id': null,
     'machine_id': null,
+    'item_unit_id': null,
     'weight_unit_id': null,
     'width_unit_id': null,
     'length_unit_id': null,
     'rework_reference_id': null,
     'start_by_id': null,
     'end_by_id': null,
+    'item_qty': null,
     'weight': null,
     'width': null,
     'length': null,
@@ -145,6 +147,9 @@ class _FinishSewingState extends State<FinishSewing> {
           wo_id: _form['wo_id'] != null
               ? int.tryParse(_form['wo_id'].toString())
               : null,
+          unit_id: _form['item_unit_id'] != null
+              ? int.tryParse(_form['item_unit_id'].toString())
+              : null,
           weight_unit_id: _form['weight_unit_id'] != null
               ? int.tryParse(_form['weight_unit_id'].toString())
               : null,
@@ -157,6 +162,7 @@ class _FinishSewingState extends State<FinishSewing> {
           machine_id: _form['machine_id'] != null
               ? int.tryParse(_form['machine_id'].toString())
               : null,
+          qty: (_form['item_qty']),
           weight: (_form['weight']),
           width: (_form['width']),
           length: (_form['length']),
@@ -219,12 +225,14 @@ class _FinishSewingState extends State<FinishSewing> {
         final sewing = Sewing(
             wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
             machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+            unit_id: int.tryParse(form['item_unit_id']?.toString() ?? ''),
             weight_unit_id:
                 int.tryParse(form['weight_unit_id']?.toString() ?? ''),
             width_unit_id:
                 int.tryParse(form['width_unit_id']?.toString() ?? ''),
             length_unit_id:
                 int.tryParse(form['length_unit_id']?.toString() ?? ''),
+            qty: form['item_qty'],
             weight: form['weight'],
             width: form['width'],
             length: form['length'],

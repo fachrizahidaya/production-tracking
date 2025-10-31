@@ -48,6 +48,7 @@ class _FinishStenterManualState extends State<FinishStenterManual> {
       processService: _stenterService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'stenter_id',
+      withItemGrade: false,
     );
   }
 }

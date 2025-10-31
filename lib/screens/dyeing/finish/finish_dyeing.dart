@@ -42,6 +42,8 @@ class _FinishDyeingState extends State<FinishDyeing> {
     'wo_id': null,
     'machine_id': null,
     'unit_id': null,
+    'length_unit_id': null,
+    'width_unit_id': null,
     'rework_reference_id': null,
     'start_by_id': null,
     'end_by_id': null,
@@ -58,6 +60,8 @@ class _FinishDyeingState extends State<FinishDyeing> {
     'no_dyeing': '',
     'nama_mesin': '',
     'nama_satuan': '',
+    'nama_satuan_panjang': '',
+    'nama_satuan_lebar': '',
   };
 
   void _handleChangeInput(fieldName, value) {
@@ -141,6 +145,12 @@ class _FinishDyeingState extends State<FinishDyeing> {
               : null,
           unit_id: _form['unit_id'] != null
               ? int.tryParse(_form['unit_id'].toString())
+              : null,
+          length_unit_id: _form['length_unit_id'] != null
+              ? int.tryParse(_form['length_unit_id'].toString())
+              : null,
+          width_unit_id: _form['width_unit_id'] != null
+              ? int.tryParse(_form['width_unit_id'].toString())
               : null,
           machine_id: _form['machine_id'] != null
               ? int.tryParse(_form['machine_id'].toString())

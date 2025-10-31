@@ -22,6 +22,14 @@ class CreateForm extends StatefulWidget {
   final processId;
   final processData;
   final isLoading;
+  final withItemGrade;
+  final itemGradeOption;
+  final handleSelectQtyUnit;
+  final qty;
+  final notes;
+  final withQtyAndWeight;
+  final handleSelectQtyUnitItem;
+  final qtyItem;
 
   const CreateForm(
       {super.key,
@@ -41,7 +49,15 @@ class CreateForm extends StatefulWidget {
       this.data,
       this.processData,
       this.processId,
-      this.isLoading});
+      this.isLoading,
+      this.withItemGrade,
+      this.itemGradeOption,
+      this.handleSelectQtyUnit,
+      this.qty,
+      this.notes,
+      this.withQtyAndWeight,
+      this.handleSelectQtyUnitItem,
+      this.qtyItem});
 
   @override
   State<CreateForm> createState() => _CreateFormState();
@@ -52,6 +68,7 @@ class _CreateFormState extends State<CreateForm> {
 
   bool _isChanged = false;
   late String _initialWeight;
+  late String _initialQty;
   late String _initialLength;
   late String _initialNotes;
   late String _initialWidth;
@@ -59,11 +76,13 @@ class _CreateFormState extends State<CreateForm> {
   @override
   void initState() {
     super.initState();
+    _initialQty = widget.data['qty']?.toString() ?? '';
     _initialWeight = widget.data['weight']?.toString() ?? '';
     _initialLength = widget.data['length']?.toString() ?? '';
     _initialWidth = widget.data['width']?.toString() ?? '';
     _initialNotes = widget.data['notes']?.toString() ?? '';
 
+    widget.qty.text = _initialQty;
     widget.weight.text = _initialWeight;
     widget.note.text = _initialNotes;
     widget.length.text = _initialLength;
@@ -76,11 +95,13 @@ class _CreateFormState extends State<CreateForm> {
     if (widget.processData != oldWidget.processData &&
         widget.processData.isNotEmpty) {
       setState(() {
+        _initialQty = widget.processData['qty']?.toString() ?? '';
         _initialWeight = widget.processData['weight']?.toString() ?? '';
         _initialLength = widget.processData['length']?.toString() ?? '';
         _initialWidth = widget.processData['width']?.toString() ?? '';
         _initialNotes = widget.processData['notes']?.toString() ?? '';
 
+        widget.qty.text = _initialWeight;
         widget.weight.text = _initialWeight;
         widget.length.text = _initialLength;
         widget.width.text = _initialWidth;
@@ -92,18 +113,22 @@ class _CreateFormState extends State<CreateForm> {
   }
 
   bool get _isFormIncomplete {
+    final qty = widget.form?['qty'];
     final weight = widget.form?['weight'];
     final width = widget.form?['width'];
     final length = widget.form?['length'];
+    final qtyUnitId = widget.form?['unit_id'];
     final unitId = widget.form?['weight_unit_id'];
     final lengthUnitId = widget.form?['length_unit_id'];
     final widthUnitId = widget.form?['width_unit_id'];
 
-    return weight == null ||
+    return qty == null ||
+        weight == null ||
         width == null ||
         length == null ||
         unitId == null ||
         lengthUnitId == null ||
+        qtyUnitId == null ||
         widthUnitId == null;
   }
 
@@ -161,36 +186,40 @@ class _CreateFormState extends State<CreateForm> {
       );
     }
 
-    return Container(
-        padding: MarginSearch.screen,
-        child: CustomCard(
-          child: ListForm(
-            formKey: widget.formKey,
-            form: widget.form,
-            data: widget.data,
-            id: widget.id,
-            processId: widget.processId,
-            length: widget.length,
-            width: widget.width,
-            weight: widget.weight,
-            note: widget.note,
-            handleSelectWo: widget.handleSelectWo,
-            handleChangeInput: widget.handleChangeInput,
-            handleSelectUnit: widget.handleSelectUnit,
-            isSubmitting: _isSubmitting,
-            handleSubmit: widget.handleSubmit,
-            isFormIncomplete: _isFormIncomplete,
-            isChanged: _isChanged,
-            initialWeight: _initialWeight,
-            initialLength: _initialLength,
-            initialWidth: _initialWidth,
-            initialNotes: _initialNotes,
-            allAttachments: allAttachments,
-            handlePickAttachments: _pickAttachments,
-            processData: widget.processData,
-            handleSelectLengthUnit: widget.handleSelectLengthUnit,
-            handleSelectWidthUnit: widget.handleSelectWidthUnit,
-          ),
-        ));
+    return ListForm(
+      formKey: widget.formKey,
+      form: widget.form,
+      data: widget.data,
+      id: widget.id,
+      processId: widget.processId,
+      length: widget.length,
+      width: widget.width,
+      weight: widget.weight,
+      note: widget.note,
+      handleSelectWo: widget.handleSelectWo,
+      handleChangeInput: widget.handleChangeInput,
+      handleSelectUnit: widget.handleSelectUnit,
+      isSubmitting: _isSubmitting,
+      handleSubmit: widget.handleSubmit,
+      isFormIncomplete: _isFormIncomplete,
+      isChanged: _isChanged,
+      initialWeight: _initialWeight,
+      initialLength: _initialLength,
+      initialWidth: _initialWidth,
+      initialNotes: _initialNotes,
+      allAttachments: allAttachments,
+      handlePickAttachments: _pickAttachments,
+      processData: widget.processData,
+      handleSelectLengthUnit: widget.handleSelectLengthUnit,
+      handleSelectWidthUnit: widget.handleSelectWidthUnit,
+      handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
+      withItemGrade: widget.withItemGrade,
+      itemGradeOption: widget.itemGradeOption,
+      handleSelectQtyUnit: widget.handleSelectQtyUnit,
+      notes: widget.notes,
+      qty: widget.qty,
+      withQtyAndWeight: widget.withQtyAndWeight,
+      qtyItem: widget.qtyItem,
+    );
   }
 }

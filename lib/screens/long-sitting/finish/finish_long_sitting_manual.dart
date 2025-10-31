@@ -49,6 +49,7 @@ class _FinishLongSittingManualState extends State<FinishLongSittingManual> {
       processService: _longSittingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'long_sitting_id',
+      withItemGrade: false,
     );
   }
 }

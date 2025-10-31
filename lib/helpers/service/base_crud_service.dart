@@ -170,23 +170,91 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('access_token');
 
-      final response = await http.patch(
-        Uri.parse('$baseUrl/$endpoint/$id'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(toJson(updatedItem)),
-      );
+      final data = toJson(updatedItem);
+      final attachments = data['attachments'];
 
-      if (response.statusCode == 200) {
-        final res = jsonDecode(response.body);
-        await refetchItems();
-        return res['message'] ?? 'Updated successfully';
+      if (attachments != null &&
+          attachments is List &&
+          attachments.isNotEmpty) {
+        var uri = Uri.parse('$baseUrl/$endpoint/$id');
+        var request = http.MultipartRequest('POST', uri)
+          ..headers['Authorization'] = 'Bearer $token';
+
+        data.forEach((key, value) {
+          if (key != 'attachments' && value != null) {
+            request.fields[key] = value.toString();
+          }
+        });
+
+        request.fields['_method'] = 'PATCH';
+
+        for (int i = 0; i < attachments.length; i++) {
+          var file = attachments[i];
+          if (file is File) {
+            request.files.add(await http.MultipartFile.fromPath(
+              'attachments[$i]',
+              file.path,
+            ));
+          } else if (file is Map && file['path'] != null) {
+            request.files.add(await http.MultipartFile.fromPath(
+              'attachments[$i]',
+              file['path'],
+              filename: file['name'] ?? 'file_$i',
+            ));
+          }
+        }
+
+        final response = await request.send();
+        final body = await response.stream.bytesToString();
+
+        if (response.statusCode == 200) {
+          await refetchItems();
+          return jsonDecode(body)['message'] ?? 'Updated successfully';
+        } else {
+          throw Exception(
+              jsonDecode(body)['message'] ?? 'Failed to update item');
+        }
       } else {
-        final error = jsonDecode(response.body);
-        throw Exception(error['message'] ?? 'Failed to update item');
+        final body = {
+          ...data,
+          '_method': 'PATCH',
+        };
+
+        final response = await http.post(
+          Uri.parse('$baseUrl/$endpoint/$id'),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(body),
+        );
+
+        if (response.statusCode == 200) {
+          await refetchItems();
+          return jsonDecode(response.body)['message'];
+        } else {
+          final error = jsonDecode(response.body);
+          throw Exception(error['message'] ?? 'Failed to update item');
+        }
       }
+
+      // final response = await http.patch(
+      //   Uri.parse('$baseUrl/$endpoint/$id'),
+      //   headers: {
+      //     'Authorization': 'Bearer $token',
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: jsonEncode(toJson(updatedItem)),
+      // );
+
+      // if (response.statusCode == 200) {
+      //   final res = jsonDecode(response.body);
+      //   await refetchItems();
+      //   return res['message'] ?? 'Updated successfully';
+      // } else {
+      //   final error = jsonDecode(response.body);
+      //   throw Exception(error['message'] ?? 'Failed to update item');
+      // }
     } catch (e) {
       throw Exception('Error updating $endpoint: $e');
     } finally {

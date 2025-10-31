@@ -5,8 +5,10 @@ import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/form/multiline_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
+import 'package:textile_tracking/components/master/layout/custom_card.dart';
 import 'package:textile_tracking/components/master/layout/finish_info_tab.dart';
 import 'package:textile_tracking/components/master/layout/finish_item_tab.dart';
+import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -21,16 +23,22 @@ class ListForm extends StatefulWidget {
   final width;
   final weight;
   final note;
+  final qty;
+  final qtyItem;
+  final notes;
   final handleSelectWo;
   final handleChangeInput;
   final handleSelectUnit;
+  final handleSelectQtyUnit;
   final handleSelectLengthUnit;
   final handleSelectWidthUnit;
+  final handleSelectQtyUnitItem;
   final handleSelectMachine;
   final isSubmitting;
   final handleSubmit;
   final isFormIncomplete;
   final isChanged;
+  final initialQty;
   final initialWeight;
   final initialLength;
   final initialWidth;
@@ -38,6 +46,9 @@ class ListForm extends StatefulWidget {
   final allAttachments;
   final handlePickAttachments;
   final processData;
+  final withItemGrade;
+  final itemGradeOption;
+  final withQtyAndWeight;
 
   const ListForm(
       {super.key,
@@ -66,323 +77,520 @@ class ListForm extends StatefulWidget {
       this.initialNotes,
       this.allAttachments,
       this.handlePickAttachments,
-      this.processData});
+      this.processData,
+      this.withItemGrade = false,
+      this.itemGradeOption,
+      this.handleSelectQtyUnit,
+      this.notes,
+      this.qty,
+      this.withQtyAndWeight = false,
+      this.handleSelectQtyUnitItem,
+      this.initialQty,
+      this.qtyItem});
 
   @override
   State<ListForm> createState() => _ListFormState();
 }
 
 class _ListFormState extends State<ListForm> {
+  late String _initialQty;
   late String _initialWeight;
   late String _initialLength;
   late String _initialWidth;
   late String _initialNotes;
   late bool _isChanged;
 
+  late List<Map<String, dynamic>> _grades;
+
   @override
   void initState() {
+    _initialQty = widget.initialQty ?? '';
     _initialWeight = widget.initialWeight ?? '';
     _initialLength = widget.initialLength ?? '';
     _initialWidth = widget.initialWidth ?? '';
     _initialNotes = widget.initialNotes ?? '';
     _isChanged = widget.isChanged ?? false;
+    // _grades = (widget.form['grades'] ?? [])
+    //     .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
+    //     .toList();
+    // _syncGradesWithOptions();
     super.initState();
   }
 
   @override
+  void didUpdateWidget(covariant ListForm oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // _syncGradesWithOptions();
+  }
+
+  void _syncGradesWithOptions() {
+    for (var grade in widget.itemGradeOption) {
+      final exists = _grades
+          .any((g) => g['grade_id'].toString() == grade['value'].toString());
+      if (!exists) {
+        _grades.add({
+          'item_grade_id': grade['value'],
+          'qty': '',
+          'unit_id': '',
+          'note': '',
+        });
+      }
+    }
+
+    widget.handleChangeInput('grades', _grades);
+  }
+
+  void _updateGrade(int index, String key, dynamic value) {
+    setState(() {
+      _grades[index][key] = value;
+    });
+    widget.handleChangeInput('grades', _grades);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Form(
-      key: widget.formKey,
-      child: SingleChildScrollView(
-        padding: PaddingColumn.screen,
+    return SingleChildScrollView(
+        child: Container(
+      padding: const EdgeInsets.all(8),
+      child: Form(
+        key: widget.formKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             if (widget.id == null)
-              SelectForm(
-                  label: 'Work Order',
-                  onTap: () => widget.handleSelectWo(),
-                  selectedLabel: widget.form['no_wo'] ?? '',
-                  selectedValue: widget.form['wo_id']?.toString() ?? '',
-                  required: false),
+              CustomCard(
+                  child: Padding(
+                padding: PaddingColumn.screen,
+                child: SelectForm(
+                    label: 'Work Order',
+                    onTap: () => widget.handleSelectWo(),
+                    selectedLabel: widget.form['no_wo'] ?? '',
+                    selectedValue: widget.form['wo_id']?.toString() ?? '',
+                    required: false),
+              )),
             if (widget.form?['wo_id'] != null)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  DefaultTabController(
-                      length: 2,
+                  CustomCard(
+                      child: Padding(
+                    padding: PaddingColumn.screen,
+                    child: DefaultTabController(
+                        length: 2,
+                        child: Column(
+                          children: [
+                            TabBar(tabs: [
+                              Tab(
+                                text: 'Informasi',
+                              ),
+                              Tab(
+                                text: 'Barang',
+                              ),
+                            ]),
+                            SizedBox(
+                              height: 400,
+                              child: TabBarView(children: [
+                                FinishInfoTab(
+                                  data: widget.data,
+                                ),
+                                FinishItemTab(
+                                  data: widget.data,
+                                )
+                              ]),
+                            )
+                          ],
+                        )),
+                  )),
+                  // if (widget.withItemGrade == true)
+                  // CustomCard(
+                  //     child: Padding(
+                  //   padding: PaddingColumn.screen,
+                  //   child: Column(
+                  //     children: [
+                  //       for (int i = 0;
+                  //           i < widget.itemGradeOption.length;
+                  //           i++)
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           children: [
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: ViewText(
+                  //       viewLabel: widget.itemGradeOption[i]
+                  //                   ['label']
+                  //               ?.split('-')
+                  //               .first
+                  //               .trim() ??
+                  //           '',
+                  //       viewValue: widget.itemGradeOption[i]
+                  //                   ['label']
+                  //               ?.split('-')
+                  //               .last
+                  //               .trim() ??
+                  //           ''),
+                  // ),
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: TextForm(
+                  //     label: 'Jumlah',
+                  //     req: false,
+                  //     controller: widget.qtyItem[i],
+                  //     handleChange: (value) {
+                  //       setState(() {
+                  //         widget.qtyItem[i].text =
+                  //             value.toString();
+                  //         widget.handleChangeInput(
+                  //             'qty_${i}', value);
+                  //       });
+                  //     },
+                  //   ),
+                  // ),
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: SelectForm(
+                  //       label: 'Satuan',
+                  //       onTap: () =>
+                  //           widget.handleSelectQtyUnit(i),
+                  //       selectedLabel:
+                  //           widget.form['nama_satuan'] ?? '',
+                  //       selectedValue:
+                  //           widget.form['unit_id']?.toString() ??
+                  //               '',
+                  //       required: false),
+                  // ),
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: TextForm(
+                  //     label: 'Catatan',
+                  //     req: false,
+                  //     controller: widget.notes[i],
+                  //     handleChange: (value) {
+                  //       setState(() {
+                  //         widget.notes[i].text = value.toString();
+                  //         widget.handleChangeInput(
+                  //             'notes_${i}', value);
+                  //       });
+                  //     },
+                  //   ),
+                  // ),
+                  //           ].separatedBy(SizedBox(
+                  //             width: 16,
+                  //           )),
+                  //         ),
+                  //     ].separatedBy(SizedBox(
+                  //       height: 16,
+                  //     )),
+                  //   ),
+                  // )),
+                  if (widget.withItemGrade == false)
+                    CustomCard(
+                        child: Padding(
+                      padding: PaddingColumn.screen,
                       child: Column(
                         children: [
-                          TabBar(tabs: [
-                            Tab(
-                              text: 'Informasi',
-                            ),
-                            Tab(
-                              text: 'Barang',
-                            ),
-                          ]),
-                          SizedBox(
-                            height: 400,
-                            child: TabBarView(children: [
-                              FinishInfoTab(
-                                data: widget.data,
-                              ),
-                              FinishItemTab(
-                                data: widget.data,
-                              )
-                            ]),
-                          )
-                        ],
-                      )),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: TextForm(
-                          label: 'Panjang',
-                          req: false,
-                          controller: widget.length,
-                          handleChange: (value) {
-                            setState(() {
-                              widget.length.text = value.toString();
-                              widget.handleChangeInput('length', value);
-                            });
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: SelectForm(
-                            label: 'Satuan Panjang',
-                            onTap: () => widget.handleSelectLengthUnit(),
-                            selectedLabel:
-                                widget.form['nama_satuan_panjang'] ?? '',
-                            selectedValue:
-                                widget.form['length_unit_id']?.toString() ?? '',
-                            required: false),
-                      ),
-                    ].separatedBy(SizedBox(
-                      width: 16,
-                    )),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: TextForm(
-                          label: 'Lebar',
-                          req: false,
-                          controller: widget.width,
-                          handleChange: (value) {
-                            setState(() {
-                              widget.width.text = value.toString();
-                              widget.handleChangeInput('width', value);
-                            });
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: SelectForm(
-                            label: 'Satuan Lebar',
-                            onTap: () => widget.handleSelectWidthUnit(),
-                            selectedLabel:
-                                widget.form['nama_satuan_lebar'] ?? '',
-                            selectedValue:
-                                widget.form['width_unit_id']?.toString() ?? '',
-                            required: false),
-                      ),
-                    ].separatedBy(SizedBox(
-                      width: 16,
-                    )),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: TextForm(
-                          label: 'Berat',
-                          req: false,
-                          controller: widget.weight,
-                          handleChange: (value) {
-                            setState(() {
-                              widget.weight.text = value.toString();
-                              widget.handleChangeInput('weight', value);
-                            });
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: SelectForm(
-                            label: 'Satuan Berat',
-                            onTap: () => widget.handleSelectUnit(),
-                            selectedLabel:
-                                widget.form['nama_satuan_berat'] ?? '',
-                            selectedValue:
-                                widget.form['weight_unit_id']?.toString() ?? '',
-                            required: false),
-                      )
-                    ].separatedBy(SizedBox(
-                      width: 16,
-                    )),
-                  ),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Lampiran',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          CustomTheme().hGap('sm'),
-                        ],
-                      ),
-                      ...List.generate(widget.allAttachments.length, (index) {
-                        final item = widget.allAttachments[index];
-
-                        if (item['is_add_button'] == true) {
-                          return GestureDetector(
-                            onTap: widget.handlePickAttachments,
-                            child: Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.grey.shade300,
-                              ),
-                              child: const Icon(Icons.add,
-                                  size: 36, color: Colors.black54),
-                            ),
-                          );
-                        }
-
-                        final bool isNew =
-                            item.containsKey('path'); // new local file
-                        final String? filePath =
-                            isNew ? item['path'] : item['file_path'];
-                        final String fileName = isNew
-                            ? item['name']
-                            : (item['file_name'] ??
-                                filePath?.split('/').last ??
-                                '');
-                        final String extension =
-                            fileName.split('.').last.toLowerCase();
-
-                        Widget previewWidget;
-                        if (extension == 'pdf') {
-                          previewWidget = const Icon(Icons.picture_as_pdf,
-                              color: Colors.red, size: 60);
-                        } else if (isNew && filePath != null) {
-                          previewWidget =
-                              Image.file(File(filePath), fit: BoxFit.cover);
-                        } else if (filePath != null) {
-                          previewWidget =
-                              Image.network(filePath, fit: BoxFit.cover);
-                        } else {
-                          previewWidget = const Icon(Icons.insert_drive_file);
-                        }
-
-                        return Stack(
-                          alignment: Alignment.topRight,
-                          children: [
-                            Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    // ignore: deprecated_member_use
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 4,
-                                    offset: const Offset(2, 2),
-                                  ),
-                                ],
-                              ),
-                              child: previewWidget,
-                            ),
-                            Positioned(
-                              right: 0,
-                              top: 0,
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    if (isNew) {
-                                      (widget.form['attachments'] as List)
-                                          .remove(item);
-                                    } else {
-                                      (widget.data!['attachments'] as List)
-                                          .remove(item);
-                                    }
-                                  });
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.black54,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(Icons.close,
-                                      color: Colors.white, size: 18),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: TextForm(
+                                  label: 'Panjang',
+                                  req: false,
+                                  controller: widget.length,
+                                  handleChange: (value) {
+                                    setState(() {
+                                      widget.length.text = value.toString();
+                                      widget.handleChangeInput('length', value);
+                                    });
+                                  },
                                 ),
                               ),
+                              Expanded(
+                                flex: 1,
+                                child: SelectForm(
+                                    label: 'Satuan Panjang',
+                                    onTap: () =>
+                                        widget.handleSelectLengthUnit(),
+                                    selectedLabel:
+                                        widget.form['nama_satuan_panjang'] ??
+                                            '',
+                                    selectedValue: widget.form['length_unit_id']
+                                            ?.toString() ??
+                                        '',
+                                    required: false),
+                              ),
+                            ].separatedBy(SizedBox(
+                              width: 16,
+                            )),
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: TextForm(
+                                  label: 'Lebar',
+                                  req: false,
+                                  controller: widget.width,
+                                  handleChange: (value) {
+                                    setState(() {
+                                      widget.width.text = value.toString();
+                                      widget.handleChangeInput('width', value);
+                                    });
+                                  },
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: SelectForm(
+                                    label: 'Satuan Lebar',
+                                    onTap: () => widget.handleSelectWidthUnit(),
+                                    selectedLabel:
+                                        widget.form['nama_satuan_lebar'] ?? '',
+                                    selectedValue: widget.form['width_unit_id']
+                                            ?.toString() ??
+                                        '',
+                                    required: false),
+                              ),
+                            ].separatedBy(SizedBox(
+                              width: 16,
+                            )),
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: TextForm(
+                                  label: 'Berat',
+                                  req: false,
+                                  controller: widget.weight,
+                                  handleChange: (value) {
+                                    setState(() {
+                                      widget.weight.text = value.toString();
+                                      widget.handleChangeInput('weight', value);
+                                    });
+                                  },
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: SelectForm(
+                                    label: 'Satuan Berat',
+                                    onTap: () => widget.handleSelectUnit(),
+                                    selectedLabel:
+                                        widget.form['nama_satuan_berat'] ?? '',
+                                    selectedValue: widget.form['weight_unit_id']
+                                            ?.toString() ??
+                                        '',
+                                    required: false),
+                              )
+                            ].separatedBy(SizedBox(
+                              width: 16,
+                            )),
+                          ),
+                          if (widget.withQtyAndWeight == true)
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: TextForm(
+                                    label: 'Jumlah',
+                                    req: false,
+                                    controller: widget.qty,
+                                    handleChange: (value) {
+                                      setState(() {
+                                        widget.qty.text = value.toString();
+                                        widget.handleChangeInput(
+                                            'item_qty', value);
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: SelectForm(
+                                      label: 'Satuan',
+                                      onTap: () =>
+                                          widget.handleSelectQtyUnitItem(),
+                                      selectedLabel:
+                                          widget.form['nama_satuan'] ?? '',
+                                      selectedValue:
+                                          widget.form['unit_id']?.toString() ??
+                                              '',
+                                      required: false),
+                                )
+                              ].separatedBy(SizedBox(
+                                width: 16,
+                              )),
                             ),
+                        ].separatedBy(SizedBox(
+                          height: 8,
+                        )),
+                      ),
+                    )),
+                  CustomCard(
+                      child: Padding(
+                    padding: PaddingColumn.screen,
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Lampiran',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            CustomTheme().hGap('sm'),
                           ],
-                        );
-                      }),
-                    ],
-                  ),
-                  MultilineForm(
-                    label: 'Catatan',
-                    req: false,
-                    controller: widget.note,
-                    handleChange: (value) {
-                      setState(() {
-                        widget.note.text = value.toString();
-                        widget.handleChangeInput('notes', value);
-                      });
-                    },
-                  ),
+                        ),
+                        ...List.generate(widget.allAttachments.length, (index) {
+                          final item = widget.allAttachments[index];
+
+                          if (item['is_add_button'] == true) {
+                            return GestureDetector(
+                              onTap: widget.handlePickAttachments,
+                              child: Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.grey.shade300,
+                                ),
+                                child: const Icon(Icons.add,
+                                    size: 36, color: Colors.black54),
+                              ),
+                            );
+                          }
+
+                          final bool isNew =
+                              item.containsKey('path'); // new local file
+                          final String? filePath =
+                              isNew ? item['path'] : item['file_path'];
+                          final String fileName = isNew
+                              ? item['name']
+                              : (item['file_name'] ??
+                                  filePath?.split('/').last ??
+                                  '');
+                          final String extension =
+                              fileName.split('.').last.toLowerCase();
+
+                          Widget previewWidget;
+                          if (extension == 'pdf') {
+                            previewWidget = const Icon(Icons.picture_as_pdf,
+                                color: Colors.red, size: 60);
+                          } else if (isNew && filePath != null) {
+                            previewWidget =
+                                Image.file(File(filePath), fit: BoxFit.cover);
+                          } else if (filePath != null) {
+                            previewWidget =
+                                Image.network(filePath, fit: BoxFit.cover);
+                          } else {
+                            previewWidget = const Icon(Icons.insert_drive_file);
+                          }
+
+                          return Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      // ignore: deprecated_member_use
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 4,
+                                      offset: const Offset(2, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: previewWidget,
+                              ),
+                              Positioned(
+                                right: 0,
+                                top: 0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (isNew) {
+                                        (widget.form['attachments'] as List)
+                                            .remove(item);
+                                      } else {
+                                        (widget.data!['attachments'] as List)
+                                            .remove(item);
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.black54,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(Icons.close,
+                                        color: Colors.white, size: 18),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                      ],
+                    ),
+                  )),
+                  CustomCard(
+                      child: Padding(
+                    padding: PaddingColumn.screen,
+                    child: MultilineForm(
+                      label: 'Catatan',
+                      req: false,
+                      controller: widget.note,
+                      handleChange: (value) {
+                        setState(() {
+                          widget.note.text = value.toString();
+                          widget.handleChangeInput('notes', value);
+                        });
+                      },
+                    ),
+                  )),
                 ].separatedBy(SizedBox(
                   height: 16,
                 )),
               ),
-            ValueListenableBuilder<bool>(
-              valueListenable: widget.isSubmitting,
-              builder: (context, isSubmitting, _) {
-                return Align(
-                  alignment: Alignment.center,
-                  child: FormButton(
-                    label: 'Submit',
-                    onPressed: () async {
-                      widget.isSubmitting.value = true;
-                      try {
-                        await widget.handleSubmit(widget.processId.toString());
-                        setState(() {
-                          _initialWeight = widget.weight.text;
-                          _initialLength = widget.length.text;
-                          _initialWidth = widget.width.text;
-                          _initialNotes = widget.note.text;
-                          _isChanged = false;
-                        });
-                      } finally {
-                        widget.isSubmitting.value = false;
-                      }
-                    },
-                    isLoading: isSubmitting,
-                    isDisabled: widget.isFormIncomplete,
-                  ),
-                );
-              },
-            )
+            // ValueListenableBuilder<bool>(
+            //   valueListenable: widget.isSubmitting,
+            //   builder: (context, isSubmitting, _) {
+            //     return Align(
+            //       alignment: Alignment.center,
+            //       child: FormButton(
+            //         label: 'Submit',
+            //         onPressed: () async {
+            //           widget.isSubmitting.value = true;
+            //           try {
+            //             await widget.handleSubmit(widget.processId.toString());
+            //             setState(() {
+            //               _initialWeight = widget.weight.text;
+            //               _initialLength = widget.length.text;
+            //               _initialWidth = widget.width.text;
+            //               _initialNotes = widget.note.text;
+            //               _isChanged = false;
+            //             });
+            //           } finally {
+            //             widget.isSubmitting.value = false;
+            //           }
+            //         },
+            //         isLoading: isSubmitting,
+            //         isDisabled: widget.isFormIncomplete,
+            //       ),
+            //     );
+            //   },
+            // )
           ].separatedBy(SizedBox(
             height: 16,
           )),
         ),
       ),
-    );
+    ));
   }
 }

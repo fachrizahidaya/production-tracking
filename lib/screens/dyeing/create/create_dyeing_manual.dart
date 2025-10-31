@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/dyeing/create/create_form.dart';
+import 'package:textile_tracking/components/master/button/cancel_button.dart';
+import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -26,6 +30,7 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
   bool _firstLoading = false;
   bool _isFetchingMachine = false;
   bool _isFetchingWorkOrder = false;
+  final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
   late List<dynamic> workOrderOption = [];
   late List<dynamic> machineOption = [];
@@ -197,6 +202,48 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
           selectMachine: _selectMachine,
           id: widget.id,
           isLoading: _firstLoading,
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: PaddingColumn.screen,
+            child: ValueListenableBuilder<bool>(
+              valueListenable: _isSubmitting,
+              builder: (context, isSubmitting, _) {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: CancelButton(
+                        label: 'Batal',
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ),
+                    Expanded(
+                        child: FormButton(
+                      label: 'Simpan',
+                      isLoading: isSubmitting,
+                      onPressed: () async {
+                        _isSubmitting.value = true;
+                        try {
+                          await widget.handleSubmit();
+                          setState(() {
+                            // _initialQty = _qtyController.text;
+                            // _initialLength = _lengthController.text;
+                            // _initialWidth = _widthController.text;
+                            // _initialNotes = _noteController.text;
+                            // _isChanged = false;
+                          });
+                        } finally {
+                          _isSubmitting.value = false;
+                        }
+                      },
+                    ))
+                  ].separatedBy(SizedBox(
+                    width: 16,
+                  )),
+                );
+              },
+            ),
+          ),
         ));
   }
 }

@@ -30,7 +30,7 @@ class CreateEmbroidery extends StatelessWidget {
           : null,
       end_by_id: form['end_by_id'],
       attachments: form['attachments'],
-      maklon: form['maklon'],
+      maklon: form['maklon'] == true,
       maklon_name: form['maklon_name'],
     );
 

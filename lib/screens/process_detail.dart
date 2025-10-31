@@ -1,11 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/master/button/cancel_button.dart';
+import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/info_tab.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 
@@ -32,6 +36,9 @@ class ProcessDetail<T> extends StatefulWidget {
   final route;
   final fetchMachine;
   final getMachineOptions;
+  final withItemGrade;
+  final withQtyAndWeight;
+  final withMaklon;
 
   const ProcessDetail(
       {super.key,
@@ -46,7 +53,10 @@ class ProcessDetail<T> extends StatefulWidget {
       this.label,
       this.route,
       this.fetchMachine,
-      this.getMachineOptions});
+      this.getMachineOptions,
+      this.withItemGrade,
+      this.withQtyAndWeight,
+      this.withMaklon});
 
   @override
   State<ProcessDetail<T>> createState() => _ProcessDetailState<T>();
@@ -62,23 +72,36 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   final TextEditingController _lengthController = TextEditingController();
   final TextEditingController _widthController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
+  final TextEditingController _maklonNameController = TextEditingController();
+  final TextEditingController _qtyItemController = TextEditingController();
+  List<TextEditingController> _qtyControllers = [];
+  List<TextEditingController> _notesControllers = [];
+  final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
   Map<String, dynamic> data = {};
-  Map<String, dynamic> _form = {
+  final Map<String, dynamic> _form = {
     'wo_id': null,
     'machine_id': null,
     'weight_unit_id': null,
     'length_unit_id': null,
     'width_unit_id': null,
+    'item_unit_id': null,
+    'item_qty': null,
     'weight': null,
     'width': null,
     'length': null,
     'notes': null,
     'attachments': [],
+    'grades': [],
     'nama_mesin': '',
+    'nama_satuan_panjang': '',
+    'nama_satuan_lebar': '',
     'nama_satuan_berat': '',
+    'nama_satuan': '',
     'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+    'maklon': false,
+    'maklon_name': '',
   };
 
   late List<dynamic> unitOption = [];
@@ -103,15 +126,36 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   void _applyDataToControllers(Map<String, dynamic> d) {
+    final grades = d['grades'] ?? [];
+    _qtyControllers = List.generate(grades.length, (i) {
+      return TextEditingController(
+        text: grades[i]['qty']?.toString() ?? '',
+      );
+    });
+    _notesControllers = List.generate(grades.length, (i) {
+      return TextEditingController(
+        text: grades[i]['notes']?.toString() ?? '',
+      );
+    });
+    _qtyItemController.text = d['item_qty']?.toString() ?? '';
     _weightController.text = d['weight']?.toString() ?? '';
     _lengthController.text = d['length']?.toString() ?? '';
     _widthController.text = d['width']?.toString() ?? '';
     _noteController.text = d['notes']?.toString() ?? '';
+    _maklonNameController.text = d['maklon_name']?.toString() ?? '';
+    _form['item_qty'] = d['item_qty'];
     _form['weight'] = d['weight'];
     _form['length'] = d['length'];
     _form['width'] = d['width'];
+    _form['maklon_name'] = d['maklon_name'];
+    _form['maklon'] = d['maklon'];
     _form['notes'] = d['notes'];
     _form['attachments'] = List.from(d['attachments'] ?? []);
+    _form['grades'] = List.from(d['grades'] ?? []);
+    if (d['item_unit'] != null) {
+      _form['item_unit_id'] = d['item_unit']['id'].toString();
+      _form['nama_satuan'] = d['item_unit']['name'].toString();
+    }
     if (d['weight_unit'] != null) {
       _form['weight_unit_id'] = d['weight_unit']['id'].toString();
       _form['nama_satuan_berat'] = d['weight_unit']['name'].toString();
@@ -202,14 +246,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         await service.fetchOptions();
       }
 
-      // await Provider.of<OptionMachineService>(context, listen: false)
-      //     .fetchOptions();
-      // setState(() {
-      //   machineOption =
-      //       Provider.of<OptionMachineService>(context, listen: false)
-      //           .dataListOption;
-      // });
-
       final data = widget.getMachineOptions != null
           ? widget.getMachineOptions!(service)
           : service.dataListOption;
@@ -255,7 +291,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   _selectLengthUnit() {
-    if (_isFetchingMachine) {
+    if (_isFetchingUnit) {
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -287,6 +323,17 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   _selectWidthUnit() {
+    if (_isFetchingUnit) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -304,6 +351,64 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           },
         );
       },
+    );
+  }
+
+  _selectQtyUnit(int index) {
+    if (_isFetchingUnit) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (_) => SelectDialog(
+        label: 'Satuan',
+        options: unitOption,
+        // 👇 Preselect current unit for this grade
+        selected: _form['grades'][index]['unit_id'].toString(),
+        handleChangeValue: (e) {
+          setState(() {
+            _form['grades'][index]['unit_id'] = e['value'].toString();
+            _form['grades'][index]['unit']['name'] = e['label'].toString();
+          });
+        },
+      ),
+    );
+  }
+
+  _selectQtyItemUnit() {
+    if (_isFetchingUnit) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (_) => SelectDialog(
+        label: 'Satuan',
+        options: unitOption,
+        // 👇 Preselect current unit for this grade
+        selected: _form['item_unit_id'].toString(),
+        handleChangeValue: (e) {
+          setState(() {
+            _form['item_unit_id'] = e['value'].toString();
+            _form['nama_satuan'] = e['label'].toString();
+          });
+        },
+      ),
     );
   }
 
@@ -346,48 +451,100 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(
-          title: '${widget.label} Detail',
-          onReturn: () => Navigator.pop(context),
-          canDelete: widget.canDelete,
-          canUpdate: widget.canUpdate,
-          handleDelete: _handleDelete,
-          id: data['id'],
+      appBar: CustomAppBar(
+        title: '${widget.label} Detail',
+        onReturn: () => Navigator.pop(context),
+        canDelete: widget.canDelete,
+        canUpdate: widget.canUpdate,
+        handleDelete: _handleDelete,
+        id: data['id'],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: InfoTab(
+              data: data,
+              isLoading: _firstLoading,
+              handleChangeInput: _handleChangeInput,
+              weight: _weightController,
+              length: _lengthController,
+              width: _widthController,
+              note: _noteController,
+              form: _form,
+              handleSelectUnit: _selectUnit,
+              handleSelectLengthUnit: _selectLengthUnit,
+              handleSelectWidthUnit: _selectWidthUnit,
+              handleSelectQtyItemUnit: _selectQtyItemUnit,
+              handleSelectMachine: _selectMachine,
+              handleUpdate: _handleUpdate,
+              refetch: _getDataView,
+              fieldConfigs: [
+                {'name': 'weight', 'label': 'Berat'},
+                {'name': 'length', 'label': 'Panjang'},
+                {'name': 'width', 'label': 'Lebar'},
+                {'name': 'notes', 'label': 'Catatan'},
+              ],
+              fieldControllers: {
+                'weight': _weightController,
+                'length': _lengthController,
+                'width': _widthController,
+                'notes': _noteController,
+              },
+              no: widget.no,
+              withItemGrade: widget.withItemGrade,
+              qty: _qtyControllers,
+              handleSelectQtyUnit: _selectQtyUnit,
+              notes: _notesControllers,
+              withQtyAndWeight: widget.withQtyAndWeight,
+              qtyItem: _qtyItemController,
+              withMaklon: widget.withMaklon,
+              maklon: _maklonNameController,
+            ),
+          )
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: PaddingColumn.screen,
+          child: ValueListenableBuilder<bool>(
+            valueListenable: _isSubmitting,
+            builder: (context, isSubmitting, _) {
+              return Row(
+                children: [
+                  Expanded(
+                    child: CancelButton(
+                      label: 'Batal',
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                  Expanded(
+                      child: FormButton(
+                    label: 'Simpan',
+                    isLoading: isSubmitting,
+                    onPressed: () async {
+                      _isSubmitting.value = true;
+                      try {
+                        await _handleUpdate(data['id'].toString());
+                        setState(() {
+                          // _initialQty = _qtyController.text;
+                          // _initialLength = _lengthController.text;
+                          // _initialWidth = _widthController.text;
+                          // _initialNotes = _noteController.text;
+                          // _isChanged = false;
+                        });
+                      } finally {
+                        _isSubmitting.value = false;
+                      }
+                    },
+                  ))
+                ].separatedBy(SizedBox(
+                  width: 16,
+                )),
+              );
+            },
+          ),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: InfoTab(
-                data: data,
-                isLoading: _firstLoading,
-                handleChangeInput: _handleChangeInput,
-                weight: _weightController,
-                length: _lengthController,
-                width: _widthController,
-                note: _noteController,
-                form: _form,
-                handleSelectUnit: _selectUnit,
-                handleSelectLengthUnit: _selectLengthUnit,
-                handleSelectWidthUnit: _selectWidthUnit,
-                handleSelectMachine: _selectMachine,
-                handleUpdate: _handleUpdate,
-                refetch: _getDataView,
-                fieldConfigs: [
-                  {'name': 'weight', 'label': 'Berat'},
-                  {'name': 'length', 'label': 'Panjang'},
-                  {'name': 'width', 'label': 'Lebar'},
-                  {'name': 'notes', 'label': 'Catatan'},
-                ],
-                fieldControllers: {
-                  'weight': _weightController,
-                  'length': _lengthController,
-                  'width': _widthController,
-                  'notes': _noteController,
-                },
-                no: widget.no,
-              ),
-            )
-          ],
-        ));
+      ),
+    );
   }
 }

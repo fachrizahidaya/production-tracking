@@ -15,7 +15,9 @@ class CreateForm extends StatefulWidget {
   final isLoading;
   final maklon;
   final isMaklon;
-  final canMaklonAndMachine;
+  final withMaklonOrMachine;
+  final withOnlyMaklon;
+  final withNoMaklonOrMachine;
 
   const CreateForm(
       {super.key,
@@ -29,7 +31,9 @@ class CreateForm extends StatefulWidget {
       this.isLoading,
       this.maklon,
       this.isMaklon,
-      this.canMaklonAndMachine});
+      this.withMaklonOrMachine,
+      this.withOnlyMaklon,
+      this.withNoMaklonOrMachine});
 
   @override
   State<CreateForm> createState() => _CreateFormState();
@@ -93,25 +97,23 @@ class _CreateFormState extends State<CreateForm> {
       );
     }
 
-    return Container(
-      padding: MarginSearch.screen,
-      child: CustomCard(
-          child: ListForm(
-        formKey: widget.formKey,
-        isMaklon: widget.isMaklon,
-        id: widget.id,
-        form: widget.form,
-        data: widget.data,
-        attachments: attachments,
-        maklon: widget.maklon,
-        selectWorkOrder: widget.selectWorkOrder,
-        selectMachine: widget.selectMachine,
-        isSubmitting: _isSubmitting,
-        isFormIncomplete: _isFormIncomplete,
-        handleSubmit: widget.handleSubmit,
-        handlePickAttachments: _pickAttachments,
-        canMaklonAndMachine: widget.canMaklonAndMachine,
-      )),
+    return ListForm(
+      formKey: widget.formKey,
+      isMaklon: widget.isMaklon,
+      id: widget.id,
+      form: widget.form,
+      data: widget.data,
+      attachments: attachments,
+      maklon: widget.maklon,
+      selectWorkOrder: widget.selectWorkOrder,
+      selectMachine: widget.selectMachine,
+      isSubmitting: _isSubmitting,
+      isFormIncomplete: _isFormIncomplete,
+      handleSubmit: widget.handleSubmit,
+      handlePickAttachments: _pickAttachments,
+      withMaklonOrMachine: widget.withMaklonOrMachine,
+      withOnlyMaklon: widget.withOnlyMaklon,
+      withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
     );
   }
 }

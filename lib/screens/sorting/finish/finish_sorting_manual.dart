@@ -43,11 +43,14 @@ class _FinishSortingManualState extends State<FinishSortingManual> {
       form: widget.form,
       handleSubmit: widget.handleSubmit,
       machineFilterValue: '2',
-      fetchWorkOrder: (service) => service.fetchStenterFinishOptions(),
+      fetchWorkOrder: (service) => service.fetchSortingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       processService: _sortingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'sorting_id',
+      withItemGrade: true,
+      fetchItemGrade: (service) => service.fetchOptions(),
+      getItemGradeOptions: (service) => service.dataListOption,
     );
   }
 }

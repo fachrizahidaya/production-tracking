@@ -287,6 +287,7 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
       processService: _pressTumblerService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'press_tumbler_id',
+      withItemGrade: false,
     );
   }
 }

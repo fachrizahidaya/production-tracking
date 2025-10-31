@@ -181,98 +181,94 @@ class _SortingScreenState extends State<SortingScreen> {
             }
           },
         ),
-        body: Container(
-          padding: MarginCard.screen,
-          child: Column(
-            children: [
-              Expanded(
-                  child: ProcessList(
-                fetchData: (params) async {
-                  return await Provider.of<SortingService>(context,
-                          listen: false)
-                      .getDataList(params);
-                },
-                service: SortingService(),
-                searchQuery: _search,
-                canCreate: _canCreate,
-                canRead: _canRead,
-                itemBuilder: (item) => ItemProcessCard(
-                  label: 'Sorting No',
-                  item: item,
-                  titleKey: 'sorting_no',
-                  subtitleKey: 'work_orders',
-                  subtitleField: 'wo_no',
-                  isRework: (item) => item.rework == false,
-                  getStartTime: (item) => formatDateSafe(item.start_time),
-                  getEndTime: (item) => formatDateSafe(item.end_time),
-                  getStartBy: (item) => item.start_by?['name'] ?? '',
-                  getEndBy: (item) => item.end_by?['name'] ?? '',
-                  getStatus: (item) => item.status ?? '-',
-                  customBadgeBuilder: (status) => CustomBadge(title: status),
-                ),
-                onItemTap: (context, item) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SortingDetail(
-                          id: item.id.toString(),
-                          no: item.sorting_no.toString(),
-                          canDelete: _canDelete,
-                          canUpdate: _canUpdate,
-                        ),
-                      )).then((value) {
-                    if (value == true) {
-                      _refetch();
-                    } else {
-                      return null;
-                    }
-                  });
-                },
-                filterWidget: ListFilter(
-                  title: 'Filter',
-                  params: params,
-                  onHandleFilter: _handleFilter,
-                  onSubmitFilter: () {
-                    _submitFilter();
-                  },
-                ),
-                showActions: () {
-                  ProcessSheet.showOptions(
+        body: Column(
+          children: [
+            Expanded(
+                child: ProcessList(
+              fetchData: (params) async {
+                return await Provider.of<SortingService>(context, listen: false)
+                    .getDataList(params);
+              },
+              service: SortingService(),
+              searchQuery: _search,
+              canCreate: _canCreate,
+              canRead: _canRead,
+              itemBuilder: (item) => ItemProcessCard(
+                label: 'Sorting No',
+                item: item,
+                titleKey: 'sorting_no',
+                subtitleKey: 'work_orders',
+                subtitleField: 'wo_no',
+                isRework: (item) => item.rework == false,
+                getStartTime: (item) => formatDateSafe(item.start_time),
+                getEndTime: (item) => formatDateSafe(item.end_time),
+                getStartBy: (item) => item.start_by?['name'] ?? '',
+                getEndBy: (item) => item.end_by?['name'] ?? '',
+                getStatus: (item) => item.status ?? '-',
+                customBadgeBuilder: (status) => CustomBadge(title: status),
+              ),
+              onItemTap: (context, item) {
+                Navigator.push(
                     context,
-                    options: [
-                      BottomSheetOption(
-                        title: "Mulai Sorting",
-                        icon: Icons.add,
-                        iconColor: CustomTheme().buttonColor('primary'),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const CreateSorting()),
-                        ),
+                    MaterialPageRoute(
+                      builder: (context) => SortingDetail(
+                        id: item.id.toString(),
+                        no: item.sorting_no.toString(),
+                        canDelete: _canDelete,
+                        canUpdate: _canUpdate,
                       ),
-                      BottomSheetOption(
-                        title: "Selesai Sorting",
-                        icon: Icons.check_circle,
-                        iconColor: CustomTheme().buttonColor('warning'),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const FinishSorting()),
-                        ),
-                      ),
-                    ],
-                  );
+                    )).then((value) {
+                  if (value == true) {
+                    _refetch();
+                  } else {
+                    return null;
+                  }
+                });
+              },
+              filterWidget: ListFilter(
+                title: 'Filter',
+                params: params,
+                onHandleFilter: _handleFilter,
+                onSubmitFilter: () {
+                  _submitFilter();
                 },
-                firstLoading: _firstLoading,
-                isFiltered: _isFiltered,
-                hasMore: _hasMore,
-                handleLoadMore: _loadMore,
-                handleRefetch: _refetch,
-                handleSearch: _handleSearch,
-                dataList: _dataList,
-              ))
-            ],
-          ),
+              ),
+              showActions: () {
+                ProcessSheet.showOptions(
+                  context,
+                  options: [
+                    BottomSheetOption(
+                      title: "Mulai Sorting",
+                      icon: Icons.add,
+                      iconColor: CustomTheme().buttonColor('primary'),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const CreateSorting()),
+                      ),
+                    ),
+                    BottomSheetOption(
+                      title: "Selesai Sorting",
+                      icon: Icons.check_circle,
+                      iconColor: CustomTheme().buttonColor('warning'),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const FinishSorting()),
+                      ),
+                    ),
+                  ],
+                );
+              },
+              firstLoading: _firstLoading,
+              isFiltered: _isFiltered,
+              hasMore: _hasMore,
+              handleLoadMore: _loadMore,
+              handleRefetch: _refetch,
+              handleSearch: _handleSearch,
+              dataList: _dataList,
+            ))
+          ],
         ));
   }
 }

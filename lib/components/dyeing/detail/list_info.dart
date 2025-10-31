@@ -32,6 +32,9 @@ class ListInfo extends StatefulWidget {
   final note;
   final handleSelectMachine;
   final handleChangeInput;
+  final handleSelectLengthUnit;
+  final handleSelectWidthUnit;
+  final handleSelectUnit;
 
   const ListInfo(
       {super.key,
@@ -50,7 +53,10 @@ class ListInfo extends StatefulWidget {
       this.width,
       this.qty,
       this.handleSelectMachine,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.handleSelectLengthUnit,
+      this.handleSelectWidthUnit,
+      this.handleSelectUnit});
 
   @override
   State<ListInfo> createState() => _ListInfoState();
@@ -77,6 +83,7 @@ class _ListInfoState extends State<ListInfo> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
+        padding: const EdgeInsets.all(8),
         color: const Color(0xFFEBEBEB),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,6 +261,7 @@ class _ListInfoState extends State<ListInfo> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
+                          flex: 2,
                           child: TextForm(
                             label: 'Panjang',
                             req: false,
@@ -267,17 +275,50 @@ class _ListInfoState extends State<ListInfo> {
                           ),
                         ),
                         Expanded(
+                          flex: 1,
+                          child: SelectForm(
+                              label: 'Satuan Panjang',
+                              onTap: () => widget.handleSelectLengthUnit(),
+                              selectedLabel:
+                                  widget.form['nama_satuan_panjang'] ?? '',
+                              selectedValue:
+                                  widget.form['length_unit_id']?.toString() ??
+                                      '',
+                              required: false),
+                        ),
+                      ].separatedBy(SizedBox(
+                        width: 16,
+                      )),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 2,
                           child: TextForm(
                             label: 'Lebar',
                             req: false,
-                            controller: widget.length,
+                            controller: widget.width,
                             handleChange: (value) {
                               setState(() {
-                                widget.length.text = value.toString();
-                                widget.handleChangeInput('length', value);
+                                widget.width.text = value.toString();
+                                widget.handleChangeInput('width', value);
                               });
                             },
                           ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: SelectForm(
+                              label: 'Satuan Lebar',
+                              onTap: () => widget.handleSelectWidthUnit(),
+                              selectedLabel:
+                                  widget.form['nama_satuan_lebar'] ?? '',
+                              selectedValue:
+                                  widget.form['width_unit_id']?.toString() ??
+                                      '',
+                              required: false),
                         ),
                       ].separatedBy(SizedBox(
                         width: 16,
@@ -305,7 +346,7 @@ class _ListInfoState extends State<ListInfo> {
                           flex: 1,
                           child: SelectForm(
                               label: 'Satuan',
-                              onTap: () => null,
+                              onTap: () => widget.handleSelectUnit(),
                               selectedLabel: widget.form['nama_satuan'] ?? '',
                               selectedValue:
                                   widget.form['unit_id']?.toString() ?? '',
@@ -441,39 +482,39 @@ class _ListInfoState extends State<ListInfo> {
                 ],
               ),
             )),
-            ValueListenableBuilder<bool>(
-              valueListenable: widget.isSubmitting,
-              builder: (context, isSubmitting, _) {
-                return Align(
-                    alignment: Alignment.center,
-                    child: FormButton(
-                      label: 'Simpan',
-                      isLoading: isSubmitting,
-                      // isDisabled: !_isChanged || isSubmitting,
-                      onPressed:
-                          // _isChanged
-                          //     ?
-                          () async {
-                        widget.isSubmitting.value = true;
-                        try {
-                          await widget
-                              .handleUpdate(widget.data['id'].toString());
-                          setState(() {
-                            _initialQty = widget.qty.text;
-                            _initialLength = widget.length.text;
-                            _initialWidth = widget.width.text;
-                            _initialNotes = widget.note.text;
-                            _isChanged = false;
-                          });
-                        } finally {
-                          widget.isSubmitting.value = false;
-                        }
-                      }
-                      // : null
-                      ,
-                    ));
-              },
-            )
+            // ValueListenableBuilder<bool>(
+            //   valueListenable: widget.isSubmitting,
+            //   builder: (context, isSubmitting, _) {
+            //     return Align(
+            //         alignment: Alignment.center,
+            //         child: FormButton(
+            //           label: 'Simpan',
+            //           isLoading: isSubmitting,
+            //           // isDisabled: !_isChanged || isSubmitting,
+            //           onPressed:
+            //               // _isChanged
+            //               //     ?
+            //               () async {
+            //             widget.isSubmitting.value = true;
+            //             try {
+            //               await widget
+            //                   .handleUpdate(widget.data['id'].toString());
+            //               setState(() {
+            //                 _initialQty = widget.qty.text;
+            //                 _initialLength = widget.length.text;
+            //                 _initialWidth = widget.width.text;
+            //                 _initialNotes = widget.note.text;
+            //                 _isChanged = false;
+            //               });
+            //             } finally {
+            //               widget.isSubmitting.value = false;
+            //             }
+            //           }
+            //           // : null
+            //           ,
+            //         ));
+            //   },
+            // )
           ].separatedBy(SizedBox(
             height: 16,
           )),

@@ -16,6 +16,8 @@ class InfoTab extends StatefulWidget {
   final handleUpdate;
   final refetch;
   final hasMore;
+  final handleSelectLengthUnit;
+  final handleSelectWidthUnit;
 
   const InfoTab(
       {super.key,
@@ -31,7 +33,9 @@ class InfoTab extends StatefulWidget {
       this.handleUpdate,
       this.refetch,
       this.hasMore,
-      this.handleSelectMachine});
+      this.handleSelectMachine,
+      this.handleSelectLengthUnit,
+      this.handleSelectWidthUnit});
 
   @override
   State<InfoTab> createState() => _InfoTabState();
@@ -118,6 +122,9 @@ class _InfoTabState extends State<InfoTab> {
       note: widget.note,
       handleSelectMachine: widget.handleSelectMachine,
       handleChangeInput: widget.handleChangeInput,
+      handleSelectLengthUnit: widget.handleSelectLengthUnit,
+      handleSelectUnit: widget.handleSelectUnit,
+      handleSelectWidthUnit: widget.handleSelectWidthUnit,
     );
   }
 }

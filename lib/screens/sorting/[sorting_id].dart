@@ -37,23 +37,31 @@ class _SortingDetailState extends State<SortingDetail> {
           Provider.of<SortingService>(context, listen: false)
               .deleteItem(id, isLoading),
       modelBuilder: (form, data) => Sorting(
-        wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-        weight_unit_id: int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-        length_unit_id: int.tryParse(form['length_unit_id']?.toString() ?? ''),
-        width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
-        machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-        weight: form['weight'] ?? data['weight'],
-        width: form['width'] ?? data['width'],
-        length: form['length'] ?? data['length'],
-        notes: form['notes'] ?? data['notes'],
-        attachments: [
-          ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
-          ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
-        ],
-      ),
+          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+          weight_unit_id:
+              int.tryParse(form['weight_unit_id']?.toString() ?? ''),
+          length_unit_id:
+              int.tryParse(form['length_unit_id']?.toString() ?? ''),
+          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
+          unit_id: int.tryParse(form['unit_id']?.toString() ?? ''),
+          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+          qty: form['qty'] ?? data['qty'],
+          weight: form['weight'] ?? data['weight'],
+          width: form['width'] ?? data['width'],
+          length: form['length'] ?? data['length'],
+          notes: form['notes'] ?? data['notes'],
+          attachments: [
+            ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
+            ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
+          ],
+          grades: [
+            ...List<Map<String, dynamic>>.from(data['grades'] ?? []),
+            ...List<Map<String, dynamic>>.from(form['grades'] ?? []),
+          ]),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/sortings',
+      withItemGrade: true,
     );
   }
 }

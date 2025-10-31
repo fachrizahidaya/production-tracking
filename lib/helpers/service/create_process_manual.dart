@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/master/button/cancel_button.dart';
+import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/form/create/create_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -20,7 +24,9 @@ class CreateProcessManual extends StatefulWidget {
   final getMachineOptions;
   final maklon;
   final isMaklon;
-  final canMaklonAndMachine;
+  final withMaklonOrMachine;
+  final withOnlyMaklon;
+  final withNoMaklonOrMachine;
 
   const CreateProcessManual(
       {super.key,
@@ -36,7 +42,9 @@ class CreateProcessManual extends StatefulWidget {
       this.getMachineOptions,
       this.maklon,
       this.isMaklon,
-      this.canMaklonAndMachine});
+      this.withMaklonOrMachine,
+      this.withOnlyMaklon,
+      this.withNoMaklonOrMachine});
 
   @override
   State<CreateProcessManual> createState() => _CreateProcessManualState();
@@ -45,6 +53,7 @@ class CreateProcessManual extends StatefulWidget {
 class _CreateProcessManualState extends State<CreateProcessManual> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final WorkOrderService _workOrderService = WorkOrderService();
+  final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
   bool _firstLoading = false;
   bool _isFetchingWorkOrder = false;
@@ -235,7 +244,51 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
         selectMachine: _selectMachine,
         id: widget.id,
         isLoading: _firstLoading,
-        canMaklonAndMachine: widget.canMaklonAndMachine,
+        withMaklonOrMachine: widget.withMaklonOrMachine,
+        withOnlyMaklon: widget.withOnlyMaklon,
+        withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: PaddingColumn.screen,
+          child: ValueListenableBuilder<bool>(
+            valueListenable: _isSubmitting,
+            builder: (context, isSubmitting, _) {
+              return Row(
+                children: [
+                  Expanded(
+                    child: CancelButton(
+                      label: 'Batal',
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                  Expanded(
+                      child: FormButton(
+                    label: 'Simpan',
+                    isLoading: isSubmitting,
+                    onPressed: () async {
+                      _isSubmitting.value = true;
+                      try {
+                        await widget.handleSubmit();
+                        setState(() {
+                          // _initialQty = _qtyController.text;
+                          // _initialLength = _lengthController.text;
+                          // _initialWidth = _widthController.text;
+                          // _initialNotes = _noteController.text;
+                          // _isChanged = false;
+                        });
+                      } finally {
+                        _isSubmitting.value = false;
+                      }
+                    },
+                  ))
+                ].separatedBy(SizedBox(
+                  width: 16,
+                )),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

@@ -68,7 +68,7 @@ class _MainListState<T> extends State<MainList<T>> {
       showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(0),
         ),
         enableDrag: true,
         isDismissible: true,

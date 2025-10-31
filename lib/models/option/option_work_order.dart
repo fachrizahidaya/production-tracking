@@ -28,7 +28,7 @@ class OptionWorkOrder {
 }
 
 class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/units';
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/wo/option';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
@@ -298,6 +298,28 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
     await _fetchOptionsGeneric(
       isInitialLoad: isInitialLoad,
       type: 'embroidery_finish',
+      searchQuery: searchQuery,
+    );
+  }
+
+  Future<void> fetchPrintingOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'printing',
+      searchQuery: searchQuery,
+    );
+  }
+
+  Future<void> fetchPrintingFinishOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'printing_finish',
       searchQuery: searchQuery,
     );
   }

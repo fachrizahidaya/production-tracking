@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -50,6 +51,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         if (hasOptions)
           PopupMenuButton<String>(
             color: Colors.white,
+            offset: const Offset(0, 40),
             onSelected: (value) {
               final String stringId = id.toString();
 
@@ -76,10 +78,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           PopupMenuButton<String>(
             icon: Icon(Icons.account_circle_outlined),
             color: Colors.white,
+            offset: const Offset(0, 40),
             onSelected: (value) {
               if (value == 'logout') {
                 handleLogout();
               }
+              if (value == 'account') {}
               if (value == 'user') {}
             },
             itemBuilder: (context) => [
@@ -89,21 +93,46 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   // crossAxisAlignment: CrossAxisAlignment.center,
                   // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(user),
+                    Text(
+                      user,
+                    ),
+                    Text(
+                      '@$user',
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: CustomTheme().colors('secondary')),
+                    ),
                   ].separatedBy(SizedBox(
-                    height: 8,
+                    height: 4,
                   )),
                 ),
               ),
-              // PopupMenuItem(
-              //   value: 'logout',
-              //   child: Text('Log Out'),
-              // ),
+              PopupMenuItem(
+                value: 'account',
+                child: Text('Account'),
+              ),
+              PopupMenuItem(
+                value: 'logout',
+                child: Text(
+                  'Log Out',
+                ),
+              ),
             ],
           ),
         ...?actions
       ],
-      bottom: tab,
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(48),
+        child: Column(
+          children: [
+            if (tab != null) tab!,
+            Container(
+              color: Colors.grey.shade300,
+              height: 1.0,
+            ),
+          ],
+        ),
+      ),
     );
   }
 

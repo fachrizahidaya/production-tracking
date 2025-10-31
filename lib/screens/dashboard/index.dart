@@ -18,7 +18,7 @@ class _DashboardState extends State<Dashboard> {
       backgroundColor: const Color(0xFFEBEBEB),
       body: dashboardSections.isEmpty
           ? const Center(
-              child: NoData(fontSize: 24),
+              child: NoData(),
             )
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16),

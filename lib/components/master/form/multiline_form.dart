@@ -48,12 +48,13 @@ class MultilineForm extends StatelessWidget {
         TextFormField(
           controller: controller,
           style: TextStyle(fontSize: 16),
-          decoration: CustomTheme().inputDecoration(),
+          decoration:
+              CustomTheme().inputDecoration().copyWith(hintText: 'Isi $label'),
           keyboardType: TextInputType.multiline,
           minLines: 4,
           maxLines: 8,
           onChanged: (value) {
-            handleChange();
+            handleChange(value);
           },
         )
       ].separatedBy(SizedBox(

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/form/finish/finish_submit_section.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 
@@ -35,14 +36,18 @@ class FinishProcess extends StatefulWidget {
   final List<dynamic> Function(OptionWorkOrderService service)?
       getWorkOrderOptions;
 
-  const FinishProcess({
-    super.key,
-    required this.title,
-    required this.formPageBuilder,
-    this.handleSubmitToService,
-    this.fetchWorkOrder,
-    this.getWorkOrderOptions,
-  });
+  final fetchItemGrade;
+  final getItemGradeOptions;
+
+  const FinishProcess(
+      {super.key,
+      required this.title,
+      required this.formPageBuilder,
+      this.handleSubmitToService,
+      this.fetchWorkOrder,
+      this.getWorkOrderOptions,
+      this.getItemGradeOptions,
+      this.fetchItemGrade});
 
   @override
   State<FinishProcess> createState() => _FinishProcessState();
@@ -57,16 +62,21 @@ class _FinishProcessState extends State<FinishProcess> {
   bool _isScannerStopped = false;
 
   List<dynamic> workOrderOption = [];
+  List<dynamic> itemGradeOption = [];
   String id = '';
 
   final Map<String, dynamic> _form = {
     'wo_id': null,
     'machine_id': null,
-    'unit_id': null,
+    'item_unit_id': null,
+    'length_unit_id': null,
+    'width_unit_id': null,
+    'weight_unit_id': null,
     'start_by_id': null,
     'end_by_id': null,
-    'qty': null,
+    'item_qty': null,
     'width': null,
+    'weight': null,
     'length': null,
     'notes': '',
     'status': null,
@@ -76,8 +86,12 @@ class _FinishProcessState extends State<FinishProcess> {
     'no_wo': '',
     'nama_mesin': '',
     'nama_satuan': '',
+    'nama_satuan_panjang': '',
+    'nama_satuan_lebar': '',
+    'nama_satuan_berat': '',
     'maklon': false,
-    'maklon_name': ''
+    'maklon_name': '',
+    'grades': []
   };
 
   @override
@@ -90,6 +104,7 @@ class _FinishProcessState extends State<FinishProcess> {
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
     _form['end_by_id'] = loggedInUser?.id;
     await _handleFetchWorkOrder();
+    await _handleFetchItemGrade();
   }
 
   Future<void> _handleFetchWorkOrder() async {
@@ -107,6 +122,24 @@ class _FinishProcessState extends State<FinishProcess> {
 
     setState(() {
       workOrderOption = options;
+    });
+  }
+
+  Future<void> _handleFetchItemGrade() async {
+    final service = Provider.of<OptionItemGradeService>(context, listen: false);
+
+    if (widget.fetchItemGrade != null) {
+      await widget.fetchItemGrade!(service);
+    } else {
+      await service.fetchOptions();
+    }
+
+    final options = widget.getItemGradeOptions != null
+        ? widget.getItemGradeOptions!(service)
+        : service.dataListOption;
+
+    setState(() {
+      itemGradeOption = options;
     });
   }
 

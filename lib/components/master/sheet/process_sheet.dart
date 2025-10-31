@@ -7,6 +7,11 @@ class ProcessSheet {
   }) {
     showModalBottomSheet(
       context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(0),
+        ),
+      ),
       builder: (context) {
         return Column(
           mainAxisSize: MainAxisSize.min,

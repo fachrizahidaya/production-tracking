@@ -38,7 +38,7 @@ class _FilterSelectFormState extends State<FilterSelectForm> {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(0),
               border: Border.all(color: Colors.grey, width: 1)),
           child: widget.selectedItems.isEmpty
               ? Row(

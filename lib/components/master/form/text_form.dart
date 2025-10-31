@@ -8,6 +8,7 @@ class TextForm extends StatelessWidget {
   final formControl;
   final controller;
   final handleChange;
+  final isNumber;
 
   const TextForm(
       {super.key,
@@ -15,7 +16,8 @@ class TextForm extends StatelessWidget {
       this.req = false,
       this.formControl,
       this.controller,
-      this.handleChange});
+      this.handleChange,
+      this.isNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,8 @@ class TextForm extends StatelessWidget {
           style: TextStyle(fontSize: 16),
           decoration:
               CustomTheme().inputDecoration().copyWith(hintText: 'Isi $label'),
-          keyboardType: TextInputType.number,
+          keyboardType:
+              isNumber == true ? TextInputType.number : TextInputType.text,
           onChanged: (value) {
             handleChange(value);
           },

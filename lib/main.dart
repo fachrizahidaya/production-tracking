@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/helpers/auth/auth_check.dart';
 import 'package:textile_tracking/models/master/unit.dart';
 import 'package:textile_tracking/models/option/option_dyeing.dart';
+import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_operator.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
@@ -14,6 +15,7 @@ import 'package:textile_tracking/models/process/long_hemming.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
 import 'package:textile_tracking/models/process/packing.dart';
 import 'package:textile_tracking/models/process/press_tumbler.dart';
+import 'package:textile_tracking/models/process/printing.dart';
 import 'package:textile_tracking/models/process/sewing.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
@@ -27,6 +29,7 @@ import 'package:textile_tracking/screens/long-sitting/index.dart';
 import 'package:textile_tracking/screens/notification/index.dart';
 import 'package:textile_tracking/screens/packing/index.dart';
 import 'package:textile_tracking/screens/press-tumbler/index.dart';
+import 'package:textile_tracking/screens/printing/index.dart';
 import 'package:textile_tracking/screens/profile/index.dart';
 import 'package:textile_tracking/screens/sewing/index.dart';
 import 'package:textile_tracking/screens/sorting/index.dart';
@@ -48,6 +51,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CrossCuttingService()),
         ChangeNotifierProvider(create: (_) => SewingService()),
         ChangeNotifierProvider(create: (_) => EmbroideryService()),
+        ChangeNotifierProvider(create: (_) => PrintingService()),
         ChangeNotifierProvider(create: (_) => SortingService()),
         ChangeNotifierProvider(create: (_) => PackingService()),
         ChangeNotifierProvider(create: (_) => UnitService()),
@@ -55,6 +59,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => OptionMachineService()),
         ChangeNotifierProvider(create: (_) => OptionOperatorService()),
         ChangeNotifierProvider(create: (_) => OptionWorkOrderService()),
+        ChangeNotifierProvider(create: (_) => OptionItemGradeService()),
         ChangeNotifierProvider(create: (_) => OptionDyeingService()),
       ],
       child: MyApp(
@@ -115,6 +120,7 @@ class MyApp extends StatelessWidget {
         '/embroideries': (context) => const EmbroideryScreen(),
         '/sortings': (context) => const SortingScreen(),
         '/packings': (context) => const PackingScreen(),
+        '/printings': (context) => const PrintingScreen(),
       },
     );
     // );

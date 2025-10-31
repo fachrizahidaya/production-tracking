@@ -25,6 +25,7 @@ class ListInfoSection extends StatefulWidget {
   final String? initialLength;
   final String? initialWidth;
   final String? initialNotes;
+  final String? initialMaklon;
 
   final bool? isChanged;
 
@@ -32,6 +33,10 @@ class ListInfoSection extends StatefulWidget {
   final length;
   final width;
   final note;
+  final maklon;
+  final qty;
+  final qtyItem;
+  final notes;
 
   final VoidCallback? handleSelectMachine;
   final Widget Function(Map<String, dynamic> data)? extraTopSection;
@@ -42,10 +47,17 @@ class ListInfoSection extends StatefulWidget {
   final handleSelectUnit;
   final handleSelectLengthUnit;
   final handleSelectWidthUnit;
+  final handleSelectQtyUnit;
+  final handleSelectQtyItemUnit;
   final handlePickAttachments;
   final handleChangeInput;
   final checkForChanges;
   final no;
+  final withItemGrade;
+  final existingGrades;
+  final withQtyAndWeight;
+  final initialQty;
+  final withMaklon;
 
   const ListInfoSection(
       {super.key,
@@ -74,13 +86,26 @@ class ListInfoSection extends StatefulWidget {
       this.checkForChanges,
       this.no,
       this.handleSelectLengthUnit,
-      this.handleSelectWidthUnit});
+      this.handleSelectWidthUnit,
+      this.withItemGrade = false,
+      this.qty,
+      this.handleSelectQtyUnit,
+      this.existingGrades,
+      this.notes,
+      this.withQtyAndWeight,
+      this.initialQty,
+      this.qtyItem,
+      this.handleSelectQtyItemUnit,
+      this.withMaklon,
+      this.maklon,
+      this.initialMaklon});
 
   @override
   State<ListInfoSection> createState() => _ListInfoSectionState();
 }
 
 class _ListInfoSectionState extends State<ListInfoSection> {
+  late String _initialQty;
   late String _initialWeight;
   late String _initialLength;
   late String _initialWidth;
@@ -89,6 +114,7 @@ class _ListInfoSectionState extends State<ListInfoSection> {
 
   @override
   void initState() {
+    _initialQty = widget.initialQty ?? '';
     _initialWeight = widget.initialWeight ?? '';
     _initialLength = widget.initialLength ?? '';
     _initialWidth = widget.initialWidth ?? '';
@@ -100,83 +126,120 @@ class _ListInfoSectionState extends State<ListInfoSection> {
   @override
   Widget build(BuildContext context) {
     final data = widget.data;
+    final grades = widget.existingGrades;
+    bool _isMaklon = widget.data['maklon'] == 1 ? true : false;
 
-    return Container(
+    return SingleChildScrollView(
+        child: Container(
+      padding: const EdgeInsets.all(8),
       color: const Color(0xFFEBEBEB),
-      padding: PaddingColumn.screen,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomCard(
-              child: Padding(
-                padding: PaddingColumn.screen,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomCard(
+            child: Padding(
+              padding: PaddingColumn.screen,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ViewText(
+                        viewLabel: 'Nomor',
+                        viewValue: widget.no ?? '-',
+                      ),
+                      Text(
+                        'Dibuat pada ${data['start_time'] != null ? DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(data['start_time'])) : '-'}',
+                      ),
+                    ].separatedBy(SizedBox(
+                      height: 8,
+                    )),
+                  ),
+                  CustomBadge(title: data['status'] ?? '-'),
+                ],
+              ),
+            ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 2,
+                child: CustomCard(
+                  child: Padding(
+                    padding: PaddingColumn.screen,
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ViewText(
-                          viewLabel: 'Nomor',
-                          viewValue: widget.no ?? '-',
+                        ViewText<Map<String, dynamic>>(
+                          viewLabel: 'Work Order',
+                          viewValue:
+                              data['work_orders']?['wo_no']?.toString() ?? '-',
+                          item: data['work_orders'],
+                          onItemTap: (context, workOrder) {
+                            if (workOrder['id'] != null) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => WorkOrderDetail(
+                                        id: workOrder['id'].toString()),
+                                  ));
+                            }
+                          },
                         ),
-                        Text(
-                          'Dibuat pada ${data['start_time'] != null ? DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(data['start_time'])) : '-'}',
+                        ViewText(
+                          viewLabel: 'Tanggal',
+                          viewValue: data['work_orders']?['wo_date'] != null
+                              ? DateFormat("dd MMMM yyyy").format(
+                                  DateTime.parse(
+                                      data['work_orders']['wo_date']),
+                                )
+                              : '-',
+                        ),
+                        ViewText(
+                          viewLabel: 'Status',
+                          childValue: CustomBadge(
+                            title: data['work_orders']?['status']?.toString() ??
+                                '-',
+                          ),
                         ),
                       ].separatedBy(SizedBox(
                         height: 8,
                       )),
                     ),
-                    CustomBadge(title: data['status'] ?? '-'),
-                  ],
+                  ),
                 ),
               ),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              if (widget.data['status'] == 'Diproses')
                 Expanded(
-                  flex: 2,
+                  flex: 1,
                   child: CustomCard(
                     child: Padding(
                       padding: PaddingColumn.screen,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ViewText<Map<String, dynamic>>(
-                            viewLabel: 'Work Order',
-                            viewValue:
-                                data['work_orders']?['wo_no']?.toString() ??
-                                    '-',
-                            item: data['work_orders'],
-                            onItemTap: (context, workOrder) {
-                              if (workOrder['id'] != null) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => WorkOrderDetail(
-                                          id: workOrder['id'].toString()),
-                                    ));
-                              }
-                            },
-                          ),
                           ViewText(
-                            viewLabel: 'Tanggal',
-                            viewValue: data['work_orders']?['wo_date'] != null
-                                ? DateFormat("dd MMMM yyyy").format(
-                                    DateTime.parse(
-                                        data['work_orders']['wo_date']),
-                                  )
+                            viewLabel: 'Panjang',
+                            viewValue: data['length'] != null &&
+                                    data['length_unit']?['code'] != null
+                                ? '${data['length']} ${data['length_unit']['code']}'
                                 : '-',
                           ),
                           ViewText(
-                            viewLabel: 'Status',
-                            childValue: CustomBadge(
-                              title:
-                                  data['work_orders']?['status']?.toString() ??
-                                      '-',
-                            ),
+                            viewLabel: 'Lebar',
+                            viewValue: data['width'] != null &&
+                                    data['width_unit']?['code'] != null
+                                ? '${data['width']} ${data['width_unit']['code']}'
+                                : '-',
+                          ),
+                          ViewText(
+                            viewLabel: 'Berat',
+                            viewValue: data['weight'] != null &&
+                                    data['weight_unit']?['code'] != null
+                                ? '${data['weight']} ${data['weight_unit']['code']}'
+                                : '-',
                           ),
                         ].separatedBy(SizedBox(
                           height: 8,
@@ -185,45 +248,147 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                     ),
                   ),
                 ),
-                if (widget.data['status'] == 'Diproses')
-                  Expanded(
-                    flex: 1,
-                    child: CustomCard(
-                      child: Padding(
-                        padding: PaddingColumn.screen,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ViewText(
-                              viewLabel: 'Panjang',
-                              viewValue: data['length'] != null &&
-                                      data['length_unit']?['code'] != null
-                                  ? '${data['length']} ${data['length_unit']['code']}'
-                                  : '-',
-                            ),
-                            ViewText(
-                              viewLabel: 'Lebar',
-                              viewValue: data['width'] != null &&
-                                      data['width_unit']?['code'] != null
-                                  ? '${data['width']} ${data['width_unit']['code']}'
-                                  : '-',
-                            ),
-                            ViewText(
-                              viewLabel: 'Berat',
-                              viewValue: data['weight'] != null &&
-                                      data['weight_unit']?['code'] != null
-                                  ? '${data['weight']} ${data['weight_unit']['code']}'
-                                  : '-',
-                            ),
-                          ].separatedBy(SizedBox(
-                            height: 8,
-                          )),
-                        ),
-                      ),
+            ],
+          ),
+          if (widget.withMaklon == true)
+            CustomCard(
+              child: Padding(
+                padding: PaddingColumn.screen,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Maklon',
+                      style: TextStyle(fontSize: 16),
                     ),
-                  ),
-              ],
+                    Switch(
+                      value: data['maklon'],
+                      onChanged: (value) {
+                        setState(() {
+                          data['maklon'] = value;
+                          widget.form['maklon'] = value;
+                        });
+                      },
+                      activeColor: Colors.green,
+                      inactiveThumbColor: Colors.redAccent,
+                    ),
+                    Text(data['maklon'] ? 'Ya' : 'Tidak'),
+                    if (data['maklon'] == true)
+                      TextForm(
+                        label: 'Nama Maklon',
+                        req: false,
+                        controller: widget.maklon,
+                        handleChange: (value) {
+                          setState(() {
+                            widget.maklon.text = value.toString();
+                            widget.form['maklon_name'] = value.toString();
+                          });
+                        },
+                      )
+                  ].separatedBy(SizedBox(
+                    height: 8,
+                  )),
+                ),
+              ),
             ),
+          if (widget.withItemGrade == true)
+            CustomCard(
+                child: Padding(
+                    padding: PaddingColumn.screen,
+                    child: Column(
+                      children: [
+                        for (int i = 0; i < grades.length; i++)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: ViewText(
+                                    viewLabel: grades[i]['item_grade']
+                                                ['description']
+                                            ?.split('-')
+                                            .first
+                                            .trim() ??
+                                        '',
+                                    viewValue: grades[i]['item_grade']
+                                                ['description']
+                                            ?.split('-')
+                                            .last
+                                            .trim() ??
+                                        ''),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: TextForm(
+                                  label: 'Jumlah',
+                                  req: false,
+                                  controller: (i < widget.qty.length)
+                                      ? widget.qty[i]
+                                      : TextEditingController(
+                                          text: grades[i]['qty']?.toString() ??
+                                              ''),
+                                  handleChange: (value) {
+                                    setState(() {
+                                      // ensure form has grades entry
+                                      if (widget.form['grades'] == null ||
+                                          i >= widget.form['grades'].length) {
+                                        widget.form['grades'] =
+                                            List.from(grades);
+                                      }
+                                      widget.form['grades'][i]['qty'] =
+                                          double.tryParse(value) ?? 0;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: SelectForm(
+                                    label: 'Satuan',
+                                    onTap: () => widget.handleSelectQtyUnit(i),
+                                    selectedLabel: widget.form['grades'][i]
+                                            ['unit']['name'] ??
+                                        '-',
+                                    selectedValue: widget.form['grades'][i]
+                                            ['unit_id']
+                                        .toString(),
+                                    required: false),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: TextForm(
+                                  label: 'Catatan',
+                                  req: false,
+                                  controller: (i < widget.notes.length)
+                                      ? widget.notes[i]
+                                      : TextEditingController(
+                                          text:
+                                              grades[i]['notes']?.toString() ??
+                                                  ''),
+                                  handleChange: (value) {
+                                    setState(() {
+                                      // ensure form has grades entry
+                                      if (widget.form['grades'] == null ||
+                                          i >= widget.form['grades'].length) {
+                                        widget.form['grades'] =
+                                            List.from(grades);
+                                      }
+                                      // widget.form['grades'][i]['notes'] =
+                                      //     double.tryParse(value) ?? 0;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ].separatedBy(SizedBox(
+                              width: 16,
+                            )),
+                          ),
+                      ].separatedBy(SizedBox(
+                        height: 16,
+                      )),
+                    ))),
+          if (widget.withItemGrade == false)
             CustomCard(
               child: Padding(
                 padding: PaddingColumn.screen,
@@ -236,12 +401,113 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                 ),
               ),
             ),
-            if (widget.data['status'] != 'Diproses')
-              CustomCard(
-                  child: Padding(
-                padding: PaddingColumn.screen,
-                child: Column(
-                  children: [
+          if (widget.withItemGrade == false &&
+              widget.data['status'] != 'Diproses')
+            CustomCard(
+                child: Padding(
+              padding: PaddingColumn.screen,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: TextForm(
+                          label: 'Panjang',
+                          req: false,
+                          controller: widget.length,
+                          handleChange: (value) {
+                            setState(() {
+                              widget.length.text = value.toString();
+                              widget.handleChangeInput('length', value);
+                            });
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: SelectForm(
+                            label: 'Satuan Panjang',
+                            onTap: () => widget.handleSelectLengthUnit(),
+                            selectedLabel:
+                                widget.form['nama_satuan_panjang'] ?? '',
+                            selectedValue:
+                                widget.form['length_unit_id']?.toString() ?? '',
+                            required: false),
+                      ),
+                    ].separatedBy(SizedBox(
+                      width: 16,
+                    )),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: TextForm(
+                          label: 'Lebar',
+                          req: false,
+                          controller: widget.width,
+                          handleChange: (value) {
+                            setState(() {
+                              widget.length.text = value.toString();
+                              widget.handleChangeInput('width', value);
+                            });
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: SelectForm(
+                            label: 'Satuan Lebar',
+                            onTap: () => widget.handleSelectWidthUnit(),
+                            selectedLabel:
+                                widget.form['nama_satuan_lebar'] ?? '',
+                            selectedValue:
+                                widget.form['width_unit_id']?.toString() ?? '',
+                            required: false),
+                      ),
+                    ].separatedBy(SizedBox(
+                      width: 16,
+                    )),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: TextForm(
+                          label: 'Berat',
+                          req: false,
+                          controller: widget.weight,
+                          handleChange: (value) {
+                            setState(() {
+                              widget.weight.text = value.toString();
+                              widget.handleChangeInput('weight', value);
+                            });
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: SelectForm(
+                            label: 'Satuan Berat',
+                            onTap: () => widget.handleSelectUnit(),
+                            selectedLabel:
+                                widget.form['nama_satuan_berat'] ?? '',
+                            selectedValue:
+                                widget.form['weight_unit_id']?.toString() ?? '',
+                            required: false),
+                      ),
+                    ].separatedBy(SizedBox(
+                      width: 16,
+                    )),
+                  ),
+                  if (widget.withQtyAndWeight == true)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -249,81 +515,13 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                         Expanded(
                           flex: 2,
                           child: TextForm(
-                            label: 'Panjang',
+                            label: 'Jumlah',
                             req: false,
-                            controller: widget.length,
+                            controller: widget.qtyItem,
                             handleChange: (value) {
                               setState(() {
-                                widget.length.text = value.toString();
-                                widget.handleChangeInput('length', value);
-                              });
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: SelectForm(
-                              label: 'Satuan Panjang',
-                              onTap: () => widget.handleSelectLengthUnit(),
-                              selectedLabel:
-                                  widget.form['nama_satuan_panjang'] ?? '',
-                              selectedValue:
-                                  widget.form['length_unit_id']?.toString() ??
-                                      '',
-                              required: false),
-                        ),
-                      ].separatedBy(SizedBox(
-                        width: 16,
-                      )),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: TextForm(
-                            label: 'Lebar',
-                            req: false,
-                            controller: widget.width,
-                            handleChange: (value) {
-                              setState(() {
-                                widget.length.text = value.toString();
-                                widget.handleChangeInput('width', value);
-                              });
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: SelectForm(
-                              label: 'Satuan Lebar',
-                              onTap: () => widget.handleSelectWidthUnit(),
-                              selectedLabel:
-                                  widget.form['nama_satuan_lebar'] ?? '',
-                              selectedValue:
-                                  widget.form['width_unit_id']?.toString() ??
-                                      '',
-                              required: false),
-                        ),
-                      ].separatedBy(SizedBox(
-                        width: 16,
-                      )),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: TextForm(
-                            label: 'Berat',
-                            req: false,
-                            controller: widget.weight,
-                            handleChange: (value) {
-                              setState(() {
-                                widget.weight.text = value.toString();
-                                widget.handleChangeInput('weight', value);
+                                widget.qtyItem.text = value.toString();
+                                widget.handleChangeInput('item_qty', value);
                               });
                             },
                           ),
@@ -332,103 +530,100 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                           flex: 1,
                           child: SelectForm(
                               label: 'Satuan',
-                              onTap: () => null,
-                              selectedLabel:
-                                  widget.form['nama_satuan_berat'] ?? '',
+                              onTap: () => widget.handleSelectQtyItemUnit(),
+                              selectedLabel: widget.form['nama_satuan'] ?? '',
                               selectedValue:
-                                  widget.form['weight_unit_id']?.toString() ??
-                                      '',
+                                  widget.form['item_unit_id']?.toString() ?? '',
                               required: false),
                         ),
                       ].separatedBy(SizedBox(
                         width: 16,
                       )),
                     ),
-                  ].separatedBy(SizedBox(
-                    height: 8,
-                  )),
-                ),
-              )),
-            CustomCard(
-                child: Padding(
-              padding: PaddingColumn.screen,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ViewText(
-                            viewLabel: 'Dimulai oleh',
-                            viewValue: widget.data['start_time'] != null
-                                ? '${widget.data['start_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['start_time']))}'
-                                : '-',
-                          ),
-                          ViewText(
-                            viewLabel: 'Selesai oleh',
-                            viewValue: widget.data['end_time'] != null
-                                ? '${widget.data['end_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['end_time']))}'
-                                : '-',
-                          ),
-                          ViewText(
-                            viewLabel: 'Catatan',
-                            viewValue: widget.data['notes']?.toString() ?? '-',
-                          ),
-                        ].separatedBy(SizedBox(
-                          height: 16,
-                        )),
-                      ),
-                    ],
-                  ),
-                ],
+                ].separatedBy(SizedBox(
+                  height: 8,
+                )),
               ),
             )),
-            CustomCard(
+          CustomCard(
               child: Padding(
-                padding: PaddingColumn.screen,
-                child: _buildAttachmentList(context),
-              ),
+            padding: PaddingColumn.screen,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ViewText(
+                          viewLabel: 'Dimulai oleh',
+                          viewValue: widget.data['start_time'] != null
+                              ? '${widget.data['start_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['start_time']))}'
+                              : '-',
+                        ),
+                        ViewText(
+                          viewLabel: 'Selesai oleh',
+                          viewValue: widget.data['end_time'] != null
+                              ? '${widget.data['end_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['end_time']))}'
+                              : '-',
+                        ),
+                        ViewText(
+                          viewLabel: 'Catatan',
+                          viewValue: widget.data['notes']?.toString() ?? '-',
+                        ),
+                      ].separatedBy(SizedBox(
+                        height: 16,
+                      )),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            ValueListenableBuilder<bool>(
-              valueListenable: widget.isSubmitting,
-              builder: (context, isSubmitting, _) {
-                return Align(
-                  alignment: Alignment.center,
-                  child: FormButton(
-                    label: 'Simpan',
-                    isLoading: isSubmitting,
-                    onPressed: () async {
-                      if (widget.handleUpdate == null) return;
-                      widget.isSubmitting.value = true;
-                      try {
-                        await widget.handleUpdate!(data['id'].toString())
-                            .timeout(const Duration(seconds: 10));
-                        setState(() {
-                          _initialWeight = widget.weight?.text ?? '';
-                          _initialLength = widget.length?.text ?? '';
-                          _initialWidth = widget.width?.text ?? '';
-                          _initialNotes = widget.note?.text ?? '';
-                          _isChanged = false;
-                        });
-                      } finally {
-                        widget.isSubmitting.value = false;
-                      }
-                    },
-                  ),
-                );
-              },
-            ),
-          ].separatedBy(SizedBox(
-            height: 16,
           )),
-        ),
+          CustomCard(
+            child: Padding(
+              padding: PaddingColumn.screen,
+              child: _buildAttachmentList(context),
+            ),
+          ),
+          // ValueListenableBuilder<bool>(
+          //   valueListenable: widget.isSubmitting,
+          //   builder: (context, isSubmitting, _) {
+          //     return Align(
+          //       alignment: Alignment.center,
+          //       child: FormButton(
+          //         label: 'Simpan',
+          //         isLoading: isSubmitting,
+          //         onPressed: () async {
+          //           if (widget.handleUpdate == null) return;
+          //           widget.isSubmitting.value = true;
+          //           try {
+          //             await widget.handleUpdate!(data['id'].toString())
+          //                 .timeout(const Duration(seconds: 10));
+          //             setState(() {
+          //               _initialWeight = widget.weight?.text ?? '';
+          //               _initialLength = widget.length?.text ?? '';
+          //               _initialWidth = widget.width?.text ?? '';
+          //               _initialNotes = widget.note?.text ?? '';
+          //               _isChanged = false;
+          //             });
+          //           } finally {
+          //             widget.isSubmitting.value = false;
+          //           }
+          //         },
+          //       ),
+          //     );
+          //   },
+          // ),
+        ].separatedBy(SizedBox(
+          height: 16,
+        )),
       ),
-    );
+    ));
   }
 
   Widget _buildAttachmentList(BuildContext context) {

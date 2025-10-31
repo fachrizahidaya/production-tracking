@@ -27,6 +27,15 @@ class InfoTab extends StatefulWidget {
   final width;
   final note;
   final no;
+  final withItemGrade;
+  final qty;
+  final notes;
+  final handleSelectQtyUnit;
+  final withQtyAndWeight;
+  final qtyItem;
+  final handleSelectQtyItemUnit;
+  final withMaklon;
+  final maklon;
 
   const InfoTab(
       {super.key,
@@ -48,7 +57,16 @@ class InfoTab extends StatefulWidget {
       this.width,
       this.no,
       this.handleSelectLengthUnit,
-      this.handleSelectWidthUnit});
+      this.handleSelectWidthUnit,
+      this.withItemGrade,
+      this.handleSelectQtyUnit,
+      this.qty,
+      this.notes,
+      this.withQtyAndWeight,
+      this.qtyItem,
+      this.handleSelectQtyItemUnit,
+      this.withMaklon,
+      this.maklon});
 
   @override
   State<InfoTab> createState() => _InfoTabState();
@@ -56,42 +74,72 @@ class InfoTab extends StatefulWidget {
 
 class _InfoTabState extends State<InfoTab> {
   bool _isChanged = false;
+  late String _initialQty;
   late String _initialWeight;
   late String _initialLength;
   late String _initialNotes;
   late String _initialWidth;
+  late String _initialMaklonName;
   late Map<String, String> _initialValues;
 
   @override
   void initState() {
     super.initState();
     _setInitialValues();
+    _initialQty = widget.data['item_qty']?.toString() ?? '';
     _initialWeight = widget.data['weight']?.toString() ?? '';
     _initialLength = widget.data['length']?.toString() ?? '';
     _initialWidth = widget.data['width']?.toString() ?? '';
     _initialNotes = widget.data['notes']?.toString() ?? '';
+    _initialMaklonName = widget.data['maklon_name']?.toString() ?? '';
 
+    widget.qtyItem.text = _initialQty;
     widget.weight.text = _initialWeight;
     widget.note.text = _initialNotes;
     widget.length.text = _initialLength;
     widget.width.text = _initialWidth;
+    widget.maklon.text = _initialMaklonName;
   }
 
   @override
   void didUpdateWidget(covariant InfoTab oldWidget) {
     super.didUpdateWidget(oldWidget);
+    final grades = widget.form['grades'] ?? [];
+    final minLen =
+        widget.qty.length < grades.length ? widget.qty.length : grades.length;
+    for (int i = 0; i < minLen; i++) {
+      final newText = grades[i]['qty']?.toString() ?? '';
+      if (widget.qty[i].text != newText) {
+        widget.qty[i].text = newText;
+      }
+    }
+
+    final minLenNotes = widget.notes.length < grades.length
+        ? widget.notes.length
+        : grades.length;
+    for (int i = 0; i < minLenNotes; i++) {
+      final newText = grades[i]['notes']?.toString() ?? '';
+      if (widget.notes[i].text != newText) {
+        widget.notes[i].text = newText;
+      }
+    }
+
     if (widget.data != oldWidget.data && widget.data.isNotEmpty) {
       _setInitialValues();
       setState(() {
+        _initialQty = widget.data['item_qty']?.toString() ?? '';
         _initialWeight = widget.data['weight']?.toString() ?? '';
         _initialLength = widget.data['length']?.toString() ?? '';
         _initialWidth = widget.data['width']?.toString() ?? '';
         _initialNotes = widget.data['notes']?.toString() ?? '';
+        _initialMaklonName = widget.data['maklon_name']?.toString() ?? '';
 
+        widget.qtyItem.text = _initialQty;
         widget.weight.text = _initialWeight;
         widget.length.text = _initialLength;
         widget.width.text = _initialWidth;
         widget.note.text = _initialNotes;
+        widget.maklon.text = _initialMaklonName;
 
         _isChanged = false;
       });
@@ -155,6 +203,8 @@ class _InfoTabState extends State<InfoTab> {
     final existingAttachments =
         (widget.data['attachments'] ?? []) as List<dynamic>;
 
+    final existingGrades = (widget.data['grades'] ?? []) as List<dynamic>;
+
     if (widget.isLoading) {
       return Container(
         color: const Color(0xFFEBEBEB),
@@ -197,6 +247,18 @@ class _InfoTabState extends State<InfoTab> {
       initialNotes: _initialNotes,
       initialWeight: _initialWeight,
       initialWidth: _initialWidth,
+      initialMaklon: _initialMaklonName,
+      withItemGrade: widget.withItemGrade,
+      qty: widget.qty,
+      qtyItem: widget.qtyItem,
+      initialQty: _initialQty,
+      handleSelectQtyUnit: widget.handleSelectQtyUnit,
+      existingGrades: existingGrades,
+      notes: widget.notes,
+      withQtyAndWeight: widget.withQtyAndWeight,
+      handleSelectQtyItemUnit: widget.handleSelectQtyItemUnit,
+      withMaklon: widget.withMaklon,
+      maklon: widget.maklon,
     );
   }
 }

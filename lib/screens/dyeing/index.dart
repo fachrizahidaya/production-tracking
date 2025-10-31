@@ -6,7 +6,6 @@ import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/main_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/margin_card.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/dyeing/%5Bdyeing_id%5D.dart';
@@ -179,112 +178,114 @@ class _DyeingScreenState extends State<DyeingScreen> {
           }
         },
       ),
-      body: Container(
-        padding: MarginCard.screen,
-        child: Column(
-          children: [
-            Expanded(
-                child: MainList(
-              fetchData: (params) async {
-                return await Provider.of<DyeingService>(context, listen: false)
-                    .getDataList(params);
+      body: Column(
+        children: [
+          Expanded(
+              child: MainList(
+            fetchData: (params) async {
+              return await Provider.of<DyeingService>(context, listen: false)
+                  .getDataList(params);
+            },
+            service: DyeingService(),
+            searchQuery: _search,
+            canCreate: _canCreate,
+            canRead: _canRead,
+            itemBuilder: (item) => ItemDyeing(
+              item: item,
+            ),
+            onItemTap: (context, item) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DyeingDetail(
+                      id: item.id.toString(),
+                      no: item.dyeing_no.toString(),
+                      canDelete: _canDelete,
+                      canUpdate: _canUpdate,
+                    ),
+                  )).then((value) {
+                if (value == true) {
+                  _refetch();
+                } else {
+                  return null;
+                }
+              });
+            },
+            filterWidget: ListFilter(
+              title: 'Filter',
+              params: params,
+              onHandleFilter: _handleFilter,
+              onSubmitFilter: () {
+                _submitFilter();
               },
-              service: DyeingService(),
-              searchQuery: _search,
-              canCreate: _canCreate,
-              canRead: _canRead,
-              itemBuilder: (item) => ItemDyeing(
-                item: item,
-              ),
-              onItemTap: (context, item) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DyeingDetail(
-                        id: item.id.toString(),
-                        no: item.dyeing_no.toString(),
-                        canDelete: _canDelete,
-                        canUpdate: _canUpdate,
+              fetchMachine: (service) => service.fetchOptionsDyeing(),
+              getMachineOptions: (service) => service.dataListOption,
+            ),
+            handleRefetch: _refetch,
+            handleLoadMore: _loadMore,
+            handleSearch: _handleSearch,
+            dataList: _dataList,
+            firstLoading: _firstLoading,
+            hasMore: _hasMore,
+            isFiltered: _isFiltered,
+            showActions: () {
+              showModalBottomSheet(
+                context: context,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(0),
+                  ),
+                ),
+                builder: (context) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.add,
+                            color: CustomTheme().buttonColor('primary')),
+                        title: const Text("Mulai Dyeing"),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const CreateDyeing(),
+                            ),
+                          );
+                        },
                       ),
-                    )).then((value) {
-                  if (value == true) {
-                    _refetch();
-                  } else {
-                    return null;
-                  }
-                });
-              },
-              filterWidget: ListFilter(
-                title: 'Filter',
-                params: params,
-                onHandleFilter: _handleFilter,
-                onSubmitFilter: () {
-                  _submitFilter();
+                      ListTile(
+                        leading: Icon(Icons.check_circle,
+                            color: CustomTheme().buttonColor('warning')),
+                        title: const Text("Selesai Dyeing"),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const FinishDyeing(),
+                            ),
+                          );
+                        },
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.replay_outlined,
+                            color: CustomTheme().buttonColor('warning')),
+                        title: const Text("Rework Dyeing"),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const ReworkDyeing(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  );
                 },
-                fetchMachine: (service) => service.fetchOptionsDyeing(),
-                getMachineOptions: (service) => service.dataListOption,
-              ),
-              handleRefetch: _refetch,
-              handleLoadMore: _loadMore,
-              handleSearch: _handleSearch,
-              dataList: _dataList,
-              firstLoading: _firstLoading,
-              hasMore: _hasMore,
-              isFiltered: _isFiltered,
-              showActions: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ListTile(
-                          leading: Icon(Icons.add,
-                              color: CustomTheme().buttonColor('primary')),
-                          title: const Text("Mulai Dyeing"),
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const CreateDyeing(),
-                              ),
-                            );
-                          },
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.check_circle,
-                              color: CustomTheme().buttonColor('warning')),
-                          title: const Text("Selesai Dyeing"),
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const FinishDyeing(),
-                              ),
-                            );
-                          },
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.replay_outlined,
-                              color: CustomTheme().buttonColor('warning')),
-                          title: const Text("Rework Dyeing"),
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const ReworkDyeing(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            ))
-          ],
-        ),
+              );
+            },
+          ))
+        ],
       ),
     );
   }

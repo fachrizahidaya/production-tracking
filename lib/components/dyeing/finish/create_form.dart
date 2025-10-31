@@ -20,6 +20,8 @@ class CreateForm extends StatefulWidget {
   final dyeingId;
   final dyeingData;
   final isLoading;
+  final handleSelectLengthUnit;
+  final handleSelectWidthUnit;
 
   const CreateForm(
       {super.key,
@@ -37,7 +39,9 @@ class CreateForm extends StatefulWidget {
       this.data,
       this.dyeingData,
       this.dyeingId,
-      this.isLoading});
+      this.isLoading,
+      this.handleSelectLengthUnit,
+      this.handleSelectWidthUnit});
 
   @override
   State<CreateForm> createState() => _CreateFormState();
@@ -150,34 +154,32 @@ class _CreateFormState extends State<CreateForm> {
       );
     }
 
-    return Container(
-        padding: MarginSearch.screen,
-        child: CustomCard(
-          child: ListForm(
-            formKey: widget.formKey,
-            form: widget.form,
-            data: widget.data,
-            id: widget.id,
-            dyeingId: widget.dyeingId,
-            length: widget.length,
-            width: widget.width,
-            qty: widget.qty,
-            note: widget.note,
-            handleSelectWo: widget.handleSelectWo,
-            handleChangeInput: widget.handleChangeInput,
-            handleSelectUnit: widget.handleSelectUnit,
-            isSubmitting: _isSubmitting,
-            handleSubmit: widget.handleSubmit,
-            isFormIncomplete: _isFormIncomplete,
-            isChanged: _isChanged,
-            initialQty: _initialQty,
-            initialLength: _initialLength,
-            initialWidth: _initialWidth,
-            initialNotes: _initialNotes,
-            allAttachments: allAttachments,
-            handlePickAttachments: _pickAttachments,
-            dyeingData: widget.dyeingData,
-          ),
-        ));
+    return ListForm(
+      formKey: widget.formKey,
+      form: widget.form,
+      data: widget.data,
+      id: widget.id,
+      dyeingId: widget.dyeingId,
+      length: widget.length,
+      width: widget.width,
+      qty: widget.qty,
+      note: widget.note,
+      handleSelectWo: widget.handleSelectWo,
+      handleChangeInput: widget.handleChangeInput,
+      handleSelectUnit: widget.handleSelectUnit,
+      handleSelectLengthUnit: widget.handleSelectLengthUnit,
+      handleSelectWidthUnit: widget.handleSelectWidthUnit,
+      isSubmitting: _isSubmitting,
+      handleSubmit: widget.handleSubmit,
+      isFormIncomplete: _isFormIncomplete,
+      isChanged: _isChanged,
+      initialQty: _initialQty,
+      initialLength: _initialLength,
+      initialWidth: _initialWidth,
+      initialNotes: _initialNotes,
+      allAttachments: allAttachments,
+      handlePickAttachments: _pickAttachments,
+      dyeingData: widget.dyeingData,
+    );
   }
 }

@@ -3,6 +3,7 @@ import 'package:textile_tracking/components/dyeing/create/info_tab.dart';
 import 'package:textile_tracking/components/dyeing/create/item_tab.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
+import 'package:textile_tracking/components/master/layout/custom_card.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -80,84 +81,97 @@ class _ListFormState extends State<ListForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: widget.formKey,
-      child: SingleChildScrollView(
-        padding: PaddingColumn.screen,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (widget.id == null)
-              SelectForm(
-                  label: 'Work Order',
-                  onTap: () => widget.handleSelectWo(),
-                  selectedLabel: widget.form['no_wo'] ?? '',
-                  selectedValue: widget.form['wo_id']?.toString() ?? '',
-                  required: false),
-            if (widget.form?['wo_id'] != null)
-              DefaultTabController(
-                  length: 2,
-                  child: Column(
-                    children: [
-                      TabBar(tabs: [
-                        Tab(
-                          text: 'Informasi',
-                        ),
-                        Tab(
-                          text: 'Barang',
-                        ),
-                      ]),
-                      SizedBox(
-                          height: 400,
-                          child: TabBarView(children: [
-                            InfoTab(
-                              data: widget.data,
-                            ),
-                            ItemTab(
-                              data: widget.data,
-                            )
-                          ]))
-                    ],
+    return SingleChildScrollView(
+        child: Container(
+            padding: const EdgeInsets.all(8),
+            child: Form(
+              key: widget.formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  if (widget.id == null)
+                    CustomCard(
+                        child: Padding(
+                      padding: PaddingColumn.screen,
+                      child: SelectForm(
+                          label: 'Work Order',
+                          onTap: () => widget.handleSelectWo(),
+                          selectedLabel: widget.form['no_wo'] ?? '',
+                          selectedValue: widget.form['wo_id']?.toString() ?? '',
+                          required: false),
+                    )),
+                  if (widget.form?['wo_id'] != null)
+                    CustomCard(
+                        child: Padding(
+                      padding: PaddingColumn.screen,
+                      child: DefaultTabController(
+                          length: 2,
+                          child: Column(
+                            children: [
+                              TabBar(tabs: [
+                                Tab(
+                                  text: 'Informasi',
+                                ),
+                                Tab(
+                                  text: 'Barang',
+                                ),
+                              ]),
+                              SizedBox(
+                                  height: 400,
+                                  child: TabBarView(children: [
+                                    InfoTab(
+                                      data: widget.data,
+                                    ),
+                                    ItemTab(
+                                      data: widget.data,
+                                    )
+                                  ]))
+                            ],
+                          )),
+                    )),
+                  CustomCard(
+                      child: Padding(
+                    padding: PaddingColumn.screen,
+                    child: SelectForm(
+                      label: 'Mesin',
+                      onTap: () => widget.handleSelectMachine(),
+                      selectedLabel: widget.form['nama_mesin'] ?? '',
+                      selectedValue: widget.form['machine_id'].toString(),
+                      required: false,
+                    ),
                   )),
-            SelectForm(
-              label: 'Mesin',
-              onTap: () => widget.handleSelectMachine(),
-              selectedLabel: widget.form['nama_mesin'] ?? '',
-              selectedValue: widget.form['machine_id'].toString(),
-              required: false,
-            ),
-            ValueListenableBuilder<bool>(
-              valueListenable: widget.isSubmitting,
-              builder: (context, isSubmitting, _) {
-                return Align(
-                    alignment: Alignment.center,
-                    child: FormButton(
-                      label: 'Submit',
-                      onPressed: () async {
-                        widget.isSubmitting.value = true;
-                        try {
-                          await widget.handleSubmit(widget.dyeingId);
-                          setState(() {
-                            _initialQty = widget.qty.text;
-                            _initialLength = widget.length.text;
-                            _initialWidth = widget.width.text;
-                            _initialNotes = widget.note.text;
-                            _isChanged = false;
-                          });
-                        } finally {
-                          widget.isSubmitting.value = false;
-                        }
-                      },
-                      isLoading: isSubmitting,
-                      isDisabled: widget.isFormIncomplete,
-                    ));
-              },
-            )
-          ].separatedBy(SizedBox(
-            height: 16,
-          )),
-        ),
-      ),
-    );
+
+                  // ValueListenableBuilder<bool>(
+                  //   valueListenable: widget.isSubmitting,
+                  //   builder: (context, isSubmitting, _) {
+                  //     return Align(
+                  //         alignment: Alignment.center,
+                  //         child: FormButton(
+                  //           label: 'Submit',
+                  //           onPressed: () async {
+                  //             widget.isSubmitting.value = true;
+                  //             try {
+                  //               await widget.handleSubmit(widget.dyeingId);
+                  //               setState(() {
+                  //                 _initialQty = widget.qty.text;
+                  //                 _initialLength = widget.length.text;
+                  //                 _initialWidth = widget.width.text;
+                  //                 _initialNotes = widget.note.text;
+                  //                 _isChanged = false;
+                  //               });
+                  //             } finally {
+                  //               widget.isSubmitting.value = false;
+                  //             }
+                  //           },
+                  //           isLoading: isSubmitting,
+                  //           isDisabled: widget.isFormIncomplete,
+                  //         ));
+                  //   },
+                  // )
+                ].separatedBy(SizedBox(
+                  height: 16,
+                )),
+              ),
+            )));
   }
 }

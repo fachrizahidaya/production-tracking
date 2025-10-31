@@ -1,8 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/create/list_form.dart';
-import 'package:textile_tracking/components/master/layout/custom_card.dart';
-import 'package:textile_tracking/helpers/util/margin_search.dart';
 
 class CreateForm extends StatefulWidget {
   final formKey;
@@ -82,22 +80,18 @@ class _CreateFormState extends State<CreateForm> {
       );
     }
 
-    return Container(
-      padding: MarginSearch.screen,
-      child: CustomCard(
-          child: ListForm(
-        formKey: widget.formKey,
-        id: widget.id,
-        form: widget.form,
-        data: widget.data,
-        attachments: attachments,
-        selectWorkOrder: widget.selectWorkOrder,
-        selectMachine: widget.selectMachine,
-        isSubmitting: _isSubmitting,
-        isFormIncomplete: _isFormIncomplete,
-        handleSubmit: widget.handleSubmit,
-        handlePickAttachments: _pickAttachments,
-      )),
+    return ListForm(
+      formKey: widget.formKey,
+      id: widget.id,
+      form: widget.form,
+      data: widget.data,
+      attachments: attachments,
+      selectWorkOrder: widget.selectWorkOrder,
+      selectMachine: widget.selectMachine,
+      isSubmitting: _isSubmitting,
+      isFormIncomplete: _isFormIncomplete,
+      handleSubmit: widget.handleSubmit,
+      handlePickAttachments: _pickAttachments,
     );
   }
 }

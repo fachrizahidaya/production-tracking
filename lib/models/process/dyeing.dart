@@ -22,6 +22,8 @@ class Dyeing {
   final String? status;
   final bool? rework;
   final int? unit_id;
+  final int? width_unit_id;
+  final int? length_unit_id;
   final int? wo_id;
   final int? machine_id;
   final int? rework_reference_id;
@@ -51,31 +53,35 @@ class Dyeing {
       this.wo_no,
       this.work_orders,
       this.start_by,
-      this.end_by});
+      this.end_by,
+      this.length_unit_id,
+      this.width_unit_id});
 
   factory Dyeing.fromJson(Map<String, dynamic> json) {
     return Dyeing(
-      id: json['id'] as int?,
-      unit_id: json['unit_id'] as int?,
-      wo_id: json['wo_id'] as int?,
-      machine_id: json['machine_id'] as int?,
-      start_by_id: json['start_by_id'] as int?,
-      end_by_id: json['end_by_id'] as int?,
-      rework_reference_id: json['rework_reference_id'] as int?,
-      dyeing_no: json['dyeing_no'] ?? '',
-      start_time: json['start_time'] ?? '',
-      end_time: json['end_time'] ?? '',
-      qty: json['qty'] ?? '',
-      width: json['width'] ?? '',
-      length: json['length'] ?? '',
-      status: json['status'] ?? '',
-      rework: json['rework'] as bool?,
-      notes: json['notes'] ?? '',
-      attachments: json['attachments'] ?? [],
-      work_orders: json['work_orders'],
-      start_by: json['start_by'],
-      end_by: json['end_by'],
-    );
+        id: json['id'] as int?,
+        unit_id: json['unit_id'] as int?,
+        wo_id: json['wo_id'] as int?,
+        machine_id: json['machine_id'] as int?,
+        start_by_id: json['start_by_id'] as int?,
+        end_by_id: json['end_by_id'] as int?,
+        rework_reference_id: json['rework_reference_id'] as int?,
+        dyeing_no: json['dyeing_no'] ?? '',
+        start_time: json['start_time'] ?? '',
+        end_time: json['end_time'] ?? '',
+        qty: json['qty'] ?? '',
+        width: json['width'] ?? '',
+        length: json['length'] ?? '',
+        status: json['status'] ?? '',
+        rework: json['rework'] as bool?,
+        notes: json['notes'] ?? '',
+        attachments: json['attachments'] ?? [],
+        work_orders: json['work_orders'],
+        start_by: json['start_by'],
+        end_by: json['end_by'],
+        width_unit_id: json['width_unit_id'] as int?,
+        wo_no: json['wo_no'],
+        length_unit_id: json['length_unit_id'] as int?);
   }
 
   Map<String, dynamic> toJson() {
@@ -100,6 +106,9 @@ class Dyeing {
       'start_by': start_by,
       'end_by': end_by,
       'notes': notes,
+      'length_unit_id': length_unit_id,
+      'width_unit_id': width_unit_id,
+      'wo_no': wo_no,
     };
   }
 }
@@ -402,24 +411,45 @@ class DyeingService extends BaseService<Dyeing> {
               jsonDecode(responseData)['message'] ?? 'Failed to update dyeing');
         }
       } else {
-        final response = await http.patch(
+        final body = {
+          ...updatedDyeing.toJson(),
+          '_method': 'PATCH',
+        };
+
+        final response = await http.post(
           Uri.parse('$baseUrl/$id'),
           headers: {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
           },
-          body: jsonEncode(updatedDyeing.toJson()),
+          body: jsonEncode(body),
         );
 
         if (response.statusCode == 200) {
-          final jsonResponse = jsonDecode(response.body);
           await refetchItems();
-          notifyListeners();
-          return jsonResponse['message'] ?? 'Update successful';
+          return jsonDecode(response.body)['message'];
         } else {
-          final errorData = jsonDecode(response.body);
-          throw Exception(errorData['message'] ?? 'Failed to update dyeing');
+          final error = jsonDecode(response.body);
+          throw Exception(error['message'] ?? 'Failed to update item');
         }
+        // final response = await http.patch(
+        //   Uri.parse('$baseUrl/$id'),
+        //   headers: {
+        //     'Authorization': 'Bearer $token',
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: jsonEncode(updatedDyeing.toJson()),
+        // );
+
+        // if (response.statusCode == 200) {
+        //   final jsonResponse = jsonDecode(response.body);
+        //   await refetchItems();
+        //   notifyListeners();
+        //   return jsonResponse['message'] ?? 'Update successful';
+        // } else {
+        //   final errorData = jsonDecode(response.body);
+        //   throw Exception(errorData['message'] ?? 'Failed to update dyeing');
+        // }
       }
     } catch (e) {
       throw Exception("$e");
@@ -493,24 +523,45 @@ class DyeingService extends BaseService<Dyeing> {
               'Failed to add dyeing with attachments');
         }
       } else {
-        final response = await http.patch(
+        final body = {
+          ...finishedDyeing.toJson(),
+          '_method': 'PATCH',
+        };
+
+        final response = await http.post(
           Uri.parse('$baseUrl/$id/complete'),
           headers: {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
           },
-          body: jsonEncode(finishedDyeing.toJson()),
+          body: jsonEncode(body),
         );
 
         if (response.statusCode == 200) {
           await refetchItems();
-          notifyListeners();
-          final responseData = jsonDecode(response.body);
-          return responseData['message'];
+          return jsonDecode(response.body)['message'];
         } else {
-          final errorData = jsonDecode(response.body);
-          throw Exception(errorData['message'] ?? 'Failed to finish dyeing');
+          final error = jsonDecode(response.body);
+          throw Exception(error['message'] ?? 'Failed to finish item');
         }
+        // final response = await http.patch(
+        //   Uri.parse('$baseUrl/$id/complete'),
+        //   headers: {
+        //     'Authorization': 'Bearer $token',
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: jsonEncode(finishedDyeing.toJson()),
+        // );
+
+        // if (response.statusCode == 200) {
+        //   await refetchItems();
+        //   notifyListeners();
+        //   final responseData = jsonDecode(response.body);
+        //   return responseData['message'];
+        // } else {
+        //   final errorData = jsonDecode(response.body);
+        //   throw Exception(errorData['message'] ?? 'Failed to finish dyeing');
+        // }
       }
     } catch (e) {
       throw Exception("$e");
@@ -577,31 +628,51 @@ class DyeingService extends BaseService<Dyeing> {
           final jsonResponse = jsonDecode(responseBody);
           await refetchItems();
           notifyListeners();
-          return jsonResponse['message'] ?? 'Finish successful';
+          return jsonResponse['message'] ?? 'Rework successful';
         } else {
           var responseData = await response.stream.bytesToString();
           throw Exception(jsonDecode(responseData)['message'] ??
               'Failed to add dyeing with attachments');
         }
       } else {
+        final body = {
+          ...reworkDyeing.toJson(),
+        };
+
         final response = await http.post(
           Uri.parse('$baseUrl/$id/rework'),
           headers: {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
           },
-          body: jsonEncode(reworkDyeing.toJson()),
+          body: jsonEncode(body),
         );
 
         if (response.statusCode == 201) {
           await refetchItems();
-          notifyListeners();
-          final responseData = jsonDecode(response.body);
-          return responseData['message'] ?? 'Rework created';
+          return jsonDecode(response.body)['message'];
         } else {
-          final errorData = jsonDecode(response.body);
-          throw Exception(errorData['message'] ?? 'Failed to rework dyeing');
+          final error = jsonDecode(response.body);
+          throw Exception(error['message'] ?? 'Failed to rework item');
         }
+        // final response = await http.post(
+        //   Uri.parse('$baseUrl/$id/rework'),
+        //   headers: {
+        //     'Authorization': 'Bearer $token',
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: jsonEncode(reworkDyeing.toJson()),
+        // );
+
+        // if (response.statusCode == 201) {
+        //   await refetchItems();
+        //   notifyListeners();
+        //   final responseData = jsonDecode(response.body);
+        //   return responseData['message'] ?? 'Rework created';
+        // } else {
+        //   final errorData = jsonDecode(response.body);
+        //   throw Exception(errorData['message'] ?? 'Failed to rework dyeing');
+        // }
       }
     } catch (e) {
       throw Exception("Error rework dyeing: $e");

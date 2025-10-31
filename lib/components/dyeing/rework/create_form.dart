@@ -171,34 +171,30 @@ class _CreateFormState extends State<CreateForm> {
       });
     }
 
-    return Container(
-        padding: MarginSearch.screen,
-        child: CustomCard(
-          child: ListForm(
-            formKey: widget.formKey,
-            form: widget.form,
-            data: widget.data,
-            id: widget.id,
-            dyeingId: widget.dyeingId,
-            length: widget.length,
-            width: widget.width,
-            qty: widget.qty,
-            note: widget.note,
-            handleSelectWo: widget.handleSelectWo,
-            handleChangeInput: widget.handleChangeInput,
-            handleSelectUnit: widget.handleSelectUnit,
-            handleSelectMachine: widget.selectMachine,
-            isSubmitting: _isSubmitting,
-            handleSubmit: widget.handleSubmit,
-            isFormIncomplete: _isFormIncomplete,
-            isChanged: _isChanged,
-            initialQty: _initialQty,
-            initialLength: _initialLength,
-            initialWidth: _initialWidth,
-            initialNotes: _initialNotes,
-            allAttachments: allAttachments,
-            handlePickAttachments: _pickAttachments,
-          ),
-        ));
+    return ListForm(
+      formKey: widget.formKey,
+      form: widget.form,
+      data: widget.data,
+      id: widget.id,
+      dyeingId: widget.dyeingId,
+      length: widget.length,
+      width: widget.width,
+      qty: widget.qty,
+      note: widget.note,
+      handleSelectWo: widget.handleSelectWo,
+      handleChangeInput: widget.handleChangeInput,
+      handleSelectUnit: widget.handleSelectUnit,
+      handleSelectMachine: widget.selectMachine,
+      isSubmitting: _isSubmitting,
+      handleSubmit: widget.handleSubmit,
+      isFormIncomplete: _isFormIncomplete,
+      isChanged: _isChanged,
+      initialQty: _initialQty,
+      initialLength: _initialLength,
+      initialWidth: _initialWidth,
+      initialNotes: _initialNotes,
+      allAttachments: allAttachments,
+      handlePickAttachments: _pickAttachments,
+    );
   }
 }

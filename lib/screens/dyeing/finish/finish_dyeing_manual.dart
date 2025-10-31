@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/finish/create_form.dart';
+import 'package:textile_tracking/components/master/button/cancel_button.dart';
+import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -32,6 +36,8 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
   final DyeingService _dyeingService = DyeingService();
   bool _firstLoading = false;
   bool _isFetchingWorkOrder = false;
+  bool _isFetchingUnit = false;
+  final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController _noteController = TextEditingController();
@@ -88,15 +94,27 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
   }
 
   Future<void> _handleFetchUnit() async {
-    await Provider.of<OptionUnitService>(context, listen: false)
-        .getDataListOption();
-    final result =
-        // ignore: use_build_context_synchronously
-        Provider.of<OptionUnitService>(context, listen: false).dataListOption;
-
     setState(() {
-      unitOption = result;
+      _isFetchingUnit = true;
     });
+
+    try {
+      await Provider.of<OptionUnitService>(context, listen: false)
+          .getDataListOption();
+      final result =
+          // ignore: use_build_context_synchronously
+          Provider.of<OptionUnitService>(context, listen: false).dataListOption;
+
+      setState(() {
+        unitOption = result;
+      });
+    } catch (e) {
+      debugPrint("Error fetching work units: $e");
+    } finally {
+      setState(() {
+        _isFetchingUnit = false;
+      });
+    }
   }
 
   Future<void> _getDataView(id) async {
@@ -137,6 +155,18 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
       if (dyeingData['machine'] != null) {
         widget.form?['machine_id'] = dyeingData['machine']['id'].toString();
         widget.form?['nama_mesin'] = dyeingData['machine']['name'].toString();
+      }
+      if (dyeingData['length_unit'] != null) {
+        widget.form?['length_unit_id'] =
+            dyeingData['length_unit']['id'].toString();
+        widget.form?['nama_satuan_panjang'] =
+            dyeingData['length_unit']['name'].toString();
+      }
+      if (dyeingData['width_unit'] != null) {
+        widget.form?['width_unit_id'] =
+            dyeingData['width_unit']['id'].toString();
+        widget.form?['nama_satuan_lebar'] =
+            dyeingData['width)unit']['name'].toString();
       }
       if (dyeingData['unit'] != null) {
         widget.form?['unit_id'] = dyeingData['unit']['id'].toString();
@@ -185,6 +215,17 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
   }
 
   _selectUnit() {
+    if (_isFetchingUnit) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -198,6 +239,70 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
             setState(() {
               widget.form?['unit_id'] = e['value'].toString();
               widget.form?['nama_satuan'] = e['label'].toString();
+            });
+          },
+        );
+      },
+    );
+  }
+
+  _selectLengthUnit() {
+    if (_isFetchingUnit) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return SelectDialog(
+          label: 'Satuan',
+          options: unitOption,
+          selected: widget.form?['length_unit_id'].toString() ?? '',
+          handleChangeValue: (e) {
+            setState(() {
+              widget.form?['length_unit_id'] = e['value'].toString();
+              widget.form?['nama_satuan_panjang'] = e['label'].toString();
+            });
+          },
+        );
+      },
+    );
+  }
+
+  _selectWidthUnit() {
+    if (_isFetchingUnit) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return SelectDialog(
+          label: 'Satuan',
+          options: unitOption,
+          selected: widget.form?['width_unit_id'].toString() ?? '',
+          handleChangeValue: (e) {
+            setState(() {
+              widget.form?['width_unit_id'] = e['value'].toString();
+              widget.form?['nama_satuan_lebar'] = e['label'].toString();
             });
           },
         );
@@ -232,6 +337,8 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
         length: _lengthController,
         handleSelectWo: _selectWorkOrder,
         handleSelectUnit: _selectUnit,
+        handleSelectLengthUnit: _selectLengthUnit,
+        handleSelectWidthUnit: _selectWidthUnit,
         handleChangeInput: widget.handleChangeInput,
         handleSubmit: widget.handleSubmit,
         id: widget.id,
@@ -239,6 +346,48 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
         dyeingId: dyeingId,
         dyeingData: dyeingData,
         isLoading: _firstLoading,
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: PaddingColumn.screen,
+          child: ValueListenableBuilder<bool>(
+            valueListenable: _isSubmitting,
+            builder: (context, isSubmitting, _) {
+              return Row(
+                children: [
+                  Expanded(
+                    child: CancelButton(
+                      label: 'Batal',
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                  Expanded(
+                      child: FormButton(
+                    label: 'Simpan',
+                    isLoading: isSubmitting,
+                    onPressed: () async {
+                      _isSubmitting.value = true;
+                      try {
+                        await widget.handleSubmit(dyeingData['id'].toString());
+                        setState(() {
+                          // _initialQty = _qtyController.text;
+                          // _initialLength = _lengthController.text;
+                          // _initialWidth = _widthController.text;
+                          // _initialNotes = _noteController.text;
+                          // _isChanged = false;
+                        });
+                      } finally {
+                        _isSubmitting.value = false;
+                      }
+                    },
+                  ))
+                ].separatedBy(SizedBox(
+                  width: 16,
+                )),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

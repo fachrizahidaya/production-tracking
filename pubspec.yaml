@@ -48,6 +48,7 @@ dependencies:
   flutter_redux: ^0.10.0
   redux: ^5.0.0
   mobile_scanner: ^6.0.11
+  fl_chart: ^0.71.0
 
 dev_dependencies:
   flutter_test:

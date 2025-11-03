@@ -11,18 +11,6 @@ class WorkOrderStatus extends StatefulWidget {
 class _WorkOrderStatusState extends State<WorkOrderStatus> {
   @override
   Widget build(BuildContext context) {
-    return DasboardCard()
-        // Column(
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: [
-        //     CustomTitle(text: 'Work Order Status'),
-        //     SizedBox(
-        //       height: 200,
-        //     )
-        //   ].separatedBy(SizedBox(
-        //     height: 16,
-        //   )),
-        // )
-        ;
+    return Placeholder();
   }
 }

@@ -23,8 +23,6 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
-  final List<Widget> _screens = [Dashboard()];
-
   String user = '';
 
   @override
@@ -155,7 +153,7 @@ class _HomeState extends State<Home> {
               ),
               body: Scaffold(
                 backgroundColor: const Color(0xFFEBEBEB),
-                body: _screens[_selectedIndex],
+                body: Dashboard(),
               ));
         });
   }

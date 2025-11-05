@@ -51,12 +51,18 @@ class _LoginFormState extends State<LoginForm> {
             controller: widget.password,
             isPassword: true,
           ),
-          FormButton(
-            label: 'LOG IN',
-            onPressed: widget.handlePress,
-            isDisabled: widget.isDisabled,
-            isLoading: widget.isLoading,
-            backgroundColor: CustomTheme().buttonColor('primary'),
+          Row(
+            children: [
+              Expanded(
+                  flex: 1,
+                  child: FormButton(
+                    label: 'LOG IN',
+                    onPressed: widget.handlePress,
+                    isDisabled: widget.isDisabled,
+                    isLoading: widget.isLoading,
+                    backgroundColor: CustomTheme().buttonColor('primary'),
+                  ))
+            ],
           )
         ].separatedBy(SizedBox(
           height: 16,

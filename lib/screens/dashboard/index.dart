@@ -42,7 +42,6 @@ class _DashboardState extends State<Dashboard> {
     final resultChart =
         // ignore: use_build_context_synchronously
         Provider.of<WorkOrderChartService>(context, listen: false).dataList;
-    print('c: $resultChart');
     final resultPie =
         // ignore: use_build_context_synchronously
         Provider.of<WorkOrderChartService>(context, listen: false).dataPie;

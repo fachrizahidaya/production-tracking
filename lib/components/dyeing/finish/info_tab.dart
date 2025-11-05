@@ -20,6 +20,7 @@ class InfoTab extends StatefulWidget {
   final length;
   final dyeingId;
   final dyeingData;
+  final processId;
 
   const InfoTab(
       {super.key,
@@ -40,7 +41,8 @@ class InfoTab extends StatefulWidget {
       this.length,
       this.note,
       this.qty,
-      this.width});
+      this.width,
+      this.processId});
 
   @override
   State<InfoTab> createState() => _InfoTabState();

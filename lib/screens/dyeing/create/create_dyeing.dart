@@ -194,7 +194,7 @@ class _CreateDyeingState extends State<CreateDyeing> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFFEBEBEB),
+        backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: 'Mulai Dyeing',
           onReturn: () {

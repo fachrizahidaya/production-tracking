@@ -218,6 +218,39 @@ class WorkOrderService extends BaseService<WorkOrder> {
     }
   }
 
+  Future<Map<String, dynamic>?> getProcessData(
+      Map<String, dynamic> woForm, ValueNotifier<bool> isSubmitting) async {
+    try {
+      isSubmitting.value = true;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      final response = await http.post(
+        Uri.parse(baseUrl),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(woForm),
+      );
+
+      if (response.statusCode == 201) {
+        await refetchItems();
+        notifyListeners();
+        final responseData = jsonDecode(response.body);
+        return responseData; // ✅ return full JSON
+      } else {
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData['message'] ?? 'Failed to get data');
+      }
+    } catch (e) {
+      throw Exception('Error get data: $e');
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
   @override
   Future<void> updateItem(String id, WorkOrder updatedWorkOrder,
       ValueNotifier<bool> isSubmitting) async {

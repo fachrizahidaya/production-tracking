@@ -62,6 +62,7 @@ class _SortingDetailState extends State<SortingDetail> {
       canUpdate: widget.canUpdate,
       route: '/sortings',
       withItemGrade: true,
+      withMaklon: false,
     );
   }
 }

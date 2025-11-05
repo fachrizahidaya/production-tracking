@@ -63,6 +63,7 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       fetchMachine: (service) => service.fetchOptionsLongSitting(),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
+      withMaklon: false,
     );
   }
 }

@@ -197,7 +197,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFFEBEBEB),
+        backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: 'Rework Dyeing',
           onReturn: () {

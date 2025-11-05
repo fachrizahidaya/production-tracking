@@ -276,7 +276,7 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
   @override
   Widget build(BuildContext context) {
     return FinishProcessManual(
-      title: 'Selesai Press Tumber',
+      title: 'Selesai Press Tumbler',
       id: widget.id,
       data: widget.data,
       form: widget.form,

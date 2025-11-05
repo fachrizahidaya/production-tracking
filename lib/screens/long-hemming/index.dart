@@ -10,7 +10,6 @@ import 'package:textile_tracking/components/master/layout/process_list.dart';
 import 'package:textile_tracking/components/master/sheet/process_sheet.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_date_safe.dart';
-import 'package:textile_tracking/helpers/util/margin_card.dart';
 import 'package:textile_tracking/models/process/long_hemming.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/long-hemming/%5Blong_hemming_id%5D.dart';
@@ -170,7 +169,7 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFFEBEBEB),
+        backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: 'Long Hemming',
           onReturn: () {
@@ -195,7 +194,7 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
               canCreate: _canCreate,
               canRead: _canRead,
               itemBuilder: (item) => ItemProcessCard(
-                label: 'Long Hemming No',
+                label: 'No. Long Hemming ',
                 item: item,
                 titleKey: 'lh_no',
                 subtitleKey: 'work_orders',
@@ -206,7 +205,14 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
                 getStartBy: (item) => item.start_by?['name'] ?? '',
                 getEndBy: (item) => item.end_by?['name'] ?? '',
                 getStatus: (item) => item.status ?? '-',
-                customBadgeBuilder: (status) => CustomBadge(title: status),
+                customBadgeBuilder: (status) => CustomBadge(
+                    title: status,
+                    withStatus: true,
+                    status: item.status,
+                    withDifferentColor: true,
+                    color: status == 'Diproses'
+                        ? Color(0xFFfff3c6)
+                        : Color(0xffd1fae4)),
               ),
               onItemTap: (context, item) {
                 Navigator.push(

@@ -67,6 +67,7 @@ class _EmbroideryDetailState extends State<EmbroideryDetail> {
       route: '/embroideries',
       withItemGrade: false,
       withQtyAndWeight: true,
+      withMaklon: true,
     );
   }
 }

@@ -63,6 +63,7 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
       fetchMachine: (service) => service.fetchOptionsLongHemming(),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
+      withMaklon: false,
     );
   }
 }

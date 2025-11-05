@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/dyeing/create/info_tab.dart';
+import 'package:textile_tracking/components/dyeing/create/item_tab.dart';
 import 'package:textile_tracking/components/dyeing/rework/create_form.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
@@ -281,33 +283,67 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEBEBEB),
+      backgroundColor: const Color(0xFFf9fafc),
       appBar: CustomAppBar(
         title: 'Rework Dyeing',
         onReturn: () {
           Navigator.pop(context);
         },
       ),
-      body: CreateForm(
-        data: woData,
-        form: widget.form,
-        formKey: _formKey,
-        note: _noteController,
-        qty: _qtyController,
-        width: _widthController,
-        length: _lengthController,
-        handleSelectWo: _selectWorkOrder,
-        handleSelectUnit: _selectUnit,
-        handleChangeInput: widget.handleChangeInput,
-        handleSubmit: widget.handleSubmit,
-        dyeingId: dyeingId,
-        dyeingData: dyeingData,
-        selectMachine: _selectMachine,
-        isLoading: _firstLoading,
+      body: Column(
+        children: [
+          DefaultTabController(
+              length: 2,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isPortrait = MediaQuery.of(context).orientation ==
+                      Orientation.portrait;
+                  final screenHeight = MediaQuery.of(context).size.height;
+
+                  final boxHeight =
+                      isPortrait ? screenHeight * 0.45 : screenHeight * 0.7;
+
+                  return Column(
+                    children: [
+                      Container(
+                        color: Colors.white,
+                        child: TabBar(tabs: [
+                          Tab(
+                            text: 'Form',
+                          ),
+                          Tab(
+                            text: 'Barang',
+                          ),
+                        ]),
+                      ),
+                      SizedBox(
+                        height: boxHeight,
+                        child: TabBarView(children: [
+                          InfoTab(
+                            data: woData,
+                            id: widget.id,
+                            isLoading: _firstLoading,
+                            form: widget.form,
+                            formKey: _formKey,
+                            handleSubmit: widget.handleSubmit,
+                            handleSelectMachine: _selectMachine,
+                            handleSelectWorkOrder: _selectWorkOrder,
+                          ),
+                          ItemTab(
+                            data: woData,
+                          ),
+                        ]),
+                      )
+                    ],
+                  );
+                },
+              )),
+        ],
       ),
       bottomNavigationBar: SafeArea(
-        child: Padding(
+        child: Container(
           padding: PaddingColumn.screen,
+          color: Colors.white,
           child: ValueListenableBuilder<bool>(
             valueListenable: _isSubmitting,
             builder: (context, isSubmitting, _) {

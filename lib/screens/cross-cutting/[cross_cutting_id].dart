@@ -68,6 +68,7 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withQtyAndWeight: true,
+      withMaklon: false,
     );
   }
 }

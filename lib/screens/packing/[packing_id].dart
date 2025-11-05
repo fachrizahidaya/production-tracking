@@ -60,6 +60,7 @@ class _PackingDetailState extends State<PackingDetail> {
       canUpdate: widget.canUpdate,
       route: '/packings',
       withItemGrade: true,
+      withMaklon: false,
     );
   }
 }

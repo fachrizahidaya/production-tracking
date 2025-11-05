@@ -63,6 +63,7 @@ class _PressTumblerDetailState extends State<PressTumblerDetail> {
       fetchMachine: (service) => service.fetchOptionsPressTumbler(),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
+      withMaklon: false,
     );
   }
 }

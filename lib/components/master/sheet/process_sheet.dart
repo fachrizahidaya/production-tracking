@@ -9,7 +9,7 @@ class ProcessSheet {
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(0),
+          top: Radius.circular(4),
         ),
       ),
       builder: (context) {

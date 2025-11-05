@@ -16,6 +16,9 @@ class CustomFloatingButton extends StatelessWidget {
     return FloatingActionButton(
       onPressed: onPressed,
       backgroundColor: backgroundColor ?? CustomTheme().buttonColor('primary'),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+      ),
       child: icon,
     );
   }

@@ -36,6 +36,7 @@ class InfoTab extends StatefulWidget {
   final handleSelectQtyItemUnit;
   final withMaklon;
   final maklon;
+  final onlySewing;
 
   const InfoTab(
       {super.key,
@@ -66,7 +67,8 @@ class InfoTab extends StatefulWidget {
       this.qtyItem,
       this.handleSelectQtyItemUnit,
       this.withMaklon,
-      this.maklon});
+      this.maklon,
+      this.onlySewing});
 
   @override
   State<InfoTab> createState() => _InfoTabState();
@@ -206,17 +208,13 @@ class _InfoTabState extends State<InfoTab> {
     final existingGrades = (widget.data['grades'] ?? []) as List<dynamic>;
 
     if (widget.isLoading) {
-      return Container(
-        color: const Color(0xFFEBEBEB),
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+      return Center(
+        child: CircularProgressIndicator(),
       );
     }
 
     if (widget.data.isEmpty) {
       return Container(
-        color: const Color(0xFFEBEBEB),
         alignment: Alignment.center,
         child: const NoData(),
       );
@@ -259,6 +257,7 @@ class _InfoTabState extends State<InfoTab> {
       handleSelectQtyItemUnit: widget.handleSelectQtyItemUnit,
       withMaklon: widget.withMaklon,
       maklon: widget.maklon,
+      onlySewing: widget.onlySewing,
     );
   }
 }

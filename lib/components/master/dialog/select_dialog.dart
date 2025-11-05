@@ -43,7 +43,7 @@ class _SelectDialogState extends State<SelectDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(4),
       ),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.85, // 85% of screen width
@@ -51,7 +51,7 @@ class _SelectDialogState extends State<SelectDialog> {
             MediaQuery.of(context).size.height * 0.6, // 60% of screen height
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(4),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -95,28 +95,56 @@ class _SelectDialogState extends State<SelectDialog> {
                       child: ListView.separated(
                         physics: const AlwaysScrollableScrollPhysics(),
                         itemCount: _dataList.length,
-                        itemBuilder: (BuildContext context, index) =>
-                            GestureDetector(
-                          onTap: () {
-                            widget.handleChangeValue(_dataList[index]);
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            child: Text(
-                              '${_dataList[index]["label"]}',
-                              style: TextStyle(
-                                fontWeight:
-                                    _dataList[index]["value"].toString() ==
-                                            widget.selected
-                                        ? FontWeight.w800
-                                        : FontWeight.w400,
-                                color: CustomTheme().colors('text-primary'),
-                                fontSize: CustomTheme().fontSize('md'),
+                        itemBuilder: (BuildContext context, index) {
+                          final isSelected =
+                              _dataList[index]['value'].toString() ==
+                                  widget.selected;
+
+                          return GestureDetector(
+                            onTap: () {
+                              // If same item tapped again -> unselect
+                              if (isSelected) {
+                                widget
+                                    .handleChangeValue(null); // clear selection
+                              } else {
+                                widget.handleChangeValue(
+                                    _dataList[index]); // select item
+                              }
+                              Navigator.pop(context); // close dialog
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // Label
+                                  Expanded(
+                                    child: Text(
+                                      '${_dataList[index]["label"]}',
+                                      style: TextStyle(
+                                        fontWeight: isSelected
+                                            ? FontWeight.w800
+                                            : FontWeight.w400,
+                                        color: CustomTheme()
+                                            .colors('text-primary'),
+                                        fontSize: CustomTheme().fontSize('md'),
+                                      ),
+                                    ),
+                                  ),
+                                  // Check icon for selected
+                                  if (isSelected)
+                                    const Icon(
+                                      Icons.check_circle,
+                                      color: Colors.green,
+                                      size: 20,
+                                    ),
+                                ],
                               ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                         separatorBuilder: (BuildContext context, int index) {
                           return const Divider(
                             height: 0,

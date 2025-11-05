@@ -71,15 +71,6 @@ class _CreateFormState extends State<CreateForm> {
   Widget build(BuildContext context) {
     final attachments = (widget.form['attachments'] as List?) ?? [];
 
-    if (widget.isLoading) {
-      return Container(
-        color: const Color(0xFFEBEBEB),
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
     return ListForm(
       formKey: widget.formKey,
       id: widget.id,

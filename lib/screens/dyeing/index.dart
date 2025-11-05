@@ -167,7 +167,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEBEBEB),
+      backgroundColor: const Color(0xFFf9fafc),
       appBar: CustomAppBar(
         title: 'Dyeing',
         onReturn: () {
@@ -231,9 +231,9 @@ class _DyeingScreenState extends State<DyeingScreen> {
             showActions: () {
               showModalBottomSheet(
                 context: context,
-                shape: const RoundedRectangleBorder(
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(0),
+                    top: Radius.circular(4),
                   ),
                 ),
                 builder: (context) {

@@ -21,19 +21,15 @@ class _ItemTabState extends State<ItemTab> {
         (widget.data?['items'] ?? []).cast<Map<String, dynamic>>();
 
     return Container(
-      color: const Color(0xFFEBEBEB),
       child: items.isEmpty
           ? const Center(child: Text('No Data'))
-          : ListView.separated(
+          : ListView.builder(
               padding: EdgeInsets.only(top: 8),
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final item = items[index];
                 return ListItem(item: item);
               },
-              separatorBuilder: (context, index) => const SizedBox(
-                height: 16,
-              ),
             ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/custom_card.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
@@ -17,21 +18,27 @@ class ListItem extends StatelessWidget {
             padding: PaddingColumn.screen,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        'Material',
+                        style: TextStyle(),
+                      ),
+                      CustomBadge(
+                          title: item['spk_item']['item']['sku']?.toString() ??
+                              '-'),
+                      Text(
+                        item['spk_item']['item']['name']?.toString() ?? '-',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
                       ViewText(
-                          viewLabel: 'SKU',
-                          viewValue: item['spk_item']?['item']['sku'] ?? '-'),
-                      ViewText(
-                          viewLabel: 'Nama',
-                          viewValue: item['spk_item']?['item']['name'] ?? '-'),
-                      ViewText(
-                          viewLabel: 'SPK',
-                          viewValue: item['spk_item']?['spk']['spk_no'] ?? '-'),
+                          viewLabel: 'Desain',
+                          viewValue: item['spk_item']?['design'] ?? '-'),
                     ].separatedBy(SizedBox(
                       height: 8,
                     ))),
@@ -40,13 +47,13 @@ class ListItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ViewText(
-                          viewLabel: 'Name',
-                          viewValue: item['spk_item']?['design'] ?? '-'),
+                          viewLabel: 'SPK',
+                          viewValue: item['spk_item']?['spk']['spk_no'] ?? '-'),
                       ViewText(
                           viewLabel: 'Warna',
                           viewValue: item['spk_item']?['color'] ?? '-'),
                       ViewText(
-                          viewLabel: 'Jumlah',
+                          viewLabel: 'Qty',
                           viewValue: '${item['qty']} ${item['unit']['code']}'),
                     ].separatedBy(SizedBox(
                       height: 8,

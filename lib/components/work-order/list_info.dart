@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/custom_card.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
-import 'package:textile_tracking/components/work-order/attachment_tab.dart';
-import 'package:textile_tracking/components/work-order/item_tab.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -21,110 +19,68 @@ class ListInfo extends StatefulWidget {
 class _ListInfoState extends State<ListInfo> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: const Color(0xFFEBEBEB),
-        padding: PaddingColumn.screen,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomCard(
-                child: Padding(
-                    padding: PaddingColumn.screen,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ViewText(
-                                viewLabel: 'Nomor',
-                                viewValue:
-                                    widget.data['wo_no']?.toString() ?? '-'),
-                            Text(
-                                'Dibuat pada ${widget.data['wo_date'] != null ? DateFormat("dd MMMM yyyy").format(DateTime.parse(widget.data['wo_date'])) : '-'} oleh ${widget.data['user']?['name'] ?? ''}')
-                          ].separatedBy(SizedBox(
-                            height: 8,
-                          )),
-                        ),
-                        CustomBadge(title: widget.data['status'] ?? '-'),
-                      ].separatedBy(SizedBox(
-                        width: 16,
-                      )),
-                    )),
-              ),
-              CustomCard(
-                child: Padding(
-                    padding: PaddingColumn.screen,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ViewText(
-                                viewLabel: 'Jumlah Greige',
-                                viewValue: widget.data['greige_qty'] != null &&
-                                        widget.data['greige_qty']
-                                            .toString()
-                                            .isNotEmpty
-                                    ? '${NumberFormat("#,###.#").format(double.tryParse(widget.data['greige_qty'].toString()) ?? 0)} ${widget.data['greige_unit']?['code'] ?? ''}'
-                                    : '-'),
-                            ViewText(
-                                viewLabel: 'Catatan',
-                                viewValue: widget.data?['notes'] ?? '-')
-                          ].separatedBy(SizedBox(
-                            height: 8,
-                          )),
-                        )
-                      ],
-                    )),
-              ),
-              CustomCard(
-                child: DefaultTabController(
-                    length: 2,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        final isPortrait = MediaQuery.of(context).orientation ==
-                            Orientation.portrait;
-                        final screenHeight = MediaQuery.of(context).size.height;
-
-                        final boxHeight = isPortrait
-                            ? screenHeight * 0.45
-                            : screenHeight * 0.7;
-
-                        return Column(
-                          children: [
-                            TabBar(tabs: [
-                              Tab(
-                                text: 'Barang',
-                              ),
-                              Tab(
-                                text: 'Lampiran',
-                              )
-                            ]),
-                            SizedBox(
-                              height: boxHeight,
-                              child: TabBarView(children: [
-                                ItemTab(
-                                  data: widget.data,
-                                ),
-                                AttachmentTab(
-                                  existingAttachment: widget.existingAttachment,
-                                )
-                              ]),
-                            )
-                          ],
-                        );
-                      },
-                    )),
-              )
-            ].separatedBy(SizedBox(
-              height: 16,
-            )),
-          ),
-        ));
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomCard(
+              child: Padding(
+                  padding: PaddingColumn.screen,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.data['wo_no']?.toString() ?? '-',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                              'Dibuat pada ${widget.data['wo_date'] != null ? DateFormat("dd MMMM yyyy").format(DateTime.parse(widget.data['wo_date'])) : '-'} oleh ${widget.data['user']?['name'] ?? ''}')
+                        ].separatedBy(SizedBox(
+                          height: 4,
+                        )),
+                      ),
+                      CustomBadge(title: widget.data['status'] ?? '-'),
+                    ],
+                  )),
+            ),
+            CustomCard(
+              child: Padding(
+                  padding: PaddingColumn.screen,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ViewText(
+                              viewLabel: 'Qty Greige',
+                              viewValue: widget.data['greige_qty'] != null &&
+                                      widget.data['greige_qty']
+                                          .toString()
+                                          .isNotEmpty
+                                  ? '${NumberFormat("#,###.#").format(double.tryParse(widget.data['greige_qty'].toString()) ?? 0)} ${widget.data['greige_unit']?['code'] ?? ''}'
+                                  : '-'),
+                          ViewText(
+                              viewLabel: 'Catatan',
+                              viewValue: widget.data?['notes'] ?? '-')
+                        ].separatedBy(SizedBox(
+                          height: 8,
+                        )),
+                      )
+                    ],
+                  )),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

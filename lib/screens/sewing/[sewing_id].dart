@@ -70,6 +70,7 @@ class _SewingDetailState extends State<SewingDetail> {
       withItemGrade: false,
       withQtyAndWeight: true,
       withMaklon: true,
+      onlySewing: true,
     );
   }
 }

@@ -18,17 +18,13 @@ class _InfoTabState extends State<InfoTab> {
     final existing = (widget.data?['attachments'] ?? []) as List<dynamic>;
 
     if (widget.isLoading) {
-      return Container(
-        color: const Color(0xFFEBEBEB),
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+      return Center(
+        child: CircularProgressIndicator(),
       );
     }
 
     if (widget.data.isEmpty) {
       return Container(
-        color: const Color(0xFFEBEBEB),
         alignment: Alignment.center,
         child: const NoData(),
       );

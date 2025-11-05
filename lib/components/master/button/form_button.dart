@@ -25,7 +25,8 @@ class FormButton extends StatelessWidget {
           backgroundColor: isDisabled || isLoading
               ? CustomTheme().buttonColor('In Progress')
               : (backgroundColor ?? CustomTheme().buttonColor('primary')),
-          shape: RoundedRectangleBorder()),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
       child: isLoading
           ? SizedBox(
               height: 20,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/home/index.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -80,9 +81,44 @@ class _AppDrawerState extends State<AppDrawer> {
                             title: Text(item.title),
                             children: item.subMenuItems.map((sub) {
                               return ListTile(
-                                title: Padding(
-                                  padding: const EdgeInsets.only(left: 16.0),
-                                  child: Text(sub.title),
+                                title: Row(
+                                  children: [
+                                    Icon(
+                                      sub.title == 'Pencelupan (Dyeing)'
+                                          ? Icons.invert_colors_on_outlined
+                                          : sub.title == 'Press Tumbler'
+                                              ? Icons.content_copy_rounded
+                                              : sub.title == 'Stenter'
+                                                  ? Icons.air
+                                                  : sub.title == 'Long Sitting'
+                                                      ? Icons
+                                                          .content_paste_outlined
+                                                      : sub.title ==
+                                                              'Long Hemming'
+                                                          ? Icons.cut
+                                                          : sub.title ==
+                                                                  'Cross Cutting'
+                                                              ? Icons.cut
+                                                              : sub.title ==
+                                                                      'Jahit (Sewing)'
+                                                                  ? Icons
+                                                                      .link_outlined
+                                                                  : sub.title ==
+                                                                          'Bordir (Embroidery)'
+                                                                      ? Icons
+                                                                          .color_lens_outlined
+                                                                      : sub.title ==
+                                                                              'Printing'
+                                                                          ? Icons
+                                                                              .print_rounded
+                                                                          : sub.title == 'Sorting'
+                                                                              ? Icons.sort_outlined
+                                                                              : Icons.stacked_bar_chart_outlined, // 👈 your fixed icon
+                                    ),
+                                    Text(sub.title),
+                                  ].separatedBy(SizedBox(
+                                    width: 16,
+                                  )),
                                 ),
                                 onTap: () {
                                   if (sub.route != null &&

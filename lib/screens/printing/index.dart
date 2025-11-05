@@ -169,7 +169,7 @@ class _PrintingScreenState extends State<PrintingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFFEBEBEB),
+        backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: 'Printing',
           onReturn: () {
@@ -194,7 +194,7 @@ class _PrintingScreenState extends State<PrintingScreen> {
               canCreate: _canCreate,
               canRead: _canRead,
               itemBuilder: (item) => ItemProcessCard(
-                label: 'Printing No',
+                label: 'No. Printing',
                 item: item,
                 titleKey: 'print_no',
                 subtitleKey: 'work_orders',
@@ -205,7 +205,14 @@ class _PrintingScreenState extends State<PrintingScreen> {
                 getStartBy: (item) => item.start_by?['name'] ?? '',
                 getEndBy: (item) => item.end_by?['name'] ?? '',
                 getStatus: (item) => item.status ?? '-',
-                customBadgeBuilder: (status) => CustomBadge(title: status),
+                customBadgeBuilder: (status) => CustomBadge(
+                    title: status,
+                    withStatus: true,
+                    status: item.status,
+                    withDifferentColor: true,
+                    color: status == 'Diproses'
+                        ? Color(0xFFfff3c6)
+                        : Color(0xffd1fae4)),
               ),
               onItemTap: (context, item) {
                 Navigator.push(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/dyeing/finish/create_form.dart';
+import 'package:textile_tracking/components/dyeing/create/item_tab.dart';
+import 'package:textile_tracking/components/dyeing/finish/form_tab.dart';
+import 'package:textile_tracking/components/dyeing/finish/info_tab.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
@@ -18,6 +20,7 @@ class FinishDyeingManual extends StatefulWidget {
   final Map<String, dynamic>? form;
   final handleSubmit;
   final handleChangeInput;
+  final processId;
 
   const FinishDyeingManual(
       {super.key,
@@ -25,7 +28,8 @@ class FinishDyeingManual extends StatefulWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.processId});
 
   @override
   State<FinishDyeingManual> createState() => _FinishDyeingManualState();
@@ -321,35 +325,83 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEBEBEB),
+      backgroundColor: const Color(0xFFf9fafc),
       appBar: CustomAppBar(
-        title: 'Finish Dyeing',
+        title: 'Selesai Dyeing',
         onReturn: () {
           Navigator.pop(context);
         },
       ),
-      body: CreateForm(
-        formKey: _formKey,
-        form: widget.form,
-        note: _noteController,
-        qty: _qtyController,
-        width: _widthController,
-        length: _lengthController,
-        handleSelectWo: _selectWorkOrder,
-        handleSelectUnit: _selectUnit,
-        handleSelectLengthUnit: _selectLengthUnit,
-        handleSelectWidthUnit: _selectWidthUnit,
-        handleChangeInput: widget.handleChangeInput,
-        handleSubmit: widget.handleSubmit,
-        id: widget.id,
-        data: woData,
-        dyeingId: dyeingId,
-        dyeingData: dyeingData,
-        isLoading: _firstLoading,
+      body: Column(
+        children: [
+          DefaultTabController(
+              length: 3,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isPortrait = MediaQuery.of(context).orientation ==
+                      Orientation.portrait;
+                  final screenHeight = MediaQuery.of(context).size.height;
+
+                  final boxHeight =
+                      isPortrait ? screenHeight * 0.45 : screenHeight * 0.7;
+
+                  return Column(
+                    children: [
+                      Container(
+                        color: Colors.white,
+                        child: TabBar(tabs: [
+                          Tab(
+                            text: 'Form',
+                          ),
+                          Tab(
+                            text: 'Informasi',
+                          ),
+                          Tab(
+                            text: 'Barang',
+                          ),
+                        ]),
+                      ),
+                      SizedBox(
+                        height: boxHeight,
+                        child: TabBarView(children: [
+                          InfoTab(
+                            data: woData,
+                            id: widget.id,
+                            isLoading: _firstLoading,
+                            form: widget.form,
+                            formKey: _formKey,
+                            handleSubmit: widget.handleSubmit,
+                            handleSelectMachine: null,
+                            handleSelectWorkOrder: _selectWorkOrder,
+                            handleSelectLengthUnit: _selectLengthUnit,
+                            handleChangeInput: widget.handleChangeInput,
+                            handleSelectUnit: _selectUnit,
+                            handleSelectWidthUnit: _selectWidthUnit,
+                            qty: _qtyController,
+                            dyeingData: dyeingData,
+                            dyeingId: dyeingId,
+                            length: _lengthController,
+                            width: _widthController,
+                            note: _noteController,
+                          ),
+                          FormTab(
+                            data: woData,
+                          ),
+                          ItemTab(
+                            data: woData,
+                          ),
+                        ]),
+                      )
+                    ],
+                  );
+                },
+              )),
+        ],
       ),
       bottomNavigationBar: SafeArea(
-        child: Padding(
+        child: Container(
           padding: PaddingColumn.screen,
+          color: Colors.white,
           child: ValueListenableBuilder<bool>(
             valueListenable: _isSubmitting,
             builder: (context, isSubmitting, _) {
@@ -364,11 +416,20 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
                   Expanded(
                       child: FormButton(
                     label: 'Simpan',
+                    isDisabled: widget.form?['wo_id'] == null ||
+                            widget.form?['length'] == null ||
+                            widget.form?['width'] == null ||
+                            widget.form?['qty'] == null ||
+                            widget.form?['unit_id'] == null
+                        ? true
+                        : false,
                     isLoading: isSubmitting,
                     onPressed: () async {
                       _isSubmitting.value = true;
                       try {
-                        await widget.handleSubmit(dyeingData['id'].toString());
+                        await widget.handleSubmit(dyeingData['id']
+                            ? dyeingData['id'].toString()
+                            : widget.processId);
                         setState(() {
                           // _initialQty = _qtyController.text;
                           // _initialLength = _lengthController.text;

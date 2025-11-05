@@ -39,6 +39,7 @@ class ProcessDetail<T> extends StatefulWidget {
   final withItemGrade;
   final withQtyAndWeight;
   final withMaklon;
+  final onlySewing;
 
   const ProcessDetail(
       {super.key,
@@ -56,7 +57,8 @@ class ProcessDetail<T> extends StatefulWidget {
       this.getMachineOptions,
       this.withItemGrade,
       this.withQtyAndWeight,
-      this.withMaklon});
+      this.withMaklon,
+      this.onlySewing});
 
   @override
   State<ProcessDetail<T>> createState() => _ProcessDetailState<T>();
@@ -451,6 +453,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFf9fafc),
       appBar: CustomAppBar(
         title: '${widget.label} Detail',
         onReturn: () => Navigator.pop(context),
@@ -499,12 +502,14 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
               qtyItem: _qtyItemController,
               withMaklon: widget.withMaklon,
               maklon: _maklonNameController,
+              onlySewing: widget.onlySewing,
             ),
           )
         ],
       ),
       bottomNavigationBar: SafeArea(
-        child: Padding(
+        child: Container(
+          color: Colors.white,
           padding: PaddingColumn.screen,
           child: ValueListenableBuilder<bool>(
             valueListenable: _isSubmitting,

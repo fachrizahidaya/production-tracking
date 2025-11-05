@@ -13,7 +13,6 @@ class FinishListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-        withBorder: true,
         child: Padding(
             padding: PaddingColumn.screen,
             child: Row(

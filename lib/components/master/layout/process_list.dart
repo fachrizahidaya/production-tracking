@@ -103,7 +103,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                             onRefresh: () async {
                               widget.handleRefetch();
                             },
-                            child: ListView.separated(
+                            child: ListView.builder(
                               controller: _scrollController,
                               physics: const AlwaysScrollableScrollPhysics(),
                               padding: const EdgeInsets.all(8),
@@ -132,8 +132,6 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                                   child: widget.itemBuilder(item),
                                 );
                               },
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(height: 16),
                             ),
                           ),
                         if (widget.canCreate)

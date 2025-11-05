@@ -10,7 +10,6 @@ import 'package:textile_tracking/components/master/layout/process_list.dart';
 import 'package:textile_tracking/components/master/sheet/process_sheet.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_date_safe.dart';
-import 'package:textile_tracking/helpers/util/margin_card.dart';
 import 'package:textile_tracking/models/process/cross_cutting.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/cross-cutting/%5Bcross_cutting_id%5D.dart';
@@ -170,7 +169,7 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFFEBEBEB),
+        backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: 'Cross Cutting',
           onReturn: () {
@@ -195,7 +194,7 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
               canCreate: _canCreate,
               canRead: _canRead,
               itemBuilder: (item) => ItemProcessCard(
-                label: 'Cross Cutting No',
+                label: 'No. Cross Cutting',
                 item: item,
                 titleKey: 'cc_no',
                 subtitleKey: 'work_orders',
@@ -206,7 +205,14 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
                 getStartBy: (item) => item.start_by?['name'] ?? '',
                 getEndBy: (item) => item.end_by?['name'] ?? '',
                 getStatus: (item) => item.status ?? '-',
-                customBadgeBuilder: (status) => CustomBadge(title: status),
+                customBadgeBuilder: (status) => CustomBadge(
+                    title: status,
+                    withStatus: true,
+                    status: item.status,
+                    withDifferentColor: true,
+                    color: status == 'Diproses'
+                        ? Color(0xFFfff3c6)
+                        : Color(0xffd1fae4)),
               ),
               onItemTap: (context, item) {
                 Navigator.push(

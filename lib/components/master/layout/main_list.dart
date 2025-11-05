@@ -103,7 +103,7 @@ class _MainListState<T> extends State<MainList<T>> {
                             onRefresh: () async {
                               widget.handleRefetch();
                             },
-                            child: ListView.separated(
+                            child: ListView.builder(
                               controller: _scrollController,
                               physics: const AlwaysScrollableScrollPhysics(),
                               padding: const EdgeInsets.all(8),
@@ -132,8 +132,8 @@ class _MainListState<T> extends State<MainList<T>> {
                                   child: widget.itemBuilder(item),
                                 );
                               },
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(height: 16),
+                              // separatorBuilder: (context, index) =>
+                              //     const SizedBox(height: 8),
                             ),
                           ),
                         if (widget.canCreate!)

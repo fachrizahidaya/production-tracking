@@ -27,10 +27,10 @@ class ItemDyeing extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Dyeing No: ${item.dyeing_no!}',
+                      'No. Dyeing: ${item.dyeing_no!}',
                     ),
                     Text(
-                      'WO No: ${item.work_orders['wo_no']}',
+                      'No. WO: ${item.work_orders['wo_no']}',
                     ),
                     if (item.rework == true)
                       Row(
@@ -54,17 +54,24 @@ class ItemDyeing extends StatelessWidget {
                   children: [
                     Text(
                       "Dibuat: ${formatDateSafe(item.start_time)}"
-                      "${item.start_by != null && item.start_by['name'] != null ? " by ${item.start_by['name']}" : ""}",
+                      "${item.start_by != null && item.start_by['name'] != null ? " Oleh ${item.start_by['name']}" : ""}",
                     ),
                     Text(
                       "Selesai: ${formatDateSafe(item.end_time)}"
-                      "${item.end_by != null && item.end_by['name'] != null ? " by ${item.end_by['name']}" : ""}",
+                      "${item.end_by != null && item.end_by['name'] != null ? " Oleh ${item.end_by['name']}" : ""}",
                     ),
                   ].separatedBy(SizedBox(
                     height: 8,
                   )),
                 ),
-                CustomBadge(title: item.status!)
+                CustomBadge(
+                    withStatus: true,
+                    status: item.status,
+                    title: item.status!,
+                    withDifferentColor: true,
+                    color: item.status == 'Diproses'
+                        ? Color(0xFFfff3c6)
+                        : Color(0xffd1fae4))
               ],
             )));
   }

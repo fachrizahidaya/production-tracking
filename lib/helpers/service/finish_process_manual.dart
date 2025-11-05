@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/form/finish/create_form.dart';
+import 'package:textile_tracking/components/master/layout/create_form_tab.dart';
+import 'package:textile_tracking/components/master/layout/create_info_tab.dart';
+import 'package:textile_tracking/components/master/layout/create_item_tab.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -529,42 +531,91 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEBEBEB),
+      backgroundColor: const Color(0xFFf9fafc),
       appBar: CustomAppBar(
         title: widget.title,
         onReturn: () {
           Navigator.pop(context);
         },
       ),
-      body: CreateForm(
-        formKey: _formKey,
-        form: widget.form,
-        note: _noteController,
-        weight: _weightController,
-        width: _widthController,
-        length: _lengthController,
-        handleSelectWo: _selectWorkOrder,
-        handleSelectUnit: _selectUnit,
-        handleChangeInput: widget.handleChangeInput,
-        handleSelectQtyUnitItem: _selectQtyItemUnit,
-        handleSubmit: widget.handleSubmit,
-        id: widget.id,
-        data: woData,
-        processId: processId,
-        processData: data,
-        isLoading: _firstLoading,
-        handleSelectLengthUnit: _selectLengthUnit,
-        handleSelectWidthUnit: _selectWidthUnit,
-        withItemGrade: widget.withItemGrade,
-        itemGradeOption: itemGradeOption,
-        handleSelectQtyUnit: _selectQtyUnit,
-        notes: _notesControllers,
-        qty: _qtyItemController,
-        withQtyAndWeight: widget.withQtyAndWeight,
-        qtyItem: _qtyControllers,
+      body: Column(
+        children: [
+          DefaultTabController(
+              length: 3,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isPortrait = MediaQuery.of(context).orientation ==
+                      Orientation.portrait;
+                  final screenHeight = MediaQuery.of(context).size.height;
+
+                  final boxHeight =
+                      isPortrait ? screenHeight * 0.45 : screenHeight * 0.7;
+
+                  return Column(
+                    children: [
+                      Container(
+                        color: Colors.white,
+                        child: TabBar(tabs: [
+                          Tab(
+                            text: 'Form',
+                          ),
+                          Tab(
+                            text: 'Informasi',
+                          ),
+                          Tab(
+                            text: 'Barang',
+                          ),
+                        ]),
+                      ),
+                      SizedBox(
+                        height: boxHeight,
+                        child: TabBarView(children: [
+                          CreateInfoTab(
+                            data: woData,
+                            id: widget.id,
+                            isLoading: _firstLoading,
+                            form: widget.form,
+                            formKey: _formKey,
+                            handleSubmit: widget.handleSubmit,
+                            handleSelectMachine: null,
+                            handleSelectWorkOrder: _selectWorkOrder,
+                            handleSelectLengthUnit: _selectLengthUnit,
+                            handleChangeInput: widget.handleChangeInput,
+                            handleSelectUnit: _selectUnit,
+                            handleSelectWidthUnit: _selectWidthUnit,
+                            qty: _qtyItemController,
+                            length: _lengthController,
+                            width: _widthController,
+                            note: _noteController,
+                            qtyItem: _qtyControllers,
+                            weight: _weightController,
+                            handleSelectWo: _selectWorkOrder,
+                            handleSelectQtyUnitItem: _selectQtyItemUnit,
+                            processId: processId,
+                            processData: data,
+                            withItemGrade: widget.withItemGrade,
+                            itemGradeOption: itemGradeOption,
+                            handleSelectQtyUnit: _selectQtyUnit,
+                            notes: _notesControllers,
+                            withQtyAndWeight: widget.withQtyAndWeight,
+                          ),
+                          CreateFormTab(
+                            data: woData,
+                          ),
+                          CreateItemTab(
+                            data: woData,
+                          ),
+                        ]),
+                      )
+                    ],
+                  );
+                },
+              )),
+        ],
       ),
       bottomNavigationBar: SafeArea(
-        child: Padding(
+        child: Container(
+          color: Colors.white,
           padding: PaddingColumn.screen,
           child: ValueListenableBuilder<bool>(
             valueListenable: _isSubmitting,

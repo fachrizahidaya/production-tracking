@@ -58,7 +58,7 @@ class ItemProcessCard extends StatelessWidget {
               children: [
                 Text('$label: ${itemField(item, titleKey)}'),
                 Text(
-                    '$subtitleLabel: ${nestedField(item, subtitleKey, subtitleField)}'),
+                    'No. WO: ${nestedField(item, subtitleKey, subtitleField)}'),
               ].separatedBy(const SizedBox(height: 8)),
             ),
 

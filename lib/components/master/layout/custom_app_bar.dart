@@ -17,6 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final id;
   final String? label;
   final user;
+  final status;
 
   const CustomAppBar(
       {super.key,
@@ -33,7 +34,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.id,
       this.label,
       this.handleLogout,
-      this.user});
+      this.user,
+      this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: const TextStyle(fontSize: 18),
       ),
       actions: [
-        if (hasOptions)
+        if (hasOptions && status != 'Selesai')
           PopupMenuButton<String>(
             color: Colors.white,
             offset: const Offset(0, 40),
@@ -90,8 +92,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               PopupMenuItem(
                 value: 'user',
                 child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       user,

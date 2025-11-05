@@ -28,7 +28,7 @@ class CancelButton extends StatelessWidget {
       style: TextButton.styleFrom(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(4),
           side: const BorderSide(color: Colors.grey),
         ),
       ),

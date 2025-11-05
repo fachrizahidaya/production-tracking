@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/create/create_form.dart';
+import 'package:textile_tracking/components/dyeing/create/info_tab.dart';
+import 'package:textile_tracking/components/dyeing/create/item_tab.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
@@ -186,25 +187,66 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFFEBEBEB),
+        backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: 'Mulai Dyeing',
           onReturn: () {
             Navigator.pop(context);
           },
         ),
-        body: CreateForm(
-          form: widget.form,
-          formKey: _formKey,
-          handleSubmit: widget.handleSubmit,
-          data: woData,
-          selectWorkOrder: _selectWorkOrder,
-          selectMachine: _selectMachine,
-          id: widget.id,
-          isLoading: _firstLoading,
+        body: Column(
+          children: [
+            DefaultTabController(
+                length: 2,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isPortrait = MediaQuery.of(context).orientation ==
+                        Orientation.portrait;
+                    final screenHeight = MediaQuery.of(context).size.height;
+
+                    final boxHeight =
+                        isPortrait ? screenHeight * 0.45 : screenHeight * 0.7;
+
+                    return Column(
+                      children: [
+                        Container(
+                          color: Colors.white,
+                          child: TabBar(tabs: [
+                            Tab(
+                              text: 'Form',
+                            ),
+                            Tab(
+                              text: 'Barang',
+                            ),
+                          ]),
+                        ),
+                        SizedBox(
+                          height: boxHeight,
+                          child: TabBarView(children: [
+                            InfoTab(
+                              data: woData,
+                              id: widget.id,
+                              isLoading: _firstLoading,
+                              form: widget.form,
+                              formKey: _formKey,
+                              handleSubmit: widget.handleSubmit,
+                              handleSelectMachine: _selectMachine,
+                              handleSelectWorkOrder: _selectWorkOrder,
+                            ),
+                            ItemTab(
+                              data: woData,
+                            ),
+                          ]),
+                        )
+                      ],
+                    );
+                  },
+                )),
+          ],
         ),
         bottomNavigationBar: SafeArea(
-          child: Padding(
+          child: Container(
+            color: Colors.white,
             padding: PaddingColumn.screen,
             child: ValueListenableBuilder<bool>(
               valueListenable: _isSubmitting,
@@ -221,17 +263,14 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
                         child: FormButton(
                       label: 'Simpan',
                       isLoading: isSubmitting,
+                      isDisabled: widget.form?['wo_id'] == null ||
+                              widget.form?['machine_id'] == null
+                          ? true
+                          : false,
                       onPressed: () async {
                         _isSubmitting.value = true;
                         try {
                           await widget.handleSubmit();
-                          setState(() {
-                            // _initialQty = _qtyController.text;
-                            // _initialLength = _lengthController.text;
-                            // _initialWidth = _widthController.text;
-                            // _initialNotes = _noteController.text;
-                            // _isChanged = false;
-                          });
                         } finally {
                           _isSubmitting.value = false;
                         }

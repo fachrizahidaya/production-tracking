@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
-import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 
 class AttachmentTab extends StatefulWidget {
@@ -33,13 +32,7 @@ class _AttachmentTabState extends State<AttachmentTab> {
         runSpacing: 8,
         children: [
           Row(
-            children: [
-              Text(
-                'Lampiran',
-                style: TextStyle(fontSize: 16),
-              ),
-              CustomTheme().hGap('sm'),
-            ],
+            children: [],
           ),
           if (widget.existingAttachment.isEmpty)
             const NoData()

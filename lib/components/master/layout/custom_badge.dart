@@ -1,22 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/helpers/util/margin_card.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class CustomBadge extends StatelessWidget {
   final String title;
-  const CustomBadge({super.key, required this.title});
+  final color;
+  final withDifferentColor;
+  final status;
+  final withStatus;
+
+  const CustomBadge(
+      {super.key,
+      required this.title,
+      this.color,
+      this.withDifferentColor = false,
+      this.status,
+      this.withStatus});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.green.shade100,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      padding: PaddingColumn.screen,
-      child: Text(
-        title,
-        style: TextStyle(fontSize: 12),
-      ),
-    );
+        decoration: BoxDecoration(
+          color: withDifferentColor == true ? color : Colors.green.shade100,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: MarginCard.screen,
+        child: Row(
+          children: [
+            if (withStatus == true)
+              Icon(
+                status == 'Diproses'
+                    ? Icons.access_time_outlined
+                    : Icons.task_alt_outlined,
+                size: 16,
+              ),
+            Text(
+              title,
+              style: TextStyle(fontSize: 14),
+            ),
+          ].separatedBy(SizedBox(
+            width: 4,
+          )),
+        ));
   }
 }

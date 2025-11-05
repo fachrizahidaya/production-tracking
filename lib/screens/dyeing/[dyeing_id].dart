@@ -480,8 +480,9 @@ class _DyeingDetailState extends State<DyeingDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFf9fafc),
       appBar: CustomAppBar(
-        title: 'Dyeing Detail',
+        title: 'Detail Proses Dyeing',
         onReturn: () {
           Navigator.pop(context);
         },
@@ -489,6 +490,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
         canUpdate: widget.canUpdate,
         handleDelete: _handleDelete,
         id: data['id'],
+        status: data['status'],
       ),
       body: Column(
         children: [
@@ -514,7 +516,8 @@ class _DyeingDetailState extends State<DyeingDetail> {
         ],
       ),
       bottomNavigationBar: SafeArea(
-        child: Padding(
+        child: Container(
+          color: Colors.white,
           padding: PaddingColumn.screen,
           child: ValueListenableBuilder<bool>(
             valueListenable: _isSubmitting,

@@ -9,6 +9,7 @@ class TextForm extends StatelessWidget {
   final controller;
   final handleChange;
   final isNumber;
+  final isDisabled;
 
   const TextForm(
       {super.key,
@@ -17,7 +18,8 @@ class TextForm extends StatelessWidget {
       this.formControl,
       this.controller,
       this.handleChange,
-      this.isNumber});
+      this.isNumber,
+      this.isDisabled = false});
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class TextForm extends StatelessWidget {
           )),
         ),
         TextFormField(
+          enabled: isDisabled == true ? false : true,
           controller: controller,
           style: TextStyle(fontSize: 16),
           decoration:

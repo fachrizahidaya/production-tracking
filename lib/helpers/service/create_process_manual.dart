@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/form/create/create_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/layout/finish_info_tab.dart';
+import 'package:textile_tracking/components/master/layout/finish_item_tab.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
@@ -228,29 +229,67 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEBEBEB),
+      backgroundColor: const Color(0xFFf9fafc),
       appBar: CustomAppBar(
         title: widget.title,
         onReturn: () => Navigator.pop(context),
       ),
-      body: CreateForm(
-        formKey: _formKey,
-        form: widget.form,
-        maklon: widget.maklon,
-        isMaklon: widget.isMaklon,
-        handleSubmit: widget.handleSubmit,
-        data: woData,
-        selectWorkOrder: _selectWorkOrder,
-        selectMachine: _selectMachine,
-        id: widget.id,
-        isLoading: _firstLoading,
-        withMaklonOrMachine: widget.withMaklonOrMachine,
-        withOnlyMaklon: widget.withOnlyMaklon,
-        withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
+      body: Column(
+        children: [
+          DefaultTabController(
+              length: 2,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isPortrait = MediaQuery.of(context).orientation ==
+                      Orientation.portrait;
+                  final screenHeight = MediaQuery.of(context).size.height;
+
+                  final boxHeight =
+                      isPortrait ? screenHeight * 0.45 : screenHeight * 0.7;
+
+                  return Column(
+                    children: [
+                      Container(
+                        color: Colors.white,
+                        child: TabBar(tabs: [
+                          Tab(
+                            text: 'Form',
+                          ),
+                          Tab(
+                            text: 'Barang',
+                          ),
+                        ]),
+                      ),
+                      SizedBox(
+                        height: boxHeight,
+                        child: TabBarView(children: [
+                          FinishInfoTab(
+                            data: woData,
+                            id: widget.id,
+                            isLoading: _firstLoading,
+                            form: widget.form,
+                            formKey: _formKey,
+                            handleSubmit: widget.handleSubmit,
+                            handleSelectMachine: _selectMachine,
+                            handleSelectWorkOrder: _selectWorkOrder,
+                            maklon: widget.maklon,
+                            withMaklonOrMachine: widget.withMaklonOrMachine,
+                            withOnlyMaklon: widget.withOnlyMaklon,
+                            withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
+                          ),
+                          FinishItemTab(data: woData),
+                        ]),
+                      )
+                    ],
+                  );
+                },
+              )),
+        ],
       ),
       bottomNavigationBar: SafeArea(
-        child: Padding(
+        child: Container(
           padding: PaddingColumn.screen,
+          color: Colors.white,
           child: ValueListenableBuilder<bool>(
             valueListenable: _isSubmitting,
             builder: (context, isSubmitting, _) {
@@ -266,6 +305,10 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
                       child: FormButton(
                     label: 'Simpan',
                     isLoading: isSubmitting,
+                    isDisabled: widget.form?['wo_id'] == null ||
+                            widget.form?['machine_id'] == null
+                        ? true
+                        : false,
                     onPressed: () async {
                       _isSubmitting.value = true;
                       try {

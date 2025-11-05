@@ -164,7 +164,7 @@ class _CreateProcessState extends State<CreateProcess> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEBEBEB),
+      backgroundColor: const Color(0xFFf9fafc),
       appBar: CustomAppBar(
         title: widget.title,
         onReturn: () => Navigator.pop(context),

@@ -26,6 +26,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
 
   final WorkOrderService _workOrderService = WorkOrderService();
   late List<dynamic> workOrderOption = [];
+  String processId = '';
 
   @override
   void initState() {
@@ -113,6 +114,18 @@ class _FinishDyeingState extends State<FinishDyeing> {
       _form['wo_id'] = data['id']?.toString();
       _form['no_wo'] = data['wo_no']?.toString() ?? '';
 
+      final woForm = {'wo_no': data['wo_no']};
+      final ValueNotifier<bool> isSubmitting = ValueNotifier(false);
+
+      final processResponse =
+          await _workOrderService.getProcessData(woForm, isSubmitting);
+
+      final processId = processResponse?['process_id']?.toString();
+
+      if (processResponse != null && processResponse['process_id'] != null) {
+        _form['process_id'] = processResponse['process_id'].toString();
+      }
+
       setState(() {
         _isLoading = false;
       });
@@ -122,6 +135,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
         MaterialPageRoute(
           builder: (context) => FinishDyeingManual(
             id: scannedId,
+            processId: processId,
             data: data,
             form: _form,
             handleSubmit: _handleSubmit,
@@ -208,9 +222,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFFEBEBEB),
+        backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
-          title: 'Finish Dyeing',
+          title: 'Selesai Dyeing',
           onReturn: () {
             Navigator.pop(context);
           },
@@ -233,6 +247,7 @@ Route _createRoute(dynamic form, handleSubmit, handleChangeInput) {
     pageBuilder: (context, animation, secondaryAnimation) => FinishDyeingManual(
       id: null,
       data: null,
+      processId: null,
       form: form,
       handleSubmit: handleSubmit,
       handleChangeInput: handleChangeInput,

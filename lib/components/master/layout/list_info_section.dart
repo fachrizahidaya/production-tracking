@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
@@ -129,7 +128,6 @@ class _ListInfoSectionState extends State<ListInfoSection> {
   Widget build(BuildContext context) {
     final data = widget.data;
     final grades = widget.existingGrades;
-    bool _isMaklon = widget.data['maklon'] == 1 ? true : false;
 
     return SingleChildScrollView(
         child: Container(
@@ -621,7 +619,6 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                       height: 16,
                     )),
                   ))),
-
         CustomCard(
             child: Padding(
           padding: PaddingColumn.screen,
@@ -675,35 +672,6 @@ class _ListInfoSectionState extends State<ListInfoSection> {
             ],
           ),
         ))
-        // ValueListenableBuilder<bool>(
-        //   valueListenable: widget.isSubmitting,
-        //   builder: (context, isSubmitting, _) {
-        //     return Align(
-        //       alignment: Alignment.center,
-        //       child: FormButton(
-        //         label: 'Simpan',
-        //         isLoading: isSubmitting,
-        //         onPressed: () async {
-        //           if (widget.handleUpdate == null) return;
-        //           widget.isSubmitting.value = true;
-        //           try {
-        //             await widget.handleUpdate!(data['id'].toString())
-        //                 .timeout(const Duration(seconds: 10));
-        //             setState(() {
-        //               _initialWeight = widget.weight?.text ?? '';
-        //               _initialLength = widget.length?.text ?? '';
-        //               _initialWidth = widget.width?.text ?? '';
-        //               _initialNotes = widget.note?.text ?? '';
-        //               _isChanged = false;
-        //             });
-        //           } finally {
-        //             widget.isSubmitting.value = false;
-        //           }
-        //         },
-        //       ),
-        //     );
-        //   },
-        // ),
       ]),
     ));
   }

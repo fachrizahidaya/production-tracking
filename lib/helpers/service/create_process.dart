@@ -90,10 +90,33 @@ class _CreateProcessState extends State<CreateProcess> {
 
   Future<void> _handleScan(code) async {
     setState(() => _isLoading = true);
+
     try {
-      final scannedId = code.toString();
-      final workOrderExists =
-          workOrderOption.any((item) => item['value'].toString() == scannedId);
+      final String woNo = code.toString();
+
+      if (woNo.isEmpty) {
+        _showSnackBar("Invalid QR Code");
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      final woForm = {'wo_no': woNo};
+      final ValueNotifier<bool> isSubmitting = ValueNotifier(false);
+
+      final processResponse =
+          await _workOrderService.getProcessData(woForm, isSubmitting);
+
+      if (processResponse == null) {
+        _showSnackBar("No process data found for this Work Order");
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      final String woId = processResponse['wo_id'].toString();
+      final String processId = processResponse['process_id'].toString();
+
+      final bool workOrderExists =
+          workOrderOption.any((item) => item['value'].toString() == woId);
 
       if (!workOrderExists) {
         _showSnackBar("Work Order not found");
@@ -101,11 +124,12 @@ class _CreateProcessState extends State<CreateProcess> {
         return;
       }
 
-      await _workOrderService.getDataView(scannedId);
+      await _workOrderService.getDataView(woId);
       final data = _workOrderService.dataView;
 
-      _form['wo_id'] = data['id']?.toString();
-      _form['no_wo'] = data['wo_no']?.toString() ?? '';
+      _form['wo_id'] = data['id']?.toString() ?? woId;
+      _form['no_wo'] = data['wo_no']?.toString() ?? woNo;
+      _form['process_id'] = processId;
 
       setState(() => _isLoading = false);
 
@@ -114,7 +138,7 @@ class _CreateProcessState extends State<CreateProcess> {
         _createRoute(
           widget.formPageBuilder(
             context,
-            scannedId,
+            woId,
             data,
             _form,
             _handleSubmit,

@@ -32,6 +32,7 @@ class FinishProcessManual extends StatefulWidget {
   final itemGradeOption;
   final fetchItemGrade;
   final getItemGradeOptions;
+  final processId;
 
   const FinishProcessManual(
       {super.key,
@@ -51,7 +52,8 @@ class FinishProcessManual extends StatefulWidget {
       this.itemGradeOption,
       this.fetchItemGrade,
       this.getItemGradeOptions,
-      this.withQtyAndWeight});
+      this.withQtyAndWeight,
+      this.processId});
 
   @override
   State<FinishProcessManual> createState() => _FinishProcessManualState();
@@ -91,6 +93,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     _lengthController.text = widget.form?['length']?.toString() ?? '';
     _widthController.text = widget.form?['width']?.toString() ?? '';
     _noteController.text = widget.form?['notes']?.toString() ?? '';
+
+    if (widget.processId != null) {
+      _getProcessView(widget.processId);
+    }
 
     if (widget.data != null) {
       woData = widget.data!;
@@ -530,129 +536,114 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFf9fafc),
-      appBar: CustomAppBar(
-        title: widget.title,
-        onReturn: () {
-          Navigator.pop(context);
-        },
-      ),
-      body: Column(
-        children: [
-          DefaultTabController(
-              length: 3,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final isPortrait = MediaQuery.of(context).orientation ==
-                      Orientation.portrait;
-                  final screenHeight = MediaQuery.of(context).size.height;
-
-                  final boxHeight =
-                      isPortrait ? screenHeight * 0.45 : screenHeight * 0.7;
-
-                  return Column(
-                    children: [
-                      Container(
-                        color: Colors.white,
-                        child: TabBar(tabs: [
-                          Tab(
-                            text: 'Form',
-                          ),
-                          Tab(
-                            text: 'Informasi',
-                          ),
-                          Tab(
-                            text: 'Barang',
-                          ),
-                        ]),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFf9fafc),
+        appBar: CustomAppBar(
+          title: widget.title,
+          onReturn: () {
+            Navigator.pop(context);
+          },
+        ),
+        body: Column(
+          children: [
+            Container(
+              color: Colors.white,
+              child: TabBar(tabs: [
+                Tab(
+                  text: 'Form',
+                ),
+                Tab(
+                  text: 'Informasi',
+                ),
+                Tab(
+                  text: 'Barang',
+                ),
+              ]),
+            ),
+            Expanded(
+              child: TabBarView(children: [
+                CreateInfoTab(
+                  data: woData,
+                  id: widget.id,
+                  isLoading: _firstLoading,
+                  form: widget.form,
+                  formKey: _formKey,
+                  handleSubmit: widget.handleSubmit,
+                  handleSelectMachine: null,
+                  handleSelectWorkOrder: _selectWorkOrder,
+                  handleSelectLengthUnit: _selectLengthUnit,
+                  handleChangeInput: widget.handleChangeInput,
+                  handleSelectUnit: _selectUnit,
+                  handleSelectWidthUnit: _selectWidthUnit,
+                  qty: _qtyItemController,
+                  length: _lengthController,
+                  width: _widthController,
+                  note: _noteController,
+                  qtyItem: _qtyControllers,
+                  weight: _weightController,
+                  handleSelectWo: _selectWorkOrder,
+                  handleSelectQtyUnitItem: _selectQtyItemUnit,
+                  processId: processId,
+                  processData: data,
+                  withItemGrade: widget.withItemGrade,
+                  itemGradeOption: itemGradeOption,
+                  handleSelectQtyUnit: _selectQtyUnit,
+                  notes: _notesControllers,
+                  withQtyAndWeight: widget.withQtyAndWeight,
+                ),
+                CreateFormTab(
+                  data: woData,
+                ),
+                CreateItemTab(
+                  data: woData,
+                ),
+              ]),
+            )
+          ],
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Container(
+            color: Colors.white,
+            padding: PaddingColumn.screen,
+            child: ValueListenableBuilder<bool>(
+              valueListenable: _isSubmitting,
+              builder: (context, isSubmitting, _) {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: CancelButton(
+                        label: 'Batal',
+                        onPressed: () => Navigator.pop(context),
                       ),
-                      SizedBox(
-                        height: boxHeight,
-                        child: TabBarView(children: [
-                          CreateInfoTab(
-                            data: woData,
-                            id: widget.id,
-                            isLoading: _firstLoading,
-                            form: widget.form,
-                            formKey: _formKey,
-                            handleSubmit: widget.handleSubmit,
-                            handleSelectMachine: null,
-                            handleSelectWorkOrder: _selectWorkOrder,
-                            handleSelectLengthUnit: _selectLengthUnit,
-                            handleChangeInput: widget.handleChangeInput,
-                            handleSelectUnit: _selectUnit,
-                            handleSelectWidthUnit: _selectWidthUnit,
-                            qty: _qtyItemController,
-                            length: _lengthController,
-                            width: _widthController,
-                            note: _noteController,
-                            qtyItem: _qtyControllers,
-                            weight: _weightController,
-                            handleSelectWo: _selectWorkOrder,
-                            handleSelectQtyUnitItem: _selectQtyItemUnit,
-                            processId: processId,
-                            processData: data,
-                            withItemGrade: widget.withItemGrade,
-                            itemGradeOption: itemGradeOption,
-                            handleSelectQtyUnit: _selectQtyUnit,
-                            notes: _notesControllers,
-                            withQtyAndWeight: widget.withQtyAndWeight,
-                          ),
-                          CreateFormTab(
-                            data: woData,
-                          ),
-                          CreateItemTab(
-                            data: woData,
-                          ),
-                        ]),
-                      )
-                    ],
-                  );
-                },
-              )),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          color: Colors.white,
-          padding: PaddingColumn.screen,
-          child: ValueListenableBuilder<bool>(
-            valueListenable: _isSubmitting,
-            builder: (context, isSubmitting, _) {
-              return Row(
-                children: [
-                  Expanded(
-                    child: CancelButton(
-                      label: 'Batal',
-                      onPressed: () => Navigator.pop(context),
                     ),
-                  ),
-                  Expanded(
-                      child: FormButton(
-                    label: 'Simpan',
-                    isLoading: isSubmitting,
-                    onPressed: () async {
-                      _isSubmitting.value = true;
-                      try {
-                        await widget.handleSubmit(data['id'].toString());
-                        setState(() {
-                          // _initialQty = _qtyController.text;
-                          // _initialLength = _lengthController.text;
-                          // _initialWidth = _widthController.text;
-                          // _initialNotes = _noteController.text;
-                          // _isChanged = false;
-                        });
-                      } finally {
-                        _isSubmitting.value = false;
-                      }
-                    },
-                  ))
-                ].separatedBy(SizedBox(
-                  width: 16,
-                )),
-              );
-            },
+                    Expanded(
+                        child: FormButton(
+                      label: 'Simpan',
+                      isLoading: isSubmitting,
+                      isDisabled: widget.form?['wo_id'] == null ||
+                              widget.form?['length'] == null ||
+                              widget.form?['width'] == null
+                          ? true
+                          : false,
+                      onPressed: () async {
+                        _isSubmitting.value = true;
+                        try {
+                          await widget.handleSubmit(data['id'] != null
+                              ? data['id'].toString()
+                              : widget.processId);
+                        } finally {
+                          _isSubmitting.value = false;
+                        }
+                      },
+                    ))
+                  ].separatedBy(SizedBox(
+                    width: 16,
+                  )),
+                );
+              },
+            ),
           ),
         ),
       ),

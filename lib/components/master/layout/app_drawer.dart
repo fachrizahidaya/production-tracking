@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/home/index.dart';
 
@@ -136,12 +135,6 @@ class _AppDrawerState extends State<AppDrawer> {
                 },
               ),
             ),
-            const Divider(),
-            // ListTile(
-            //   leading: const Icon(Icons.logout, color: Colors.red),
-            //   title: const Text('Logout'),
-            //   onTap: widget.handleLogout,
-            // ),
           ],
         ),
       ),

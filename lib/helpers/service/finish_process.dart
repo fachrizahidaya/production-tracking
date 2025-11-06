@@ -16,6 +16,7 @@ class FinishProcess extends StatefulWidget {
   final Widget Function(
     BuildContext context,
     dynamic id,
+    dynamic processId,
     Map<String, dynamic> data,
     Map<String, dynamic> form,
     Future<void> Function(String id) handleSubmit,
@@ -152,21 +153,44 @@ class _FinishProcessState extends State<FinishProcess> {
   Future<void> _handleScan(code) async {
     setState(() => _isLoading = true);
     try {
-      final scannedId = code.toString();
-      final exists =
-          workOrderOption.any((e) => e['value'].toString() == scannedId);
+      final String woNo = code.toString();
 
-      if (!exists) {
+      if (woNo.isEmpty) {
         _showSnackBar("Work Order not found");
         setState(() => _isLoading = false);
         return;
       }
 
-      await _workOrderService.getDataView(scannedId);
+      final woForm = {'wo_no': woNo};
+      final ValueNotifier<bool> isSubmitting = ValueNotifier(false);
+
+      final processResponse =
+          await _workOrderService.getProcessData(woForm, isSubmitting);
+
+      if (processResponse == null) {
+        _showSnackBar("No process data found for this Work Order");
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      final String woId = processResponse['wo_id'].toString();
+      final String processId = processResponse['process_id'].toString();
+
+      final bool workOrderExists =
+          workOrderOption.any((item) => item['value'].toString() == woId);
+
+      if (!workOrderExists) {
+        _showSnackBar("Work Order not found in the list");
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      await _workOrderService.getDataView(woId);
       final data = _workOrderService.dataView;
 
-      _form['wo_id'] = data['id']?.toString();
-      _form['no_wo'] = data['wo_no']?.toString() ?? '';
+      _form['wo_id'] = data['id']?.toString() ?? woId;
+      _form['no_wo'] = data['wo_no']?.toString() ?? woNo;
+      _form['process_id'] = processId;
 
       setState(() => _isLoading = false);
 
@@ -174,7 +198,8 @@ class _FinishProcessState extends State<FinishProcess> {
           context,
           _createRoute(widget.formPageBuilder(
             context,
-            scannedId,
+            woId,
+            processId,
             data,
             _form,
             _handleSubmit,
@@ -231,8 +256,8 @@ class _FinishProcessState extends State<FinishProcess> {
         handleScan: _handleScan,
         handleSubmit: _handleSubmit,
         handleRoute: (form, handleSubmit, handleChangeInput) => _createRoute(
-            widget.formPageBuilder(
-                context, null, {}, form, handleSubmit, handleChangeInput)),
+            widget.formPageBuilder(context, null, null, {}, form, handleSubmit,
+                handleChangeInput)),
         isLoading: _isLoading,
         handleChangeInput: _handleChangeInput,
       ),

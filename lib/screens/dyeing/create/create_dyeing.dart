@@ -78,42 +78,61 @@ class _CreateDyeingState extends State<CreateDyeing> {
     });
 
     try {
-      final scannedId = code.toString();
+      final String woNo =
+          code.toString(); // QR contains wo_no like "WO/25/10/00059"
 
-      final workOrderExists =
-          workOrderOption.any((item) => item['value'].toString() == scannedId);
-
-      if (!workOrderExists) {
-        _showSnackBar("Work Order not found");
-
-        setState(() {
-          _isLoading = false;
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Work Order not found")),
-        );
-
+      if (woNo.isEmpty) {
+        _showSnackBar("Invalid QR Code");
+        setState(() => _isLoading = false);
         return;
       }
 
-      await _workOrderService.getDataView(scannedId);
+      // Prepare request body
+      final woForm = {'wo_no': woNo};
+      final ValueNotifier<bool> isSubmitting = ValueNotifier(false);
 
+      // Fetch process data using wo_no
+      final processResponse =
+          await _workOrderService.getProcessData(woForm, isSubmitting);
+
+      if (processResponse == null) {
+        _showSnackBar("No process data found for this Work Order");
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      final String woId = processResponse['wo_id'].toString();
+      final String processId = processResponse['process_id'].toString();
+
+      // Check if work order exists
+      final bool workOrderExists =
+          workOrderOption.any((item) => item['value'].toString() == woId);
+
+      if (!workOrderExists) {
+        _showSnackBar("Work Order not found");
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      // If exists → continue to get WO details and navigate
+      await _workOrderService.getDataView(woId);
       final data = _workOrderService.dataView;
 
-      _form['wo_id'] = data['id']?.toString();
-      _form['no_wo'] = data['wo_no']?.toString() ?? '';
+      // Update form values
+      _form['wo_id'] = data['id']?.toString() ?? woId;
+      _form['no_wo'] = data['wo_no']?.toString() ?? woNo;
+      _form['process_id'] = processId;
 
       setState(() {
         _isLoading = false;
       });
 
+      // Navigate to FinishDyeingManual
       Navigator.push(
-        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
           builder: (context) => CreateDyeingManual(
-            id: scannedId,
+            id: woId,
             data: data,
             form: _form,
             handleSubmit: _handleSubmit,
@@ -124,7 +143,6 @@ class _CreateDyeingState extends State<CreateDyeing> {
       setState(() {
         _isLoading = false;
       });
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: ${e.toString()}")),
       );

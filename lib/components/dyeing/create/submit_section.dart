@@ -56,22 +56,25 @@ class _SubmitSectionState extends State<SubmitSection> {
                             child: Stack(
                           children: [
                             MobileScanner(
-                              controller: widget.controller,
-                              onDetect: (BarcodeCapture capture) {
+                              controller: MobileScannerController(
+                                detectionSpeed: DetectionSpeed.noDuplicates,
+                              ),
+                              onDetect: (capture) {
                                 final List<Barcode> barcodes = capture.barcodes;
-                                for (final barcode in barcodes) {
-                                  final String code = barcode.rawValue ?? "---";
 
-                                  if (int.tryParse(code) != null) {
-                                    int id = int.parse(code);
+                                for (final barcode in barcodes) {
+                                  final String? code = barcode.rawValue;
+
+                                  if (code != null && code.isNotEmpty) {
                                     widget.controller.stop();
                                     setState(() {
                                       _isScannerStopped = true;
                                     });
-                                    widget.handleScan(id);
-                                  }
 
-                                  break;
+                                    widget.handleScan(code);
+
+                                    break;
+                                  }
                                 }
                               },
                             ),

@@ -18,60 +18,64 @@ class ItemDyeing extends StatelessWidget {
     return CustomCard(
         child: Padding(
             padding: PaddingColumn.screen,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Column(
               children: [
-                Column(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      'No. Dyeing: ${item.dyeing_no!}',
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'No. Dyeing: ${item.dyeing_no!}',
+                        ),
+                        Text(
+                          'No. WO: ${item.work_orders['wo_no']}',
+                        ),
+                        if (item.rework == true)
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.replay_outlined,
+                                size: 16,
+                              ),
+                              Text(
+                                'Rework',
+                              ),
+                            ],
+                          )
+                      ].separatedBy(SizedBox(
+                        height: 8,
+                      )),
                     ),
-                    Text(
-                      'No. WO: ${item.work_orders['wo_no']}',
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Dibuat: ${formatDateSafe(item.start_time)}"
+                          "${item.start_by != null && item.start_by['name'] != null ? " Oleh ${item.start_by['name']}" : ""}",
+                        ),
+                        Text(
+                          "Selesai: ${formatDateSafe(item.end_time)}"
+                          "${item.end_by != null && item.end_by['name'] != null ? " Oleh ${item.end_by['name']}" : ""}",
+                        ),
+                      ].separatedBy(SizedBox(
+                        height: 8,
+                      )),
                     ),
-                    if (item.rework == true)
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.replay_outlined,
-                            size: 16,
-                          ),
-                          Text(
-                            'Rework',
-                          ),
-                        ],
-                      )
-                  ].separatedBy(SizedBox(
-                    height: 8,
-                  )),
+                    CustomBadge(
+                        withStatus: true,
+                        status: item.status,
+                        title: item.status!,
+                        withDifferentColor: true,
+                        color: item.status == 'Diproses'
+                            ? Color(0xFFfff3c6)
+                            : Color(0xffd1fae4))
+                  ],
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Dibuat: ${formatDateSafe(item.start_time)}"
-                      "${item.start_by != null && item.start_by['name'] != null ? " Oleh ${item.start_by['name']}" : ""}",
-                    ),
-                    Text(
-                      "Selesai: ${formatDateSafe(item.end_time)}"
-                      "${item.end_by != null && item.end_by['name'] != null ? " Oleh ${item.end_by['name']}" : ""}",
-                    ),
-                  ].separatedBy(SizedBox(
-                    height: 8,
-                  )),
-                ),
-                CustomBadge(
-                    withStatus: true,
-                    status: item.status,
-                    title: item.status!,
-                    withDifferentColor: true,
-                    color: item.status == 'Diproses'
-                        ? Color(0xFFfff3c6)
-                        : Color(0xffd1fae4))
               ],
             )));
   }

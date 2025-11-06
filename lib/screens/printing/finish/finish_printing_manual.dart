@@ -8,6 +8,7 @@ class FinishPrintingManual extends StatefulWidget {
   final Map<String, dynamic>? form;
   final handleSubmit;
   final handleChangeInput;
+  final processId;
 
   const FinishPrintingManual(
       {super.key,
@@ -15,7 +16,8 @@ class FinishPrintingManual extends StatefulWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.processId});
 
   @override
   State<FinishPrintingManual> createState() => _FinishPrintingManualState();
@@ -50,6 +52,7 @@ class _FinishPrintingManualState extends State<FinishPrintingManual> {
       idProcess: 'printing_id',
       withItemGrade: false,
       withQtyAndWeight: true,
+      processId: widget.processId,
     );
   }
 }

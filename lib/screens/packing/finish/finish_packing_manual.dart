@@ -8,6 +8,7 @@ class FinishPackingManual extends StatefulWidget {
   final Map<String, dynamic>? form;
   final handleSubmit;
   final handleChangeInput;
+  final processId;
 
   const FinishPackingManual(
       {super.key,
@@ -15,7 +16,8 @@ class FinishPackingManual extends StatefulWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.processId});
 
   @override
   State<FinishPackingManual> createState() => _FinishPackingManualState();
@@ -51,6 +53,7 @@ class _FinishPackingManualState extends State<FinishPackingManual> {
       withItemGrade: true,
       fetchItemGrade: (service) => service.fetchOptions(),
       getItemGradeOptions: (service) => service.dataListOption,
+      processId: widget.processId,
     );
   }
 }

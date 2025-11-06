@@ -8,6 +8,7 @@ class FinishSortingManual extends StatefulWidget {
   final Map<String, dynamic>? form;
   final handleSubmit;
   final handleChangeInput;
+  final processId;
 
   const FinishSortingManual(
       {super.key,
@@ -15,7 +16,8 @@ class FinishSortingManual extends StatefulWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.processId});
 
   @override
   State<FinishSortingManual> createState() => _FinishSortingManualState();
@@ -51,6 +53,7 @@ class _FinishSortingManualState extends State<FinishSortingManual> {
       withItemGrade: true,
       fetchItemGrade: (service) => service.fetchOptions(),
       getItemGradeOptions: (service) => service.dataListOption,
+      processId: widget.processId,
     );
   }
 }

@@ -8,6 +8,7 @@ class FinishCrossCuttingManual extends StatefulWidget {
   final Map<String, dynamic>? form;
   final handleSubmit;
   final handleChangeInput;
+  final processId;
 
   const FinishCrossCuttingManual(
       {super.key,
@@ -15,7 +16,8 @@ class FinishCrossCuttingManual extends StatefulWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.processId});
 
   @override
   State<FinishCrossCuttingManual> createState() =>
@@ -51,6 +53,7 @@ class _FinishCrossCuttingManualState extends State<FinishCrossCuttingManual> {
       idProcess: 'cross_cutting_id',
       withItemGrade: false,
       withQtyAndWeight: true,
+      processId: widget.processId,
     );
   }
 }

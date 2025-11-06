@@ -289,21 +289,11 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
                         child: FormButton(
                       label: 'Simpan',
                       isLoading: isSubmitting,
-                      isDisabled: widget.form?['wo_id'] == null ||
-                              widget.form?['machine_id'] == null
-                          ? true
-                          : false,
+                      isDisabled: widget.form?['wo_id'] == null ? true : false,
                       onPressed: () async {
                         _isSubmitting.value = true;
                         try {
                           await widget.handleSubmit();
-                          setState(() {
-                            // _initialQty = _qtyController.text;
-                            // _initialLength = _lengthController.text;
-                            // _initialWidth = _widthController.text;
-                            // _initialNotes = _noteController.text;
-                            // _isChanged = false;
-                          });
                         } finally {
                           _isSubmitting.value = false;
                         }

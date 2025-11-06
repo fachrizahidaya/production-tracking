@@ -131,7 +131,7 @@ class _FinishSubmitSectionState extends State<FinishSubmitSection> {
         ),
         if (widget.isLoading)
           Container(
-            color: CustomTheme().buttonColor('In Progress'),
+            color: Color(0xFFf9fafc),
             child: const Center(
               child: CircularProgressIndicator(),
             ),

@@ -105,23 +105,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     _handleFetchWorkOrder();
     _handleFetchItemGrade();
     _handleFetchUnit();
-    // _initControllers();
 
     super.initState();
-  }
-
-  void _initControllers() {
-    final length = widget.itemGradeOption.length;
-
-    _qtyControllers = List.generate(length, (index) => TextEditingController());
-    _notesControllers =
-        List.generate(length, (index) => TextEditingController());
-    _selectedUnits = List.generate(
-        length,
-        (index) => {
-              'value': null,
-              'label': '',
-            });
   }
 
   Future<void> _handleFetchWorkOrder() async {
@@ -145,15 +130,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       setState(() {
         workOrderOption = data;
       });
-      // await Provider.of<OptionWorkOrderService>(context, listen: false)
-      //     .fetchPressFinishOptions();
-      // // ignore: use_build_context_synchronously
-      // final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-      //     .dataListPressFinish;
-
-      // setState(() {
-      //   workOrderOption = result;
-      // });
     } catch (e) {
       debugPrint("Error fetching work orders: $e");
     } finally {
@@ -235,17 +211,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
     setState(() {
       data = widget.processService.dataView;
-      // final grades = data['grades'] ?? [];
-      // _qtyControllers = List.generate(grades.length, (i) {
-      //   return TextEditingController(
-      //     text: grades[i]['qty']?.toString() ?? '',
-      //   );
-      // });
-      // _notesControllers = List.generate(grades.length, (i) {
-      //   return TextEditingController(
-      //     text: grades[i]['notes']?.toString() ?? '',
-      //   );
-      // });
 
       if (data['length'] != null) {
         _lengthController.text = data['length'].toString();

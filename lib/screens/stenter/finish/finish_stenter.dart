@@ -85,6 +85,7 @@ class _FinishStenterState extends State<FinishStenter> {
               handleChangeInput) =>
           FinishStenterManual(
         id: id,
+        processId: processId,
         data: data,
         form: form,
         handleSubmit: handleSubmit,

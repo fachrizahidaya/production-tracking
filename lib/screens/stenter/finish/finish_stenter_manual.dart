@@ -8,6 +8,7 @@ class FinishStenterManual extends StatefulWidget {
   final Map<String, dynamic>? form;
   final handleSubmit;
   final handleChangeInput;
+  final processId;
 
   const FinishStenterManual(
       {super.key,
@@ -15,7 +16,8 @@ class FinishStenterManual extends StatefulWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.processId});
 
   @override
   State<FinishStenterManual> createState() => _FinishStenterManualState();
@@ -49,6 +51,7 @@ class _FinishStenterManualState extends State<FinishStenterManual> {
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'stenter_id',
       withItemGrade: false,
+      processId: widget.processId,
     );
   }
 }

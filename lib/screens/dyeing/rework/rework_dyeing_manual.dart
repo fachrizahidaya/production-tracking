@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/dyeing/create/info_tab.dart';
 import 'package:textile_tracking/components/dyeing/create/item_tab.dart';
-import 'package:textile_tracking/components/dyeing/rework/create_form.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
@@ -363,13 +362,6 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                       _isSubmitting.value = true;
                       try {
                         await widget.handleSubmit(dyeingData['id'].toString());
-                        setState(() {
-                          // _initialQty = _qtyController.text;
-                          // _initialLength = _lengthController.text;
-                          // _initialWidth = _widthController.text;
-                          // _initialNotes = _noteController.text;
-                          // _isChanged = false;
-                        });
                       } finally {
                         _isSubmitting.value = false;
                       }

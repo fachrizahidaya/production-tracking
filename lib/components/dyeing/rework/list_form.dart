@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/create/info_tab.dart';
 import 'package:textile_tracking/components/dyeing/create/item_tab.dart';
-import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_card.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
@@ -140,34 +139,6 @@ class _ListFormState extends State<ListForm> {
                       required: false,
                     ),
                   )),
-
-                  // ValueListenableBuilder<bool>(
-                  //   valueListenable: widget.isSubmitting,
-                  //   builder: (context, isSubmitting, _) {
-                  //     return Align(
-                  //         alignment: Alignment.center,
-                  //         child: FormButton(
-                  //           label: 'Submit',
-                  //           onPressed: () async {
-                  //             widget.isSubmitting.value = true;
-                  //             try {
-                  //               await widget.handleSubmit(widget.dyeingId);
-                  //               setState(() {
-                  //                 _initialQty = widget.qty.text;
-                  //                 _initialLength = widget.length.text;
-                  //                 _initialWidth = widget.width.text;
-                  //                 _initialNotes = widget.note.text;
-                  //                 _isChanged = false;
-                  //               });
-                  //             } finally {
-                  //               widget.isSubmitting.value = false;
-                  //             }
-                  //           },
-                  //           isLoading: isSubmitting,
-                  //           isDisabled: widget.isFormIncomplete,
-                  //         ));
-                  //   },
-                  // )
                 ].separatedBy(SizedBox(
                   height: 16,
                 )),

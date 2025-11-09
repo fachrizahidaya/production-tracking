@@ -1,9 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/service/finish_process.dart';
-import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/printing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
@@ -17,13 +15,8 @@ class FinishPrinting extends StatefulWidget {
 }
 
 class _FinishPrintingState extends State<FinishPrinting> {
-  final MobileScannerController _controller = MobileScannerController();
-  bool _isLoading = false;
-  bool _isScannerStopped = false;
   int number = 0;
-  final ValueNotifier<bool> _firstLoading = ValueNotifier(false);
 
-  final WorkOrderService _workOrderService = WorkOrderService();
   late List<dynamic> workOrderOption = [];
 
   final Map<String, dynamic> _form = {
@@ -68,12 +61,6 @@ class _FinishPrintingState extends State<FinishPrinting> {
     });
   }
 
-  void _handleChangeInput(fieldName, value) {
-    setState(() {
-      _form[fieldName] = value;
-    });
-  }
-
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchPrintingFinishOptions();
@@ -83,120 +70,6 @@ class _FinishPrintingState extends State<FinishPrinting> {
     setState(() {
       workOrderOption = result;
     });
-  }
-
-  Future<void> _handleScan(code) async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final scannedId = code.toString();
-
-      final workOrderExists =
-          workOrderOption.any((item) => item['value'].toString() == scannedId);
-
-      if (!workOrderExists) {
-        setState(() {
-          _isLoading = false;
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Work Order not found")),
-        );
-
-        return;
-      }
-
-      await _workOrderService.getDataView(scannedId);
-
-      final data = _workOrderService.dataView;
-
-      _form['wo_id'] = data['id']?.toString();
-      _form['no_wo'] = data['wo_no']?.toString() ?? '';
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => FinishPrintingManual(
-            id: scannedId,
-            data: data,
-            form: _form,
-            handleSubmit: _handleSubmit,
-            handleChangeInput: _handleChangeInput,
-          ),
-        ),
-      );
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: ${e.toString()}")),
-      );
-    }
-  }
-
-  Future<void> _handleSubmit(id) async {
-    try {
-      final printing = Printing(
-          wo_id: _form['wo_id'] != null
-              ? int.tryParse(_form['wo_id'].toString())
-              : null,
-          unit_id: _form['item_unit_id'] != null
-              ? int.tryParse(_form['item_unit_id'].toString())
-              : null,
-          weight_unit_id: _form['weight_unit_id'] != null
-              ? int.tryParse(_form['weight_unit_id'].toString())
-              : null,
-          width_unit_id: _form['width_unit_id'] != null
-              ? int.tryParse(_form['width_unit_id'].toString())
-              : null,
-          length_unit_id: _form['length_unit_id'] != null
-              ? int.tryParse(_form['length_unit_id'].toString())
-              : null,
-          machine_id: _form['machine_id'] != null
-              ? int.tryParse(_form['machine_id'].toString())
-              : null,
-          qty: (_form['item_qty']),
-          weight: (_form['weight']),
-          width: (_form['width']),
-          length: (_form['length']),
-          notes: _form['notes'],
-          status: _form['status'],
-          start_time: _form['start_time'],
-          end_time: _form['end_time'],
-          start_by_id: _form['start_by_id'] != null
-              ? int.tryParse(_form['start_by_id'].toString())
-              : null,
-          end_by_id: _form['end_by_id'] != null
-              ? int.tryParse(_form['end_by_id'])
-              : null,
-          attachments: _form['attachments'],
-          maklon: (_form['maklon']),
-          maklon_name: (_form['maklon_name']));
-
-      final message = await Provider.of<PrintingService>(context, listen: false)
-          .finishItem(id, printing, _firstLoading);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
-
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/printings',
-        (Route<dynamic> route) => false,
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
-    }
   }
 
   @override
@@ -212,10 +85,11 @@ class _FinishPrintingState extends State<FinishPrinting> {
       fetchWorkOrder: (service) async =>
           await service.fetchPrintingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
-      formPageBuilder:
-          (context, id, data, form, handleSubmit, handleChangeInput) =>
-              FinishPrintingManual(
+      formPageBuilder: (context, id, processId, data, form, handleSubmit,
+              handleChangeInput) =>
+          FinishPrintingManual(
         id: id,
+        processId: processId,
         data: data,
         form: form,
         handleSubmit: handleSubmit,

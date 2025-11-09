@@ -186,103 +186,88 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
-        appBar: CustomAppBar(
-          title: 'Mulai Dyeing',
-          onReturn: () {
-            Navigator.pop(context);
-          },
-        ),
-        body: Column(
-          children: [
-            DefaultTabController(
-                length: 2,
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isPortrait = MediaQuery.of(context).orientation ==
-                        Orientation.portrait;
-                    final screenHeight = MediaQuery.of(context).size.height;
-
-                    final boxHeight =
-                        isPortrait ? screenHeight * 0.45 : screenHeight * 0.7;
-
-                    return Column(
-                      children: [
-                        Container(
-                          color: Colors.white,
-                          child: TabBar(tabs: [
-                            Tab(
-                              text: 'Form',
-                            ),
-                            Tab(
-                              text: 'Barang',
-                            ),
-                          ]),
-                        ),
-                        SizedBox(
-                          height: boxHeight,
-                          child: TabBarView(children: [
-                            InfoTab(
-                              data: woData,
-                              id: widget.id,
-                              isLoading: _firstLoading,
-                              form: widget.form,
-                              formKey: _formKey,
-                              handleSubmit: widget.handleSubmit,
-                              handleSelectMachine: _selectMachine,
-                              handleSelectWorkOrder: _selectWorkOrder,
-                            ),
-                            ItemTab(
-                              data: woData,
-                            ),
-                          ]),
-                        )
-                      ],
-                    );
-                  },
-                )),
-          ],
-        ),
-        bottomNavigationBar: SafeArea(
-          child: Container(
-            color: Colors.white,
-            padding: PaddingColumn.screen,
-            child: ValueListenableBuilder<bool>(
-              valueListenable: _isSubmitting,
-              builder: (context, isSubmitting, _) {
-                return Row(
-                  children: [
-                    Expanded(
-                      child: CancelButton(
-                        label: 'Batal',
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ),
-                    Expanded(
-                        child: FormButton(
-                      label: 'Simpan',
-                      isLoading: isSubmitting,
-                      isDisabled: widget.form?['wo_id'] == null ||
-                              widget.form?['machine_id'] == null
-                          ? true
-                          : false,
-                      onPressed: () async {
-                        _isSubmitting.value = true;
-                        try {
-                          await widget.handleSubmit();
-                        } finally {
-                          _isSubmitting.value = false;
-                        }
-                      },
-                    ))
-                  ].separatedBy(SizedBox(
-                    width: 16,
-                  )),
-                );
-              },
-            ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+          backgroundColor: const Color(0xFFf9fafc),
+          appBar: CustomAppBar(
+            title: 'Mulai Dyeing',
+            onReturn: () {
+              Navigator.pop(context);
+            },
           ),
-        ));
+          body: Column(
+            children: [
+              Container(
+                color: Colors.white,
+                child: TabBar(tabs: [
+                  Tab(
+                    text: 'Form',
+                  ),
+                  Tab(
+                    text: 'Barang',
+                  ),
+                ]),
+              ),
+              Expanded(
+                child: TabBarView(children: [
+                  InfoTab(
+                    data: woData,
+                    id: widget.id,
+                    isLoading: _firstLoading,
+                    form: widget.form,
+                    formKey: _formKey,
+                    handleSubmit: widget.handleSubmit,
+                    handleSelectMachine: _selectMachine,
+                    handleSelectWorkOrder: _selectWorkOrder,
+                  ),
+                  ItemTab(
+                    data: woData,
+                  ),
+                ]),
+              )
+            ],
+          ),
+          bottomNavigationBar: SafeArea(
+            child: Container(
+              color: Colors.white,
+              padding: PaddingColumn.screen,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: _isSubmitting,
+                builder: (context, isSubmitting, _) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: CancelButton(
+                          label: 'Batal',
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ),
+                      Expanded(
+                          child: FormButton(
+                        label: 'Simpan',
+                        isLoading: isSubmitting,
+                        isDisabled: widget.form?['wo_id'] == null ||
+                                widget.form?['machine_id'] == null
+                            ? true
+                            : false,
+                        onPressed: () async {
+                          _isSubmitting.value = true;
+                          try {
+                            await widget.handleSubmit();
+                          } finally {
+                            _isSubmitting.value = false;
+                          }
+                        },
+                      ))
+                    ].separatedBy(SizedBox(
+                      width: 16,
+                    )),
+                  );
+                },
+              ),
+            ),
+          )),
+    );
   }
 }

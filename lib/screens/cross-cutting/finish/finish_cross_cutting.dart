@@ -209,10 +209,11 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
       fetchWorkOrder: (service) async =>
           await service.fetchCuttingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
-      formPageBuilder:
-          (context, id, data, form, handleSubmit, handleChangeInput) =>
-              FinishCrossCuttingManual(
+      formPageBuilder: (context, id, processId, data, form, handleSubmit,
+              handleChangeInput) =>
+          FinishCrossCuttingManual(
         id: id,
+        processId: processId,
         data: data,
         form: form,
         handleSubmit: handleSubmit,

@@ -8,6 +8,7 @@ class FinishLongSittingManual extends StatefulWidget {
   final Map<String, dynamic>? form;
   final handleSubmit;
   final handleChangeInput;
+  final processId;
 
   const FinishLongSittingManual(
       {super.key,
@@ -15,7 +16,8 @@ class FinishLongSittingManual extends StatefulWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.processId});
 
   @override
   State<FinishLongSittingManual> createState() =>
@@ -50,6 +52,7 @@ class _FinishLongSittingManualState extends State<FinishLongSittingManual> {
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'long_sitting_id',
       withItemGrade: false,
+      processId: widget.processId,
     );
   }
 }

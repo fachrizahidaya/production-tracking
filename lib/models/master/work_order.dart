@@ -227,7 +227,7 @@ class WorkOrderService extends BaseService<WorkOrder> {
       String? token = prefs.getString('access_token');
 
       final response = await http.post(
-        Uri.parse(baseUrl),
+        Uri.parse('${dotenv.env['API_URL_DEV']}/wo/active-process'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -235,11 +235,11 @@ class WorkOrderService extends BaseService<WorkOrder> {
         body: jsonEncode(woForm),
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         await refetchItems();
         notifyListeners();
         final responseData = jsonDecode(response.body);
-        return responseData; // ✅ return full JSON
+        return responseData;
       } else {
         final errorData = jsonDecode(response.body);
         throw Exception(errorData['message'] ?? 'Failed to get data');

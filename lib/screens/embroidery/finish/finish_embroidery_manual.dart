@@ -8,6 +8,7 @@ class FinishEmbroideryManual extends StatefulWidget {
   final Map<String, dynamic>? form;
   final handleSubmit;
   final handleChangeInput;
+  final processId;
 
   const FinishEmbroideryManual(
       {super.key,
@@ -15,7 +16,8 @@ class FinishEmbroideryManual extends StatefulWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.processId});
 
   @override
   State<FinishEmbroideryManual> createState() => _FinishEmbroideryManualState();
@@ -50,6 +52,7 @@ class _FinishEmbroideryManualState extends State<FinishEmbroideryManual> {
       idProcess: 'embroidery_id',
       withItemGrade: false,
       withQtyAndWeight: true,
+      processId: widget.processId,
     );
   }
 }

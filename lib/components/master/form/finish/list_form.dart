@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/form/multiline_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
@@ -525,34 +524,6 @@ class _ListFormState extends State<ListForm> {
                 )),
               ],
             ),
-          // ValueListenableBuilder<bool>(
-          //   valueListenable: widget.isSubmitting,
-          //   builder: (context, isSubmitting, _) {
-          //     return Align(
-          //       alignment: Alignment.center,
-          //       child: FormButton(
-          //         label: 'Submit',
-          //         onPressed: () async {
-          //           widget.isSubmitting.value = true;
-          //           try {
-          //             await widget.handleSubmit(widget.processId.toString());
-          //             setState(() {
-          //               _initialWeight = widget.weight.text;
-          //               _initialLength = widget.length.text;
-          //               _initialWidth = widget.width.text;
-          //               _initialNotes = widget.note.text;
-          //               _isChanged = false;
-          //             });
-          //           } finally {
-          //             widget.isSubmitting.value = false;
-          //           }
-          //         },
-          //         isLoading: isSubmitting,
-          //         isDisabled: widget.isFormIncomplete,
-          //       ),
-          //     );
-          //   },
-          // )
         ],
       ),
     );

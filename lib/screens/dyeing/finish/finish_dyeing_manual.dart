@@ -64,6 +64,10 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
     _widthController.text = widget.form?['width']?.toString() ?? '';
     _noteController.text = widget.form?['notes']?.toString() ?? '';
 
+    if (widget.processId != null) {
+      _getDyeingView(widget.processId);
+    }
+
     if (widget.data != null) {
       woData = widget.data!;
     }
@@ -324,129 +328,107 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFf9fafc),
-      appBar: CustomAppBar(
-        title: 'Selesai Dyeing',
-        onReturn: () {
-          Navigator.pop(context);
-        },
-      ),
-      body: Column(
-        children: [
-          DefaultTabController(
-              length: 3,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final isPortrait = MediaQuery.of(context).orientation ==
-                      Orientation.portrait;
-                  final screenHeight = MediaQuery.of(context).size.height;
-
-                  final boxHeight =
-                      isPortrait ? screenHeight * 0.45 : screenHeight * 0.7;
-
-                  return Column(
-                    children: [
-                      Container(
-                        color: Colors.white,
-                        child: TabBar(tabs: [
-                          Tab(
-                            text: 'Form',
-                          ),
-                          Tab(
-                            text: 'Informasi',
-                          ),
-                          Tab(
-                            text: 'Barang',
-                          ),
-                        ]),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFf9fafc),
+        appBar: CustomAppBar(
+          title: 'Selesai Dyeing',
+          onReturn: () {
+            Navigator.pop(context);
+          },
+        ),
+        body: Column(
+          children: [
+            Container(
+              color: Colors.white,
+              child: TabBar(tabs: [
+                Tab(
+                  text: 'Form',
+                ),
+                Tab(
+                  text: 'Informasi',
+                ),
+                Tab(
+                  text: 'Barang',
+                ),
+              ]),
+            ),
+            Expanded(
+              child: TabBarView(children: [
+                InfoTab(
+                  data: woData,
+                  id: widget.id,
+                  isLoading: _firstLoading,
+                  form: widget.form,
+                  formKey: _formKey,
+                  handleSubmit: widget.handleSubmit,
+                  handleSelectMachine: null,
+                  handleSelectWorkOrder: _selectWorkOrder,
+                  handleSelectLengthUnit: _selectLengthUnit,
+                  handleChangeInput: widget.handleChangeInput,
+                  handleSelectUnit: _selectUnit,
+                  handleSelectWidthUnit: _selectWidthUnit,
+                  qty: _qtyController,
+                  dyeingData: dyeingData,
+                  dyeingId: dyeingId,
+                  length: _lengthController,
+                  width: _widthController,
+                  note: _noteController,
+                ),
+                FormTab(
+                  data: woData,
+                ),
+                ItemTab(
+                  data: woData,
+                ),
+              ]),
+            ),
+          ],
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Container(
+            padding: PaddingColumn.screen,
+            color: Colors.white,
+            child: ValueListenableBuilder<bool>(
+              valueListenable: _isSubmitting,
+              builder: (context, isSubmitting, _) {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: CancelButton(
+                        label: 'Batal',
+                        onPressed: () => Navigator.pop(context),
                       ),
-                      SizedBox(
-                        height: boxHeight,
-                        child: TabBarView(children: [
-                          InfoTab(
-                            data: woData,
-                            id: widget.id,
-                            isLoading: _firstLoading,
-                            form: widget.form,
-                            formKey: _formKey,
-                            handleSubmit: widget.handleSubmit,
-                            handleSelectMachine: null,
-                            handleSelectWorkOrder: _selectWorkOrder,
-                            handleSelectLengthUnit: _selectLengthUnit,
-                            handleChangeInput: widget.handleChangeInput,
-                            handleSelectUnit: _selectUnit,
-                            handleSelectWidthUnit: _selectWidthUnit,
-                            qty: _qtyController,
-                            dyeingData: dyeingData,
-                            dyeingId: dyeingId,
-                            length: _lengthController,
-                            width: _widthController,
-                            note: _noteController,
-                          ),
-                          FormTab(
-                            data: woData,
-                          ),
-                          ItemTab(
-                            data: woData,
-                          ),
-                        ]),
-                      )
-                    ],
-                  );
-                },
-              )),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: PaddingColumn.screen,
-          color: Colors.white,
-          child: ValueListenableBuilder<bool>(
-            valueListenable: _isSubmitting,
-            builder: (context, isSubmitting, _) {
-              return Row(
-                children: [
-                  Expanded(
-                    child: CancelButton(
-                      label: 'Batal',
-                      onPressed: () => Navigator.pop(context),
                     ),
-                  ),
-                  Expanded(
-                      child: FormButton(
-                    label: 'Simpan',
-                    isDisabled: widget.form?['wo_id'] == null ||
-                            widget.form?['length'] == null ||
-                            widget.form?['width'] == null ||
-                            widget.form?['qty'] == null ||
-                            widget.form?['unit_id'] == null
-                        ? true
-                        : false,
-                    isLoading: isSubmitting,
-                    onPressed: () async {
-                      _isSubmitting.value = true;
-                      try {
-                        await widget.handleSubmit(dyeingData['id']
-                            ? dyeingData['id'].toString()
-                            : widget.processId);
-                        setState(() {
-                          // _initialQty = _qtyController.text;
-                          // _initialLength = _lengthController.text;
-                          // _initialWidth = _widthController.text;
-                          // _initialNotes = _noteController.text;
-                          // _isChanged = false;
-                        });
-                      } finally {
-                        _isSubmitting.value = false;
-                      }
-                    },
-                  ))
-                ].separatedBy(SizedBox(
-                  width: 16,
-                )),
-              );
-            },
+                    Expanded(
+                        child: FormButton(
+                      label: 'Simpan',
+                      isDisabled: widget.form?['wo_id'] == null ||
+                              widget.form?['length'] == null ||
+                              widget.form?['width'] == null ||
+                              widget.form?['qty'] == null ||
+                              widget.form?['unit_id'] == null
+                          ? true
+                          : false,
+                      isLoading: isSubmitting,
+                      onPressed: () async {
+                        _isSubmitting.value = true;
+                        try {
+                          await widget.handleSubmit(dyeingData['id'] != null
+                              ? dyeingData['id'].toString()
+                              : widget.processId);
+                        } finally {
+                          _isSubmitting.value = false;
+                        }
+                      },
+                    ))
+                  ].separatedBy(SizedBox(
+                    width: 16,
+                  )),
+                );
+              },
+            ),
           ),
         ),
       ),

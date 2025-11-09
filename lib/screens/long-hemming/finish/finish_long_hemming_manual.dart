@@ -8,6 +8,7 @@ class FinishLongHemmingManual extends StatefulWidget {
   final Map<String, dynamic>? form;
   final handleSubmit;
   final handleChangeInput;
+  final processId;
 
   const FinishLongHemmingManual(
       {super.key,
@@ -15,7 +16,8 @@ class FinishLongHemmingManual extends StatefulWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.processId});
 
   @override
   State<FinishLongHemmingManual> createState() =>
@@ -50,6 +52,7 @@ class _FinishLongHemmingManualState extends State<FinishLongHemmingManual> {
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'long_hemming_id',
       withItemGrade: false,
+      processId: widget.processId,
     );
   }
 }

@@ -228,108 +228,83 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFf9fafc),
-      appBar: CustomAppBar(
-        title: widget.title,
-        onReturn: () => Navigator.pop(context),
-      ),
-      body: Column(
-        children: [
-          DefaultTabController(
-              length: 2,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final isPortrait = MediaQuery.of(context).orientation ==
-                      Orientation.portrait;
-                  final screenHeight = MediaQuery.of(context).size.height;
-
-                  final boxHeight =
-                      isPortrait ? screenHeight * 0.45 : screenHeight * 0.7;
-
-                  return Column(
-                    children: [
-                      Container(
-                        color: Colors.white,
-                        child: TabBar(tabs: [
-                          Tab(
-                            text: 'Form',
-                          ),
-                          Tab(
-                            text: 'Barang',
-                          ),
-                        ]),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFf9fafc),
+        appBar: CustomAppBar(
+          title: widget.title,
+          onReturn: () => Navigator.pop(context),
+        ),
+        body: Column(
+          children: [
+            Container(
+              color: Colors.white,
+              child: TabBar(tabs: [
+                Tab(
+                  text: 'Form',
+                ),
+                Tab(
+                  text: 'Barang',
+                ),
+              ]),
+            ),
+            Expanded(
+              child: TabBarView(children: [
+                FinishInfoTab(
+                  data: woData,
+                  id: widget.id,
+                  isLoading: _firstLoading,
+                  form: widget.form,
+                  formKey: _formKey,
+                  handleSubmit: widget.handleSubmit,
+                  handleSelectMachine: _selectMachine,
+                  handleSelectWorkOrder: _selectWorkOrder,
+                  maklon: widget.maklon,
+                  withMaklonOrMachine: widget.withMaklonOrMachine,
+                  withOnlyMaklon: widget.withOnlyMaklon,
+                  withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
+                ),
+                FinishItemTab(data: woData),
+              ]),
+            )
+          ],
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Container(
+            padding: PaddingColumn.screen,
+            color: Colors.white,
+            child: ValueListenableBuilder<bool>(
+              valueListenable: _isSubmitting,
+              builder: (context, isSubmitting, _) {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: CancelButton(
+                        label: 'Batal',
+                        onPressed: () => Navigator.pop(context),
                       ),
-                      SizedBox(
-                        height: boxHeight,
-                        child: TabBarView(children: [
-                          FinishInfoTab(
-                            data: woData,
-                            id: widget.id,
-                            isLoading: _firstLoading,
-                            form: widget.form,
-                            formKey: _formKey,
-                            handleSubmit: widget.handleSubmit,
-                            handleSelectMachine: _selectMachine,
-                            handleSelectWorkOrder: _selectWorkOrder,
-                            maklon: widget.maklon,
-                            withMaklonOrMachine: widget.withMaklonOrMachine,
-                            withOnlyMaklon: widget.withOnlyMaklon,
-                            withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
-                          ),
-                          FinishItemTab(data: woData),
-                        ]),
-                      )
-                    ],
-                  );
-                },
-              )),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: PaddingColumn.screen,
-          color: Colors.white,
-          child: ValueListenableBuilder<bool>(
-            valueListenable: _isSubmitting,
-            builder: (context, isSubmitting, _) {
-              return Row(
-                children: [
-                  Expanded(
-                    child: CancelButton(
-                      label: 'Batal',
-                      onPressed: () => Navigator.pop(context),
                     ),
-                  ),
-                  Expanded(
-                      child: FormButton(
-                    label: 'Simpan',
-                    isLoading: isSubmitting,
-                    isDisabled: widget.form?['wo_id'] == null ||
-                            widget.form?['machine_id'] == null
-                        ? true
-                        : false,
-                    onPressed: () async {
-                      _isSubmitting.value = true;
-                      try {
-                        await widget.handleSubmit();
-                        setState(() {
-                          // _initialQty = _qtyController.text;
-                          // _initialLength = _lengthController.text;
-                          // _initialWidth = _widthController.text;
-                          // _initialNotes = _noteController.text;
-                          // _isChanged = false;
-                        });
-                      } finally {
-                        _isSubmitting.value = false;
-                      }
-                    },
-                  ))
-                ].separatedBy(SizedBox(
-                  width: 16,
-                )),
-              );
-            },
+                    Expanded(
+                        child: FormButton(
+                      label: 'Simpan',
+                      isLoading: isSubmitting,
+                      isDisabled: widget.form?['wo_id'] == null ? true : false,
+                      onPressed: () async {
+                        _isSubmitting.value = true;
+                        try {
+                          await widget.handleSubmit();
+                        } finally {
+                          _isSubmitting.value = false;
+                        }
+                      },
+                    ))
+                  ].separatedBy(SizedBox(
+                    width: 16,
+                  )),
+                );
+              },
+            ),
           ),
         ),
       ),

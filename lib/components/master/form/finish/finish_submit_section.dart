@@ -58,22 +58,23 @@ class _FinishSubmitSectionState extends State<FinishSubmitSection> {
                             child: Stack(
                           children: [
                             MobileScanner(
-                              controller: widget.controller,
-                              onDetect: (BarcodeCapture capture) {
+                              controller: MobileScannerController(
+                                  detectionSpeed: DetectionSpeed.noDuplicates),
+                              onDetect: (capture) {
                                 final List<Barcode> barcodes = capture.barcodes;
                                 for (final barcode in barcodes) {
-                                  final String code = barcode.rawValue ?? "---";
+                                  final String? code = barcode.rawValue;
 
-                                  if (int.tryParse(code) != null) {
-                                    int id = int.parse(code);
+                                  if (code != null && code.isNotEmpty) {
                                     widget.controller.stop();
                                     setState(() {
                                       _isScannerStopped = true;
                                     });
-                                    widget.handleScan(id);
-                                  }
 
-                                  break;
+                                    widget.handleScan(code);
+
+                                    break;
+                                  }
                                 }
                               },
                             ),
@@ -130,7 +131,7 @@ class _FinishSubmitSectionState extends State<FinishSubmitSection> {
         ),
         if (widget.isLoading)
           Container(
-            color: CustomTheme().buttonColor('In Progress'),
+            color: Color(0xFFf9fafc),
             child: const Center(
               child: CircularProgressIndicator(),
             ),

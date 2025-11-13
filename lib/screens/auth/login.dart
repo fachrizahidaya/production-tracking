@@ -147,14 +147,14 @@ class _LoginState extends State<Login> {
     final double dockHeight =
         isPortrait ? size.height * 0.5 : size.height * 0.8;
 
-    return Scaffold(
-        backgroundColor: const Color(0xFFEBEBEB),
-        body: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          behavior: HitTestBehavior.opaque,
-          child: Center(
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+          backgroundColor: const Color(0xFFEBEBEB),
+          body: Center(
             child: Container(
                 width: dockWidth,
                 height: dockHeight,
@@ -179,7 +179,7 @@ class _LoginState extends State<Login> {
                     _handleSubmit(context);
                   },
                 )),
-          ),
-        ));
+          )),
+    );
   }
 }

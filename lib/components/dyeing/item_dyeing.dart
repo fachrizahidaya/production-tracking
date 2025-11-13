@@ -24,46 +24,21 @@ class ItemDyeing extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
                       children: [
                         Text(
-                          'No. Dyeing: ${item.dyeing_no!}',
-                        ),
-                        Text(
-                          'No. WO: ${item.work_orders['wo_no']}',
+                          '${item.dyeing_no!}',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
                         if (item.rework == true)
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.replay_outlined,
-                                size: 16,
-                              ),
-                              Text(
-                                'Rework',
-                              ),
-                            ],
+                          Icon(
+                            Icons.replay_outlined,
+                            size: 16,
                           )
                       ].separatedBy(SizedBox(
-                        height: 8,
-                      )),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Dibuat: ${formatDateSafe(item.start_time)}"
-                          "${item.start_by != null && item.start_by['name'] != null ? " Oleh ${item.start_by['name']}" : ""}",
-                        ),
-                        Text(
-                          "Selesai: ${formatDateSafe(item.end_time)}"
-                          "${item.end_by != null && item.end_by['name'] != null ? " Oleh ${item.end_by['name']}" : ""}",
-                        ),
-                      ].separatedBy(SizedBox(
-                        height: 8,
+                        width: 4,
                       )),
                     ),
                     CustomBadge(
@@ -73,7 +48,70 @@ class ItemDyeing extends StatelessWidget {
                         withDifferentColor: true,
                         color: item.status == 'Diproses'
                             ? Color(0xFFfff3c6)
-                            : Color(0xffd1fae4))
+                            : Color(0xffd1fae4)),
+                  ],
+                ),
+                Divider(),
+                const SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${item.work_orders['wo_no']}',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Row(
+                      children: [
+                        // Icon(
+                        //   Icons.timelapse_outlined,
+                        //   size: 14,
+                        // ),
+                        Text(
+                          "Waktu Dibuat: ${formatDateSafe(item.start_time)}"
+                          "${item.start_by != null && item.start_by['name'] != null ? ", ${item.start_by['name']}" : ""}",
+                        ),
+                      ].separatedBy(SizedBox(
+                        width: 4,
+                      )),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.local_laundry_service_outlined,
+                          size: 14,
+                        ),
+                        Text(
+                          '${item.machine['name']}',
+                        ),
+                      ].separatedBy(SizedBox(
+                        width: 4,
+                      )),
+                    ),
+                    Row(
+                      children: [
+                        // Icon(
+                        //   Icons.playlist_add_check_outlined,
+                        //   size: 14,
+                        // ),
+                        Text(
+                          "Waktu Selesai: ${formatDateSafe(item.end_time)}"
+                          "${item.end_by != null && item.end_by['name'] != null ? ", ${item.end_by['name']}" : ""}",
+                        ),
+                      ].separatedBy(SizedBox(
+                        width: 4,
+                      )),
+                    ),
                   ],
                 ),
               ],

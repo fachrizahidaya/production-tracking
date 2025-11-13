@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
 
 class FilterSelectForm extends StatefulWidget {
   final String label;
@@ -35,10 +36,10 @@ class _FilterSelectFormState extends State<FilterSelectForm> {
       formControl: GestureDetector(
         onTap: widget.isDisabled == true ? null : widget.onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: PaddingColumn.screen,
           decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(0),
+              borderRadius: BorderRadius.circular(4),
               border: Border.all(color: Colors.grey, width: 1)),
           child: widget.selectedItems.isEmpty
               ? Row(

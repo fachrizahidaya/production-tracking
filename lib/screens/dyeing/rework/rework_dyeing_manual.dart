@@ -218,27 +218,6 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
     );
   }
 
-  _selectUnit() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      useSafeArea: true,
-      builder: (BuildContext context) {
-        return SelectDialog(
-          label: 'Satuan',
-          options: unitOption,
-          selected: widget.form?['unit_id'].toString() ?? '',
-          handleChangeValue: (e) {
-            setState(() {
-              widget.form?['unit_id'] = e['value'].toString();
-              widget.form?['nama_satuan'] = e['label'].toString();
-            });
-          },
-        );
-      },
-    );
-  }
-
   _selectMachine() {
     if (_isFetchingMachine) {
       showDialog(

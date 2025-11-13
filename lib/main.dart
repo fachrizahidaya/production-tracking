@@ -22,6 +22,10 @@ import 'package:textile_tracking/models/process/sewing.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
+import 'package:textile_tracking/screens/auth/account.dart';
+import 'package:textile_tracking/screens/auth/eula.dart';
+import 'package:textile_tracking/screens/auth/privacy_policy.dart';
+import 'package:textile_tracking/screens/auth/terms_conditions.dart';
 import 'package:textile_tracking/screens/cross-cutting/index.dart';
 import 'package:textile_tracking/screens/dyeing/index.dart';
 import 'package:textile_tracking/screens/embroidery/index.dart';
@@ -81,11 +85,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-        // StoreProvider<AppState>(
-        //     store: store,
-        //     child:
-        MaterialApp(
+    return MaterialApp(
       title: 'Textile Tracking',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -125,8 +125,11 @@ class MyApp extends StatelessWidget {
         '/sortings': (context) => const SortingScreen(),
         '/packings': (context) => const PackingScreen(),
         '/printings': (context) => const PrintingScreen(),
+        '/account': (context) => const Account(),
+        '/eula': (context) => const Eula(),
+        '/privacy-policy': (context) => const PrivacyPolicy(),
+        '/terms-conditions': (context) => const TermsConditions(),
       },
     );
-    // );
   }
 }

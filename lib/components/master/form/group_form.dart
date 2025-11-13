@@ -28,9 +28,6 @@ class GroupForm extends StatelessWidget {
           children: [
             Text(
               label,
-              style: TextStyle(
-                fontSize: 16,
-              ),
             ),
             CustomTheme().hGap('sm'),
             if (req)

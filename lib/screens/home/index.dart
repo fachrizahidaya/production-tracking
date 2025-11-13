@@ -20,7 +20,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   String user = '';
@@ -140,21 +139,19 @@ class _HomeState extends State<Home> {
           }
 
           return Scaffold(
-              appBar: CustomAppBar(
-                title: 'Textile Tracking',
-                isWithNotification: true,
-                handleLogout: () => _handleLogout(context),
-                isWithAccount: true,
-                user: user,
-              ),
-              drawer: AppDrawer(
-                handleLogout: () => _handleLogout(context),
-                handleFetchMenu: () => _handleFetchMenu(),
-              ),
-              body: Scaffold(
-                backgroundColor: const Color(0xFFEBEBEB),
-                body: Dashboard(),
-              ));
+            appBar: CustomAppBar(
+              title: 'Textile Tracking',
+              isWithNotification: true,
+              handleLogout: () => _handleLogout(context),
+              isWithAccount: true,
+              user: user,
+            ),
+            drawer: AppDrawer(
+              handleLogout: () => _handleLogout(context),
+              handleFetchMenu: () => _handleFetchMenu(),
+            ),
+            body: Dashboard(),
+          );
         });
   }
 }

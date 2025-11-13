@@ -17,7 +17,7 @@ class CustomAlertDialog extends StatelessWidget {
     final double maxDialogHeight = size.height * 0.9;
 
     return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         backgroundColor: Colors.white,
         child: ConstrainedBox(
           constraints: BoxConstraints(

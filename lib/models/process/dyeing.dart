@@ -31,6 +31,7 @@ class Dyeing {
   final dynamic work_orders;
   final dynamic start_by;
   final dynamic end_by;
+  final machine;
 
   Dyeing(
       {this.id,
@@ -55,7 +56,8 @@ class Dyeing {
       this.start_by,
       this.end_by,
       this.length_unit_id,
-      this.width_unit_id});
+      this.width_unit_id,
+      this.machine});
 
   factory Dyeing.fromJson(Map<String, dynamic> json) {
     return Dyeing(
@@ -76,6 +78,7 @@ class Dyeing {
         rework: json['rework'] as bool?,
         notes: json['notes'] ?? '',
         attachments: json['attachments'] ?? [],
+        machine: json['machine'] ?? {},
         work_orders: json['work_orders'],
         start_by: json['start_by'],
         end_by: json['end_by'],
@@ -102,6 +105,7 @@ class Dyeing {
       'status': status,
       'rework': rework,
       'attachments': attachments,
+      'machine': machine,
       'work_orders': work_orders,
       'start_by': start_by,
       'end_by': end_by,
@@ -219,10 +223,17 @@ class DyeingService extends BaseService<Dyeing> {
     }
   }
 
-  Future<List<Dyeing>> getDataList(Map<String, String> params) async {
-    final url = Uri.parse(baseUrl).replace(queryParameters: params);
+  Future<List<Dyeing>> getDataList(Map<String, String?> params) async {
+    final cleanParams = Map<String, String>.fromEntries(
+      params.entries
+          .where((e) => e.value != null && e.value!.isNotEmpty)
+          .map((e) => MapEntry(e.key, e.value!)),
+    );
+
+    final url = Uri.parse(baseUrl).replace(queryParameters: cleanParams);
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('access_token').toString();
+    String token = prefs.getString('access_token') ?? '';
 
     try {
       final response = await http.get(url, headers: {

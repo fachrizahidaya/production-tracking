@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/item_dyeing.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
@@ -40,11 +41,28 @@ class _DyeingScreenState extends State<DyeingScreen> {
   int page = 0;
   Map<String, String> params = {'search': '', 'page': '0'};
 
+  String dariTanggal = '';
+  String sampaiTanggal = '';
+
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
+    final now = DateTime.now();
+    final firstDayOfMonth = DateTime(now.year, now.month, 1);
+    final today = now;
+
+    dariTanggal = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
+    sampaiTanggal = DateFormat('yyyy-MM-dd').format(today);
+
     setState(() {
-      params = {'search': _search, 'page': '0'};
+      params = {
+        'search': _search,
+        'page': '0',
+        'start_date': dariTanggal,
+        'end_date': sampaiTanggal,
+      };
     });
     Future.delayed(Duration.zero, () {
       _loadMore();
@@ -79,27 +97,23 @@ class _DyeingScreenState extends State<DyeingScreen> {
     });
   }
 
-  Future<void> _handleFilter(key, value) async {
+  Future<void> _handleFilter(String key, dynamic value) async {
     setState(() {
       params['page'] = '0';
-      if (value.toString() != '') {
-        params[key.toString()] = value.toString();
+      if (value != null && value.toString().isNotEmpty) {
+        params[key] = value.toString();
       } else {
-        params.remove(key.toString());
+        params.remove(key);
       }
     });
 
-    if (
-        // params['dari_tanggal'] == null &&
-        //   params['sampai_tanggal'] == null &&
-        params['machine_id'] == null && params['status'] == null) {
-      setState(() {
-        _isFiltered = false;
-      });
+    if (params['status'] == null &&
+        params['user_id'] == null &&
+        params['start_date'] == null &&
+        params['end_date'] == null) {
+      _isFiltered = false;
     } else {
-      setState(() {
-        _isFiltered = true;
-      });
+      _isFiltered = true;
     }
 
     _loadMore();
@@ -166,126 +180,136 @@ class _DyeingScreenState extends State<DyeingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFf9fafc),
-      appBar: CustomAppBar(
-        title: 'Dyeing',
-        onReturn: () {
-          if (Navigator.canPop(context)) {
-            Navigator.pop(context);
-          } else {
-            Navigator.pushReplacementNamed(context, '/dashboard');
-          }
-        },
-      ),
-      body: Column(
-        children: [
-          Expanded(
-              child: MainList(
-            fetchData: (params) async {
-              return await Provider.of<DyeingService>(context, listen: false)
-                  .getDataList(params);
-            },
-            service: DyeingService(),
-            searchQuery: _search,
-            canCreate: _canCreate,
-            canRead: _canRead,
-            itemBuilder: (item) => ItemDyeing(
-              item: item,
-            ),
-            onItemTap: (context, item) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DyeingDetail(
-                      id: item.id.toString(),
-                      no: item.dyeing_no.toString(),
-                      canDelete: _canDelete,
-                      canUpdate: _canUpdate,
-                    ),
-                  )).then((value) {
-                if (value == true) {
-                  _refetch();
-                } else {
-                  return null;
-                }
-              });
-            },
-            filterWidget: ListFilter(
-              title: 'Filter',
-              params: params,
-              onHandleFilter: _handleFilter,
-              onSubmitFilter: () {
-                _submitFilter();
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFf9fafc),
+        appBar: CustomAppBar(
+          title: 'Pencelupan (Dyeing)',
+          onReturn: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushReplacementNamed(context, '/dashboard');
+            }
+          },
+        ),
+        body: Column(
+          children: [
+            Expanded(
+                child: MainList(
+              fetchData: (params) async {
+                return await Provider.of<DyeingService>(context, listen: false)
+                    .getDataList(params);
               },
-              fetchMachine: (service) => service.fetchOptionsDyeing(),
-              getMachineOptions: (service) => service.dataListOption,
-            ),
-            handleRefetch: _refetch,
-            handleLoadMore: _loadMore,
-            handleSearch: _handleSearch,
-            dataList: _dataList,
-            firstLoading: _firstLoading,
-            hasMore: _hasMore,
-            isFiltered: _isFiltered,
-            showActions: () {
-              showModalBottomSheet(
-                context: context,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(4),
-                  ),
-                ),
-                builder: (context) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.add,
-                            color: CustomTheme().buttonColor('primary')),
-                        title: const Text("Mulai Dyeing"),
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const CreateDyeing(),
-                            ),
-                          );
-                        },
+              service: DyeingService(),
+              searchQuery: _search,
+              canCreate: _canCreate,
+              canRead: _canRead,
+              itemBuilder: (item) => ItemDyeing(
+                item: item,
+              ),
+              onItemTap: (context, item) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DyeingDetail(
+                        id: item.id.toString(),
+                        no: item.dyeing_no.toString(),
+                        canDelete: _canDelete,
+                        canUpdate: _canUpdate,
                       ),
-                      ListTile(
-                        leading: Icon(Icons.check_circle,
-                            color: CustomTheme().buttonColor('warning')),
-                        title: const Text("Selesai Dyeing"),
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const FinishDyeing(),
-                            ),
-                          );
-                        },
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.replay_outlined,
-                            color: CustomTheme().buttonColor('warning')),
-                        title: const Text("Rework Dyeing"),
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const ReworkDyeing(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  );
+                    )).then((value) {
+                  if (value == true) {
+                    _refetch();
+                  } else {
+                    return null;
+                  }
+                });
+              },
+              filterWidget: ListFilter(
+                title: 'Filter',
+                params: params,
+                onHandleFilter: _handleFilter,
+                onSubmitFilter: () {
+                  _submitFilter();
                 },
-              );
-            },
-          ))
-        ],
+                fetchMachine: (service) => service.fetchOptionsDyeing(),
+                getMachineOptions: (service) => service.dataListOption,
+                fetchOperators: null,
+                getOperatorOptions: null,
+                dariTanggal: dariTanggal,
+                sampaiTanggal: sampaiTanggal,
+              ),
+              handleRefetch: _refetch,
+              handleLoadMore: _loadMore,
+              handleSearch: _handleSearch,
+              dataList: _dataList,
+              firstLoading: _firstLoading,
+              hasMore: _hasMore,
+              isFiltered: _isFiltered,
+              showActions: () {
+                showModalBottomSheet(
+                  context: context,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(4),
+                    ),
+                  ),
+                  builder: (context) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.add,
+                              color: CustomTheme().buttonColor('primary')),
+                          title: const Text("Mulai Dyeing"),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const CreateDyeing(),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.check_circle,
+                              color: CustomTheme().buttonColor('warning')),
+                          title: const Text("Selesai Dyeing"),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const FinishDyeing(),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.replay_outlined,
+                              color: CustomTheme().buttonColor('warning')),
+                          title: const Text("Rework Dyeing"),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const ReworkDyeing(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ))
+          ],
+        ),
       ),
     );
   }

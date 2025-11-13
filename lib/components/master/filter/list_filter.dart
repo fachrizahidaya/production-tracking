@@ -42,6 +42,10 @@ class ListFilter<T> extends StatefulWidget {
   final onSubmitFilter;
   final fetchMachine;
   final getMachineOptions;
+  final fetchOperators;
+  final getOperatorOptions;
+  final dariTanggal;
+  final sampaiTanggal;
 
   const ListFilter(
       {super.key,
@@ -56,7 +60,11 @@ class ListFilter<T> extends StatefulWidget {
       this.onHandleFilter,
       this.onSubmitFilter,
       this.fetchMachine,
-      this.getMachineOptions});
+      this.getMachineOptions,
+      this.fetchOperators,
+      this.getOperatorOptions,
+      this.dariTanggal,
+      this.sampaiTanggal});
 
   @override
   State<ListFilter<T>> createState() => _ListFilterState<T>();
@@ -66,6 +74,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
   TextEditingController dariTanggalInput = TextEditingController();
   TextEditingController sampaiTanggalInput = TextEditingController();
   bool _isFetchingMachine = false;
+  bool _isFetchingOperator = false;
   int? operatorId;
   String? namaOperator = '';
   int? machineId;
@@ -79,6 +88,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
 
   List<Map<String, dynamic>> selectedMachines = [];
   List<Map<String, dynamic>> selectedStatuses = [];
+  List<Map<String, dynamic>> selectedOperators = [];
 
   List<dynamic> statusOption = [
     {'label': 'Diproses', 'value': 'Diproses'},
@@ -88,7 +98,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
   @override
   void initState() {
     super.initState();
-    // _getOperator();
+    _getOperator();
     _getMachine();
 
     if (widget.params['status'] != null) {
@@ -99,8 +109,16 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
           .toList();
     }
 
-    dariTanggalInput.text = widget.params['dari_tanggal'] ?? '';
-    sampaiTanggalInput.text = widget.params['sampai_tanggal'] ?? '';
+    if (widget.params['user_id'] != null) {
+      final activeOperators = widget.params['user_id'].split(',');
+      selectedStatuses = operatorOption
+          .where((s) => activeOperators.contains(s['value']))
+          .map((s) => Map<String, dynamic>.from(s))
+          .toList();
+    }
+
+    dariTanggalInput.text = widget.dariTanggal;
+    sampaiTanggalInput.text = widget.sampaiTanggal;
 
     if (widget.params['machine_id'] != null) {
       final activeMachines = widget.params['machine_id'].split(',');
@@ -142,15 +160,39 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
   }
 
   Future<void> _getOperator() async {
-    await Provider.of<OptionOperatorService>(context, listen: false)
-        .fetchOptions();
-    // ignore: use_build_context_synchronously
-    final result = Provider.of<OptionOperatorService>(context, listen: false)
-        .dataListOption;
-
     setState(() {
-      operatorOption = result;
+      _isFetchingOperator = true;
     });
+
+    final service = Provider.of<OptionOperatorService>(context, listen: false);
+    try {
+      if (widget.fetchOperators != null) {
+        await widget.fetchOperators!(service);
+      } else {
+        await service.fetchOptions();
+      }
+
+      final data = widget.getOperatorOptions != null
+          ? widget.getOperatorOptions!(service)
+          : service.dataListOption;
+
+      setState(() {
+        operatorOption = data;
+      });
+    } catch (e) {
+      debugPrint("Error fetching machines: $e");
+    } finally {
+      setState(() {
+        _isFetchingOperator = false;
+      });
+    }
+    // ignore: use_build_context_synchronously
+    // final result = Provider.of<OptionOperatorService>(context, listen: false)
+    //     .dataListOption;
+
+    // setState(() {
+    //   operatorOption = result;
+    // });
   }
 
   _searchDataOption(value) {
@@ -165,75 +207,38 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
   }
 
   @override
+  void didUpdateWidget(covariant oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.dariTanggal != dariTanggalInput.text) {
+      dariTanggalInput.text = widget.dariTanggal;
+    }
+    if (widget.sampaiTanggal != sampaiTanggalInput.text) {
+      sampaiTanggalInput.text = widget.sampaiTanggal;
+    }
+  }
+
+  @override
+  void dispose() {
+    dariTanggalInput.dispose();
+    sampaiTanggalInput.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     setState(() {
-      dariTanggalInput.text = widget.params['dari_tanggal'] ?? '';
-      sampaiTanggalInput.text = widget.params['sampai_tanggal'] ?? '';
+      dariTanggalInput.text = widget.params['start_date'] ?? '';
+      sampaiTanggalInput.text = widget.params['end_date'] ?? '';
     });
 
     return Container(
       padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // FilterSelectForm(
-          //     label: "Mesin",
-          //     onTap: () async {
-          //       final result = await showDialog<List<Map<String, dynamic>>>(
-          //         context: context,
-          //         builder: (_) {
-          //           return SimpleDialog(
-          //             title: const Text("Pilih Mesin"),
-          //             children: machineOption.map((machine) {
-          //               final isSelected = selectedMachines.contains(machine);
-          //               return CheckboxListTile(
-          //                 value: isSelected,
-          //                 title: Text(machine['label']),
-          //                 onChanged: (checked) {
-          //                   setState(() {
-          //                     if (checked == true) {
-          //                       selectedMachines.add(machine);
-          //                     } else {
-          //                       selectedMachines.remove(machine);
-          //                     }
-          //                   });
-          //                   Navigator.pop(context, selectedMachines);
-          //                 },
-          //               );
-          //             }).toList(),
-          //           );
-          //         },
-          //       );
-
-          //       if (result != null) {
-          //         setState(() {
-          //           selectedMachines = result;
-          //         });
-          //         widget.onHandleFilter(
-          //             "machine_id", result.map((e) => e['value']).join(","));
-          //       }
-          //     },
-          //     selectedItems: selectedMachines,
-          //     required: false,
-          //     onRemoveItem: (item) {
-          //       setState(() {
-          //         selectedMachines.remove(item);
-          //       });
-          //       widget.onHandleFilter("machine_id",
-          //           selectedStatuses.map((e) => e['value']).join(","));
-          //     },
-          //     onClearAll: () {
-          //       setState(() {
-          //         selectedMachines.clear();
-          //       });
-          //       widget.onHandleFilter("machine_id", "");
-          //     },
-          //     onSelectionChanged: (selected) {
-          //       widget.onHandleFilter(
-          //           "machine_id", selected.map((e) => e['value']).join(","));
-          //     }),
           Row(
             children: [
               Expanded(
@@ -244,15 +249,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                     style: const TextStyle(
                       fontSize: 16,
                     ),
-                    decoration: CustomTheme().inputDateDecoration(
-                        clearable: dariTanggalInput.text != '' ? true : false,
-                        onPressClear: () => {
-                              setState(() {
-                                widget.onHandleFilter('dari_tanggal', '');
-                                dariTanggalInput.text = '';
-                              })
-                            },
-                        hintTextString: 'Pilih tanggal'),
+                    decoration: CustomTheme()
+                        .inputDateDecoration(hintTextString: 'Pilih tanggal'),
                     keyboardType: TextInputType.datetime,
                     readOnly: true,
                     onTap: () async {
@@ -280,7 +278,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                             DateFormat('yyyy-MM-dd').format(pickedDate);
                         setState(() {
                           dariTanggalInput.text = formattedDate;
-                          widget.onHandleFilter('dari_tanggal', formattedDate);
+                          widget.onHandleFilter('start_date', formattedDate);
                         });
                       }
                     },
@@ -295,15 +293,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                     style: const TextStyle(
                       fontSize: 16,
                     ),
-                    decoration: CustomTheme().inputDateDecoration(
-                        clearable: sampaiTanggalInput.text != '' ? true : false,
-                        onPressClear: () => {
-                              setState(() {
-                                widget.onHandleFilter('sampai_tanggal', '');
-                                sampaiTanggalInput.text = '';
-                              })
-                            },
-                        hintTextString: 'Pilih tanggal'),
+                    decoration: CustomTheme()
+                        .inputDateDecoration(hintTextString: 'Pilih tanggal'),
                     keyboardType: TextInputType.datetime,
                     readOnly: true,
                     onTap: () async {
@@ -331,8 +322,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                             DateFormat('yyyy-MM-dd').format(pickedDate);
                         setState(() {
                           sampaiTanggalInput.text = formattedDate;
-                          widget.onHandleFilter(
-                              'sampai_tanggal', formattedDate);
+                          widget.onHandleFilter('end_date', formattedDate);
                         });
                       }
                     },
@@ -500,6 +490,165 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
             onSelectionChanged: (selected) {
               widget.onHandleFilter(
                   "status", selected.map((e) => e['value']).join(","));
+            },
+          ),
+          FilterSelectForm(
+            label: "Operator",
+            onTap: () async {
+              final result = await showDialog<List<Map<String, dynamic>>>(
+                context: context,
+                builder: (_) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.85,
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: StatefulBuilder(
+                        builder: (context, setState) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // 🔹 Header
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Pilih Operator",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    SizedBox(
+                                      height: 40,
+                                      child: TextFormField(
+                                        decoration: InputDecoration(
+                                          hintText: 'Pencarian...',
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 12),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                          ),
+                                        ),
+                                        onChanged: (value) {
+                                          _searchDataOption(value);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // 🔹 List of Options
+                              Expanded(
+                                child: Scrollbar(
+                                  thickness: 4,
+                                  child: ListView.separated(
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    itemCount: operatorOption.length,
+                                    itemBuilder: (context, index) {
+                                      final user = operatorOption[index];
+                                      final isSelected =
+                                          selectedOperators.contains(user);
+
+                                      return CheckboxListTile(
+                                        value: isSelected,
+                                        title: Text(
+                                          user['label'],
+                                          style: TextStyle(
+                                            fontWeight: isSelected
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                          ),
+                                        ),
+                                        activeColor: Colors.green,
+                                        onChanged: (checked) {
+                                          setState(() {
+                                            if (checked == true) {
+                                              selectedOperators.add(user);
+                                            } else {
+                                              selectedOperators.remove(user);
+                                            }
+                                          });
+                                        },
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) =>
+                                        const Divider(height: 0.5),
+                                  ),
+                                ),
+                              ),
+
+                              // 🔹 Footer (Buttons)
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context); // cancel
+                                      },
+                                      child: const Text('Batal'),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context,
+                                            selectedOperators); // return selected
+                                      },
+                                      child: const Text('Simpan'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
+              );
+
+              if (result != null) {
+                setState(() {
+                  selectedOperators = result;
+                });
+                widget.onHandleFilter(
+                    "user_id", result.map((e) => e['value']).join(","));
+              }
+            },
+            selectedItems: selectedOperators,
+            required: false,
+            onRemoveItem: (item) {
+              setState(() {
+                selectedOperators.remove(item);
+              });
+              widget.onHandleFilter("user_id",
+                  selectedOperators.map((e) => e['value']).join(","));
+            },
+            onClearAll: () {
+              setState(() {
+                selectedOperators.clear();
+              });
+              widget.onHandleFilter("user_id", "");
+            },
+            onSelectionChanged: (selected) {
+              widget.onHandleFilter(
+                  "user_id", selected.map((e) => e['value']).join(","));
             },
           ),
         ].separatedBy(SizedBox(

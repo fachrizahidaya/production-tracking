@@ -452,103 +452,105 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFf9fafc),
-      appBar: CustomAppBar(
-        title: '${widget.label} Detail',
-        onReturn: () => Navigator.pop(context),
-        canDelete: widget.canDelete,
-        canUpdate: widget.canUpdate,
-        handleDelete: _handleDelete,
-        id: data['id'],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: InfoTab(
-              data: data,
-              isLoading: _firstLoading,
-              handleChangeInput: _handleChangeInput,
-              weight: _weightController,
-              length: _lengthController,
-              width: _widthController,
-              note: _noteController,
-              form: _form,
-              handleSelectUnit: _selectUnit,
-              handleSelectLengthUnit: _selectLengthUnit,
-              handleSelectWidthUnit: _selectWidthUnit,
-              handleSelectQtyItemUnit: _selectQtyItemUnit,
-              handleSelectMachine: _selectMachine,
-              handleUpdate: _handleUpdate,
-              refetch: _getDataView,
-              fieldConfigs: [
-                {'name': 'weight', 'label': 'Berat'},
-                {'name': 'length', 'label': 'Panjang'},
-                {'name': 'width', 'label': 'Lebar'},
-                {'name': 'notes', 'label': 'Catatan'},
-              ],
-              fieldControllers: {
-                'weight': _weightController,
-                'length': _lengthController,
-                'width': _widthController,
-                'notes': _noteController,
-              },
-              no: widget.no,
-              withItemGrade: widget.withItemGrade,
-              qty: _qtyControllers,
-              handleSelectQtyUnit: _selectQtyUnit,
-              notes: _notesControllers,
-              withQtyAndWeight: widget.withQtyAndWeight,
-              qtyItem: _qtyItemController,
-              withMaklon: widget.withMaklon,
-              maklon: _maklonNameController,
-              onlySewing: widget.onlySewing,
-            ),
-          )
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          color: Colors.white,
-          padding: PaddingColumn.screen,
-          child: ValueListenableBuilder<bool>(
-            valueListenable: _isSubmitting,
-            builder: (context, isSubmitting, _) {
-              return Row(
-                children: [
-                  Expanded(
-                    child: CancelButton(
-                      label: 'Batal',
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ),
-                  Expanded(
-                      child: FormButton(
-                    label: 'Simpan',
-                    isLoading: isSubmitting,
-                    onPressed: () async {
-                      _isSubmitting.value = true;
-                      try {
-                        await _handleUpdate(data['id'].toString());
-                        setState(() {
-                          // _initialQty = _qtyController.text;
-                          // _initialLength = _lengthController.text;
-                          // _initialWidth = _widthController.text;
-                          // _initialNotes = _noteController.text;
-                          // _isChanged = false;
-                        });
-                      } finally {
-                        _isSubmitting.value = false;
-                      }
-                    },
-                  ))
-                ].separatedBy(SizedBox(
-                  width: 16,
-                )),
-              );
-            },
-          ),
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFf9fafc),
+        appBar: CustomAppBar(
+          title: '${widget.label} Detail',
+          onReturn: () => Navigator.pop(context),
+          canDelete: widget.canDelete,
+          canUpdate: widget.canUpdate,
+          handleDelete: _handleDelete,
+          id: data['id'],
+          status: data['status'],
         ),
+        body: Column(
+          children: [
+            Expanded(
+              child: InfoTab(
+                data: data,
+                isLoading: _firstLoading,
+                handleChangeInput: _handleChangeInput,
+                weight: _weightController,
+                length: _lengthController,
+                width: _widthController,
+                note: _noteController,
+                form: _form,
+                handleSelectUnit: _selectUnit,
+                handleSelectLengthUnit: _selectLengthUnit,
+                handleSelectWidthUnit: _selectWidthUnit,
+                handleSelectQtyItemUnit: _selectQtyItemUnit,
+                handleSelectMachine: _selectMachine,
+                handleUpdate: _handleUpdate,
+                refetch: _getDataView,
+                fieldConfigs: [
+                  {'name': 'weight', 'label': 'Berat'},
+                  {'name': 'length', 'label': 'Panjang'},
+                  {'name': 'width', 'label': 'Lebar'},
+                  {'name': 'notes', 'label': 'Catatan'},
+                ],
+                fieldControllers: {
+                  'weight': _weightController,
+                  'length': _lengthController,
+                  'width': _widthController,
+                  'notes': _noteController,
+                },
+                no: widget.no,
+                withItemGrade: widget.withItemGrade,
+                qty: _qtyControllers,
+                handleSelectQtyUnit: _selectQtyUnit,
+                notes: _notesControllers,
+                withQtyAndWeight: widget.withQtyAndWeight,
+                qtyItem: _qtyItemController,
+                withMaklon: widget.withMaklon,
+                maklon: _maklonNameController,
+                onlySewing: widget.onlySewing,
+              ),
+            )
+          ],
+        ),
+        bottomNavigationBar: data['status'] == 'Selesai'
+            ? null
+            : SafeArea(
+                child: Container(
+                  color: Colors.white,
+                  padding: PaddingColumn.screen,
+                  child: ValueListenableBuilder<bool>(
+                    valueListenable: _isSubmitting,
+                    builder: (context, isSubmitting, _) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: CancelButton(
+                              label: 'Batal',
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ),
+                          Expanded(
+                              child: FormButton(
+                            label: 'Simpan',
+                            isLoading: isSubmitting,
+                            onPressed: () async {
+                              _isSubmitting.value = true;
+                              try {
+                                await _handleUpdate(data['id'].toString());
+                              } finally {
+                                _isSubmitting.value = false;
+                              }
+                            },
+                          ))
+                        ].separatedBy(SizedBox(
+                          width: 16,
+                        )),
+                      );
+                    },
+                  ),
+                ),
+              ),
       ),
     );
   }

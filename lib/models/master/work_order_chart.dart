@@ -45,8 +45,12 @@ class WorkOrderChartService extends BaseService {
     await fetchWorkOrderChart(isInitialLoad: true);
   }
 
-  Future<void> getDataList() async {
-    final url = Uri.parse(baseUrl);
+  Future<void> getDataList(Map<String, String> params) async {
+    final url = Uri.parse(baseUrl).replace(queryParameters: {
+      'process_start_date': params['process_start_date'] ?? '',
+      'process_end_date': params['process_end_date'] ?? '',
+    });
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('access_token').toString();
 

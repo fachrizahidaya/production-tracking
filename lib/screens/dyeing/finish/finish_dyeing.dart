@@ -229,24 +229,30 @@ class _FinishDyeingState extends State<FinishDyeing> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
-        appBar: CustomAppBar(
-          title: 'Selesai Dyeing',
-          onReturn: () {
-            Navigator.pop(context);
-          },
-        ),
-        body: SubmitSection(
-          isScannerStopped: _isScannerStopped,
-          form: _form,
-          controller: _controller,
-          handleScan: _handleScan,
-          handleSubmit: _handleSubmit,
-          handleRoute: _createRoute,
-          isLoading: _isLoading,
-          handleChangeInput: _handleChangeInput,
-        ));
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+          backgroundColor: const Color(0xFFf9fafc),
+          appBar: CustomAppBar(
+            title: 'Selesai Dyeing',
+            onReturn: () {
+              Navigator.pop(context);
+            },
+          ),
+          body: SubmitSection(
+            isScannerStopped: _isScannerStopped,
+            form: _form,
+            controller: _controller,
+            handleScan: _handleScan,
+            handleSubmit: _handleSubmit,
+            handleRoute: _createRoute,
+            isLoading: _isLoading,
+            handleChangeInput: _handleChangeInput,
+          )),
+    );
   }
 }
 

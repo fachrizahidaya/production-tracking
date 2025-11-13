@@ -26,6 +26,7 @@ class Printing {
   final dynamic end_by;
   final String? maklon_name;
   final bool? maklon;
+  final machine;
 
   Printing(
       {this.id,
@@ -52,34 +53,37 @@ class Printing {
       this.maklon,
       this.maklon_name,
       this.qty,
-      this.unit_id});
+      this.unit_id,
+      this.machine});
 
   factory Printing.fromJson(Map<String, dynamic> json) {
     return Printing(
-        id: json['id'] as int?,
-        unit_id: json['item_unit_id'] as int?,
-        weight_unit_id: json['weight_unit_id'] as int?,
-        width_unit_id: json['width_unit_id'] as int?,
-        length_unit_id: json['length_unit_id'] as int?,
-        wo_id: json['wo_id'] as int?,
-        machine_id: json['machine_id'] as int?,
-        start_by_id: json['start_by_id'] as int?,
-        end_by_id: json['end_by_id'] as int?,
-        print_no: json['print_no'] ?? '',
-        start_time: json['start_time'] ?? '',
-        end_time: json['end_time'] ?? '',
-        qty: json['item_qty'] ?? '',
-        weight: json['weight'] ?? '',
-        width: json['width'] ?? '',
-        length: json['length'] ?? '',
-        status: json['status'] ?? '',
-        notes: json['notes'] ?? '',
-        attachments: json['attachments'] ?? [],
-        work_orders: json['work_orders'],
-        start_by: json['start_by'],
-        end_by: json['end_by'],
-        maklon: json['maklon'] as bool?,
-        maklon_name: json['maklon_name'] ?? '');
+      id: json['id'] as int?,
+      unit_id: json['item_unit_id'] as int?,
+      weight_unit_id: json['weight_unit_id'] as int?,
+      width_unit_id: json['width_unit_id'] as int?,
+      length_unit_id: json['length_unit_id'] as int?,
+      wo_id: json['wo_id'] as int?,
+      machine_id: json['machine_id'] as int?,
+      start_by_id: json['start_by_id'] as int?,
+      end_by_id: json['end_by_id'] as int?,
+      print_no: json['print_no'] ?? '',
+      start_time: json['start_time'] ?? '',
+      end_time: json['end_time'] ?? '',
+      qty: json['item_qty'] ?? '',
+      weight: json['weight'] ?? '',
+      width: json['width'] ?? '',
+      length: json['length'] ?? '',
+      status: json['status'] ?? '',
+      notes: json['notes'] ?? '',
+      attachments: json['attachments'] ?? [],
+      work_orders: json['work_orders'],
+      start_by: json['start_by'],
+      end_by: json['end_by'],
+      maklon: json['maklon'] as bool?,
+      maklon_name: json['maklon_name'] ?? '',
+      machine: json['machine'] ?? {},
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -108,7 +112,8 @@ class Printing {
       'end_by': end_by,
       'work_orders': work_orders,
       'maklon': maklon == true ? 1 : 0,
-      'maklon_name': maklon == true ? maklon_name : ''
+      'maklon_name': maklon == true ? maklon_name : '',
+      'machine': machine,
     };
   }
 }

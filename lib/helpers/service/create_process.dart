@@ -187,22 +187,28 @@ class _CreateProcessState extends State<CreateProcess> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFf9fafc),
-      appBar: CustomAppBar(
-        title: widget.title,
-        onReturn: () => Navigator.pop(context),
-      ),
-      body: CreateSubmitSection(
-        isScannerStopped: _isScannerStopped,
-        form: _form,
-        controller: _controller,
-        handleScan: _handleScan,
-        handleSubmit: _handleSubmit,
-        handleRoute: (form, handleSubmit) => _createRoute(
-          widget.formPageBuilder(context, null, {}, form, handleSubmit),
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFf9fafc),
+        appBar: CustomAppBar(
+          title: widget.title,
+          onReturn: () => Navigator.pop(context),
         ),
-        isLoading: _isLoading,
+        body: CreateSubmitSection(
+          isScannerStopped: _isScannerStopped,
+          form: _form,
+          controller: _controller,
+          handleScan: _handleScan,
+          handleSubmit: _handleSubmit,
+          handleRoute: (form, handleSubmit) => _createRoute(
+            widget.formPageBuilder(context, null, {}, form, handleSubmit),
+          ),
+          isLoading: _isLoading,
+        ),
       ),
     );
   }

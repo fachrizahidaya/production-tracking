@@ -48,37 +48,102 @@ class ItemProcessCard extends StatelessWidget {
     return CustomCard(
       child: Padding(
         padding: PaddingColumn.screen,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Column(
           children: [
-            // Left column
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('$label: ${itemField(item, titleKey)}'),
-                Text(
-                    'No. WO: ${nestedField(item, subtitleKey, subtitleField)}'),
-              ].separatedBy(const SizedBox(height: 8)),
-            ),
-
-            // Middle column
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Dibuat: ${getStartTime?.call(item) ?? '-'}"
-                  "${getStartBy?.call(item).isNotEmpty == true ? " by ${getStartBy!(item)}" : ""}",
+                  '${itemField(item, titleKey)}',
+                  style: TextStyle(fontSize: 16),
                 ),
-                Text(
-                  "Selesai: ${getEndTime?.call(item) ?? '-'}"
-                  "${getEndBy?.call(item).isNotEmpty == true ? " by ${getEndBy!(item)}" : ""}",
-                ),
-              ].separatedBy(const SizedBox(height: 8)),
+                customBadgeBuilder?.call(status) ?? CustomBadge(title: status),
+              ],
             ),
-
-            // Right badge
-            customBadgeBuilder?.call(status) ?? CustomBadge(title: status),
+            Divider(),
+            const SizedBox(
+              height: 8,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  '${nestedField(item, subtitleKey, subtitleField)}',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Row(
+                  children: [
+                    // Icon(
+                    //   Icons.timelapse_outlined,
+                    //   size: 14,
+                    // ),
+                    Text(
+                      "Waktu Dibuat: ${getStartTime?.call(item) ?? '-'}"
+                      "${getStartBy?.call(item).isNotEmpty == true ? ", ${getStartBy!(item)}" : ""}",
+                    ),
+                  ],
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (item.machine['name'] != null)
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.local_laundry_service_outlined,
+                            size: 14,
+                          ),
+                          Text(
+                            '${item.machine['name']}',
+                          ),
+                        ].separatedBy(SizedBox(
+                          width: 4,
+                        )),
+                      ),
+                    if (item.maklon != null)
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.business_outlined,
+                            size: 14,
+                          ),
+                          Text(
+                            '${item.maklon_name}',
+                          ),
+                        ].separatedBy(SizedBox(
+                          width: 4,
+                        )),
+                      ),
+                    if (item.maklon == null && item.machine['name'] == null)
+                      Row(
+                        children: [],
+                      ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    // Icon(
+                    //   Icons.playlist_add_check_outlined,
+                    //   size: 14,
+                    // ),
+                    Text(
+                      "Waktu Selesai: ${getEndTime?.call(item) ?? '-'}"
+                      "${getEndBy?.call(item).isNotEmpty == true ? ", ${getEndBy!(item)}" : ""}",
+                    ),
+                  ],
+                ),
+              ].separatedBy(SizedBox(
+                width: 4,
+              )),
+            ),
           ],
         ),
       ),

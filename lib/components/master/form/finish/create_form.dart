@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:textile_tracking/components/master/form/finish/list_form.dart';
 
 class CreateForm extends StatefulWidget {
@@ -132,37 +133,66 @@ class _CreateFormState extends State<CreateForm> {
 
   Future<void> _pickAttachments() async {
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
-        allowMultiple: true,
-      );
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
-      if (result != null && result.files.isNotEmpty) {
+      if (image != null) {
         setState(() {
           final currentFormAttachments =
               List<Map<String, dynamic>>.from(widget.form['attachments'] ?? []);
 
-          final newFiles = result.files.map((file) {
-            return {
-              'name': file.name,
-              'path': file.path,
-              'extension': file.extension,
-            };
-          }).toList();
+          final newFile = {
+            'name': image.name,
+            'path': image.path,
+            'extension': image.path.split('.').last,
+            'isFromCamera': true,
+          };
 
           widget.form['attachments'] = [
             ...currentFormAttachments,
-            ...newFiles,
+            newFile,
           ];
         });
       }
     } catch (e) {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error picking file: $e")),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error capturing image: $e")),
+        );
+      }
     }
+    // try {
+    //   FilePickerResult? result = await FilePicker.platform.pickFiles(
+    //     type: FileType.custom,
+    //     allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
+    //     allowMultiple: true,
+    //   );
+
+    //   if (result != null && result.files.isNotEmpty) {
+    //     setState(() {
+    //       final currentFormAttachments =
+    //           List<Map<String, dynamic>>.from(widget.form['attachments'] ?? []);
+
+    //       final newFiles = result.files.map((file) {
+    //         return {
+    //           'name': file.name,
+    //           'path': file.path,
+    //           'extension': file.extension,
+    //         };
+    //       }).toList();
+
+    //       widget.form['attachments'] = [
+    //         ...currentFormAttachments,
+    //         ...newFiles,
+    //       ];
+    //     });
+    //   }
+    // } catch (e) {
+    //   // ignore: use_build_context_synchronously
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text("Error picking file: $e")),
+    //   );
+    // }
   }
 
   @override

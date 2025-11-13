@@ -85,7 +85,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               if (value == 'logout') {
                 handleLogout();
               }
-              if (value == 'account') {}
+              if (value == 'account') {
+                Navigator.pushNamed(context, '/account');
+              }
               if (value == 'user') {}
             },
             itemBuilder: (context) => [

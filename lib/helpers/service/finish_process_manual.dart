@@ -503,111 +503,117 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
-        appBar: CustomAppBar(
-          title: widget.title,
-          onReturn: () {
-            Navigator.pop(context);
-          },
-        ),
-        body: Column(
-          children: [
-            Container(
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          backgroundColor: const Color(0xFFf9fafc),
+          appBar: CustomAppBar(
+            title: widget.title,
+            onReturn: () {
+              Navigator.pop(context);
+            },
+          ),
+          body: Column(
+            children: [
+              Container(
+                color: Colors.white,
+                child: TabBar(tabs: [
+                  Tab(
+                    text: 'Form',
+                  ),
+                  Tab(
+                    text: 'Informasi',
+                  ),
+                  Tab(
+                    text: 'Barang',
+                  ),
+                ]),
+              ),
+              Expanded(
+                child: TabBarView(children: [
+                  CreateInfoTab(
+                    data: woData,
+                    id: widget.id,
+                    isLoading: _firstLoading,
+                    form: widget.form,
+                    formKey: _formKey,
+                    handleSubmit: widget.handleSubmit,
+                    handleSelectMachine: null,
+                    handleSelectWorkOrder: _selectWorkOrder,
+                    handleSelectLengthUnit: _selectLengthUnit,
+                    handleChangeInput: widget.handleChangeInput,
+                    handleSelectUnit: _selectUnit,
+                    handleSelectWidthUnit: _selectWidthUnit,
+                    qty: _qtyItemController,
+                    length: _lengthController,
+                    width: _widthController,
+                    note: _noteController,
+                    qtyItem: _qtyControllers,
+                    weight: _weightController,
+                    handleSelectWo: _selectWorkOrder,
+                    handleSelectQtyUnitItem: _selectQtyItemUnit,
+                    processId: processId,
+                    processData: data,
+                    withItemGrade: widget.withItemGrade,
+                    itemGradeOption: itemGradeOption,
+                    handleSelectQtyUnit: _selectQtyUnit,
+                    notes: _notesControllers,
+                    withQtyAndWeight: widget.withQtyAndWeight,
+                  ),
+                  CreateFormTab(
+                    data: woData,
+                  ),
+                  CreateItemTab(
+                    data: woData,
+                  ),
+                ]),
+              )
+            ],
+          ),
+          bottomNavigationBar: SafeArea(
+            child: Container(
               color: Colors.white,
-              child: TabBar(tabs: [
-                Tab(
-                  text: 'Form',
-                ),
-                Tab(
-                  text: 'Informasi',
-                ),
-                Tab(
-                  text: 'Barang',
-                ),
-              ]),
-            ),
-            Expanded(
-              child: TabBarView(children: [
-                CreateInfoTab(
-                  data: woData,
-                  id: widget.id,
-                  isLoading: _firstLoading,
-                  form: widget.form,
-                  formKey: _formKey,
-                  handleSubmit: widget.handleSubmit,
-                  handleSelectMachine: null,
-                  handleSelectWorkOrder: _selectWorkOrder,
-                  handleSelectLengthUnit: _selectLengthUnit,
-                  handleChangeInput: widget.handleChangeInput,
-                  handleSelectUnit: _selectUnit,
-                  handleSelectWidthUnit: _selectWidthUnit,
-                  qty: _qtyItemController,
-                  length: _lengthController,
-                  width: _widthController,
-                  note: _noteController,
-                  qtyItem: _qtyControllers,
-                  weight: _weightController,
-                  handleSelectWo: _selectWorkOrder,
-                  handleSelectQtyUnitItem: _selectQtyItemUnit,
-                  processId: processId,
-                  processData: data,
-                  withItemGrade: widget.withItemGrade,
-                  itemGradeOption: itemGradeOption,
-                  handleSelectQtyUnit: _selectQtyUnit,
-                  notes: _notesControllers,
-                  withQtyAndWeight: widget.withQtyAndWeight,
-                ),
-                CreateFormTab(
-                  data: woData,
-                ),
-                CreateItemTab(
-                  data: woData,
-                ),
-              ]),
-            )
-          ],
-        ),
-        bottomNavigationBar: SafeArea(
-          child: Container(
-            color: Colors.white,
-            padding: PaddingColumn.screen,
-            child: ValueListenableBuilder<bool>(
-              valueListenable: _isSubmitting,
-              builder: (context, isSubmitting, _) {
-                return Row(
-                  children: [
-                    Expanded(
-                      child: CancelButton(
-                        label: 'Batal',
-                        onPressed: () => Navigator.pop(context),
+              padding: PaddingColumn.screen,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: _isSubmitting,
+                builder: (context, isSubmitting, _) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: CancelButton(
+                          label: 'Batal',
+                          onPressed: () => Navigator.pop(context),
+                        ),
                       ),
-                    ),
-                    Expanded(
-                        child: FormButton(
-                      label: 'Simpan',
-                      isLoading: isSubmitting,
-                      isDisabled: widget.form?['wo_id'] == null ||
-                              widget.form?['length'] == null ||
-                              widget.form?['width'] == null
-                          ? true
-                          : false,
-                      onPressed: () async {
-                        _isSubmitting.value = true;
-                        try {
-                          await widget.handleSubmit(data['id'] != null
-                              ? data['id'].toString()
-                              : widget.processId);
-                        } finally {
-                          _isSubmitting.value = false;
-                        }
-                      },
-                    ))
-                  ].separatedBy(SizedBox(
-                    width: 16,
-                  )),
-                );
-              },
+                      Expanded(
+                          child: FormButton(
+                        label: 'Simpan',
+                        isLoading: isSubmitting,
+                        isDisabled: widget.form?['wo_id'] == null ||
+                                widget.form?['length'] == null ||
+                                widget.form?['width'] == null
+                            ? true
+                            : false,
+                        onPressed: () async {
+                          _isSubmitting.value = true;
+                          try {
+                            await widget.handleSubmit(data['id'] != null
+                                ? data['id'].toString()
+                                : widget.processId);
+                          } finally {
+                            _isSubmitting.value = false;
+                          }
+                        },
+                      ))
+                    ].separatedBy(SizedBox(
+                      width: 16,
+                    )),
+                  );
+                },
+              ),
             ),
           ),
         ),

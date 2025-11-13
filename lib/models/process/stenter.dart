@@ -22,6 +22,9 @@ class Stenter {
   final int? width_unit_id;
   final int? length_unit_id;
   final int? weight_unit_id;
+  final machine;
+  final String? maklon_name;
+  final bool? maklon;
 
   Stenter(
       {this.id,
@@ -44,7 +47,10 @@ class Stenter {
       this.end_by,
       this.length_unit_id,
       this.weight_unit_id,
-      this.width_unit_id});
+      this.width_unit_id,
+      this.machine,
+      this.maklon,
+      this.maklon_name});
 
   factory Stenter.fromJson(Map<String, dynamic> json) {
     return Stenter(
@@ -68,6 +74,9 @@ class Stenter {
       work_orders: json['work_orders'],
       start_by: json['start_by'],
       end_by: json['end_by'],
+      machine: json['machine'] ?? {},
+      maklon: json['maklon'] as bool?,
+      maklon_name: json['maklon_name'] ?? '',
     );
   }
 
@@ -94,6 +103,9 @@ class Stenter {
       'start_by': start_by,
       'end_by': end_by,
       'work_orders': work_orders,
+      'machine': machine,
+      'maklon': maklon == true ? 1 : 0,
+      'maklon_name': maklon == true ? maklon_name : '',
     };
   }
 }

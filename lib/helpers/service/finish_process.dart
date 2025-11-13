@@ -243,23 +243,29 @@ class _FinishProcessState extends State<FinishProcess> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFf9fafc),
-      appBar: CustomAppBar(
-        title: widget.title,
-        onReturn: () => Navigator.pop(context),
-      ),
-      body: FinishSubmitSection(
-        isScannerStopped: _isScannerStopped,
-        form: _form,
-        controller: _controller,
-        handleScan: _handleScan,
-        handleSubmit: _handleSubmit,
-        handleRoute: (form, handleSubmit, handleChangeInput) => _createRoute(
-            widget.formPageBuilder(context, null, null, {}, form, handleSubmit,
-                handleChangeInput)),
-        isLoading: _isLoading,
-        handleChangeInput: _handleChangeInput,
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFf9fafc),
+        appBar: CustomAppBar(
+          title: widget.title,
+          onReturn: () => Navigator.pop(context),
+        ),
+        body: FinishSubmitSection(
+          isScannerStopped: _isScannerStopped,
+          form: _form,
+          controller: _controller,
+          handleScan: _handleScan,
+          handleSubmit: _handleSubmit,
+          handleRoute: (form, handleSubmit, handleChangeInput) => _createRoute(
+              widget.formPageBuilder(context, null, null, {}, form,
+                  handleSubmit, handleChangeInput)),
+          isLoading: _isLoading,
+          handleChangeInput: _handleChangeInput,
+        ),
       ),
     );
   }

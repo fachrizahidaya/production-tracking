@@ -298,16 +298,60 @@ class _ListFormState extends State<ListForm> {
                               right: 0,
                               top: 0,
                               child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    if (isNew) {
-                                      (widget.form['attachments'] as List)
-                                          .remove(item);
-                                    } else {
-                                      (widget.data!['attachments'] as List)
-                                          .remove(item);
+                                onTap: () async {
+                                  final confirm = await showDialog<bool>(
+                                    context: context,
+                                    builder: (ctx) => AlertDialog(
+                                      title: const Text('Hapus Lampiran'),
+                                      content: const Text(
+                                          'Apakah Anda yakin ingin menghapus lampiran ini?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(ctx, false),
+                                          child: const Text('Batal'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(ctx, true),
+                                          child: const Text('Hapus',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+
+                                  if (confirm == true) {
+                                    setState(() {
+                                      if (isNew) {
+                                        // Locally captured or picked image
+                                        (widget.form['attachments'] as List)
+                                            .remove(item);
+                                      } else {
+                                        // Existing from API (optional server delete)
+                                        (widget.data!['attachments'] as List)
+                                            .remove(item);
+                                      }
+                                    });
+
+                                    // OPTIONAL: If you want to delete from server
+                                    if (!isNew && item['id'] != null) {
+                                      try {
+                                        // Example call (depends on your backend)
+                                        // await YourApiService.deleteAttachment(item['id']);
+                                      } catch (e) {
+                                        if (mounted) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    "Gagal menghapus dari server: $e")),
+                                          );
+                                        }
+                                      }
                                     }
-                                  });
+                                  }
                                 },
                                 child: Container(
                                   decoration: const BoxDecoration(
@@ -344,34 +388,6 @@ class _ListFormState extends State<ListForm> {
                 height: 16,
               )),
             ),
-          // ValueListenableBuilder<bool>(
-          //   valueListenable: widget.isSubmitting,
-          //   builder: (context, isSubmitting, _) {
-          //     return Align(
-          //       alignment: Alignment.center,
-          //       child: FormButton(
-          //         label: 'Submit',
-          //         onPressed: () async {
-          //           widget.isSubmitting.value = true;
-          //           try {
-          //             await widget.handleSubmit(widget.dyeingId.toString());
-          //             setState(() {
-          //               _initialQty = widget.qty.text;
-          //               _initialLength = widget.length.text;
-          //               _initialWidth = widget.width.text;
-          //               _initialNotes = widget.note.text;
-          //               _isChanged = false;
-          //             });
-          //           } finally {
-          //             widget.isSubmitting.value = false;
-          //           }
-          //         },
-          //         isLoading: isSubmitting,
-          //         isDisabled: widget.isFormIncomplete,
-          //       ),
-          //     );
-          //   },
-          // )
         ],
       ),
     );

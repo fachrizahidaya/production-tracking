@@ -22,6 +22,9 @@ class LongSitting {
   final dynamic work_orders;
   final dynamic start_by;
   final dynamic end_by;
+  final machine;
+  final String? maklon_name;
+  final bool? maklon;
 
   LongSitting(
       {this.id,
@@ -44,7 +47,10 @@ class LongSitting {
       this.wo_no,
       this.work_orders,
       this.start_by,
-      this.end_by});
+      this.end_by,
+      this.machine,
+      this.maklon,
+      this.maklon_name});
 
   factory LongSitting.fromJson(Map<String, dynamic> json) {
     return LongSitting(
@@ -68,6 +74,9 @@ class LongSitting {
       work_orders: json['work_orders'],
       start_by: json['start_by'],
       end_by: json['end_by'],
+      machine: json['machine'] ?? {},
+      maklon: json['maklon'] as bool?,
+      maklon_name: json['maklon_name'] ?? '',
     );
   }
 
@@ -94,6 +103,9 @@ class LongSitting {
       'start_by': start_by,
       'end_by': end_by,
       'work_orders': work_orders,
+      'machine': machine,
+      'maklon': maklon == true ? 1 : 0,
+      'maklon_name': maklon == true ? maklon_name : '',
     };
   }
 }

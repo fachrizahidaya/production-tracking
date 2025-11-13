@@ -9,7 +9,16 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderChart extends StatefulWidget {
   final List<dynamic> data;
-  const WorkOrderChart({super.key, required this.data});
+  final onHandleFilter;
+  final dariTanggal;
+  final sampaiTanggal;
+
+  const WorkOrderChart(
+      {super.key,
+      required this.data,
+      this.onHandleFilter,
+      this.dariTanggal,
+      this.sampaiTanggal});
 
   @override
   State<WorkOrderChart> createState() => _WorkOrderChartState();
@@ -21,10 +30,34 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
   double maxY = 0;
   int? touchedIndex;
 
+  final TextEditingController dariTanggalInput = TextEditingController();
+  final TextEditingController sampaiTanggalInput = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     _generateChartData();
+
+    dariTanggalInput.text = widget.dariTanggal;
+    sampaiTanggalInput.text = widget.sampaiTanggal;
+  }
+
+  @override
+  void didUpdateWidget(covariant WorkOrderChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.dariTanggal != dariTanggalInput.text) {
+      dariTanggalInput.text = widget.dariTanggal;
+    }
+    if (widget.sampaiTanggal != sampaiTanggalInput.text) {
+      sampaiTanggalInput.text = widget.sampaiTanggal;
+    }
+  }
+
+  @override
+  void dispose() {
+    dariTanggalInput.dispose();
+    sampaiTanggalInput.dispose();
+    super.dispose();
   }
 
   void _generateChartData() {
@@ -54,17 +87,13 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
       barRods: [
         BarChartRodData(
           toY: y1,
-          color: isTouched
-              ? const Color(0xFF34D399)
-              : const Color(0xFF10B981), // highlight when touched
+          color: isTouched ? const Color(0xFF34D399) : const Color(0xFF10B981),
           width: width,
           borderRadius: BorderRadius.circular(4),
         ),
         BarChartRodData(
           toY: y2,
-          color: isTouched
-              ? const Color(0xFFFFB84D)
-              : const Color(0xfff18800), // highlight when touched
+          color: isTouched ? const Color(0xFFFFB84D) : const Color(0xfff18800),
           width: width,
           borderRadius: BorderRadius.circular(4),
         ),
@@ -101,6 +130,87 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
     );
   }
 
+  Future<void> _pickDate({
+    required TextEditingController controller,
+    required String type,
+  }) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: controller.text.isNotEmpty
+          ? DateTime.tryParse(controller.text) ?? DateTime.now()
+          : DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: CustomTheme().colors('base'),
+              onPrimary: Colors.white,
+              onSurface: Colors.black87,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate != null) {
+      final formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+      setState(() {
+        controller.text = formattedDate;
+      });
+      widget.onHandleFilter(type, formattedDate);
+    }
+  }
+
+  Widget _buildDateFilterRow() {
+    return SizedBox(
+      width: 400,
+      child: Row(
+        children: [
+          Expanded(
+            child: GroupForm(
+              label: 'Dari Tanggal',
+              formControl: TextFormField(
+                controller: dariTanggalInput,
+                style: const TextStyle(fontSize: 14),
+                decoration: CustomTheme().inputDateDecoration(
+                  hintTextString: 'Pilih tanggal',
+                ),
+                keyboardType: TextInputType.datetime,
+                readOnly: true,
+                onTap: () => _pickDate(
+                  controller: dariTanggalInput,
+                  type: 'dari_tanggal',
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: GroupForm(
+              label: 'Sampai Tanggal',
+              formControl: TextFormField(
+                controller: sampaiTanggalInput,
+                style: const TextStyle(fontSize: 14),
+                decoration: CustomTheme().inputDateDecoration(
+                  hintTextString: 'Pilih tanggal',
+                ),
+                keyboardType: TextInputType.datetime,
+                readOnly: true,
+                onTap: () => _pickDate(
+                  controller: sampaiTanggalInput,
+                  type: 'sampai_tanggal',
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final bool allZero = widget.data.every((item) {
@@ -112,214 +222,89 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
     final double chartRatio = allZero ? 3 : 2;
 
     return DasboardCard(
-        child: Padding(
-      padding: PaddingColumn.screen,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Text('Status Setiap Proses'),
-              ),
-              SizedBox(
-                width: 400,
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: GroupForm(
-                        label: 'Dari Tanggal',
-                        formControl: TextFormField(
-                          // controller: dariTanggalInput,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
-                          decoration: CustomTheme().inputDateDecoration(
-                              clearable:
-                                  // dariTanggalInput.text != '' ? true :
-                                  false,
-                              onPressClear: () => {
-                                    setState(() {
-                                      // widget.onHandleFilter('dari_tanggal', '');
-                                      // dariTanggalInput.text = '';
-                                    })
-                                  },
-                              hintTextString: 'Pilih tanggal'),
-                          keyboardType: TextInputType.datetime,
-                          readOnly: true,
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2101),
-                              builder: (context, child) {
-                                return Theme(
-                                  data: ThemeData.light().copyWith(
-                                    colorScheme: ColorScheme.light(
-                                      primary: CustomTheme().colors('base'),
-                                      onPrimary: Colors.white,
-                                      onSurface: Colors.black87,
-                                    ),
-                                  ),
-                                  child: child!,
-                                );
-                              },
-                            );
-
-                            if (pickedDate != null) {
-                              String formattedDate =
-                                  DateFormat('yyyy-MM-dd').format(pickedDate);
-                              setState(() {
-                                // dariTanggalInput.text = formattedDate;
-                                // widget.onHandleFilter(
-                                //     'dari_tanggal', formattedDate);
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: GroupForm(
-                        label: 'Sampai Tanggal',
-                        formControl: TextFormField(
-                          // controller: sampaiTanggalInput,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
-                          decoration: CustomTheme().inputDateDecoration(
-                              clearable:
-                                  // sampaiTanggalInput.text != '' ? true :
-                                  false,
-                              onPressClear: () => {
-                                    setState(() {
-                                      // widget.onHandleFilter(
-                                      //     'sampai_tanggal', '');
-                                      // sampaiTanggalInput.text = '';
-                                    })
-                                  },
-                              hintTextString: 'Pilih tanggal'),
-                          keyboardType: TextInputType.datetime,
-                          readOnly: true,
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2101),
-                              builder: (context, child) {
-                                return Theme(
-                                  data: ThemeData.light().copyWith(
-                                    colorScheme: ColorScheme.light(
-                                      primary: CustomTheme().colors('base'),
-                                      onPrimary: Colors.white,
-                                      onSurface: Colors.black87,
-                                    ),
-                                  ),
-                                  child: child!,
-                                );
-                              },
-                            );
-
-                            if (pickedDate != null) {
-                              String formattedDate =
-                                  DateFormat('yyyy-MM-dd').format(pickedDate);
-                              setState(() {
-                                // sampaiTanggalInput.text = formattedDate;
-                                // widget.onHandleFilter(
-                                //     'sampai_tanggal', formattedDate);
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ].separatedBy(SizedBox(
-                    width: 16,
-                  )),
+      child: Padding(
+        padding: PaddingColumn.screen,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Expanded(
+                  child: Text('Status Setiap Proses'),
                 ),
-              ),
-            ],
-          ),
-          AspectRatio(
-            aspectRatio: chartRatio,
-            child: BarChart(
-              BarChartData(
-                maxY: maxY,
-                barGroups: barGroups,
-                barTouchData: BarTouchData(
-                  enabled: true,
-                  touchCallback: (FlTouchEvent event, response) {
-                    if (!event.isInterestedForInteractions ||
-                        response == null ||
-                        response.spot == null) {
-                      setState(() => touchedIndex = null);
-                      return;
-                    }
-                    setState(() {
-                      touchedIndex = response.spot!.touchedBarGroupIndex;
-                    });
-                  },
-                ),
-                gridData: FlGridData(
-                  show: true,
-                  drawHorizontalLine: false,
-                  drawVerticalLine: true,
-                  getDrawingHorizontalLine: (value) {
-                    if (value == 0 || value == maxY) {
+                _buildDateFilterRow(),
+              ],
+            ),
+            AspectRatio(
+              aspectRatio: chartRatio,
+              child: BarChart(
+                BarChartData(
+                  maxY: maxY,
+                  barGroups: barGroups,
+                  barTouchData: BarTouchData(
+                    enabled: true,
+                    touchCallback: (FlTouchEvent event, response) {
+                      if (!event.isInterestedForInteractions ||
+                          response == null ||
+                          response.spot == null) {
+                        setState(() => touchedIndex = null);
+                        return;
+                      }
+                      setState(() {
+                        touchedIndex = response.spot!.touchedBarGroupIndex;
+                      });
+                    },
+                  ),
+                  gridData: FlGridData(
+                    show: true,
+                    drawHorizontalLine: false,
+                    drawVerticalLine: true,
+                    getDrawingHorizontalLine: (value) {
+                      if (value == 0 || value == maxY) {
+                        return FlLine(
+                          color: Colors.grey.withOpacity(0.3),
+                          strokeWidth: 1,
+                        );
+                      }
                       return FlLine(
-                        color: Colors.grey.withOpacity(0.3),
-                        strokeWidth: 1,
+                        color: Colors.transparent,
+                        strokeWidth: 0,
                       );
-                    }
-                    return FlLine(
-                      color: Colors.transparent,
-                      strokeWidth: 0,
-                    );
-                  },
-                ),
-                titlesData: FlTitlesData(
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: bottomTitles,
-                      reservedSize: 50,
+                    },
+                  ),
+                  titlesData: FlTitlesData(
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: bottomTitles,
+                        reservedSize: 50,
+                      ),
                     ),
+                    leftTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
+                    rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
+                    topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
                   ),
-                  leftTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
+                  borderData: FlBorderData(show: false),
                 ),
-                borderData: FlBorderData(show: false),
               ),
             ),
-          ),
-          // Legend
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildLegendItem(const Color(0xFF10B981), 'Selesai'),
-              const SizedBox(width: 16),
-              _buildLegendItem(const Color(0xfff18800), 'Diproses'),
-            ],
-          ),
-        ].separatedBy(SizedBox(
-          height: 16,
-        )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildLegendItem(const Color(0xFF10B981), 'Selesai'),
+                const SizedBox(width: 16),
+                _buildLegendItem(const Color(0xfff18800), 'Diproses'),
+              ],
+            ),
+          ].separatedBy(const SizedBox(height: 16)),
+        ),
       ),
-    ));
+    );
   }
 
   Widget _buildLegendItem(Color color, String text) {

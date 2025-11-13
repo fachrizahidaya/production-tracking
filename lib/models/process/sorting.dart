@@ -25,6 +25,9 @@ class Sorting {
   final dynamic work_orders;
   final dynamic start_by;
   final dynamic end_by;
+  final machine;
+  final String? maklon_name;
+  final bool? maklon;
 
   Sorting(
       {this.id,
@@ -50,33 +53,40 @@ class Sorting {
       this.start_by,
       this.end_by,
       this.qty,
-      this.unit_id});
+      this.unit_id,
+      this.machine,
+      this.maklon,
+      this.maklon_name});
 
   factory Sorting.fromJson(Map<String, dynamic> json) {
     return Sorting(
-        id: json['id'] as int?,
-        weight_unit_id: json['weight_unit_id'] as int?,
-        length_unit_id: json['length_unit_id'] as int?,
-        width_unit_id: json['width_unit_id'] as int?,
-        wo_id: json['wo_id'] as int?,
-        machine_id: json['machine_id'] as int?,
-        start_by_id: json['start_by_id'] as int?,
-        end_by_id: json['end_by_id'] as int?,
-        sorting_no: json['sorting_no'] ?? '',
-        start_time: json['start_time'] ?? '',
-        end_time: json['end_time'] ?? '',
-        weight: json['weight'] ?? '',
-        width: json['width'] ?? '',
-        length: json['length'] ?? '',
-        status: json['status'] ?? '',
-        notes: json['notes'] ?? '',
-        attachments: json['attachments'] ?? [],
-        grades: json['grades'] ?? [],
-        work_orders: json['work_orders'],
-        start_by: json['start_by'],
-        end_by: json['end_by'],
-        qty: json['qty'] ?? '',
-        unit_id: json['unit_id'] as int?);
+      id: json['id'] as int?,
+      weight_unit_id: json['weight_unit_id'] as int?,
+      length_unit_id: json['length_unit_id'] as int?,
+      width_unit_id: json['width_unit_id'] as int?,
+      wo_id: json['wo_id'] as int?,
+      machine_id: json['machine_id'] as int?,
+      start_by_id: json['start_by_id'] as int?,
+      end_by_id: json['end_by_id'] as int?,
+      sorting_no: json['sorting_no'] ?? '',
+      start_time: json['start_time'] ?? '',
+      end_time: json['end_time'] ?? '',
+      weight: json['weight'] ?? '',
+      width: json['width'] ?? '',
+      length: json['length'] ?? '',
+      status: json['status'] ?? '',
+      notes: json['notes'] ?? '',
+      attachments: json['attachments'] ?? [],
+      grades: json['grades'] ?? [],
+      work_orders: json['work_orders'],
+      start_by: json['start_by'],
+      end_by: json['end_by'],
+      qty: json['qty'] ?? '',
+      unit_id: json['unit_id'] as int?,
+      machine: json['machine'] ?? {},
+      maklon: json['maklon'] as bool?,
+      maklon_name: json['maklon_name'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -105,6 +115,9 @@ class Sorting {
       'start_by': start_by,
       'end_by': end_by,
       'work_orders': work_orders,
+      'machine': machine,
+      'maklon': maklon == true ? 1 : 0,
+      'maklon_name': maklon == true ? maklon_name : '',
     };
   }
 }

@@ -223,7 +223,7 @@ class CustomTheme {
                 color: colors('base'),
               )
             : IconButton(
-                icon: const Icon(Icons.clear),
+                icon: const Icon(Icons.calendar_month_outlined),
                 onPressed: () {
                   onPressClear!();
                 },

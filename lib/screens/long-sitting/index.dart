@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
@@ -42,11 +43,26 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
   int page = 0;
   Map<String, String> params = {'search': '', 'page': '0'};
 
+  String dariTanggal = '';
+  String sampaiTanggal = '';
+
   @override
   void initState() {
     super.initState();
+    final now = DateTime.now();
+    final firstDayOfMonth = DateTime(now.year, now.month, 1);
+    final today = now;
+
+    dariTanggal = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
+    sampaiTanggal = DateFormat('yyyy-MM-dd').format(today);
+
     setState(() {
-      params = {'search': _search, 'page': '0'};
+      params = {
+        'search': _search,
+        'page': '0',
+        'start_date': dariTanggal,
+        'end_date': sampaiTanggal,
+      };
     });
     Future.delayed(Duration.zero, () {
       _loadMore();
@@ -91,10 +107,10 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
       }
     });
 
-    if (
-        // params['dari_tanggal'] == null &&
-        //   params['sampai_tanggal'] == null &&
-        params['machine_id'] == null && params['status'] == null) {
+    if (params['start_date'] == null &&
+        params['end_date'] == null &&
+        params['machine_id'] == null &&
+        params['status'] == null) {
       setState(() {
         _isFiltered = false;
       });
@@ -168,116 +184,124 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
-        appBar: CustomAppBar(
-          title: 'Long Sitting',
-          onReturn: () {
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            } else {
-              Navigator.pushReplacementNamed(context, '/dashboard');
-            }
-          },
-        ),
-        body: Column(
-          children: [
-            Expanded(
-                child: ProcessList(
-              fetchData: (params) async {
-                return await Provider.of<LongSittingService>(context,
-                        listen: false)
-                    .getDataList(params);
-              },
-              service: LongSittingService(),
-              searchQuery: _search,
-              canCreate: _canCreate,
-              canRead: _canRead,
-              itemBuilder: (item) => ItemProcessCard(
-                label: 'No. Long Sitting',
-                item: item,
-                titleKey: 'ls_no',
-                subtitleKey: 'work_orders',
-                subtitleField: 'wo_no',
-                isRework: (item) => item.rework == false,
-                getStartTime: (item) => formatDateSafe(item.start_time),
-                getEndTime: (item) => formatDateSafe(item.end_time),
-                getStartBy: (item) => item.start_by?['name'] ?? '',
-                getEndBy: (item) => item.end_by?['name'] ?? '',
-                getStatus: (item) => item.status ?? '-',
-                customBadgeBuilder: (status) => CustomBadge(
-                    title: status,
-                    withStatus: true,
-                    status: item.status,
-                    withDifferentColor: true,
-                    color: status == 'Diproses'
-                        ? Color(0xFFfff3c6)
-                        : Color(0xffd1fae4)),
-              ),
-              onItemTap: (context, item) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LongSittingDetail(
-                        id: item.id.toString(),
-                        no: item.ls_no.toString(),
-                        canDelete: _canDelete,
-                        canUpdate: _canUpdate,
-                      ),
-                    )).then((value) {
-                  if (value == true) {
-                    _refetch();
-                  } else {
-                    return null;
-                  }
-                });
-              },
-              filterWidget: ListFilter(
-                title: 'Filter',
-                params: params,
-                onHandleFilter: _handleFilter,
-                onSubmitFilter: () {
-                  _submitFilter();
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+          backgroundColor: const Color(0xFFf9fafc),
+          appBar: CustomAppBar(
+            title: 'Long Sitting',
+            onReturn: () {
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              } else {
+                Navigator.pushReplacementNamed(context, '/dashboard');
+              }
+            },
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                  child: ProcessList(
+                fetchData: (params) async {
+                  return await Provider.of<LongSittingService>(context,
+                          listen: false)
+                      .getDataList(params);
                 },
-                fetchMachine: (service) => service.fetchOptionsLongSitting(),
-                getMachineOptions: (service) => service.dataListOption,
-              ),
-              showActions: () {
-                ProcessSheet.showOptions(
-                  context,
-                  options: [
-                    BottomSheetOption(
-                      title: "Mulai Long Sitting",
-                      icon: Icons.add,
-                      iconColor: CustomTheme().buttonColor('primary'),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const CreateLongSitting()),
+                service: LongSittingService(),
+                searchQuery: _search,
+                canCreate: _canCreate,
+                canRead: _canRead,
+                itemBuilder: (item) => ItemProcessCard(
+                  label: 'No. Long Sitting',
+                  item: item,
+                  titleKey: 'ls_no',
+                  subtitleKey: 'work_orders',
+                  subtitleField: 'wo_no',
+                  isRework: (item) => item.rework == false,
+                  getStartTime: (item) => formatDateSafe(item.start_time),
+                  getEndTime: (item) => formatDateSafe(item.end_time),
+                  getStartBy: (item) => item.start_by?['name'] ?? '',
+                  getEndBy: (item) => item.end_by?['name'] ?? '',
+                  getStatus: (item) => item.status ?? '-',
+                  customBadgeBuilder: (status) => CustomBadge(
+                      title: status,
+                      withStatus: true,
+                      status: item.status,
+                      withDifferentColor: true,
+                      color: status == 'Diproses'
+                          ? Color(0xFFfff3c6)
+                          : Color(0xffd1fae4)),
+                ),
+                onItemTap: (context, item) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LongSittingDetail(
+                          id: item.id.toString(),
+                          no: item.ls_no.toString(),
+                          canDelete: _canDelete,
+                          canUpdate: _canUpdate,
+                        ),
+                      )).then((value) {
+                    if (value == true) {
+                      _refetch();
+                    } else {
+                      return null;
+                    }
+                  });
+                },
+                filterWidget: ListFilter(
+                  title: 'Filter',
+                  params: params,
+                  onHandleFilter: _handleFilter,
+                  onSubmitFilter: () {
+                    _submitFilter();
+                  },
+                  fetchMachine: (service) => service.fetchOptionsLongSitting(),
+                  getMachineOptions: (service) => service.dataListOption,
+                  dariTanggal: dariTanggal,
+                  sampaiTanggal: sampaiTanggal,
+                ),
+                showActions: () {
+                  ProcessSheet.showOptions(
+                    context,
+                    options: [
+                      BottomSheetOption(
+                        title: "Mulai Long Sitting",
+                        icon: Icons.add,
+                        iconColor: CustomTheme().buttonColor('primary'),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const CreateLongSitting()),
+                        ),
                       ),
-                    ),
-                    BottomSheetOption(
-                      title: "Selesai Long Sitting",
-                      icon: Icons.check_circle,
-                      iconColor: CustomTheme().buttonColor('warning'),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const FinishLongSitting()),
+                      BottomSheetOption(
+                        title: "Selesai Long Sitting",
+                        icon: Icons.check_circle,
+                        iconColor: CustomTheme().buttonColor('warning'),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const FinishLongSitting()),
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              },
-              firstLoading: _firstLoading,
-              isFiltered: _isFiltered,
-              hasMore: _hasMore,
-              handleLoadMore: _loadMore,
-              handleRefetch: _refetch,
-              handleSearch: _handleSearch,
-              dataList: _dataList,
-            ))
-          ],
-        ));
+                    ],
+                  );
+                },
+                firstLoading: _firstLoading,
+                isFiltered: _isFiltered,
+                hasMore: _hasMore,
+                handleLoadMore: _loadMore,
+                handleRefetch: _refetch,
+                handleSearch: _handleSearch,
+                dataList: _dataList,
+              ))
+            ],
+          )),
+    );
   }
 }

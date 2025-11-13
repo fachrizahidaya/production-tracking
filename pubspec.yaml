@@ -49,6 +49,10 @@ dependencies:
   redux: ^5.0.0
   mobile_scanner: ^6.0.11
   fl_chart: ^0.71.0
+  flutter_html: ^3.0.0
+  webview_flutter: ^4.13.0
+  image_picker: ^1.2.0
+  native_device_orientation: ^2.0.4
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +79,9 @@ flutter:
   assets:
     - assets/images/ic_launcher.png
     - .env
+    - assets/eula.json
+    - assets/privacy_policy.json
+    - assets/terms_conditions.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

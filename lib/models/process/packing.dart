@@ -24,6 +24,8 @@ class Packing {
   final dynamic start_by;
   final dynamic end_by;
   final machine;
+  final String? maklon_name;
+  final bool? maklon;
 
   Packing(
       {this.id,
@@ -48,7 +50,9 @@ class Packing {
       this.start_by,
       this.end_by,
       this.grades,
-      this.machine});
+      this.machine,
+      this.maklon,
+      this.maklon_name});
 
   factory Packing.fromJson(Map<String, dynamic> json) {
     return Packing(
@@ -74,6 +78,8 @@ class Packing {
       end_by: json['end_by'],
       grades: json['grades'] ?? [],
       machine: json['machine'] ?? {},
+      maklon: json['maklon'] as bool?,
+      maklon_name: json['maklon_name'] ?? '',
     );
   }
 
@@ -102,6 +108,8 @@ class Packing {
       'work_orders': work_orders,
       'grades': grades,
       'machine': machine,
+      'maklon': maklon == true ? 1 : 0,
+      'maklon_name': maklon == true ? maklon_name : '',
     };
   }
 }

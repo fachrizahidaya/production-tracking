@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/item_dyeing.dart';
+import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/main_list.dart';
@@ -180,6 +181,8 @@ class _DyeingScreenState extends State<DyeingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -209,8 +212,14 @@ class _DyeingScreenState extends State<DyeingScreen> {
               searchQuery: _search,
               canCreate: _canCreate,
               canRead: _canRead,
-              itemBuilder: (item) => ItemDyeing(
-                item: item,
+              itemBuilder: (item) => Align(
+                alignment: Alignment.centerLeft,
+                child: ItemDyeing(
+                  useCustomSize: true,
+                  customWidth: 930.0,
+                  customHeight: null,
+                  item: item,
+                ),
               ),
               onItemTap: (context, item) {
                 Navigator.push(
@@ -252,57 +261,64 @@ class _DyeingScreenState extends State<DyeingScreen> {
               hasMore: _hasMore,
               isFiltered: _isFiltered,
               showActions: () {
-                showModalBottomSheet(
+                showDialog(
                   context: context,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(4),
-                    ),
-                  ),
                   builder: (context) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ListTile(
-                          leading: Icon(Icons.add,
-                              color: CustomTheme().buttonColor('primary')),
-                          title: const Text("Mulai Dyeing"),
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const CreateDyeing(),
-                              ),
-                            );
-                          },
+                    return Dialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      insetPadding: const EdgeInsets.symmetric(
+                          horizontal: 80, vertical: 80),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              leading: Icon(Icons.add,
+                                  color: CustomTheme().buttonColor('primary')),
+                              title: const Text("Mulai Dyeing"),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const CreateDyeing(),
+                                  ),
+                                );
+                              },
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: Icon(Icons.check_circle,
+                                  color: CustomTheme().buttonColor('warning')),
+                              title: const Text("Selesai Dyeing"),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const FinishDyeing(),
+                                  ),
+                                );
+                              },
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: Icon(Icons.replay_outlined,
+                                  color: CustomTheme().buttonColor('warning')),
+                              title: const Text("Rework Dyeing"),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const ReworkDyeing(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                        ListTile(
-                          leading: Icon(Icons.check_circle,
-                              color: CustomTheme().buttonColor('warning')),
-                          title: const Text("Selesai Dyeing"),
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const FinishDyeing(),
-                              ),
-                            );
-                          },
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.replay_outlined,
-                              color: CustomTheme().buttonColor('warning')),
-                          title: const Text("Rework Dyeing"),
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const ReworkDyeing(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                      ),
                     );
                   },
                 );
@@ -310,6 +326,85 @@ class _DyeingScreenState extends State<DyeingScreen> {
             ))
           ],
         ),
+        bottomNavigationBar: isPortrait
+            ? CustomFloatingButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        insetPadding: const EdgeInsets.symmetric(
+                            horizontal: 80, vertical: 80),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.add,
+                                    color:
+                                        CustomTheme().buttonColor('primary')),
+                                title: const Text("Mulai Dyeing"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CreateDyeing(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              const Divider(height: 1),
+                              ListTile(
+                                leading: Icon(Icons.check_circle,
+                                    color:
+                                        CustomTheme().buttonColor('warning')),
+                                title: const Text("Selesai Dyeing"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const FinishDyeing(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              const Divider(height: 1),
+                              ListTile(
+                                leading: Icon(Icons.replay_outlined,
+                                    color:
+                                        CustomTheme().buttonColor('warning')),
+                                title: const Text("Rework Dyeing"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ReworkDyeing(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                  ;
+                },
+                icon: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 128,
+                ),
+              )
+            : null,
       ),
     );
   }

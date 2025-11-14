@@ -250,7 +250,7 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
                         ),
                         Expanded(
                             child: FormButton(
-                          label: 'Simpan',
+                          label: 'Mulai',
                           isLoading: isSubmitting,
                           isDisabled: widget.form?['wo_id'] == null ||
                                   widget.form?['machine_id'] == null

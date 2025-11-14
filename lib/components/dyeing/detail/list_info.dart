@@ -13,6 +13,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
+import 'package:html/parser.dart' as html_parser;
 
 class ListInfo extends StatefulWidget {
   final data;
@@ -80,6 +81,11 @@ class _ListInfoState extends State<ListInfo> {
 
   @override
   Widget build(BuildContext context) {
+    String htmlToPlainText(String htmlString) {
+      final document = html_parser.parse(htmlString);
+      return document.body?.text ?? '';
+    }
+
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(8),
@@ -138,9 +144,7 @@ class _ListInfoState extends State<ListInfo> {
                           ],
                         ),
                         SelectForm(
-                          isDisabled: widget.data['status'] == 'Diproses'
-                              ? false
-                              : true,
+                          isDisabled: widget.data['can_update'] ? false : true,
                           label: 'Mesin',
                           onTap: () => widget.handleSelectMachine(),
                           selectedLabel: widget.form['nama_mesin'] ?? '',
@@ -237,10 +241,10 @@ class _ListInfoState extends State<ListInfo> {
                                             label: 'Panjang',
                                             req: false,
                                             controller: widget.length,
-                                            isDisabled: widget.data['status'] ==
-                                                    'Diproses'
-                                                ? false
-                                                : true,
+                                            isDisabled:
+                                                widget.data['can_update']
+                                                    ? false
+                                                    : true,
                                             handleChange: (value) {
                                               setState(() {
                                                 widget.length.text =
@@ -258,8 +262,7 @@ class _ListInfoState extends State<ListInfo> {
                                               onTap: () => widget
                                                   .handleSelectLengthUnit(),
                                               isDisabled:
-                                                  widget.data['status'] ==
-                                                          'Diproses'
+                                                  widget.data['can_update']
                                                       ? false
                                                       : true,
                                               selectedLabel: widget.form[
@@ -286,10 +289,10 @@ class _ListInfoState extends State<ListInfo> {
                                           child: TextForm(
                                             label: 'Lebar',
                                             req: false,
-                                            isDisabled: widget.data['status'] ==
-                                                    'Diproses'
-                                                ? false
-                                                : true,
+                                            isDisabled:
+                                                widget.data['can_update']
+                                                    ? false
+                                                    : true,
                                             controller: widget.width,
                                             handleChange: (value) {
                                               setState(() {
@@ -308,8 +311,7 @@ class _ListInfoState extends State<ListInfo> {
                                               onTap: () => widget
                                                   .handleSelectWidthUnit(),
                                               isDisabled:
-                                                  widget.data['status'] ==
-                                                          'Diproses'
+                                                  widget.data['can_update']
                                                       ? false
                                                       : true,
                                               selectedLabel: widget.form[
@@ -336,10 +338,10 @@ class _ListInfoState extends State<ListInfo> {
                                           child: TextForm(
                                             label: 'Qty Hasil Dyeing',
                                             req: false,
-                                            isDisabled: widget.data['status'] ==
-                                                    'Diproses'
-                                                ? false
-                                                : true,
+                                            isDisabled:
+                                                widget.data['can_update']
+                                                    ? false
+                                                    : true,
                                             controller: widget.qty,
                                             handleChange: (value) {
                                               setState(() {
@@ -356,8 +358,7 @@ class _ListInfoState extends State<ListInfo> {
                                           child: SelectForm(
                                               label: 'Satuan',
                                               isDisabled:
-                                                  widget.data['status'] ==
-                                                          'Diproses'
+                                                  widget.data['can_update']
                                                       ? false
                                                       : true,
                                               onTap: () =>
@@ -406,7 +407,8 @@ class _ListInfoState extends State<ListInfo> {
                           ),
                           ViewText(
                             viewLabel: 'Catatan Work Order',
-                            viewValue: '${widget.data['work_orders']['notes']}',
+                            viewValue: htmlToPlainText(
+                                widget.data['work_orders']['notes']),
                           )
                         ].separatedBy(SizedBox(
                           height: 8,

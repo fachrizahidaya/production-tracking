@@ -217,6 +217,7 @@ class _ListFormState extends State<ListForm> {
                                   child: TextForm(
                                     label: 'Jumlah',
                                     req: false,
+                                    isNumber: true,
                                     handleChange: (val) =>
                                         _updateGrade(i, 'qty', val),
                                   ),
@@ -267,6 +268,7 @@ class _ListFormState extends State<ListForm> {
                               child: TextForm(
                                 label: 'Panjang',
                                 req: false,
+                                isNumber: true,
                                 controller: widget.length,
                                 handleChange: (value) {
                                   setState(() {
@@ -299,6 +301,7 @@ class _ListFormState extends State<ListForm> {
                               child: TextForm(
                                 label: 'Lebar',
                                 req: false,
+                                isNumber: true,
                                 controller: widget.width,
                                 handleChange: (value) {
                                   setState(() {
@@ -331,6 +334,7 @@ class _ListFormState extends State<ListForm> {
                               child: TextForm(
                                 label: 'Berat',
                                 req: false,
+                                isNumber: true,
                                 controller: widget.weight,
                                 handleChange: (value) {
                                   setState(() {
@@ -364,6 +368,7 @@ class _ListFormState extends State<ListForm> {
                                 child: TextForm(
                                   label: 'Jumlah',
                                   req: false,
+                                  isNumber: true,
                                   controller: widget.qty,
                                   handleChange: (value) {
                                     setState(() {

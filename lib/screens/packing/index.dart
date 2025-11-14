@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
@@ -183,6 +184,8 @@ class _PackingScreenState extends State<PackingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -213,26 +216,32 @@ class _PackingScreenState extends State<PackingScreen> {
                 searchQuery: _search,
                 canCreate: _canCreate,
                 canRead: _canRead,
-                itemBuilder: (item) => ItemProcessCard(
-                  label: 'No. Packing',
-                  item: item,
-                  titleKey: 'packing_no',
-                  subtitleKey: 'work_orders',
-                  subtitleField: 'wo_no',
-                  isRework: (item) => item.rework == false,
-                  getStartTime: (item) => formatDateSafe(item.start_time),
-                  getEndTime: (item) => formatDateSafe(item.end_time),
-                  getStartBy: (item) => item.start_by?['name'] ?? '',
-                  getEndBy: (item) => item.end_by?['name'] ?? '',
-                  getStatus: (item) => item.status ?? '-',
-                  customBadgeBuilder: (status) => CustomBadge(
-                      title: status,
-                      withStatus: true,
-                      status: item.status,
-                      withDifferentColor: true,
-                      color: status == 'Diproses'
-                          ? Color(0xFFfff3c6)
-                          : Color(0xffd1fae4)),
+                itemBuilder: (item) => Align(
+                  alignment: Alignment.centerLeft,
+                  child: ItemProcessCard(
+                    useCustomSize: true,
+                    customWidth: 930.0,
+                    customHeight: null,
+                    label: 'No. Packing',
+                    item: item,
+                    titleKey: 'packing_no',
+                    subtitleKey: 'work_orders',
+                    subtitleField: 'wo_no',
+                    isRework: (item) => item.rework == false,
+                    getStartTime: (item) => formatDateSafe(item.start_time),
+                    getEndTime: (item) => formatDateSafe(item.end_time),
+                    getStartBy: (item) => item.start_by?['name'] ?? '',
+                    getEndBy: (item) => item.end_by?['name'] ?? '',
+                    getStatus: (item) => item.status ?? '-',
+                    customBadgeBuilder: (status) => CustomBadge(
+                        title: status,
+                        withStatus: true,
+                        status: item.status,
+                        withDifferentColor: true,
+                        color: status == 'Diproses'
+                            ? Color(0xFFfff3c6)
+                            : Color(0xffd1fae4)),
+                  ),
                 ),
                 onItemTap: (context, item) {
                   Navigator.push(
@@ -298,7 +307,42 @@ class _PackingScreenState extends State<PackingScreen> {
                 dataList: _dataList,
               ))
             ],
-          )),
+          ),
+          bottomNavigationBar: isPortrait
+              ? CustomFloatingButton(
+                  onPressed: () {
+                    ProcessSheet.showOptions(
+                      context,
+                      options: [
+                        BottomSheetOption(
+                          title: "Mulai Packing",
+                          icon: Icons.add,
+                          iconColor: CustomTheme().buttonColor('primary'),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const CreatePacking()),
+                          ),
+                        ),
+                        BottomSheetOption(
+                          title: "Selesai Packing",
+                          icon: Icons.check_circle,
+                          iconColor: CustomTheme().buttonColor('warning'),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const FinishPacking()),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                    size: 128,
+                  ))
+              : null),
     );
   }
 }

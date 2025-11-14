@@ -8,6 +8,7 @@ import 'package:textile_tracking/components/master/layout/custom_card.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:html/parser.dart' as html_parser;
 
 class ListForm extends StatefulWidget {
   final formKey;
@@ -89,6 +90,11 @@ class _ListFormState extends State<ListForm> {
 
   @override
   Widget build(BuildContext context) {
+    String htmlToPlainText(String htmlString) {
+      final document = html_parser.parse(htmlString);
+      return document.body?.text ?? '';
+    }
+
     return Form(
       key: widget.formKey,
       child: Column(
@@ -103,7 +109,7 @@ class _ListFormState extends State<ListForm> {
                   onTap: () => widget.handleSelectWo(),
                   selectedLabel: widget.form['no_wo'] ?? '',
                   selectedValue: widget.form['wo_id']?.toString() ?? '',
-                  required: false),
+                  required: true),
             )),
           if (widget.form?['wo_id'] != null)
             Column(
@@ -122,6 +128,7 @@ class _ListFormState extends State<ListForm> {
                             child: TextForm(
                               label: 'Panjang',
                               req: false,
+                              isNumber: true,
                               controller: widget.length,
                               handleChange: (value) {
                                 setState(() {
@@ -154,6 +161,7 @@ class _ListFormState extends State<ListForm> {
                             child: TextForm(
                               label: 'Lebar',
                               req: false,
+                              isNumber: true,
                               controller: widget.width,
                               handleChange: (value) {
                                 setState(() {
@@ -184,8 +192,9 @@ class _ListFormState extends State<ListForm> {
                           Expanded(
                             flex: 2,
                             child: TextForm(
-                              label: 'Jumlah',
-                              req: false,
+                              label: 'Qty Hasil Dyeing',
+                              req: true,
+                              isNumber: true,
                               controller: widget.qty,
                               handleChange: (value) {
                                 setState(() {
@@ -203,7 +212,7 @@ class _ListFormState extends State<ListForm> {
                                 selectedLabel: widget.form['nama_satuan'] ?? '',
                                 selectedValue:
                                     widget.form['unit_id']?.toString() ?? '',
-                                required: false),
+                                required: true),
                           )
                         ].separatedBy(SizedBox(
                           width: 16,
@@ -378,7 +387,7 @@ class _ListFormState extends State<ListForm> {
                     controller: widget.note,
                     handleChange: (value) {
                       setState(() {
-                        widget.note.text = value.toString();
+                        widget.note.text = htmlToPlainText(value.toString());
                         widget.handleChangeInput('notes', value);
                       });
                     },

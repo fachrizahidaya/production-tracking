@@ -272,7 +272,7 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
       useSafeArea: true,
       builder: (BuildContext context) {
         return SelectDialog(
-          label: 'Satuan',
+          label: 'Satuan Panjang',
           options: unitOption,
           selected: widget.form?['length_unit_id'].toString() ?? '',
           handleChangeValue: (e) {
@@ -304,7 +304,7 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
       useSafeArea: true,
       builder: (BuildContext context) {
         return SelectDialog(
-          label: 'Satuan',
+          label: 'Satuan Lebar',
           options: unitOption,
           selected: widget.form?['width_unit_id'].toString() ?? '',
           handleChangeValue: (e) {
@@ -408,10 +408,8 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
                       ),
                       Expanded(
                           child: FormButton(
-                        label: 'Simpan',
+                        label: 'Selesai',
                         isDisabled: widget.form?['wo_id'] == null ||
-                                widget.form?['length'] == null ||
-                                widget.form?['width'] == null ||
                                 widget.form?['qty'] == null ||
                                 widget.form?['unit_id'] == null
                             ? true

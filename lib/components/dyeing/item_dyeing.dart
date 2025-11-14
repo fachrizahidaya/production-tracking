@@ -7,15 +7,23 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ItemDyeing extends StatelessWidget {
   final item;
+  final useCustomSize;
+  final customWidth;
+  final customHeight;
 
-  const ItemDyeing({
-    super.key,
-    this.item,
-  });
+  const ItemDyeing(
+      {super.key,
+      this.item,
+      this.customHeight,
+      this.customWidth,
+      this.useCustomSize});
 
   @override
   Widget build(BuildContext context) {
     return CustomCard(
+        useCustomSize: useCustomSize,
+        customWidth: customWidth,
+        customHeight: customHeight,
         child: Padding(
             padding: PaddingColumn.screen,
             child: Column(

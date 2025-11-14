@@ -160,7 +160,7 @@ class CustomTheme {
         border: OutlineInputBorder(
           borderRadius: const BorderRadius.all(
             Radius.circular(
-              8.0,
+              4.0,
             ),
           ),
           borderSide: BorderSide(
@@ -171,7 +171,7 @@ class CustomTheme {
         focusedBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(
-              8.0,
+              4.0,
             ),
           ),
           borderSide: BorderSide(
@@ -182,7 +182,7 @@ class CustomTheme {
         enabledBorder: OutlineInputBorder(
           borderRadius: const BorderRadius.all(
             Radius.circular(
-              8.0,
+              4.0,
             ),
           ),
           borderSide: BorderSide(
@@ -193,7 +193,7 @@ class CustomTheme {
         errorBorder: OutlineInputBorder(
           borderRadius: const BorderRadius.all(
             Radius.circular(
-              8.0,
+              4.0,
             ),
           ),
           borderSide: BorderSide(
@@ -204,7 +204,7 @@ class CustomTheme {
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: const BorderRadius.all(
             Radius.circular(
-              8.0,
+              4.0,
             ),
           ),
           borderSide: BorderSide(

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
@@ -184,88 +185,128 @@ class _StenterScreenState extends State<StenterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-          backgroundColor: const Color(0xFFf9fafc),
-          appBar: CustomAppBar(
-            title: 'Stenter',
-            onReturn: () {
-              if (Navigator.canPop(context)) {
-                Navigator.pop(context);
-              } else {
-                Navigator.pushReplacementNamed(context, '/dashboard');
-              }
-            },
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                  child: ProcessList(
-                fetchData: (params) async {
-                  return await Provider.of<StenterService>(context,
-                          listen: false)
-                      .getDataList(params);
+        backgroundColor: const Color(0xFFf9fafc),
+        appBar: CustomAppBar(
+          title: 'Stenter',
+          onReturn: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushReplacementNamed(context, '/dashboard');
+            }
+          },
+        ),
+        body: Column(
+          children: [
+            Expanded(
+                child: ProcessList(
+              fetchData: (params) async {
+                return await Provider.of<StenterService>(context, listen: false)
+                    .getDataList(params);
+              },
+              service: StenterService(),
+              searchQuery: _search,
+              canCreate: _canCreate,
+              canRead: _canRead,
+              itemBuilder: (item) => ItemProcessCard(
+                label: 'No. Stenter',
+                item: item,
+                titleKey: 'stenter_no',
+                subtitleKey: 'work_orders',
+                subtitleField: 'wo_no',
+                isRework: (item) => item.rework == false,
+                getStartTime: (item) => formatDateSafe(item.start_time),
+                getEndTime: (item) => formatDateSafe(item.end_time),
+                getStartBy: (item) => item.start_by?['name'] ?? '',
+                getEndBy: (item) => item.end_by?['name'] ?? '',
+                getStatus: (item) => item.status ?? '-',
+                customBadgeBuilder: (status) => CustomBadge(
+                    title: status,
+                    withStatus: true,
+                    status: item.status,
+                    withDifferentColor: true,
+                    color: status == 'Diproses'
+                        ? Color(0xFFfff3c6)
+                        : Color(0xffd1fae4)),
+              ),
+              onItemTap: (context, item) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StenterDetail(
+                        id: item.id.toString(),
+                        no: item.stenter_no.toString(),
+                        canDelete: _canDelete,
+                        canUpdate: _canUpdate,
+                      ),
+                    )).then((value) {
+                  if (value == true) {
+                    _refetch();
+                  } else {
+                    return null;
+                  }
+                });
+              },
+              filterWidget: ListFilter(
+                title: 'Filter',
+                params: params,
+                onHandleFilter: _handleFilter,
+                onSubmitFilter: () {
+                  _submitFilter();
                 },
-                service: StenterService(),
-                searchQuery: _search,
-                canCreate: _canCreate,
-                canRead: _canRead,
-                itemBuilder: (item) => ItemProcessCard(
-                  label: 'No. Stenter',
-                  item: item,
-                  titleKey: 'stenter_no',
-                  subtitleKey: 'work_orders',
-                  subtitleField: 'wo_no',
-                  isRework: (item) => item.rework == false,
-                  getStartTime: (item) => formatDateSafe(item.start_time),
-                  getEndTime: (item) => formatDateSafe(item.end_time),
-                  getStartBy: (item) => item.start_by?['name'] ?? '',
-                  getEndBy: (item) => item.end_by?['name'] ?? '',
-                  getStatus: (item) => item.status ?? '-',
-                  customBadgeBuilder: (status) => CustomBadge(
-                      title: status,
-                      withStatus: true,
-                      status: item.status,
-                      withDifferentColor: true,
-                      color: status == 'Diproses'
-                          ? Color(0xFFfff3c6)
-                          : Color(0xffd1fae4)),
-                ),
-                onItemTap: (context, item) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => StenterDetail(
-                          id: item.id.toString(),
-                          no: item.stenter_no.toString(),
-                          canDelete: _canDelete,
-                          canUpdate: _canUpdate,
-                        ),
-                      )).then((value) {
-                    if (value == true) {
-                      _refetch();
-                    } else {
-                      return null;
-                    }
-                  });
-                },
-                filterWidget: ListFilter(
-                  title: 'Filter',
-                  params: params,
-                  onHandleFilter: _handleFilter,
-                  onSubmitFilter: () {
-                    _submitFilter();
-                  },
-                  fetchMachine: (service) => service.fetchOptionsStenter(),
-                  getMachineOptions: (service) => service.dataListOption,
-                  dariTanggal: dariTanggal,
-                  sampaiTanggal: sampaiTanggal,
-                ),
-                showActions: () {
+                fetchMachine: (service) => service.fetchOptionsStenter(),
+                getMachineOptions: (service) => service.dataListOption,
+                dariTanggal: dariTanggal,
+                sampaiTanggal: sampaiTanggal,
+              ),
+              showActions: () {
+                ProcessSheet.showOptions(
+                  context,
+                  options: [
+                    BottomSheetOption(
+                      title: "Mulai Stenter",
+                      icon: Icons.add,
+                      iconColor: CustomTheme().buttonColor('primary'),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const CreateStenter()),
+                      ),
+                    ),
+                    BottomSheetOption(
+                      title: "Selesai Stenter",
+                      icon: Icons.check_circle,
+                      iconColor: CustomTheme().buttonColor('warning'),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const FinishStenter()),
+                      ),
+                    ),
+                  ],
+                );
+              },
+              firstLoading: _firstLoading,
+              isFiltered: _isFiltered,
+              hasMore: _hasMore,
+              handleLoadMore: _loadMore,
+              handleRefetch: _refetch,
+              handleSearch: _handleSearch,
+              dataList: _dataList,
+            ))
+          ],
+        ),
+        bottomNavigationBar: isPortrait
+            ? CustomFloatingButton(
+                onPressed: () {
                   ProcessSheet.showOptions(
                     context,
                     options: [
@@ -292,16 +333,13 @@ class _StenterScreenState extends State<StenterScreen> {
                     ],
                   );
                 },
-                firstLoading: _firstLoading,
-                isFiltered: _isFiltered,
-                hasMore: _hasMore,
-                handleLoadMore: _loadMore,
-                handleRefetch: _refetch,
-                handleSearch: _handleSearch,
-                dataList: _dataList,
-              ))
-            ],
-          )),
+                icon: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 128,
+                ))
+            : null,
+      ),
     );
   }
 }

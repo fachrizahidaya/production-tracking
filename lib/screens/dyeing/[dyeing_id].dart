@@ -495,7 +495,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
           canUpdate: widget.canUpdate,
           handleDelete: _handleDelete,
           id: data['id'],
-          status: data['status'],
+          status: data['can_delete'],
         ),
         body: Column(
           children: [
@@ -520,7 +520,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
             )
           ],
         ),
-        bottomNavigationBar: data['status'] == 'Selesai'
+        bottomNavigationBar: data['can_update'] != true
             ? null
             : SafeArea(
                 child: Container(

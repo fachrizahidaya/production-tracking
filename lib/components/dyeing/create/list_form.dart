@@ -52,7 +52,7 @@ class _ListFormState extends State<ListForm> {
                   onTap: () => widget.selectWorkOrder(),
                   selectedLabel: widget.form?['no_wo'] ?? '',
                   selectedValue: widget.form?['wo_id']?.toString() ?? '',
-                  required: false,
+                  required: true,
                 ),
               )),
 
@@ -64,7 +64,7 @@ class _ListFormState extends State<ListForm> {
                 onTap: () => widget.selectMachine(),
                 selectedLabel: widget.form['nama_mesin'] ?? '',
                 selectedValue: widget.form['machine_id'].toString(),
-                required: false,
+                required: true,
               ),
             )),
             // ValueListenableBuilder<bool>(

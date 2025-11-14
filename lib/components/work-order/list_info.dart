@@ -5,6 +5,7 @@ import 'package:textile_tracking/components/master/layout/custom_card.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:html/parser.dart' as html_parser;
 
 class ListInfo extends StatefulWidget {
   final data;
@@ -17,6 +18,11 @@ class ListInfo extends StatefulWidget {
 }
 
 class _ListInfoState extends State<ListInfo> {
+  String htmlToPlainText(String htmlString) {
+    final document = html_parser.parse(htmlString);
+    return document.body?.text ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -70,7 +76,8 @@ class _ListInfoState extends State<ListInfo> {
                                   : '-'),
                           ViewText(
                               viewLabel: 'Catatan',
-                              viewValue: widget.data?['notes'] ?? '-')
+                              viewValue:
+                                  htmlToPlainText(widget.data?['notes'] ?? '-'))
                         ].separatedBy(SizedBox(
                           height: 8,
                         )),

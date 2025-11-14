@@ -77,132 +77,121 @@ class _SubmitSectionState extends State<SubmitSection> {
 
         return Stack(
           children: [
-            Container(
-              padding: MarginSearch.screen,
-              child: Column(
-                children: [
-                  Expanded(
-                      flex: 2,
-                      child: Center(child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          final maxSide = math.min(
-                              constraints.maxWidth, constraints.maxHeight);
-                          final scanSize = maxSide * 0.8;
-                          return SizedBox(
-                            width: scanSize,
-                            height: scanSize,
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(4),
-                                child: Stack(
-                                  children: [
-                                    Transform.rotate(
-                                      angle: angle,
-                                      alignment: Alignment.center,
-                                      child: SizedBox(
-                                        width: scanSize,
-                                        height: scanSize,
-                                        child: FittedBox(
-                                          fit: BoxFit.cover,
-                                          clipBehavior: Clip.hardEdge,
-                                          child: SizedBox(
-                                            width: scanSize,
-                                            height: scanSize,
-                                            child: MobileScanner(
-                                              controller: controller,
-                                              onDetect: (capture) {
-                                                final List<Barcode> barcodes =
-                                                    capture.barcodes;
-
-                                                for (final barcode
-                                                    in barcodes) {
-                                                  final String? code =
-                                                      barcode.rawValue;
-
-                                                  if (code != null &&
-                                                      code.isNotEmpty) {
-                                                    controller.stop();
-                                                    setState(() {
-                                                      _isScannerStopped = true;
-                                                    });
-
-                                                    widget.handleScan(code);
-
-                                                    break;
-                                                  }
-                                                }
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    if (_isScannerStopped)
-                                      Center(
-                                        child: IconButton(
-                                          icon: Icon(
-                                            Icons.refresh,
-                                            size: 48,
-                                            color: Colors.black,
-                                          ),
-                                          onPressed: () {
-                                            controller.start();
-                                            setState(() {
-                                              _isScannerStopped = false;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    Positioned(
-                                      top: 16,
-                                      right: 16,
-                                      child: IconButton(
-                                        icon: const Icon(Icons.cameraswitch,
-                                            color: Colors.white),
-                                        onPressed: () =>
-                                            controller.switchCamera(),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                          );
-                        },
-                      ))),
-                  Expanded(
-                      child: Column(
-                    children: [
-                      Text(
-                        "Scan QR Work Order",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.edit),
-                        label: const Text("Isi Manual"),
-                        onPressed: () async {
-                          final result = await Navigator.of(context).push(widget
-                              .handleRoute(widget.form, widget.handleSubmit));
-
-                          if (result != null &&
-                              result is String &&
-                              result.isNotEmpty) {
-                            widget.handleScan(result);
+            // ✅ Fullscreen camera preview
+            Positioned.fill(
+              child: Transform.rotate(
+                angle: angle,
+                alignment: Alignment.center,
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  clipBehavior: Clip.hardEdge,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: MobileScanner(
+                      controller: controller,
+                      onDetect: (capture) {
+                        final barcodes = capture.barcodes;
+                        for (final barcode in barcodes) {
+                          final String? code = barcode.rawValue;
+                          if (code != null && code.isNotEmpty) {
+                            controller.stop();
+                            setState(() => _isScannerStopped = true);
+                            widget.handleScan(code);
+                            break;
                           }
-                        },
-                      ),
-                    ].separatedBy(SizedBox(
-                      height: 16,
-                    )),
-                  )),
-                ].separatedBy(SizedBox(
-                  height: 16,
-                )),
+                        }
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
+
+            // ✅ Overlay for UI controls (keeps upright)
+            Positioned.fill(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Top-right camera switch
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.cameraswitch,
+                              color: Colors.white),
+                          onPressed: () => controller.switchCamera(),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Bottom text and button
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: Column(
+                      children: [
+                        const Text(
+                          "Scan QR Work Order",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            shadows: [
+                              Shadow(
+                                  color: Colors.black,
+                                  offset: Offset(1, 1),
+                                  blurRadius: 3)
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        ElevatedButton.icon(
+                          icon: const Icon(Icons.edit),
+                          label: const Text("Isi Manual"),
+                          onPressed: () async {
+                            final result = await Navigator.of(context).push(
+                              widget.handleRoute(
+                                  widget.form, widget.handleSubmit),
+                            );
+                            if (result != null &&
+                                result is String &&
+                                result.isNotEmpty) {
+                              widget.handleScan(result);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // ✅ Refresh button overlay (when stopped)
+            if (_isScannerStopped)
+              Center(
+                child: IconButton(
+                  icon:
+                      const Icon(Icons.refresh, size: 60, color: Colors.white),
+                  onPressed: () {
+                    controller.start();
+                    setState(() => _isScannerStopped = false);
+                  },
+                ),
+              ),
+
+            // ✅ Loading overlay
             if (widget.isLoading)
               Container(
-                color: CustomTheme().buttonColor('In Progress'),
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
+                color: Colors.black.withOpacity(0.6),
+                child: const Center(child: CircularProgressIndicator()),
               ),
           ],
         );

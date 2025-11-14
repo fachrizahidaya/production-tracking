@@ -5,6 +5,7 @@ import 'package:textile_tracking/components/master/layout/custom_card.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:html/parser.dart' as html_parser;
 
 class InfoTab extends StatefulWidget {
   final id;
@@ -32,6 +33,11 @@ class InfoTab extends StatefulWidget {
 }
 
 class _InfoTabState extends State<InfoTab> {
+  String htmlToPlainText(String htmlString) {
+    final document = html_parser.parse(htmlString);
+    return document.body?.text ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.isLoading) {
@@ -81,7 +87,8 @@ class _InfoTabState extends State<InfoTab> {
                                 : '-'),
                         ViewText(
                             viewLabel: 'Catatan',
-                            viewValue: widget.data['notes']?.toString() ?? '-'),
+                            viewValue: htmlToPlainText(
+                                widget.data['notes']?.toString() ?? '-')),
                         ViewText(
                             viewLabel: 'Jumlah Greige',
                             viewValue: widget.data['greige_qty'] != null &&

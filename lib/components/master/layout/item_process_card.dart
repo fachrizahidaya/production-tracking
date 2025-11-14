@@ -19,6 +19,9 @@ class ItemProcessCard extends StatelessWidget {
   final String? Function(dynamic item)? getSubtitleLabel;
   final Widget Function(String title)? customBadgeBuilder;
   final label;
+  final useCustomSize;
+  final customWidth;
+  final customHeight;
 
   const ItemProcessCard(
       {super.key,
@@ -35,7 +38,10 @@ class ItemProcessCard extends StatelessWidget {
       this.getTitleLabel,
       this.getSubtitleLabel,
       this.customBadgeBuilder,
-      this.label});
+      this.label,
+      this.customHeight,
+      this.customWidth,
+      this.useCustomSize});
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +52,9 @@ class ItemProcessCard extends StatelessWidget {
     final status = getStatus?.call(item) ?? '-';
 
     return CustomCard(
+      useCustomSize: useCustomSize,
+      customWidth: customWidth,
+      customHeight: customHeight,
       child: Padding(
         padding: PaddingColumn.screen,
         child: Column(

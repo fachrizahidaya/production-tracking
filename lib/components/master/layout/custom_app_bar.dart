@@ -50,7 +50,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: const TextStyle(fontSize: 18),
       ),
       actions: [
-        if (hasOptions && status != 'Selesai')
+        if (hasOptions && status == true)
           PopupMenuButton<String>(
             color: Colors.white,
             offset: const Offset(0, 40),

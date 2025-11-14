@@ -58,12 +58,22 @@ class _FinishSubmitSectionState extends State<FinishSubmitSection> {
                       flex: 2,
                       child: Center(child: LayoutBuilder(
                         builder: (context, constraints) {
-                          double scanSize = constraints.maxWidth * 0.4;
-                          return SizedBox(
-                            width: scanSize,
-                            height: scanSize,
-                            child: ClipRRect(
-                                child: Stack(
+                          final isLandscape =
+                              MediaQuery.of(context).orientation ==
+                                  Orientation.landscape;
+                          double scanWidth = isLandscape
+                              ? constraints
+                                  .maxHeight // full height in landscape
+                              : constraints.maxWidth *
+                                  0.9; // proportional in portrait
+                          double scanHeight = isLandscape
+                              ? constraints.maxWidth // full width in landscape
+                              : constraints.maxWidth * 0.9;
+                          return ClipRRect(
+                              child: SizedBox(
+                            width: scanWidth,
+                            height: scanHeight,
+                            child: Stack(
                               children: [
                                 Transform.rotate(
                                   angle: orientation == Orientation.landscape
@@ -118,8 +128,8 @@ class _FinishSubmitSectionState extends State<FinishSubmitSection> {
                                   ),
                                 ),
                               ],
-                            )),
-                          );
+                            ),
+                          ));
                         },
                       ))),
                   Expanded(

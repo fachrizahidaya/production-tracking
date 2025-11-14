@@ -13,13 +13,21 @@ class CustomFloatingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: onPressed,
-      backgroundColor: backgroundColor ?? CustomTheme().buttonColor('primary'),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    return SizedBox(
+      width: isPortrait ? 760 : 300,
+      height: isPortrait ? 200 : 620,
+      child: FloatingActionButton(
+        onPressed: onPressed,
+        backgroundColor:
+            backgroundColor ?? CustomTheme().buttonColor('primary'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: icon,
       ),
-      child: icon,
     );
   }
 }

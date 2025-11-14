@@ -361,7 +361,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         return SelectDialog(
           label: 'Satuan Panjang',
           options: unitOption,
-          selected: widget.form?['length_unit_id'].toString() ?? '',
+          selected: widget.form?['length_unit_id'].toString() ?? '4',
           handleChangeValue: (e) {
             setState(() {
               widget.form?['length_unit_id'] = e['value'].toString();
@@ -393,7 +393,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         return SelectDialog(
           label: 'Satuan Lebar',
           options: unitOption,
-          selected: widget.form?['width_unit_id'].toString() ?? '',
+          selected: widget.form?['width_unit_id'].toString() ?? '4',
           handleChangeValue: (e) {
             setState(() {
               widget.form?['width_unit_id'] = e['value'].toString();
@@ -590,13 +590,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                       ),
                       Expanded(
                           child: FormButton(
-                        label: 'Simpan',
+                        label: 'Selesai',
                         isLoading: isSubmitting,
-                        isDisabled: widget.form?['wo_id'] == null ||
-                                widget.form?['length'] == null ||
-                                widget.form?['width'] == null
-                            ? true
-                            : false,
+                        isDisabled:
+                            widget.form?['wo_id'] == null ? true : false,
                         onPressed: () async {
                           _isSubmitting.value = true;
                           try {

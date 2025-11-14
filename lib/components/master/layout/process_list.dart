@@ -82,6 +82,9 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
     return Column(
       children: [
         CustomSearchBar(
@@ -134,7 +137,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                               },
                             ),
                           ),
-                        if (widget.canCreate)
+                        if (!isPortrait && widget.canCreate)
                           Positioned(
                             bottom: 16,
                             right: 16,
@@ -143,6 +146,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                               icon: const Icon(
                                 Icons.add,
                                 color: Colors.white,
+                                size: 256,
                               ),
                             ),
                           ),

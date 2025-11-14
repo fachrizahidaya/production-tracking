@@ -292,7 +292,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
                       ),
                       Expanded(
                           child: FormButton(
-                        label: 'Simpan',
+                        label: 'Mulai',
                         isLoading: isSubmitting,
                         isDisabled:
                             widget.form?['wo_id'] == null ? true : false,

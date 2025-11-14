@@ -466,7 +466,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           canUpdate: widget.canUpdate,
           handleDelete: _handleDelete,
           id: data['id'],
-          status: data['status'],
+          status: data['can_delete'],
         ),
         body: Column(
           children: [
@@ -513,7 +513,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
             )
           ],
         ),
-        bottomNavigationBar: data['status'] == 'Selesai'
+        bottomNavigationBar: data['can_update'] != true
             ? null
             : SafeArea(
                 child: Container(

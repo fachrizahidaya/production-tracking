@@ -47,6 +47,7 @@ class _SubmitSectionState extends State<SubmitSection> {
   void dispose() {
     controller.dispose();
     super.dispose();
+    controller.start();
   }
 
   double _angleForOrientation(NativeDeviceOrientation orientation) {

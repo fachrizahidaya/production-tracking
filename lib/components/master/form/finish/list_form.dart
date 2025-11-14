@@ -174,7 +174,7 @@ class _ListFormState extends State<ListForm> {
                   onTap: () => widget.handleSelectWo(),
                   selectedLabel: widget.form['no_wo'] ?? '',
                   selectedValue: widget.form['wo_id']?.toString() ?? '',
-                  required: false),
+                  required: true),
             )),
           if (widget.form?['wo_id'] != null)
             Column(
@@ -216,7 +216,7 @@ class _ListFormState extends State<ListForm> {
                                   flex: 2,
                                   child: TextForm(
                                     label: 'Jumlah',
-                                    req: false,
+                                    req: true,
                                     isNumber: true,
                                     handleChange: (val) =>
                                         _updateGrade(i, 'qty', val),
@@ -234,7 +234,7 @@ class _ListFormState extends State<ListForm> {
                                                 ?['unit_id']
                                             ?.toString() ??
                                         '',
-                                    required: false,
+                                    required: true,
                                   ),
                                 ),
                                 Expanded(
@@ -267,7 +267,7 @@ class _ListFormState extends State<ListForm> {
                               flex: 2,
                               child: TextForm(
                                 label: 'Panjang',
-                                req: false,
+                                req: true,
                                 isNumber: true,
                                 controller: widget.length,
                                 handleChange: (value) {
@@ -288,7 +288,7 @@ class _ListFormState extends State<ListForm> {
                                   selectedValue: widget.form['length_unit_id']
                                           ?.toString() ??
                                       '',
-                                  required: false),
+                                  required: true),
                             ),
                           ].separatedBy(SizedBox(
                             width: 16,
@@ -300,7 +300,7 @@ class _ListFormState extends State<ListForm> {
                               flex: 2,
                               child: TextForm(
                                 label: 'Lebar',
-                                req: false,
+                                req: true,
                                 isNumber: true,
                                 controller: widget.width,
                                 handleChange: (value) {
@@ -321,7 +321,7 @@ class _ListFormState extends State<ListForm> {
                                   selectedValue: widget.form['width_unit_id']
                                           ?.toString() ??
                                       '',
-                                  required: false),
+                                  required: true),
                             ),
                           ].separatedBy(SizedBox(
                             width: 16,
@@ -333,7 +333,7 @@ class _ListFormState extends State<ListForm> {
                               flex: 2,
                               child: TextForm(
                                 label: 'Berat',
-                                req: false,
+                                req: true,
                                 isNumber: true,
                                 controller: widget.weight,
                                 handleChange: (value) {
@@ -354,7 +354,7 @@ class _ListFormState extends State<ListForm> {
                                   selectedValue: widget.form['weight_unit_id']
                                           ?.toString() ??
                                       '',
-                                  required: false),
+                                  required: true),
                             )
                           ].separatedBy(SizedBox(
                             width: 16,
@@ -367,7 +367,7 @@ class _ListFormState extends State<ListForm> {
                                 flex: 2,
                                 child: TextForm(
                                   label: 'Jumlah',
-                                  req: false,
+                                  req: true,
                                   isNumber: true,
                                   controller: widget.qty,
                                   handleChange: (value) {
@@ -390,7 +390,7 @@ class _ListFormState extends State<ListForm> {
                                     selectedValue:
                                         widget.form['unit_id']?.toString() ??
                                             '',
-                                    required: false),
+                                    required: true),
                               )
                             ].separatedBy(SizedBox(
                               width: 16,

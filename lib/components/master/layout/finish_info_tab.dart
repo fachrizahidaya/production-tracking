@@ -5,6 +5,7 @@ import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/components/master/form/create/create_form.dart';
+import 'package:html/parser.dart' as html_parser;
 
 class FinishInfoTab extends StatefulWidget {
   final id;
@@ -42,6 +43,11 @@ class FinishInfoTab extends StatefulWidget {
 }
 
 class _FinishInfoTabState extends State<FinishInfoTab> {
+  String htmlToPlainText(String htmlString) {
+    final document = html_parser.parse(htmlString);
+    return document.body?.text ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.isLoading) {
@@ -96,7 +102,8 @@ class _FinishInfoTabState extends State<FinishInfoTab> {
                                 : '-'),
                         ViewText(
                             viewLabel: 'Catatan',
-                            viewValue: widget.data['notes']?.toString() ?? '-'),
+                            viewValue: htmlToPlainText(
+                                widget.data['notes']?.toString() ?? '-')),
                         ViewText(
                             viewLabel: 'Jumlah Greige',
                             viewValue: widget.data['greige_qty'] != null &&

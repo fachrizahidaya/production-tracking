@@ -9,7 +9,6 @@ import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/item_process_card.dart';
 import 'package:textile_tracking/components/master/layout/process_list.dart';
-import 'package:textile_tracking/components/master/sheet/process_sheet.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_date_safe.dart';
 import 'package:textile_tracking/models/process/packing.dart';
@@ -272,30 +271,53 @@ class _PackingScreenState extends State<PackingScreen> {
                   sampaiTanggal: sampaiTanggal,
                 ),
                 showActions: () {
-                  ProcessSheet.showOptions(
-                    context,
-                    options: [
-                      BottomSheetOption(
-                        title: "Mulai Packing",
-                        icon: Icons.add,
-                        iconColor: CustomTheme().buttonColor('primary'),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const CreatePacking()),
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                      ),
-                      BottomSheetOption(
-                        title: "Selesai Packing",
-                        icon: Icons.check_circle,
-                        iconColor: CustomTheme().buttonColor('warning'),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const FinishPacking()),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.add,
+                                    color:
+                                        CustomTheme().buttonColor('primary')),
+                                title: const Text("Mulai Packing"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CreatePacking(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.check_circle,
+                                    color:
+                                        CustomTheme().buttonColor('warning')),
+                                title: const Text("Selesai Packing"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const FinishPacking(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   );
                 },
                 firstLoading: _firstLoading,
@@ -311,30 +333,53 @@ class _PackingScreenState extends State<PackingScreen> {
           bottomNavigationBar: isPortrait
               ? CustomFloatingButton(
                   onPressed: () {
-                    ProcessSheet.showOptions(
-                      context,
-                      options: [
-                        BottomSheetOption(
-                          title: "Mulai Packing",
-                          icon: Icons.add,
-                          iconColor: CustomTheme().buttonColor('primary'),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const CreatePacking()),
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Dialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
                           ),
-                        ),
-                        BottomSheetOption(
-                          title: "Selesai Packing",
-                          icon: Icons.check_circle,
-                          iconColor: CustomTheme().buttonColor('warning'),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const FinishPacking()),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ListTile(
+                                  leading: Icon(Icons.add,
+                                      color:
+                                          CustomTheme().buttonColor('primary')),
+                                  title: const Text("Mulai Packing"),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CreatePacking(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                ListTile(
+                                  leading: Icon(Icons.check_circle,
+                                      color:
+                                          CustomTheme().buttonColor('warning')),
+                                  title: const Text("Selesai Packing"),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const FinishPacking(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        );
+                      },
                     );
                   },
                   icon: const Icon(

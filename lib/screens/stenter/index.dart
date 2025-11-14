@@ -9,7 +9,6 @@ import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/item_process_card.dart';
 import 'package:textile_tracking/components/master/layout/process_list.dart';
-import 'package:textile_tracking/components/master/sheet/process_sheet.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_date_safe.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
@@ -187,6 +186,7 @@ class _StenterScreenState extends State<StenterScreen> {
   Widget build(BuildContext context) {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -217,6 +217,9 @@ class _StenterScreenState extends State<StenterScreen> {
               canCreate: _canCreate,
               canRead: _canRead,
               itemBuilder: (item) => ItemProcessCard(
+                useCustomSize: true,
+                customWidth: 930.0,
+                customHeight: null,
                 label: 'No. Stenter',
                 item: item,
                 titleKey: 'stenter_no',
@@ -268,30 +271,49 @@ class _StenterScreenState extends State<StenterScreen> {
                 sampaiTanggal: sampaiTanggal,
               ),
               showActions: () {
-                ProcessSheet.showOptions(
-                  context,
-                  options: [
-                    BottomSheetOption(
-                      title: "Mulai Stenter",
-                      icon: Icons.add,
-                      iconColor: CustomTheme().buttonColor('primary'),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const CreateStenter()),
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
                       ),
-                    ),
-                    BottomSheetOption(
-                      title: "Selesai Stenter",
-                      icon: Icons.check_circle,
-                      iconColor: CustomTheme().buttonColor('warning'),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const FinishStenter()),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              leading: Icon(Icons.add,
+                                  color: CustomTheme().buttonColor('primary')),
+                              title: const Text("Mulai Stenter"),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const CreateStenter(),
+                                  ),
+                                );
+                              },
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.check_circle,
+                                  color: CustomTheme().buttonColor('warning')),
+                              title: const Text("Selesai Stenter"),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const FinishStenter(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 );
               },
               firstLoading: _firstLoading,
@@ -307,30 +329,53 @@ class _StenterScreenState extends State<StenterScreen> {
         bottomNavigationBar: isPortrait
             ? CustomFloatingButton(
                 onPressed: () {
-                  ProcessSheet.showOptions(
-                    context,
-                    options: [
-                      BottomSheetOption(
-                        title: "Mulai Stenter",
-                        icon: Icons.add,
-                        iconColor: CustomTheme().buttonColor('primary'),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const CreateStenter()),
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                      ),
-                      BottomSheetOption(
-                        title: "Selesai Stenter",
-                        icon: Icons.check_circle,
-                        iconColor: CustomTheme().buttonColor('warning'),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const FinishStenter()),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.add,
+                                    color:
+                                        CustomTheme().buttonColor('primary')),
+                                title: const Text("Mulai Stenter"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CreateStenter(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.check_circle,
+                                    color:
+                                        CustomTheme().buttonColor('warning')),
+                                title: const Text("Selesai Stenter"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const FinishStenter(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   );
                 },
                 icon: const Icon(

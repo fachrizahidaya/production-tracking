@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:textile_tracking/helpers/util/margin_search.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'dart:math' as math;
@@ -42,6 +43,29 @@ class _CreateSubmitSectionState extends State<CreateSubmitSection> {
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  double _angleForOrientation(NativeDeviceOrientation orientation) {
+    switch (orientation) {
+      case NativeDeviceOrientation.landscapeLeft:
+        // device rotated so top goes to the left -> rotate preview -90deg
+        return -math.pi / 2;
+      case NativeDeviceOrientation.landscapeRight:
+        // device rotated so top goes to the right -> rotate preview +90deg
+        return math.pi / 2;
+      case NativeDeviceOrientation.portraitDown:
+        // upside-down portrait
+        return math.pi;
+      case NativeDeviceOrientation.portraitUp:
+      default:
+        return 0.0;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return OrientationBuilder(
       builder: (context, orientation) {
@@ -59,12 +83,10 @@ class _CreateSubmitSectionState extends State<CreateSubmitSection> {
                               MediaQuery.of(context).orientation ==
                                   Orientation.landscape;
                           double scanWidth = isLandscape
-                              ? constraints
-                                  .maxHeight // full height in landscape
-                              : constraints.maxWidth *
-                                  0.9; // proportional in portrait
+                              ? constraints.maxHeight
+                              : constraints.maxWidth * 0.9;
                           double scanHeight = isLandscape
-                              ? constraints.maxWidth // full width in landscape
+                              ? constraints.maxWidth
                               : constraints.maxWidth * 0.9;
                           return ClipRRect(
                               child: SizedBox(
@@ -81,6 +103,7 @@ class _CreateSubmitSectionState extends State<CreateSubmitSection> {
                                     onDetect: (capture) {
                                       final List<Barcode> barcodes =
                                           capture.barcodes;
+
                                       for (final barcode in barcodes) {
                                         final String? code = barcode.rawValue;
 
@@ -122,7 +145,7 @@ class _CreateSubmitSectionState extends State<CreateSubmitSection> {
                                         color: Colors.white),
                                     onPressed: () => controller.switchCamera(),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ));

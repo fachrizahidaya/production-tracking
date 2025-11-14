@@ -65,7 +65,7 @@ class _ListFormState extends State<ListForm> {
                 onTap: () => widget.selectWorkOrder(),
                 selectedLabel: widget.form?['no_wo'] ?? '',
                 selectedValue: widget.form?['wo_id']?.toString() ?? '',
-                required: false,
+                required: true,
               ),
             )),
           ].separatedBy(const SizedBox(height: 16)),
@@ -87,7 +87,7 @@ class _ListFormState extends State<ListForm> {
                 onTap: () => widget.selectWorkOrder(),
                 selectedLabel: widget.form?['no_wo'] ?? '',
                 selectedValue: widget.form?['wo_id']?.toString() ?? '',
-                required: false,
+                required: true,
               ),
             )),
           if (widget.withOnlyMaklon == true)
@@ -177,7 +177,7 @@ class _ListFormState extends State<ListForm> {
                             onTap: () => widget.selectMachine(),
                             selectedLabel: widget.form['nama_mesin'] ?? '',
                             selectedValue: widget.form['machine_id'].toString(),
-                            required: false,
+                            required: true,
                           ),
                       ],
                     )))
@@ -221,7 +221,7 @@ class _ListFormState extends State<ListForm> {
                 onTap: () => widget.selectMachine(),
                 selectedLabel: widget.form['nama_mesin'] ?? '',
                 selectedValue: widget.form['machine_id'].toString(),
-                required: false,
+                required: true,
               ),
             )),
           if (_isMaklon && widget.withMaklonOrMachine != true)

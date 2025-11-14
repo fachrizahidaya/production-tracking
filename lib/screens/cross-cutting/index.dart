@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/item_process_card.dart';
 import 'package:textile_tracking/components/master/layout/process_list.dart';
-import 'package:textile_tracking/components/master/sheet/process_sheet.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_date_safe.dart';
 import 'package:textile_tracking/models/process/cross_cutting.dart';
@@ -168,27 +168,30 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-          backgroundColor: const Color(0xFFf9fafc),
-          appBar: CustomAppBar(
-            title: 'Cross Cutting',
-            onReturn: () {
-              if (Navigator.canPop(context)) {
-                Navigator.pop(context);
-              } else {
-                Navigator.pushReplacementNamed(context, '/dashboard');
-              }
-            },
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                  child: ProcessList(
+        backgroundColor: const Color(0xFFf9fafc),
+        appBar: CustomAppBar(
+          title: 'Cross Cutting',
+          onReturn: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushReplacementNamed(context, '/dashboard');
+            }
+          },
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: ProcessList(
                 fetchData: (params) async {
                   return await Provider.of<CrossCuttingService>(context,
                           listen: false)
@@ -199,6 +202,9 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
                 canCreate: _canCreate,
                 canRead: _canRead,
                 itemBuilder: (item) => ItemProcessCard(
+                  useCustomSize: true,
+                  customWidth: 930.0,
+                  customHeight: null,
                   label: 'No. Cross Cutting',
                   item: item,
                   titleKey: 'cc_no',
@@ -248,30 +254,53 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
                   getMachineOptions: (service) => service.dataListOption,
                 ),
                 showActions: () {
-                  ProcessSheet.showOptions(
-                    context,
-                    options: [
-                      BottomSheetOption(
-                        title: "Mulai Cross Cutting",
-                        icon: Icons.add,
-                        iconColor: CustomTheme().buttonColor('primary'),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const CreateCrossCutting()),
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                      ),
-                      BottomSheetOption(
-                        title: "Selesai Cross Cutting",
-                        icon: Icons.check_circle,
-                        iconColor: CustomTheme().buttonColor('warning'),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const FinishCrossCutting()),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.add,
+                                    color:
+                                        CustomTheme().buttonColor('primary')),
+                                title: const Text("Mulai Cross Cuttting"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CreateCrossCutting(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.check_circle,
+                                    color:
+                                        CustomTheme().buttonColor('warning')),
+                                title: const Text("Selesai Cross Cutting"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const FinishCrossCutting(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   );
                 },
                 firstLoading: _firstLoading,
@@ -281,9 +310,69 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
                 handleRefetch: _refetch,
                 handleSearch: _handleSearch,
                 dataList: _dataList,
-              ))
-            ],
-          )),
+              ),
+            )
+          ],
+        ),
+        bottomNavigationBar: isPortrait
+            ? CustomFloatingButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.add,
+                                    color:
+                                        CustomTheme().buttonColor('primary')),
+                                title: const Text("Mulai Cross Cuttting"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CreateCrossCutting(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.check_circle,
+                                    color:
+                                        CustomTheme().buttonColor('warning')),
+                                title: const Text("Selesai Cross Cutting"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const FinishCrossCutting(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                icon: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 128,
+                ))
+            : null,
+      ),
     );
   }
 }

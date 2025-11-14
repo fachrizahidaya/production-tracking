@@ -9,7 +9,6 @@ import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/item_process_card.dart';
 import 'package:textile_tracking/components/master/layout/process_list.dart';
-import 'package:textile_tracking/components/master/sheet/process_sheet.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_date_safe.dart';
 import 'package:textile_tracking/models/process/press_tumbler.dart';
@@ -187,6 +186,7 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
   Widget build(BuildContext context) {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -275,30 +275,76 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
                 sampaiTanggal: sampaiTanggal,
               ),
               showActions: () {
-                ProcessSheet.showOptions(
-                  context,
-                  options: [
-                    BottomSheetOption(
-                      title: "Mulai Press Tumbler",
-                      icon: Icons.add,
-                      iconColor: CustomTheme().buttonColor('primary'),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const CreatePressTumbler()),
+                // ProcessSheet.showOptions(
+                //   context,
+                //   options: [
+                //     BottomSheetOption(
+                //       title: "Mulai Press Tumbler",
+                //       icon: Icons.add,
+                //       iconColor: CustomTheme().buttonColor('primary'),
+                //       onTap: () => Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (_) => const CreatePressTumbler()),
+                //       ),
+                //     ),
+                //     BottomSheetOption(
+                //       title: "Selesai Press Tumbler",
+                //       icon: Icons.check_circle,
+                //       iconColor: CustomTheme().buttonColor('warning'),
+                //       onTap: () => Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (_) => const FinishPressTumbler()),
+                //       ),
+                //     ),
+                //   ],
+                // );
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
                       ),
-                    ),
-                    BottomSheetOption(
-                      title: "Selesai Press Tumbler",
-                      icon: Icons.check_circle,
-                      iconColor: CustomTheme().buttonColor('warning'),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const FinishPressTumbler()),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              leading: Icon(Icons.add,
+                                  color: CustomTheme().buttonColor('primary')),
+                              title: const Text("Mulai Press Tumbler"),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreatePressTumbler(),
+                                  ),
+                                );
+                              },
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.check_circle,
+                                  color: CustomTheme().buttonColor('warning')),
+                              title: const Text("Selesai Press Tumbler"),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const FinishPressTumbler(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 );
               },
               firstLoading: _firstLoading,
@@ -314,30 +360,78 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
         bottomNavigationBar: isPortrait
             ? CustomFloatingButton(
                 onPressed: () {
-                  ProcessSheet.showOptions(
-                    context,
-                    options: [
-                      BottomSheetOption(
-                        title: "Mulai Press Tumbler",
-                        icon: Icons.add,
-                        iconColor: CustomTheme().buttonColor('primary'),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const CreatePressTumbler()),
+                  // ProcessSheet.showOptions(
+                  //   context,
+                  //   options: [
+                  //     BottomSheetOption(
+                  //       title: "Mulai Press Tumbler",
+                  //       icon: Icons.add,
+                  //       iconColor: CustomTheme().buttonColor('primary'),
+                  //       onTap: () => Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (_) => const CreatePressTumbler()),
+                  //       ),
+                  //     ),
+                  //     BottomSheetOption(
+                  //       title: "Selesai Press Tumbler",
+                  //       icon: Icons.check_circle,
+                  //       iconColor: CustomTheme().buttonColor('warning'),
+                  //       onTap: () => Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (_) => const FinishPressTumbler()),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // );
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                      ),
-                      BottomSheetOption(
-                        title: "Selesai Press Tumbler",
-                        icon: Icons.check_circle,
-                        iconColor: CustomTheme().buttonColor('warning'),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const FinishPressTumbler()),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.add,
+                                    color:
+                                        CustomTheme().buttonColor('primary')),
+                                title: const Text("Mulai Press Tumbler"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CreatePressTumbler(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.check_circle,
+                                    color:
+                                        CustomTheme().buttonColor('warning')),
+                                title: const Text("Selesai Press Tumbler"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const FinishPressTumbler(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   );
                 },
                 icon: const Icon(

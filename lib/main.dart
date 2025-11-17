@@ -22,7 +22,7 @@ import 'package:textile_tracking/models/process/sewing.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
-import 'package:textile_tracking/screens/auth/account.dart';
+import 'package:textile_tracking/screens/auth/index.dart';
 import 'package:textile_tracking/screens/auth/eula.dart';
 import 'package:textile_tracking/screens/auth/privacy_policy.dart';
 import 'package:textile_tracking/screens/auth/terms_conditions.dart';

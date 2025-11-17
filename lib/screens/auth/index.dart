@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/custom_card.dart';
 import 'package:textile_tracking/components/master/layout/option_list.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 
 class Account extends StatefulWidget {
@@ -51,7 +53,15 @@ class _AccountState extends State<Account> {
             onItemTap: (context, item) {
               Navigator.pushNamed(context, item['route']!);
             },
-          ))
+          )),
+          Expanded(
+            child: Text(
+              'v.${dotenv.env['APP_VERSION']!}',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 16, color: CustomTheme().colors('text-secondary')),
+            ),
+          ),
         ],
       ),
     );

@@ -119,7 +119,9 @@ class _DyeingDetailState extends State<DyeingDetail> {
         machineOption = result;
       });
     } catch (e) {
-      debugPrint("Error fetching machines: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingMachine = false;

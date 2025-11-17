@@ -131,7 +131,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         workOrderOption = data;
       });
     } catch (e) {
-      debugPrint("Error fetching work orders: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingWorkOrder = false;
@@ -161,7 +163,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         itemGradeOption = data;
       });
     } catch (e) {
-      debugPrint("Error fetching item grade: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingGrade = false;
@@ -185,7 +189,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         unitOption = result;
       });
     } catch (e) {
-      debugPrint("Error fetching work units: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingUnit = false;

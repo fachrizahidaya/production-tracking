@@ -93,7 +93,9 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
         workOrderOption = result;
       });
     } catch (e) {
-      debugPrint("Error fetching work orders: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingWorkOrder = false;
@@ -117,7 +119,9 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
         unitOption = result;
       });
     } catch (e) {
-      debugPrint("Error fetching work units: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingUnit = false;

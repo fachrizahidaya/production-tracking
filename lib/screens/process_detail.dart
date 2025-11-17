@@ -226,7 +226,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
             .dataListOption;
       });
     } catch (e) {
-      debugPrint("Error fetching work units: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingUnit = false;
@@ -256,7 +258,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         machineOption = data;
       });
     } catch (e) {
-      debugPrint("Error fetching machines: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingMachine = false;

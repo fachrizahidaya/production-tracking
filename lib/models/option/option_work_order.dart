@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:path/path.dart';
 import 'package:textile_tracking/helpers/service/base_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -107,7 +108,9 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
         throw Exception('Failed to load work order: ${response.statusCode}');
       }
     } catch (e) {
-      debugPrint('Error fetching work order options: $e');
+      ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
       rethrow;
     } finally {
       _isLoading = false;

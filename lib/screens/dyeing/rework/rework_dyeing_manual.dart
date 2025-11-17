@@ -89,7 +89,9 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
         workOrderOption = result;
       });
     } catch (e) {
-      debugPrint("Error fetching work orders: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingMachine = false;
@@ -125,7 +127,9 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
         machineOption = result;
       });
     } catch (e) {
-      debugPrint("Error fetching machines: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingWorkOrder = false;

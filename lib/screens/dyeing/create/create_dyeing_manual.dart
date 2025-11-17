@@ -65,7 +65,9 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
         workOrderOption = result;
       });
     } catch (e) {
-      debugPrint("Error fetching work orders: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingWorkOrder = false;
@@ -89,7 +91,9 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
         machineOption = result;
       });
     } catch (e) {
-      debugPrint("Error fetching machines: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingMachine = false;

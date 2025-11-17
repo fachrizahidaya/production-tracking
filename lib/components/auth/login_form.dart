@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/form/custom_form.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/theme.dart';
@@ -63,7 +64,13 @@ class _LoginFormState extends State<LoginForm> {
                     backgroundColor: CustomTheme().buttonColor('primary'),
                   ))
             ],
-          )
+          ),
+          Text(
+            'v.${dotenv.env['APP_VERSION']!}',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 16, color: CustomTheme().colors('text-secondary')),
+          ),
         ].separatedBy(SizedBox(
           height: 16,
         )),

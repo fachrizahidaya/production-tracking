@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:production_tracking/providers/user_provider.dart';
-import 'package:production_tracking/screens/auth/login.dart';
+import 'package:textile_tracking/providers/user_provider.dart';
+import 'package:textile_tracking/screens/auth/login.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,9 +23,9 @@ class _AuthCheckState extends State<AuthCheck> {
 
   Future<void> _handleCheckLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+    String? token = prefs.getString('access_token');
 
-    if (token != null) {
+    if (token != null && !isTokenExpired(token)) {
       if (mounted) {
         Provider.of<UserProvider>(context, listen: false).setToken(token);
         setState(() {
@@ -33,6 +33,7 @@ class _AuthCheckState extends State<AuthCheck> {
         });
       }
     } else {
+      await Provider.of<UserProvider>(context, listen: false).handleLogout();
       if (mounted) {
         setState(() {
           _isAuthenticated = false;
@@ -52,7 +53,7 @@ class _AuthCheckState extends State<AuthCheck> {
   @override
   Widget build(BuildContext context) {
     if (_isAuthenticated) {
-      WidgetsBinding.instance.addPersistentFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacementNamed(context, '/dashboard');
       });
       return const SizedBox.shrink();

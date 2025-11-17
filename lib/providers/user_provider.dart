@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:production_tracking/models/user.dart';
+import 'package:textile_tracking/helpers/auth/storage.dart';
+import 'package:textile_tracking/models/master/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider with ChangeNotifier {
@@ -16,25 +17,31 @@ class UserProvider with ChangeNotifier {
 
   Future<void> _handleLoadUserFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString('token');
+    _token = prefs.getString('access_token');
 
     if (_token != null) {
       String? username = prefs.getString('username');
+      String? id = prefs.getString('user_id');
 
       if (username != null) {
-        _user = User(username: username, token: _token!);
+        _user = User(
+          username: username,
+          id: id!,
+          token: token!,
+        );
       }
       notifyListeners();
     }
   }
 
-  void handleLogin(String username, String token) async {
-    _user = User(username: username, token: token);
+  void handleLogin(String username, String token, String id) async {
+    _user = User(username: username, token: token, id: id);
     _token = token;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', username);
-    await prefs.setString('token', token);
+    await prefs.setString('access_token', token);
+    await prefs.setString('user_id', id);
 
     notifyListeners();
   }
@@ -50,6 +57,10 @@ class UserProvider with ChangeNotifier {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('username');
-    await prefs.remove('token');
+    await prefs.remove('access_token');
+    await prefs.remove('user_id');
+
+    await Storage.instance.clearUserData();
+    await Storage.instance.clearMenus();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class CustomTitle extends StatelessWidget {
   final String text;
@@ -18,7 +19,9 @@ class CustomTitle extends StatelessWidget {
     return Text(
       text,
       textAlign: textAlign,
-      style: TextStyle(fontSize: fontSize, color: color ?? Colors.grey),
+      style: TextStyle(
+          fontSize: fontSize,
+          color: color ?? CustomTheme().colors('text-primary')),
     );
   }
 }

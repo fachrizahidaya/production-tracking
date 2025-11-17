@@ -1,0 +1,162 @@
+import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+
+class SelectDialog extends StatefulWidget {
+  final String label;
+  final List<dynamic> options;
+  final selected;
+  final handleChangeValue;
+
+  const SelectDialog(
+      {super.key,
+      required this.label,
+      required this.options,
+      this.selected,
+      this.handleChangeValue});
+
+  @override
+  State<SelectDialog> createState() => _SelectDialogState();
+}
+
+class _SelectDialogState extends State<SelectDialog> {
+  late List<dynamic> _dataList;
+
+  _searchDataOption(value) {
+    setState(() {
+      _dataList = widget.options
+          .where((element) => element['label']
+              .toString()
+              .toLowerCase()
+              .contains(value.toLowerCase()))
+          .toList();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _dataList = widget.options;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.85, // 85% of screen width
+        height:
+            MediaQuery.of(context).size.height * 0.6, // 60% of screen height
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.label.toString(),
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('xl'),
+                      fontWeight: CustomTheme().fontWeight('bold'),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    height: 40,
+                    child: TextFormField(
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('md'),
+                      ),
+                      decoration: CustomTheme().inputDecoration('Pencarian...'),
+                      keyboardType: TextInputType.text,
+                      onChanged: (value) {
+                        _searchDataOption(value);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: _dataList.isEmpty
+                  ? Center(
+                      child: NoData(),
+                    )
+                  : Scrollbar(
+                      thickness: 4,
+                      child: ListView.separated(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: _dataList.length,
+                        itemBuilder: (BuildContext context, index) {
+                          final isSelected =
+                              _dataList[index]['value'].toString() ==
+                                  widget.selected;
+
+                          return GestureDetector(
+                            onTap: () {
+                              // If same item tapped again -> unselect
+                              if (isSelected) {
+                                widget
+                                    .handleChangeValue(null); // clear selection
+                              } else {
+                                widget.handleChangeValue(
+                                    _dataList[index]); // select item
+                              }
+                              Navigator.pop(context); // close dialog
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // Label
+                                  Expanded(
+                                    child: Text(
+                                      '${_dataList[index]["label"]}',
+                                      style: TextStyle(
+                                        fontWeight: isSelected
+                                            ? FontWeight.w800
+                                            : FontWeight.w400,
+                                        color: CustomTheme()
+                                            .colors('text-primary'),
+                                        fontSize: CustomTheme().fontSize('md'),
+                                      ),
+                                    ),
+                                  ),
+                                  // Check icon for selected
+                                  if (isSelected)
+                                    const Icon(
+                                      Icons.check_circle,
+                                      color: Colors.green,
+                                      size: 20,
+                                    ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return const Divider(
+                            height: 0,
+                            thickness: 0.5,
+                          );
+                        },
+                      ),
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

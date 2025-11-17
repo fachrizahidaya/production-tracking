@@ -1,0 +1,144 @@
+import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/form/finish/create_form.dart';
+
+class CreateInfoTab extends StatefulWidget {
+  final id;
+  final data;
+  final form;
+  final formKey;
+  final handleSubmit;
+  final handleSelectMachine;
+  final handleSelectWorkOrder;
+  final isLoading;
+  final maklon;
+  final isMaklon;
+  final withMaklonOrMachine;
+  final withOnlyMaklon;
+  final withNoMaklonOrMachine;
+  final handleSelectUnit;
+  final handleSelectLengthUnit;
+  final handleSelectWidthUnit;
+  final handleChangeInput;
+  final processId;
+  final length;
+  final width;
+  final weight;
+  final note;
+  final qty;
+  final qtyItem;
+  final notes;
+  final handleSelectWo;
+  final handleSelectQtyUnit;
+  final handleSelectQtyUnitItem;
+  final isSubmitting;
+  final isFormIncomplete;
+  final isChanged;
+  final initialQty;
+  final initialWeight;
+  final initialLength;
+  final initialWidth;
+  final initialNotes;
+  final allAttachments;
+  final handlePickAttachments;
+  final processData;
+  final withItemGrade;
+  final itemGradeOption;
+  final withQtyAndWeight;
+
+  const CreateInfoTab(
+      {super.key,
+      this.data,
+      this.form,
+      this.formKey,
+      this.handleSelectMachine,
+      this.handleSelectWorkOrder,
+      this.handleSubmit,
+      this.id,
+      this.isLoading,
+      this.isMaklon,
+      this.maklon,
+      this.withMaklonOrMachine,
+      this.withNoMaklonOrMachine,
+      this.withOnlyMaklon,
+      this.handleChangeInput,
+      this.handleSelectLengthUnit,
+      this.handleSelectUnit,
+      this.handleSelectWidthUnit,
+      this.allAttachments,
+      this.handlePickAttachments,
+      this.handleSelectQtyUnit,
+      this.handleSelectQtyUnitItem,
+      this.handleSelectWo,
+      this.initialLength,
+      this.initialNotes,
+      this.initialQty,
+      this.initialWeight,
+      this.initialWidth,
+      this.isChanged,
+      this.isFormIncomplete,
+      this.isSubmitting,
+      this.itemGradeOption,
+      this.length,
+      this.note,
+      this.notes,
+      this.processData,
+      this.processId,
+      this.qty,
+      this.qtyItem,
+      this.weight,
+      this.width,
+      this.withItemGrade,
+      this.withQtyAndWeight});
+
+  @override
+  State<CreateInfoTab> createState() => _CreateInfoTabState();
+}
+
+class _CreateInfoTabState extends State<CreateInfoTab> {
+  @override
+  Widget build(BuildContext context) {
+    if (widget.isLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CreateForm(
+              formKey: widget.formKey,
+              form: widget.form,
+              note: widget.note,
+              weight: widget.weight,
+              width: widget.width,
+              length: widget.length,
+              handleSelectWo: widget.handleSelectWo,
+              handleSelectUnit: widget.handleSelectUnit,
+              handleChangeInput: widget.handleChangeInput,
+              handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
+              handleSubmit: widget.handleSubmit,
+              id: widget.id,
+              data: widget.data,
+              processId: widget.processId,
+              processData: widget.processData,
+              isLoading: widget.isLoading,
+              handleSelectLengthUnit: widget.handleSelectLengthUnit,
+              handleSelectWidthUnit: widget.handleSelectWidthUnit,
+              withItemGrade: widget.withItemGrade,
+              itemGradeOption: widget.itemGradeOption,
+              handleSelectQtyUnit: widget.handleSelectQtyUnit,
+              notes: widget.notes,
+              qty: widget.qty,
+              withQtyAndWeight: widget.withQtyAndWeight,
+              qtyItem: widget.qtyItem,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

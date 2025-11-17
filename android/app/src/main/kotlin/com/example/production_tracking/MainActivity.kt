@@ -1,4 +1,4 @@
-package com.example.production_tracking
+package com.kss.textile_tracking
 
 import io.flutter.embedding.android.FlutterActivity
 

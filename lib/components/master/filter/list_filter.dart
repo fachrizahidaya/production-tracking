@@ -151,7 +151,9 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
         machineOption = data;
       });
     } catch (e) {
-      debugPrint("Error fetching machines: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingMachine = false;
@@ -180,7 +182,9 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
         operatorOption = data;
       });
     } catch (e) {
-      debugPrint("Error fetching machines: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingOperator = false;

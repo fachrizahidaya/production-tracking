@@ -76,7 +76,9 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
         workOrderOption = result;
       });
     } catch (e) {
-      debugPrint("Error fetching work orders: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingWorkOrder = false;

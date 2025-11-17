@@ -96,7 +96,9 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
         workOrderOption = data;
       });
     } catch (e) {
-      debugPrint("Error fetching work orders: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingWorkOrder = false;
@@ -134,7 +136,9 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
         machineOption = data;
       });
     } catch (e) {
-      debugPrint("Error fetching work orders: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         _isFetchingMachine = false;

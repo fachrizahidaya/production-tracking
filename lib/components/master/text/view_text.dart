@@ -20,6 +20,7 @@ class ViewText<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isClickable = onItemTap != null && item != null;
+    final maxWidth = MediaQuery.of(context).size.width * 0.8;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -33,23 +34,27 @@ class ViewText<T> extends StatelessWidget {
         ),
         CustomTheme().vGap('xs'),
         GestureDetector(
-          onTap: isClickable ? () => onItemTap!(context, item as T) : null,
-          child: childValue ??
-              Text(
-                viewValue ?? '',
-                style: TextStyle(
-                  fontSize: CustomTheme().fontSize('lg'),
-                  fontWeight: CustomTheme().fontWeight('semibold'),
-                  color: isClickable
-                      ? CustomTheme().colors('primary')
-                      : CustomTheme().colors('text-primary'),
-                  decoration: isClickable ? TextDecoration.underline : null,
-                ),
-                softWrap: true,
-                overflow: TextOverflow.visible,
-                maxLines: null,
-              ),
-        ),
+            onTap: isClickable ? () => onItemTap!(context, item as T) : null,
+            child: childValue ??
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: maxWidth,
+                  ),
+                  child: Text(
+                    viewValue ?? '',
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('lg'),
+                      fontWeight: CustomTheme().fontWeight('semibold'),
+                      color: isClickable
+                          ? CustomTheme().colors('primary')
+                          : CustomTheme().colors('text-primary'),
+                      decoration: isClickable ? TextDecoration.underline : null,
+                    ),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                    maxLines: null,
+                  ),
+                )),
       ],
     );
   }

@@ -25,6 +25,8 @@ class _ListInfoState extends State<ListInfo> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(8),
@@ -46,13 +48,16 @@ class _ListInfoState extends State<ListInfo> {
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
+                          if (isMobile)
+                            CustomBadge(title: widget.data['status'] ?? '-'),
                           Text(
                               'Dibuat pada ${widget.data['wo_date'] != null ? DateFormat("dd MMMM yyyy").format(DateTime.parse(widget.data['wo_date'])) : '-'} oleh ${widget.data['user']?['name'] ?? ''}')
                         ].separatedBy(SizedBox(
                           height: 4,
                         )),
                       ),
-                      CustomBadge(title: widget.data['status'] ?? '-'),
+                      if (!isMobile)
+                        CustomBadge(title: widget.data['status'] ?? '-'),
                     ],
                   )),
             ),

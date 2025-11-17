@@ -168,6 +168,11 @@ class _FinishSubmitSectionState extends State<FinishSubmitSection> {
                         icon: const Icon(Icons.edit),
                         label: const Text("Isi Manual"),
                         onPressed: () async {
+                          controller.stop();
+                          setState(() {
+                            _isScannerStopped = true;
+                          });
+
                           final result = await Navigator.of(context).push(
                               widget.handleRoute(
                                   widget.form,

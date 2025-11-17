@@ -81,6 +81,8 @@ class _ListInfoState extends State<ListInfo> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     String htmlToPlainText(String htmlString) {
       final document = html_parser.parse(htmlString);
       return document.body?.text ?? '';
@@ -387,36 +389,64 @@ class _ListInfoState extends State<ListInfo> {
                         ],
                       ),
                     ))),
-                Expanded(
-                    flex: 1,
-                    child: CustomCard(
-                        child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'INFORMASI GREIGE & CATATAN',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          ViewText(
-                            viewLabel: 'Qty Greige',
-                            viewValue:
-                                '${widget.data['work_orders']['greige_qty']} ${widget.data['work_orders']['greige_unit']['code']}',
-                          ),
-                          ViewText(
-                            viewLabel: 'Catatan Work Order',
-                            viewValue: htmlToPlainText(
-                                widget.data['work_orders']['notes']),
-                          )
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
-                      ),
-                    )))
+                if (!isMobile)
+                  Expanded(
+                      flex: 1,
+                      child: CustomCard(
+                          child: Padding(
+                        padding: PaddingColumn.screen,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'INFORMASI GREIGE & CATATAN',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            ViewText(
+                              viewLabel: 'Qty Greige',
+                              viewValue:
+                                  '${widget.data['work_orders']['greige_qty']} ${widget.data['work_orders']['greige_unit']['code']}',
+                            ),
+                            ViewText(
+                              viewLabel: 'Catatan Work Order',
+                              viewValue: htmlToPlainText(
+                                  widget.data['work_orders']['notes']),
+                            )
+                          ].separatedBy(SizedBox(
+                            height: 8,
+                          )),
+                        ),
+                      )))
               ],
             ),
+            if (isMobile)
+              CustomCard(
+                  child: Padding(
+                padding: PaddingColumn.screen,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'INFORMASI GREIGE & CATATAN',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    ViewText(
+                      viewLabel: 'Qty Greige',
+                      viewValue:
+                          '${widget.data['work_orders']['greige_qty']} ${widget.data['work_orders']['greige_unit']['code']}',
+                    ),
+                    ViewText(
+                      viewLabel: 'Catatan Work Order',
+                      viewValue:
+                          htmlToPlainText(widget.data['work_orders']['notes']),
+                    )
+                  ].separatedBy(SizedBox(
+                    height: 8,
+                  )),
+                ),
+              )),
             CustomCard(
                 child: Padding(
               padding: PaddingColumn.screen,

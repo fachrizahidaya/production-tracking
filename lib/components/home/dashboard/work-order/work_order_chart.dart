@@ -165,6 +165,8 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
   }
 
   Widget _buildDateFilterRow() {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return SizedBox(
       width: 400,
       child: Row(

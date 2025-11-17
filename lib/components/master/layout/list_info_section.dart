@@ -12,6 +12,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
+import 'package:html/parser.dart' as html_parser;
 
 class ListInfoSection extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -128,6 +129,10 @@ class _ListInfoSectionState extends State<ListInfoSection> {
   Widget build(BuildContext context) {
     final data = widget.data;
     final grades = widget.existingGrades;
+    String htmlToPlainText(String htmlString) {
+      final document = html_parser.parse(htmlString);
+      return document.body?.text ?? '';
+    }
 
     return SingleChildScrollView(
         child: Container(
@@ -170,7 +175,7 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                 if (widget.withMaklon == false)
                   SelectForm(
                     label: 'Mesin',
-                    isDisabled: data['status'] == 'Diproses' ? false : true,
+                    isDisabled: data['can_update'] ? false : true,
                     onTap: widget.handleSelectMachine!,
                     selectedLabel: widget.form['nama_mesin'] ?? '',
                     selectedValue: widget.form['machine_id'].toString(),
@@ -254,9 +259,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                   Expanded(
                                     flex: 2,
                                     child: TextForm(
-                                      isDisabled: data['status'] == 'Diproses'
-                                          ? false
-                                          : true,
+                                      isDisabled:
+                                          data['can_update'] ? false : true,
                                       label: 'Panjang',
                                       req: false,
                                       controller: widget.length,
@@ -272,9 +276,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                   Expanded(
                                     flex: 1,
                                     child: SelectForm(
-                                        isDisabled: data['status'] == 'Diproses'
-                                            ? false
-                                            : true,
+                                        isDisabled:
+                                            data['can_update'] ? false : true,
                                         label: 'Satuan Panjang',
                                         onTap: () =>
                                             widget.handleSelectLengthUnit(),
@@ -299,9 +302,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                   Expanded(
                                     flex: 2,
                                     child: TextForm(
-                                      isDisabled: data['status'] == 'Diproses'
-                                          ? false
-                                          : true,
+                                      isDisabled:
+                                          data['can_update'] ? false : true,
                                       label: 'Lebar',
                                       req: false,
                                       controller: widget.width,
@@ -317,9 +319,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                   Expanded(
                                     flex: 1,
                                     child: SelectForm(
-                                        isDisabled: data['status'] == 'Diproses'
-                                            ? false
-                                            : true,
+                                        isDisabled:
+                                            data['can_update'] ? false : true,
                                         label: 'Satuan Lebar',
                                         onTap: () =>
                                             widget.handleSelectWidthUnit(),
@@ -344,9 +345,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                   Expanded(
                                     flex: 2,
                                     child: TextForm(
-                                      isDisabled: data['status'] == 'Diproses'
-                                          ? false
-                                          : true,
+                                      isDisabled:
+                                          data['can_update'] ? false : true,
                                       label: 'Berat',
                                       req: false,
                                       controller: widget.weight,
@@ -362,9 +362,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                   Expanded(
                                     flex: 1,
                                     child: SelectForm(
-                                        isDisabled: data['status'] == 'Diproses'
-                                            ? false
-                                            : true,
+                                        isDisabled:
+                                            data['can_update'] ? false : true,
                                         label: 'Satuan Berat',
                                         onTap: () => widget.handleSelectUnit(),
                                         selectedLabel:
@@ -390,9 +389,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                       flex: 2,
                                       child: TextForm(
                                         label: 'Jumlah',
-                                        isDisabled: data['status'] == 'Diproses'
-                                            ? false
-                                            : true,
+                                        isDisabled:
+                                            data['can_update'] ? false : true,
                                         req: false,
                                         controller: widget.qtyItem,
                                         handleChange: (value) {
@@ -410,9 +408,7 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                       child: SelectForm(
                                           label: 'Satuan',
                                           isDisabled:
-                                              data['status'] == 'Diproses'
-                                                  ? false
-                                                  : true,
+                                              data['can_update'] ? false : true,
                                           onTap: () =>
                                               widget.handleSelectQtyItemUnit(),
                                           selectedLabel:
@@ -462,7 +458,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                       ),
                       ViewText(
                         viewLabel: 'Catatan Work Order',
-                        viewValue: '${data['work_orders']['notes']}',
+                        viewValue: htmlToPlainText(
+                            data['work_orders']['notes'] ?? '-'),
                       )
                     ].separatedBy(SizedBox(
                       height: 8,
@@ -513,7 +510,7 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                   if (widget.onlySewing == true && data['maklon'] == false)
                     SelectForm(
                       label: 'Mesin',
-                      isDisabled: data['status'] == 'Diproses' ? false : true,
+                      isDisabled: data['can_update'] ? false : true,
                       onTap: widget.handleSelectMachine!,
                       selectedLabel: widget.form['nama_mesin'] ?? '',
                       selectedValue: widget.form['machine_id'].toString(),
@@ -594,7 +591,7 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                 label: 'Catatan',
                                 req: false,
                                 controller: (i < widget.notes.length)
-                                    ? widget.notes[i]
+                                    ? htmlToPlainText(widget.notes[i])
                                     : TextEditingController(
                                         text: grades[i]['notes']?.toString() ??
                                             ''),
@@ -605,8 +602,6 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                         i >= widget.form['grades'].length) {
                                       widget.form['grades'] = List.from(grades);
                                     }
-                                    // widget.form['grades'][i]['notes'] =
-                                    //     double.tryParse(value) ?? 0;
                                   });
                                 },
                               ),
@@ -667,7 +662,7 @@ class _ListInfoSectionState extends State<ListInfoSection> {
             children: [
               ViewText(
                 viewLabel: 'Catatan',
-                viewValue: '${data['notes'] ?? '-'}',
+                viewValue: htmlToPlainText(data['notes'] ?? '-'),
               ),
             ],
           ),

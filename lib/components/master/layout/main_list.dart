@@ -101,12 +101,49 @@ class _MainListState<T> extends State<MainList<T>> {
                   : RefreshIndicator(
                       onRefresh: () async => widget.handleRefetch(),
                       child: widget.dataList.isEmpty
-                          ? ListView(
-                              physics: AlwaysScrollableScrollPhysics(),
-                              children: [
-                                Center(child: NoData()),
-                              ],
-                            )
+                          ? isPortrait
+                              ? ListView(
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  children: [
+                                    SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.8,
+                                        child: Center(child: NoData())),
+                                  ],
+                                )
+                              : Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: ListView(
+                                        physics:
+                                            AlwaysScrollableScrollPhysics(),
+                                        children: [
+                                          SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.8,
+                                              child: Center(child: NoData())),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Padding(
+                                          padding: PaddingColumn.screen,
+                                          child: CustomFloatingButton(
+                                            onPressed: widget.showActions,
+                                            icon: Icon(
+                                              Icons.add,
+                                              color: Colors.white,
+                                              size: 256,
+                                            ),
+                                          ),
+                                        ))
+                                  ],
+                                )
                           : (!isPortrait
                               ? Row(
                                   children: [

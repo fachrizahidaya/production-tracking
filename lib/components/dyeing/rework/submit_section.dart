@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/margin_search.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -44,6 +45,23 @@ class _SubmitSectionState extends State<SubmitSection> {
     );
   }
 
+  double _angleForOrientation(NativeDeviceOrientation orientation) {
+    switch (orientation) {
+      case NativeDeviceOrientation.landscapeLeft:
+        // device rotated so top goes to the left -> rotate preview -90deg
+        return -math.pi / 2;
+      case NativeDeviceOrientation.landscapeRight:
+        // device rotated so top goes to the right -> rotate preview +90deg
+        return math.pi / 2;
+      case NativeDeviceOrientation.portraitDown:
+        // upside-down portrait
+        return math.pi;
+      case NativeDeviceOrientation.portraitUp:
+      default:
+        return 0.0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(
@@ -81,23 +99,23 @@ class _SubmitSectionState extends State<SubmitSection> {
                                       : 0,
                                   child: MobileScanner(
                                     controller: controller,
-                                    onDetect: (BarcodeCapture capture) {
+                                    onDetect: (capture) {
                                       final List<Barcode> barcodes =
                                           capture.barcodes;
-                                      for (final barcode in barcodes) {
-                                        final String code =
-                                            barcode.rawValue ?? "---";
 
-                                        if (int.tryParse(code) != null) {
-                                          int id = int.parse(code);
+                                      for (final barcode in barcodes) {
+                                        final String? code = barcode.rawValue;
+
+                                        if (code != null && code.isNotEmpty) {
                                           controller.stop();
                                           setState(() {
                                             _isScannerStopped = true;
                                           });
-                                          widget.handleScan(id);
-                                        }
 
-                                        break;
+                                          widget.handleScan(code);
+
+                                          break;
+                                        }
                                       }
                                     },
                                   ),
@@ -149,7 +167,6 @@ class _SubmitSectionState extends State<SubmitSection> {
                                   widget.form,
                                   widget.handleSubmit,
                                   widget.handleChangeInput));
-
                           if (result != null &&
                               result is String &&
                               result.isNotEmpty) {

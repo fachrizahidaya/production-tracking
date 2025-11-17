@@ -22,7 +22,7 @@ class _ItemTabState extends State<ItemTab> {
     return Container(
       child: items.isEmpty
           ? const Center(child: Text('No Data'))
-          : ListView.separated(
+          : ListView.builder(
               padding: EdgeInsets.only(top: 8),
               itemCount: items.length,
               itemBuilder: (context, index) {
@@ -31,7 +31,6 @@ class _ItemTabState extends State<ItemTab> {
                   item: item,
                 );
               },
-              separatorBuilder: (context, index) => const SizedBox(height: 16),
             ),
     );
   }

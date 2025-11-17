@@ -9,7 +9,6 @@ import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/item_process_card.dart';
 import 'package:textile_tracking/components/master/layout/process_list.dart';
-import 'package:textile_tracking/components/master/sheet/process_sheet.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_date_safe.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
@@ -271,30 +270,49 @@ class _SortingScreenState extends State<SortingScreen> {
                 sampaiTanggal: sampaiTanggal,
               ),
               showActions: () {
-                ProcessSheet.showOptions(
-                  context,
-                  options: [
-                    BottomSheetOption(
-                      title: "Mulai Sorting",
-                      icon: Icons.add,
-                      iconColor: CustomTheme().buttonColor('primary'),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const CreateSorting()),
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
                       ),
-                    ),
-                    BottomSheetOption(
-                      title: "Selesai Sorting",
-                      icon: Icons.check_circle,
-                      iconColor: CustomTheme().buttonColor('warning'),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const FinishSorting()),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              leading: Icon(Icons.add,
+                                  color: CustomTheme().buttonColor('primary')),
+                              title: const Text("Mulai Sorting"),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const CreateSorting(),
+                                  ),
+                                );
+                              },
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.check_circle,
+                                  color: CustomTheme().buttonColor('warning')),
+                              title: const Text("Selesai Sorting"),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const FinishSorting(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 );
               },
               firstLoading: _firstLoading,
@@ -310,30 +328,53 @@ class _SortingScreenState extends State<SortingScreen> {
         bottomNavigationBar: isPortrait
             ? CustomFloatingButton(
                 onPressed: () {
-                  ProcessSheet.showOptions(
-                    context,
-                    options: [
-                      BottomSheetOption(
-                        title: "Mulai Sorting",
-                        icon: Icons.add,
-                        iconColor: CustomTheme().buttonColor('primary'),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const CreateSorting()),
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                      ),
-                      BottomSheetOption(
-                        title: "Selesai Sorting",
-                        icon: Icons.check_circle,
-                        iconColor: CustomTheme().buttonColor('warning'),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const FinishSorting()),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.add,
+                                    color:
+                                        CustomTheme().buttonColor('primary')),
+                                title: const Text("Mulai Sorting"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CreateSorting(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.check_circle,
+                                    color:
+                                        CustomTheme().buttonColor('warning')),
+                                title: const Text("Selesai Sorting"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const FinishSorting(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   );
                 },
                 icon: const Icon(

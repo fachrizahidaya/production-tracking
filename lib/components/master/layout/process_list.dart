@@ -3,6 +3,7 @@ import 'package:textile_tracking/components/master/button/custom_floating_button
 import 'package:textile_tracking/components/master/layout/custom_search_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
 
 class ProcessList<T> extends StatefulWidget {
   final BaseCrudService<T> service;
@@ -94,63 +95,127 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
         ),
         Expanded(
           child: !widget.canRead
-              ? const Center(child: Text('No Access'))
+              ? Center(child: Text('No Access'))
               : widget.firstLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : Stack(
-                      children: [
-                        if (widget.dataList.isEmpty)
-                          const Center(child: NoData())
-                        else
-                          RefreshIndicator(
-                            onRefresh: () async {
-                              widget.handleRefetch();
-                            },
-                            child: ListView.builder(
-                              controller: _scrollController,
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              padding: const EdgeInsets.all(8),
-                              itemCount: widget.dataList.length +
-                                  (widget.hasMore ? 1 : 0),
-                              itemBuilder: (context, index) {
-                                if (!widget.canRead) {
-                                  return const Center(child: Text('No Access'));
-                                } else if (index == widget.dataList.length) {
-                                  if (widget.hasMore &&
-                                      widget.dataList.isNotEmpty) {
-                                    return const Padding(
-                                      padding: EdgeInsets.all(16.0),
-                                      child: Center(
-                                          child: CircularProgressIndicator()),
-                                    );
-                                  } else {
-                                    return const SizedBox.shrink();
-                                  }
-                                }
+                  ? Center(child: CircularProgressIndicator())
+                  : RefreshIndicator(
+                      onRefresh: () async => widget.handleRefetch(),
+                      child: widget.dataList.isEmpty
+                          ? isPortrait
+                              ? ListView(
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  children: [
+                                    Center(child: NoData()),
+                                  ],
+                                )
+                              : Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: ListView(
+                                        physics:
+                                            AlwaysScrollableScrollPhysics(),
+                                        children: [
+                                          SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.8,
+                                              child: Center(child: NoData())),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Padding(
+                                          padding: PaddingColumn.screen,
+                                          child: CustomFloatingButton(
+                                            onPressed: widget.showActions,
+                                            icon: Icon(
+                                              Icons.add,
+                                              color: Colors.white,
+                                              size: 256,
+                                            ),
+                                          ),
+                                        ))
+                                  ],
+                                )
+                          : (!isPortrait
+                              ? Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: ListView.builder(
+                                        controller: _scrollController,
+                                        physics:
+                                            AlwaysScrollableScrollPhysics(),
+                                        padding: EdgeInsets.all(8),
+                                        itemCount: widget.dataList.length +
+                                            (widget.hasMore ? 1 : 0),
+                                        itemBuilder: (context, index) {
+                                          if (index == widget.dataList.length) {
+                                            return widget.hasMore
+                                                ? Padding(
+                                                    padding: EdgeInsets.all(16),
+                                                    child: Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    ),
+                                                  )
+                                                : SizedBox.shrink();
+                                          }
 
-                                final item = widget.dataList[index];
-                                return GestureDetector(
-                                  onTap: () =>
-                                      widget.onItemTap?.call(context, item),
-                                  child: widget.itemBuilder(item),
-                                );
-                              },
-                            ),
-                          ),
-                        if (!isPortrait && widget.canCreate)
-                          Positioned(
-                            bottom: 16,
-                            right: 16,
-                            child: CustomFloatingButton(
-                              onPressed: widget.showActions,
-                              icon: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 256,
-                              ),
-                            ),
-                          ),
-                      ],
+                                          final item = widget.dataList[index];
+                                          return GestureDetector(
+                                            onTap: () => widget.onItemTap
+                                                ?.call(context, item),
+                                            child: widget.itemBuilder(item),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Padding(
+                                        padding: PaddingColumn.screen,
+                                        child: CustomFloatingButton(
+                                          onPressed: widget.showActions,
+                                          icon: Icon(
+                                            Icons.add,
+                                            color: Colors.white,
+                                            size: 256,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : ListView.builder(
+                                  controller: _scrollController,
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  padding: EdgeInsets.all(8),
+                                  itemCount: widget.dataList.length +
+                                      (widget.hasMore ? 1 : 0),
+                                  itemBuilder: (context, index) {
+                                    if (index == widget.dataList.length) {
+                                      return widget.hasMore
+                                          ? Padding(
+                                              padding: EdgeInsets.all(16.0),
+                                              child: Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
+                                            )
+                                          : SizedBox.shrink();
+                                    }
+
+                                    final item = widget.dataList[index];
+                                    return GestureDetector(
+                                      onTap: () =>
+                                          widget.onItemTap?.call(context, item),
+                                      child: widget.itemBuilder(item),
+                                    );
+                                  },
+                                )),
                     ),
         ),
       ],

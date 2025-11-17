@@ -134,6 +134,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
       return document.body?.text ?? '';
     }
 
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return SingleChildScrollView(
         child: Container(
       padding: const EdgeInsets.all(8),
@@ -438,36 +440,63 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                 ),
               ),
             ),
-            Expanded(
-                flex: 1,
-                child: CustomCard(
-                    child: Padding(
-                  padding: PaddingColumn.screen,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'INFORMASI GREIGE & CATATAN',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      ViewText(
-                        viewLabel: 'Qty Greige',
-                        viewValue:
-                            '${data['work_orders']?['greige_qty'] ?? '-'} ${data['work_orders']?['greige_unit']?['code'] ?? ''}',
-                      ),
-                      ViewText(
-                        viewLabel: 'Catatan Work Order',
-                        viewValue: htmlToPlainText(
-                            data['work_orders']['notes'] ?? '-'),
-                      )
-                    ].separatedBy(SizedBox(
-                      height: 8,
-                    )),
-                  ),
-                )))
+            if (!isMobile)
+              Expanded(
+                  flex: 1,
+                  child: CustomCard(
+                      child: Padding(
+                    padding: PaddingColumn.screen,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'INFORMASI GREIGE & CATATAN',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        ViewText(
+                          viewLabel: 'Qty Greige',
+                          viewValue:
+                              '${data['work_orders']?['greige_qty'] ?? '-'} ${data['work_orders']?['greige_unit']?['code'] ?? ''}',
+                        ),
+                        ViewText(
+                          viewLabel: 'Catatan Work Order',
+                          viewValue: htmlToPlainText(
+                              data['work_orders']['notes'] ?? '-'),
+                        )
+                      ].separatedBy(SizedBox(
+                        height: 8,
+                      )),
+                    ),
+                  )))
           ],
         ),
+        if (isMobile)
+          CustomCard(
+              child: Padding(
+            padding: PaddingColumn.screen,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'INFORMASI GREIGE & CATATAN',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                ViewText(
+                  viewLabel: 'Qty Greige',
+                  viewValue:
+                      '${data['work_orders']?['greige_qty'] ?? '-'} ${data['work_orders']?['greige_unit']?['code'] ?? ''}',
+                ),
+                ViewText(
+                  viewLabel: 'Catatan Work Order',
+                  viewValue:
+                      htmlToPlainText(data['work_orders']['notes'] ?? '-'),
+                )
+              ].separatedBy(SizedBox(
+                height: 8,
+              )),
+            ),
+          )),
         if (widget.withMaklon == true)
           CustomCard(
             child: Padding(

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:path/path.dart';
 import 'package:textile_tracking/helpers/service/base_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -99,7 +100,9 @@ class OptionMachineService extends BaseService<OptionMachine> {
         throw Exception('Failed to load machines: ${response.statusCode}');
       }
     } catch (e) {
-      debugPrint('Error fetching machine options: $e');
+      ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
       rethrow;
     } finally {
       _isLoading = false;

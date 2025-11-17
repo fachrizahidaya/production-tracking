@@ -90,7 +90,9 @@ class _DashboardState extends State<Dashboard> {
         ];
       });
     } catch (e) {
-      debugPrint("Error fetching dashboard data: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     } finally {
       setState(() {
         isLoading = false;

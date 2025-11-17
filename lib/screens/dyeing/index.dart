@@ -183,6 +183,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
   Widget build(BuildContext context) {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {

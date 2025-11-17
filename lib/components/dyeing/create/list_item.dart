@@ -12,10 +12,13 @@ class ListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return CustomCard(
         child: Padding(
             padding: PaddingColumn.screen,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -27,10 +30,19 @@ class ListItem extends StatelessWidget {
                           fontSize: 16,
                         ),
                       ),
-                      CustomBadge(
-                          title: item['spk_item']['item']['sku']?.toString() ??
-                              '-'),
+                      if (!isMobile)
+                        CustomBadge(
+                            title:
+                                item['spk_item']['item']['sku']?.toString() ??
+                                    '-'),
                     ]),
+                if (isMobile)
+                  Text(
+                    item['spk_item']['item']['sku']?.toString() ?? '-',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
                 Divider(),
                 const SizedBox(
                   height: 8,

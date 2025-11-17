@@ -40,13 +40,13 @@ class _SubmitSectionState extends State<SubmitSection> {
       detectionSpeed: DetectionSpeed.noDuplicates,
       facing: CameraFacing.front,
     );
+    // controller.start();
   }
 
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
-    controller.start();
   }
 
   double _angleForOrientation(NativeDeviceOrientation orientation) {
@@ -163,6 +163,11 @@ class _SubmitSectionState extends State<SubmitSection> {
                         icon: const Icon(Icons.edit),
                         label: const Text("Isi Manual"),
                         onPressed: () async {
+                          controller.stop();
+                          setState(() {
+                            _isScannerStopped = true;
+                          });
+
                           final result = await Navigator.of(context).push(widget
                               .handleRoute(widget.form, widget.handleSubmit));
 

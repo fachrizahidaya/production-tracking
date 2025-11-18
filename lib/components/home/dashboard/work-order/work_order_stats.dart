@@ -51,9 +51,9 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
                                           color: i == 0
                                               ? Color(0xff3b82f6)
                                               : i == 1
-                                                  ? Color(0xfff18800)
+                                                  ? Color(0xFF10b981)
                                                   : i == 2
-                                                      ? Color(0xFF10b981)
+                                                      ? Color(0xfff18800)
                                                       : Color(0xFF94a3b8),
                                           borderRadius:
                                               BorderRadius.circular(4)),
@@ -109,9 +109,9 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
                           bottomBorderColor: i == 0
                               ? Color(0xff3b82f6)
                               : i == 1
-                                  ? Color(0xfff18800)
+                                  ? Color(0xFF10b981)
                                   : i == 2
-                                      ? Color(0xFF10b981)
+                                      ? Color(0xfff18800)
                                       : Color(0xFF94a3b8),
                           child: Padding(
                             padding: PaddingColumn.screen,
@@ -126,9 +126,9 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
                                           color: i == 0
                                               ? Color(0xff3b82f6)
                                               : i == 1
-                                                  ? Color(0xfff18800)
+                                                  ? Color(0xFF10b981)
                                                   : i == 2
-                                                      ? Color(0xFF10b981)
+                                                      ? Color(0xfff18800)
                                                       : Color(0xFF94a3b8),
                                           borderRadius:
                                               BorderRadius.circular(4)),

@@ -7,6 +7,7 @@ import 'package:textile_tracking/components/home/dashboard/work-order/work_order
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order_chart.dart';
+import 'package:textile_tracking/models/master/work_order_process.dart';
 import 'package:textile_tracking/models/master/work_order_stats.dart';
 
 class Dashboard extends StatefulWidget {
@@ -17,14 +18,15 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  late List<dynamic> statsList = [];
-  late List<dynamic> chartList = [];
-  late List<dynamic> pieList = [];
-
-  List<Widget> dashboardSections = [];
+  List<dynamic> statsList = [];
+  List<dynamic> chartList = [];
+  List<dynamic> pieList = [];
+  List<dynamic> processList = [];
 
   String dariTanggal = '';
   String sampaiTanggal = '';
+  String dariTanggalProses = '';
+  String sampaiTanggalProses = '';
 
   bool isLoading = false;
 
@@ -34,70 +36,85 @@ class _DashboardState extends State<Dashboard> {
 
     final now = DateTime.now();
     final firstDayOfMonth = DateTime(now.year, now.month, 1);
-    final today = now;
 
     dariTanggal = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
-    sampaiTanggal = DateFormat('yyyy-MM-dd').format(today);
+    sampaiTanggal = DateFormat('yyyy-MM-dd').format(now);
+    dariTanggalProses = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
+    sampaiTanggalProses = DateFormat('yyyy-MM-dd').format(now);
 
-    _handleFetchStats(
-      fromDate: dariTanggal,
-      toDate: sampaiTanggal,
-    );
+    // Fetch all data at once
+    _loadDashboardData();
   }
 
-  Future<void> _handleFetchStats({String? fromDate, String? toDate}) async {
-    setState(() {
-      isLoading = true;
-    });
+  Future<void> _loadDashboardData() async {
+    setState(() => isLoading = true);
 
-    final chartParams = {
+    try {
+      await Future.wait([
+        _handleFetchStats(),
+        _handleFetchPie(),
+        _handleFetchCharts(
+          fromDate: dariTanggal,
+          toDate: sampaiTanggal,
+        ),
+        _handleFetchProcess(
+            fromDate: dariTanggalProses, toDate: sampaiTanggalProses)
+      ]);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
+  Future<void> _handleFetchCharts({String? fromDate, String? toDate}) async {
+    final params = {
       'process_start_date': fromDate ?? dariTanggal,
       'process_end_date': toDate ?? sampaiTanggal,
     };
 
-    try {
-      await Provider.of<WorkOrderStatsService>(context, listen: false)
-          .getDataList();
-      await Provider.of<WorkOrderChartService>(context, listen: false)
-          .getDataList(chartParams);
-      await Provider.of<WorkOrderChartService>(context, listen: false)
-          .getDataPie();
+    await Provider.of<WorkOrderChartService>(context, listen: false)
+        .getDataList(params);
 
-      final result =
-          Provider.of<WorkOrderStatsService>(context, listen: false).dataList;
-      final resultChart =
+    setState(() {
+      chartList =
           Provider.of<WorkOrderChartService>(context, listen: false).dataList;
-      final resultPie =
+    });
+  }
+
+  Future<void> _handleFetchProcess({String? fromDate, String? toDate}) async {
+    final params = {
+      'process_start_date': fromDate ?? dariTanggalProses,
+      'process_end_date': toDate ?? sampaiTanggalProses,
+    };
+
+    await Provider.of<WorkOrderProcessService>(context, listen: false)
+        .getDataProcess(params);
+
+    setState(() {
+      processList = Provider.of<WorkOrderProcessService>(context, listen: false)
+          .dataProcess;
+    });
+  }
+
+  Future<void> _handleFetchStats() async {
+    await Provider.of<WorkOrderStatsService>(context, listen: false)
+        .getDataList();
+
+    setState(() {
+      statsList =
+          Provider.of<WorkOrderStatsService>(context, listen: false).dataList;
+    });
+  }
+
+  Future<void> _handleFetchPie() async {
+    await Provider.of<WorkOrderChartService>(context, listen: false)
+        .getDataPie();
+
+    setState(() {
+      pieList =
           Provider.of<WorkOrderChartService>(context, listen: false).dataPie;
-
-      setState(() {
-        statsList = result;
-        chartList = resultChart;
-        pieList = resultPie;
-
-        dashboardSections = [
-          WorkOrderStats(data: statsList),
-          WorkOrderChart(
-            data: chartList,
-            dariTanggal: dariTanggal,
-            sampaiTanggal: sampaiTanggal,
-            onHandleFilter: _handleFilter,
-          ),
-          WorkOrderPie(
-            data: pieList,
-            process: chartList,
-          )
-        ];
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    });
   }
 
   void _handleFilter(String type, String value) {
@@ -106,7 +123,7 @@ class _DashboardState extends State<Dashboard> {
       if (type == 'sampai_tanggal') sampaiTanggal = value;
     });
 
-    _handleFetchStats(
+    _handleFetchCharts(
       fromDate: dariTanggal,
       toDate: sampaiTanggal,
     );
@@ -114,6 +131,32 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> dashboardSections = [];
+
+    if (statsList.isNotEmpty) {
+      dashboardSections.add(WorkOrderStats(data: statsList));
+    }
+
+    if (chartList.isNotEmpty) {
+      dashboardSections.add(
+        WorkOrderChart(
+          data: chartList,
+          dariTanggal: dariTanggal,
+          sampaiTanggal: sampaiTanggal,
+          onHandleFilter: _handleFilter,
+        ),
+      );
+    }
+
+    if (pieList.isNotEmpty) {
+      dashboardSections.add(
+        WorkOrderPie(
+          data: pieList,
+          process: chartList,
+        ),
+      );
+    }
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -124,12 +167,10 @@ class _DashboardState extends State<Dashboard> {
             : dashboardSections.isEmpty
                 ? const Center(child: NoData())
                 : SingleChildScrollView(
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        children: dashboardSections
-                            .separatedBy(const SizedBox(height: 8)),
-                      ),
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      children: dashboardSections
+                          .separatedBy(const SizedBox(height: 8)),
                     ),
                   ),
       ),

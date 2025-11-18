@@ -17,7 +17,7 @@ class CustomFloatingButton extends StatelessWidget {
         MediaQuery.of(context).orientation == Orientation.portrait;
 
     return SizedBox(
-      width: isPortrait ? 760 : 300,
+      width: isPortrait ? null : 300,
       height: isPortrait ? 200 : 620,
       child: FloatingActionButton(
         onPressed: onPressed,

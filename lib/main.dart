@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/helpers/auth/auth_check.dart';
 import 'package:textile_tracking/models/master/unit.dart';
 import 'package:textile_tracking/models/master/work_order_chart.dart';
+import 'package:textile_tracking/models/master/work_order_process.dart';
 import 'package:textile_tracking/models/master/work_order_stats.dart';
 import 'package:textile_tracking/models/option/option_dyeing.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
@@ -69,6 +70,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => OptionDyeingService()),
         ChangeNotifierProvider(create: (_) => WorkOrderStatsService()),
         ChangeNotifierProvider(create: (_) => WorkOrderChartService()),
+        ChangeNotifierProvider(create: (_) => WorkOrderProcessService()),
       ],
       child: MyApp(
           // store: store

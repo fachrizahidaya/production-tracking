@@ -69,12 +69,14 @@ class WorkOrderPieState extends State<WorkOrderPie> {
                                                                 ? Icons
                                                                     .color_lens_outlined
                                                                 : i == 8
-                                                                    ? Icons.sort
+                                                                    ? Icons
+                                                                        .print_outlined
                                                                     : i == 9
                                                                         ? Icons
-                                                                            .stacked_bar_chart_outlined
-                                                                        : Icons
-                                                                            .dangerous,
+                                                                            .sort
+                                                                        : i == 10
+                                                                            ? Icons.stacked_bar_chart_outlined
+                                                                            : Icons.dangerous,
                                 color: Colors.white,
                                 size: 32,
                               ),

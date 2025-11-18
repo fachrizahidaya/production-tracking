@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -265,8 +267,7 @@ class DyeingService extends BaseService<Dyeing> {
   }
 
   @override
-  Future<String> addItem(
-      Dyeing newDyeing, ValueNotifier<bool> isSubmitting) async {
+  Future<String> addItem(Dyeing item, ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -275,32 +276,32 @@ class DyeingService extends BaseService<Dyeing> {
 
       var uri = Uri.parse(baseUrl);
 
-      bool hasAttachments = newDyeing.attachments != null &&
-          newDyeing.attachments is List &&
-          (newDyeing.attachments as List).isNotEmpty;
+      bool hasAttachments = item.attachments != null &&
+          item.attachments is List &&
+          (item.attachments as List).isNotEmpty;
 
       if (hasAttachments) {
         var request = http.MultipartRequest('POST', uri);
         request.headers['Authorization'] = 'Bearer $token';
 
-        request.fields['wo_id'] = newDyeing.wo_id?.toString() ?? '';
-        request.fields['machine_id'] = newDyeing.machine_id?.toString() ?? '';
-        request.fields['unit_id'] = newDyeing.unit_id?.toString() ?? '';
+        request.fields['wo_id'] = item.wo_id?.toString() ?? '';
+        request.fields['machine_id'] = item.machine_id?.toString() ?? '';
+        request.fields['unit_id'] = item.unit_id?.toString() ?? '';
         request.fields['rework_reference_id'] =
-            newDyeing.rework_reference_id?.toString() ?? '';
-        request.fields['start_by_id'] = newDyeing.start_by_id?.toString() ?? '';
-        request.fields['end_by_id'] = newDyeing.end_by_id?.toString() ?? '';
-        request.fields['qty'] = newDyeing.qty ?? '';
-        request.fields['width'] = newDyeing.width ?? '';
-        request.fields['length'] = newDyeing.length ?? '';
-        request.fields['notes'] = newDyeing.notes ?? '';
-        request.fields['rework'] = (newDyeing.rework == true ? '1' : '0');
-        request.fields['status'] = newDyeing.status ?? '';
-        request.fields['start_time'] = newDyeing.start_time ?? '';
-        request.fields['end_time'] = newDyeing.end_time ?? '';
+            item.rework_reference_id?.toString() ?? '';
+        request.fields['start_by_id'] = item.start_by_id?.toString() ?? '';
+        request.fields['end_by_id'] = item.end_by_id?.toString() ?? '';
+        request.fields['qty'] = item.qty ?? '';
+        request.fields['width'] = item.width ?? '';
+        request.fields['length'] = item.length ?? '';
+        request.fields['notes'] = item.notes ?? '';
+        request.fields['rework'] = (item.rework == true ? '1' : '0');
+        request.fields['status'] = item.status ?? '';
+        request.fields['start_time'] = item.start_time ?? '';
+        request.fields['end_time'] = item.end_time ?? '';
 
-        for (int i = 0; i < newDyeing.attachments.length; i++) {
-          var file = newDyeing.attachments[i];
+        for (int i = 0; i < item.attachments.length; i++) {
+          var file = item.attachments[i];
           if (file is File) {
             request.files.add(await http.MultipartFile.fromPath(
               'attachments[$i]',
@@ -334,7 +335,7 @@ class DyeingService extends BaseService<Dyeing> {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
           },
-          body: jsonEncode(newDyeing.toJson()),
+          body: jsonEncode(item.toJson()),
         );
 
         if (response.statusCode == 201) {
@@ -357,7 +358,7 @@ class DyeingService extends BaseService<Dyeing> {
   @override
   Future<String> updateItem(
     String id,
-    Dyeing updatedDyeing,
+    Dyeing item,
     ValueNotifier<bool> isSubmitting,
   ) async {
     try {
@@ -366,35 +367,33 @@ class DyeingService extends BaseService<Dyeing> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('access_token');
 
-      bool hasAttachments = updatedDyeing.attachments != null &&
-          updatedDyeing.attachments is List &&
-          (updatedDyeing.attachments as List).isNotEmpty;
+      bool hasAttachments = item.attachments != null &&
+          item.attachments is List &&
+          (item.attachments as List).isNotEmpty;
 
       if (hasAttachments) {
         var uri = Uri.parse('$baseUrl/$id?_method=PATCH');
         var request = http.MultipartRequest('POST', uri);
         request.headers['Authorization'] = 'Bearer $token';
 
-        request.fields['wo_id'] = updatedDyeing.wo_id?.toString() ?? '';
-        request.fields['machine_id'] =
-            updatedDyeing.machine_id?.toString() ?? '';
-        request.fields['unit_id'] = updatedDyeing.unit_id?.toString() ?? '';
+        request.fields['wo_id'] = item.wo_id?.toString() ?? '';
+        request.fields['machine_id'] = item.machine_id?.toString() ?? '';
+        request.fields['unit_id'] = item.unit_id?.toString() ?? '';
         request.fields['rework_reference_id'] =
-            updatedDyeing.rework_reference_id?.toString() ?? '';
-        request.fields['start_by_id'] =
-            updatedDyeing.start_by_id?.toString() ?? '';
-        request.fields['end_by_id'] = updatedDyeing.end_by_id?.toString() ?? '';
-        request.fields['qty'] = updatedDyeing.qty ?? '';
-        request.fields['width'] = updatedDyeing.width ?? '';
-        request.fields['length'] = updatedDyeing.length ?? '';
-        request.fields['notes'] = updatedDyeing.notes ?? '';
-        request.fields['rework'] = (updatedDyeing.rework == true ? '1' : '0');
-        request.fields['status'] = updatedDyeing.status ?? '';
-        request.fields['start_time'] = updatedDyeing.start_time ?? '';
-        request.fields['end_time'] = updatedDyeing.end_time ?? '';
+            item.rework_reference_id?.toString() ?? '';
+        request.fields['start_by_id'] = item.start_by_id?.toString() ?? '';
+        request.fields['end_by_id'] = item.end_by_id?.toString() ?? '';
+        request.fields['qty'] = item.qty ?? '';
+        request.fields['width'] = item.width ?? '';
+        request.fields['length'] = item.length ?? '';
+        request.fields['notes'] = item.notes ?? '';
+        request.fields['rework'] = (item.rework == true ? '1' : '0');
+        request.fields['status'] = item.status ?? '';
+        request.fields['start_time'] = item.start_time ?? '';
+        request.fields['end_time'] = item.end_time ?? '';
 
-        for (int i = 0; i < updatedDyeing.attachments.length; i++) {
-          var file = updatedDyeing.attachments[i];
+        for (int i = 0; i < item.attachments.length; i++) {
+          var file = item.attachments[i];
           if (file is File) {
             request.files.add(await http.MultipartFile.fromPath(
               'attachments[$i]',
@@ -423,7 +422,7 @@ class DyeingService extends BaseService<Dyeing> {
         }
       } else {
         final body = {
-          ...updatedDyeing.toJson(),
+          ...item.toJson(),
           '_method': 'PATCH',
         };
 

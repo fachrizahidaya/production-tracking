@@ -58,10 +58,10 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
 
   @override
   Future<void> addItem(
-      OptionItemGrade newWo, ValueNotifier<bool> isSubmitting) async {}
+      OptionItemGrade item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
-  Future<void> updateItem(String id, OptionItemGrade updatedWo,
+  Future<void> updateItem(String id, OptionItemGrade item,
       ValueNotifier<bool> isSubmitting) async {}
 
   @override

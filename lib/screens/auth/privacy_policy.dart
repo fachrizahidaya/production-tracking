@@ -70,7 +70,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

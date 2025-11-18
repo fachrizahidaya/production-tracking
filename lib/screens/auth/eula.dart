@@ -70,7 +70,7 @@ class _EulaState extends State<Eula> {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

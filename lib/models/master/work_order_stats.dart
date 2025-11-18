@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -25,11 +27,11 @@ class WorkOrderStatsService extends BaseService {
   }
 
   @override
-  Future<void> addItem(newDyeing, ValueNotifier<bool> isSubmitting) async {}
+  Future<void> addItem(item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
   Future<void> updateItem(
-      String id, updatedDyeing, ValueNotifier<bool> isSubmitting) async {}
+      String id, item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}

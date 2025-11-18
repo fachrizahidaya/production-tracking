@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables, use_build_context_synchronously
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/filter_select_form.dart';
@@ -190,7 +192,6 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
         _isFetchingOperator = false;
       });
     }
-    // ignore: use_build_context_synchronously
     // final result = Provider.of<OptionOperatorService>(context, listen: false)
     //     .dataListOption;
 

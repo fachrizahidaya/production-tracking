@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -63,7 +65,6 @@ class _CreateDyeingState extends State<CreateDyeing> {
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchOptions();
-    // ignore: use_build_context_synchronously
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
         .dataListOption;
 
@@ -180,19 +181,16 @@ class _CreateDyeingState extends State<CreateDyeing> {
       final message = await Provider.of<DyeingService>(context, listen: false)
           .addItem(dyeing, _firstLoading);
 
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
       );
 
       Navigator.pushNamedAndRemoveUntil(
-        // ignore: use_build_context_synchronously
         context,
         '/dyeings',
         (Route<dynamic> route) => false,
       );
     } catch (e) {
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );

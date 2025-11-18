@@ -748,7 +748,7 @@ class _ListInfoSectionState extends State<ListInfoSection> {
             color: Colors.white,
             child: preview,
           );
-        }).toList(),
+        }),
     ]);
   }
 }

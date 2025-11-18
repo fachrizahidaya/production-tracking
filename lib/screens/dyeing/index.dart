@@ -397,7 +397,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
                       );
                     },
                   );
-                  ;
                 },
                 icon: const Icon(
                   Icons.add,

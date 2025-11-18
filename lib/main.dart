@@ -46,43 +46,35 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  // final store = Store(appReducer, initialState: AppState.initial());
-  runApp(MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => DyeingService()),
-        ChangeNotifierProvider(create: (_) => PressTumblerService()),
-        ChangeNotifierProvider(create: (_) => StenterService()),
-        ChangeNotifierProvider(create: (_) => LongSittingService()),
-        ChangeNotifierProvider(create: (_) => LongHemmingService()),
-        ChangeNotifierProvider(create: (_) => CrossCuttingService()),
-        ChangeNotifierProvider(create: (_) => SewingService()),
-        ChangeNotifierProvider(create: (_) => EmbroideryService()),
-        ChangeNotifierProvider(create: (_) => PrintingService()),
-        ChangeNotifierProvider(create: (_) => SortingService()),
-        ChangeNotifierProvider(create: (_) => PackingService()),
-        ChangeNotifierProvider(create: (_) => UnitService()),
-        ChangeNotifierProvider(create: (_) => OptionUnitService()),
-        ChangeNotifierProvider(create: (_) => OptionMachineService()),
-        ChangeNotifierProvider(create: (_) => OptionOperatorService()),
-        ChangeNotifierProvider(create: (_) => OptionWorkOrderService()),
-        ChangeNotifierProvider(create: (_) => OptionItemGradeService()),
-        ChangeNotifierProvider(create: (_) => OptionDyeingService()),
-        ChangeNotifierProvider(create: (_) => WorkOrderStatsService()),
-        ChangeNotifierProvider(create: (_) => WorkOrderChartService()),
-        ChangeNotifierProvider(create: (_) => WorkOrderProcessService()),
-      ],
-      child: MyApp(
-          // store: store
-          )));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => UserProvider()),
+    ChangeNotifierProvider(create: (_) => DyeingService()),
+    ChangeNotifierProvider(create: (_) => PressTumblerService()),
+    ChangeNotifierProvider(create: (_) => StenterService()),
+    ChangeNotifierProvider(create: (_) => LongSittingService()),
+    ChangeNotifierProvider(create: (_) => LongHemmingService()),
+    ChangeNotifierProvider(create: (_) => CrossCuttingService()),
+    ChangeNotifierProvider(create: (_) => SewingService()),
+    ChangeNotifierProvider(create: (_) => EmbroideryService()),
+    ChangeNotifierProvider(create: (_) => PrintingService()),
+    ChangeNotifierProvider(create: (_) => SortingService()),
+    ChangeNotifierProvider(create: (_) => PackingService()),
+    ChangeNotifierProvider(create: (_) => UnitService()),
+    ChangeNotifierProvider(create: (_) => OptionUnitService()),
+    ChangeNotifierProvider(create: (_) => OptionMachineService()),
+    ChangeNotifierProvider(create: (_) => OptionOperatorService()),
+    ChangeNotifierProvider(create: (_) => OptionWorkOrderService()),
+    ChangeNotifierProvider(create: (_) => OptionItemGradeService()),
+    ChangeNotifierProvider(create: (_) => OptionDyeingService()),
+    ChangeNotifierProvider(create: (_) => WorkOrderStatsService()),
+    ChangeNotifierProvider(create: (_) => WorkOrderChartService()),
+    ChangeNotifierProvider(create: (_) => WorkOrderProcessService()),
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
-  // final Store<AppState> store;
-
   const MyApp({
     super.key,
-    // required this.store
   });
 
   @override

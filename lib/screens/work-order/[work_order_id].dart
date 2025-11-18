@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
@@ -34,14 +34,6 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
   Map<String, String> params = {'search': '', 'page': '0'};
 
   Map<String, dynamic> data = {};
-
-  String _getSpkLabel(int spkId) {
-    final match = _optionSpkService.options.firstWhere(
-      (opt) => opt.value == spkId,
-      orElse: () => OptionSpk(value: -1, label: ''),
-    );
-    return match.label ?? '';
-  }
 
   Future<void> _getDataView() async {
     setState(() {

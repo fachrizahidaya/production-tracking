@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -58,10 +60,10 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
 
   @override
   Future<void> addItem(
-      OptionWorkOrder newWo, ValueNotifier<bool> isSubmitting) async {}
+      OptionWorkOrder item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
-  Future<void> updateItem(String id, OptionWorkOrder updatedWo,
+  Future<void> updateItem(String id, OptionWorkOrder item,
       ValueNotifier<bool> isSubmitting) async {}
 
   @override

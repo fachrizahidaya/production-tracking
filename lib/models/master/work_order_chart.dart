@@ -27,11 +27,11 @@ class WorkOrderChartService extends BaseService {
   }
 
   @override
-  Future<void> addItem(newDyeing, ValueNotifier<bool> isSubmitting) async {}
+  Future<void> addItem(item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
   Future<void> updateItem(
-      String id, updatedDyeing, ValueNotifier<bool> isSubmitting) async {}
+      String id, item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}

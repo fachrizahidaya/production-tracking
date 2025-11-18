@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';

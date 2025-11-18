@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
@@ -73,8 +75,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   final TextEditingController _lengthController = TextEditingController();
   final TextEditingController _widthController = TextEditingController();
   final TextEditingController _qtyItemController = TextEditingController();
-  List<TextEditingController> _qtyControllers = [];
-  List<TextEditingController> _notesControllers = [];
+  final List<TextEditingController> _qtyControllers = [];
+  final List<TextEditingController> _notesControllers = [];
   List<Map<String, dynamic>> _selectedUnits = [];
 
   late List<dynamic> workOrderOption = [];
@@ -182,7 +184,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       await Provider.of<OptionUnitService>(context, listen: false)
           .getDataListOption();
       final result =
-          // ignore: use_build_context_synchronously
           Provider.of<OptionUnitService>(context, listen: false).dataListOption;
 
       setState(() {

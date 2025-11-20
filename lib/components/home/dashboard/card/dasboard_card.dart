@@ -6,13 +6,15 @@ class DasboardCard extends StatelessWidget {
   final bool isLoading;
   final bottomBorderColor;
   final withBottomBorder;
+  final bgColor;
 
   const DasboardCard(
       {super.key,
       required this.child,
       this.isLoading = false,
       this.bottomBorderColor,
-      this.withBottomBorder = false // default border color
+      this.withBottomBorder = false,
+      this.bgColor // default border color
       });
 
   @override
@@ -25,7 +27,7 @@ class DasboardCard extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              color: Colors.white,
+              color: bgColor ?? Colors.white,
               border: Border(
                 bottom: BorderSide(
                   color: withBottomBorder == true

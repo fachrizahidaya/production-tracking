@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields, annotate_overrides, non_constant_identifier_names
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -176,7 +178,7 @@ class SpkService extends BaseService<Spk> {
   }
 
   @override
-  Future<void> addItem(Spk newSpk, ValueNotifier<bool> isSubmitting) async {
+  Future<void> addItem(Spk item, ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -189,7 +191,7 @@ class SpkService extends BaseService<Spk> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(newSpk.toJson()),
+        body: jsonEncode(item.toJson()),
       );
 
       if (response.statusCode == 200) {
@@ -210,7 +212,7 @@ class SpkService extends BaseService<Spk> {
 
   @override
   Future<void> updateItem(
-      String id, Spk updatedSpk, ValueNotifier<bool> isSubmitting) async {
+      String id, Spk item, ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -223,7 +225,7 @@ class SpkService extends BaseService<Spk> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(updatedSpk.toJson()),
+        body: jsonEncode(item.toJson()),
       );
 
       if (response.statusCode == 200) {

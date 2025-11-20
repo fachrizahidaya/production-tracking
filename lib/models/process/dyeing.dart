@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, annotate_overrides, prefer_final_fields
 
 import 'dart:convert';
 import 'dart:io';

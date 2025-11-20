@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides, prefer_final_fields
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -53,11 +55,11 @@ class OptionMachineService extends BaseService<OptionMachine> {
 
   @override
   Future<void> addItem(
-      OptionMachine newMachine, ValueNotifier<bool> isSubmitting) async {}
+      OptionMachine item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
-  Future<void> updateItem(String id, OptionMachine updatedMachine,
-      ValueNotifier<bool> isSubmitting) async {}
+  Future<void> updateItem(
+      String id, OptionMachine item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}

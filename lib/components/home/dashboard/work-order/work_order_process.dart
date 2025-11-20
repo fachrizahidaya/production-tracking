@@ -2,31 +2,50 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/home/dashboard/dasboard_card.dart';
-import 'package:textile_tracking/components/master/form/group_form.dart';
+import 'package:textile_tracking/components/home/dashboard/card/dasboard_card.dart';
+import 'package:textile_tracking/components/master/layout/dashboard_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 
-class WorkOrderProcess extends StatefulWidget {
-  final List<dynamic> data;
+class WorkOrderProcessScreen extends StatefulWidget {
+  final data;
   final onHandleFilter;
   final dariTanggal;
   final sampaiTanggal;
   final filterWidget;
+  final handleSearch;
+  final search;
+  final firstLoading;
+  final hasMore;
+  final handleRefetch;
+  final handleLoadMore;
+  final handleFetchData;
+  final handleBuildItem;
+  final service;
 
-  const WorkOrderProcess(
+  const WorkOrderProcessScreen(
       {super.key,
       this.dariTanggal,
-      required this.data,
+      this.data,
       this.onHandleFilter,
       this.sampaiTanggal,
-      this.filterWidget});
+      this.filterWidget,
+      this.handleSearch,
+      this.search,
+      this.handleRefetch,
+      this.handleLoadMore,
+      this.firstLoading,
+      this.hasMore,
+      this.handleFetchData,
+      this.handleBuildItem,
+      this.service});
 
   @override
-  State<WorkOrderProcess> createState() => _WorkOrderProcessState();
+  State<WorkOrderProcessScreen> createState() => _WorkOrderProcessScreenState();
 }
 
-class _WorkOrderProcessState extends State<WorkOrderProcess> {
+class _WorkOrderProcessScreenState extends State<WorkOrderProcessScreen> {
   final double width = 14;
   double maxY = 0;
   int? touchedIndex;
@@ -43,7 +62,7 @@ class _WorkOrderProcessState extends State<WorkOrderProcess> {
   }
 
   @override
-  void didUpdateWidget(covariant WorkOrderProcess oldWidget) {
+  void didUpdateWidget(covariant WorkOrderProcessScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.dariTanggal != dariTanggalInput.text) {
       dariTanggalInput.text = widget.dariTanggal;
@@ -87,23 +106,6 @@ class _WorkOrderProcessState extends State<WorkOrderProcess> {
     }
   }
 
-  void _openFilter() {
-    if (widget.filterWidget != null) {
-      showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-        ),
-        enableDrag: true,
-        isDismissible: true,
-        isScrollControlled: true,
-        builder: (BuildContext context) {
-          return widget.filterWidget!;
-        },
-      );
-    }
-  }
-
   @override
   void dispose() {
     dariTanggalInput.dispose();
@@ -111,64 +113,30 @@ class _WorkOrderProcessState extends State<WorkOrderProcess> {
     super.dispose();
   }
 
-  Widget _buildDateFilterRow() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    return SizedBox(
-      width: 400,
-      child: Row(
-        children: [
-          Expanded(
-            child: GroupForm(
-              label: 'Dari Tanggal',
-              formControl: TextFormField(
-                controller: dariTanggalInput,
-                style: const TextStyle(fontSize: 14),
-                decoration: CustomTheme().inputDateDecoration(
-                  hintTextString: 'Pilih tanggal',
-                ),
-                keyboardType: TextInputType.datetime,
-                readOnly: true,
-                onTap: () => _pickDate(
-                  controller: dariTanggalInput,
-                  type: 'dari_tanggal',
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: GroupForm(
-              label: 'Sampai Tanggal',
-              formControl: TextFormField(
-                controller: sampaiTanggalInput,
-                style: const TextStyle(fontSize: 14),
-                decoration: CustomTheme().inputDateDecoration(
-                  hintTextString: 'Pilih tanggal',
-                ),
-                keyboardType: TextInputType.datetime,
-                readOnly: true,
-                onTap: () => _pickDate(
-                  controller: sampaiTanggalInput,
-                  type: 'sampai_tanggal',
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return DasboardCard(
-      child: Padding(
+    return Padding(
         padding: PaddingColumn.screen,
-        child: SizedBox(
-          width: 400,
-        ),
-      ),
-    );
+        child: Column(
+          children: [
+            SizedBox(
+              height: 500,
+              child: DashboardList(
+                fetchData: widget.handleFetchData,
+                service: widget.service,
+                searchQuery: widget.search,
+                itemBuilder: widget.handleBuildItem,
+                filterWidget: widget.filterWidget,
+                handleRefetch: widget.handleRefetch,
+                handleLoadMore: widget.handleLoadMore,
+                handleSearch: widget.handleSearch,
+                dataList: widget.data,
+                firstLoading: widget.firstLoading,
+                hasMore: widget.hasMore,
+                isFiltered: false,
+              ),
+            )
+          ].separatedBy(const SizedBox(height: 16)),
+        ));
   }
 }

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/multiline_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
-import 'package:textile_tracking/components/master/layout/custom_card.dart';
+import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:textile_tracking/models/master/terms_conditions_model.dart';
+import 'package:textile_tracking/models/auth/terms_conditions_model.dart';
 
 class TermsConditionsService {
   static Future<TermsConditionsModel> loadTermsConditions() async {

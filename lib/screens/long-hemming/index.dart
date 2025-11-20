@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields
+
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -7,8 +9,8 @@ import 'package:textile_tracking/components/master/button/custom_floating_button
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
-import 'package:textile_tracking/components/master/layout/item_process_card.dart';
-import 'package:textile_tracking/components/master/layout/process_list.dart';
+import 'package:textile_tracking/components/master/layout/card/item_process_card.dart';
+import 'package:textile_tracking/components/master/layout/list/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_date_safe.dart';
 import 'package:textile_tracking/models/process/long_hemming.dart';

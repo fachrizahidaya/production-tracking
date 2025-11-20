@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/create/info_tab.dart';
 import 'package:textile_tracking/components/dyeing/create/item_tab.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
-import 'package:textile_tracking/components/master/layout/custom_card.dart';
+import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 

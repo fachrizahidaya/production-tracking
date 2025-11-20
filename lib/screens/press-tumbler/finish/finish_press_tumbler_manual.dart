@@ -70,7 +70,6 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
     try {
       await Provider.of<OptionWorkOrderService>(context, listen: false)
           .fetchPressFinishOptions();
-      // ignore: use_build_context_synchronously
       final result = Provider.of<OptionWorkOrderService>(context, listen: false)
           .dataListOption;
 
@@ -92,7 +91,6 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
     await Provider.of<OptionUnitService>(context, listen: false)
         .getDataListOption();
     final result =
-        // ignore: use_build_context_synchronously
         Provider.of<OptionUnitService>(context, listen: false).dataListOption;
 
     setState(() {

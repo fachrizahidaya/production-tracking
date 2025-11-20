@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/models/process/press_tumbler.dart';
-import 'package:textile_tracking/screens/process_detail.dart';
+import 'package:textile_tracking/screens/master/process_detail.dart';
 
 class PressTumblerDetail extends StatefulWidget {
   final String id;

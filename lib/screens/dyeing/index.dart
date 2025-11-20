@@ -1,12 +1,14 @@
+// ignore_for_file: prefer_final_fields
+
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/dyeing/item_dyeing.dart';
+import 'package:textile_tracking/components/dyeing/card/item_dyeing.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/layout/main_list.dart';
+import 'package:textile_tracking/components/master/layout/list/main_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';

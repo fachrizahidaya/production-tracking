@@ -11,7 +11,6 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
-import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
@@ -193,47 +192,6 @@ class _DyeingDetailState extends State<DyeingDetail> {
       data = _dyeingService.dataView;
       _firstLoading = false;
     });
-  }
-
-  Future<void> _loadMore() async {
-    _isLoadMore = true;
-
-    if (params['page'] == '0') {
-      setState(() {
-        _dataList.clear();
-        _firstLoading = true;
-        _hasMore = true;
-      });
-    }
-
-    String newPage = (int.parse(params['page']!) + 1).toString();
-    setState(() {
-      params['page'] = newPage;
-    });
-
-    await Provider.of<WorkOrderService>(context, listen: false)
-        .getDataList(params);
-
-    List<dynamic> loadData =
-        Provider.of<WorkOrderService>(context, listen: false).dataList;
-
-    if (loadData.isEmpty) {
-      setState(() {
-        _firstLoading = false;
-        _isLoadMore = false;
-        _hasMore = false;
-      });
-    } else {
-      setState(() {
-        _dataList.addAll(loadData);
-        _firstLoading = false;
-        _isLoadMore = false;
-
-        if (loadData.length < 20) {
-          _hasMore = false;
-        }
-      });
-    }
   }
 
   Future<void> _handleUpdate(id) async {

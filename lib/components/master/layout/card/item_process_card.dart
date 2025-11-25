@@ -45,10 +45,6 @@ class ItemProcessCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleLabel =
-        getTitleLabel?.call(item) ?? _capitalize(titleKey.replaceAll('_', ' '));
-    final subtitleLabel = getSubtitleLabel?.call(item) ??
-        _capitalize(subtitleKey.replaceAll('_', ' '));
     final status = getStatus?.call(item) ?? '-';
 
     final isMobile = MediaQuery.of(context).size.width < 600;
@@ -278,7 +274,4 @@ class ItemProcessCard extends StatelessWidget {
       return '-';
     }
   }
-
-  String _capitalize(String text) =>
-      text.isNotEmpty ? text[0].toUpperCase() + text.substring(1) : text;
 }

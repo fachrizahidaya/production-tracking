@@ -31,7 +31,6 @@ class FinishPressTumblerManual extends StatefulWidget {
 
 class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
   final PressTumblerService _pressTumblerService = PressTumblerService();
-  bool _isFetchingWorkOrder = false;
 
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
@@ -63,10 +62,6 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
   }
 
   Future<void> _handleFetchWorkOrder() async {
-    setState(() {
-      _isFetchingWorkOrder = true;
-    });
-
     try {
       await Provider.of<OptionWorkOrderService>(context, listen: false)
           .fetchPressFinishOptions();
@@ -80,11 +75,7 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("$e")),
       );
-    } finally {
-      setState(() {
-        _isFetchingWorkOrder = false;
-      });
-    }
+    } finally {}
   }
 
   Future<void> _handleFetchUnit() async {

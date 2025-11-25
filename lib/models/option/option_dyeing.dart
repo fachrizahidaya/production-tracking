@@ -55,11 +55,11 @@ class OptionDyeingService extends BaseService<OptionDyeing> {
 
   @override
   Future<void> addItem(
-      OptionDyeing newDyeing, ValueNotifier<bool> isSubmitting) async {}
+      OptionDyeing item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
-  Future<void> updateItem(String id, OptionDyeing updatedDyeing,
-      ValueNotifier<bool> isSubmitting) async {}
+  Future<void> updateItem(
+      String id, OptionDyeing item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}

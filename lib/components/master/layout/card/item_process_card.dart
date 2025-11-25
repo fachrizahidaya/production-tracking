@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
-import 'package:textile_tracking/components/master/layout/custom_card.dart';
+import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -45,10 +45,10 @@ class ItemProcessCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleLabel = getTitleLabel?.call(item) ??
-        '${_capitalize(titleKey.replaceAll('_', ' '))}';
+    final titleLabel =
+        getTitleLabel?.call(item) ?? _capitalize(titleKey.replaceAll('_', ' '));
     final subtitleLabel = getSubtitleLabel?.call(item) ??
-        '${_capitalize(subtitleKey.replaceAll('_', ' '))}';
+        _capitalize(subtitleKey.replaceAll('_', ' '));
     final status = getStatus?.call(item) ?? '-';
 
     final isMobile = MediaQuery.of(context).size.width < 600;

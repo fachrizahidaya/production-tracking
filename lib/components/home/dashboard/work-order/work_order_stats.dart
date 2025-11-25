@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/home/dashboard/dasboard_card.dart';
+import 'package:textile_tracking/components/home/dashboard/card/dasboard_card.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/helpers/util/margin_card.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';

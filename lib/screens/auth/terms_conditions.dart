@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/helpers/service/terms_conditions_service.dart';
-import 'package:textile_tracking/models/master/terms_conditions_model.dart';
+import 'package:textile_tracking/models/auth/terms_conditions_model.dart';
 
 class TermsConditions extends StatefulWidget {
   const TermsConditions({super.key});
@@ -70,7 +70,7 @@ class _TermsConditionsState extends State<TermsConditions> {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

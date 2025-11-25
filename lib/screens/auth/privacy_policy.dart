@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/helpers/service/privacy_policy_service.dart';
-import 'package:textile_tracking/models/master/privacy_policy_model.dart';
+import 'package:textile_tracking/models/auth/privacy_policy_model.dart';
 
 class PrivacyPolicy extends StatefulWidget {
   const PrivacyPolicy({super.key});
@@ -70,7 +70,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

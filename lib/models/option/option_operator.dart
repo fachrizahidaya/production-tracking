@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields, annotate_overrides
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -47,11 +49,11 @@ class OptionOperatorService extends BaseService<OptionOperator> {
 
   @override
   Future<void> addItem(
-      OptionOperator newOperator, ValueNotifier<bool> isSubmitting) async {}
+      OptionOperator item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
-  Future<void> updateItem(String id, OptionOperator updatedOperator,
-      ValueNotifier<bool> isSubmitting) async {}
+  Future<void> updateItem(
+      String id, OptionOperator item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}

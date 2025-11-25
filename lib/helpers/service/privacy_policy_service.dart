@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:textile_tracking/models/master/privacy_policy_model.dart';
+import 'package:textile_tracking/models/auth/privacy_policy_model.dart';
 
 class PrivacyPolicyService {
   static Future<PrivacyPolicyModel> loadPrivacyPolicy() async {

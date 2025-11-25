@@ -1,10 +1,10 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously, prefer_final_fields
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/components/work-order/attachment_tab.dart';
-import 'package:textile_tracking/components/work-order/info_tab.dart';
-import 'package:textile_tracking/components/work-order/item_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/info_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/item_tab.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_spk.dart';
 import 'package:provider/provider.dart';
@@ -34,14 +34,6 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
   Map<String, String> params = {'search': '', 'page': '0'};
 
   Map<String, dynamic> data = {};
-
-  String _getSpkLabel(int spkId) {
-    final match = _optionSpkService.options.firstWhere(
-      (opt) => opt.value == spkId,
-      orElse: () => OptionSpk(value: -1, label: ''),
-    );
-    return match.label ?? '';
-  }
 
   Future<void> _getDataView() async {
     setState(() {

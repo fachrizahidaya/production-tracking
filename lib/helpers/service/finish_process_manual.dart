@@ -1,11 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/layout/create_form_tab.dart';
-import 'package:textile_tracking/components/master/layout/create_info_tab.dart';
-import 'package:textile_tracking/components/master/layout/create_item_tab.dart';
+import 'package:textile_tracking/components/master/layout/tab/create_form_tab.dart';
+import 'package:textile_tracking/components/master/layout/tab/create_info_tab.dart';
+import 'package:textile_tracking/components/master/layout/tab/create_item_tab.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -73,8 +75,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   final TextEditingController _lengthController = TextEditingController();
   final TextEditingController _widthController = TextEditingController();
   final TextEditingController _qtyItemController = TextEditingController();
-  List<TextEditingController> _qtyControllers = [];
-  List<TextEditingController> _notesControllers = [];
+  final List<TextEditingController> _qtyControllers = [];
+  final List<TextEditingController> _notesControllers = [];
   List<Map<String, dynamic>> _selectedUnits = [];
 
   late List<dynamic> workOrderOption = [];
@@ -182,7 +184,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       await Provider.of<OptionUnitService>(context, listen: false)
           .getDataListOption();
       final result =
-          // ignore: use_build_context_synchronously
           Provider.of<OptionUnitService>(context, listen: false).dataListOption;
 
       setState(() {

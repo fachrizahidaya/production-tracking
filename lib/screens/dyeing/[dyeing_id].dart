@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously, unused_field, prefer_final_fields
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +95,6 @@ class _DyeingDetailState extends State<DyeingDetail> {
     await Provider.of<OptionUnitService>(context, listen: false)
         .getDataListOption();
     final result =
-        // ignore: use_build_context_synchronously
         Provider.of<OptionUnitService>(context, listen: false).dataListOption;
 
     setState(() {
@@ -111,7 +110,6 @@ class _DyeingDetailState extends State<DyeingDetail> {
     try {
       await Provider.of<OptionMachineService>(context, listen: false)
           .fetchOptionsDyeing();
-      // ignore: use_build_context_synchronously
       final result = Provider.of<OptionMachineService>(context, listen: false)
           .dataListOption;
 
@@ -217,7 +215,6 @@ class _DyeingDetailState extends State<DyeingDetail> {
         .getDataList(params);
 
     List<dynamic> loadData =
-        // ignore: use_build_context_synchronously
         Provider.of<WorkOrderService>(context, listen: false).dataList;
 
     if (loadData.isEmpty) {
@@ -281,19 +278,16 @@ class _DyeingDetailState extends State<DyeingDetail> {
       final message = await Provider.of<DyeingService>(context, listen: false)
           .updateItem(id, dyeing, _isLoading);
 
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
       );
 
       Navigator.pushNamedAndRemoveUntil(
-        // ignore: use_build_context_synchronously
         context,
         '/dyeings',
         (Route<dynamic> route) => false,
       );
     } catch (e) {
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );
@@ -310,19 +304,16 @@ class _DyeingDetailState extends State<DyeingDetail> {
                   await Provider.of<DyeingService>(context, listen: false)
                       .deleteItem(id, _processLoading);
 
-              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(message)),
               );
 
               Navigator.pushNamedAndRemoveUntil(
-                // ignore: use_build_context_synchronously
                 context,
                 '/dyeings',
                 (Route<dynamic> route) => false,
               );
             } catch (e) {
-              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("Error: ${e.toString()}")),
               );

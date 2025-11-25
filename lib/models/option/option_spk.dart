@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides, prefer_final_fields
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -53,11 +55,11 @@ class OptionSpkService extends BaseService<OptionSpk> {
 
   @override
   Future<void> addItem(
-      OptionSpk newSpk, ValueNotifier<bool> isSubmitting) async {}
+      OptionSpk item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
-  Future<void> updateItem(String id, OptionSpk updatedSpk,
-      ValueNotifier<bool> isSubmitting) async {}
+  Future<void> updateItem(
+      String id, OptionSpk item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}

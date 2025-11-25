@@ -1,9 +1,8 @@
-import 'package:easy_localization/easy_localization.dart';
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/home/dashboard/dasboard_card.dart';
-import 'package:textile_tracking/components/master/form/group_form.dart';
-import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/components/home/dashboard/card/dasboard_card.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -12,13 +11,15 @@ class WorkOrderChart extends StatefulWidget {
   final onHandleFilter;
   final dariTanggal;
   final sampaiTanggal;
+  final filterWidget;
 
   const WorkOrderChart(
       {super.key,
       required this.data,
       this.onHandleFilter,
       this.dariTanggal,
-      this.sampaiTanggal});
+      this.sampaiTanggal,
+      this.filterWidget});
 
   @override
   State<WorkOrderChart> createState() => _WorkOrderChartState();
@@ -130,85 +131,40 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
     );
   }
 
-  Future<void> _pickDate({
-    required TextEditingController controller,
-    required String type,
-  }) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: controller.text.isNotEmpty
-          ? DateTime.tryParse(controller.text) ?? DateTime.now()
-          : DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2101),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: CustomTheme().colors('base'),
-              onPrimary: Colors.white,
-              onSurface: Colors.black87,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (pickedDate != null) {
-      final formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-      setState(() {
-        controller.text = formattedDate;
-      });
-      widget.onHandleFilter(type, formattedDate);
+  void _openFilter() {
+    if (widget.filterWidget != null) {
+      showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        enableDrag: true,
+        isDismissible: true,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return widget.filterWidget!;
+        },
+      );
     }
   }
 
   Widget _buildDateFilterRow() {
     final isMobile = MediaQuery.of(context).size.width < 600;
 
-    return SizedBox(
-      width: 400,
-      child: Row(
-        children: [
-          Expanded(
-            child: GroupForm(
-              label: 'Dari Tanggal',
-              formControl: TextFormField(
-                controller: dariTanggalInput,
-                style: const TextStyle(fontSize: 14),
-                decoration: CustomTheme().inputDateDecoration(
-                  hintTextString: 'Pilih tanggal',
-                ),
-                keyboardType: TextInputType.datetime,
-                readOnly: true,
-                onTap: () => _pickDate(
-                  controller: dariTanggalInput,
-                  type: 'dari_tanggal',
-                ),
-              ),
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(8)),
+      child: IconButton(
+        icon: Stack(
+          children: [
+            const Icon(
+              Icons.tune,
             ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: GroupForm(
-              label: 'Sampai Tanggal',
-              formControl: TextFormField(
-                controller: sampaiTanggalInput,
-                style: const TextStyle(fontSize: 14),
-                decoration: CustomTheme().inputDateDecoration(
-                  hintTextString: 'Pilih tanggal',
-                ),
-                keyboardType: TextInputType.datetime,
-                readOnly: true,
-                onTap: () => _pickDate(
-                  controller: sampaiTanggalInput,
-                  type: 'sampai_tanggal',
-                ),
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
+        onPressed: () {
+          _openFilter();
+        },
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/helpers/service/eula_service.dart';
-import 'package:textile_tracking/models/master/eula_model.dart';
+import 'package:textile_tracking/models/auth/eula_model.dart';
 
 class Eula extends StatefulWidget {
   const Eula({super.key});
@@ -70,7 +70,7 @@ class _EulaState extends State<Eula> {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

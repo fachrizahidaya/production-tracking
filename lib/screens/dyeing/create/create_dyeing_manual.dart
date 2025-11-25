@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/dyeing/create/info_tab.dart';
@@ -57,7 +59,6 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
     try {
       await Provider.of<OptionWorkOrderService>(context, listen: false)
           .fetchOptions();
-      // ignore: use_build_context_synchronously
       final result = Provider.of<OptionWorkOrderService>(context, listen: false)
           .dataListOption;
 
@@ -83,7 +84,6 @@ class _CreateDyeingManualState extends State<CreateDyeingManual> {
     try {
       await Provider.of<OptionMachineService>(context, listen: false)
           .fetchOptionsDyeing();
-      // ignore: use_build_context_synchronously
       final result = Provider.of<OptionMachineService>(context, listen: false)
           .dataListOption;
 

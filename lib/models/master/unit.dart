@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -109,7 +111,7 @@ class UnitService extends BaseService<Unit> {
   }
 
   @override
-  Future<void> addItem(Unit newUnit, ValueNotifier<bool> isSubmitting) async {
+  Future<void> addItem(Unit item, ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -122,7 +124,7 @@ class UnitService extends BaseService<Unit> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(newUnit.toJson()),
+        body: jsonEncode(item.toJson()),
       );
 
       if (response.statusCode == 200) {
@@ -143,7 +145,7 @@ class UnitService extends BaseService<Unit> {
 
   @override
   Future<void> updateItem(
-      String id, Unit updatedUnit, ValueNotifier<bool> isSubmitting) async {
+      String id, Unit item, ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -156,7 +158,7 @@ class UnitService extends BaseService<Unit> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(updatedUnit.toJson()),
+        body: jsonEncode(item.toJson()),
       );
 
       if (response.statusCode == 200) {

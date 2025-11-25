@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/home/dashboard/filter/chart_filter.dart';
+import 'package:textile_tracking/components/home/dashboard/filter/process_filter.dart';
 import 'package:textile_tracking/components/home/dashboard/machine/active_machine.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_process.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_chart.dart';
@@ -50,6 +51,7 @@ class _DashboardState extends State<Dashboard> {
   bool _firstLoading = true;
   String _search = '';
   final List<dynamic> _dataList = [];
+  bool _isFiltered = false;
 
   @override
   void initState() {
@@ -70,8 +72,8 @@ class _DashboardState extends State<Dashboard> {
       params = {
         'search': _search,
         'page': '0',
-        'start_date': dariTanggal,
-        'end_date': sampaiTanggal,
+        'start_date': dariTanggalProses,
+        'end_date': sampaiTanggalProses,
       };
     });
     Future.delayed(Duration.zero, () {
@@ -169,11 +171,30 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  void _handleProcessFilter(String type, String value) {
+  void _handleProcessFilter(String key, dynamic value) {
     setState(() {
-      dariTanggalProses = value;
-      sampaiTanggalProses = value;
+      params['page'] = '0';
+      if (value != null && value.toString().isNotEmpty) {
+        params[key] = value.toString();
+      } else {
+        params.remove(key);
+      }
     });
+
+    if (params['status'] == null &&
+        params['start_date'] == null &&
+        params['end_date'] == null) {
+      _isFiltered = false;
+    } else {
+      _isFiltered = true;
+    }
+
+    _loadMore();
+  }
+
+  Future<void> _submitFilter() async {
+    Navigator.pop(context);
+    _loadMore();
   }
 
   Future<void> _pickDate({
@@ -272,6 +293,7 @@ class _DashboardState extends State<Dashboard> {
   void dispose() {
     dariTanggalInput.dispose();
     sampaiTanggalInput.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -279,78 +301,72 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     List<Widget> dashboardSections = [];
 
-    if (statsList.isNotEmpty) {
-      dashboardSections.add(WorkOrderStats(data: statsList));
-    }
+    dashboardSections.add(WorkOrderStats(data: statsList));
 
-    if (chartList.isNotEmpty) {
-      dashboardSections.add(
-        WorkOrderChart(
-          data: chartList,
-          dariTanggal: dariTanggal,
-          sampaiTanggal: sampaiTanggal,
+    dashboardSections.add(
+      WorkOrderChart(
+        data: chartList,
+        dariTanggal: dariTanggal,
+        sampaiTanggal: sampaiTanggal,
+        onHandleFilter: _handleFilter,
+        filterWidget: ChartFilter(
+          dariTanggal: dariTanggalInput,
+          sampaiTanggal: sampaiTanggalInput,
           onHandleFilter: _handleFilter,
-          filterWidget: ChartFilter(
-            dariTanggal: dariTanggalInput,
-            sampaiTanggal: sampaiTanggalInput,
-            onHandleFilter: _handleFilter,
-            pickDate: _pickDate,
-          ),
+          pickDate: _pickDate,
         ),
-      );
-    }
+      ),
+    );
 
-    if (pieList.isNotEmpty) {
-      dashboardSections.add(
-        WorkOrderPie(
-          data: pieList,
-          process: chartList,
-        ),
-      );
-    }
+    dashboardSections.add(
+      WorkOrderPie(
+        data: pieList,
+        process: chartList,
+      ),
+    );
 
-    if (machineList.isNotEmpty) {
-      dashboardSections.add(ActiveMachine(
-        data: machineList,
-        available: machineList['available'],
-        unavailable: machineList['unavailable'],
-      ));
-    }
+    dashboardSections.add(ActiveMachine(
+      data: machineList,
+      available: machineList['available'],
+      unavailable: machineList['unavailable'],
+    ));
 
-    if (_dataList.isNotEmpty) {
-      dashboardSections.add(
-        WorkOrderProcessScreen(
-          data: _dataList,
+    dashboardSections.add(
+      WorkOrderProcessScreen(
+        data: _dataList,
+        search: _search,
+        handleSearch: _handleSearch,
+        firstLoading: _firstLoading,
+        hasMore: _hasMore,
+        handleLoadMore: _loadMore,
+        handleRefetch: _refetch,
+        filterWidget: ProcessFilter(
+          title: 'Filter',
+          params: params,
+          onHandleFilter: _handleProcessFilter,
+          onSubmitFilter: () {
+            _submitFilter();
+          },
           dariTanggal: dariTanggalProses,
           sampaiTanggal: sampaiTanggalProses,
-          search: _search,
-          handleSearch: _handleSearch,
-          firstLoading: _firstLoading,
-          hasMore: _hasMore,
-          handleLoadMore: _loadMore,
-          handleRefetch: _refetch,
-          filterWidget: ChartFilter(
-            dariTanggal: dariTanggalInput,
-            sampaiTanggal: sampaiTanggalInput,
-            onHandleFilter: _handleFilter,
-            pickDate: _pickDate,
-          ),
-          handleFetchData: (params) async {
-            return await Provider.of<WorkOrderProcessService>(context,
-                    listen: false)
-                .getDataProcess(params);
-          },
-          handleBuildItem: (item) => Align(
-            alignment: Alignment.centerLeft,
-            child: ItemProcess(
-              item: item,
-            ),
-          ),
-          onHandleFilter: _handleFilter,
-          service: WorkOrderProcessService(),
+          pickDate: _pickDate,
         ),
-      );
-    }
+        handleFetchData: (params) async {
+          return await Provider.of<WorkOrderProcessService>(context,
+                  listen: false)
+              .getDataProcess(params);
+        },
+        handleBuildItem: (item) => Align(
+          alignment: Alignment.centerLeft,
+          child: ItemProcess(
+            item: item,
+          ),
+        ),
+        onHandleFilter: _handleFilter,
+        service: WorkOrderProcessService(),
+        isFiltered: false,
+      ),
+    );
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,

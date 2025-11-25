@@ -160,17 +160,6 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
             const Icon(
               Icons.tune,
             ),
-            // if (widget.isFiltered)
-            //   Positioned(
-            //       right: 0,
-            //       top: 0,
-            //       child: Container(
-            //         width: 10,
-            //         height: 10,
-            //         decoration: BoxDecoration(
-            //             color: CustomTheme().buttonColor('danger'),
-            //             shape: BoxShape.circle),
-            //       ))
           ],
         ),
         onPressed: () {

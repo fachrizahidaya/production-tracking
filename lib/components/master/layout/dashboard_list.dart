@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/layout/custom_search_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/helpers/service/base_service.dart';
+import 'package:textile_tracking/helpers/util/padding_column.dart';
 
 class DashboardList<T> extends StatefulWidget {
   final BaseService<T> service;
@@ -84,109 +86,118 @@ class _DashboardListState<T> extends State<DashboardList<T>> {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
-    return Column(
-      children: [
-        CustomSearchBar(
-          handleSearchChange: widget.handleSearch,
-          showFilter: _openFilter,
-          isFiltered: widget.isFiltered,
-        ),
-        Expanded(
-          child: widget.firstLoading
-              ? Center(child: CircularProgressIndicator())
-              : RefreshIndicator(
-                  onRefresh: () async => widget.handleRefetch(),
-                  child: widget.dataList.isEmpty
-                      ? isPortrait
-                          ? ListView(
-                              physics: AlwaysScrollableScrollPhysics(),
-                              children: [
-                                SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.8,
-                                    child: Center(child: NoData())),
-                              ],
-                            )
-                          : Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: ListView(
-                                    physics: AlwaysScrollableScrollPhysics(),
-                                    children: [
-                                      SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.8,
-                                          child: Center(child: NoData())),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
-                      : (!isPortrait
-                          ? Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: ListView.builder(
-                                    controller: _scrollController,
-                                    physics: AlwaysScrollableScrollPhysics(),
-                                    itemCount: widget.dataList.length +
-                                        (widget.hasMore ? 1 : 0),
-                                    itemBuilder: (context, index) {
-                                      if (index == widget.dataList.length) {
-                                        return widget.hasMore
-                                            ? Padding(
-                                                padding: EdgeInsets.all(16),
-                                                child: Center(
+    return CustomCard(
+      child: Padding(
+        padding: PaddingColumn.screen,
+        child: Column(
+          children: [
+            CustomSearchBar(
+              handleSearchChange: widget.handleSearch,
+              showFilter: _openFilter,
+              isFiltered: widget.isFiltered,
+            ),
+            Divider(),
+            Expanded(
+              child: widget.firstLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : RefreshIndicator(
+                      onRefresh: () async => widget.handleRefetch(),
+                      child: widget.dataList.isEmpty
+                          ? isPortrait
+                              ? ListView(
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  children: [
+                                    SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.8,
+                                        child: Center(child: NoData())),
+                                  ],
+                                )
+                              : Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: ListView(
+                                        physics:
+                                            AlwaysScrollableScrollPhysics(),
+                                        children: [
+                                          SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.8,
+                                              child: Center(child: NoData())),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                )
+                          : (!isPortrait
+                              ? Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: ListView.builder(
+                                        controller: _scrollController,
+                                        physics:
+                                            AlwaysScrollableScrollPhysics(),
+                                        itemCount: widget.dataList.length +
+                                            (widget.hasMore ? 1 : 0),
+                                        itemBuilder: (context, index) {
+                                          if (index == widget.dataList.length) {
+                                            return widget.hasMore
+                                                ? Padding(
+                                                    padding: EdgeInsets.all(16),
+                                                    child: Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    ),
+                                                  )
+                                                : SizedBox.shrink();
+                                          }
+
+                                          final item = widget.dataList[index];
+                                          return GestureDetector(
+                                            onTap: () => widget.onItemTap
+                                                ?.call(context, item),
+                                            child: widget.itemBuilder(item),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : ListView.builder(
+                                  controller: _scrollController,
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  itemCount: widget.dataList.length +
+                                      (widget.hasMore ? 1 : 0),
+                                  itemBuilder: (context, index) {
+                                    if (index == widget.dataList.length) {
+                                      return widget.hasMore
+                                          ? Padding(
+                                              padding: EdgeInsets.all(16.0),
+                                              child: Center(
                                                   child:
-                                                      CircularProgressIndicator(),
-                                                ),
-                                              )
-                                            : SizedBox.shrink();
-                                      }
+                                                      CircularProgressIndicator()),
+                                            )
+                                          : SizedBox.shrink();
+                                    }
 
-                                      final item = widget.dataList[index];
-                                      return GestureDetector(
-                                        onTap: () => widget.onItemTap
-                                            ?.call(context, item),
-                                        child: widget.itemBuilder(item),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            )
-                          : ListView.builder(
-                              controller: _scrollController,
-                              physics: AlwaysScrollableScrollPhysics(),
-                              itemCount: widget.dataList.length +
-                                  (widget.hasMore ? 1 : 0),
-                              itemBuilder: (context, index) {
-                                if (index == widget.dataList.length) {
-                                  return widget.hasMore
-                                      ? Padding(
-                                          padding: EdgeInsets.all(16.0),
-                                          child: Center(
-                                              child:
-                                                  CircularProgressIndicator()),
-                                        )
-                                      : SizedBox.shrink();
-                                }
-
-                                final item = widget.dataList[index];
-                                return GestureDetector(
-                                  onTap: () =>
-                                      widget.onItemTap?.call(context, item),
-                                  child: widget.itemBuilder(item),
-                                );
-                              },
-                            )),
-                ),
+                                    final item = widget.dataList[index];
+                                    return GestureDetector(
+                                      onTap: () =>
+                                          widget.onItemTap?.call(context, item),
+                                      child: widget.itemBuilder(item),
+                                    );
+                                  },
+                                )),
+                    ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

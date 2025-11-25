@@ -17,6 +17,7 @@ class WorkOrderProcess {
   final int? wo_qty;
   final String? greige_qty;
   final processes;
+  final grades;
 
   WorkOrderProcess(
       {this.id,
@@ -26,18 +27,21 @@ class WorkOrderProcess {
       this.wo_date,
       this.wo_qty,
       this.greige_qty,
-      this.processes});
+      this.processes,
+      this.grades});
 
   factory WorkOrderProcess.fromJson(Map<String, dynamic> json) {
     return WorkOrderProcess(
-        id: json['id'] as int?,
-        spk_no: json['spk_no'] ?? '',
-        wo_no: json['wo_no'] ?? '',
-        status: json['status'] ?? '',
-        wo_date: json['wo_date'] ?? '',
-        wo_qty: json['wo_qty'] as int?,
-        greige_qty: json['greige_qty'] ?? '',
-        processes: json['processes'] ?? {});
+      id: json['id'] as int?,
+      spk_no: json['spk_no'] ?? '',
+      wo_no: json['wo_no'] ?? '',
+      status: json['status'] ?? '',
+      wo_date: json['wo_date'] ?? '',
+      wo_qty: json['wo_qty'] as int?,
+      greige_qty: json['greige_qty'] ?? '',
+      processes: json['processes'] ?? {},
+      grades: json['grades'] ?? {},
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -49,7 +53,8 @@ class WorkOrderProcess {
       'wo_date': wo_date,
       'wo_qty': wo_qty,
       'greige_qty': greige_qty,
-      'processes': processes
+      'processes': processes,
+      'grades': grades,
     };
   }
 }

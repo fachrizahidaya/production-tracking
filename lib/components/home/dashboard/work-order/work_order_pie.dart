@@ -111,14 +111,6 @@ class WorkOrderPieState extends State<WorkOrderPie> {
                                 ),
                             ],
                           ),
-                          // SizedBox(
-                          //     width: 80,
-                          //     child: Text(
-                          //       widget.process?[i]['name'],
-                          //       maxLines: 2,
-                          //       overflow: TextOverflow.ellipsis,
-                          //       textAlign: TextAlign.center,
-                          //     )),
                         ].separatedBy(SizedBox(
                           height: 8,
                         )),

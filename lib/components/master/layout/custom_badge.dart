@@ -8,6 +8,7 @@ class CustomBadge extends StatelessWidget {
   final withDifferentColor;
   final status;
   final withStatus;
+  final icon;
 
   const CustomBadge(
       {super.key,
@@ -15,7 +16,8 @@ class CustomBadge extends StatelessWidget {
       this.color,
       this.withDifferentColor = false,
       this.status,
-      this.withStatus});
+      this.withStatus,
+      this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +31,10 @@ class CustomBadge extends StatelessWidget {
           children: [
             if (withStatus == true)
               Icon(
-                status == 'Diproses'
-                    ? Icons.access_time_outlined
-                    : Icons.task_alt_outlined,
+                icon ??
+                    (status == 'Diproses'
+                        ? Icons.access_time_outlined
+                        : Icons.task_alt_outlined),
                 size: 16,
               ),
             Text(

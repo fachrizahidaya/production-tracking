@@ -8,6 +8,7 @@ import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -236,9 +237,8 @@ class _DyeingDetailState extends State<DyeingDetail> {
       final message = await Provider.of<DyeingService>(context, listen: false)
           .updateItem(id, dyeing, _isLoading);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
+      showAlertDialog(
+          context: context, title: 'Dyeing Updated', message: message);
 
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -261,10 +261,8 @@ class _DyeingDetailState extends State<DyeingDetail> {
               final message =
                   await Provider.of<DyeingService>(context, listen: false)
                       .deleteItem(id, _processLoading);
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(message)),
-              );
+              showAlertDialog(
+                  context: context, title: 'Dyeing Deleted', message: message);
 
               Navigator.pushNamedAndRemoveUntil(
                 context,

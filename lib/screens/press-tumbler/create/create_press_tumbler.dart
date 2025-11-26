@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/service/create_process.dart';
 import 'package:textile_tracking/models/process/press_tumbler.dart';
 import 'package:textile_tracking/screens/press-tumbler/create/create_press_tumbler_manual.dart';
@@ -38,8 +39,8 @@ class CreatePressTumbler extends StatelessWidget {
         await Provider.of<PressTumblerService>(context, listen: false)
             .addItem(pressTumbler, isLoading);
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    showAlertDialog(
+        context: context, title: 'Press Tumbler Created', message: message);
 
     Navigator.pushNamedAndRemoveUntil(
         context, '/press-tumblers', (route) => false);

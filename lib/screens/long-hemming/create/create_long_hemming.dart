@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/service/create_process.dart';
 import 'package:textile_tracking/models/process/long_hemming.dart';
 import 'package:textile_tracking/screens/long-hemming/create/create_long_hemming_manual.dart';
@@ -38,8 +39,8 @@ class CreateLongHemming extends StatelessWidget {
         await Provider.of<LongHemmingService>(context, listen: false)
             .addItem(longHemming, isLoading);
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    showAlertDialog(
+        context: context, title: 'Long Hemming Created', message: message);
 
     Navigator.pushNamedAndRemoveUntil(
         context, '/long-hemmings', (route) => false);

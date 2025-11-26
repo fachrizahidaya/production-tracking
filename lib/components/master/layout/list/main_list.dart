@@ -97,7 +97,31 @@ class _MainListState<T> extends State<MainList<T>> {
           child: !widget.canRead
               ? Center(child: Text('No Access'))
               : widget.firstLoading
-                  ? Center(child: CircularProgressIndicator())
+                  ? Row(
+                      children: [
+                        Expanded(
+                            flex: 2,
+                            child: RefreshIndicator(
+                                onRefresh: () async => widget.handleRefetch(),
+                                child: Center(
+                                    child: CircularProgressIndicator()))),
+                        Expanded(
+                            flex: 1,
+                            child: Expanded(
+                                flex: 1,
+                                child: Padding(
+                                  padding: PaddingColumn.screen,
+                                  child: CustomFloatingButton(
+                                    onPressed: widget.showActions,
+                                    icon: Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                      size: 256,
+                                    ),
+                                  ),
+                                )))
+                      ],
+                    )
                   : RefreshIndicator(
                       onRefresh: () async => widget.handleRefetch(),
                       child: widget.dataList.isEmpty

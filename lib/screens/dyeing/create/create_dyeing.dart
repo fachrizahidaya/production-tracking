@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/dyeing/create/submit_section.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
@@ -79,11 +80,11 @@ class _CreateDyeingState extends State<CreateDyeing> {
     });
 
     try {
-      final String woNo =
-          code.toString(); // QR contains wo_no like "WO/25/10/00059"
+      final String woNo = code.toString();
 
       if (woNo.isEmpty) {
-        _showSnackBar("Invalid QR Code");
+        showAlertDialog(
+            context: context, title: 'Error', message: "Invalid QR Code");
         setState(() => _isLoading = false);
         return;
       }
@@ -97,7 +98,10 @@ class _CreateDyeingState extends State<CreateDyeing> {
           await _workOrderService.getProcessData(woForm, isSubmitting);
 
       if (processResponse == null) {
-        _showSnackBar("No process data found for this Work Order");
+        showAlertDialog(
+            context: context,
+            title: 'Error',
+            message: "No process data found for this Work Order");
         setState(() => _isLoading = false);
         return;
       }
@@ -110,7 +114,9 @@ class _CreateDyeingState extends State<CreateDyeing> {
           workOrderOption.any((item) => item['value'].toString() == woId);
 
       if (!workOrderExists) {
-        _showSnackBar("Work Order not found");
+        showAlertDialog(
+            context: context, title: 'Error', message: "Work Order not found");
+
         setState(() => _isLoading = false);
         return;
       }
@@ -181,9 +187,8 @@ class _CreateDyeingState extends State<CreateDyeing> {
       final message = await Provider.of<DyeingService>(context, listen: false)
           .addItem(dyeing, _firstLoading);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
+      showAlertDialog(
+          context: context, title: 'Dyeing Created', message: message);
 
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -195,11 +200,6 @@ class _CreateDyeingState extends State<CreateDyeing> {
         SnackBar(content: Text(e.toString())),
       );
     }
-  }
-
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override

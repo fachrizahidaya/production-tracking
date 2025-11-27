@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields, annotate_overrides
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';

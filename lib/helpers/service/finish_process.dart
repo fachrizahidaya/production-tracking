@@ -6,6 +6,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/form/finish/finish_submit_section.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -158,7 +159,8 @@ class _FinishProcessState extends State<FinishProcess> {
       final String woNo = code.toString();
 
       if (woNo.isEmpty) {
-        _showSnackBar("Work Order not found");
+        showAlertDialog(
+            context: context, title: 'Error', message: "Invalid QR Code");
         setState(() => _isLoading = false);
         return;
       }
@@ -170,7 +172,10 @@ class _FinishProcessState extends State<FinishProcess> {
           await _workOrderService.getProcessData(woForm, isSubmitting);
 
       if (processResponse == null) {
-        _showSnackBar("No process data found for this Work Order");
+        showAlertDialog(
+            context: context,
+            title: 'Error',
+            message: "No process data found for this Work Order");
         setState(() => _isLoading = false);
         return;
       }
@@ -182,7 +187,8 @@ class _FinishProcessState extends State<FinishProcess> {
           workOrderOption.any((item) => item['value'].toString() == woId);
 
       if (!workOrderExists) {
-        _showSnackBar("Work Order not found in the list");
+        showAlertDialog(
+            context: context, title: 'Error', message: "Work Order not found");
         setState(() => _isLoading = false);
         return;
       }
@@ -217,8 +223,6 @@ class _FinishProcessState extends State<FinishProcess> {
     try {
       if (widget.handleSubmitToService != null) {
         await widget.handleSubmitToService!(context, id, _form, _firstLoading);
-      } else {
-        _showSnackBar("No submission handler provided");
       }
     } catch (e) {
       _showSnackBar(e.toString());

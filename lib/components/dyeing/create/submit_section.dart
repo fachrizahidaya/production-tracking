@@ -1,10 +1,6 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
-
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
-import 'package:textile_tracking/helpers/util/margin_search.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'dart:math' as math;
 
 class SubmitSection extends StatefulWidget {
@@ -16,15 +12,16 @@ class SubmitSection extends StatefulWidget {
   final handleRoute;
   final isLoading;
 
-  const SubmitSection(
-      {super.key,
-      this.controller,
-      required this.isScannerStopped,
-      this.handleScan,
-      this.form,
-      this.handleSubmit,
-      this.handleRoute,
-      this.isLoading});
+  const SubmitSection({
+    super.key,
+    this.controller,
+    required this.isScannerStopped,
+    this.handleScan,
+    this.form,
+    this.handleSubmit,
+    this.handleRoute,
+    this.isLoading,
+  });
 
   @override
   State<SubmitSection> createState() => _SubmitSectionState();
@@ -32,17 +29,15 @@ class SubmitSection extends StatefulWidget {
 
 class _SubmitSectionState extends State<SubmitSection> {
   late MobileScannerController controller;
-  late bool _isScannerStopped;
+  bool _isScannerStopped = false;
 
   @override
   void initState() {
     super.initState();
-    _isScannerStopped = false;
     controller = MobileScannerController(
       detectionSpeed: DetectionSpeed.noDuplicates,
       facing: CameraFacing.front,
     );
-    // controller.start();
   }
 
   @override
@@ -51,16 +46,14 @@ class _SubmitSectionState extends State<SubmitSection> {
     super.dispose();
   }
 
+  /// Convert NativeDeviceOrientation to angle in radians
   double _angleForOrientation(NativeDeviceOrientation orientation) {
     switch (orientation) {
       case NativeDeviceOrientation.landscapeLeft:
-        // device rotated so top goes to the left -> rotate preview -90deg
         return -math.pi / 2;
       case NativeDeviceOrientation.landscapeRight:
-        // device rotated so top goes to the right -> rotate preview +90deg
         return math.pi / 2;
       case NativeDeviceOrientation.portraitDown:
-        // upside-down portrait
         return math.pi;
       case NativeDeviceOrientation.portraitUp:
       default:
@@ -70,128 +63,139 @@ class _SubmitSectionState extends State<SubmitSection> {
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (context, orientation) {
+    return NativeDeviceOrientationReader(
+      builder: (context) {
+        final orientation = NativeDeviceOrientationReader.orientation(context);
+
+        final angle = _angleForOrientation(orientation);
+
         return Stack(
           children: [
             Container(
-              padding: MarginSearch.screen,
+              padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
                   Expanded(
-                      flex: 2,
-                      child: Center(child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          final isLandscape =
-                              MediaQuery.of(context).orientation ==
-                                  Orientation.landscape;
-                          double scanWidth = isLandscape
-                              ? constraints.maxHeight
-                              : constraints.maxWidth * 0.9;
-                          double scanHeight = isLandscape
-                              ? constraints.maxWidth
-                              : constraints.maxWidth * 0.9;
-                          return ClipRRect(
-                              child: SizedBox(
-                            width: scanWidth,
-                            height: scanHeight,
-                            child: Stack(
-                              children: [
-                                Transform.rotate(
-                                  angle: orientation == Orientation.landscape
-                                      ? math.pi / 2
-                                      : 0,
-                                  child: MobileScanner(
-                                    controller: controller,
-                                    onDetect: (capture) {
-                                      final List<Barcode> barcodes =
-                                          capture.barcodes;
+                    flex: 2,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final isLandscape = orientation ==
+                                NativeDeviceOrientation.landscapeLeft ||
+                            orientation ==
+                                NativeDeviceOrientation.landscapeRight;
 
-                                      for (final barcode in barcodes) {
-                                        final String? code = barcode.rawValue;
+                        double scanWidth = isLandscape
+                            ? constraints.maxHeight
+                            : constraints.maxWidth * 0.9;
 
-                                        if (code != null && code.isNotEmpty) {
-                                          controller.stop();
-                                          setState(() {
-                                            _isScannerStopped = true;
-                                          });
+                        double scanHeight = isLandscape
+                            ? constraints.maxWidth
+                            : constraints.maxWidth * 0.9;
 
-                                          widget.handleScan(code);
-
-                                          break;
+                        return Center(
+                          child: ClipRRect(
+                            child: SizedBox(
+                              width: scanWidth,
+                              height: scanHeight,
+                              child: Stack(
+                                children: [
+                                  /// → Rotate the scanner preview with real device movement
+                                  Transform.rotate(
+                                    angle: angle,
+                                    child: MobileScanner(
+                                      controller: controller,
+                                      onDetect: (capture) {
+                                        for (final barcode
+                                            in capture.barcodes) {
+                                          final code = barcode.rawValue;
+                                          if (code != null && code.isNotEmpty) {
+                                            controller.stop();
+                                            setState(() {
+                                              _isScannerStopped = true;
+                                            });
+                                            widget.handleScan(code);
+                                            break;
+                                          }
                                         }
-                                      }
-                                    },
-                                  ),
-                                ),
-                                if (_isScannerStopped)
-                                  Center(
-                                    child: IconButton(
-                                      icon: Icon(
-                                        Icons.refresh,
-                                        size: 48,
-                                        color: Colors.black,
-                                      ),
-                                      onPressed: () {
-                                        controller.start();
-                                        setState(() {
-                                          _isScannerStopped = false;
-                                        });
                                       },
                                     ),
                                   ),
-                                Positioned(
-                                  top: 16,
-                                  right: 16,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.cameraswitch,
-                                        color: Colors.white),
-                                    onPressed: () => controller.switchCamera(),
+
+                                  if (_isScannerStopped)
+                                    Center(
+                                      child: IconButton(
+                                        icon:
+                                            const Icon(Icons.refresh, size: 48),
+                                        onPressed: () {
+                                          controller.start();
+                                          setState(() {
+                                            _isScannerStopped = false;
+                                          });
+                                        },
+                                      ),
+                                    ),
+
+                                  Positioned(
+                                    top: 16,
+                                    right: 16,
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.cameraswitch,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () =>
+                                          controller.switchCamera(),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ));
-                        },
-                      ))),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  /// Bottom Section
                   Expanded(
-                      child: Column(
-                    children: [
-                      Text(
-                        "Scan QR Work Order",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.edit),
-                        label: const Text("Isi Manual"),
-                        onPressed: () async {
-                          controller.stop();
-                          setState(() {
-                            _isScannerStopped = true;
-                          });
+                    child: Column(
+                      children: [
+                        const Text(
+                          "Scan QR Work Order",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        ElevatedButton.icon(
+                          icon: const Icon(Icons.edit),
+                          label: const Text("Isi Manual"),
+                          onPressed: () async {
+                            controller.stop();
+                            setState(() => _isScannerStopped = true);
 
-                          final result = await Navigator.of(context).push(widget
-                              .handleRoute(widget.form, widget.handleSubmit));
+                            final result = await Navigator.of(context).push(
+                              widget.handleRoute(
+                                widget.form,
+                                widget.handleSubmit,
+                              ),
+                            );
 
-                          if (result != null &&
-                              result is String &&
-                              result.isNotEmpty) {
-                            widget.handleScan(result);
-                          }
-                        },
-                      ),
-                    ].separatedBy(SizedBox(
-                      height: 16,
-                    )),
-                  )),
-                ].separatedBy(SizedBox(
-                  height: 16,
-                )),
+                            if (result != null &&
+                                result is String &&
+                                result.isNotEmpty) {
+                              widget.handleScan(result);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
             if (widget.isLoading)
               Container(
-                color: Color(0xFFf9fafc),
+                color: Colors.white.withOpacity(0.8),
                 child: const Center(
                   child: CircularProgressIndicator(),
                 ),

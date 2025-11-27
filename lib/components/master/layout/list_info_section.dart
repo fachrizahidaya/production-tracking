@@ -107,21 +107,8 @@ class ListInfoSection extends StatefulWidget {
 }
 
 class _ListInfoSectionState extends State<ListInfoSection> {
-  late String _initialQty;
-  late String _initialWeight;
-  late String _initialLength;
-  late String _initialWidth;
-  late String _initialNotes;
-  late bool _isChanged;
-
   @override
   void initState() {
-    _initialQty = widget.initialQty ?? '';
-    _initialWeight = widget.initialWeight ?? '';
-    _initialLength = widget.initialLength ?? '';
-    _initialWidth = widget.initialWidth ?? '';
-    _initialNotes = widget.initialNotes ?? '';
-    _isChanged = widget.isChanged ?? false;
     super.initState();
   }
 
@@ -512,12 +499,14 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                     children: [
                       Switch(
                         value: data['maklon'],
-                        onChanged: (value) {
-                          setState(() {
-                            data['maklon'] = value;
-                            widget.form['maklon'] = value;
-                          });
-                        },
+                        onChanged: data['can_update']
+                            ? (value) {
+                                setState(() {
+                                  data['maklon'] = value;
+                                  widget.form['maklon'] = value;
+                                });
+                              }
+                            : null,
                         activeColor: Colors.green,
                         inactiveThumbColor: Colors.redAccent,
                       ),
@@ -620,17 +609,26 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                 label: 'Catatan',
                                 req: false,
                                 controller: (i < widget.notes.length)
-                                    ? htmlToPlainText(widget.notes[i])
+                                    ? TextEditingController(
+                                        text: htmlToPlainText(
+                                          widget.notes[i]
+                                                  is TextEditingController
+                                              ? widget.notes[i].text
+                                              : widget.notes[i].toString(),
+                                        ),
+                                      )
                                     : TextEditingController(
-                                        text: grades[i]['notes']?.toString() ??
-                                            ''),
+                                        text: htmlToPlainText(
+                                          grades[i]['notes']?.toString() ?? '',
+                                        ),
+                                      ),
                                 handleChange: (value) {
                                   setState(() {
-                                    // ensure form has grades entry
                                     if (widget.form['grades'] == null ||
                                         i >= widget.form['grades'].length) {
                                       widget.form['grades'] = List.from(grades);
                                     }
+                                    widget.form['grades'][i]['notes'] = value;
                                   });
                                 },
                               ),

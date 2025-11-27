@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_typing_uninitialized_variables, deprecated_member_use
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -149,8 +149,6 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
   }
 
   Widget _buildDateFilterRow() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
     return Container(
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(8)),

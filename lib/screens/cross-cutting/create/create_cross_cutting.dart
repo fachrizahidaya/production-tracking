@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/service/create_process.dart';
 import 'package:textile_tracking/models/process/cross_cutting.dart';
 import 'package:textile_tracking/screens/cross-cutting/create/create_cross_cutting_manual.dart';
@@ -38,8 +39,8 @@ class CreateCrossCutting extends StatelessWidget {
         await Provider.of<CrossCuttingService>(context, listen: false)
             .addItem(crossCutting, isLoading);
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    showAlertDialog(
+        context: context, title: 'Cross Cutting Created', message: message);
 
     Navigator.pushNamedAndRemoveUntil(
         context, '/cross-cuttings', (route) => false);

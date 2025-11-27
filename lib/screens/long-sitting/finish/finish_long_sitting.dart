@@ -3,6 +3,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/service/finish_process.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
@@ -117,8 +118,8 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
             await Provider.of<LongSittingService>(context, listen: false)
                 .finishItem(id, longSitting, isLoading);
 
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(message)));
+        showAlertDialog(
+            context: context, title: 'Long Sitting Finished', message: message);
         Navigator.pushNamedAndRemoveUntil(
             context, '/long-sittings', (_) => false);
       },

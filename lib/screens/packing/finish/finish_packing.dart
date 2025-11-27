@@ -3,6 +3,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/service/finish_process.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/packing.dart';
@@ -118,8 +119,8 @@ class _FinishPackingState extends State<FinishPacking> {
             await Provider.of<PackingService>(context, listen: false)
                 .finishItem(id, packing, isLoading);
 
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(message)));
+        showAlertDialog(
+            context: context, title: 'Packing Finished', message: message);
         Navigator.pushNamedAndRemoveUntil(context, '/packings', (_) => false);
       },
       fetchItemGrade: (service) => service.fetchOptions(),

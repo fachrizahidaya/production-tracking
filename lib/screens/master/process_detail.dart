@@ -9,6 +9,7 @@ import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/info_tab.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -183,8 +184,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       final item = widget.modelBuilder(_form, data);
       final message =
           await widget.handleUpdateService(context, id, item, _isLoading);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(message)));
+
+      showAlertDialog(
+          context: context, title: 'Dyeing Updated', message: message);
       Navigator.pushNamedAndRemoveUntil(context, widget.route, (_) => false);
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -203,8 +205,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         try {
           final message =
               await widget.handleDeleteService(context, id, _processLoading);
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(message)));
+
+          showAlertDialog(
+              context: context, title: 'Dyeing Deleted', message: message);
           Navigator.pushNamedAndRemoveUntil(
               context, widget.route, (_) => false);
         } catch (e) {

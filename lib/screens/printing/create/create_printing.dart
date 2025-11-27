@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/service/create_process.dart';
 import 'package:textile_tracking/models/process/printing.dart';
 import 'package:textile_tracking/screens/printing/create/create_printing_manual.dart';
@@ -39,8 +40,8 @@ class CreatePrinting extends StatelessWidget {
     final message = await Provider.of<PrintingService>(context, listen: false)
         .addItem(printing, isLoading);
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    showAlertDialog(
+        context: context, title: 'Printing Created', message: message);
 
     Navigator.pushNamedAndRemoveUntil(context, '/printings', (route) => false);
   }

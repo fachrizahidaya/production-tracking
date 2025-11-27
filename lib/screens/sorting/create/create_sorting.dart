@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/service/create_process.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
 import 'package:textile_tracking/screens/sorting/create/create_sorting_manual.dart';
@@ -37,8 +38,8 @@ class CreateSorting extends StatelessWidget {
     final message = await Provider.of<SortingService>(context, listen: false)
         .addItem(sorting, isLoading);
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    showAlertDialog(
+        context: context, title: 'Sorting Created', message: message);
 
     Navigator.pushNamedAndRemoveUntil(context, '/sortings', (route) => false);
   }

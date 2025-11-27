@@ -92,23 +92,10 @@ class ListForm extends StatefulWidget {
 }
 
 class _ListFormState extends State<ListForm> {
-  late String _initialQty;
-  late String _initialWeight;
-  late String _initialLength;
-  late String _initialWidth;
-  late String _initialNotes;
-  late bool _isChanged;
-
   late List<Map<String, dynamic>> _grades;
 
   @override
   void initState() {
-    _initialQty = widget.initialQty ?? '';
-    _initialWeight = widget.initialWeight ?? '';
-    _initialLength = widget.initialLength ?? '';
-    _initialWidth = widget.initialWidth ?? '';
-    _initialNotes = widget.initialNotes ?? '';
-    _isChanged = widget.isChanged ?? false;
     _grades = (widget.form['grades'] ?? [])
         .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
         .toList();

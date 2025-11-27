@@ -74,19 +74,8 @@ class ListForm extends StatefulWidget {
 }
 
 class _ListFormState extends State<ListForm> {
-  late String _initialQty;
-  late String _initialLength;
-  late String _initialWidth;
-  late String _initialNotes;
-  late bool _isChanged;
-
   @override
   void initState() {
-    _initialQty = widget.initialQty ?? '';
-    _initialLength = widget.initialLength ?? '';
-    _initialWidth = widget.initialWidth ?? '';
-    _initialNotes = widget.initialNotes ?? '';
-    _isChanged = widget.isChanged ?? false;
     super.initState();
   }
 

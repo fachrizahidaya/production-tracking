@@ -105,21 +105,22 @@ class _MainListState<T> extends State<MainList<T>> {
                                 onRefresh: () async => widget.handleRefetch(),
                                 child: Center(
                                     child: CircularProgressIndicator()))),
-                        Expanded(
-                            flex: 1,
-                            child: Expanded(
-                                flex: 1,
-                                child: Padding(
-                                  padding: PaddingColumn.screen,
-                                  child: CustomFloatingButton(
-                                    onPressed: widget.showActions,
-                                    icon: Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                      size: 256,
+                        if (!isPortrait)
+                          Expanded(
+                              flex: 1,
+                              child: Expanded(
+                                  flex: 1,
+                                  child: Padding(
+                                    padding: PaddingColumn.screen,
+                                    child: CustomFloatingButton(
+                                      onPressed: widget.showActions,
+                                      icon: Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                        size: 256,
+                                      ),
                                     ),
-                                  ),
-                                )))
+                                  )))
                       ],
                     )
                   : RefreshIndicator(

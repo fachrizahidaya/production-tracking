@@ -34,16 +34,19 @@ class _ActiveMachineState extends State<ActiveMachine> {
   @override
   Widget build(BuildContext context) {
     List<dynamic> filteredAvailable = selectedProcess == 'All'
-        ? widget.available!
-        : widget.available!
-            .where((m) => m['process_type'] == selectedProcess)
-            .toList();
+        ? (widget.available ?? [])
+        : (widget.available ?? []).where((m) {
+            final process = m is Map ? (m['process_type'] ?? '') : '';
+            return process == selectedProcess;
+          }).toList();
 
     List<dynamic> filteredUnavailable = selectedProcess == 'All'
-        ? widget.unavailable!
-        : widget.unavailable!
-            .where((m) => m['process_type'] == selectedProcess)
-            .toList();
+        ? (widget.unavailable ?? [])
+        : (widget.unavailable ?? []).where((m) {
+            final process = m is Map ? (m['process_type'] ?? '') : '';
+            return process == selectedProcess;
+          }).toList();
+
     return Column(
       children: [
         DasboardCard(
@@ -61,19 +64,15 @@ class _ActiveMachineState extends State<ActiveMachine> {
                       CustomBadge(
                         withStatus: true,
                         icon: Icons.check_circle_outline,
-                        title:
-                            '${widget.available!.length.toString()} Tersedia',
+                        title: '${(widget.available ?? []).length} Tersedia',
                       ),
                       CustomBadge(
                         withStatus: true,
                         icon: Icons.warning_outlined,
-                        title:
-                            '${widget.unavailable!.length.toString()} Digunakan',
+                        title: '${(widget.unavailable ?? []).length} Digunakan',
                       ),
-                    ].separatedBy(SizedBox(
-                      width: 8,
-                    )),
-                  ),
+                    ].separatedBy(const SizedBox(width: 8)),
+                  )
                 ],
               ),
             ),
@@ -174,10 +173,12 @@ class _ActiveMachineState extends State<ActiveMachine> {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: SingleChildScrollView(
-                        child: filteredAvailable.isEmpty
-                            ? Center(child: NoData())
-                            : Column(
+                      child: filteredAvailable.isEmpty
+                          ? SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.7,
+                              child: Center(child: NoData()))
+                          : SingleChildScrollView(
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   for (int i = 0;
@@ -258,14 +259,16 @@ class _ActiveMachineState extends State<ActiveMachine> {
                                         ))
                                 ],
                               ),
-                      ),
+                            ),
                     ),
                     Expanded(
                       flex: 1,
-                      child: SingleChildScrollView(
-                        child: filteredUnavailable.isEmpty
-                            ? Center(child: NoData())
-                            : Column(
+                      child: filteredUnavailable.isEmpty
+                          ? SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.7,
+                              child: Center(child: NoData()))
+                          : SingleChildScrollView(
+                              child: Column(
                                 children: [
                                   for (int i = 0;
                                       i < filteredUnavailable.length;
@@ -351,7 +354,7 @@ class _ActiveMachineState extends State<ActiveMachine> {
                                         ))
                                 ],
                               ),
-                      ),
+                            ),
                     ),
                   ],
                 ))

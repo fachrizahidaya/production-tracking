@@ -2,7 +2,7 @@
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/home/dashboard/card/dasboard_card.dart';
+import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -12,6 +12,8 @@ class WorkOrderChart extends StatefulWidget {
   final dariTanggal;
   final sampaiTanggal;
   final filterWidget;
+  final handleRefetch;
+  final isFetching;
 
   const WorkOrderChart(
       {super.key,
@@ -19,14 +21,16 @@ class WorkOrderChart extends StatefulWidget {
       this.onHandleFilter,
       this.dariTanggal,
       this.sampaiTanggal,
-      this.filterWidget});
+      this.filterWidget,
+      this.handleRefetch,
+      this.isFetching});
 
   @override
   State<WorkOrderChart> createState() => _WorkOrderChartState();
 }
 
 class _WorkOrderChartState extends State<WorkOrderChart> {
-  final double width = 14;
+  final double width = 22;
   List<BarChartGroupData> barGroups = [];
   double maxY = 0;
   int? touchedIndex;
@@ -69,32 +73,41 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
       final item = widget.data[i];
       final completed = (item['completed'] ?? 0).toDouble();
       final inProgress = (item['inProgress'] ?? 0).toDouble();
+      final awaitingProgress = (item['waiting'] ?? 0).toDouble();
 
-      final processMax = completed > inProgress ? completed : inProgress;
+      final processMax = completed > inProgress
+          ? completed
+          : inProgress > awaitingProgress
+              ? inProgress
+              : awaitingProgress;
       if (processMax > localMax) localMax = processMax;
 
-      barGroups.add(makeGroupData(i, completed, inProgress));
+      barGroups.add(makeGroupData(i, completed, inProgress, awaitingProgress));
     }
 
     maxY = localMax == 0 ? 1 : localMax + (localMax * 0.2);
   }
 
-  BarChartGroupData makeGroupData(int x, double y1, double y2) {
-    final bool isTouched = x == touchedIndex;
-
+  BarChartGroupData makeGroupData(int x, double y1, double y2, double y3) {
     return BarChartGroupData(
       x: x,
       barsSpace: 6,
       barRods: [
         BarChartRodData(
+          toY: y3,
+          color: const Color(0xFF94a3b8),
+          width: width,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        BarChartRodData(
           toY: y1,
-          color: isTouched ? const Color(0xFF34D399) : const Color(0xFF10B981),
+          color: const Color(0xFF10B981),
           width: width,
           borderRadius: BorderRadius.circular(4),
         ),
         BarChartRodData(
           toY: y2,
-          color: isTouched ? const Color(0xFFFFB84D) : const Color(0xfff18800),
+          color: const Color(0xfff18800),
           width: width,
           borderRadius: BorderRadius.circular(4),
         ),
@@ -108,24 +121,23 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
     }
 
     final name = widget.data[value.toInt()]['name'] ?? '';
-    final bool isTouched = value.toInt() == touchedIndex;
+
+    final double groupWidth = (width * 3) + (6 * 2);
 
     return SideTitleWidget(
       meta: meta,
       space: 8,
       child: SizedBox(
-        width: 60,
+        width: groupWidth,
         child: Text(
           name,
-          style: TextStyle(
-            color: isTouched ? Colors.white : const Color(0xff7589a2),
+          style: const TextStyle(
+            color: Color(0xff7589a2),
             fontWeight: FontWeight.bold,
-            fontSize: 10,
+            fontSize: 11,
           ),
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-          softWrap: false,
         ),
       ),
     );
@@ -167,6 +179,25 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
     );
   }
 
+  Widget _buildRefetchRow() {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(8)),
+      child: IconButton(
+        icon: Stack(
+          children: [
+            const Icon(
+              Icons.refresh_outlined,
+            ),
+          ],
+        ),
+        onPressed: () {
+          widget.handleRefetch();
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final bool allZero = widget.data.every((item) {
@@ -177,7 +208,7 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
 
     final double chartRatio = allZero ? 3 : 2;
 
-    return DasboardCard(
+    return CustomCard(
       child: Padding(
         padding: PaddingColumn.screen,
         child: Column(
@@ -185,73 +216,101 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Expanded(
-                  child: Text('Status Setiap Proses'),
+                Text(
+                  'Status Setiap Proses',
                 ),
-                _buildDateFilterRow(),
+                Row(
+                  children: [
+                    _buildRefetchRow(),
+                    _buildDateFilterRow(),
+                  ],
+                ),
               ],
             ),
             AspectRatio(
               aspectRatio: chartRatio,
-              child: BarChart(
-                BarChartData(
-                  maxY: maxY,
-                  barGroups: barGroups,
-                  barTouchData: BarTouchData(
-                    enabled: true,
-                    touchCallback: (FlTouchEvent event, response) {
-                      if (!event.isInterestedForInteractions ||
-                          response == null ||
-                          response.spot == null) {
-                        setState(() => touchedIndex = null);
-                        return;
-                      }
-                      setState(() {
-                        touchedIndex = response.spot!.touchedBarGroupIndex;
-                      });
-                    },
-                  ),
-                  gridData: FlGridData(
-                    show: true,
-                    drawHorizontalLine: false,
-                    drawVerticalLine: true,
-                    getDrawingHorizontalLine: (value) {
-                      if (value == 0 || value == maxY) {
-                        return FlLine(
-                          color: Colors.grey.withOpacity(0.3),
-                          strokeWidth: 1,
-                        );
-                      }
-                      return FlLine(
-                        color: Colors.transparent,
-                        strokeWidth: 0,
-                      );
-                    },
-                  ),
-                  titlesData: FlTitlesData(
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: bottomTitles,
-                        reservedSize: 50,
+              child: widget.isFetching
+                  ? Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  : BarChart(
+                      BarChartData(
+                        maxY: maxY,
+                        barGroups: barGroups,
+                        barTouchData: BarTouchData(
+                          enabled: true,
+                          touchCallback: (FlTouchEvent event, response) {
+                            if (!event.isInterestedForInteractions ||
+                                response == null ||
+                                response.spot == null) {
+                              setState(() => touchedIndex = null);
+                              return;
+                            }
+                            setState(() {
+                              touchedIndex =
+                                  response.spot!.touchedBarGroupIndex;
+                            });
+                          },
+                        ),
+                        gridData: FlGridData(
+                          show: true,
+                          drawHorizontalLine: false,
+                          drawVerticalLine: false,
+                          getDrawingHorizontalLine: (value) {
+                            if (value == 0 || value == maxY) {
+                              return FlLine(
+                                color: Colors.grey.withOpacity(0.3),
+                                strokeWidth: 1,
+                              );
+                            }
+                            return FlLine(
+                              color: Colors.transparent,
+                              strokeWidth: 0,
+                            );
+                          },
+                        ),
+                        titlesData: FlTitlesData(
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              getTitlesWidget: bottomTitles,
+                              reservedSize: 50,
+                            ),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 40,
+                              getTitlesWidget: (value, meta) {
+                                return Text(
+                                  value.toInt().toString(),
+                                  style: const TextStyle(
+                                    color: Color(0xff7589a2),
+                                    fontSize: 12,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          rightTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          topTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
+                        borderData: FlBorderData(show: false),
                       ),
                     ),
-                    leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
-                    topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
-                  ),
-                  borderData: FlBorderData(show: false),
-                ),
-              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                _buildLegendItem(const Color(0xFF94a3b8), 'Menunggu Diproses'),
+                const SizedBox(width: 16),
                 _buildLegendItem(const Color(0xFF10B981), 'Selesai'),
                 const SizedBox(width: 16),
                 _buildLegendItem(const Color(0xfff18800), 'Diproses'),
@@ -274,7 +333,6 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
             borderRadius: BorderRadius.circular(3),
           ),
         ),
-        const SizedBox(width: 6),
         Text(
           text,
           style: const TextStyle(
@@ -283,7 +341,9 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
             fontWeight: FontWeight.w500,
           ),
         ),
-      ],
+      ].separatedBy(SizedBox(
+        width: 8,
+      )),
     );
   }
 }

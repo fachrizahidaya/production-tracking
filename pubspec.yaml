@@ -54,7 +54,6 @@ dependencies:
   image_picker: ^1.2.0
   native_device_orientation: ^2.0.4
   html: ^0.15.6
-  flutter_quill: ^11.5.0
 
 dev_dependencies:
   flutter_test:

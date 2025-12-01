@@ -248,9 +248,17 @@ class _ActiveMachineState extends State<ActiveMachine> {
                                                                 .local_laundry_service_outlined,
                                                             size: 16,
                                                           ),
-                                                          Text(
+                                                          SizedBox(
+                                                            width: 150,
+                                                            child: Text(
                                                               filteredAvailable[
-                                                                  i]['name']),
+                                                                  i]['name'],
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              maxLines: 2,
+                                                            ),
+                                                          )
                                                         ].separatedBy(SizedBox(
                                                           width: 4,
                                                         )),
@@ -374,9 +382,17 @@ class _ActiveMachineState extends State<ActiveMachine> {
                                                                 .local_laundry_service_outlined,
                                                             size: 16,
                                                           ),
-                                                          Text(
+                                                          SizedBox(
+                                                            width: 150,
+                                                            child: Text(
                                                               filteredUnavailable[
-                                                                  i]['name']),
+                                                                  i]['name'],
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              maxLines: 2,
+                                                            ),
+                                                          ),
                                                         ].separatedBy(SizedBox(
                                                           width: 4,
                                                         )),
@@ -413,199 +429,6 @@ class _ActiveMachineState extends State<ActiveMachine> {
                   ),
                 ],
               ),
-            // SizedBox(
-            //     height: 500,
-            //     child: Row(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //       children: [
-            //         Expanded(
-            //           flex: 1,
-            //           child: filteredAvailable.isEmpty
-            //               ? SizedBox(
-            //                   height: MediaQuery.of(context).size.height * 0.7,
-            //                   child: Center(child: NoData()))
-            //               : SingleChildScrollView(
-            //                   child: Column(
-            //                     crossAxisAlignment: CrossAxisAlignment.start,
-            //                     children: [
-            //                       for (int i = 0;
-            //                           i < filteredAvailable.length;
-            //                           i++)
-            //                         CustomCard(
-            //                             withBorder: true,
-            //                             child: Padding(
-            //                               padding: PaddingColumn.screen,
-            //                               child: Column(
-            //                                 children: [
-            //                                   Row(
-            //                                     crossAxisAlignment:
-            //                                         CrossAxisAlignment.center,
-            //                                     mainAxisAlignment:
-            //                                         MainAxisAlignment
-            //                                             .spaceBetween,
-            //                                     children: [
-            //                                       CustomBadge(
-            //                                         status: filteredAvailable[i]
-            //                                             ['code'],
-            //                                         title: filteredAvailable[i]
-            //                                             ['code']!,
-            //                                         withDifferentColor: true,
-            //                                         color: Color(0xffeaeaec),
-            //                                       ),
-            //                                       Row(
-            //                                         children: [
-            //                                           Icon(
-            //                                             Icons
-            //                                                 .location_on_outlined,
-            //                                             size: 16,
-            //                                           ),
-            //                                           Text(filteredAvailable[i]
-            //                                               ['location']),
-            //                                         ].separatedBy(SizedBox(
-            //                                           width: 4,
-            //                                         )),
-            //                                       ),
-            //                                     ],
-            //                                   ),
-            //                                   Row(
-            //                                     crossAxisAlignment:
-            //                                         CrossAxisAlignment.center,
-            //                                     mainAxisAlignment:
-            //                                         MainAxisAlignment
-            //                                             .spaceBetween,
-            //                                     children: [
-            //                                       Row(
-            //                                         children: [
-            //                                           Icon(
-            //                                             Icons
-            //                                                 .local_laundry_service_outlined,
-            //                                             size: 16,
-            //                                           ),
-            //                                           Text(filteredAvailable[i]
-            //                                               ['name']),
-            //                                         ].separatedBy(SizedBox(
-            //                                           width: 4,
-            //                                         )),
-            //                                       ),
-            //                                       CustomBadge(
-            //                                         status: filteredAvailable[i]
-            //                                             ['process_type'],
-            //                                         title: filteredAvailable[i]
-            //                                             ['process_type']!,
-            //                                         withDifferentColor: true,
-            //                                         color: Color(0xffd1fae4),
-            //                                       ),
-            //                                     ].separatedBy(SizedBox(
-            //                                       height: 8,
-            //                                     )),
-            //                                   ),
-            //                                 ].separatedBy(SizedBox(
-            //                                   height: 8,
-            //                                 )),
-            //                               ),
-            //                             ))
-            //                     ],
-            //                   ),
-            //                 ),
-            //         ),
-            //         Expanded(
-            //           flex: 1,
-            //           child: filteredUnavailable.isEmpty
-            //               ? SizedBox(
-            //                   height: MediaQuery.of(context).size.height * 0.7,
-            //                   child: Center(child: NoData()))
-            //               : SingleChildScrollView(
-            //                   child: Column(
-            //                     children: [
-            //                       for (int i = 0;
-            //                           i < filteredUnavailable.length;
-            //                           i++)
-            //                         CustomCard(
-            //                             withBorder: true,
-            //                             child: Padding(
-            //                               padding: PaddingColumn.screen,
-            //                               child: Column(
-            //                                 children: [
-            //                                   Row(
-            //                                     crossAxisAlignment:
-            //                                         CrossAxisAlignment.center,
-            //                                     mainAxisAlignment:
-            //                                         MainAxisAlignment
-            //                                             .spaceBetween,
-            //                                     children: [
-            //                                       CustomBadge(
-            //                                         status:
-            //                                             filteredUnavailable[i]
-            //                                                 ['code'],
-            //                                         title:
-            //                                             filteredUnavailable[i]
-            //                                                 ['code']!,
-            //                                         withDifferentColor: true,
-            //                                         color: Color(0xffeaeaec),
-            //                                       ),
-            //                                       Row(
-            //                                         children: [
-            //                                           Icon(
-            //                                             Icons
-            //                                                 .location_on_outlined,
-            //                                             size: 16,
-            //                                           ),
-            //                                           Text(
-            //                                               filteredUnavailable[i]
-            //                                                   ['location']),
-            //                                         ].separatedBy(SizedBox(
-            //                                           width: 4,
-            //                                         )),
-            //                                       ),
-            //                                     ],
-            //                                   ),
-            //                                   Row(
-            //                                     crossAxisAlignment:
-            //                                         CrossAxisAlignment.center,
-            //                                     mainAxisAlignment:
-            //                                         MainAxisAlignment
-            //                                             .spaceBetween,
-            //                                     children: [
-            //                                       Row(
-            //                                         children: [
-            //                                           Icon(
-            //                                             Icons
-            //                                                 .local_laundry_service_outlined,
-            //                                             size: 16,
-            //                                           ),
-            //                                           Text(
-            //                                               filteredUnavailable[i]
-            //                                                   ['name']),
-            //                                         ].separatedBy(SizedBox(
-            //                                           width: 4,
-            //                                         )),
-            //                                       ),
-            //                                       CustomBadge(
-            //                                         status:
-            //                                             filteredUnavailable[i]
-            //                                                 ['process_type'],
-            //                                         title:
-            //                                             filteredUnavailable[i]
-            //                                                 ['process_type']!,
-            //                                         withDifferentColor: true,
-            //                                         color: Color(0xffd1fae4),
-            //                                       ),
-            //                                     ].separatedBy(SizedBox(
-            //                                       height: 8,
-            //                                     )),
-            //                                   ),
-            //                                 ].separatedBy(SizedBox(
-            //                                   height: 8,
-            //                                 )),
-            //                               ),
-            //                             ))
-            //                     ],
-            //                   ),
-            //                 ),
-            //         ),
-            //       ],
-            //     ))
           ].separatedBy(SizedBox(
             height: 16,
           )),

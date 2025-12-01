@@ -122,22 +122,27 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
 
     final name = widget.data[value.toInt()]['name'] ?? '';
 
-    final double groupWidth = (width * 3) + (6 * 2);
+    final double groupWidth = (width * 2) + (6 * 2);
 
     return SideTitleWidget(
       meta: meta,
       space: 8,
       child: SizedBox(
         width: groupWidth,
-        child: Text(
-          name,
-          style: const TextStyle(
-            color: Color(0xff7589a2),
-            fontWeight: FontWeight.bold,
-            fontSize: 11,
+        child: SizedBox(
+          width: groupWidth,
+          child: Text(
+            name,
+            style: const TextStyle(
+              color: Color(0xff7589a2),
+              fontWeight: FontWeight.bold,
+              fontSize: 11,
+            ),
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            softWrap: true,
           ),
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
         ),
       ),
     );

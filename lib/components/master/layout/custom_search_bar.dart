@@ -6,12 +6,16 @@ class CustomSearchBar extends StatefulWidget {
   final Function(String) handleSearchChange;
   final Function() showFilter;
   final isFiltered;
+  final withRefresh;
+  final handleRefetch;
 
   const CustomSearchBar(
       {super.key,
       required this.handleSearchChange,
       required this.showFilter,
-      this.isFiltered});
+      this.isFiltered,
+      this.withRefresh = false,
+      this.handleRefetch});
 
   @override
   State<CustomSearchBar> createState() => _CustomSearchBarState();
@@ -62,32 +66,57 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                 },
               ),
             ),
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(8)),
-              child: IconButton(
-                icon: Stack(
-                  children: [
-                    const Icon(
-                      Icons.tune,
+            Row(
+              children: [
+                if (!widget.withRefresh)
+                  SizedBox()
+                else
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8)),
+                    child: IconButton(
+                      icon: Stack(
+                        children: [
+                          const Icon(
+                            Icons.refresh_outlined,
+                          ),
+                        ],
+                      ),
+                      onPressed: () {
+                        widget.handleRefetch();
+                      },
                     ),
-                    if (widget.isFiltered)
-                      Positioned(
-                          right: 0,
-                          top: 0,
-                          child: Container(
-                            width: 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                                color: CustomTheme().buttonColor('danger'),
-                                shape: BoxShape.circle),
-                          ))
-                  ],
+                  ),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: IconButton(
+                    icon: Stack(
+                      children: [
+                        const Icon(
+                          Icons.tune,
+                        ),
+                        if (widget.isFiltered)
+                          Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                    color: CustomTheme().buttonColor('danger'),
+                                    shape: BoxShape.circle),
+                              ))
+                      ],
+                    ),
+                    onPressed: () {
+                      widget.showFilter();
+                    },
+                  ),
                 ),
-                onPressed: () {
-                  widget.showFilter();
-                },
-              ),
+              ],
             )
           ],
         ));

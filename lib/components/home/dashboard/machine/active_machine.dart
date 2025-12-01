@@ -40,6 +40,9 @@ class _ActiveMachineState extends State<ActiveMachine> {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
     List<dynamic> filteredAvailable = selectedProcess == 'All'
         ? (widget.available ?? [])
         : (widget.available ?? []).where((m) {
@@ -223,10 +226,29 @@ class _ActiveMachineState extends State<ActiveMachine> {
                                                                 .location_on_outlined,
                                                             size: 16,
                                                           ),
-                                                          Text(
+                                                          if (isPortrait)
+                                                            SizedBox(
+                                                              width: 100,
+                                                              child: Text(
+                                                                filteredAvailable[
+                                                                        i][
+                                                                    'location'],
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                maxLines: 2,
+                                                              ),
+                                                            ),
+                                                          if (!isPortrait)
+                                                            Text(
                                                               filteredAvailable[
                                                                       i]
-                                                                  ['location']),
+                                                                  ['location'],
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              maxLines: 2,
+                                                            ),
                                                         ].separatedBy(SizedBox(
                                                           width: 4,
                                                         )),
@@ -248,9 +270,20 @@ class _ActiveMachineState extends State<ActiveMachine> {
                                                                 .local_laundry_service_outlined,
                                                             size: 16,
                                                           ),
-                                                          SizedBox(
-                                                            width: 150,
-                                                            child: Text(
+                                                          if (isPortrait)
+                                                            SizedBox(
+                                                              width: 150,
+                                                              child: Text(
+                                                                filteredAvailable[
+                                                                    i]['name'],
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                maxLines: 2,
+                                                              ),
+                                                            ),
+                                                          if (!isPortrait)
+                                                            Text(
                                                               filteredAvailable[
                                                                   i]['name'],
                                                               overflow:
@@ -258,7 +291,6 @@ class _ActiveMachineState extends State<ActiveMachine> {
                                                                       .ellipsis,
                                                               maxLines: 2,
                                                             ),
-                                                          )
                                                         ].separatedBy(SizedBox(
                                                           width: 4,
                                                         )),
@@ -357,10 +389,29 @@ class _ActiveMachineState extends State<ActiveMachine> {
                                                                 .location_on_outlined,
                                                             size: 16,
                                                           ),
-                                                          Text(
+                                                          if (isPortrait)
+                                                            SizedBox(
+                                                              width: 100,
+                                                              child: Text(
+                                                                filteredUnavailable[
+                                                                        i][
+                                                                    'location'],
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                maxLines: 2,
+                                                              ),
+                                                            ),
+                                                          if (!isPortrait)
+                                                            Text(
                                                               filteredUnavailable[
                                                                       i]
-                                                                  ['location']),
+                                                                  ['location'],
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              maxLines: 2,
+                                                            ),
                                                         ].separatedBy(SizedBox(
                                                           width: 4,
                                                         )),
@@ -382,17 +433,27 @@ class _ActiveMachineState extends State<ActiveMachine> {
                                                                 .local_laundry_service_outlined,
                                                             size: 16,
                                                           ),
-                                                          SizedBox(
-                                                            width: 150,
-                                                            child: Text(
+                                                          if (isPortrait)
+                                                            SizedBox(
+                                                              width: 150,
+                                                              child: Text(
+                                                                filteredUnavailable[
+                                                                    i]['name'],
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                maxLines: 2,
+                                                              ),
+                                                            ),
+                                                          if (!isPortrait)
+                                                            Text(
                                                               filteredUnavailable[
                                                                   i]['name'],
                                                               overflow:
                                                                   TextOverflow
                                                                       .ellipsis,
                                                               maxLines: 2,
-                                                            ),
-                                                          ),
+                                                            )
                                                         ].separatedBy(SizedBox(
                                                           width: 4,
                                                         )),

@@ -133,7 +133,7 @@ class _MainListState<T> extends State<MainList<T>> {
                                     SizedBox(
                                         height:
                                             MediaQuery.of(context).size.height *
-                                                0.8,
+                                                0.7,
                                         child: Center(child: NoData())),
                                   ],
                                 )

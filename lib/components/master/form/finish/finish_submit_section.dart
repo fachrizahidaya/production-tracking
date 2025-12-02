@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/margin_search.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
-import 'dart:math' as math;
 
 class FinishSubmitSection extends StatefulWidget {
   final form;
@@ -51,23 +49,6 @@ class _FinishSubmitSectionState extends State<FinishSubmitSection> {
     super.dispose();
   }
 
-  double _angleForOrientation(NativeDeviceOrientation orientation) {
-    switch (orientation) {
-      case NativeDeviceOrientation.landscapeLeft:
-        // device rotated so top goes to the left -> rotate preview -90deg
-        return -math.pi / 2;
-      case NativeDeviceOrientation.landscapeRight:
-        // device rotated so top goes to the right -> rotate preview +90deg
-        return math.pi / 2;
-      case NativeDeviceOrientation.portraitDown:
-        // upside-down portrait
-        return math.pi;
-      case NativeDeviceOrientation.portraitUp:
-      default:
-        return 0.0;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(
@@ -99,10 +80,11 @@ class _FinishSubmitSectionState extends State<FinishSubmitSection> {
                             height: scanHeight,
                             child: Stack(
                               children: [
-                                Transform.rotate(
-                                  angle: orientation == Orientation.landscape
-                                      ? math.pi / 2
+                                AnimatedRotation(
+                                  turns: orientation == Orientation.landscape
+                                      ? -0.25
                                       : 0,
+                                  duration: const Duration(milliseconds: 300),
                                   child: MobileScanner(
                                     controller: controller,
                                     onDetect: (capture) {

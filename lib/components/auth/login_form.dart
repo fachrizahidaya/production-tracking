@@ -35,7 +35,7 @@ class _LoginFormState extends State<LoginForm> {
           child: Column(
         children: [
           Image.asset(
-            'assets/images/icon_logo.png',
+            'assets/images/ic_launcher.png',
             height: 100,
             width: 100,
             fit: BoxFit.contain,

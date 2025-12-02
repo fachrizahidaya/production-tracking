@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/home/dashboard/card/dasboard_card.dart';
+import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/helpers/util/margin_card.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -17,111 +18,117 @@ class WorkOrderPie extends StatefulWidget {
 class WorkOrderPieState extends State<WorkOrderPie> {
   int touchedIndex = -1;
 
+  static const List<IconData> processIcons = [
+    Icons.invert_colors_on_outlined,
+    Icons.content_copy_rounded,
+    Icons.air,
+    Icons.content_paste_outlined,
+    Icons.cut,
+    Icons.cut,
+    Icons.link_outlined,
+    Icons.color_lens_outlined,
+    Icons.print_outlined,
+    Icons.sort,
+    Icons.stacked_bar_chart_outlined,
+    Icons.dangerous,
+  ];
+
+  IconData getIcon(int index) {
+    if (index < processIcons.length) return processIcons[index];
+    return Icons.dangerous;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isEmpty = widget.process.isEmpty;
+
     return Row(
       children: [
         Expanded(
-          flex: 1,
-          child: DasboardCard(
-              child: Column(
-            children: [
-              Padding(
-                padding: PaddingColumn.screen,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Alur Proses Produksi'),
-                  ],
+          child: CustomCard(
+            child: Column(
+              children: [
+                Padding(
+                  padding: PaddingColumn.screen,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text('Alur Proses Produksi'),
+                    ],
+                  ),
                 ),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    for (int i = 0; i < widget.process?.length; i++)
-                      Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                if (isEmpty)
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    child: const Center(child: NoData()),
+                  )
+                else
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: PaddingColumn.screen,
+                      child: Row(
+                        children: List.generate(
+                          widget.process.length,
+                          (i) => Row(
                             children: [
-                              Column(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        color: Color(0xff3b82f6),
-                                        borderRadius: BorderRadius.circular(4)),
-                                    padding: MarginCard.screen,
-                                    child: Icon(
-                                      i == 0
-                                          ? Icons.invert_colors_on_outlined
-                                          : i == 1
-                                              ? Icons.content_copy_rounded
-                                              : i == 2
-                                                  ? Icons.air
-                                                  : i == 3
-                                                      ? Icons
-                                                          .content_paste_outlined
-                                                      : i == 4
-                                                          ? Icons.cut
-                                                          : i == 5
-                                                              ? Icons.cut
-                                                              : i == 6
-                                                                  ? Icons
-                                                                      .link_outlined
-                                                                  : i == 7
-                                                                      ? Icons
-                                                                          .color_lens_outlined
-                                                                      : i == 8
-                                                                          ? Icons
-                                                                              .print_outlined
-                                                                          : i == 9
-                                                                              ? Icons.sort
-                                                                              : i == 10
-                                                                                  ? Icons.stacked_bar_chart_outlined
-                                                                                  : Icons.dangerous,
-                                      color: Colors.white,
-                                      size: 32,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                      width: 80,
-                                      child: Text(
-                                        widget.process?[i]['name'],
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.center,
-                                      )),
-                                ].separatedBy(SizedBox(
-                                  height: 8,
-                                )),
+                              _buildProcessItem(
+                                index: i,
+                                name: widget.process[i]['name'] ?? '',
                               ),
-                              if (i != widget.process!.length - 1)
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12),
-                                  child: Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    size: 18,
-                                    color: Colors.grey,
+                              if (i != widget.process.length - 1)
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 12),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(bottom: 24),
+                                    child: Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      size: 18,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                 ),
                             ],
                           ),
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
+                        ),
                       ),
-                  ],
-                ),
+                    ),
+                  ),
+              ].separatedBy(const SizedBox(height: 16)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProcessItem({required int index, required String name}) {
+    return Column(
+      children: [
+        Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xff3b82f6),
+                borderRadius: BorderRadius.circular(4),
               ),
-            ].separatedBy(SizedBox(
-              height: 16,
-            )),
-          )),
+              padding: MarginCard.screen,
+              child: Icon(
+                getIcon(index),
+                color: Colors.white,
+                size: 32,
+              ),
+            ),
+            SizedBox(
+              width: 80,
+              child: Text(
+                name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ].separatedBy(const SizedBox(height: 8)),
         ),
       ],
     );

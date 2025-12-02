@@ -49,9 +49,10 @@ class _DashboardState extends State<Dashboard> {
   bool _isLoading = false;
   bool _hasMore = true;
   bool _firstLoading = true;
+  bool isChartLoading = false;
+  bool isMachineLoading = false;
   String _search = '';
   final List<dynamic> _dataList = [];
-  bool _isFiltered = false;
 
   @override
   void initState() {
@@ -80,7 +81,6 @@ class _DashboardState extends State<Dashboard> {
       _loadMore();
     });
 
-    // Fetch all data at once
     _loadDashboardData();
   }
 
@@ -107,6 +107,7 @@ class _DashboardState extends State<Dashboard> {
           toDate: sampaiTanggal,
         ),
         _handleFetchMachine(),
+        _loadMore(),
       ]);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
@@ -116,6 +117,8 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _handleFetchCharts({String? fromDate, String? toDate}) async {
+    setState(() => isChartLoading = true);
+
     final params = {
       'process_start_date': fromDate ?? dariTanggal,
       'process_end_date': toDate ?? sampaiTanggal,
@@ -127,6 +130,7 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       chartList =
           Provider.of<WorkOrderChartService>(context, listen: false).dataList;
+      isChartLoading = false;
     });
   }
 
@@ -141,11 +145,14 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _handleFetchMachine() async {
+    setState(() => isMachineLoading = true);
+
     await Provider.of<MachineService>(context, listen: false).getDataList();
 
     setState(() {
       machineList =
           Provider.of<MachineService>(context, listen: false).dataList;
+      isMachineLoading = false;
     });
   }
 
@@ -180,14 +187,6 @@ class _DashboardState extends State<Dashboard> {
         params.remove(key);
       }
     });
-
-    if (params['status'] == null &&
-        params['start_date'] == null &&
-        params['end_date'] == null) {
-      _isFiltered = false;
-    } else {
-      _isFiltered = true;
-    }
 
     _loadMore();
   }
@@ -283,7 +282,12 @@ class _DashboardState extends State<Dashboard> {
   _refetch() {
     Future.delayed(Duration.zero, () {
       setState(() {
-        params = {'search': _search, 'page': '0'};
+        params = {
+          'search': _search,
+          'page': '0',
+          'start_date': dariTanggalProses,
+          'end_date': sampaiTanggalProses,
+        };
       });
       _loadMore();
     });
@@ -315,6 +319,8 @@ class _DashboardState extends State<Dashboard> {
           onHandleFilter: _handleFilter,
           pickDate: _pickDate,
         ),
+        handleRefetch: _handleFetchCharts,
+        isFetching: isChartLoading,
       ),
     );
 
@@ -329,6 +335,8 @@ class _DashboardState extends State<Dashboard> {
       data: machineList,
       available: machineList['available'],
       unavailable: machineList['unavailable'],
+      handleRefetch: _handleFetchMachine,
+      isFetching: isMachineLoading,
     ));
 
     dashboardSections.add(
@@ -372,16 +380,20 @@ class _DashboardState extends State<Dashboard> {
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
+        backgroundColor: Color(0xFFf9fafc),
         body: isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? Center(child: CircularProgressIndicator())
             : dashboardSections.isEmpty
-                ? const Center(child: NoData())
-                : SingleChildScrollView(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: dashboardSections
-                          .separatedBy(const SizedBox(height: 8)),
+                ? Center(child: NoData())
+                : RefreshIndicator(
+                    onRefresh: () => _loadDashboardData(),
+                    child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        children:
+                            dashboardSections.separatedBy(SizedBox(height: 8)),
+                      ),
                     ),
                   ),
       ),

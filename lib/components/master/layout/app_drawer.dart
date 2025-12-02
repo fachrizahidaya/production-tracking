@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/home/index.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -16,6 +15,28 @@ class AppDrawer extends StatefulWidget {
 class _AppDrawerState extends State<AppDrawer> {
   late Future<List<MenuItem>> menuItems;
   late Future<List<MenuItem>> _menuFuture;
+
+  List<MenuItem> flattenMenus(List<MenuItem> menus) {
+    final List<MenuItem> result = [];
+
+    for (final menu in menus) {
+      if (menu.subMenuItems.isEmpty) {
+        // Dashboard or any parent without children
+        result.add(menu);
+      } else {
+        // Convert each SubMenuItem → MenuItem
+        for (final sub in menu.subMenuItems) {
+          result.add(MenuItem(
+            title: sub.title,
+            route: sub.route,
+            subMenuItems: const [],
+          ));
+        }
+      }
+    }
+
+    return result;
+  }
 
   @override
   void initState() {
@@ -35,9 +56,9 @@ class _AppDrawerState extends State<AppDrawer> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/ic_launcher.png',
-                  height: 50,
-                  width: 50,
+                  'assets/images/icon_logo.png',
+                  height: 100,
+                  width: 100,
                   fit: BoxFit.contain,
                 )
               ],
@@ -54,82 +75,60 @@ class _AppDrawerState extends State<AppDrawer> {
                     return const Center(child: Text('No menu found'));
                   }
 
-                  final menus = snapshot.data!;
+                  final rawMenus = snapshot.data!;
+                  final menus = flattenMenus(rawMenus);
+
                   return ListView.builder(
                     itemCount: menus.length,
                     itemBuilder: (context, index) {
                       final item = menus[index];
 
-                      if (item.subMenuItems.isEmpty) {
-                        // Regular menu (no children)
-                        return ListTile(
-                          title: Text(item.title),
-                          onTap: () {
-                            if (item.route != null && item.route!.isNotEmpty) {
-                              Navigator.pushNamed(context, item.route!);
-                            }
-                          },
-                        );
-                      } else {
-                        // Menu with children
-                        return Theme(
-                          data: Theme.of(context).copyWith(
-                            dividerColor: Colors.transparent,
-                          ),
-                          child: ExpansionTile(
-                            title: Text(item.title),
-                            children: item.subMenuItems.map((sub) {
-                              return ListTile(
-                                title: Row(
-                                  children: [
-                                    Icon(
-                                      sub.title == 'Pencelupan (Dyeing)'
-                                          ? Icons.invert_colors_on_outlined
-                                          : sub.title == 'Press Tumbler'
-                                              ? Icons.content_copy_rounded
-                                              : sub.title == 'Stenter'
-                                                  ? Icons.air
-                                                  : sub.title == 'Long Sitting'
-                                                      ? Icons
-                                                          .content_paste_outlined
-                                                      : sub.title ==
-                                                              'Long Hemming'
-                                                          ? Icons.cut
-                                                          : sub.title ==
-                                                                  'Cross Cutting'
-                                                              ? Icons.cut
-                                                              : sub.title ==
-                                                                      'Jahit (Sewing)'
+                      return ListTile(
+                        leading: Icon(
+                          item.title == 'Pencelupan (Dyeing)'
+                              ? Icons.invert_colors_on_outlined
+                              : item.title == 'Press Tumbler'
+                                  ? Icons.content_copy_rounded
+                                  : item.title == 'Stenter'
+                                      ? Icons.air
+                                      : item.title == 'Long Sitting'
+                                          ? Icons.content_paste_outlined
+                                          : item.title == 'Long Hemming'
+                                              ? Icons.cut
+                                              : item.title == 'Cross Cutting'
+                                                  ? Icons.cut
+                                                  : item.title ==
+                                                          'Jahit (Sewing)'
+                                                      ? Icons.link_outlined
+                                                      : item.title ==
+                                                              'Bordir (Embroidery)'
+                                                          ? Icons.link_outlined
+                                                          : item.title ==
+                                                                  'Printing'
+                                                              ? Icons
+                                                                  .print_rounded
+                                                              : item.title ==
+                                                                      'Sorting'
                                                                   ? Icons
-                                                                      .link_outlined
-                                                                  : sub.title ==
-                                                                          'Bordir (Embroidery)'
+                                                                      .sort_outlined
+                                                                  : item.title ==
+                                                                          'Dashboard'
                                                                       ? Icons
-                                                                          .color_lens_outlined
-                                                                      : sub.title ==
-                                                                              'Printing'
+                                                                          .home_outlined
+                                                                      : item.title ==
+                                                                              'Packing'
                                                                           ? Icons
-                                                                              .print_rounded
-                                                                          : sub.title == 'Sorting'
-                                                                              ? Icons.sort_outlined
-                                                                              : Icons.stacked_bar_chart_outlined, // 👈 your fixed icon
-                                    ),
-                                    Text(sub.title),
-                                  ].separatedBy(SizedBox(
-                                    width: 16,
-                                  )),
-                                ),
-                                onTap: () {
-                                  if (sub.route != null &&
-                                      sub.route!.isNotEmpty) {
-                                    Navigator.pushNamed(context, sub.route!);
-                                  }
-                                },
-                              );
-                            }).toList(),
-                          ),
-                        );
-                      }
+                                                                              .stacked_bar_chart_outlined
+                                                                          : Icons
+                                                                              .menu,
+                        ),
+                        title: Text(item.title),
+                        onTap: () {
+                          if (item.route != null && item.route!.isNotEmpty) {
+                            Navigator.pushNamed(context, item.route!);
+                          }
+                        },
+                      );
                     },
                   );
                 },

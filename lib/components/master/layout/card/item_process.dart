@@ -79,575 +79,42 @@ class _ItemProcessState extends State<ItemProcess> {
               padding: PaddingColumn.screen,
               child: Row(
                 children: [
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: BorderSide(
-                            color: Colors.grey.shade400, width: 1.0)),
-                    child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomBadge(
-                                withStatus: true,
-                                icon: Icons.check_circle_outline,
-                                title: widget.item.processes['dyeing']
-                                    ['status'],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.invert_colors_on_outlined),
-                              Text('Dyeing'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.shopping_cart_outlined),
-                              Text(widget.item.processes['dyeing']['qty'] !=
-                                      null
-                                  ? '${widget.item.processes['dyeing']['qty']} ${widget.item.processes['dyeing']['unit']['code']}'
-                                  : '-'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          )
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: BorderSide(
-                            color: Colors.grey.shade400, width: 1.0)),
-                    child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomBadge(
-                                withStatus: true,
-                                icon: Icons.check_circle_outline,
-                                title: widget.item.processes['press-tumbler']
-                                    ['status'],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.content_copy_rounded),
-                              Text('Press Tumbler'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.shopping_cart_outlined),
-                              Text(widget.item.processes['press-tumbler']
-                                          ['weight'] !=
-                                      null
-                                  ? '${widget.item.processes['press-tumbler']['weight']} ${widget.item.processes['press-tumbler']['weight_unit']['code']}'
-                                  : '-'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          )
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: BorderSide(
-                            color: Colors.grey.shade400, width: 1.0)),
-                    child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomBadge(
-                                withStatus: true,
-                                icon: Icons.check_circle_outline,
-                                title: widget.item.processes['stenter']
-                                    ['status'],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.air),
-                              Text('Stenter'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.shopping_cart_outlined),
-                              Text(widget.item.processes['stenter']['weight'] !=
-                                      null
-                                  ? '${widget.item.processes['stenter']['weight']} ${widget.item.processes['stenter']['weight_unit']['code']}'
-                                  : '-'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          )
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: BorderSide(
-                            color: Colors.grey.shade400, width: 1.0)),
-                    child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomBadge(
-                                withStatus: true,
-                                icon: Icons.check_circle_outline,
-                                title: widget.item.processes['long-sitting']
-                                    ['status'],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.content_paste_outlined),
-                              Text('Long Sitting'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.shopping_cart_outlined),
-                              Text(widget.item.processes['long-sitting']
-                                          ['weight'] !=
-                                      null
-                                  ? '${widget.item.processes['long-sitting']['weight']} ${widget.item.processes['long-sitting']['weight_unit']['code']}'
-                                  : '-'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          )
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: BorderSide(
-                            color: Colors.grey.shade400, width: 1.0)),
-                    child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomBadge(
-                                withStatus: true,
-                                icon: Icons.check_circle_outline,
-                                title: widget.item.processes['long-hemming']
-                                    ['status'],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.cut),
-                              Text('Long Hemming'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.shopping_cart_outlined),
-                              Text(widget.item.processes['long-hemming']
-                                          ['weight'] !=
-                                      null
-                                  ? '${widget.item.processes['long-hemming']['weight']} ${widget.item.processes['long-hemming']['weight_unit']['code']}'
-                                  : '-'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          )
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: BorderSide(
-                            color: Colors.grey.shade400, width: 1.0)),
-                    child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomBadge(
-                                withStatus: true,
-                                icon: Icons.check_circle_outline,
-                                title: widget.item.processes['cross-cutting']
-                                    ['status'],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.cut),
-                              Text('Cross Cutting'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.shopping_cart_outlined),
-                              Text(widget.item.processes['cross-cutting']
-                                          ['item_qty'] !=
-                                      null
-                                  ? '${widget.item.processes['cross-cutting']['item_qty']} ${widget.item.processes['cross-cutting']['item_unit']['code']}'
-                                  : '-'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.shopping_cart_outlined),
-                              Text(widget.item.processes['cross-cutting']
-                                          ['weight'] !=
-                                      null
-                                  ? '${widget.item.processes['cross-cutting']['weight']} ${widget.item.processes['cross-cutting']['weight_unit']['code']}'
-                                  : '-'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          )
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: BorderSide(
-                            color: Colors.grey.shade400, width: 1.0)),
-                    child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomBadge(
-                                withStatus: true,
-                                icon: Icons.check_circle_outline,
-                                title: widget.item.processes['sewing']
-                                    ['status'],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.link_outlined),
-                              Text('Sewing'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.shopping_cart_outlined),
-                              Text(widget.item.processes['sewing']
-                                          ['item_qty'] !=
-                                      null
-                                  ? '${widget.item.processes['sewing']['item_qty']} ${widget.item.processes['sewing']['item_unit']['code']}'
-                                  : '-'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.shopping_cart_outlined),
-                              Text(widget.item.processes['sewing']['weight'] !=
-                                      null
-                                  ? '${widget.item.processes['sewing']['weight']} ${widget.item.processes['sewing']['weight_unit']['code']}'
-                                  : '-'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          )
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: BorderSide(
-                            color: Colors.grey.shade400, width: 1.0)),
-                    child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomBadge(
-                                withStatus: true,
-                                icon: Icons.check_circle_outline,
-                                title: widget.item.processes['embroidery']
-                                    ['status'],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.color_lens_outlined),
-                              Text('Embroidery'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.shopping_cart_outlined),
-                              Text(widget.item.processes['embroidery']
-                                          ['item_qty'] !=
-                                      null
-                                  ? '${widget.item.processes['embroidery']['item_qty']} ${widget.item.processes['embroidery']['item_unit']['code']}'
-                                  : '-'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.shopping_cart_outlined),
-                              Text(widget.item.processes['embroidery']
-                                          ['weight'] !=
-                                      null
-                                  ? '${widget.item.processes['embroidery']['weight']} ${widget.item.processes['embroidery']['weight_unit']['code']}'
-                                  : '-'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          )
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: BorderSide(
-                            color: Colors.grey.shade400, width: 1.0)),
-                    child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomBadge(
-                                withStatus: true,
-                                icon: Icons.check_circle_outline,
-                                title: widget.item.processes['printing']
-                                    ['status'],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.print_outlined),
-                              Text('Printing'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.shopping_cart_outlined),
-                              Text(widget.item.processes['printing']
-                                          ['item_qty'] !=
-                                      null
-                                  ? '${widget.item.processes['printing']['item_qty']} ${widget.item.processes['printing']['item_unit']['code']}'
-                                  : '-'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.shopping_cart_outlined),
-                              Text(widget.item.processes['printing']
-                                          ['weight'] !=
-                                      null
-                                  ? '${widget.item.processes['printing']['weight']} ${widget.item.processes['printing']['weight_unit']['code']}'
-                                  : '-'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          )
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: BorderSide(
-                            color: Colors.grey.shade400, width: 1.0)),
-                    child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomBadge(
-                                withStatus: true,
-                                icon: Icons.check_circle_outline,
-                                title: widget.item.processes['sorting']
-                                    ['status'],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.sort),
-                              Text('Sorting'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: sortingGrades.isNotEmpty
-                                ? sortingGrades.map<Widget>((grade) {
-                                    return Text(
-                                      'Grade ${grade['item_grade']['code']}: ${grade['qty']} ${grade['unit']['code']}',
-                                    );
-                                  }).toList()
-                                : [const Text('-')],
-                          )
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        side: BorderSide(
-                            color: Colors.grey.shade400, width: 1.0)),
-                    child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomBadge(
-                                withStatus: true,
-                                icon: Icons.check_circle_outline,
-                                title: widget.item.processes['packing']
-                                    ['status'],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.stacked_bar_chart),
-                              Text('Packing'),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: packingGrades.isNotEmpty
-                                ? packingGrades.map<Widget>((grade) {
-                                    return Text(
-                                      'Grade ${grade['item_grade']['code']}: ${grade['qty']} ${grade['unit']['code']}',
-                                    );
-                                  }).toList()
-                                : [const Text('-')],
-                          )
-                        ].separatedBy(SizedBox(
-                          height: 8,
-                        )),
-                      ),
-                    ),
-                  ),
+                  _buildCard('Dyeing', 'dyeing', Icons.color_lens_outlined,
+                      true, false, false, false, null),
+                  _buildCard(
+                      'Press Tumbler',
+                      'press-tumbler',
+                      Icons.content_copy_rounded,
+                      false,
+                      true,
+                      false,
+                      false,
+                      null),
+                  _buildCard('Stenter', 'stenter', Icons.air, false, true,
+                      false, false, null),
+                  _buildCard(
+                      'Long Sitting',
+                      'long-sitting',
+                      Icons.content_paste_outlined,
+                      false,
+                      true,
+                      false,
+                      false,
+                      null),
+                  _buildCard('Long Hemming', 'long-sitting', Icons.cut, false,
+                      true, false, false, null),
+                  _buildCard('Cross Cutting', 'cross-cutting', Icons.cut, false,
+                      true, true, false, null),
+                  _buildCard('Sewing', 'sewing', Icons.link_outlined, false,
+                      true, true, false, null),
+                  _buildCard('Embroidery', 'embroidery', Icons.link_outlined,
+                      false, true, true, false, null),
+                  _buildCard('Printing', 'printing', Icons.print, false, true,
+                      true, false, null),
+                  _buildCard('Sorting', 'sorting', Icons.sort, false, false,
+                      false, true, sortingGrades),
+                  _buildCard('Packing', 'packing', Icons.sort, false, false,
+                      false, true, packingGrades),
                 ].separatedBy(SizedBox(
                   width: 8,
                 )),
@@ -657,6 +124,92 @@ class _ItemProcessState extends State<ItemProcess> {
         ].separatedBy(SizedBox(
           height: 8,
         )),
+      ),
+    );
+  }
+
+  Widget _buildCard(
+      title, item, icon, withQty, withWeight, withItemQty, withGrades, grades) {
+    return Card(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+          side: BorderSide(color: Colors.grey.shade400, width: 1.0)),
+      child: SizedBox(
+        height: 180,
+        width: 250,
+        child: Padding(
+          padding: PaddingColumn.screen,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CustomBadge(
+                    withStatus: true,
+                    icon: Icons.check_circle_outline,
+                    title: widget.item.processes[item]['status'],
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Icon(icon),
+                  Text(title),
+                ].separatedBy(SizedBox(
+                  width: 8,
+                )),
+              ),
+              if (withQty)
+                Row(
+                  children: [
+                    Icon(Icons.shopping_cart_outlined),
+                    Text(widget.item.processes[item]['qty'] != null
+                        ? '${widget.item.processes[item]['qty']} ${widget.item.processes[item]['unit']['code']}'
+                        : '-'),
+                  ].separatedBy(SizedBox(
+                    width: 8,
+                  )),
+                ),
+              if (withItemQty)
+                Row(
+                  children: [
+                    Icon(Icons.shopping_cart_outlined),
+                    Text(widget.item.processes[item]['item_qty'] != null
+                        ? '${widget.item.processes[item]['item_qty']} ${widget.item.processes[item]['item_unit']['code']}'
+                        : '-'),
+                  ].separatedBy(SizedBox(
+                    width: 8,
+                  )),
+                ),
+              if (withWeight)
+                Row(
+                  children: [
+                    Icon(Icons.line_weight_outlined),
+                    Text(widget.item.processes[item]['weight'] != null
+                        ? '${widget.item.processes[item]['weight']} ${widget.item.processes[item]['weight_unit']['code']}'
+                        : '-'),
+                  ].separatedBy(SizedBox(
+                    width: 8,
+                  )),
+                ),
+              if (withGrades)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: grades.isNotEmpty
+                      ? grades.map<Widget>((grade) {
+                          return Text(
+                            'Grade ${grade['item_grade']['code']}: ${grade['qty']} ${grade['unit']['code']}',
+                          );
+                        }).toList()
+                      : [const Text('-')],
+                )
+            ].separatedBy(SizedBox(
+              height: 8,
+            )),
+          ),
+        ),
       ),
     );
   }

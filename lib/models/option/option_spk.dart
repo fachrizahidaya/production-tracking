@@ -88,7 +88,7 @@ class OptionSpkService extends BaseService<OptionSpk> {
       }
 
       final response = await http
-          .get(Uri.parse('${dotenv.env['API_URL_DEV']}/spk/option'), headers: {
+          .get(Uri.parse('${dotenv.env['API_URL']}/spk/option'), headers: {
         'Authorization': 'Bearer $token',
       });
 

@@ -252,7 +252,11 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                           data['can_update'] ? false : true,
                                       label: 'Panjang',
                                       req: false,
-                                      controller: widget.length,
+                                      controller: widget.length
+                                        ..text = (widget.length.text.isEmpty ||
+                                                widget.length.text == '0')
+                                            ? 'No Data'
+                                            : widget.length.text,
                                       handleChange: (value) {
                                         setState(() {
                                           widget.length.text = value.toString();
@@ -295,7 +299,11 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                           data['can_update'] ? false : true,
                                       label: 'Lebar',
                                       req: false,
-                                      controller: widget.width,
+                                      controller: widget.width
+                                        ..text = (widget.width.text.isEmpty ||
+                                                widget.width.text == '0')
+                                            ? 'No Data'
+                                            : widget.width.text,
                                       handleChange: (value) {
                                         setState(() {
                                           widget.length.text = value.toString();
@@ -338,7 +346,11 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                           data['can_update'] ? false : true,
                                       label: 'Berat',
                                       req: false,
-                                      controller: widget.weight,
+                                      controller: widget.weight
+                                        ..text = (widget.weight.text.isEmpty ||
+                                                widget.weight.text == '0'
+                                            ? 'No Data'
+                                            : widget.weight.text),
                                       handleChange: (value) {
                                         setState(() {
                                           widget.weight.text = value.toString();
@@ -381,7 +393,12 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                         isDisabled:
                                             data['can_update'] ? false : true,
                                         req: false,
-                                        controller: widget.qtyItem,
+                                        controller: widget.qtyItem
+                                          ..text = (widget
+                                                      .qtyItem.text.isEmpty ||
+                                                  widget.qtyItem.text == '0')
+                                              ? 'No Data'
+                                              : widget.qtyItem.text,
                                         handleChange: (value) {
                                           setState(() {
                                             widget.qtyItem.text =

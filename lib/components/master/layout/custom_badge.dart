@@ -32,9 +32,13 @@ class CustomBadge extends StatelessWidget {
             if (withStatus == true)
               Icon(
                 icon ??
-                    (status == 'Diproses'
-                        ? Icons.access_time_outlined
-                        : Icons.task_alt_outlined),
+                    (status == 'Menunggu Diproses'
+                        ? Icons.warning_outlined
+                        : status == 'Diproses'
+                            ? Icons.access_time_outlined
+                            : status == 'Selesai'
+                                ? Icons.task_alt_outlined
+                                : null),
                 size: 16,
               ),
             Text(

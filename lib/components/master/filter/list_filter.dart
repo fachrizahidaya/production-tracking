@@ -6,9 +6,6 @@ import 'package:textile_tracking/components/master/form/filter_select_form.dart'
 import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
-import 'package:textile_tracking/models/option/option_machine.dart';
-import 'package:textile_tracking/models/option/option_operator.dart';
-import 'package:provider/provider.dart';
 
 class DropdownConfig<T> {
   final String id;
@@ -75,8 +72,6 @@ class ListFilter<T> extends StatefulWidget {
 class _ListFilterState<T> extends State<ListFilter<T>> {
   TextEditingController dariTanggalInput = TextEditingController();
   TextEditingController sampaiTanggalInput = TextEditingController();
-  bool _isFetchingMachine = false;
-  bool _isFetchingOperator = false;
   int? operatorId;
   String? namaOperator = '';
   int? machineId;
@@ -100,8 +95,6 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
   @override
   void initState() {
     super.initState();
-    _getOperator();
-    _getMachine();
 
     if (widget.params['status'] != null) {
       final activeStatuses = widget.params['status'].split(',');
@@ -129,75 +122,6 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
           .toList()
           .cast<Map<String, dynamic>>();
     }
-  }
-
-  Future<void> _getMachine() async {
-    setState(() {
-      _isFetchingMachine = true;
-    });
-
-    final service = Provider.of<OptionMachineService>(context, listen: false);
-
-    try {
-      if (widget.fetchMachine != null) {
-        await widget.fetchMachine!(service);
-      } else {
-        await service.fetchOptions();
-      }
-
-      final data = widget.getMachineOptions != null
-          ? widget.getMachineOptions!(service)
-          : service.dataListOption;
-
-      setState(() {
-        machineOption = data;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
-    } finally {
-      setState(() {
-        _isFetchingMachine = false;
-      });
-    }
-  }
-
-  Future<void> _getOperator() async {
-    setState(() {
-      _isFetchingOperator = true;
-    });
-
-    final service = Provider.of<OptionOperatorService>(context, listen: false);
-    try {
-      if (widget.fetchOperators != null) {
-        await widget.fetchOperators!(service);
-      } else {
-        await service.fetchOptions();
-      }
-
-      final data = widget.getOperatorOptions != null
-          ? widget.getOperatorOptions!(service)
-          : service.dataListOption;
-
-      setState(() {
-        operatorOption = data;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
-    } finally {
-      setState(() {
-        _isFetchingOperator = false;
-      });
-    }
-    // final result = Provider.of<OptionOperatorService>(context, listen: false)
-    //     .dataListOption;
-
-    // setState(() {
-    //   operatorOption = result;
-    // });
   }
 
   _searchDataOption(value) {
@@ -495,165 +419,6 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
             onSelectionChanged: (selected) {
               widget.onHandleFilter(
                   "status", selected.map((e) => e['value']).join(","));
-            },
-          ),
-          FilterSelectForm(
-            label: "Operator",
-            onTap: () async {
-              final result = await showDialog<List<Map<String, dynamic>>>(
-                context: context,
-                builder: (_) {
-                  return Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.85,
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: StatefulBuilder(
-                        builder: (context, setState) {
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // 🔹 Header
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      "Pilih Operator",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    SizedBox(
-                                      height: 40,
-                                      child: TextFormField(
-                                        decoration: InputDecoration(
-                                          hintText: 'Pencarian...',
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 12),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                          ),
-                                        ),
-                                        onChanged: (value) {
-                                          _searchDataOption(value);
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              // 🔹 List of Options
-                              Expanded(
-                                child: Scrollbar(
-                                  thickness: 4,
-                                  child: ListView.separated(
-                                    physics:
-                                        const AlwaysScrollableScrollPhysics(),
-                                    itemCount: operatorOption.length,
-                                    itemBuilder: (context, index) {
-                                      final user = operatorOption[index];
-                                      final isSelected =
-                                          selectedOperators.contains(user);
-
-                                      return CheckboxListTile(
-                                        value: isSelected,
-                                        title: Text(
-                                          user['label'],
-                                          style: TextStyle(
-                                            fontWeight: isSelected
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                          ),
-                                        ),
-                                        activeColor: Colors.green,
-                                        onChanged: (checked) {
-                                          setState(() {
-                                            if (checked == true) {
-                                              selectedOperators.add(user);
-                                            } else {
-                                              selectedOperators.remove(user);
-                                            }
-                                          });
-                                        },
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) =>
-                                        const Divider(height: 0.5),
-                                  ),
-                                ),
-                              ),
-
-                              // 🔹 Footer (Buttons)
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context); // cancel
-                                      },
-                                      child: const Text('Batal'),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context,
-                                            selectedOperators); // return selected
-                                      },
-                                      child: const Text('Simpan'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                },
-              );
-
-              if (result != null) {
-                setState(() {
-                  selectedOperators = result;
-                });
-                widget.onHandleFilter(
-                    "user_id", result.map((e) => e['value']).join(","));
-              }
-            },
-            selectedItems: selectedOperators,
-            required: false,
-            onRemoveItem: (item) {
-              setState(() {
-                selectedOperators.remove(item);
-              });
-              widget.onHandleFilter("user_id",
-                  selectedOperators.map((e) => e['value']).join(","));
-            },
-            onClearAll: () {
-              setState(() {
-                selectedOperators.clear();
-              });
-              widget.onHandleFilter("user_id", "");
-            },
-            onSelectionChanged: (selected) {
-              widget.onHandleFilter(
-                  "user_id", selected.map((e) => e['value']).join(","));
             },
           ),
         ].separatedBy(SizedBox(

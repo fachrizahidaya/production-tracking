@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/text/thousand_separator_input_formatter.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -33,7 +34,7 @@ class TextForm extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
               ),
             ),
             if (req)
@@ -52,13 +53,16 @@ class TextForm extends StatelessWidget {
         TextFormField(
           enabled: isDisabled == true ? false : true,
           controller: controller,
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 14),
           decoration:
               CustomTheme().inputDecoration().copyWith(hintText: 'Isi $label'),
           keyboardType:
               isNumber == true ? TextInputType.number : TextInputType.text,
+          inputFormatters:
+              isNumber == true ? [ThousandsSeparatorInputFormatter()] : [],
           onChanged: (value) {
-            handleChange(value);
+            String rawValue = value.replaceAll(',', '');
+            handleChange(rawValue);
           },
         )
       ].separatedBy(SizedBox(

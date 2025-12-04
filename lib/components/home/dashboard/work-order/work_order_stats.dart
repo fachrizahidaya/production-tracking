@@ -96,6 +96,8 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
               title: item['label'],
               withDifferentColor: true,
               color: getBadgeColor(i),
+              withStatus: i == 0 ? false : true,
+              status: item['label'],
             )
           ],
         ),

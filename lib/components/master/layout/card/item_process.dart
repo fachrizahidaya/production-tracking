@@ -40,6 +40,12 @@ class _ItemProcessState extends State<ItemProcess> {
                       withStatus: true,
                       icon: Icons.check_circle_outline,
                       title: widget.item.status,
+                      color: widget.item.status == 'Menunggu Diproses'
+                          ? Color(0xffdbeaff)
+                          : widget.item.status == 'Diproses'
+                              ? Color(0xFFfff3c6)
+                              : Color(0xffd1fae4),
+                      withDifferentColor: true,
                     ),
                   ].separatedBy(SizedBox(
                     width: 8,
@@ -131,12 +137,16 @@ class _ItemProcessState extends State<ItemProcess> {
   Widget _buildCard(
       title, item, icon, withQty, withWeight, withItemQty, withGrades, grades) {
     return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-          side: BorderSide(color: Colors.grey.shade400, width: 1.0)),
+      color: widget.item.processes[item]['status'] == 'Menunggu Diproses'
+          ? Color(0xFFfafafa)
+          : widget.item.processes[item]['status'] == 'Diproses'
+              ? Color(0xFFfffbea)
+              : widget.item.processes[item]['status'] == 'Selesai'
+                  ? Color(0xfff0fdf4)
+                  : Color(0xfff1f4fd),
       child: SizedBox(
-        height: 180,
-        width: 250,
+        height: 150,
+        width: 380,
         child: Padding(
           padding: PaddingColumn.screen,
           child: Column(
@@ -146,20 +156,27 @@ class _ItemProcessState extends State<ItemProcess> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Row(
+                    children: [
+                      Icon(icon),
+                      Text(title),
+                    ].separatedBy(SizedBox(
+                      width: 8,
+                    )),
+                  ),
                   CustomBadge(
                     withStatus: true,
                     icon: Icons.check_circle_outline,
                     title: widget.item.processes[item]['status'],
+                    withDifferentColor: true,
+                    color: widget.item.processes[item]['status'] ==
+                            'Menunggu Diproses'
+                        ? Color(0xFFf1f5f9)
+                        : widget.item.processes[item]['status'] == 'Diproses'
+                            ? Color(0xFFfff3c6)
+                            : Color(0xffd1fae4),
                   ),
                 ],
-              ),
-              Row(
-                children: [
-                  Icon(icon),
-                  Text(title),
-                ].separatedBy(SizedBox(
-                  width: 8,
-                )),
               ),
               if (withQty)
                 Row(

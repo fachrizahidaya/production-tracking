@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
@@ -74,7 +75,7 @@ class ListItem extends StatelessWidget {
                             size: 14,
                           ),
                           Text(
-                            '${item['qty']} ${item['unit']['code']}',
+                            '${NumberFormat("#,###.#").format(double.tryParse(item['qty']))} ${item['unit']['code']}',
                             style: TextStyle(
                               fontSize: 16,
                             ),

@@ -79,6 +79,39 @@ class _ListInfoState extends State<ListInfo> {
       return document.body?.text ?? '';
     }
 
+    void showImageDialog(
+        BuildContext context, bool isNew, String filePath, String baseUrl) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            backgroundColor: Colors.black,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            insetPadding: const EdgeInsets.all(20),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: MediaQuery.of(context).size.height * 0.6,
+              padding: const EdgeInsets.all(10),
+              child: InteractiveViewer(
+                minScale: 1,
+                maxScale: 4,
+                child: isNew
+                    ? Image.file(
+                        File(filePath),
+                        fit: BoxFit.contain,
+                      )
+                    : Image.network(
+                        '$baseUrl$filePath',
+                        fit: BoxFit.contain,
+                      ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(8),
@@ -233,7 +266,12 @@ class _ListInfoState extends State<ListInfo> {
                                           child: TextForm(
                                             label: 'Panjang',
                                             req: false,
-                                            controller: widget.length,
+                                            controller: widget.length
+                                              ..text = (widget.length.text
+                                                          .isEmpty ||
+                                                      widget.length.text == '0')
+                                                  ? 'No Data'
+                                                  : widget.length.text,
                                             isDisabled:
                                                 widget.data['can_update']
                                                     ? false
@@ -286,7 +324,12 @@ class _ListInfoState extends State<ListInfo> {
                                                 widget.data['can_update']
                                                     ? false
                                                     : true,
-                                            controller: widget.width,
+                                            controller: widget.width
+                                              ..text = (widget
+                                                          .width.text.isEmpty ||
+                                                      widget.width.text == '0'
+                                                  ? 'No Data'
+                                                  : widget.width.text),
                                             handleChange: (value) {
                                               setState(() {
                                                 widget.width.text =
@@ -335,7 +378,12 @@ class _ListInfoState extends State<ListInfo> {
                                                 widget.data['can_update']
                                                     ? false
                                                     : true,
-                                            controller: widget.qty,
+                                            controller: widget.qty
+                                              ..text =
+                                                  (widget.qty.text.isEmpty ||
+                                                          widget.qty.text == '0'
+                                                      ? 'No Data'
+                                                      : widget.qty.text),
                                             handleChange: (value) {
                                               setState(() {
                                                 widget.qty.text =
@@ -349,7 +397,7 @@ class _ListInfoState extends State<ListInfo> {
                                         Expanded(
                                           flex: 1,
                                           child: SelectForm(
-                                              label: 'Satuan',
+                                              label: 'Satuan Qty',
                                               isDisabled:
                                                   widget.data['can_update']
                                                       ? false
@@ -402,7 +450,7 @@ class _ListInfoState extends State<ListInfo> {
                             ViewText(
                               viewLabel: 'Catatan Work Order',
                               viewValue: htmlToPlainText(
-                                  widget.data['work_orders']['notes']),
+                                  widget.data['work_orders']['notes'] ?? '-'),
                             )
                           ].separatedBy(SizedBox(
                             height: 8,
@@ -546,7 +594,17 @@ class _ListInfoState extends State<ListInfo> {
                             decoration: BoxDecoration(
                               color: Colors.white,
                             ),
-                            child: previewWidget,
+                            child: GestureDetector(
+                              onTap: () {
+                                if (['png', 'jpg', 'jpeg', 'gif']
+                                        .contains(extension) &&
+                                    filePath != null) {
+                                  showImageDialog(
+                                      context, isNew, filePath, baseUrl);
+                                }
+                              },
+                              child: previewWidget,
+                            ),
                           ),
                         ],
                       );

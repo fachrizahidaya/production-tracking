@@ -120,7 +120,7 @@ class Dyeing {
 }
 
 class DyeingService extends BaseService<Dyeing> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/dyeings';
+  final String baseUrl = '${dotenv.env['API_URL']}/dyeings';
 
   bool _isLoading = false;
   bool _hasMoreData = true;

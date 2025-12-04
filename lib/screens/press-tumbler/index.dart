@@ -172,7 +172,12 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
   _refetch() {
     Future.delayed(Duration.zero, () {
       setState(() {
-        params = {'search': _search, 'page': '0'};
+        params = {
+          'search': _search,
+          'page': '0',
+          'start_date': dariTanggal,
+          'end_date': sampaiTanggal,
+        };
       });
       _loadMore();
     });

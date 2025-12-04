@@ -48,9 +48,13 @@ class InfoTab extends StatefulWidget {
   State<InfoTab> createState() => _InfoTabState();
 }
 
-class _InfoTabState extends State<InfoTab> {
+class _InfoTabState extends State<InfoTab> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (widget.isLoading) {
       return Center(
         child: CircularProgressIndicator(),

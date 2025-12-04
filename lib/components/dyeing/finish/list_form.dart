@@ -79,6 +79,38 @@ class _ListFormState extends State<ListForm> {
     super.initState();
   }
 
+  void showImageDialog(BuildContext context, bool isNew, String filePath) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.black,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          insetPadding: const EdgeInsets.all(20),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.6,
+            padding: const EdgeInsets.all(10),
+            child: InteractiveViewer(
+              minScale: 1,
+              maxScale: 4,
+              child: isNew
+                  ? Image.file(
+                      File(filePath),
+                      fit: BoxFit.contain,
+                    )
+                  : Image.network(
+                      filePath,
+                      fit: BoxFit.contain,
+                    ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     String htmlToPlainText(String htmlString) {
@@ -249,8 +281,7 @@ class _ListFormState extends State<ListForm> {
                           );
                         }
 
-                        final bool isNew =
-                            item.containsKey('path'); // new local file
+                        final bool isNew = item.containsKey('path');
                         final String? filePath =
                             isNew ? item['path'] : item['file_path'];
                         final String fileName = isNew
@@ -292,7 +323,16 @@ class _ListFormState extends State<ListForm> {
                                   ),
                                 ],
                               ),
-                              child: previewWidget,
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (['png', 'jpg', 'jpeg', 'gif']
+                                          .contains(extension) &&
+                                      filePath != null) {
+                                    showImageDialog(context, isNew, filePath);
+                                  }
+                                },
+                                child: previewWidget,
+                              ),
                             ),
                             Positioned(
                               right: 0,
@@ -325,22 +365,16 @@ class _ListFormState extends State<ListForm> {
                                   if (confirm == true) {
                                     setState(() {
                                       if (isNew) {
-                                        // Locally captured or picked image
                                         (widget.form['attachments'] as List)
                                             .remove(item);
                                       } else {
-                                        // Existing from API (optional server delete)
                                         (widget.data!['attachments'] as List)
                                             .remove(item);
                                       }
                                     });
 
-                                    // OPTIONAL: If you want to delete from server
                                     if (!isNew && item['id'] != null) {
-                                      try {
-                                        // Example call (depends on your backend)
-                                        // await YourApiService.deleteAttachment(item['id']);
-                                      } catch (e) {
+                                      try {} catch (e) {
                                         if (mounted) {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(

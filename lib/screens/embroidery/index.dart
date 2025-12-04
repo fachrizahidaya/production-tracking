@@ -170,8 +170,19 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
 
   _refetch() {
     Future.delayed(Duration.zero, () {
+      if (_isFiltered) {
+        setState(() {
+          _isFiltered = false;
+        });
+      }
+
       setState(() {
-        params = {'search': _search, 'page': '0'};
+        params = {
+          'search': _search,
+          'page': '0',
+          'start_date': dariTanggal,
+          'end_date': sampaiTanggal,
+        };
       });
       _loadMore();
     });

@@ -168,8 +168,19 @@ class _DyeingScreenState extends State<DyeingScreen> {
 
   _refetch() {
     Future.delayed(Duration.zero, () {
+      if (_isFiltered) {
+        setState(() {
+          _isFiltered = false;
+        });
+      }
+
       setState(() {
-        params = {'search': _search, 'page': '0'};
+        params = {
+          'search': _search,
+          'page': '0',
+          'start_date': dariTanggal,
+          'end_date': sampaiTanggal,
+        };
       });
       _loadMore();
     });

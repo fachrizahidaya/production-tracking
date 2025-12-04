@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
@@ -44,11 +45,26 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
   int page = 0;
   Map<String, String> params = {'search': '', 'page': '0'};
 
+  String dariTanggal = '';
+  String sampaiTanggal = '';
+
   @override
   void initState() {
     super.initState();
+    final now = DateTime.now();
+    final firstDayOfMonth = DateTime(now.year, now.month, 1);
+    final today = now;
+
+    dariTanggal = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
+    sampaiTanggal = DateFormat('yyyy-MM-dd').format(today);
+
     setState(() {
-      params = {'search': _search, 'page': '0'};
+      params = {
+        'search': _search,
+        'page': '0',
+        'start_date': dariTanggal,
+        'end_date': sampaiTanggal,
+      };
     });
     Future.delayed(Duration.zero, () {
       _loadMore();
@@ -155,8 +171,19 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
 
   _refetch() {
     Future.delayed(Duration.zero, () {
+      if (_isFiltered) {
+        setState(() {
+          _isFiltered = false;
+        });
+      }
+
       setState(() {
-        params = {'search': _search, 'page': '0'};
+        params = {
+          'search': _search,
+          'page': '0',
+          'start_date': dariTanggal,
+          'end_date': sampaiTanggal,
+        };
       });
       _loadMore();
     });
@@ -254,6 +281,8 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
                   },
                   fetchMachine: (service) => service.fetchOptionsCrossCutting(),
                   getMachineOptions: (service) => service.dataListOption,
+                  dariTanggal: dariTanggal,
+                  sampaiTanggal: sampaiTanggal,
                 ),
                 showActions: () {
                   showDialog(

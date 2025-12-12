@@ -1,15 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/dyeing/create/item_tab.dart';
-import 'package:textile_tracking/components/dyeing/finish/form_tab.dart';
-import 'package:textile_tracking/components/dyeing/finish/info_tab.dart';
-import 'package:textile_tracking/components/master/button/cancel_button.dart';
-import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/dyeing/finish/finish_section.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -334,111 +327,26 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Scaffold(
-          backgroundColor: const Color(0xFFf9fafc),
-          appBar: CustomAppBar(
-            title: 'Selesai Dyeing',
-            onReturn: () {
-              Navigator.pop(context);
-            },
-          ),
-          body: Column(
-            children: [
-              Container(
-                color: Colors.white,
-                child: TabBar(tabs: [
-                  Tab(
-                    text: 'Form',
-                  ),
-                  Tab(
-                    text: 'Informasi',
-                  ),
-                  Tab(
-                    text: 'Barang',
-                  ),
-                ]),
-              ),
-              Expanded(
-                child: TabBarView(children: [
-                  InfoTab(
-                    data: woData,
-                    id: widget.id,
-                    isLoading: _firstLoading,
-                    form: widget.form,
-                    formKey: _formKey,
-                    handleSubmit: widget.handleSubmit,
-                    handleSelectMachine: null,
-                    handleSelectWorkOrder: _selectWorkOrder,
-                    handleSelectLengthUnit: _selectLengthUnit,
-                    handleChangeInput: widget.handleChangeInput,
-                    handleSelectUnit: _selectUnit,
-                    handleSelectWidthUnit: _selectWidthUnit,
-                    qty: _qtyController,
-                    dyeingData: dyeingData,
-                    dyeingId: dyeingId,
-                    length: _lengthController,
-                    width: _widthController,
-                    note: _noteController,
-                  ),
-                  FormTab(
-                    data: woData,
-                  ),
-                  ItemTab(
-                    data: woData,
-                  ),
-                ]),
-              ),
-            ],
-          ),
-          bottomNavigationBar: SafeArea(
-            child: Container(
-              padding: PaddingColumn.screen,
-              color: Colors.white,
-              child: ValueListenableBuilder<bool>(
-                valueListenable: _isSubmitting,
-                builder: (context, isSubmitting, _) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: CancelButton(
-                          label: 'Batal',
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ),
-                      Expanded(
-                          child: FormButton(
-                        label: 'Selesai',
-                        isDisabled: widget.form?['wo_id'] == null ||
-                                widget.form?['qty'] == null ||
-                                widget.form?['unit_id'] == null
-                            ? true
-                            : false,
-                        isLoading: isSubmitting,
-                        onPressed: () async {
-                          _isSubmitting.value = true;
-                          try {
-                            await widget.handleSubmit(dyeingData['id'] != null
-                                ? dyeingData['id'].toString()
-                                : widget.processId);
-                          } finally {
-                            _isSubmitting.value = false;
-                          }
-                        },
-                      ))
-                    ].separatedBy(SizedBox(
-                      width: 16,
-                    )),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
+      child: FinishSection(
+        id: widget.id,
+        processId: widget.processId,
+        form: widget.form,
+        formKey: _formKey,
+        dyeingId: dyeingId,
+        dyeingData: dyeingData,
+        woData: woData,
+        handleSubmit: widget.handleSubmit,
+        handleChangeInput: widget.handleChangeInput,
+        isSubmitting: _isSubmitting,
+        firstLoading: _firstLoading,
+        lengthController: _lengthController,
+        widthController: _widthController,
+        noteController: _noteController,
+        qtyController: _qtyController,
+        selectUnit: _selectUnit,
+        selectWidthUnit: _selectWidthUnit,
+        selectLengthUnit: _selectLengthUnit,
+        selectWorkOrder: _selectWorkOrder,
       ),
     );
   }

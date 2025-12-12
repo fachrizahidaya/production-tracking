@@ -15,7 +15,6 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
-import 'package:html/parser.dart' as html_parser;
 
 class ListInfo extends StatefulWidget {
   final data;
@@ -37,6 +36,8 @@ class ListInfo extends StatefulWidget {
   final handleSelectLengthUnit;
   final handleSelectWidthUnit;
   final handleSelectUnit;
+  final handleHtml;
+  final handleShowImage;
 
   const ListInfo(
       {super.key,
@@ -58,7 +59,9 @@ class ListInfo extends StatefulWidget {
       this.handleChangeInput,
       this.handleSelectLengthUnit,
       this.handleSelectWidthUnit,
-      this.handleSelectUnit});
+      this.handleSelectUnit,
+      this.handleHtml,
+      this.handleShowImage});
 
   @override
   State<ListInfo> createState() => _ListInfoState();
@@ -73,44 +76,6 @@ class _ListInfoState extends State<ListInfo> {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
-
-    String htmlToPlainText(String htmlString) {
-      final document = html_parser.parse(htmlString);
-      return document.body?.text ?? '';
-    }
-
-    void showImageDialog(
-        BuildContext context, bool isNew, String filePath, String baseUrl) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(
-            backgroundColor: Colors.black,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            insetPadding: const EdgeInsets.all(20),
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.6,
-              padding: const EdgeInsets.all(10),
-              child: InteractiveViewer(
-                minScale: 1,
-                maxScale: 4,
-                child: isNew
-                    ? Image.file(
-                        File(filePath),
-                        fit: BoxFit.contain,
-                      )
-                    : Image.network(
-                        '$baseUrl$filePath',
-                        fit: BoxFit.contain,
-                      ),
-              ),
-            ),
-          );
-        },
-      );
-    }
 
     return SingleChildScrollView(
       child: Container(
@@ -449,7 +414,7 @@ class _ListInfoState extends State<ListInfo> {
                             ),
                             ViewText(
                               viewLabel: 'Catatan Work Order',
-                              viewValue: htmlToPlainText(
+                              viewValue: widget.handleHtml(
                                   widget.data['work_orders']['notes'] ?? '-'),
                             )
                           ].separatedBy(SizedBox(
@@ -478,8 +443,8 @@ class _ListInfoState extends State<ListInfo> {
                     ),
                     ViewText(
                       viewLabel: 'Catatan Work Order',
-                      viewValue:
-                          htmlToPlainText(widget.data['work_orders']['notes']),
+                      viewValue: widget
+                          .handleHtml(widget.data['work_orders']['notes']),
                     )
                   ].separatedBy(SizedBox(
                     height: 8,
@@ -599,7 +564,7 @@ class _ListInfoState extends State<ListInfo> {
                                 if (['png', 'jpg', 'jpeg', 'gif']
                                         .contains(extension) &&
                                     filePath != null) {
-                                  showImageDialog(
+                                  widget.handleShowImage(
                                       context, isNew, filePath, baseUrl);
                                 }
                               },

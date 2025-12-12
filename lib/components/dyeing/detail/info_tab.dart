@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/detail/list_info.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
+import 'package:html/parser.dart' as html_parser;
 
 class InfoTab extends StatefulWidget {
   final data;
@@ -64,6 +67,55 @@ class _InfoTabState extends State<InfoTab> {
     widget.width.text = _initialWidth;
   }
 
+  String htmlToPlainText(dynamic htmlString) {
+    if (htmlString == null) return '';
+
+    // If it's a list, return joined text or ignore
+    if (htmlString is List) {
+      return htmlString.join(" ");
+    }
+
+    if (htmlString is! String) {
+      return htmlString.toString();
+    }
+
+    final document = html_parser.parse(htmlString);
+    return document.body?.text ?? '';
+  }
+
+  void showImageDialog(
+      BuildContext context, bool isNew, String filePath, String baseUrl) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.black,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          insetPadding: const EdgeInsets.all(20),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.6,
+            padding: const EdgeInsets.all(10),
+            child: InteractiveViewer(
+              minScale: 1,
+              maxScale: 4,
+              child: isNew
+                  ? Image.file(
+                      File(filePath),
+                      fit: BoxFit.contain,
+                    )
+                  : Image.network(
+                      '$baseUrl$filePath',
+                      fit: BoxFit.contain,
+                    ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void didUpdateWidget(covariant InfoTab oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -121,6 +173,8 @@ class _InfoTabState extends State<InfoTab> {
       handleSelectLengthUnit: widget.handleSelectLengthUnit,
       handleSelectUnit: widget.handleSelectUnit,
       handleSelectWidthUnit: widget.handleSelectWidthUnit,
+      handleHtml: htmlToPlainText,
+      handleShowImage: showImageDialog,
     );
   }
 }

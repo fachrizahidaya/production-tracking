@@ -1,260 +1,76 @@
 // ignore_for_file: use_build_context_synchronously, prefer_final_fields
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/create/submit_section.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/models/option/option_work_order.dart';
+import 'package:textile_tracking/helpers/service/create_process.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
-import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/dyeing/create/create_dyeing_manual.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/models/master/work_order.dart';
 
-class CreateDyeing extends StatefulWidget {
+class CreateDyeing extends StatelessWidget {
   const CreateDyeing({super.key});
 
-  @override
-  State<CreateDyeing> createState() => _CreateDyeingState();
-}
+  Future<void> _submitToService(
+      BuildContext context, Map<String, dynamic> form, isLoading) async {
+    final dyeing = Dyeing(
+      wo_id:
+          form['wo_id'] != null ? int.tryParse(form['wo_id'].toString()) : null,
+      unit_id: form['unit_id'] != null
+          ? int.tryParse(form['unit_id'].toString())
+          : null,
+      machine_id: form['machine_id'] != null
+          ? int.tryParse(form['machine_id'].toString())
+          : null,
+      rework_reference_id: form['rework_reference_id'] != null
+          ? int.tryParse(form['rework_reference_id'].toString())
+          : null,
+      qty: form['qty'],
+      width: form['width'],
+      length: form['length'],
+      notes: form['notes'],
+      rework: form['rework'],
+      status: form['status'],
+      start_time: form['start_time'],
+      end_time: form['end_time'],
+      start_by_id: form['start_by_id'] != null
+          ? int.tryParse(form['start_by_id'].toString())
+          : null,
+      end_by_id: form['end_by_id'],
+      attachments: form['attachments'],
+    );
 
-class _CreateDyeingState extends State<CreateDyeing> {
-  final MobileScannerController _controller = MobileScannerController();
-  bool _isLoading = false;
-  bool _isScannerStopped = false;
-  int number = 0;
-  final ValueNotifier<bool> _firstLoading = ValueNotifier(false);
+    final message = await Provider.of<DyeingService>(context, listen: false)
+        .addItem(dyeing, isLoading);
 
-  final WorkOrderService _workOrderService = WorkOrderService();
-  late List<dynamic> workOrderOption = [];
+    showAlertDialog(
+      context: context,
+      title: 'Dyeing Created',
+      message: message,
+    );
 
-  @override
-  void initState() {
-    final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
-    _handleFetchWorkOrder();
-    super.initState();
-
-    setState(() {
-      _form['start_by_id'] = loggedInUser?.id;
-    });
-  }
-
-  final Map<String, dynamic> _form = {
-    'wo_id': null,
-    'machine_id': null,
-    'unit_id': null,
-    'rework_reference_id': null,
-    'start_by_id': null,
-    'end_by_id': null,
-    'qty': null,
-    'width': null,
-    'length': null,
-    'notes': '',
-    'rework': null,
-    'status': null,
-    'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-    'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-    'attachments': [],
-    'no_wo': '',
-    'no_dyeing': '',
-    'nama_mesin': '',
-    'nama_satuan': '',
-  };
-
-  Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchOptions();
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
-
-    setState(() {
-      workOrderOption = result;
-    });
-  }
-
-  Future<void> _handleScan(code) async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final String woNo = code.toString();
-
-      if (woNo.isEmpty) {
-        showAlertDialog(
-            context: context, title: 'Error', message: "Invalid QR Code");
-        setState(() => _isLoading = false);
-        return;
-      }
-
-      // Prepare request body
-      final woForm = {'wo_no': woNo};
-      final ValueNotifier<bool> isSubmitting = ValueNotifier(false);
-
-      // Fetch process data using wo_no
-      final processResponse =
-          await _workOrderService.getProcessData(woForm, isSubmitting);
-
-      if (processResponse == null) {
-        showAlertDialog(
-            context: context,
-            title: 'Error',
-            message: "No process data found for this Work Order");
-        setState(() => _isLoading = false);
-        return;
-      }
-
-      final String woId = processResponse['wo_id'].toString();
-      final String processId = processResponse['process_id'].toString();
-
-      // Check if work order exists
-      final bool workOrderExists =
-          workOrderOption.any((item) => item['value'].toString() == woId);
-
-      if (!workOrderExists) {
-        showAlertDialog(
-            context: context, title: 'Error', message: "Work Order not found");
-
-        setState(() => _isLoading = false);
-        return;
-      }
-
-      // If exists → continue to get WO details and navigate
-      await _workOrderService.getDataView(woId);
-      final data = _workOrderService.dataView;
-
-      // Update form values
-      _form['wo_id'] = data['id']?.toString() ?? woId;
-      _form['no_wo'] = data['wo_no']?.toString() ?? woNo;
-      _form['process_id'] = processId;
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      // Navigate to FinishDyeingManual
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CreateDyeingManual(
-            id: woId,
-            data: data,
-            form: _form,
-            handleSubmit: _handleSubmit,
-          ),
-        ),
-      );
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: ${e.toString()}")),
-      );
-    }
-  }
-
-  Future<void> _handleSubmit() async {
-    try {
-      final dyeing = Dyeing(
-          wo_id: _form['wo_id'] != null
-              ? int.tryParse(_form['wo_id'].toString())
-              : null,
-          unit_id: _form['unit_id'] != null
-              ? int.tryParse(_form['unit_id'].toString())
-              : null,
-          machine_id: _form['machine_id'] != null
-              ? int.tryParse(_form['machine_id'].toString())
-              : null,
-          rework_reference_id: _form['rework_reference_id'] != null
-              ? int.tryParse(_form['rework_reference_id'].toString())
-              : null,
-          qty: _form['qty'],
-          width: _form['width'],
-          length: _form['length'],
-          notes: _form['notes'],
-          rework: _form['rework'],
-          status: _form['status'],
-          start_time: _form['start_time'],
-          end_time: _form['end_time'],
-          start_by_id: _form['start_by_id'] != null
-              ? int.tryParse(_form['start_by_id'].toString())
-              : null,
-          end_by_id: _form['end_by_id'],
-          attachments: _form['attachments']);
-      final message = await Provider.of<DyeingService>(context, listen: false)
-          .addItem(dyeing, _firstLoading);
-
-      showAlertDialog(
-          context: context, title: 'Dyeing Created', message: message);
-
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/dyeings',
-        (Route<dynamic> route) => false,
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/dyeings',
+      (route) => false,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        FocusScope.of(context).unfocus();
+    return CreateProcess(
+      title: "Mulai Dyeing",
+      fetchWorkOrder: (service) => service.fetchOptions(),
+      getWorkOrderOptions: (service) => service.dataListOption,
+      handleSubmitToService: _submitToService,
+      formPageBuilder: (context, id, data, form, handleSubmit) {
+        return CreateDyeingManual(
+          id: id,
+          data: data,
+          form: form,
+          handleSubmit: handleSubmit,
+          fetchWorkOrder: (service) => service.fetchOptions(id),
+        );
       },
-      child: Scaffold(
-          backgroundColor: const Color(0xFFf9fafc),
-          appBar: CustomAppBar(
-            title: 'Mulai Dyeing',
-            onReturn: () {
-              Navigator.pop(context);
-            },
-          ),
-          body: SubmitSection(
-            isScannerStopped: _isScannerStopped,
-            form: _form,
-            controller: _controller,
-            handleScan: _handleScan,
-            handleSubmit: _handleSubmit,
-            handleRoute: _createRoute,
-            isLoading: _isLoading,
-          )),
     );
   }
-}
-
-Route _createRoute(dynamic form, handleSubmit) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => CreateDyeingManual(
-      id: null,
-      data: null,
-      form: form,
-      handleSubmit: handleSubmit,
-    ),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 1.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-      var offsetAnimation = animation.drive(tween);
-
-      return SlideTransition(
-        position: offsetAnimation,
-        child: child,
-      );
-    },
-  );
 }

@@ -11,6 +11,7 @@ class TextForm extends StatelessWidget {
   final handleChange;
   final isNumber;
   final isDisabled;
+  final validator;
 
   const TextForm(
       {super.key,
@@ -20,7 +21,8 @@ class TextForm extends StatelessWidget {
       this.controller,
       this.handleChange,
       this.isNumber,
-      this.isDisabled = false});
+      this.isDisabled = false,
+      this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +66,7 @@ class TextForm extends StatelessWidget {
             String rawValue = value.replaceAll(',', '');
             handleChange(rawValue);
           },
+          validator: req ? validator : null,
         )
       ].separatedBy(SizedBox(
         height: 8,

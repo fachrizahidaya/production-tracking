@@ -40,6 +40,7 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
   bool _canDelete = false;
   bool _canUpdate = false;
   bool _isLoading = false;
+  bool _isLoadMore = false;
   String _search = '';
   Timer? _debounce;
   int page = 0;
@@ -78,10 +79,10 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
       await _userMenu.handleLoadMenu();
 
       setState(() {
-        _canRead = _userMenu.checkMenu('Press Tumbler', 'read');
-        _canCreate = _userMenu.checkMenu('Press Tumbler', 'create');
-        _canDelete = _userMenu.checkMenu('Press Tumbler', 'delete');
-        _canUpdate = _userMenu.checkMenu('Press Tumbler', 'update');
+        _canRead = _userMenu.checkMenu('Press', 'read');
+        _canCreate = _userMenu.checkMenu('Press', 'create');
+        _canDelete = _userMenu.checkMenu('Press', 'delete');
+        _canUpdate = _userMenu.checkMenu('Press', 'update');
       });
     } catch (e) {
       throw Exception('Error initializing menus: $e');
@@ -131,7 +132,8 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
   }
 
   Future<void> _loadMore() async {
-    if (_isLoading) return;
+    _isLoadMore = true;
+
     _isLoading = true;
 
     if (params['page'] == '0') {
@@ -142,31 +144,60 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
       });
     }
 
-    final currentPage = int.parse(params['page']!);
+    String newPage = (int.parse(params['page']!) + 1).toString();
+    setState(() {
+      params['page'] = newPage;
+    });
 
-    try {
-      List<PressTumbler> loadData =
-          await Provider.of<PressTumblerService>(context, listen: false)
-              .getDataList(params);
+    await Provider.of<PressTumblerService>(context, listen: false)
+        .getDataList(params);
 
-      if (loadData.isEmpty) {
-        setState(() {
-          _firstLoading = false;
-          _hasMore = false;
-        });
-      } else {
-        setState(() {
-          _dataList.addAll(loadData);
-          _firstLoading = false;
-          params['page'] = (currentPage + 1).toString();
-          if (loadData.length < 20) {
-            _hasMore = false;
-          }
-        });
-      }
-    } finally {
-      _isLoading = false;
+    // ignore: use_build_context_synchronously
+    List<dynamic> loadData =
+        // ignore: use_build_context_synchronously
+        Provider.of<PressTumblerService>(context, listen: false).items;
+
+    if (loadData.isEmpty) {
+      setState(() {
+        _firstLoading = false;
+        _isLoadMore = false;
+        _hasMore = false;
+      });
+    } else {
+      setState(() {
+        _dataList.addAll(loadData);
+        _firstLoading = false;
+        _isLoadMore = false;
+      });
     }
+
+    _isLoading = false;
+
+    // final currentPage = int.parse(params['page']!);
+
+    // try {
+    //   List<PressTumbler> loadData =
+    //       await Provider.of<PressTumblerService>(context, listen: false)
+    //           .getDataList(params);
+
+    //   if (loadData.isEmpty) {
+    //     setState(() {
+    //       _firstLoading = false;
+    //       _hasMore = false;
+    //     });
+    //   } else {
+    //     setState(() {
+    //       _dataList.addAll(loadData);
+    //       _firstLoading = false;
+    //       params['page'] = (currentPage + 1).toString();
+    //       if (loadData.length < 20) {
+    //         _hasMore = false;
+    //       }
+    //     });
+    //   }
+    // } finally {
+    //   _isLoading = false;
+    // }
   }
 
   _refetch() {
@@ -216,10 +247,12 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
             Expanded(
                 child: ProcessList(
               fetchData: (params) async {
-                return await Provider.of<PressTumblerService>(context,
-                        listen: false)
-                    .getDataList(params);
+                final service =
+                    Provider.of<PressTumblerService>(context, listen: false);
+                await service.getDataList(params);
+                return service.items;
               },
+              isLoadMore: _isLoadMore,
               service: PressTumblerService(),
               searchQuery: _search,
               canCreate: _canCreate,
@@ -282,31 +315,6 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
                 sampaiTanggal: sampaiTanggal,
               ),
               showActions: () {
-                // ProcessSheet.showOptions(
-                //   context,
-                //   options: [
-                //     BottomSheetOption(
-                //       title: "Mulai Press Tumbler",
-                //       icon: Icons.add,
-                //       iconColor: CustomTheme().buttonColor('primary'),
-                //       onTap: () => Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //             builder: (_) => const CreatePressTumbler()),
-                //       ),
-                //     ),
-                //     BottomSheetOption(
-                //       title: "Selesai Press Tumbler",
-                //       icon: Icons.check_circle,
-                //       iconColor: CustomTheme().buttonColor('warning'),
-                //       onTap: () => Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //             builder: (_) => const FinishPressTumbler()),
-                //       ),
-                //     ),
-                //   ],
-                // );
                 showDialog(
                   context: context,
                   builder: (context) {
@@ -367,31 +375,6 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
         bottomNavigationBar: isPortrait
             ? CustomFloatingButton(
                 onPressed: () {
-                  // ProcessSheet.showOptions(
-                  //   context,
-                  //   options: [
-                  //     BottomSheetOption(
-                  //       title: "Mulai Press Tumbler",
-                  //       icon: Icons.add,
-                  //       iconColor: CustomTheme().buttonColor('primary'),
-                  //       onTap: () => Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //             builder: (_) => const CreatePressTumbler()),
-                  //       ),
-                  //     ),
-                  //     BottomSheetOption(
-                  //       title: "Selesai Press Tumbler",
-                  //       icon: Icons.check_circle,
-                  //       iconColor: CustomTheme().buttonColor('warning'),
-                  //       onTap: () => Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //             builder: (_) => const FinishPressTumbler()),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // );
                   showDialog(
                     context: context,
                     builder: (context) {

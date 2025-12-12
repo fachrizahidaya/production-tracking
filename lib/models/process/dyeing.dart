@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 import 'package:textile_tracking/helpers/service/base_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -119,607 +120,612 @@ class Dyeing {
   }
 }
 
-class DyeingService extends BaseService<Dyeing> {
-  final String baseUrl = '${dotenv.env['API_URL']}/dyeings';
+// class DyeingService extends BaseService<Dyeing> {
+//   final String baseUrl = '${dotenv.env['API_URL']}/dyeings';
 
-  bool _isLoading = false;
-  bool _hasMoreData = true;
-  int _currentPage = 1;
-  final int _itemsPerPage = 20;
-  List<dynamic> _dataList = [];
-  Map<String, dynamic> _dataView = {};
+//   bool _isLoading = false;
+//   bool _hasMoreData = true;
+//   int _currentPage = 1;
+//   final int _itemsPerPage = 20;
+//   List<dynamic> _dataList = [];
+//   Map<String, dynamic> _dataView = {};
+//   int currentPage = 1;
+//   int lastPage = 1;
 
-  bool get isLoading => _isLoading;
-  bool get hasMoreData => _hasMoreData;
-  List<dynamic> get dataList => _dataList;
-  Map<String, dynamic> get dataView => _dataView;
+//   bool get isLoading => _isLoading;
+//   bool get hasMoreData => _hasMoreData;
+//   List<dynamic> get dataList => _dataList;
+//   Map<String, dynamic> get dataView => _dataView;
 
-  @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {
-    if (isLoading || (!hasMoreData && !isInitialLoad)) return;
+//   @override
+//   Future<void> fetchItems(
+//       {bool isInitialLoad = false, String? searchQuery = ''}) async {
+//     if (isLoading || (!hasMoreData && !isInitialLoad)) return;
 
-    if (isInitialLoad) {
-      _currentPage = 1;
-      hasMoreData = true;
-      items.clear();
-      notifyListeners();
-    }
+//     if (isInitialLoad) {
+//       _currentPage = 1;
+//       hasMoreData = true;
+//       items.clear();
+//       notifyListeners();
+//     }
 
-    isLoading = true;
-    notifyListeners();
+//     isLoading = true;
+//     notifyListeners();
 
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
+//     try {
+//       SharedPreferences prefs = await SharedPreferences.getInstance();
+//       String? token = prefs.getString('access_token');
 
-      final response = await http.get(
-        Uri.parse('$baseUrl?page=$_currentPage&search=$searchQuery'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
+//       final response = await http.get(
+//         Uri.parse('$baseUrl?page=$_currentPage&search=$searchQuery'),
+//         headers: {
+//           'Authorization': 'Bearer $token',
+//           'Content-Type': 'application/json',
+//         },
+//       );
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        final List<dynamic> dataList = responseData['data'];
+//       if (response.statusCode == 200) {
+//         final Map<String, dynamic> responseData = jsonDecode(response.body);
+//         final List<dynamic> dataList = responseData['data'];
 
-        List<Dyeing> newItems =
-            dataList.map((item) => Dyeing.fromJson(item)).toList();
+//         List<Dyeing> newItems =
+//             dataList.map((item) => Dyeing.fromJson(item)).toList();
 
-        if (newItems.length < _itemsPerPage) {
-          hasMoreData = false;
-        }
+//         if (newItems.length < _itemsPerPage) {
+//           hasMoreData = false;
+//         }
 
-        final existingIds = items.map((e) => e.id).toSet();
-        for (var newItem in newItems) {
-          if (!existingIds.contains(newItem.id)) {
-            items.add(newItem);
-          }
-        }
-        // items.addAll(newItems);
+//         final existingIds = items.map((e) => e.id).toSet();
+//         for (var newItem in newItems) {
+//           if (!existingIds.contains(newItem.id)) {
+//             items.add(newItem);
+//           }
+//         }
+//         // items.addAll(newItems);
 
-        if (newItems.isNotEmpty) {
-          _currentPage++;
-        } else {
-          hasMoreData = false;
-        }
-      } else {
-        throw Exception('Failed to load dyeings');
-      }
-    } catch (e) {
-      throw Exception("Error fetching dyeings: $e");
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
-  }
+//         if (newItems.isNotEmpty) {
+//           _currentPage++;
+//         } else {
+//           hasMoreData = false;
+//         }
+//       } else {
+//         throw Exception('Failed to load dyeings');
+//       }
+//     } catch (e) {
+//       throw Exception("Error fetching dyeings: $e");
+//     } finally {
+//       isLoading = false;
+//       notifyListeners();
+//     }
+//   }
 
-  Future<void> getDataView(id) async {
-    final url = Uri.parse('$baseUrl/$id');
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('access_token').toString();
+//   Future<void> getDataView(id) async {
+//     final url = Uri.parse('$baseUrl/$id');
+//     final SharedPreferences prefs = await SharedPreferences.getInstance();
+//     String token = prefs.getString('access_token').toString();
 
-    try {
-      _dataView = {};
-      notifyListeners();
+//     try {
+//       _dataView = {};
+//       notifyListeners();
 
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
-      });
+//       final response = await http.get(url, headers: {
+//         'Authorization': 'Bearer $token',
+//       });
 
-      final responseData = json.decode(response.body);
-      switch (response.statusCode) {
-        case 200:
-          if (responseData != null) {
-            _dataView = responseData as Map<String, dynamic>;
-          }
-          notifyListeners();
-          break;
-        default:
-          throw responseData['message'];
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
+//       final responseData = json.decode(response.body);
+//       switch (response.statusCode) {
+//         case 200:
+//           if (responseData != null) {
+//             _dataView = responseData as Map<String, dynamic>;
+//           }
+//           notifyListeners();
+//           break;
+//         default:
+//           throw responseData['message'];
+//       }
+//     } catch (e) {
+//       rethrow;
+//     }
+//   }
 
-  Future<List<Dyeing>> getDataList(Map<String, String?> params) async {
-    final cleanParams = Map<String, String>.fromEntries(
-      params.entries
-          .where((e) => e.value != null && e.value!.isNotEmpty)
-          .map((e) => MapEntry(e.key, e.value!)),
-    );
+//   Future<void> getDataList(Map<String, dynamic> params) async {
+//     final url = Uri.parse(baseUrl).replace(queryParameters: params);
+//     final SharedPreferences prefs = await SharedPreferences.getInstance();
+//     String token = prefs.getString('access_token').toString();
 
-    final url = Uri.parse(baseUrl).replace(queryParameters: cleanParams);
+//     try {
+//       _dataList.clear();
+//       notifyListeners();
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('access_token') ?? '';
+//       final response = await http.get(url, headers: {
+//         'Authorization': 'Bearer $token',
+//       });
 
-    try {
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
-      });
+//       final responseData = jsonDecode(response.body);
+//       switch (response.statusCode) {
+//         case 200:
+//           if (responseData['data'] != null) {
+//             _dataList = responseData['data'];
+//           }
+//           notifyListeners();
+//           break;
+//         default:
+//           throw responseData['message'];
+//       }
+//     } catch (e) {
+//       rethrow;
+//     }
+//   }
 
-      final responseData = jsonDecode(response.body);
+//   @override
+//   Future<void> refetchItems() async {
+//     hasMoreData = true;
+//     await fetchItems(isInitialLoad: true);
+//   }
 
-      switch (response.statusCode) {
-        case 200:
-          if (responseData['data'] != null) {
-            return (responseData['data'] as List)
-                .map((item) => Dyeing.fromJson(item))
-                .toList();
-          }
-          return [];
-        default:
-          throw responseData['message'];
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
+//   @override
+//   Future<String> addItem(Dyeing item, ValueNotifier<bool> isSubmitting) async {
+//     try {
+//       isSubmitting.value = true;
 
-  @override
-  Future<void> refetchItems() async {
-    hasMoreData = true;
-    await fetchItems(isInitialLoad: true);
-  }
+//       SharedPreferences prefs = await SharedPreferences.getInstance();
+//       String? token = prefs.getString('access_token');
 
-  @override
-  Future<String> addItem(Dyeing item, ValueNotifier<bool> isSubmitting) async {
-    try {
-      isSubmitting.value = true;
+//       var uri = Uri.parse(baseUrl);
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
+//       bool hasAttachments = item.attachments != null &&
+//           item.attachments is List &&
+//           (item.attachments as List).isNotEmpty;
 
-      var uri = Uri.parse(baseUrl);
+//       if (hasAttachments) {
+//         var request = http.MultipartRequest('POST', uri);
+//         request.headers['Authorization'] = 'Bearer $token';
 
-      bool hasAttachments = item.attachments != null &&
-          item.attachments is List &&
-          (item.attachments as List).isNotEmpty;
+//         request.fields['wo_id'] = item.wo_id?.toString() ?? '';
+//         request.fields['machine_id'] = item.machine_id?.toString() ?? '';
+//         request.fields['unit_id'] = item.unit_id?.toString() ?? '';
+//         request.fields['rework_reference_id'] =
+//             item.rework_reference_id?.toString() ?? '';
+//         request.fields['start_by_id'] = item.start_by_id?.toString() ?? '';
+//         request.fields['end_by_id'] = item.end_by_id?.toString() ?? '';
+//         request.fields['qty'] = item.qty ?? '';
+//         request.fields['width'] = item.width ?? '';
+//         request.fields['length'] = item.length ?? '';
+//         request.fields['notes'] = item.notes ?? '';
+//         request.fields['rework'] = (item.rework == true ? '1' : '0');
+//         request.fields['status'] = item.status ?? '';
+//         request.fields['start_time'] = item.start_time ?? '';
+//         request.fields['end_time'] = item.end_time ?? '';
 
-      if (hasAttachments) {
-        var request = http.MultipartRequest('POST', uri);
-        request.headers['Authorization'] = 'Bearer $token';
+//         for (int i = 0; i < item.attachments.length; i++) {
+//           var file = item.attachments[i];
+//           if (file is File) {
+//             request.files.add(await http.MultipartFile.fromPath(
+//               'attachments[$i]',
+//               file.path,
+//             ));
+//           } else if (file is Map && file['path'] != null) {
+//             request.files.add(await http.MultipartFile.fromPath(
+//               'attachments[$i]',
+//               file['path'],
+//               filename: file['name'] ?? 'file_$i',
+//             ));
+//           }
+//         }
 
-        request.fields['wo_id'] = item.wo_id?.toString() ?? '';
-        request.fields['machine_id'] = item.machine_id?.toString() ?? '';
-        request.fields['unit_id'] = item.unit_id?.toString() ?? '';
-        request.fields['rework_reference_id'] =
-            item.rework_reference_id?.toString() ?? '';
-        request.fields['start_by_id'] = item.start_by_id?.toString() ?? '';
-        request.fields['end_by_id'] = item.end_by_id?.toString() ?? '';
-        request.fields['qty'] = item.qty ?? '';
-        request.fields['width'] = item.width ?? '';
-        request.fields['length'] = item.length ?? '';
-        request.fields['notes'] = item.notes ?? '';
-        request.fields['rework'] = (item.rework == true ? '1' : '0');
-        request.fields['status'] = item.status ?? '';
-        request.fields['start_time'] = item.start_time ?? '';
-        request.fields['end_time'] = item.end_time ?? '';
+//         var response = await request.send();
+//         var responseBody = await response.stream.bytesToString();
+//         if (response.statusCode == 201) {
+//           final jsonResponse = jsonDecode(responseBody);
+//           await refetchItems();
+//           notifyListeners();
+//           return jsonResponse['message'] ?? 'Update successful';
+//         } else {
+//           var responseData = await response.stream.bytesToString();
+//           throw Exception(jsonDecode(responseData)['message'] ??
+//               'Failed to add dyeing with attachments');
+//         }
+//       } else {
+//         final response = await http.post(
+//           uri,
+//           headers: {
+//             'Authorization': 'Bearer $token',
+//             'Content-Type': 'application/json',
+//           },
+//           body: jsonEncode(item.toJson()),
+//         );
 
-        for (int i = 0; i < item.attachments.length; i++) {
-          var file = item.attachments[i];
-          if (file is File) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file.path,
-            ));
-          } else if (file is Map && file['path'] != null) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file['path'],
-              filename: file['name'] ?? 'file_$i',
-            ));
-          }
-        }
+//         if (response.statusCode == 201) {
+//           final jsonResponse = jsonDecode(response.body);
+//           await refetchItems();
+//           notifyListeners();
+//           return jsonResponse['message'] ?? 'Update successful';
+//         } else {
+//           final errorData = jsonDecode(response.body);
+//           throw Exception(errorData['message'] ?? 'Failed to add dyeings');
+//         }
+//       }
+//     } catch (e) {
+//       throw Exception('Error adding dyeing: $e');
+//     } finally {
+//       isSubmitting.value = false;
+//     }
+//   }
 
-        var response = await request.send();
-        var responseBody = await response.stream.bytesToString();
-        if (response.statusCode == 201) {
-          final jsonResponse = jsonDecode(responseBody);
-          await refetchItems();
-          notifyListeners();
-          return jsonResponse['message'] ?? 'Update successful';
-        } else {
-          var responseData = await response.stream.bytesToString();
-          throw Exception(jsonDecode(responseData)['message'] ??
-              'Failed to add dyeing with attachments');
-        }
-      } else {
-        final response = await http.post(
-          uri,
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode(item.toJson()),
+//   @override
+//   Future<String> updateItem(
+//     String id,
+//     Dyeing item,
+//     ValueNotifier<bool> isSubmitting,
+//   ) async {
+//     try {
+//       isSubmitting.value = true;
+
+//       SharedPreferences prefs = await SharedPreferences.getInstance();
+//       String? token = prefs.getString('access_token');
+
+//       bool hasAttachments = item.attachments != null &&
+//           item.attachments is List &&
+//           (item.attachments as List).isNotEmpty;
+
+//       if (hasAttachments) {
+//         var uri = Uri.parse('$baseUrl/$id?_method=PATCH');
+//         var request = http.MultipartRequest('POST', uri);
+//         request.headers['Authorization'] = 'Bearer $token';
+
+//         request.fields['wo_id'] = item.wo_id?.toString() ?? '';
+//         request.fields['machine_id'] = item.machine_id?.toString() ?? '';
+//         request.fields['unit_id'] = item.unit_id?.toString() ?? '';
+//         request.fields['rework_reference_id'] =
+//             item.rework_reference_id?.toString() ?? '';
+//         request.fields['start_by_id'] = item.start_by_id?.toString() ?? '';
+//         request.fields['end_by_id'] = item.end_by_id?.toString() ?? '';
+//         request.fields['qty'] = item.qty ?? '';
+//         request.fields['width'] = item.width ?? '';
+//         request.fields['length'] = item.length ?? '';
+//         request.fields['notes'] = item.notes ?? '';
+//         request.fields['rework'] = (item.rework == true ? '1' : '0');
+//         request.fields['status'] = item.status ?? '';
+//         request.fields['start_time'] = item.start_time ?? '';
+//         request.fields['end_time'] = item.end_time ?? '';
+
+//         for (int i = 0; i < item.attachments.length; i++) {
+//           var file = item.attachments[i];
+//           if (file is File) {
+//             request.files.add(await http.MultipartFile.fromPath(
+//               'attachments[$i]',
+//               file.path,
+//             ));
+//           } else if (file is Map && file['path'] != null) {
+//             request.files.add(await http.MultipartFile.fromPath(
+//               'attachments[$i]',
+//               file['path'],
+//               filename: file['name'] ?? 'file_$i',
+//             ));
+//           }
+//         }
+
+//         var response = await request.send();
+//         var responseBody = await response.stream.bytesToString();
+//         if (response.statusCode == 200) {
+//           final jsonResponse = jsonDecode(responseBody);
+//           await refetchItems();
+//           notifyListeners();
+//           return jsonResponse['message'] ?? 'Update successful';
+//         } else {
+//           var responseData = await response.stream.bytesToString();
+//           throw Exception(
+//               jsonDecode(responseData)['message'] ?? 'Failed to update dyeing');
+//         }
+//       } else {
+//         final body = {
+//           ...item.toJson(),
+//           '_method': 'PATCH',
+//         };
+
+//         final response = await http.post(
+//           Uri.parse('$baseUrl/$id'),
+//           headers: {
+//             'Authorization': 'Bearer $token',
+//             'Content-Type': 'application/json',
+//           },
+//           body: jsonEncode(body),
+//         );
+
+//         if (response.statusCode == 200) {
+//           await refetchItems();
+//           return jsonDecode(response.body)['message'];
+//         } else {
+//           final error = jsonDecode(response.body);
+//           throw Exception(error['message'] ?? 'Failed to update item');
+//         }
+//         // final response = await http.patch(
+//         //   Uri.parse('$baseUrl/$id'),
+//         //   headers: {
+//         //     'Authorization': 'Bearer $token',
+//         //     'Content-Type': 'application/json',
+//         //   },
+//         //   body: jsonEncode(updatedDyeing.toJson()),
+//         // );
+
+//         // if (response.statusCode == 200) {
+//         //   final jsonResponse = jsonDecode(response.body);
+//         //   await refetchItems();
+//         //   notifyListeners();
+//         //   return jsonResponse['message'] ?? 'Update successful';
+//         // } else {
+//         //   final errorData = jsonDecode(response.body);
+//         //   throw Exception(errorData['message'] ?? 'Failed to update dyeing');
+//         // }
+//       }
+//     } catch (e) {
+//       throw Exception("$e");
+//     } finally {
+//       isSubmitting.value = false;
+//     }
+//   }
+
+//   Future<String> finishItem(String id, Dyeing finishedDyeing,
+//       ValueNotifier<bool> isSubmitting) async {
+//     try {
+//       isSubmitting.value = true;
+
+//       SharedPreferences prefs = await SharedPreferences.getInstance();
+//       String? token = prefs.getString('access_token');
+
+//       bool hasAttachments = finishedDyeing.attachments != null &&
+//           finishedDyeing.attachments is List &&
+//           (finishedDyeing.attachments as List).isNotEmpty;
+
+//       if (hasAttachments) {
+//         var uri = Uri.parse('$baseUrl/$id/complete?_method=PATCH');
+//         var request = http.MultipartRequest('POST', uri);
+//         request.headers['Authorization'] = 'Bearer $token';
+
+//         request.fields['wo_id'] = finishedDyeing.wo_id?.toString() ?? '';
+//         request.fields['machine_id'] =
+//             finishedDyeing.machine_id?.toString() ?? '';
+//         request.fields['unit_id'] = finishedDyeing.unit_id?.toString() ?? '';
+//         request.fields['rework_reference_id'] =
+//             finishedDyeing.rework_reference_id?.toString() ?? '';
+//         request.fields['start_by_id'] =
+//             finishedDyeing.start_by_id?.toString() ?? '';
+//         request.fields['end_by_id'] =
+//             finishedDyeing.end_by_id?.toString() ?? '';
+//         request.fields['qty'] = finishedDyeing.qty ?? '';
+//         request.fields['width'] = finishedDyeing.width ?? '';
+//         request.fields['length'] = finishedDyeing.length ?? '';
+//         request.fields['notes'] = finishedDyeing.notes ?? '';
+//         request.fields['rework'] = (finishedDyeing.rework == true ? '1' : '0');
+//         request.fields['status'] = finishedDyeing.status ?? '';
+//         request.fields['start_time'] = finishedDyeing.start_time ?? '';
+//         request.fields['end_time'] = finishedDyeing.end_time ?? '';
+
+//         for (int i = 0; i < finishedDyeing.attachments.length; i++) {
+//           var file = finishedDyeing.attachments[i];
+//           if (file is File) {
+//             request.files.add(await http.MultipartFile.fromPath(
+//               'attachments[$i]',
+//               file.path,
+//             ));
+//           } else if (file is Map && file['path'] != null) {
+//             request.files.add(await http.MultipartFile.fromPath(
+//               'attachments[$i]',
+//               file['path'],
+//               filename: file['name'] ?? 'file_$i',
+//             ));
+//           }
+//         }
+
+//         var response = await request.send();
+//         var responseBody = await response.stream.bytesToString();
+//         if (response.statusCode == 200) {
+//           final jsonResponse = jsonDecode(responseBody);
+//           await refetchItems();
+//           notifyListeners();
+//           return jsonResponse['message'] ?? 'Finish successful';
+//         } else {
+//           var responseData = await response.stream.bytesToString();
+//           throw Exception(jsonDecode(responseData)['message'] ??
+//               'Failed to add dyeing with attachments');
+//         }
+//       } else {
+//         final body = {
+//           ...finishedDyeing.toJson(),
+//           '_method': 'PATCH',
+//         };
+
+//         final response = await http.post(
+//           Uri.parse('$baseUrl/$id/complete'),
+//           headers: {
+//             'Authorization': 'Bearer $token',
+//             'Content-Type': 'application/json',
+//           },
+//           body: jsonEncode(body),
+//         );
+
+//         if (response.statusCode == 200) {
+//           await refetchItems();
+//           return jsonDecode(response.body)['message'];
+//         } else {
+//           final error = jsonDecode(response.body);
+//           throw Exception(error['message'] ?? 'Failed to finish item');
+//         }
+//         // final response = await http.patch(
+//         //   Uri.parse('$baseUrl/$id/complete'),
+//         //   headers: {
+//         //     'Authorization': 'Bearer $token',
+//         //     'Content-Type': 'application/json',
+//         //   },
+//         //   body: jsonEncode(finishedDyeing.toJson()),
+//         // );
+
+//         // if (response.statusCode == 200) {
+//         //   await refetchItems();
+//         //   notifyListeners();
+//         //   final responseData = jsonDecode(response.body);
+//         //   return responseData['message'];
+//         // } else {
+//         //   final errorData = jsonDecode(response.body);
+//         //   throw Exception(errorData['message'] ?? 'Failed to finish dyeing');
+//         // }
+//       }
+//     } catch (e) {
+//       throw Exception("$e");
+//     } finally {
+//       isSubmitting.value = false;
+//     }
+//   }
+
+//   Future<String> reworkItem(
+//       String id, Dyeing reworkDyeing, ValueNotifier<bool> isSubmitting) async {
+//     try {
+//       isSubmitting.value = true;
+
+//       SharedPreferences prefs = await SharedPreferences.getInstance();
+//       String? token = prefs.getString('access_token');
+
+//       var uri = Uri.parse('$baseUrl/$id/rework');
+
+//       bool hasAttachments = reworkDyeing.attachments != null &&
+//           reworkDyeing.attachments is List &&
+//           (reworkDyeing.attachments as List).isNotEmpty;
+
+//       if (hasAttachments) {
+//         var request = http.MultipartRequest('POST', uri);
+//         request.headers['Authorization'] = 'Bearer $token';
+
+//         request.fields['wo_id'] = reworkDyeing.wo_id?.toString() ?? '';
+//         request.fields['machine_id'] =
+//             reworkDyeing.machine_id?.toString() ?? '';
+//         request.fields['unit_id'] = reworkDyeing.unit_id?.toString() ?? '';
+//         request.fields['rework_reference_id'] =
+//             reworkDyeing.rework_reference_id?.toString() ?? '';
+//         request.fields['start_by_id'] =
+//             reworkDyeing.start_by_id?.toString() ?? '';
+//         request.fields['end_by_id'] = reworkDyeing.end_by_id?.toString() ?? '';
+//         request.fields['qty'] = reworkDyeing.qty ?? '';
+//         request.fields['width'] = reworkDyeing.width ?? '';
+//         request.fields['length'] = reworkDyeing.length ?? '';
+//         request.fields['notes'] = reworkDyeing.notes ?? '';
+//         request.fields['rework'] = (reworkDyeing.rework == true ? '1' : '0');
+//         request.fields['status'] = reworkDyeing.status ?? '';
+//         request.fields['start_time'] = reworkDyeing.start_time ?? '';
+//         request.fields['end_time'] = reworkDyeing.end_time ?? '';
+
+//         for (int i = 0; i < reworkDyeing.attachments.length; i++) {
+//           var file = reworkDyeing.attachments[i];
+//           if (file is File) {
+//             request.files.add(await http.MultipartFile.fromPath(
+//               'attachments[$i]',
+//               file.path,
+//             ));
+//           } else if (file is Map && file['path'] != null) {
+//             request.files.add(await http.MultipartFile.fromPath(
+//               'attachments[$i]',
+//               file['path'],
+//               filename: file['name'] ?? 'file_$i',
+//             ));
+//           }
+//         }
+
+//         var response = await request.send();
+//         var responseBody = await response.stream.bytesToString();
+//         if (response.statusCode == 201) {
+//           final jsonResponse = jsonDecode(responseBody);
+//           await refetchItems();
+//           notifyListeners();
+//           return jsonResponse['message'] ?? 'Rework successful';
+//         } else {
+//           var responseData = await response.stream.bytesToString();
+//           throw Exception(jsonDecode(responseData)['message'] ??
+//               'Failed to add dyeing with attachments');
+//         }
+//       } else {
+//         final body = {
+//           ...reworkDyeing.toJson(),
+//         };
+
+//         final response = await http.post(
+//           Uri.parse('$baseUrl/$id/rework'),
+//           headers: {
+//             'Authorization': 'Bearer $token',
+//             'Content-Type': 'application/json',
+//           },
+//           body: jsonEncode(body),
+//         );
+
+//         if (response.statusCode == 201) {
+//           await refetchItems();
+//           return jsonDecode(response.body)['message'];
+//         } else {
+//           final error = jsonDecode(response.body);
+//           throw Exception(error['message'] ?? 'Failed to rework item');
+//         }
+//         // final response = await http.post(
+//         //   Uri.parse('$baseUrl/$id/rework'),
+//         //   headers: {
+//         //     'Authorization': 'Bearer $token',
+//         //     'Content-Type': 'application/json',
+//         //   },
+//         //   body: jsonEncode(reworkDyeing.toJson()),
+//         // );
+
+//         // if (response.statusCode == 201) {
+//         //   await refetchItems();
+//         //   notifyListeners();
+//         //   final responseData = jsonDecode(response.body);
+//         //   return responseData['message'] ?? 'Rework created';
+//         // } else {
+//         //   final errorData = jsonDecode(response.body);
+//         //   throw Exception(errorData['message'] ?? 'Failed to rework dyeing');
+//         // }
+//       }
+//     } catch (e) {
+//       throw Exception("Error rework dyeing: $e");
+//     } finally {
+//       isSubmitting.value = false;
+//     }
+//   }
+
+//   @override
+//   Future<String> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {
+//     try {
+//       isSubmitting.value = true;
+
+//       SharedPreferences prefs = await SharedPreferences.getInstance();
+//       String? token = prefs.getString('access_token');
+
+//       final response = await http.delete(
+//         Uri.parse('$baseUrl/$id'),
+//         headers: {
+//           'Authorization': 'Bearer $token',
+//           'Content-Type': 'application/json',
+//         },
+//       );
+
+//       if (response.statusCode == 200) {
+//         await refetchItems();
+//         notifyListeners();
+//         final responseData = jsonDecode(response.body);
+//         return responseData['message'];
+//       } else {
+//         final errorData = jsonDecode(response.body);
+//         throw Exception(errorData['message'] ?? 'Failed to delete dyeing');
+//       }
+//     } catch (e) {
+//       throw Exception("Error deleting dyeing: $e");
+//     } finally {
+//       isSubmitting.value = false;
+//     }
+//   }
+// }
+
+class DyeingService extends BaseCrudService<Dyeing> {
+  DyeingService()
+      : super(
+          endpoint: 'dyeings',
+          fromJson: (json) => Dyeing.fromJson(json),
+          toJson: (item) => item.toJson(),
         );
-
-        if (response.statusCode == 201) {
-          final jsonResponse = jsonDecode(response.body);
-          await refetchItems();
-          notifyListeners();
-          return jsonResponse['message'] ?? 'Update successful';
-        } else {
-          final errorData = jsonDecode(response.body);
-          throw Exception(errorData['message'] ?? 'Failed to add dyeings');
-        }
-      }
-    } catch (e) {
-      throw Exception('Error adding dyeing: $e');
-    } finally {
-      isSubmitting.value = false;
-    }
-  }
-
-  @override
-  Future<String> updateItem(
-    String id,
-    Dyeing item,
-    ValueNotifier<bool> isSubmitting,
-  ) async {
-    try {
-      isSubmitting.value = true;
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      bool hasAttachments = item.attachments != null &&
-          item.attachments is List &&
-          (item.attachments as List).isNotEmpty;
-
-      if (hasAttachments) {
-        var uri = Uri.parse('$baseUrl/$id?_method=PATCH');
-        var request = http.MultipartRequest('POST', uri);
-        request.headers['Authorization'] = 'Bearer $token';
-
-        request.fields['wo_id'] = item.wo_id?.toString() ?? '';
-        request.fields['machine_id'] = item.machine_id?.toString() ?? '';
-        request.fields['unit_id'] = item.unit_id?.toString() ?? '';
-        request.fields['rework_reference_id'] =
-            item.rework_reference_id?.toString() ?? '';
-        request.fields['start_by_id'] = item.start_by_id?.toString() ?? '';
-        request.fields['end_by_id'] = item.end_by_id?.toString() ?? '';
-        request.fields['qty'] = item.qty ?? '';
-        request.fields['width'] = item.width ?? '';
-        request.fields['length'] = item.length ?? '';
-        request.fields['notes'] = item.notes ?? '';
-        request.fields['rework'] = (item.rework == true ? '1' : '0');
-        request.fields['status'] = item.status ?? '';
-        request.fields['start_time'] = item.start_time ?? '';
-        request.fields['end_time'] = item.end_time ?? '';
-
-        for (int i = 0; i < item.attachments.length; i++) {
-          var file = item.attachments[i];
-          if (file is File) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file.path,
-            ));
-          } else if (file is Map && file['path'] != null) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file['path'],
-              filename: file['name'] ?? 'file_$i',
-            ));
-          }
-        }
-
-        var response = await request.send();
-        var responseBody = await response.stream.bytesToString();
-        if (response.statusCode == 200) {
-          final jsonResponse = jsonDecode(responseBody);
-          await refetchItems();
-          notifyListeners();
-          return jsonResponse['message'] ?? 'Update successful';
-        } else {
-          var responseData = await response.stream.bytesToString();
-          throw Exception(
-              jsonDecode(responseData)['message'] ?? 'Failed to update dyeing');
-        }
-      } else {
-        final body = {
-          ...item.toJson(),
-          '_method': 'PATCH',
-        };
-
-        final response = await http.post(
-          Uri.parse('$baseUrl/$id'),
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode(body),
-        );
-
-        if (response.statusCode == 200) {
-          await refetchItems();
-          return jsonDecode(response.body)['message'];
-        } else {
-          final error = jsonDecode(response.body);
-          throw Exception(error['message'] ?? 'Failed to update item');
-        }
-        // final response = await http.patch(
-        //   Uri.parse('$baseUrl/$id'),
-        //   headers: {
-        //     'Authorization': 'Bearer $token',
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: jsonEncode(updatedDyeing.toJson()),
-        // );
-
-        // if (response.statusCode == 200) {
-        //   final jsonResponse = jsonDecode(response.body);
-        //   await refetchItems();
-        //   notifyListeners();
-        //   return jsonResponse['message'] ?? 'Update successful';
-        // } else {
-        //   final errorData = jsonDecode(response.body);
-        //   throw Exception(errorData['message'] ?? 'Failed to update dyeing');
-        // }
-      }
-    } catch (e) {
-      throw Exception("$e");
-    } finally {
-      isSubmitting.value = false;
-    }
-  }
-
-  Future<String> finishItem(String id, Dyeing finishedDyeing,
-      ValueNotifier<bool> isSubmitting) async {
-    try {
-      isSubmitting.value = true;
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      bool hasAttachments = finishedDyeing.attachments != null &&
-          finishedDyeing.attachments is List &&
-          (finishedDyeing.attachments as List).isNotEmpty;
-
-      if (hasAttachments) {
-        var uri = Uri.parse('$baseUrl/$id/complete?_method=PATCH');
-        var request = http.MultipartRequest('POST', uri);
-        request.headers['Authorization'] = 'Bearer $token';
-
-        request.fields['wo_id'] = finishedDyeing.wo_id?.toString() ?? '';
-        request.fields['machine_id'] =
-            finishedDyeing.machine_id?.toString() ?? '';
-        request.fields['unit_id'] = finishedDyeing.unit_id?.toString() ?? '';
-        request.fields['rework_reference_id'] =
-            finishedDyeing.rework_reference_id?.toString() ?? '';
-        request.fields['start_by_id'] =
-            finishedDyeing.start_by_id?.toString() ?? '';
-        request.fields['end_by_id'] =
-            finishedDyeing.end_by_id?.toString() ?? '';
-        request.fields['qty'] = finishedDyeing.qty ?? '';
-        request.fields['width'] = finishedDyeing.width ?? '';
-        request.fields['length'] = finishedDyeing.length ?? '';
-        request.fields['notes'] = finishedDyeing.notes ?? '';
-        request.fields['rework'] = (finishedDyeing.rework == true ? '1' : '0');
-        request.fields['status'] = finishedDyeing.status ?? '';
-        request.fields['start_time'] = finishedDyeing.start_time ?? '';
-        request.fields['end_time'] = finishedDyeing.end_time ?? '';
-
-        for (int i = 0; i < finishedDyeing.attachments.length; i++) {
-          var file = finishedDyeing.attachments[i];
-          if (file is File) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file.path,
-            ));
-          } else if (file is Map && file['path'] != null) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file['path'],
-              filename: file['name'] ?? 'file_$i',
-            ));
-          }
-        }
-
-        var response = await request.send();
-        var responseBody = await response.stream.bytesToString();
-        if (response.statusCode == 200) {
-          final jsonResponse = jsonDecode(responseBody);
-          await refetchItems();
-          notifyListeners();
-          return jsonResponse['message'] ?? 'Finish successful';
-        } else {
-          var responseData = await response.stream.bytesToString();
-          throw Exception(jsonDecode(responseData)['message'] ??
-              'Failed to add dyeing with attachments');
-        }
-      } else {
-        final body = {
-          ...finishedDyeing.toJson(),
-          '_method': 'PATCH',
-        };
-
-        final response = await http.post(
-          Uri.parse('$baseUrl/$id/complete'),
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode(body),
-        );
-
-        if (response.statusCode == 200) {
-          await refetchItems();
-          return jsonDecode(response.body)['message'];
-        } else {
-          final error = jsonDecode(response.body);
-          throw Exception(error['message'] ?? 'Failed to finish item');
-        }
-        // final response = await http.patch(
-        //   Uri.parse('$baseUrl/$id/complete'),
-        //   headers: {
-        //     'Authorization': 'Bearer $token',
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: jsonEncode(finishedDyeing.toJson()),
-        // );
-
-        // if (response.statusCode == 200) {
-        //   await refetchItems();
-        //   notifyListeners();
-        //   final responseData = jsonDecode(response.body);
-        //   return responseData['message'];
-        // } else {
-        //   final errorData = jsonDecode(response.body);
-        //   throw Exception(errorData['message'] ?? 'Failed to finish dyeing');
-        // }
-      }
-    } catch (e) {
-      throw Exception("$e");
-    } finally {
-      isSubmitting.value = false;
-    }
-  }
-
-  Future<String> reworkItem(
-      String id, Dyeing reworkDyeing, ValueNotifier<bool> isSubmitting) async {
-    try {
-      isSubmitting.value = true;
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      var uri = Uri.parse('$baseUrl/$id/rework');
-
-      bool hasAttachments = reworkDyeing.attachments != null &&
-          reworkDyeing.attachments is List &&
-          (reworkDyeing.attachments as List).isNotEmpty;
-
-      if (hasAttachments) {
-        var request = http.MultipartRequest('POST', uri);
-        request.headers['Authorization'] = 'Bearer $token';
-
-        request.fields['wo_id'] = reworkDyeing.wo_id?.toString() ?? '';
-        request.fields['machine_id'] =
-            reworkDyeing.machine_id?.toString() ?? '';
-        request.fields['unit_id'] = reworkDyeing.unit_id?.toString() ?? '';
-        request.fields['rework_reference_id'] =
-            reworkDyeing.rework_reference_id?.toString() ?? '';
-        request.fields['start_by_id'] =
-            reworkDyeing.start_by_id?.toString() ?? '';
-        request.fields['end_by_id'] = reworkDyeing.end_by_id?.toString() ?? '';
-        request.fields['qty'] = reworkDyeing.qty ?? '';
-        request.fields['width'] = reworkDyeing.width ?? '';
-        request.fields['length'] = reworkDyeing.length ?? '';
-        request.fields['notes'] = reworkDyeing.notes ?? '';
-        request.fields['rework'] = (reworkDyeing.rework == true ? '1' : '0');
-        request.fields['status'] = reworkDyeing.status ?? '';
-        request.fields['start_time'] = reworkDyeing.start_time ?? '';
-        request.fields['end_time'] = reworkDyeing.end_time ?? '';
-
-        for (int i = 0; i < reworkDyeing.attachments.length; i++) {
-          var file = reworkDyeing.attachments[i];
-          if (file is File) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file.path,
-            ));
-          } else if (file is Map && file['path'] != null) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file['path'],
-              filename: file['name'] ?? 'file_$i',
-            ));
-          }
-        }
-
-        var response = await request.send();
-        var responseBody = await response.stream.bytesToString();
-        if (response.statusCode == 201) {
-          final jsonResponse = jsonDecode(responseBody);
-          await refetchItems();
-          notifyListeners();
-          return jsonResponse['message'] ?? 'Rework successful';
-        } else {
-          var responseData = await response.stream.bytesToString();
-          throw Exception(jsonDecode(responseData)['message'] ??
-              'Failed to add dyeing with attachments');
-        }
-      } else {
-        final body = {
-          ...reworkDyeing.toJson(),
-        };
-
-        final response = await http.post(
-          Uri.parse('$baseUrl/$id/rework'),
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode(body),
-        );
-
-        if (response.statusCode == 201) {
-          await refetchItems();
-          return jsonDecode(response.body)['message'];
-        } else {
-          final error = jsonDecode(response.body);
-          throw Exception(error['message'] ?? 'Failed to rework item');
-        }
-        // final response = await http.post(
-        //   Uri.parse('$baseUrl/$id/rework'),
-        //   headers: {
-        //     'Authorization': 'Bearer $token',
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: jsonEncode(reworkDyeing.toJson()),
-        // );
-
-        // if (response.statusCode == 201) {
-        //   await refetchItems();
-        //   notifyListeners();
-        //   final responseData = jsonDecode(response.body);
-        //   return responseData['message'] ?? 'Rework created';
-        // } else {
-        //   final errorData = jsonDecode(response.body);
-        //   throw Exception(errorData['message'] ?? 'Failed to rework dyeing');
-        // }
-      }
-    } catch (e) {
-      throw Exception("Error rework dyeing: $e");
-    } finally {
-      isSubmitting.value = false;
-    }
-  }
-
-  @override
-  Future<String> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {
-    try {
-      isSubmitting.value = true;
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      final response = await http.delete(
-        Uri.parse('$baseUrl/$id'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        await refetchItems();
-        notifyListeners();
-        final responseData = jsonDecode(response.body);
-        return responseData['message'];
-      } else {
-        final errorData = jsonDecode(response.body);
-        throw Exception(errorData['message'] ?? 'Failed to delete dyeing');
-      }
-    } catch (e) {
-      throw Exception("Error deleting dyeing: $e");
-    } finally {
-      isSubmitting.value = false;
-    }
-  }
 }

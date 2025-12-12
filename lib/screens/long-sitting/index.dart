@@ -40,6 +40,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
   bool _canDelete = false;
   bool _canUpdate = false;
   bool _isLoading = false;
+  bool _isLoadMore = false;
   String _search = '';
   Timer? _debounce;
   int page = 0;
@@ -131,7 +132,8 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
   }
 
   Future<void> _loadMore() async {
-    if (_isLoading) return;
+    _isLoadMore = true;
+
     _isLoading = true;
 
     if (params['page'] == '0') {
@@ -142,31 +144,34 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
       });
     }
 
-    final currentPage = int.parse(params['page']!);
+    String newPage = (int.parse(params['page']!) + 1).toString();
+    setState(() {
+      params['page'] = newPage;
+    });
 
-    try {
-      List<LongSitting> loadData =
-          await Provider.of<LongSittingService>(context, listen: false)
-              .getDataList(params);
+    await Provider.of<LongSittingService>(context, listen: false)
+        .getDataList(params);
 
-      if (loadData.isEmpty) {
-        setState(() {
-          _firstLoading = false;
-          _hasMore = false;
-        });
-      } else {
-        setState(() {
-          _dataList.addAll(loadData);
-          _firstLoading = false;
-          params['page'] = (currentPage + 1).toString();
-          if (loadData.length < 20) {
-            _hasMore = false;
-          }
-        });
-      }
-    } finally {
-      _isLoading = false;
+    // ignore: use_build_context_synchronously
+    List<dynamic> loadData =
+        // ignore: use_build_context_synchronously
+        Provider.of<LongSittingService>(context, listen: false).items;
+
+    if (loadData.isEmpty) {
+      setState(() {
+        _firstLoading = false;
+        _isLoadMore = false;
+        _hasMore = false;
+      });
+    } else {
+      setState(() {
+        _dataList.addAll(loadData);
+        _firstLoading = false;
+        _isLoadMore = false;
+      });
     }
+
+    _isLoading = false;
   }
 
   _refetch() {
@@ -222,10 +227,12 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
             Expanded(
                 child: ProcessList(
               fetchData: (params) async {
-                return await Provider.of<LongSittingService>(context,
-                        listen: false)
-                    .getDataList(params);
+                final service =
+                    Provider.of<LongSittingService>(context, listen: false);
+                await service.getDataList(params);
+                return service.items;
               },
+              isLoadMore: _isLoadMore,
               service: LongSittingService(),
               searchQuery: _search,
               canCreate: _canCreate,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/helpers/auth/auth_check.dart';
 import 'package:textile_tracking/models/dashboard/machine.dart';
+import 'package:textile_tracking/models/dashboard/work_order_summary.dart';
 import 'package:textile_tracking/models/master/unit.dart';
 import 'package:textile_tracking/models/dashboard/work_order_chart.dart';
 import 'package:textile_tracking/models/dashboard/work_order_process.dart';
@@ -29,7 +30,7 @@ import 'package:textile_tracking/screens/auth/eula.dart';
 import 'package:textile_tracking/screens/auth/privacy_policy.dart';
 import 'package:textile_tracking/screens/auth/terms_conditions.dart';
 import 'package:textile_tracking/screens/cross-cutting/index.dart';
-import 'package:textile_tracking/screens/dyeing/index.dart';
+import 'package:textile_tracking/screens/dyeing/list/index.dart';
 import 'package:textile_tracking/screens/embroidery/index.dart';
 import 'package:textile_tracking/screens/home/index.dart';
 import 'package:textile_tracking/screens/long-hemming/index.dart';
@@ -70,6 +71,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => WorkOrderStatsService()),
     ChangeNotifierProvider(create: (_) => WorkOrderChartService()),
     ChangeNotifierProvider(create: (_) => WorkOrderProcessService()),
+    ChangeNotifierProvider(create: (_) => WorkOrderSummaryService()),
     ChangeNotifierProvider(create: (_) => MachineService()),
   ], child: MyApp()));
 }

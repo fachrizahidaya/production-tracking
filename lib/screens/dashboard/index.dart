@@ -12,6 +12,7 @@ import 'package:textile_tracking/components/home/dashboard/work-order/work_order
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_chart.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_pie.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_stats.dart';
+import 'package:textile_tracking/components/home/dashboard/work-order/work_order_summary.dart';
 import 'package:textile_tracking/components/master/layout/card/item_process.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
@@ -20,6 +21,7 @@ import 'package:textile_tracking/models/dashboard/machine.dart';
 import 'package:textile_tracking/models/dashboard/work_order_chart.dart';
 import 'package:textile_tracking/models/dashboard/work_order_process.dart';
 import 'package:textile_tracking/models/dashboard/work_order_stats.dart';
+import 'package:textile_tracking/models/dashboard/work_order_summary.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -33,6 +35,7 @@ class _DashboardState extends State<Dashboard> {
   List<dynamic> chartList = [];
   List<dynamic> pieList = [];
   List<dynamic> processList = [];
+  List<dynamic> summaryList = [];
   Map<String, dynamic> machineList = {};
 
   final TextEditingController dariTanggalInput = TextEditingController();
@@ -42,6 +45,8 @@ class _DashboardState extends State<Dashboard> {
   String sampaiTanggal = '';
   String dariTanggalProses = '';
   String sampaiTanggalProses = '';
+  String dariTanggalSummary = '';
+  String sampaiTanggalSummary = '';
 
   bool isLoading = false;
   Timer? _debounce;
@@ -51,6 +56,7 @@ class _DashboardState extends State<Dashboard> {
   bool _firstLoading = true;
   bool isChartLoading = false;
   bool isMachineLoading = false;
+  bool isSummaryLoading = false;
   String _search = '';
   final List<dynamic> _dataList = [];
 
@@ -65,6 +71,8 @@ class _DashboardState extends State<Dashboard> {
     sampaiTanggal = DateFormat('yyyy-MM-dd').format(now);
     dariTanggalProses = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
     sampaiTanggalProses = DateFormat('yyyy-MM-dd').format(now);
+    dariTanggalSummary = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
+    sampaiTanggalSummary = DateFormat('yyyy-MM-dd').format(now);
 
     dariTanggalInput.text = dariTanggal;
     sampaiTanggalInput.text = sampaiTanggal;
@@ -107,6 +115,8 @@ class _DashboardState extends State<Dashboard> {
           toDate: sampaiTanggal,
         ),
         _handleFetchMachine(),
+        _handleFetchSummary(
+            fromDate: dariTanggalSummary, toDate: sampaiTanggalSummary),
         _loadMore(),
       ]);
     } catch (e) {
@@ -166,6 +176,28 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
+  Future<void> _handleFetchSummary({
+    String? fromDate,
+    String? toDate,
+    String? status,
+  }) async {
+    setState(() => isSummaryLoading = true);
+
+    final Map<String, String> params = {
+      'start_date': fromDate ?? dariTanggalSummary,
+      'end_date': toDate ?? sampaiTanggalSummary,
+      if (status != null) 'status': status,
+    };
+
+    await Provider.of<WorkOrderSummaryService>(context, listen: false)
+        .getDataList(params);
+
+    setState(() {
+      summaryList =
+          Provider.of<WorkOrderSummaryService>(context, listen: false).dataList;
+    });
+  }
+
   void _handleFilter(String type, String value) {
     setState(() {
       if (type == 'dari_tanggal') dariTanggal = value;
@@ -175,6 +207,19 @@ class _DashboardState extends State<Dashboard> {
     _handleFetchCharts(
       fromDate: dariTanggal,
       toDate: sampaiTanggal,
+    );
+  }
+
+  void _handleSummaryFilter(String type, String value, String? status) {
+    setState(() {
+      if (type == 'dari_tanggal') dariTanggalSummary = value;
+      if (type == 'sampai_tanggal') sampaiTanggalSummary = value;
+    });
+
+    _handleFetchSummary(
+      fromDate: dariTanggalSummary,
+      toDate: sampaiTanggalSummary,
+      status: status,
     );
   }
 
@@ -199,6 +244,7 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _pickDate({
     required TextEditingController controller,
     required String type,
+    handleProcess,
   }) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -226,7 +272,7 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         controller.text = formattedDate;
       });
-      _handleFilter(type, formattedDate);
+      handleProcess(type, formattedDate);
     }
   }
 
@@ -318,18 +364,21 @@ class _DashboardState extends State<Dashboard> {
           sampaiTanggal: sampaiTanggalInput,
           onHandleFilter: _handleFilter,
           pickDate: _pickDate,
+          handleProcess: _handleFilter,
         ),
         handleRefetch: _handleFetchCharts,
         isFetching: isChartLoading,
       ),
     );
 
-    dashboardSections.add(
-      WorkOrderPie(
-        data: pieList,
-        process: chartList,
-      ),
-    );
+    dashboardSections.add(WorkOrderSummary(
+      data: summaryList,
+      dariTanggal: dariTanggalSummary,
+      sampaiTanggal: sampaiTanggalSummary,
+      handleRefetch: _handleFetchSummary,
+      isFetching: isSummaryLoading,
+      handleProcess: _handleSummaryFilter,
+    ));
 
     dashboardSections.add(ActiveMachine(
       data: machineList,
@@ -338,6 +387,13 @@ class _DashboardState extends State<Dashboard> {
       handleRefetch: _handleFetchMachine,
       isFetching: isMachineLoading,
     ));
+
+    dashboardSections.add(
+      WorkOrderPie(
+        data: pieList,
+        process: chartList,
+      ),
+    );
 
     dashboardSections.add(
       WorkOrderProcessScreen(

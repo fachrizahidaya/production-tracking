@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:textile_tracking/components/master/form/finish/list_form.dart';
@@ -70,6 +72,7 @@ class _CreateFormState extends State<CreateForm> {
   late String _initialLength;
   late String _initialNotes;
   late String _initialWidth;
+  late List<Map<String, dynamic>> allAttachments;
 
   @override
   void initState() {
@@ -85,6 +88,17 @@ class _CreateFormState extends State<CreateForm> {
     widget.note.text = _initialNotes;
     widget.length.text = _initialLength;
     widget.width.text = _initialWidth;
+
+    final existing =
+        (widget.data?['attachments'] ?? []).cast<Map<String, dynamic>>();
+    final newOnes =
+        (widget.form['attachments'] ?? []).cast<Map<String, dynamic>>();
+
+    allAttachments = [
+      ...existing,
+      ...newOnes,
+      {'is_add_button': true},
+    ];
   }
 
   @override
@@ -104,6 +118,17 @@ class _CreateFormState extends State<CreateForm> {
         widget.length.text = _initialLength;
         widget.width.text = _initialWidth;
         widget.note.text = _initialNotes;
+
+        final existing =
+            (widget.data?['attachments'] ?? []).cast<Map<String, dynamic>>();
+        final newOnes =
+            (widget.form['attachments'] ?? []).cast<Map<String, dynamic>>();
+
+        allAttachments = [
+          ...existing,
+          ...newOnes,
+          {'is_add_button': true},
+        ];
 
         _isChanged = false;
       });
@@ -132,25 +157,26 @@ class _CreateFormState extends State<CreateForm> {
 
   Future<void> _pickAttachments() async {
     try {
-      final ImagePicker picker = ImagePicker();
+      final picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
       if (image != null) {
         setState(() {
-          final currentFormAttachments =
-              List<Map<String, dynamic>>.from(widget.form['attachments'] ?? []);
+          allAttachments.removeWhere((e) => e['is_add_button'] == true);
 
           final newFile = {
             'name': image.name,
             'path': image.path,
             'extension': image.path.split('.').last,
-            'isFromCamera': true,
+            'isNew': true,
           };
 
-          widget.form['attachments'] = [
-            ...currentFormAttachments,
-            newFile,
-          ];
+          allAttachments.add(newFile);
+
+          allAttachments.add({'is_add_button': true});
+
+          widget.form['attachments'] =
+              allAttachments.where((e) => e['is_add_button'] != true).toList();
         });
       }
     } catch (e) {
@@ -160,50 +186,75 @@ class _CreateFormState extends State<CreateForm> {
         );
       }
     }
-    // try {
-    //   FilePickerResult? result = await FilePicker.platform.pickFiles(
-    //     type: FileType.custom,
-    //     allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
-    //     allowMultiple: true,
-    //   );
+  }
 
-    //   if (result != null && result.files.isNotEmpty) {
-    //     setState(() {
-    //       final currentFormAttachments =
-    //           List<Map<String, dynamic>>.from(widget.form['attachments'] ?? []);
+  void showImageDialog(BuildContext context, bool isNew, String filePath) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.black,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          insetPadding: const EdgeInsets.all(20),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.6,
+            padding: const EdgeInsets.all(10),
+            child: InteractiveViewer(
+              minScale: 1,
+              maxScale: 4,
+              child: isNew
+                  ? Image.file(
+                      File(filePath),
+                      fit: BoxFit.contain,
+                    )
+                  : Image.network(
+                      filePath,
+                      fit: BoxFit.contain,
+                    ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
-    //       final newFiles = result.files.map((file) {
-    //         return {
-    //           'name': file.name,
-    //           'path': file.path,
-    //           'extension': file.extension,
-    //         };
-    //       }).toList();
+  Future<bool?> _handleDeleteAttachment(Map item) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Hapus Lampiran'),
+        content: const Text('Apakah Anda yakin ingin menghapus lampiran ini?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
 
-    //       widget.form['attachments'] = [
-    //         ...currentFormAttachments,
-    //         ...newFiles,
-    //       ];
-    //     });
-    //   }
-    // } catch (e) {
-    //   // ignore: use_build_context_synchronously
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text("Error picking file: $e")),
-    //   );
-    // }
+    if (confirm == true) {
+      setState(() {
+        allAttachments.remove(item);
+
+        widget.form['attachments'] =
+            allAttachments.where((e) => e['is_add_button'] != true).toList();
+      });
+
+      return true;
+    }
+
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
-    final existing = (widget.data?['attachments'] ?? []) as List<dynamic>;
-    final newOnes = (widget.form['attachments'] ?? []) as List<dynamic>;
-    final allAttachments = [
-      ...existing.cast<Map<String, dynamic>>(),
-      ...newOnes.cast<Map<String, dynamic>>(),
-      {'is_add_button': true},
-    ];
-
     if (widget.isLoading) {
       return Center(
         child: CircularProgressIndicator(),
@@ -244,6 +295,8 @@ class _CreateFormState extends State<CreateForm> {
       qty: widget.qty,
       withQtyAndWeight: widget.withQtyAndWeight,
       qtyItem: widget.qtyItem,
+      showImageDialog: showImageDialog,
+      handleDeleteAttachment: _handleDeleteAttachment,
     );
   }
 }

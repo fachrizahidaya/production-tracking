@@ -19,7 +19,7 @@ class CreateLongSittingManual extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CreateProcessManual(
-      title: 'Mulai Long Sitting',
+      title: 'Mulai Long Slitting',
       id: id,
       data: data,
       form: form,

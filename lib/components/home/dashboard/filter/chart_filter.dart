@@ -8,13 +8,15 @@ class ChartFilter<T> extends StatefulWidget {
   final sampaiTanggal;
   final onHandleFilter;
   final pickDate;
+  final handleProcess;
 
   const ChartFilter(
       {super.key,
       this.dariTanggal,
       this.sampaiTanggal,
       this.onHandleFilter,
-      this.pickDate});
+      this.pickDate,
+      this.handleProcess});
 
   @override
   State<ChartFilter<T>> createState() => _ChartFilterState<T>();
@@ -40,14 +42,13 @@ class _ChartFilterState<T> extends State<ChartFilter<T>> {
                     controller: widget.dariTanggal,
                     style: const TextStyle(fontSize: 14),
                     decoration: CustomTheme().inputDateDecoration(
-                      hintTextString: 'Pilih tanggal',
-                    ),
+                        hintTextString: 'Pilih tanggal', hasValue: false),
                     keyboardType: TextInputType.datetime,
                     readOnly: true,
                     onTap: () => widget.pickDate(
-                      controller: widget.dariTanggal,
-                      type: 'dari_tanggal',
-                    ),
+                        controller: widget.dariTanggal,
+                        type: 'dari_tanggal',
+                        widget.handleProcess),
                   ),
                 ),
               ),
@@ -59,14 +60,13 @@ class _ChartFilterState<T> extends State<ChartFilter<T>> {
                     controller: widget.sampaiTanggal,
                     style: const TextStyle(fontSize: 14),
                     decoration: CustomTheme().inputDateDecoration(
-                      hintTextString: 'Pilih tanggal',
-                    ),
+                        hintTextString: 'Pilih tanggal', hasValue: false),
                     keyboardType: TextInputType.datetime,
                     readOnly: true,
                     onTap: () => widget.pickDate(
-                      controller: widget.sampaiTanggal,
-                      type: 'sampai_tanggal',
-                    ),
+                        controller: widget.sampaiTanggal,
+                        type: 'sampai_tanggal',
+                        widget.handleProcess),
                   ),
                 ),
               ),

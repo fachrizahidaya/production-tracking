@@ -111,8 +111,8 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                     controller: dariTanggalInput,
                     style: const TextStyle(fontSize: 14),
                     decoration: CustomTheme().inputDateDecoration(
-                      hintTextString: 'Pilih tanggal',
-                    ),
+                        hintTextString: 'Pilih tanggal',
+                        hasValue: dariTanggalInput.text.isNotEmpty),
                     keyboardType: TextInputType.datetime,
                     readOnly: true,
                     onTap: () async {
@@ -155,8 +155,8 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                     controller: sampaiTanggalInput,
                     style: const TextStyle(fontSize: 14),
                     decoration: CustomTheme().inputDateDecoration(
-                      hintTextString: 'Pilih tanggal',
-                    ),
+                        hintTextString: 'Pilih tanggal',
+                        hasValue: dariTanggalInput.text.isNotEmpty),
                     keyboardType: TextInputType.datetime,
                     readOnly: true,
                     onTap: () async {

@@ -24,6 +24,7 @@ class MainList<T> extends StatefulWidget {
   final isFiltered;
   final canRead;
   final showActions;
+  final isLoadMore;
 
   const MainList(
       {super.key,
@@ -44,7 +45,8 @@ class MainList<T> extends StatefulWidget {
       this.isFiltered,
       this.canRead,
       this.canDelete,
-      this.showActions});
+      this.showActions,
+      this.isLoadMore});
 
   @override
   State<MainList<T>> createState() => _MainListState<T>();
@@ -108,19 +110,17 @@ class _MainListState<T> extends State<MainList<T>> {
                         if (!isPortrait)
                           Expanded(
                               flex: 1,
-                              child: Expanded(
-                                  flex: 1,
-                                  child: Padding(
-                                    padding: PaddingColumn.screen,
-                                    child: CustomFloatingButton(
-                                      onPressed: widget.showActions,
-                                      icon: Icon(
-                                        Icons.add,
-                                        color: Colors.white,
-                                        size: 256,
-                                      ),
-                                    ),
-                                  )))
+                              child: Padding(
+                                padding: PaddingColumn.screen,
+                                child: CustomFloatingButton(
+                                  onPressed: widget.showActions,
+                                  icon: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 256,
+                                  ),
+                                ),
+                              ))
                       ],
                     )
                   : RefreshIndicator(
@@ -176,22 +176,22 @@ class _MainListState<T> extends State<MainList<T>> {
                                       flex: 2,
                                       child: ListView.builder(
                                         controller: _scrollController,
+                                        shrinkWrap: true,
                                         physics:
                                             AlwaysScrollableScrollPhysics(),
                                         padding: EdgeInsets.all(8),
-                                        itemCount: widget.dataList.length +
-                                            (widget.hasMore ? 1 : 0),
+                                        itemCount: widget.hasMore
+                                            ? widget.dataList.length + 1
+                                            : widget.dataList.length,
                                         itemBuilder: (context, index) {
-                                          if (index == widget.dataList.length) {
-                                            return widget.hasMore
-                                                ? Padding(
-                                                    padding: EdgeInsets.all(16),
-                                                    child: Center(
-                                                      child:
-                                                          CircularProgressIndicator(),
-                                                    ),
-                                                  )
-                                                : SizedBox.shrink();
+                                          if (index >= widget.dataList.length) {
+                                            if (!widget.isLoadMore) {
+                                              Future.delayed(Duration.zero, () {
+                                                widget.handleLoadMore();
+                                              });
+                                            }
+
+                                            return const SizedBox.shrink();
                                           }
 
                                           final item = widget.dataList[index];

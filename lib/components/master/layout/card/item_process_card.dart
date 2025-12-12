@@ -71,9 +71,6 @@ class ItemProcessCard extends StatelessWidget {
                     ],
                   ),
                   Divider(),
-                  const SizedBox(
-                    height: 8,
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -104,7 +101,7 @@ class ItemProcessCard extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (item.machine['name'] != null)
+                          if (item['machine']['name'] != null)
                             Row(
                               children: [
                                 Icon(
@@ -112,13 +109,13 @@ class ItemProcessCard extends StatelessWidget {
                                   size: 14,
                                 ),
                                 Text(
-                                  '${item.machine['name']}',
+                                  '${item['machine']['name']}',
                                 ),
                               ].separatedBy(SizedBox(
                                 width: 4,
                               )),
                             ),
-                          if (item.maklon != null)
+                          if (item['maklon'] != null)
                             Row(
                               children: [
                                 Icon(
@@ -126,14 +123,14 @@ class ItemProcessCard extends StatelessWidget {
                                   size: 14,
                                 ),
                                 Text(
-                                  '${item.maklon_name}',
+                                  '${item['maklon_name']}',
                                 ),
                               ].separatedBy(SizedBox(
                                 width: 4,
                               )),
                             ),
-                          if (item.maklon == null &&
-                              item.machine['name'] == null)
+                          if (item['maklon'] == null &&
+                              item['machine']['name'] == null)
                             Row(
                               children: [],
                             ),
@@ -177,18 +174,15 @@ class ItemProcessCard extends StatelessWidget {
                       ),
                       CustomBadge(
                           withStatus: true,
-                          status: item.status,
-                          title: item.status!,
+                          status: item['status'],
+                          title: item['status']!,
                           withDifferentColor: true,
-                          color: item.status == 'Diproses'
+                          color: item['status'] == 'Diproses'
                               ? Color(0xFFfff3c6)
                               : Color(0xffd1fae4)),
                     ],
                   ),
                   Divider(),
-                  const SizedBox(
-                    height: 8,
-                  ),
                   Column(
                     children: [
                       Row(
@@ -196,7 +190,7 @@ class ItemProcessCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            '${item.work_orders['wo_no']}',
+                            '${item['work_orders']['wo_no']}',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
@@ -214,7 +208,7 @@ class ItemProcessCard extends StatelessWidget {
                                 size: 14,
                               ),
                               Text(
-                                '${item.machine['name']}',
+                                '${item['machine']['name']}',
                               ),
                             ].separatedBy(SizedBox(
                               width: 4,

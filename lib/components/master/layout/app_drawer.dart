@@ -85,23 +85,22 @@ class _AppDrawerState extends State<AppDrawer> {
 
                       return ListTile(
                         leading: Icon(
-                          item.title == 'Pencelupan (Dyeing)'
+                          item.title == 'Dyeing'
                               ? Icons.invert_colors_on_outlined
-                              : item.title == 'Press Tumbler'
-                                  ? Icons.content_copy_rounded
+                              : item.title == 'Press'
+                                  ? Icons.dry_outlined
                                   : item.title == 'Stenter'
                                       ? Icons.air
                                       : item.title == 'Long Sitting'
-                                          ? Icons.content_paste_outlined
+                                          ? Icons.cut_outlined
                                           : item.title == 'Long Hemming'
-                                              ? Icons.cut
+                                              ? Icons.link_outlined
                                               : item.title == 'Cross Cutting'
-                                                  ? Icons.cut
-                                                  : item.title ==
-                                                          'Jahit (Sewing)'
+                                                  ? Icons.cut_outlined
+                                                  : item.title == 'Sewing'
                                                       ? Icons.link_outlined
                                                       : item.title ==
-                                                              'Bordir (Embroidery)'
+                                                              'Embroidery'
                                                           ? Icons.link_outlined
                                                           : item.title ==
                                                                   'Printing'
@@ -119,8 +118,9 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                               'Packing'
                                                                           ? Icons
                                                                               .stacked_bar_chart_outlined
-                                                                          : Icons
-                                                                              .menu,
+                                                                          : item.title == 'Tumbler'
+                                                                              ? Icons.dry_cleaning_outlined
+                                                                              : Icons.menu,
                         ),
                         title: Text(item.title),
                         onTap: () {

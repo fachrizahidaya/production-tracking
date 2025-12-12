@@ -21,7 +21,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
   bool _hasMoreData = true;
   int _currentPage = 1;
   final int _itemsPerPage = 20;
-  List<T> items = [];
+  List<dynamic> items = [];
   Map<String, dynamic> _dataView = {};
 
   bool get isLoading => _isLoading;
@@ -110,23 +110,30 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
-  Future<List<T>> getDataList(Map<String, String> params) async {
+  Future<void> getDataList(Map<String, String> params) async {
     final url =
         Uri.parse('$baseUrl/$endpoint').replace(queryParameters: params);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('access_token');
 
     try {
+      items.clear();
+      notifyListeners();
+
       final response = await http.get(url, headers: {
         'Authorization': 'Bearer $token',
       });
 
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        final data = jsonResponse['data'] ?? [];
-        return data.map<T>((e) => fromJson(e)).toList();
-      } else {
-        throw Exception('Failed to fetch list from $endpoint');
+      final responseData = jsonDecode(response.body);
+      switch (response.statusCode) {
+        case 200:
+          if (responseData['data'] != null) {
+            items = responseData['data'];
+          }
+          notifyListeners();
+          break;
+        default:
+          throw responseData['message'];
       }
     } catch (e) {
       rethrow;

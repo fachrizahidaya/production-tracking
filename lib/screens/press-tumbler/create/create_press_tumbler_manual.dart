@@ -19,7 +19,7 @@ class CreatePressTumblerManual extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CreateProcessManual(
-      title: 'Mulai Press Tumbler',
+      title: 'Mulai Press',
       id: id,
       data: data,
       form: form,

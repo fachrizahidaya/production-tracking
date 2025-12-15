@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
+import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/layout/card/item_process_card.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
@@ -17,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/screens/dyeing/%5Bdyeing_id%5D.dart';
 import 'package:textile_tracking/screens/dyeing/create/create_dyeing.dart';
 import 'package:textile_tracking/screens/dyeing/finish/finish_dyeing.dart';
+import 'package:textile_tracking/screens/dyeing/rework/rework_dyeing.dart';
 
 class DyeingScreen extends StatefulWidget {
   const DyeingScreen({super.key});
@@ -228,7 +230,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
                 titleKey: 'dyeing_no',
                 subtitleKey: 'work_orders',
                 subtitleField: 'wo_no',
-                isRework: (item) => item['rework'] == false,
+                isRework: (item) => item['rework'] == true,
                 getStartTime: (item) => formatDateSafe(item['start_time']),
                 getEndTime: (item) => formatDateSafe(item['end_time']),
                 getStartBy: (item) => item['start_by']?['name'] ?? '',
@@ -273,52 +275,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
                 dariTanggal: dariTanggal,
                 sampaiTanggal: sampaiTanggal,
               ),
-              showActions: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: Icon(Icons.add,
-                                  color: CustomTheme().buttonColor('primary')),
-                              title: const Text("Mulai Dyeing"),
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const CreateDyeing(),
-                                  ),
-                                );
-                              },
-                            ),
-                            ListTile(
-                              leading: Icon(Icons.check_circle,
-                                  color: CustomTheme().buttonColor('warning')),
-                              title: const Text("Selesai Dyeing"),
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const FinishDyeing(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
               firstLoading: _firstLoading,
               isFiltered: _isFiltered,
               hasMore: _hasMore,
@@ -334,45 +290,45 @@ class _DyeingScreenState extends State<DyeingScreen> {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ListTile(
-                            leading: Icon(Icons.add,
-                                color: CustomTheme().buttonColor('primary')),
-                            title: const Text("Mulai Dyeing"),
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const CreateDyeing(),
-                                ),
-                              );
-                            },
+                  final actions = [
+                    DialogActionItem(
+                      icon: Icons.add,
+                      iconColor: CustomTheme().buttonColor('primary'),
+                      title: 'Mulai Dyeing',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const CreateDyeing(),
                           ),
-                          ListTile(
-                            leading: Icon(Icons.check_circle,
-                                color: CustomTheme().buttonColor('warning')),
-                            title: const Text("Selesai Dyeing"),
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const FinishDyeing(),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  );
+                    DialogActionItem(
+                      icon: Icons.check_circle,
+                      iconColor: CustomTheme().buttonColor('warning'),
+                      title: 'Selesai Dyeing',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const FinishDyeing(),
+                          ),
+                        );
+                      },
+                    ),
+                    DialogActionItem(
+                      icon: Icons.check_circle,
+                      iconColor: CustomTheme().buttonColor('danger'),
+                      title: 'Rework Dyeing',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ReworkDyeing(),
+                          ),
+                        );
+                      },
+                    ),
+                  ];
+                  return ActionDialog(actions: actions);
                 },
               );
             },

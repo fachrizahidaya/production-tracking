@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
+import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
@@ -35,8 +36,8 @@ class _StenterScreenState extends State<StenterScreen> {
   bool _canRead = false;
   bool _canCreate = false;
   bool _canDelete = false;
-  bool _isLoadMore = false;
   bool _canUpdate = false;
+  bool _isLoadMore = false;
 
   final List<dynamic> _dataList = [];
   String _search = '';
@@ -193,7 +194,7 @@ class _StenterScreenState extends State<StenterScreen> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
+        backgroundColor: Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: 'Stenter',
           onReturn: () {
@@ -273,52 +274,6 @@ class _StenterScreenState extends State<StenterScreen> {
                 dariTanggal: dariTanggal,
                 sampaiTanggal: sampaiTanggal,
               ),
-              showActions: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: Icon(Icons.add,
-                                  color: CustomTheme().buttonColor('primary')),
-                              title: const Text("Mulai Stenter"),
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const CreateStenter(),
-                                  ),
-                                );
-                              },
-                            ),
-                            ListTile(
-                              leading: Icon(Icons.check_circle,
-                                  color: CustomTheme().buttonColor('warning')),
-                              title: const Text("Selesai Stenter"),
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const FinishStenter(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
               firstLoading: _firstLoading,
               isFiltered: _isFiltered,
               hasMore: _hasMore,
@@ -334,52 +289,39 @@ class _StenterScreenState extends State<StenterScreen> {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ListTile(
-                            leading: Icon(Icons.add,
-                                color: CustomTheme().buttonColor('primary')),
-                            title: const Text("Mulai Stenter"),
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const CreateStenter(),
-                                ),
-                              );
-                            },
+                  final actions = [
+                    DialogActionItem(
+                      icon: Icons.add,
+                      iconColor: CustomTheme().buttonColor('primary'),
+                      title: 'Mulai Stenter',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const CreateStenter(),
                           ),
-                          ListTile(
-                            leading: Icon(Icons.check_circle,
-                                color: CustomTheme().buttonColor('warning')),
-                            title: const Text("Selesai Stenter"),
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const FinishStenter(),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  );
+                    DialogActionItem(
+                      icon: Icons.check_circle,
+                      iconColor: CustomTheme().buttonColor('warning'),
+                      title: 'Selesai Stenter',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const FinishStenter(),
+                          ),
+                        );
+                      },
+                    ),
+                  ];
+                  return ActionDialog(actions: actions);
                 },
               );
             },
-            icon: const Icon(
+            icon: Icon(
               Icons.add,
               color: Colors.white,
-              size: 128,
             )),
       ),
     );

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:textile_tracking/models/process/dyeing.dart';
 
 abstract class BaseCrudService<T> extends ChangeNotifier {
   final String endpoint;
@@ -244,24 +245,6 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
           throw Exception(error['message'] ?? 'Failed to update item');
         }
       }
-
-      // final response = await http.patch(
-      //   Uri.parse('$baseUrl/$endpoint/$id'),
-      //   headers: {
-      //     'Authorization': 'Bearer $token',
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: jsonEncode(toJson(updatedItem)),
-      // );
-
-      // if (response.statusCode == 200) {
-      //   final res = jsonDecode(response.body);
-      //   await refetchItems();
-      //   return res['message'] ?? 'Updated successfully';
-      // } else {
-      //   final error = jsonDecode(response.body);
-      //   throw Exception(error['message'] ?? 'Failed to update item');
-      // }
     } catch (e) {
       throw Exception('Error updating $endpoint: $e');
     } finally {
@@ -348,6 +331,99 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       }
     } catch (e) {
       throw Exception('Error finishing $endpoint: $e');
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
+  Future<String> reworkItem(
+      String id, Dyeing reworkedItem, ValueNotifier<bool> isSubmitting) async {
+    try {
+      isSubmitting.value = true;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      var uri = Uri.parse('$baseUrl/$endpoint/$id/rework');
+
+      bool hasAttachments = reworkedItem.attachments != null &&
+          reworkedItem.attachments is List &&
+          (reworkedItem.attachments as List).isNotEmpty;
+
+      if (hasAttachments) {
+        var request = http.MultipartRequest('POST', uri);
+        request.headers['Authorization'] = 'Bearer $token';
+
+        request.fields['wo_id'] = reworkedItem.wo_id?.toString() ?? '';
+        request.fields['machine_id'] =
+            reworkedItem.machine_id?.toString() ?? '';
+        request.fields['unit_id'] = reworkedItem.unit_id?.toString() ?? '';
+        request.fields['rework_reference_id'] =
+            reworkedItem.rework_reference_id?.toString() ?? '';
+        request.fields['start_by_id'] =
+            reworkedItem.start_by_id?.toString() ?? '';
+        request.fields['end_by_id'] = reworkedItem.end_by_id?.toString() ?? '';
+        request.fields['qty'] = reworkedItem.qty ?? '';
+        request.fields['width'] = reworkedItem.width ?? '';
+        request.fields['length'] = reworkedItem.length ?? '';
+        request.fields['notes'] = reworkedItem.notes ?? '';
+        request.fields['rework'] = (reworkedItem.rework == true ? '1' : '0');
+        request.fields['status'] = reworkedItem.status ?? '';
+        request.fields['start_time'] = reworkedItem.start_time ?? '';
+        request.fields['end_time'] = reworkedItem.end_time ?? '';
+
+        for (int i = 0; i < reworkedItem.attachments.length; i++) {
+          var file = reworkedItem.attachments[i];
+          if (file is File) {
+            request.files.add(await http.MultipartFile.fromPath(
+              'attachments[$i]',
+              file.path,
+            ));
+          } else if (file is Map && file['path'] != null) {
+            request.files.add(await http.MultipartFile.fromPath(
+              'attachments[$i]',
+              file['path'],
+              filename: file['name'] ?? 'file_$i',
+            ));
+          }
+        }
+
+        var response = await request.send();
+        var responseBody = await response.stream.bytesToString();
+        if (response.statusCode == 201) {
+          final jsonResponse = jsonDecode(responseBody);
+          await refetchItems();
+          notifyListeners();
+          return jsonResponse['message'] ?? 'Rework successful';
+        } else {
+          var responseData = await response.stream.bytesToString();
+          throw Exception(jsonDecode(responseData)['message'] ??
+              'Failed to add dyeing with attachments');
+        }
+      } else {
+        final body = {
+          ...reworkedItem.toJson(),
+        };
+
+        final response = await http.post(
+          Uri.parse('$baseUrl/$endpoint/$id/rework'),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(body),
+        );
+
+        if (response.statusCode == 201) {
+          await refetchItems();
+          return jsonDecode(response.body)['message'];
+        } else {
+          final error = jsonDecode(response.body);
+          throw Exception(error['message'] ?? 'Failed to rework item');
+        }
+      }
+    } catch (e) {
+      throw Exception("Error rework dyeing: $e");
     } finally {
       isSubmitting.value = false;
     }

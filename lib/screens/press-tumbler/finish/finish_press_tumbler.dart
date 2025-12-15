@@ -18,8 +18,6 @@ class FinishPressTumbler extends StatefulWidget {
 }
 
 class _FinishPressTumblerState extends State<FinishPressTumbler> {
-  int number = 0;
-
   late List<dynamic> workOrderOption = [];
 
   @override
@@ -80,7 +78,7 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
   @override
   Widget build(BuildContext context) {
     return FinishProcess(
-      title: 'Selesai Press Tumbler',
+      title: 'Selesai Press',
       fetchWorkOrder: (service) async =>
           await service.fetchStenterFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
@@ -119,11 +117,8 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
                 .finishItem(id, stenter, isLoading);
 
         showAlertDialog(
-            context: context,
-            title: 'Press Tumbler Finished',
-            message: message);
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/press-tumblers', (_) => false);
+            context: context, title: 'Press Finished', message: message);
+        Navigator.pushNamedAndRemoveUntil(context, '/press', (_) => false);
       },
     );
   }

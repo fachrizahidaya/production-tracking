@@ -12,7 +12,7 @@ class CreatePressTumbler extends StatelessWidget {
 
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
-    final pressTumbler = PressTumbler(
+    final press = PressTumbler(
       wo_id:
           form['wo_id'] != null ? int.tryParse(form['wo_id'].toString()) : null,
       weight_unit_id: form['unit_id'] != null
@@ -37,19 +37,17 @@ class CreatePressTumbler extends StatelessWidget {
 
     final message =
         await Provider.of<PressTumblerService>(context, listen: false)
-            .addItem(pressTumbler, isLoading);
+            .addItem(press, isLoading);
 
-    showAlertDialog(
-        context: context, title: 'Press Tumbler Created', message: message);
+    showAlertDialog(context: context, title: 'Press Created', message: message);
 
-    Navigator.pushNamedAndRemoveUntil(
-        context, '/press-tumblers', (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/press', (route) => false);
   }
 
   @override
   Widget build(BuildContext context) {
     return CreateProcess(
-      title: 'Mulai Press Tumbler',
+      title: 'Mulai Press',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, data, form, handleSubmit) {
         return CreatePressTumblerManual(

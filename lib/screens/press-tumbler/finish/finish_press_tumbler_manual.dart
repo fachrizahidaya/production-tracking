@@ -9,8 +9,8 @@ import 'package:textile_tracking/models/process/press_tumbler.dart';
 
 class FinishPressTumblerManual extends StatefulWidget {
   final id;
-  final Map<String, dynamic>? data;
-  final Map<String, dynamic>? form;
+  final data;
+  final form;
   final handleSubmit;
   final handleChangeInput;
   final processId;
@@ -41,7 +41,6 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
   late List<dynamic> unitOption = [];
 
   Map<String, dynamic> woData = {};
-  Map<String, dynamic> pressTumblerData = {};
 
   var ptId = '';
 
@@ -100,7 +99,7 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
   @override
   Widget build(BuildContext context) {
     return FinishProcessManual(
-      title: 'Selesai Press Tumbler',
+      title: 'Selesai Press',
       id: widget.id,
       data: widget.data,
       form: widget.form,
@@ -110,7 +109,7 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
       getWorkOrderOptions: (service) => service.dataListOption,
       processService: _pressTumblerService,
       handleChangeInput: widget.handleChangeInput,
-      idProcess: 'press_tumbler_id',
+      idProcess: 'press_id',
       withItemGrade: false,
       processId: widget.processId,
     );

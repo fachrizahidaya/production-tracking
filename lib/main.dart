@@ -24,6 +24,7 @@ import 'package:textile_tracking/models/process/printing.dart';
 import 'package:textile_tracking/models/process/sewing.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
+import 'package:textile_tracking/models/process/tumbler.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/auth/index.dart';
 import 'package:textile_tracking/screens/auth/eula.dart';
@@ -44,6 +45,7 @@ import 'package:textile_tracking/screens/sewing/index.dart';
 import 'package:textile_tracking/screens/sorting/index.dart';
 import 'package:textile_tracking/screens/stenter/index.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/screens/tumbler/index.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +54,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => UserProvider()),
     ChangeNotifierProvider(create: (_) => DyeingService()),
     ChangeNotifierProvider(create: (_) => PressTumblerService()),
+    ChangeNotifierProvider(create: (_) => TumblerService()),
     ChangeNotifierProvider(create: (_) => StenterService()),
     ChangeNotifierProvider(create: (_) => LongSittingService()),
     ChangeNotifierProvider(create: (_) => LongHemmingService()),
@@ -113,7 +116,8 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => const Profile(),
         '/notification': (context) => const NotificationList(),
         '/dyeings': (context) => const DyeingScreen(),
-        '/press-tumblers': (context) => const PressTumblerScreen(),
+        '/press': (context) => const PressTumblerScreen(),
+        '/tumblers': (context) => const TumblerScreen(),
         '/stenters': (context) => const StenterScreen(),
         '/long-sittings': (context) => const LongSittingScreen(),
         '/long-hemmings': (context) => const LongHemmingScreen(),

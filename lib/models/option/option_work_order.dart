@@ -35,7 +35,6 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
 
   bool _isLoading = false;
   bool _hasMoreData = true;
-  int _currentPage = 1;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
 
@@ -77,7 +76,6 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
     if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
-      _currentPage = 1;
       _hasMoreData = true;
       _wo.clear();
     }
@@ -159,7 +157,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
   }) async {
     await _fetchOptionsGeneric(
       isInitialLoad: isInitialLoad,
-      type: 'press_tumbler',
+      type: 'press',
       searchQuery: searchQuery,
     );
   }
@@ -170,7 +168,29 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
   }) async {
     await _fetchOptionsGeneric(
       isInitialLoad: isInitialLoad,
-      type: 'press_tumbler_finish',
+      type: 'press_finish',
+      searchQuery: searchQuery,
+    );
+  }
+
+  Future<void> fetchTumblerOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'tumbler',
+      searchQuery: searchQuery,
+    );
+  }
+
+  Future<void> fetchTumblerFinishOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'tumbler_finish',
       searchQuery: searchQuery,
     );
   }

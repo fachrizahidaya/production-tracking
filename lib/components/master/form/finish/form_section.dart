@@ -76,7 +76,8 @@ class _FormSectionState extends State<FormSection> {
         'selectedLabel': widget.form['nama_satuan_panjang'] ?? '',
         'selectedValue': widget.form['length_unit_id']?.toString() ?? '',
         'unitLabel': 'Satuan Panjang',
-        'value': 'length'
+        'value': 'length',
+        'req': false
       },
       {
         'label': 'Lebar',
@@ -85,7 +86,8 @@ class _FormSectionState extends State<FormSection> {
         'selectedLabel': widget.form['nama_satuan_lebar'] ?? '',
         'selectedValue': widget.form['width_unit_id']?.toString() ?? '',
         'unitLabel': 'Satuan Lebar',
-        'value': 'width'
+        'value': 'width',
+        'req': false
       },
       {
         'label': 'Berat',
@@ -94,7 +96,8 @@ class _FormSectionState extends State<FormSection> {
         'selectedLabel': widget.form['nama_satuan_berat'] ?? '',
         'selectedValue': widget.form['weight_unit_id']?.toString() ?? '',
         'unitLabel': 'Satuan Berat',
-        'value': 'weight'
+        'value': 'weight',
+        'req': true
       },
     ];
 
@@ -201,7 +204,7 @@ class _FormSectionState extends State<FormSection> {
                                     flex: 2,
                                     child: TextForm(
                                       label: row['label'],
-                                      req: true,
+                                      req: row['req'],
                                       isNumber: true,
                                       controller: row['controller'],
                                       handleChange: (value) {
@@ -225,7 +228,7 @@ class _FormSectionState extends State<FormSection> {
                                       onTap: row['onSelect'],
                                       selectedLabel: row['selectedLabel'],
                                       selectedValue: row['selectedValue'],
-                                      required: true,
+                                      required: row['req'],
                                     ),
                                   ),
                                 ].separatedBy(const SizedBox(width: 16)),

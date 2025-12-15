@@ -121,7 +121,11 @@ class OptionMachineService extends BaseService<OptionMachine> {
   }
 
   Future<void> fetchOptionsPressTumbler() async {
-    await _fetchOptionsGeneric(process: 'press_tumbler');
+    await _fetchOptionsGeneric(process: 'press');
+  }
+
+  Future<void> fetchOptionsTumbler() async {
+    await _fetchOptionsGeneric(process: 'tumbler');
   }
 
   Future<void> fetchOptionsStenter() async {

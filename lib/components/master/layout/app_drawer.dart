@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/screens/home/index.dart';
 
 class AppDrawer extends StatefulWidget {
-  final Function() handleLogout;
+  final handleLogout;
   final handleFetchMenu;
 
   const AppDrawer(
@@ -16,24 +16,51 @@ class _AppDrawerState extends State<AppDrawer> {
   late Future<List<MenuItem>> menuItems;
   late Future<List<MenuItem>> _menuFuture;
 
+  List<String> menuOrder = [
+    'Dashboard',
+    'Dyeing',
+    'Press',
+    'Tumbler',
+    'Stenter',
+    'Long Sitting',
+    'Long Hemming',
+    'Cross Cutting',
+    'Sewing',
+    'Embroidery',
+    'Printing',
+    'Sorting',
+    'Packing',
+  ];
+
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
     final List<MenuItem> result = [];
 
     for (final menu in menus) {
       if (menu.subMenuItems.isEmpty) {
-        // Dashboard or any parent without children
         result.add(menu);
       } else {
-        // Convert each SubMenuItem → MenuItem
         for (final sub in menu.subMenuItems) {
-          result.add(MenuItem(
-            title: sub.title,
-            route: sub.route,
-            subMenuItems: const [],
-          ));
+          result.add(
+            MenuItem(
+              title: sub.title,
+              route: sub.route,
+              subMenuItems: const [],
+            ),
+          );
         }
       }
     }
+
+    result.sort((a, b) {
+      final aIndex = menuOrder.indexOf(a.title);
+      final bIndex = menuOrder.indexOf(b.title);
+
+      if (aIndex == -1 && bIndex == -1) return 0;
+      if (aIndex == -1) return 1;
+      if (bIndex == -1) return -1;
+
+      return aIndex.compareTo(bIndex);
+    });
 
     return result;
   }

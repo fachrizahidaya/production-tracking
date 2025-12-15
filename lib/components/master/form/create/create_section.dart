@@ -111,7 +111,10 @@ class _CreateSectionState extends State<CreateSection> {
                         child: FormButton(
                       label: 'Mulai',
                       isLoading: isSubmitting,
-                      isDisabled: widget.form?['wo_id'] == null ? true : false,
+                      isDisabled: widget.form?['wo_id'] == null ||
+                              widget.form?['machine_id'] == null
+                          ? true
+                          : false,
                       onPressed: () async {
                         widget.isSubmitting.value = true;
                         try {

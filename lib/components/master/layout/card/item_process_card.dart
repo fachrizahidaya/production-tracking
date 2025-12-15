@@ -62,9 +62,20 @@ class ItemProcessCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        '${itemField(item, titleKey)}',
-                        style: TextStyle(fontSize: 16),
+                      Row(
+                        children: [
+                          Text(
+                            '${itemField(item, titleKey)}',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          if (item['rework'] == true)
+                            Icon(
+                              Icons.replay_outlined,
+                              size: 16,
+                            )
+                        ].separatedBy(SizedBox(
+                          width: 4,
+                        )),
                       ),
                       customBadgeBuilder?.call(status) ??
                           CustomBadge(title: status),
@@ -101,7 +112,7 @@ class ItemProcessCard extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (item['machine']['name'] != null)
+                          if (item['machine'] != null)
                             Row(
                               children: [
                                 Icon(
@@ -115,7 +126,7 @@ class ItemProcessCard extends StatelessWidget {
                                 width: 4,
                               )),
                             ),
-                          if (item['maklon'] != null)
+                          if (item['maklon'] == true)
                             Row(
                               children: [
                                 Icon(
@@ -128,11 +139,6 @@ class ItemProcessCard extends StatelessWidget {
                               ].separatedBy(SizedBox(
                                 width: 4,
                               )),
-                            ),
-                          if (item['maklon'] == null &&
-                              item['machine']['name'] == null)
-                            Row(
-                              children: [],
                             ),
                         ],
                       ),

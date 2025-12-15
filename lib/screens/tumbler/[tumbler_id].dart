@@ -2,16 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/models/process/press_tumbler.dart';
+import 'package:textile_tracking/models/process/tumbler.dart';
 import 'package:textile_tracking/screens/master/process_detail.dart';
 
-class PressTumblerDetail extends StatefulWidget {
+class TumblerDetail extends StatefulWidget {
   final id;
   final no;
   final canDelete;
   final canUpdate;
 
-  const PressTumblerDetail(
+  const TumblerDetail(
       {super.key,
       required this.id,
       required this.no,
@@ -19,24 +19,24 @@ class PressTumblerDetail extends StatefulWidget {
       this.canUpdate});
 
   @override
-  State<PressTumblerDetail> createState() => _PressTumblerDetailState();
+  State<TumblerDetail> createState() => _TumblerDetailState();
 }
 
-class _PressTumblerDetailState extends State<PressTumblerDetail> {
+class _TumblerDetailState extends State<TumblerDetail> {
   @override
   Widget build(BuildContext context) {
-    return ProcessDetail<PressTumbler>(
+    return ProcessDetail<Tumbler>(
       id: widget.id,
       no: widget.no,
-      label: 'Press Tumbler',
-      service: Provider.of<PressTumblerService>(context, listen: false),
+      label: 'Tumbler',
+      service: Provider.of<TumblerService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
-          Provider.of<PressTumblerService>(context, listen: false)
+          Provider.of<TumblerService>(context, listen: false)
               .updateItem(id, item, isLoading),
       handleDeleteService: (context, id, isLoading) =>
-          Provider.of<PressTumblerService>(context, listen: false)
+          Provider.of<TumblerService>(context, listen: false)
               .deleteItem(id, isLoading),
-      modelBuilder: (form, data) => PressTumbler(
+      modelBuilder: (form, data) => Tumbler(
         wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
         weight_unit_id: form['weight_unit_id'] != null
             ? int.tryParse(form['weight_unit_id'].toString())

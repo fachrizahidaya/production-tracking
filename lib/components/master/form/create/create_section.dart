@@ -10,6 +10,7 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 class CreateSection extends StatefulWidget {
   final id;
   final title;
+  final label;
   final maklon;
   final form;
   final formKey;
@@ -26,6 +27,7 @@ class CreateSection extends StatefulWidget {
   const CreateSection(
       {super.key,
       this.title,
+      this.label,
       this.firstLoading,
       this.form,
       this.formKey,
@@ -77,6 +79,7 @@ class _CreateSectionState extends State<CreateSection> {
                   data: widget.woData,
                   id: widget.id,
                   isLoading: widget.firstLoading,
+                  label: widget.label,
                   form: widget.form,
                   formKey: widget.formKey,
                   handleSubmit: widget.handleSubmit,

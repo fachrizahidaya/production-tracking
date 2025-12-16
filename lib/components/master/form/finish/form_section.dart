@@ -251,7 +251,9 @@ class _FormSectionState extends State<FormSection> {
                                                     'width_unit_id', 4);
                                               }
 
-                                              if (row['value'] == 'weight') {
+                                              if (widget.withQtyAndWeight ==
+                                                      false &&
+                                                  row['value'] == 'weight') {
                                                 widget.validateWeight(value);
                                               }
                                             });
@@ -264,7 +266,8 @@ class _FormSectionState extends State<FormSection> {
                                             return null;
                                           },
                                         ),
-                                        if (row['value'] == 'weight' &&
+                                        if (widget.withQtyAndWeight == false &&
+                                            row['value'] == 'weight' &&
                                             widget.weightWarning != null)
                                           Padding(
                                             padding:

@@ -91,7 +91,7 @@ class ListItem extends StatelessWidget {
                           size: 14,
                         ),
                         Text(
-                          item['spk_item']?['color'],
+                          item['spk_item']?['color'] ?? '-',
                           style: TextStyle(
                             fontSize: 16,
                           ),

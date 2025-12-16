@@ -18,14 +18,13 @@ import 'package:textile_tracking/models/option/option_work_order.dart';
 
 class FinishProcessManual extends StatefulWidget {
   final title;
-  final String? machineFilterValue;
   final dynamic id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
+  final void Function(String fieldName, dynamic value)? handleChangeInput;
   final handleSubmit;
   final fetchWorkOrder;
   final getWorkOrderOptions;
-  final void Function(String fieldName, dynamic value)? handleChangeInput;
   final label;
   final processService;
   final idProcess;
@@ -39,7 +38,6 @@ class FinishProcessManual extends StatefulWidget {
   const FinishProcessManual(
       {super.key,
       this.title,
-      this.machineFilterValue,
       this.id,
       this.data,
       this.form,
@@ -572,6 +570,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                   ),
                   CreateFormTab(
                     data: woData,
+                    label: widget.label,
                   ),
                   CreateItemTab(
                     data: woData,

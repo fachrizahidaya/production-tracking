@@ -8,15 +8,26 @@ import 'package:html/parser.dart' as html_parser;
 
 class CreateFormTab extends StatefulWidget {
   final data;
+  final label;
 
-  const CreateFormTab({super.key, this.data});
+  const CreateFormTab({super.key, this.data, this.label});
 
   @override
   State<CreateFormTab> createState() => _CreateFormTabState();
 }
 
 class _CreateFormTabState extends State<CreateFormTab> {
-  String htmlToPlainText(String htmlString) {
+  String htmlToPlainText(dynamic htmlString) {
+    if (htmlString == null) return '';
+
+    if (htmlString is List) {
+      return htmlString.join(" ");
+    }
+
+    if (htmlString is! String) {
+      return htmlString.toString();
+    }
+
     final document = html_parser.parse(htmlString);
     return document.body?.text ?? '';
   }
@@ -39,19 +50,18 @@ class _CreateFormTabState extends State<CreateFormTab> {
                           viewLabel: 'Nomor',
                           viewValue: widget.data['wo_no']?.toString() ?? '-'),
                       ViewText(
-                          viewLabel: 'User',
-                          viewValue:
-                              widget.data['user']?['name']?.toString() ?? '-'),
-                      ViewText(
                           viewLabel: 'Tanggal',
                           viewValue: widget.data['wo_date'] != null
                               ? DateFormat("dd MMM yyyy").format(
                                   DateTime.parse(widget.data['wo_date']))
                               : '-'),
                       ViewText(
-                          viewLabel: 'Catatan',
-                          viewValue: htmlToPlainText(
-                              widget.data['notes']?.toString() ?? '-')),
+                          viewLabel: 'Status',
+                          viewValue: widget.data['status']?.toString() ?? '-'),
+                      ViewText(
+                          viewLabel: 'User',
+                          viewValue:
+                              widget.data['user']?['name']?.toString() ?? '-'),
                       ViewText(
                           viewLabel: 'Jumlah Greige',
                           viewValue: widget.data['greige_qty'] != null &&
@@ -61,8 +71,10 @@ class _CreateFormTabState extends State<CreateFormTab> {
                               ? '${NumberFormat("#,###.#").format(double.tryParse(widget.data['greige_qty'].toString()) ?? 0)} ${widget.data['greige_unit']?['code'] ?? ''}'
                               : '-'),
                       ViewText(
-                          viewLabel: 'Status',
-                          viewValue: widget.data['status']?.toString() ?? '-'),
+                          viewLabel: 'Catatan ${widget.label}',
+                          viewValue: htmlToPlainText(widget.data['notes'] is Map
+                              ? widget.data['notes'][widget.label]
+                              : '-')),
                     ].separatedBy(SizedBox(
                       height: 16,
                     )),

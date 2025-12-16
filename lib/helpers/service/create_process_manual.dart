@@ -10,7 +10,6 @@ import 'package:textile_tracking/models/option/option_work_order.dart';
 
 class CreateProcessManual extends StatefulWidget {
   final String title;
-  final String? machineFilterValue;
   final dynamic id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
@@ -20,6 +19,7 @@ class CreateProcessManual extends StatefulWidget {
   final fetchMachine;
   final getMachineOptions;
   final maklon;
+  final label;
   final isMaklon;
   final withMaklonOrMachine;
   final withOnlyMaklon;
@@ -28,7 +28,6 @@ class CreateProcessManual extends StatefulWidget {
   const CreateProcessManual(
       {super.key,
       required this.title,
-      this.machineFilterValue,
       this.id,
       this.data,
       this.form,
@@ -38,6 +37,7 @@ class CreateProcessManual extends StatefulWidget {
       this.fetchMachine,
       this.getMachineOptions,
       this.maklon,
+      this.label,
       this.isMaklon,
       this.withMaklonOrMachine,
       this.withOnlyMaklon,
@@ -227,6 +227,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
         title: widget.title,
         maklon: widget.maklon,
         form: widget.form,
+        label: widget.label,
         formKey: _formKey,
         woData: woData,
         withMaklonOrMachine: widget.withMaklonOrMachine,

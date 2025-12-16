@@ -28,6 +28,11 @@ class _FinishPackingManualState extends State<FinishPackingManual> {
 
   @override
   void initState() {
+    widget.form?['length'] ??= '0';
+    widget.form?['width'] ??= '0';
+    widget.form?['length_unit_id'] ??= 4;
+    widget.form?['width_unit_id'] ??= 4;
+
     super.initState();
   }
 
@@ -44,7 +49,6 @@ class _FinishPackingManualState extends State<FinishPackingManual> {
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchPackingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       processService: _packingService,

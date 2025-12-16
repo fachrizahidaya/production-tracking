@@ -24,7 +24,6 @@ class CreateSortingManual extends StatelessWidget {
       data: data,
       form: form,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchSortingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       withNoMaklonOrMachine: true,

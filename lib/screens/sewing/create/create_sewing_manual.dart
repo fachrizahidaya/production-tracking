@@ -30,7 +30,6 @@ class CreateSewingManual extends StatelessWidget {
       maklon: _maklonController,
       isMaklon: true,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchSewingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsSewing(),

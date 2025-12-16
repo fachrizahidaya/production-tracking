@@ -40,10 +40,12 @@ class CreateSewing extends StatelessWidget {
     final message = await Provider.of<SewingService>(context, listen: false)
         .addItem(sewing, isLoading);
 
-    showAlertDialog(
-        context: context, title: 'Sewing Created', message: message);
-
     Navigator.pushNamedAndRemoveUntil(context, '/sewings', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Sewing Dimulai', message: message);
+    });
   }
 
   @override

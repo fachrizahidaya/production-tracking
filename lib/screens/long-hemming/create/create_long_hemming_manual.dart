@@ -24,7 +24,6 @@ class CreateLongHemmingManual extends StatelessWidget {
       data: data,
       form: form,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchLongHemmingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsLongHemming(),

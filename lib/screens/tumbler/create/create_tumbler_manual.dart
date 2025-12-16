@@ -24,7 +24,6 @@ class CreateTumblerManual extends StatelessWidget {
       data: data,
       form: form,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchTumblerOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsTumbler(),

@@ -39,11 +39,13 @@ class CreateLongHemming extends StatelessWidget {
         await Provider.of<LongHemmingService>(context, listen: false)
             .addItem(longHemming, isLoading);
 
-    showAlertDialog(
-        context: context, title: 'Long Hemming Created', message: message);
-
     Navigator.pushNamedAndRemoveUntil(
         context, '/long-hemmings', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Long Hemming Dimulai', message: message);
+    });
   }
 
   @override

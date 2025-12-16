@@ -20,11 +20,11 @@ class CreatePressTumblerManual extends StatelessWidget {
   Widget build(BuildContext context) {
     return CreateProcessManual(
       title: 'Mulai Press',
+      label: 'Press',
       id: id,
       data: data,
       form: form,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchPressTumblerOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsPressTumbler(),

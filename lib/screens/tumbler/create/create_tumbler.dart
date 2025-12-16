@@ -38,10 +38,12 @@ class CreateTumbler extends StatelessWidget {
     final message = await Provider.of<TumblerService>(context, listen: false)
         .addItem(tumbler, isLoading);
 
-    showAlertDialog(
-        context: context, title: 'Tumbler Created', message: message);
-
     Navigator.pushNamedAndRemoveUntil(context, '/tumblers', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Tumbler Dimulai', message: message);
+    });
   }
 
   @override

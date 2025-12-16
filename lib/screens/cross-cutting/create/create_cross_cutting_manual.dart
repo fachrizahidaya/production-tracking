@@ -24,7 +24,6 @@ class CreateCrossCuttingManual extends StatelessWidget {
       data: data,
       form: form,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchCrossCuttingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsCrossCutting(),

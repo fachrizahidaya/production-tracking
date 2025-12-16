@@ -28,7 +28,7 @@ class _PressTumblerDetailState extends State<PressTumblerDetail> {
     return ProcessDetail<PressTumbler>(
       id: widget.id,
       no: widget.no,
-      label: 'Press Tumbler',
+      label: 'Press',
       service: Provider.of<PressTumblerService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<PressTumblerService>(context, listen: false)

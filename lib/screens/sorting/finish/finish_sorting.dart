@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/service/finish_process.dart';
-import 'package:textile_tracking/models/option/option_item_grade.dart';
-import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/sorting/finish/finish_sorting_manual.dart';
@@ -19,11 +17,6 @@ class FinishSorting extends StatefulWidget {
 }
 
 class _FinishSortingState extends State<FinishSorting> {
-  int number = 0;
-
-  late List<dynamic> workOrderOption = [];
-  late List<dynamic> itemGradeOption = [];
-
   final Map<String, dynamic> _form = {
     'wo_id': null,
     'machine_id': null,
@@ -56,34 +49,10 @@ class _FinishSortingState extends State<FinishSorting> {
   @override
   void initState() {
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
-    _handleFetchWorkOrder();
-    _handleFetchItemGrade();
     super.initState();
 
     setState(() {
       _form['end_by_id'] = loggedInUser?.id;
-    });
-  }
-
-  Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchSortingFinishOptions();
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
-
-    setState(() {
-      workOrderOption = result;
-    });
-  }
-
-  Future<void> _handleFetchItemGrade() async {
-    await Provider.of<OptionItemGradeService>(context, listen: false)
-        .fetchOptions();
-    final result = Provider.of<OptionItemGradeService>(context, listen: false)
-        .dataListOption;
-
-    setState(() {
-      itemGradeOption = result;
     });
   }
 
@@ -135,9 +104,12 @@ class _FinishSortingState extends State<FinishSorting> {
             await Provider.of<SortingService>(context, listen: false)
                 .finishItem(id, sorting, isLoading);
 
-        showAlertDialog(
-            context: context, title: 'Sorting Finished', message: message);
         Navigator.pushNamedAndRemoveUntil(context, '/sortings', (_) => false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showAlertDialog(
+              context: context, title: 'Sorting Selesai', message: message);
+        });
       },
       fetchItemGrade: (service) async => await service.fetchOptions(),
       getItemGradeOptions: (service) => service.dataListOption,

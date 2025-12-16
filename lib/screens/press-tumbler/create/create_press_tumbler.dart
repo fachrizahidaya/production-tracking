@@ -39,9 +39,12 @@ class CreatePressTumbler extends StatelessWidget {
         await Provider.of<PressTumblerService>(context, listen: false)
             .addItem(press, isLoading);
 
-    showAlertDialog(context: context, title: 'Press Created', message: message);
-
     Navigator.pushNamedAndRemoveUntil(context, '/press', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Press Dimulai', message: message);
+    });
   }
 
   @override

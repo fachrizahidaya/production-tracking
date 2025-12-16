@@ -38,10 +38,12 @@ class CreateStenter extends StatelessWidget {
     final message = await Provider.of<StenterService>(context, listen: false)
         .addItem(stenter, isLoading);
 
-    showAlertDialog(
-        context: context, title: 'Stenter Created', message: message);
-
     Navigator.pushNamedAndRemoveUntil(context, '/stenters', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Stenter Dimulai', message: message);
+    });
   }
 
   @override

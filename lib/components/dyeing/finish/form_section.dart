@@ -4,6 +4,7 @@ import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/layout/attachment_picker.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -24,6 +25,8 @@ class FormSection extends StatefulWidget {
   final handlePickAttachments;
   final handleDeleteAttachment;
   final showImageDialog;
+  final validateQty;
+  final qtyWarning;
 
   const FormSection(
       {super.key,
@@ -42,7 +45,9 @@ class FormSection extends StatefulWidget {
       this.qty,
       this.showImageDialog,
       this.width,
-      this.handleDeleteAttachment});
+      this.handleDeleteAttachment,
+      this.validateQty,
+      this.qtyWarning});
 
   @override
   State<FormSection> createState() => _FormSectionState();
@@ -60,7 +65,8 @@ class _FormSectionState extends State<FormSection> {
         'selectedValue': widget.form['length_unit_id']?.toString() ?? '',
         'unitLabel': 'Satuan Panjang',
         'value': 'length',
-        'req': false
+        'req': false,
+        'withSelectUnit': false
       },
       {
         'label': 'Lebar',
@@ -70,7 +76,8 @@ class _FormSectionState extends State<FormSection> {
         'selectedValue': widget.form['width_unit_id']?.toString() ?? '',
         'unitLabel': 'Satuan Lebar',
         'value': 'width',
-        'req': false
+        'req': false,
+        'withSelectUnit': false
       },
       {
         'label': 'Qty Hasil Dyeing',
@@ -80,7 +87,8 @@ class _FormSectionState extends State<FormSection> {
         'selectedValue': widget.form['unit_id']?.toString() ?? '',
         'unitLabel': 'Satuan',
         'value': 'qty',
-        'req': true
+        'req': true,
+        'withSelectUnit': true
       },
     ];
 
@@ -99,7 +107,7 @@ class _FormSectionState extends State<FormSection> {
               required: true,
               validator: (value) {
                 if ((value == null || value.isEmpty)) {
-                  return 'is required';
+                  return 'Work Order wajib dipilih';
                 }
                 return null;
               },
@@ -120,44 +128,90 @@ class _FormSectionState extends State<FormSection> {
                         children: [
                           Expanded(
                             flex: 2,
-                            child: TextForm(
-                              label: row['label'],
-                              req: row['req'],
-                              isNumber: true,
-                              controller: row['controller'],
-                              handleChange: (value) {
-                                setState(() {
-                                  row['controller'].text = value.toString();
-                                  widget.handleChangeInput(
-                                    row['value'],
-                                    value,
-                                  );
-                                });
-                              },
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Must filled';
-                                }
-                                return null;
-                              },
+                            child: Column(
+                              children: [
+                                TextForm(
+                                  label: row['label'],
+                                  req: row['req'],
+                                  isNumber: true,
+                                  controller: row['controller'],
+                                  handleChange: (value) {
+                                    final safeValue = (value == null ||
+                                            value.toString().trim().isEmpty)
+                                        ? '0'
+                                        : value.toString();
+
+                                    setState(() {
+                                      row['controller'].text = safeValue;
+                                      widget.handleChangeInput(
+                                        row['value'],
+                                        safeValue,
+                                      );
+
+                                      if (row['value'] == 'length') {
+                                        widget.handleChangeInput(
+                                            'length_unit_id', 4);
+                                      }
+
+                                      if (row['value'] == 'width') {
+                                        widget.handleChangeInput(
+                                            'width_unit_id', 4);
+                                      }
+
+                                      if (row['value'] == 'qty') {
+                                        widget.validateQty(value);
+                                      }
+                                    });
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return '${row['label']} wajib diisi';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                if (row['value'] == 'qty' &&
+                                    widget.qtyWarning != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 12),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            widget.qtyWarning ?? '-',
+                                            style: TextStyle(
+                                              color: CustomTheme()
+                                                  .colors('danger'),
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: SelectForm(
-                              label: row['unitLabel'],
-                              onTap: row['onSelect'],
-                              selectedLabel: row['selectedLabel'],
-                              selectedValue: row['selectedValue'],
-                              required: row['req'],
-                              validator: (value) {
-                                if ((value == null || value.isEmpty)) {
-                                  return 'is required';
-                                }
-                                return null;
-                              },
+                          if (row['withSelectUnit'] == true)
+                            Expanded(
+                              flex: 1,
+                              child: SelectForm(
+                                label: row['unitLabel'],
+                                onTap: row['onSelect'],
+                                selectedLabel: row['selectedLabel'],
+                                selectedValue: row['selectedValue'],
+                                required: row['req'],
+                                validator: (value) {
+                                  if ((value == null || value.isEmpty)) {
+                                    return '${row['unitLabel']} wajib dipilih';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
-                          ),
                         ].separatedBy(const SizedBox(width: 16)),
                       );
                     }),

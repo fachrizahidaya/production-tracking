@@ -42,17 +42,16 @@ class CreateDyeing extends StatelessWidget {
     final message = await Provider.of<DyeingService>(context, listen: false)
         .addItem(dyeing, isLoading);
 
-    showAlertDialog(
-      context: context,
-      title: 'Dyeing Created',
-      message: message,
-    );
-
     Navigator.pushNamedAndRemoveUntil(
       context,
       '/dyeings',
       (route) => false,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Dyeing Dimulai', message: message);
+    });
   }
 
   @override

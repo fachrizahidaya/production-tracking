@@ -292,7 +292,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
                 builder: (context) {
                   final actions = [
                     DialogActionItem(
-                      icon: Icons.add,
+                      icon: Icons.add_outlined,
                       iconColor: CustomTheme().buttonColor('primary'),
                       title: 'Mulai Dyeing',
                       onTap: () {
@@ -304,7 +304,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
                       },
                     ),
                     DialogActionItem(
-                      icon: Icons.check_circle,
+                      icon: Icons.check_circle_outline,
                       iconColor: CustomTheme().buttonColor('warning'),
                       title: 'Selesai Dyeing',
                       onTap: () {
@@ -316,7 +316,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
                       },
                     ),
                     DialogActionItem(
-                      icon: Icons.check_circle,
+                      icon: Icons.replay_outlined,
                       iconColor: CustomTheme().buttonColor('danger'),
                       title: 'Rework Dyeing',
                       onTap: () {

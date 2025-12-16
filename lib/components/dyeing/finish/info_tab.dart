@@ -4,6 +4,7 @@ import 'package:textile_tracking/components/dyeing/finish/create_form.dart';
 class InfoTab extends StatefulWidget {
   final id;
   final data;
+  final woData;
   final form;
   final formKey;
   final handleSubmit;
@@ -42,7 +43,8 @@ class InfoTab extends StatefulWidget {
       this.note,
       this.qty,
       this.width,
-      this.processId});
+      this.processId,
+      this.woData});
 
   @override
   State<InfoTab> createState() => _InfoTabState();
@@ -85,6 +87,7 @@ class _InfoTabState extends State<InfoTab> with AutomaticKeepAliveClientMixin {
               length: widget.length,
               dyeingData: widget.dyeingData,
               dyeingId: widget.dyeingId,
+              woData: widget.woData,
             ),
           ],
         ),

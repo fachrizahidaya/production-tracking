@@ -7,6 +7,7 @@ class ListForm extends StatefulWidget {
   final formKey;
   final form;
   final data;
+  final woData;
   final id;
   final dyeingId;
   final length;
@@ -62,16 +63,49 @@ class ListForm extends StatefulWidget {
       this.handleSelectLengthUnit,
       this.handleSelectWidthUnit,
       this.showImageDialog,
-      this.handleDeleteAttachment});
+      this.handleDeleteAttachment,
+      this.woData});
 
   @override
   State<ListForm> createState() => _ListFormState();
 }
 
 class _ListFormState extends State<ListForm> {
+  String? _qtyWarningMessage;
+
   @override
   void initState() {
     super.initState();
+  }
+
+  void _validateQty(String qty) {
+    final greigeQty =
+        double.tryParse(widget.dyeingData['work_orders']['greige_qty']);
+    final berat = double.tryParse(qty);
+
+    if (greigeQty == null || berat == null || greigeQty <= 0) {
+      setState(() {
+        _qtyWarningMessage = null;
+      });
+      return;
+    }
+
+    final lowerLimit = greigeQty * 0.9;
+    final upperLimit = greigeQty * 1.1;
+
+    if (berat < lowerLimit || berat > upperLimit) {
+      final diffPercent = ((berat - greigeQty) / greigeQty) * 100;
+
+      setState(() {
+        _qtyWarningMessage = 'Qty ${berat < greigeQty ? 'kurang' : 'lebih'} '
+            '${diffPercent.abs().toStringAsFixed(2)}% '
+            '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
+      });
+    } else {
+      setState(() {
+        _qtyWarningMessage = null;
+      });
+    }
   }
 
   @override
@@ -95,6 +129,8 @@ class _ListFormState extends State<ListForm> {
         handlePickAttachments: widget.handlePickAttachments,
         showImageDialog: widget.showImageDialog,
         handleDeleteAttachment: widget.handleDeleteAttachment,
+        validateQty: _validateQty,
+        qtyWarning: _qtyWarningMessage,
       ),
     );
   }

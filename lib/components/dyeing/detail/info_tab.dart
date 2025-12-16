@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/dyeing/detail/list_info.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:html/parser.dart' as html_parser;
@@ -21,6 +22,7 @@ class InfoTab extends StatefulWidget {
   final hasMore;
   final handleSelectLengthUnit;
   final handleSelectWidthUnit;
+  final label;
 
   const InfoTab(
       {super.key,
@@ -38,7 +40,8 @@ class InfoTab extends StatefulWidget {
       this.hasMore,
       this.handleSelectMachine,
       this.handleSelectLengthUnit,
-      this.handleSelectWidthUnit});
+      this.handleSelectWidthUnit,
+      this.label});
 
   @override
   State<InfoTab> createState() => _InfoTabState();
@@ -70,7 +73,6 @@ class _InfoTabState extends State<InfoTab> {
   String htmlToPlainText(dynamic htmlString) {
     if (htmlString == null) return '';
 
-    // If it's a list, return joined text or ignore
     if (htmlString is List) {
       return htmlString.join(" ");
     }
@@ -168,6 +170,7 @@ class _InfoTabState extends State<InfoTab> {
       width: widget.width,
       qty: widget.qty,
       note: widget.note,
+      label: widget.label,
       handleSelectMachine: widget.handleSelectMachine,
       handleChangeInput: widget.handleChangeInput,
       handleSelectLengthUnit: widget.handleSelectLengthUnit,
@@ -175,6 +178,90 @@ class _InfoTabState extends State<InfoTab> {
       handleSelectWidthUnit: widget.handleSelectWidthUnit,
       handleHtml: htmlToPlainText,
       handleShowImage: showImageDialog,
+      handleBuildAttachment: _buildAttachments,
+    );
+  }
+
+  Widget _buildAttachments(BuildContext context) {
+    final existing = (widget.data?['attachments'] ?? []) as List<dynamic>;
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: List.generate(existing.length, (index) {
+        final item = existing[index];
+
+        if (item['is_add_button'] == true) {
+          return const SizedBox.shrink();
+        }
+
+        final bool isNew = item.containsKey('path');
+        final String? filePath = isNew ? item['path'] : item['file_path'];
+
+        final String fileName = isNew
+            ? item['name']
+            : (item['file_name'] ?? filePath?.split('/').last ?? '');
+
+        final String extension = fileName.split('.').last.toLowerCase();
+
+        final String baseUrl = '${dotenv.env['IMAGE_URL_DEV']}';
+
+        Widget previewWidget;
+
+        if (extension == 'pdf') {
+          previewWidget = const Icon(
+            Icons.picture_as_pdf,
+            color: Colors.red,
+            size: 60,
+          );
+        } else if (isNew && filePath != null) {
+          previewWidget = Image.file(
+            File(filePath),
+            fit: BoxFit.cover,
+          );
+        } else if (filePath != null) {
+          final bool isImage =
+              ['png', 'jpg', 'jpeg', 'gif'].contains(extension);
+
+          if (isImage) {
+            previewWidget = Image.network(
+              '$baseUrl$filePath',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.broken_image, size: 60),
+            );
+          } else {
+            previewWidget = const Icon(Icons.insert_drive_file, size: 60);
+          }
+        } else {
+          previewWidget = const Icon(Icons.insert_drive_file, size: 60);
+        }
+
+        return Stack(
+          alignment: Alignment.topRight,
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              color: Colors.white,
+              child: GestureDetector(
+                onTap: () {
+                  if (['png', 'jpg', 'jpeg', 'gif'].contains(extension) &&
+                      filePath != null) {
+                    showImageDialog(
+                      context,
+                      isNew,
+                      filePath,
+                      baseUrl,
+                    );
+                  }
+                },
+                child: previewWidget,
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 }

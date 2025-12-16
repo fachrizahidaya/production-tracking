@@ -19,6 +19,7 @@ class CreateForm extends StatefulWidget {
   final handleSubmit;
   final id;
   final data;
+  final woData;
   final dyeingId;
   final dyeingData;
   final isLoading;
@@ -43,7 +44,8 @@ class CreateForm extends StatefulWidget {
       this.dyeingId,
       this.isLoading,
       this.handleSelectLengthUnit,
-      this.handleSelectWidthUnit});
+      this.handleSelectWidthUnit,
+      this.woData});
 
   @override
   State<CreateForm> createState() => _CreateFormState();
@@ -258,6 +260,7 @@ class _CreateFormState extends State<CreateForm> {
       dyeingData: widget.dyeingData,
       showImageDialog: showImageDialog,
       handleDeleteAttachment: _handleDeleteAttachment,
+      woData: widget.woData,
     );
   }
 }

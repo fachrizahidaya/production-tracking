@@ -137,11 +137,7 @@ class _FinishSectionState extends State<FinishSection> {
                     Expanded(
                         child: FormButton(
                       label: 'Selesai',
-                      isDisabled: widget.form?['wo_id'] == null ||
-                              widget.form?['qty'] == null ||
-                              widget.form?['unit_id'] == null
-                          ? true
-                          : false,
+                      isDisabled: widget.form?['wo_id'] == null ? true : false,
                       isLoading: isSubmitting,
                       onPressed: () async {
                         widget.isSubmitting.value = true;

@@ -55,8 +55,8 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
   @override
   void initState() {
     _qtyController.text = widget.form?['qty']?.toString() ?? '';
-    _lengthController.text = widget.form?['length']?.toString() ?? '';
-    _widthController.text = widget.form?['width']?.toString() ?? '';
+    _lengthController.text = widget.form?['length']?.toString() ?? '0';
+    _widthController.text = widget.form?['width']?.toString() ?? '0';
     _noteController.text = widget.form?['notes']?.toString() ?? '';
 
     if (widget.processId != null) {
@@ -66,6 +66,11 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
     if (widget.data != null) {
       woData = widget.data!;
     }
+
+    widget.form?['length'] ??= '0';
+    widget.form?['width'] ??= '0';
+    widget.form?['length_unit_id'] ??= 4;
+    widget.form?['width_unit_id'] ??= 4;
 
     _handleFetchWorkOrder();
     _handleFetchUnit();

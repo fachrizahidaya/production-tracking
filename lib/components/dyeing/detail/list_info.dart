@@ -1,15 +1,11 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
-import 'dart:io';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
-import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
@@ -30,6 +26,7 @@ class ListInfo extends StatefulWidget {
   final length;
   final width;
   final qty;
+  final label;
   final note;
   final handleSelectMachine;
   final handleChangeInput;
@@ -38,6 +35,7 @@ class ListInfo extends StatefulWidget {
   final handleSelectUnit;
   final handleHtml;
   final handleShowImage;
+  final handleBuildAttachment;
 
   const ListInfo(
       {super.key,
@@ -55,13 +53,15 @@ class ListInfo extends StatefulWidget {
       this.note,
       this.width,
       this.qty,
+      this.label,
       this.handleSelectMachine,
       this.handleChangeInput,
       this.handleSelectLengthUnit,
       this.handleSelectWidthUnit,
       this.handleSelectUnit,
       this.handleHtml,
-      this.handleShowImage});
+      this.handleShowImage,
+      this.handleBuildAttachment});
 
   @override
   State<ListInfo> createState() => _ListInfoState();
@@ -232,11 +232,10 @@ class _ListInfoState extends State<ListInfo> {
                                             label: 'Panjang',
                                             req: false,
                                             controller: widget.length
-                                              ..text = (widget.length.text
-                                                          .isEmpty ||
-                                                      widget.length.text == '0')
-                                                  ? 'No Data'
-                                                  : widget.length.text,
+                                              ..text =
+                                                  (widget.length.text == '0')
+                                                      ? '0'
+                                                      : widget.length.text,
                                             isDisabled:
                                                 widget.data['can_update']
                                                     ? false
@@ -290,10 +289,8 @@ class _ListInfoState extends State<ListInfo> {
                                                     ? false
                                                     : true,
                                             controller: widget.width
-                                              ..text = (widget
-                                                          .width.text.isEmpty ||
-                                                      widget.width.text == '0'
-                                                  ? 'No Data'
+                                              ..text = (widget.width.text == '0'
+                                                  ? '0'
                                                   : widget.width.text),
                                             handleChange: (value) {
                                               setState(() {
@@ -413,9 +410,13 @@ class _ListInfoState extends State<ListInfo> {
                                   '${widget.data['work_orders']['greige_qty']} ${widget.data['work_orders']['greige_unit']['code']}',
                             ),
                             ViewText(
-                              viewLabel: 'Catatan Work Order',
+                              viewLabel: 'Catatan Dyeing',
                               viewValue: widget.handleHtml(
-                                  widget.data['work_orders']['notes'] ?? '-'),
+                                widget.data['work_orders']['notes'] is Map
+                                    ? widget.data['work_orders']['notes']
+                                        [widget.label]
+                                    : '-',
+                              ),
                             )
                           ].separatedBy(SizedBox(
                             height: 8,
@@ -442,9 +443,12 @@ class _ListInfoState extends State<ListInfo> {
                           '${widget.data['work_orders']['greige_qty']} ${widget.data['work_orders']['greige_unit']['code']}',
                     ),
                     ViewText(
-                      viewLabel: 'Catatan Work Order',
-                      viewValue: widget
-                          .handleHtml(widget.data['work_orders']['notes']),
+                      viewLabel: 'Catatan Dyeing',
+                      viewValue: widget.handleHtml(
+                        widget.data['work_orders']['notes'] is Map
+                            ? widget.data['work_orders']['notes'][widget.label]
+                            : '-',
+                      ),
                     )
                   ].separatedBy(SizedBox(
                     height: 8,
@@ -485,110 +489,40 @@ class _ListInfoState extends State<ListInfo> {
                 ],
               ),
             )),
-            CustomCard(
-                child: Padding(
-              padding: PaddingColumn.screen,
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Lampiran',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      CustomTheme().hGap('sm'),
-                    ],
-                  ),
-                  if (widget.existingAttachment.isEmpty)
-                    const NoData()
-                  else
-                    ...List.generate(widget.existingAttachment.length, (index) {
-                      final item = widget.existingAttachment[index];
-
-                      if (item['is_add_button'] == true) {
-                        return const SizedBox.shrink();
-                      }
-
-                      final bool isNew = item.containsKey('path');
-                      final String? filePath =
-                          isNew ? item['path'] : item['file_path'];
-                      final String fileName = isNew
-                          ? item['name']
-                          : (item['file_name'] ??
-                              filePath?.split('/').last ??
-                              '');
-                      final String extension =
-                          fileName.split('.').last.toLowerCase();
-
-                      final String baseUrl = '${dotenv.env['IMAGE_URL_DEV']}';
-
-                      Widget previewWidget;
-                      if (extension == 'pdf') {
-                        previewWidget = const Icon(Icons.picture_as_pdf,
-                            color: Colors.red, size: 60);
-                      } else if (isNew && filePath != null) {
-                        previewWidget =
-                            Image.file(File(filePath), fit: BoxFit.cover);
-                      } else if (filePath != null) {
-                        final bool isImage =
-                            ['png', 'jpg', 'jpeg', 'gif'].contains(extension);
-                        if (isImage) {
-                          previewWidget = Image.network(
-                            '$baseUrl$filePath',
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(Icons.broken_image, size: 60),
-                          );
-                        } else {
-                          previewWidget =
-                              const Icon(Icons.insert_drive_file, size: 60);
-                        }
-                      } else {
-                        previewWidget =
-                            const Icon(Icons.insert_drive_file, size: 60);
-                      }
-
-                      return Stack(
-                        alignment: Alignment.topRight,
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                            ),
-                            child: GestureDetector(
-                              onTap: () {
-                                if (['png', 'jpg', 'jpeg', 'gif']
-                                        .contains(extension) &&
-                                    filePath != null) {
-                                  widget.handleShowImage(
-                                      context, isNew, filePath, baseUrl);
-                                }
-                              },
-                              child: previewWidget,
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-                ],
-              ),
-            )),
-            CustomCard(
-                child: Padding(
-              padding: PaddingColumn.screen,
-              child: Row(
-                children: [
-                  ViewText(
-                    viewLabel: 'Catatan',
-                    viewValue: '${widget.data['notes'] ?? '-'}',
-                  ),
-                ],
-              ),
-            ))
+            if (widget.data['status'] == 'Selesai')
+              CustomCard(
+                  child: Padding(
+                padding: PaddingColumn.screen,
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Lampiran',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        CustomTheme().hGap('sm'),
+                      ],
+                    ),
+                    widget.handleBuildAttachment(context),
+                  ],
+                ),
+              )),
+            if (widget.data['status'] == 'Selesai')
+              CustomCard(
+                  child: Padding(
+                padding: PaddingColumn.screen,
+                child: Row(
+                  children: [
+                    ViewText(
+                      viewLabel: 'Catatan',
+                      viewValue: '${widget.data['notes'] ?? '-'}',
+                    ),
+                  ],
+                ),
+              ))
           ],
         ),
       ),

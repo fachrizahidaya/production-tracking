@@ -336,6 +336,7 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
         id: widget.id,
         processId: widget.processId,
         form: widget.form,
+        label: 'Dyeing',
         formKey: _formKey,
         dyeingId: dyeingId,
         dyeingData: dyeingData,

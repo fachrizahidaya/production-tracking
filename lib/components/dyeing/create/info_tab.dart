@@ -9,6 +9,7 @@ import 'package:html/parser.dart' as html_parser;
 
 class InfoTab extends StatefulWidget {
   final id;
+  final label;
   final data;
   final form;
   final formKey;
@@ -26,7 +27,8 @@ class InfoTab extends StatefulWidget {
       this.handleSelectWorkOrder,
       this.handleSubmit,
       this.id,
-      this.isLoading});
+      this.isLoading,
+      this.label});
 
   @override
   State<InfoTab> createState() => _InfoTabState();
@@ -75,20 +77,20 @@ class _InfoTabState extends State<InfoTab> {
                             viewLabel: 'Nomor',
                             viewValue: widget.data['wo_no']?.toString() ?? '-'),
                         ViewText(
-                            viewLabel: 'User',
-                            viewValue:
-                                widget.data['user']?['name']?.toString() ??
-                                    '-'),
-                        ViewText(
                             viewLabel: 'Tanggal',
                             viewValue: widget.data['wo_date'] != null
                                 ? DateFormat("dd MMM yyyy").format(
                                     DateTime.parse(widget.data['wo_date']))
                                 : '-'),
                         ViewText(
-                            viewLabel: 'Catatan',
-                            viewValue: htmlToPlainText(
-                                widget.data['notes']?.toString() ?? '-')),
+                            viewLabel: 'Status',
+                            viewValue:
+                                widget.data['status']?.toString() ?? '-'),
+                        ViewText(
+                            viewLabel: 'User',
+                            viewValue:
+                                widget.data['user']?['name']?.toString() ??
+                                    '-'),
                         ViewText(
                             viewLabel: 'Jumlah Greige',
                             viewValue: widget.data['greige_qty'] != null &&
@@ -98,9 +100,11 @@ class _InfoTabState extends State<InfoTab> {
                                 ? '${NumberFormat("#,###.#").format(double.tryParse(widget.data['greige_qty'].toString()) ?? 0)} ${widget.data['greige_unit']?['code'] ?? ''}'
                                 : '-'),
                         ViewText(
-                            viewLabel: 'Status',
-                            viewValue:
-                                widget.data['status']?.toString() ?? '-'),
+                            viewLabel: 'Catatan',
+                            viewValue: htmlToPlainText(
+                                widget.data['notes'] is Map
+                                    ? widget.data['notes'][widget.label]
+                                    : '-')),
                       ].separatedBy(SizedBox(
                         height: 16,
                       )),

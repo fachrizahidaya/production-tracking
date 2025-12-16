@@ -24,10 +24,10 @@ class CreateDyeingManual extends StatelessWidget {
     return CreateProcessManual(
       title: 'Mulai Dyeing',
       id: id,
+      label: 'Dyeing',
       data: data,
       form: form,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsDyeing(),

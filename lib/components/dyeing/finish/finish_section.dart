@@ -11,6 +11,7 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 class FinishSection extends StatefulWidget {
   final id;
   final processId;
+  final label;
   final form;
   final formKey;
   final dyeingId;
@@ -49,7 +50,8 @@ class FinishSection extends StatefulWidget {
       this.selectWidthUnit,
       this.selectWorkOrder,
       this.widthController,
-      this.woData});
+      this.woData,
+      this.label});
 
   @override
   State<FinishSection> createState() => _FinishSectionState();
@@ -111,6 +113,7 @@ class _FinishSectionState extends State<FinishSection> {
                 ),
                 FormTab(
                   data: widget.woData,
+                  label: widget.label,
                 ),
                 ItemTab(
                   data: widget.woData,

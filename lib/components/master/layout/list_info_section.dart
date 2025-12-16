@@ -1,18 +1,13 @@
-import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
-import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
-import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
-import 'package:html/parser.dart' as html_parser;
 
 class ListInfoSection extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -20,14 +15,15 @@ class ListInfoSection extends StatefulWidget {
   final ValueNotifier<bool> isSubmitting;
   final List<dynamic> existingAttachment;
   final Future<void> Function(String id)? handleUpdate;
-
   final String? initialWeight;
   final String? initialLength;
   final String? initialWidth;
   final String? initialNotes;
   final String? initialMaklon;
-
   final bool? isChanged;
+  final VoidCallback? handleSelectMachine;
+  final Widget Function(Map<String, dynamic> data)? extraTopSection;
+  final Widget Function(Map<String, dynamic> data)? extraBottomSection;
 
   final weight;
   final length;
@@ -37,11 +33,6 @@ class ListInfoSection extends StatefulWidget {
   final qty;
   final qtyItem;
   final notes;
-
-  final VoidCallback? handleSelectMachine;
-  final Widget Function(Map<String, dynamic> data)? extraTopSection;
-  final Widget Function(Map<String, dynamic> data)? extraBottomSection;
-
   final fieldConfigs;
   final fieldControllers;
   final handleSelectUnit;
@@ -51,6 +42,8 @@ class ListInfoSection extends StatefulWidget {
   final handleSelectQtyItemUnit;
   final handlePickAttachments;
   final handleChangeInput;
+  final handleBuildAttachment;
+  final handleHtmlText;
   final checkForChanges;
   final no;
   final withItemGrade;
@@ -59,6 +52,7 @@ class ListInfoSection extends StatefulWidget {
   final initialQty;
   final withMaklon;
   final onlySewing;
+  final label;
 
   const ListInfoSection(
       {super.key,
@@ -100,7 +94,10 @@ class ListInfoSection extends StatefulWidget {
       this.withMaklon = false,
       this.maklon,
       this.initialMaklon,
-      this.onlySewing = false});
+      this.onlySewing = false,
+      this.handleBuildAttachment,
+      this.handleHtmlText,
+      this.label});
 
   @override
   State<ListInfoSection> createState() => _ListInfoSectionState();
@@ -116,10 +113,6 @@ class _ListInfoSectionState extends State<ListInfoSection> {
   Widget build(BuildContext context) {
     final data = widget.data;
     final grades = widget.existingGrades;
-    String htmlToPlainText(String htmlString) {
-      final document = html_parser.parse(htmlString);
-      return document.body?.text ?? '';
-    }
 
     final isMobile = MediaQuery.of(context).size.width < 600;
 
@@ -253,9 +246,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                       label: 'Panjang',
                                       req: false,
                                       controller: widget.length
-                                        ..text = (widget.length.text.isEmpty ||
-                                                widget.length.text == '0')
-                                            ? 'No Data'
+                                        ..text = (widget.length.text == '0')
+                                            ? '0'
                                             : widget.length.text,
                                       handleChange: (value) {
                                         setState(() {
@@ -300,9 +292,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                       label: 'Lebar',
                                       req: false,
                                       controller: widget.width
-                                        ..text = (widget.width.text.isEmpty ||
-                                                widget.width.text == '0')
-                                            ? 'No Data'
+                                        ..text = (widget.width.text == '0')
+                                            ? '0'
                                             : widget.width.text,
                                       handleChange: (value) {
                                         setState(() {
@@ -461,12 +452,14 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                         ViewText(
                           viewLabel: 'Qty Greige',
                           viewValue:
-                              '${data['work_orders']?['greige_qty'] ?? '-'} ${data['work_orders']?['greige_unit']?['code'] ?? ''}',
+                              '${data['work_orders']?['greige_qty'] ?? '-'} ${data['work_orders']?['greige_unit']?['code'] ?? '-'}',
                         ),
                         ViewText(
-                          viewLabel: 'Catatan Work Order',
-                          viewValue: htmlToPlainText(
-                              data['work_orders']['notes'] ?? '-'),
+                          viewLabel: 'Catatan ${widget.label}',
+                          viewValue: widget.handleHtmlText(
+                              data['work_orders']['notes'] is Map
+                                  ? data['work_orders']['notes'][widget.label]
+                                  : '-'),
                         )
                       ].separatedBy(SizedBox(
                         height: 8,
@@ -489,12 +482,14 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                 ViewText(
                   viewLabel: 'Qty Greige',
                   viewValue:
-                      '${data['work_orders']?['greige_qty'] ?? '-'} ${data['work_orders']?['greige_unit']?['code'] ?? ''}',
+                      '${data['work_orders']?['greige_qty'] ?? '-'} ${data['work_orders']?['greige_unit']?['code'] ?? '-'}',
                 ),
                 ViewText(
                   viewLabel: 'Catatan Work Order',
-                  viewValue:
-                      htmlToPlainText(data['work_orders']['notes'] ?? '-'),
+                  viewValue: widget.handleHtmlText(
+                      data['work_orders']['notes'] is Map
+                          ? data['work_orders']['notes'][widget.label]
+                          : '-'),
                 )
               ].separatedBy(SizedBox(
                 height: 8,
@@ -557,7 +552,7 @@ class _ListInfoSectionState extends State<ListInfoSection> {
               ),
             ),
           ),
-        if (widget.withItemGrade == true && data['status'] != 'Diproses')
+        if (widget.withItemGrade == true && data['status'] == 'Selesai')
           CustomCard(
               child: Padding(
                   padding: PaddingColumn.screen,
@@ -576,13 +571,13 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                           ?.split('-')
                                           .first
                                           .trim() ??
-                                      '',
+                                      '-',
                                   viewValue: grades[i]['item_grade']
                                               ['description']
                                           ?.split('-')
                                           .last
                                           .trim() ??
-                                      ''),
+                                      '-'),
                             ),
                             Expanded(
                               flex: 1,
@@ -596,7 +591,6 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                             grades[i]['qty']?.toString() ?? ''),
                                 handleChange: (value) {
                                   setState(() {
-                                    // ensure form has grades entry
                                     if (widget.form['grades'] == null ||
                                         i >= widget.form['grades'].length) {
                                       widget.form['grades'] = List.from(grades);
@@ -627,7 +621,7 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                 req: false,
                                 controller: (i < widget.notes.length)
                                     ? TextEditingController(
-                                        text: htmlToPlainText(
+                                        text: widget.handleHtmlText(
                                           widget.notes[i]
                                                   is TextEditingController
                                               ? widget.notes[i].text
@@ -635,7 +629,7 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                         ),
                                       )
                                     : TextEditingController(
-                                        text: htmlToPlainText(
+                                        text: widget.handleHtmlText(
                                           grades[i]['notes']?.toString() ?? '',
                                         ),
                                       ),
@@ -696,74 +690,23 @@ class _ListInfoSectionState extends State<ListInfoSection> {
         CustomCard(
           child: Padding(
             padding: PaddingColumn.screen,
-            child: _buildAttachmentList(context),
+            child: widget.handleBuildAttachment(context),
           ),
         ),
-        CustomCard(
-            child: Padding(
-          padding: PaddingColumn.screen,
-          child: Row(
-            children: [
-              ViewText(
-                viewLabel: 'Catatan',
-                viewValue: htmlToPlainText(data['notes'] ?? '-'),
-              ),
-            ],
-          ),
-        ))
+        if (data['status'] == 'Selesai')
+          CustomCard(
+              child: Padding(
+            padding: PaddingColumn.screen,
+            child: Row(
+              children: [
+                ViewText(
+                  viewLabel: 'Catatan',
+                  viewValue: widget.handleHtmlText(data['notes'] ?? '-'),
+                ),
+              ],
+            ),
+          ))
       ]),
     ));
-  }
-
-  Widget _buildAttachmentList(BuildContext context) {
-    final attachments = widget.existingAttachment;
-
-    final baseUrl = dotenv.env['IMAGE_URL_DEV'] ?? '';
-
-    return Wrap(spacing: 8, runSpacing: 8, children: [
-      Row(
-        children: [
-          Text(
-            'Lampiran',
-            style: TextStyle(fontSize: 16),
-          ),
-          CustomTheme().hGap('sm'),
-        ],
-      ),
-      if (widget.existingAttachment.isEmpty)
-        const NoData()
-      else
-        ...attachments.map<Widget>((item) {
-          final bool isNew = item.containsKey('path');
-          final String? filePath = isNew ? item['path'] : item['file_path'];
-          final String fileName = isNew
-              ? item['name']
-              : (item['file_name'] ?? filePath?.split('/').last ?? '');
-          final String extension = fileName.split('.').last.toLowerCase();
-
-          Widget preview;
-          if (extension == 'pdf') {
-            preview =
-                const Icon(Icons.picture_as_pdf, color: Colors.red, size: 60);
-          } else if (isNew && filePath != null) {
-            preview = Image.file(File(filePath), fit: BoxFit.cover);
-          } else if (filePath != null &&
-              ['png', 'jpg', 'jpeg', 'gif'].contains(extension)) {
-            preview = Image.network('$baseUrl$filePath',
-                fit: BoxFit.cover,
-                errorBuilder: (context, _, __) =>
-                    const Icon(Icons.broken_image, size: 60));
-          } else {
-            preview = const Icon(Icons.insert_drive_file, size: 60);
-          }
-
-          return Container(
-            width: 100,
-            height: 100,
-            color: Colors.white,
-            child: preview,
-          );
-        }),
-    ]);
   }
 }

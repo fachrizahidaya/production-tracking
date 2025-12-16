@@ -16,7 +16,6 @@ class CreateForm extends StatefulWidget {
   final handleSelectLengthUnit;
   final handleSelectWidthUnit;
   final handleChangeInput;
-  final handleSubmit;
   final id;
   final data;
   final processId;
@@ -31,41 +30,39 @@ class CreateForm extends StatefulWidget {
   final handleSelectQtyUnitItem;
   final qtyItem;
 
-  const CreateForm(
-      {super.key,
-      this.formKey,
-      this.form,
-      this.note,
-      this.weight,
-      this.length,
-      this.width,
-      this.handleSelectWo,
-      this.handleSelectUnit,
-      this.handleSelectLengthUnit,
-      this.handleSelectWidthUnit,
-      this.handleChangeInput,
-      this.handleSubmit,
-      this.id,
-      this.data,
-      this.processData,
-      this.processId,
-      this.isLoading,
-      this.withItemGrade,
-      this.itemGradeOption,
-      this.handleSelectQtyUnit,
-      this.qty,
-      this.notes,
-      this.withQtyAndWeight,
-      this.handleSelectQtyUnitItem,
-      this.qtyItem});
+  const CreateForm({
+    super.key,
+    this.formKey,
+    this.form,
+    this.note,
+    this.weight,
+    this.length,
+    this.width,
+    this.handleSelectWo,
+    this.handleSelectUnit,
+    this.handleSelectLengthUnit,
+    this.handleSelectWidthUnit,
+    this.handleChangeInput,
+    this.id,
+    this.data,
+    this.processData,
+    this.processId,
+    this.isLoading,
+    this.withItemGrade,
+    this.itemGradeOption,
+    this.handleSelectQtyUnit,
+    this.qty,
+    this.notes,
+    this.withQtyAndWeight,
+    this.handleSelectQtyUnitItem,
+    this.qtyItem,
+  });
 
   @override
   State<CreateForm> createState() => _CreateFormState();
 }
 
 class _CreateFormState extends State<CreateForm> {
-  final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
-
   bool _isChanged = false;
   late String _initialWeight;
   late String _initialQty;
@@ -274,8 +271,6 @@ class _CreateFormState extends State<CreateForm> {
       handleSelectWo: widget.handleSelectWo,
       handleChangeInput: widget.handleChangeInput,
       handleSelectUnit: widget.handleSelectUnit,
-      isSubmitting: _isSubmitting,
-      handleSubmit: widget.handleSubmit,
       isFormIncomplete: _isFormIncomplete,
       isChanged: _isChanged,
       initialWeight: _initialWeight,

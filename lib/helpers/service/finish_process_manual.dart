@@ -70,6 +70,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
   final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<FormState> _listFormKey = GlobalKey();
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _lengthController = TextEditingController();
@@ -547,7 +548,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                     isLoading: _firstLoading,
                     form: widget.form,
                     formKey: _formKey,
-                    handleSubmit: widget.handleSubmit,
                     handleSelectMachine: null,
                     handleSelectWorkOrder: _selectWorkOrder,
                     handleSelectLengthUnit: _selectLengthUnit,
@@ -604,6 +604,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                         onPressed: () async {
                           _isSubmitting.value = true;
                           try {
+                            if (!_formKey.currentState!.validate()) {
+                              return;
+                            }
+
                             await widget.handleSubmit(data['id'] != null
                                 ? data['id'].toString()
                                 : widget.processId);

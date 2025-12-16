@@ -24,8 +24,6 @@ class ListForm extends StatefulWidget {
   final handleSelectWidthUnit;
   final handleSelectQtyUnitItem;
   final handleSelectMachine;
-  final isSubmitting;
-  final handleSubmit;
   final isFormIncomplete;
   final isChanged;
   final initialQty;
@@ -42,45 +40,44 @@ class ListForm extends StatefulWidget {
   final withQtyAndWeight;
   final showImageDialog;
 
-  const ListForm(
-      {super.key,
-      this.formKey,
-      this.id,
-      this.handleSelectWo,
-      this.form,
-      this.data,
-      this.length,
-      this.width,
-      this.weight,
-      this.note,
-      this.handleChangeInput,
-      this.handleSelectUnit,
-      this.handleSelectLengthUnit,
-      this.handleSelectWidthUnit,
-      this.isSubmitting,
-      this.handleSelectMachine,
-      this.handleSubmit,
-      this.isFormIncomplete,
-      this.processId,
-      this.isChanged,
-      this.initialWeight,
-      this.initialLength,
-      this.initialWidth,
-      this.initialNotes,
-      this.allAttachments,
-      this.handlePickAttachments,
-      this.processData,
-      this.withItemGrade = false,
-      this.itemGradeOption,
-      this.handleSelectQtyUnit,
-      this.notes,
-      this.qty,
-      this.withQtyAndWeight = false,
-      this.handleSelectQtyUnitItem,
-      this.initialQty,
-      this.qtyItem,
-      this.showImageDialog,
-      this.handleDeleteAttachment});
+  const ListForm({
+    super.key,
+    this.formKey,
+    this.id,
+    this.handleSelectWo,
+    this.form,
+    this.data,
+    this.length,
+    this.width,
+    this.weight,
+    this.note,
+    this.handleChangeInput,
+    this.handleSelectUnit,
+    this.handleSelectLengthUnit,
+    this.handleSelectWidthUnit,
+    this.handleSelectMachine,
+    this.isFormIncomplete,
+    this.processId,
+    this.isChanged,
+    this.initialWeight,
+    this.initialLength,
+    this.initialWidth,
+    this.initialNotes,
+    this.allAttachments,
+    this.handlePickAttachments,
+    this.processData,
+    this.withItemGrade = false,
+    this.itemGradeOption,
+    this.handleSelectQtyUnit,
+    this.notes,
+    this.qty,
+    this.withQtyAndWeight = false,
+    this.handleSelectQtyUnitItem,
+    this.initialQty,
+    this.qtyItem,
+    this.showImageDialog,
+    this.handleDeleteAttachment,
+  });
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -88,6 +85,7 @@ class ListForm extends StatefulWidget {
 
 class _ListFormState extends State<ListForm> {
   late List<Map<String, dynamic>> _grades;
+  String? _warningValidationMessage;
 
   @override
   void initState() {
@@ -96,6 +94,77 @@ class _ListFormState extends State<ListForm> {
         .toList();
     _syncGradesWithOptions();
     super.initState();
+  }
+
+  double _getTotalItemQty() {
+    final items = widget.processData['work_orders']?['items'] as List<dynamic>?;
+
+    if (items == null || items.isEmpty) return 0;
+
+    return items.fold<double>(0, (sum, item) {
+      final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
+      return sum + qty;
+    });
+  }
+
+  void _validateWeight(String weight) {
+    final greigeQty =
+        double.tryParse(widget.processData['work_orders']['greige_qty']);
+    final berat = double.tryParse(weight);
+
+    if (greigeQty == null || berat == null || greigeQty <= 0) {
+      setState(() {
+        _warningValidationMessage = null;
+      });
+      return;
+    }
+
+    final lowerLimit = greigeQty * 0.9;
+    final upperLimit = greigeQty * 1.1;
+
+    if (berat < lowerLimit || berat > upperLimit) {
+      final diffPercent = ((berat - greigeQty) / greigeQty) * 100;
+
+      setState(() {
+        _warningValidationMessage =
+            'Berat ${berat < greigeQty ? 'kurang' : 'lebih'} '
+            '${diffPercent.abs().toStringAsFixed(2)}% '
+            '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
+      });
+    } else {
+      setState(() {
+        _warningValidationMessage = null;
+      });
+    }
+  }
+
+  void _validateQty(String woQty) {
+    final qty = _getTotalItemQty();
+    final berat = double.tryParse(woQty);
+
+    if (qty <= 0 || berat == null) {
+      setState(() {
+        _warningValidationMessage = null;
+      });
+      return;
+    }
+
+    final lowerLimit = qty * 0.9;
+    final upperLimit = qty * 1.1;
+
+    if (berat < lowerLimit || berat > upperLimit) {
+      final diffPercent = ((berat - qty) / qty) * 100;
+
+      setState(() {
+        _warningValidationMessage = 'Berat ${berat < qty ? 'kurang' : 'lebih'} '
+            '${diffPercent.abs().toStringAsFixed(2)}% '
+            '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
+      });
+    } else {
+      setState(() {
+        _warningValidationMessage = null;
+      });
+    }
   }
 
   @override
@@ -147,7 +216,6 @@ class _ListFormState extends State<ListForm> {
       key: widget.formKey,
       child: FormSection(
         id: widget.id,
-        data: widget.data,
         form: widget.form,
         withItemGrade: widget.withItemGrade,
         withQtyAndWeight: widget.withQtyAndWeight,
@@ -170,6 +238,9 @@ class _ListFormState extends State<ListForm> {
         handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
         showImageDialog: widget.showImageDialog,
         handleDeleteAttachment: widget.handleDeleteAttachment,
+        validateWeight: _validateWeight,
+        validateQty: _validateQty,
+        weightWarning: _warningValidationMessage,
       ),
     );
   }

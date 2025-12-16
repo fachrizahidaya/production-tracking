@@ -518,6 +518,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
                 withMaklon: widget.withMaklon,
                 maklon: _maklonNameController,
                 onlySewing: widget.onlySewing,
+                label: widget.label,
               ),
             )
           ],

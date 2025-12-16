@@ -5,12 +5,12 @@ import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/layout/attachment_picker.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class FormSection extends StatefulWidget {
   final id;
-  final data;
   final form;
   final withItemGrade;
   final withQtyAndWeight;
@@ -33,11 +33,13 @@ class FormSection extends StatefulWidget {
   final handleDeleteAttachment;
   final handleSelectQtyUnitItem;
   final showImageDialog;
+  final validateWeight;
+  final validateQty;
+  final weightWarning;
 
   const FormSection(
       {super.key,
       this.allAttachments,
-      this.data,
       this.form,
       this.grades,
       this.handleChangeInput,
@@ -59,7 +61,10 @@ class FormSection extends StatefulWidget {
       this.width,
       this.withItemGrade,
       this.withQtyAndWeight,
-      this.handleDeleteAttachment});
+      this.handleDeleteAttachment,
+      this.validateWeight,
+      this.weightWarning,
+      this.validateQty});
 
   @override
   State<FormSection> createState() => _FormSectionState();
@@ -77,7 +82,8 @@ class _FormSectionState extends State<FormSection> {
         'selectedValue': widget.form['length_unit_id']?.toString() ?? '',
         'unitLabel': 'Satuan Panjang',
         'value': 'length',
-        'req': false
+        'req': false,
+        'withSelectUnit': false
       },
       {
         'label': 'Lebar',
@@ -87,7 +93,8 @@ class _FormSectionState extends State<FormSection> {
         'selectedValue': widget.form['width_unit_id']?.toString() ?? '',
         'unitLabel': 'Satuan Lebar',
         'value': 'width',
-        'req': false
+        'req': false,
+        'withSelectUnit': false
       },
       {
         'label': 'Berat',
@@ -97,7 +104,8 @@ class _FormSectionState extends State<FormSection> {
         'selectedValue': widget.form['weight_unit_id']?.toString() ?? '',
         'unitLabel': 'Satuan Berat',
         'value': 'weight',
-        'req': true
+        'req': widget.withQtyAndWeight == true ? false : true,
+        'withSelectUnit': true
       },
     ];
 
@@ -157,11 +165,18 @@ class _FormSectionState extends State<FormSection> {
               child: Padding(
             padding: PaddingColumn.screen,
             child: SelectForm(
-                label: 'Work Order',
-                onTap: () => widget.handleSelectWo(),
-                selectedLabel: widget.form['no_wo'] ?? '',
-                selectedValue: widget.form['wo_id']?.toString() ?? '',
-                required: true),
+              label: 'Work Order',
+              onTap: () => widget.handleSelectWo(),
+              selectedLabel: widget.form['no_wo'] ?? '',
+              selectedValue: widget.form['wo_id']?.toString() ?? '',
+              required: true,
+              validator: (value) {
+                if ((value == null || value.isEmpty)) {
+                  return 'Work Order wajib dipilih';
+                }
+                return null;
+              },
+            ),
           )),
         if (widget.form?['wo_id'] != null)
           Column(
@@ -202,35 +217,97 @@ class _FormSectionState extends State<FormSection> {
                                 children: [
                                   Expanded(
                                     flex: 2,
-                                    child: TextForm(
-                                      label: row['label'],
-                                      req: row['req'],
-                                      isNumber: true,
-                                      controller: row['controller'],
-                                      handleChange: (value) {
-                                        setState(() {
-                                          row['controller'].text =
-                                              value.toString();
-                                          widget.handleChangeInput(
-                                            row['label']
-                                                .toString()
-                                                .toLowerCase(),
-                                            value,
-                                          );
-                                        });
-                                      },
+                                    child: Column(
+                                      children: [
+                                        TextForm(
+                                          label: row['label'],
+                                          req: row['req'],
+                                          isNumber: true,
+                                          controller: row['controller'],
+                                          handleChange: (value) {
+                                            final safeValue = (value == null ||
+                                                    value
+                                                        .toString()
+                                                        .trim()
+                                                        .isEmpty)
+                                                ? '0'
+                                                : value.toString();
+
+                                            setState(() {
+                                              row['controller'].text =
+                                                  safeValue;
+                                              widget.handleChangeInput(
+                                                row['value'],
+                                                safeValue,
+                                              );
+
+                                              if (row['value'] == 'length') {
+                                                widget.handleChangeInput(
+                                                    'length_unit_id', 4);
+                                              }
+
+                                              if (row['value'] == 'width') {
+                                                widget.handleChangeInput(
+                                                    'width_unit_id', 4);
+                                              }
+
+                                              if (row['value'] == 'weight') {
+                                                widget.validateWeight(value);
+                                              }
+                                            });
+                                          },
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.trim().isEmpty) {
+                                              return '${row['label']} wajib diisi';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                        if (row['value'] == 'weight' &&
+                                            widget.weightWarning != null)
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 12),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const SizedBox(width: 8),
+                                                Expanded(
+                                                  child: Text(
+                                                    widget.weightWarning ?? '-',
+                                                    style: TextStyle(
+                                                      color: CustomTheme()
+                                                          .colors('warning'),
+                                                      fontSize: 13,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                   ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: SelectForm(
-                                      label: row['unitLabel'],
-                                      onTap: row['onSelect'],
-                                      selectedLabel: row['selectedLabel'],
-                                      selectedValue: row['selectedValue'],
-                                      required: row['req'],
+                                  if (row['withSelectUnit'] == true)
+                                    Expanded(
+                                      flex: 1,
+                                      child: SelectForm(
+                                        label: row['unitLabel'],
+                                        onTap: row['onSelect'],
+                                        selectedLabel: row['selectedLabel'],
+                                        selectedValue: row['selectedValue'],
+                                        required: row['req'],
+                                        validator: (value) {
+                                          if ((value == null ||
+                                              value.isEmpty)) {
+                                            return '${row['unitLabel']} wajib dipilih';
+                                          }
+                                          return null;
+                                        },
+                                      ),
                                     ),
-                                  ),
                                 ].separatedBy(const SizedBox(width: 16)),
                               );
                             }),
@@ -239,18 +316,52 @@ class _FormSectionState extends State<FormSection> {
                                 children: [
                                   Expanded(
                                     flex: 2,
-                                    child: TextForm(
-                                      label: 'Jumlah',
-                                      req: true,
-                                      isNumber: true,
-                                      controller: widget.qty,
-                                      handleChange: (value) {
-                                        setState(() {
-                                          widget.qty.text = value.toString();
-                                          widget.handleChangeInput(
-                                              'item_qty', value);
-                                        });
-                                      },
+                                    child: Column(
+                                      children: [
+                                        TextForm(
+                                          label: 'Jumlah',
+                                          req: true,
+                                          isNumber: true,
+                                          controller: widget.qty,
+                                          handleChange: (value) {
+                                            setState(() {
+                                              widget.qty.text =
+                                                  value.toString();
+                                              widget.handleChangeInput(
+                                                  'item_qty', value);
+                                              widget.validateQty(value);
+                                            });
+                                          },
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.trim().isEmpty) {
+                                              return 'Qty wajib diisi';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 12),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: Text(
+                                                  widget.weightWarning ?? '-',
+                                                  style: TextStyle(
+                                                    color: CustomTheme()
+                                                        .colors('warning'),
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   Expanded(
@@ -264,6 +375,12 @@ class _FormSectionState extends State<FormSection> {
                                           widget.form['unit_id']?.toString() ??
                                               '',
                                       required: true,
+                                      validator: (value) {
+                                        if ((value == null || value.isEmpty)) {
+                                          return 'Satuan wajib dipilih';
+                                        }
+                                        return null;
+                                      },
                                     ),
                                   )
                                 ].separatedBy(const SizedBox(width: 16)),

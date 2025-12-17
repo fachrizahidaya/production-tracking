@@ -22,7 +22,7 @@ class _ItemTabState extends State<ItemTab> {
 
     return Container(
       child: items.isEmpty
-          ? const Center(child: Text('No Data'))
+          ? Center(child: Text('No Data'))
           : ListView.builder(
               padding: EdgeInsets.only(top: 8),
               itemCount: items.length,

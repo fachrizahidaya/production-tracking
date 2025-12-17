@@ -60,7 +60,7 @@ class WorkOrderProcess {
 }
 
 class WorkOrderProcessService extends BaseService {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/dashboard/wo-process';
+  final String baseUrl = '${dotenv.env['API_URL']}/dashboard/wo-process';
 
   bool _isLoading = false;
   List<dynamic> _dataProcess = [];

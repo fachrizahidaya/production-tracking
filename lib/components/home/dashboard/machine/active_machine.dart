@@ -30,7 +30,8 @@ class _ActiveMachineState extends State<ActiveMachine> {
   final List<String> processFilters = [
     'All',
     'Dyeing',
-    'Press Tumbler',
+    'Press',
+    'Tumbler',
     'Stenter',
     'Long Sitting',
     'Long Hemming',
@@ -68,7 +69,16 @@ class _ActiveMachineState extends State<ActiveMachine> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Status Mesin'),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Status Mesin'),
+                      Text(
+                        'Pemantauan ketersediaan mesin secara real-time',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    ],
+                  ),
                   Row(
                     children: [
                       Container(

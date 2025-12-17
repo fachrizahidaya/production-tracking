@@ -24,7 +24,6 @@ class CreatePackingManual extends StatelessWidget {
       data: data,
       form: form,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchPackingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       withNoMaklonOrMachine: true,

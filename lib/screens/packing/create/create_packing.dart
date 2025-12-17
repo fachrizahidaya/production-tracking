@@ -38,10 +38,12 @@ class CreatePacking extends StatelessWidget {
     final message = await Provider.of<PackingService>(context, listen: false)
         .addItem(packing, isLoading);
 
-    showAlertDialog(
-        context: context, title: 'Packing Created', message: message);
-
     Navigator.pushNamedAndRemoveUntil(context, '/packings', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Packing Dimulai', message: message);
+    });
   }
 
   @override

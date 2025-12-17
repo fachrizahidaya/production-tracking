@@ -1,8 +1,7 @@
-// ignore_for_file: prefer_final_fields
+// ignore_for_file: prefer_final_fields, use_build_context_synchronously
 
 import 'dart:async';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
@@ -29,21 +28,21 @@ class LongSittingScreen extends StatefulWidget {
 class _LongSittingScreenState extends State<LongSittingScreen> {
   final MenuService _menuService = MenuService();
   final UserMenu _userMenu = UserMenu();
-  bool _isFiltered = false;
-  bool avaiableCreate = false;
-  bool _firstLoading = true;
-  final List<dynamic> _dataList = [];
 
+  bool _isFiltered = false;
+  bool _firstLoading = true;
   bool _hasMore = true;
   bool _canRead = false;
   bool _canCreate = false;
   bool _canDelete = false;
   bool _canUpdate = false;
-  bool _isLoading = false;
+  bool _isLoadMore = false;
+
+  final List<dynamic> _dataList = [];
   String _search = '';
-  Timer? _debounce;
-  int page = 0;
   Map<String, String> params = {'search': '', 'page': '0'};
+
+  Timer? _debounce;
 
   String dariTanggal = '';
   String sampaiTanggal = '';
@@ -51,25 +50,36 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
-    final firstDayOfMonth = DateTime(now.year, now.month, 1);
-    final today = now;
-
-    dariTanggal = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
-    sampaiTanggal = DateFormat('yyyy-MM-dd').format(today);
 
     setState(() {
       params = {
         'search': _search,
         'page': '0',
-        'start_date': dariTanggal,
-        'end_date': sampaiTanggal,
+        'start_date': '',
+        'end_date': '',
       };
     });
     Future.delayed(Duration.zero, () {
       _loadMore();
     });
     _intializeMenus();
+  }
+
+  bool _checkIsFiltered() {
+    final filterKeys = [
+      'status',
+      'user_id',
+      'start_date',
+      'end_date',
+    ];
+
+    for (var key in filterKeys) {
+      if (params[key] != null && params[key]!.isNotEmpty) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   Future<void> _intializeMenus() async {
@@ -93,7 +103,9 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
 
     _debounce = Timer(const Duration(milliseconds: 500), () {
       setState(() {
-        params = {'search': value, 'page': '0'};
+        _search = value;
+        params['search'] = value;
+        params['page'] = '0';
       });
       _loadMore();
     });
@@ -109,30 +121,21 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
       }
     });
 
-    if (params['start_date'] == null &&
-        params['end_date'] == null &&
-        params['machine_id'] == null &&
-        params['status'] == null) {
-      setState(() {
-        _isFiltered = false;
-      });
-    } else {
-      setState(() {
-        _isFiltered = true;
-      });
-    }
+    _isFiltered = _checkIsFiltered();
 
     _loadMore();
   }
 
   Future<void> _submitFilter() async {
     Navigator.pop(context);
+    setState(() {
+      _isFiltered = _checkIsFiltered();
+    });
     _loadMore();
   }
 
   Future<void> _loadMore() async {
-    if (_isLoading) return;
-    _isLoading = true;
+    _isLoadMore = true;
 
     if (params['page'] == '0') {
       setState(() {
@@ -142,40 +145,42 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
       });
     }
 
-    final currentPage = int.parse(params['page']!);
+    String newPage = (int.parse(params['page']!) + 1).toString();
+    setState(() {
+      params['page'] = newPage;
+    });
 
-    try {
-      List<LongSitting> loadData =
-          await Provider.of<LongSittingService>(context, listen: false)
-              .getDataList(params);
+    await Provider.of<LongSittingService>(context, listen: false)
+        .getDataList(params);
 
-      if (loadData.isEmpty) {
-        setState(() {
-          _firstLoading = false;
-          _hasMore = false;
-        });
-      } else {
-        setState(() {
-          _dataList.addAll(loadData);
-          _firstLoading = false;
-          params['page'] = (currentPage + 1).toString();
-          if (loadData.length < 20) {
-            _hasMore = false;
-          }
-        });
-      }
-    } finally {
-      _isLoading = false;
+    List<dynamic> loadData =
+        Provider.of<LongSittingService>(context, listen: false).items;
+
+    if (loadData.isEmpty) {
+      setState(() {
+        _firstLoading = false;
+        _isLoadMore = false;
+        _hasMore = false;
+      });
+    } else {
+      setState(() {
+        _dataList.addAll(loadData);
+        _firstLoading = false;
+        _isLoadMore = false;
+      });
     }
   }
 
   _refetch() {
-    Future.delayed(Duration.zero, () {
-      setState(() {
-        params = {'search': _search, 'page': '0'};
-      });
-      _loadMore();
+    setState(() {
+      params = {
+        'search': _search,
+        'page': '0',
+        'start_date': dariTanggal,
+        'end_date': sampaiTanggal,
+      };
     });
+    _loadMore();
   }
 
   @override
@@ -186,16 +191,13 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
+        backgroundColor: Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: 'Long Sitting',
           onReturn: () {
@@ -211,10 +213,12 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
             Expanded(
                 child: ProcessList(
               fetchData: (params) async {
-                return await Provider.of<LongSittingService>(context,
-                        listen: false)
-                    .getDataList(params);
+                final service =
+                    Provider.of<LongSittingService>(context, listen: false);
+                await service.getDataList(params);
+                return service.items;
               },
+              isLoadMore: _isLoadMore,
               service: LongSittingService(),
               searchQuery: _search,
               canCreate: _canCreate,
@@ -228,16 +232,16 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                 titleKey: 'ls_no',
                 subtitleKey: 'work_orders',
                 subtitleField: 'wo_no',
-                isRework: (item) => item.rework == false,
-                getStartTime: (item) => formatDateSafe(item.start_time),
-                getEndTime: (item) => formatDateSafe(item.end_time),
-                getStartBy: (item) => item.start_by?['name'] ?? '',
-                getEndBy: (item) => item.end_by?['name'] ?? '',
-                getStatus: (item) => item.status ?? '-',
+                isRework: (item) => item['rework'] == false,
+                getStartTime: (item) => formatDateSafe(item['start_time']),
+                getEndTime: (item) => formatDateSafe(item['end_time']),
+                getStartBy: (item) => item['start_by']?['name'] ?? '',
+                getEndBy: (item) => item['end_by']?['name'] ?? '',
+                getStatus: (item) => item['status'] ?? '-',
                 customBadgeBuilder: (status) => CustomBadge(
                     title: status,
                     withStatus: true,
-                    status: item.status,
+                    status: item['status'],
                     withDifferentColor: true,
                     color: status == 'Diproses'
                         ? Color(0xFFfff3c6)
@@ -248,8 +252,8 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => LongSittingDetail(
-                        id: item.id.toString(),
-                        no: item.ls_no.toString(),
+                        id: item['id'].toString(),
+                        no: item['ls_no'].toString(),
                         canDelete: _canDelete,
                         canUpdate: _canUpdate,
                       ),
@@ -282,20 +286,19 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        padding: EdgeInsets.symmetric(vertical: 8),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             ListTile(
                               leading: Icon(Icons.add,
                                   color: CustomTheme().buttonColor('primary')),
-                              title: const Text("Mulai Long Sitting"),
+                              title: Text("Mulai Long Sitting"),
                               onTap: () {
                                 Navigator.pop(context);
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CreateLongSitting(),
+                                    builder: (context) => CreateLongSitting(),
                                   ),
                                 );
                               },
@@ -303,13 +306,12 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                             ListTile(
                               leading: Icon(Icons.check_circle,
                                   color: CustomTheme().buttonColor('warning')),
-                              title: const Text("Selesai Long Sitting"),
+                              title: Text("Selesai Long Sitting"),
                               onTap: () {
                                 Navigator.pop(context);
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const FinishLongSitting(),
+                                    builder: (context) => FinishLongSitting(),
                                   ),
                                 );
                               },
@@ -331,64 +333,57 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
             ))
           ],
         ),
-        bottomNavigationBar: isPortrait
-            ? CustomFloatingButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                leading: Icon(Icons.add,
-                                    color:
-                                        CustomTheme().buttonColor('primary')),
-                                title: const Text("Mulai Long Sitting"),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CreateLongSitting(),
-                                    ),
-                                  );
-                                },
-                              ),
-                              ListTile(
-                                leading: Icon(Icons.check_circle,
-                                    color:
-                                        CustomTheme().buttonColor('warning')),
-                                title: const Text("Selesai Long Sitting"),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const FinishLongSitting(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
+        floatingActionButton: CustomFloatingButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListTile(
+                            leading: Icon(Icons.add,
+                                color: CustomTheme().buttonColor('primary')),
+                            title: Text("Mulai Long Sitting"),
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => CreateLongSitting(),
+                                ),
+                              );
+                            },
                           ),
-                        ),
-                      );
-                    },
+                          ListTile(
+                            leading: Icon(Icons.check_circle,
+                                color: CustomTheme().buttonColor('warning')),
+                            title: Text("Selesai Long Sitting"),
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => FinishLongSitting(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 },
-                icon: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 128,
-                ))
-            : null,
+              );
+            },
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+            )),
       ),
     );
   }

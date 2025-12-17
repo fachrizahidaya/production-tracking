@@ -40,6 +40,12 @@ class _ItemProcessState extends State<ItemProcess> {
                       withStatus: true,
                       icon: Icons.check_circle_outline,
                       title: widget.item.status,
+                      color: widget.item.status == 'Menunggu Diproses'
+                          ? Color(0xffdbeaff)
+                          : widget.item.status == 'Diproses'
+                              ? Color(0xFFfff3c6)
+                              : Color(0xffd1fae4),
+                      withDifferentColor: true,
                     ),
                   ].separatedBy(SizedBox(
                     width: 8,
@@ -81,40 +87,35 @@ class _ItemProcessState extends State<ItemProcess> {
                 children: [
                   _buildCard('Dyeing', 'dyeing', Icons.color_lens_outlined,
                       true, false, false, false, null),
-                  _buildCard(
-                      'Press Tumbler',
-                      'press-tumbler',
-                      Icons.content_copy_rounded,
-                      false,
-                      true,
-                      false,
-                      false,
-                      null),
+                  _buildCard('Press', 'press', Icons.dry_outlined, false, true,
+                      false, false, null),
+                  _buildCard('Tumbler', 'tumbler', Icons.dry_cleaning_outlined,
+                      false, true, false, false, null),
                   _buildCard('Stenter', 'stenter', Icons.air, false, true,
                       false, false, null),
-                  _buildCard(
-                      'Long Sitting',
-                      'long-sitting',
-                      Icons.content_paste_outlined,
-                      false,
-                      true,
-                      false,
-                      false,
-                      null),
-                  _buildCard('Long Hemming', 'long-sitting', Icons.cut, false,
-                      true, false, false, null),
+                  _buildCard('Long Slitting', 'long-sitting',
+                      Icons.cut_outlined, false, true, false, false, null),
+                  _buildCard('Long Hemming', 'long-hemming',
+                      Icons.link_outlined, false, true, false, false, null),
                   _buildCard('Cross Cutting', 'cross-cutting', Icons.cut, false,
                       true, true, false, null),
                   _buildCard('Sewing', 'sewing', Icons.link_outlined, false,
                       true, true, false, null),
-                  _buildCard('Embroidery', 'embroidery', Icons.link_outlined,
+                  _buildCard('Embroidery', 'embroidery', Icons.numbers_outlined,
                       false, true, true, false, null),
                   _buildCard('Printing', 'printing', Icons.print, false, true,
                       true, false, null),
                   _buildCard('Sorting', 'sorting', Icons.sort, false, false,
                       false, true, sortingGrades),
-                  _buildCard('Packing', 'packing', Icons.sort, false, false,
-                      false, true, packingGrades),
+                  _buildCard(
+                      'Packing',
+                      'packing',
+                      Icons.stacked_bar_chart_outlined,
+                      false,
+                      false,
+                      false,
+                      true,
+                      packingGrades),
                 ].separatedBy(SizedBox(
                   width: 8,
                 )),
@@ -131,12 +132,16 @@ class _ItemProcessState extends State<ItemProcess> {
   Widget _buildCard(
       title, item, icon, withQty, withWeight, withItemQty, withGrades, grades) {
     return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-          side: BorderSide(color: Colors.grey.shade400, width: 1.0)),
+      color: widget.item.processes[item]['status'] == 'Menunggu Diproses'
+          ? Color(0xFFfafafa)
+          : widget.item.processes[item]['status'] == 'Diproses'
+              ? Color(0xFFfffbea)
+              : widget.item.processes[item]['status'] == 'Selesai'
+                  ? Color(0xfff0fdf4)
+                  : Color(0xfff1f4fd),
       child: SizedBox(
-        height: 180,
-        width: 250,
+        height: 150,
+        width: 380,
         child: Padding(
           padding: PaddingColumn.screen,
           child: Column(
@@ -146,20 +151,27 @@ class _ItemProcessState extends State<ItemProcess> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Row(
+                    children: [
+                      Icon(icon),
+                      Text(title),
+                    ].separatedBy(SizedBox(
+                      width: 8,
+                    )),
+                  ),
                   CustomBadge(
                     withStatus: true,
                     icon: Icons.check_circle_outline,
                     title: widget.item.processes[item]['status'],
+                    withDifferentColor: true,
+                    color: widget.item.processes[item]['status'] ==
+                            'Menunggu Diproses'
+                        ? Color(0xFFf1f5f9)
+                        : widget.item.processes[item]['status'] == 'Diproses'
+                            ? Color(0xFFfff3c6)
+                            : Color(0xffd1fae4),
                   ),
                 ],
-              ),
-              Row(
-                children: [
-                  Icon(icon),
-                  Text(title),
-                ].separatedBy(SizedBox(
-                  width: 8,
-                )),
               ),
               if (withQty)
                 Row(

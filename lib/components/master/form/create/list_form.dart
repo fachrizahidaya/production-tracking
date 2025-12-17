@@ -13,10 +13,7 @@ class ListForm extends StatefulWidget {
   final attachments;
   final selectWorkOrder;
   final selectMachine;
-  final isSubmitting;
-  final isFormIncomplete;
   final handleSubmit;
-  final handlePickAttachments;
   final isMaklon;
   final maklon;
   final withMaklonOrMachine;
@@ -31,10 +28,7 @@ class ListForm extends StatefulWidget {
       this.data,
       this.selectWorkOrder,
       this.selectMachine,
-      this.isSubmitting,
-      this.isFormIncomplete,
       this.handleSubmit,
-      this.handlePickAttachments,
       this.attachments,
       this.maklon,
       this.isMaklon = false,
@@ -117,18 +111,6 @@ class _ListFormState extends State<ListForm> {
                       Text(_isMaklon ? 'Ya' : 'Tidak'),
                     ].separatedBy(const SizedBox(width: 8)),
                   ),
-                  // if (_isMaklon)
-                  //   TextForm(
-                  //     label: 'Nama Maklon',
-                  //     req: false,
-                  //     controller: widget.maklon,
-                  //     handleChange: (value) {
-                  //       setState(() {
-                  //         widget.maklon.text = value.toString();
-                  //         widget.form['maklon_name'] = value.toString();
-                  //       });
-                  //     },
-                  //   ),
                 ],
               ),
             ))

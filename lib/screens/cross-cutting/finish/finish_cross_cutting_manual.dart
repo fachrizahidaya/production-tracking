@@ -29,6 +29,11 @@ class _FinishCrossCuttingManualState extends State<FinishCrossCuttingManual> {
 
   @override
   void initState() {
+    widget.form?['length'] ??= '0';
+    widget.form?['width'] ??= '0';
+    widget.form?['length_unit_id'] ??= 4;
+    widget.form?['width_unit_id'] ??= 4;
+
     super.initState();
   }
 
@@ -45,7 +50,6 @@ class _FinishCrossCuttingManualState extends State<FinishCrossCuttingManual> {
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchCuttingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       processService: _crossCuttingService,

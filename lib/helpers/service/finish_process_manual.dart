@@ -18,14 +18,13 @@ import 'package:textile_tracking/models/option/option_work_order.dart';
 
 class FinishProcessManual extends StatefulWidget {
   final title;
-  final String? machineFilterValue;
   final dynamic id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
+  final void Function(String fieldName, dynamic value)? handleChangeInput;
   final handleSubmit;
   final fetchWorkOrder;
   final getWorkOrderOptions;
-  final void Function(String fieldName, dynamic value)? handleChangeInput;
   final label;
   final processService;
   final idProcess;
@@ -39,7 +38,6 @@ class FinishProcessManual extends StatefulWidget {
   const FinishProcessManual(
       {super.key,
       this.title,
-      this.machineFilterValue,
       this.id,
       this.data,
       this.form,
@@ -70,6 +68,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
   final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<FormState> _listFormKey = GlobalKey();
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _lengthController = TextEditingController();
@@ -547,7 +546,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                     isLoading: _firstLoading,
                     form: widget.form,
                     formKey: _formKey,
-                    handleSubmit: widget.handleSubmit,
                     handleSelectMachine: null,
                     handleSelectWorkOrder: _selectWorkOrder,
                     handleSelectLengthUnit: _selectLengthUnit,
@@ -572,6 +570,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                   ),
                   CreateFormTab(
                     data: woData,
+                    label: widget.label,
                   ),
                   CreateItemTab(
                     data: woData,
@@ -604,6 +603,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                         onPressed: () async {
                           _isSubmitting.value = true;
                           try {
+                            if (!_formKey.currentState!.validate()) {
+                              return;
+                            }
+
                             await widget.handleSubmit(data['id'] != null
                                 ? data['id'].toString()
                                 : widget.processId);

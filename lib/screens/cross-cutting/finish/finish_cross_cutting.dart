@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/service/finish_process.dart';
-import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/cross_cutting.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/cross-cutting/finish/finish_cross_cutting_manual.dart';
@@ -18,10 +17,6 @@ class FinishCrossCutting extends StatefulWidget {
 }
 
 class _FinishCrossCuttingState extends State<FinishCrossCutting> {
-  int number = 0;
-
-  late List<dynamic> workOrderOption = [];
-
   final Map<String, dynamic> _form = {
     'wo_id': null,
     'machine_id': null,
@@ -54,22 +49,10 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
   @override
   void initState() {
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
-    _handleFetchWorkOrder();
     super.initState();
 
     setState(() {
       _form['end_by_id'] = loggedInUser?.id;
-    });
-  }
-
-  Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchCuttingFinishOptions();
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
-
-    setState(() {
-      workOrderOption = result;
     });
   }
 
@@ -122,12 +105,15 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
             await Provider.of<CrossCuttingService>(context, listen: false)
                 .finishItem(id, crossCutting, isLoading);
 
-        showAlertDialog(
-            context: context,
-            title: 'Cross Cutting Finished',
-            message: message);
         Navigator.pushNamedAndRemoveUntil(
             context, '/cross-cuttings', (_) => false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showAlertDialog(
+              context: context,
+              title: 'Cross Cutting Selesai',
+              message: message);
+        });
       },
     );
   }

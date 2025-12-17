@@ -15,8 +15,6 @@ class InfoTab extends StatefulWidget {
 class _InfoTabState extends State<InfoTab> {
   @override
   Widget build(BuildContext context) {
-    final existing = (widget.data?['attachments'] ?? []) as List<dynamic>;
-
     if (widget.isLoading) {
       return Center(
         child: CircularProgressIndicator(),
@@ -32,7 +30,6 @@ class _InfoTabState extends State<InfoTab> {
 
     return ListInfo(
       data: widget.data,
-      existingAttachment: existing,
     );
   }
 }

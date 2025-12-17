@@ -20,13 +20,14 @@ class WorkOrderPieState extends State<WorkOrderPie> {
 
   static const List<IconData> processIcons = [
     Icons.invert_colors_on_outlined,
-    Icons.content_copy_rounded,
+    Icons.dry_outlined,
+    Icons.dry_cleaning_outlined,
     Icons.air,
-    Icons.content_paste_outlined,
-    Icons.cut,
+    Icons.cut_outlined,
+    Icons.link_outlined,
     Icons.cut,
     Icons.link_outlined,
-    Icons.color_lens_outlined,
+    Icons.numbers_outlined,
     Icons.print_outlined,
     Icons.sort,
     Icons.stacked_bar_chart_outlined,
@@ -52,15 +53,24 @@ class WorkOrderPieState extends State<WorkOrderPie> {
                   padding: PaddingColumn.screen,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text('Alur Proses Produksi'),
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Alur Proses Produksi'),
+                          Text(
+                            'Tahapan lengkap proses produksi dari awal hingga akhir',
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
                 if (isEmpty)
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.2,
-                    child: const Center(child: NoData()),
+                    child: Center(child: NoData()),
                   )
                 else
                   SingleChildScrollView(

@@ -150,84 +150,83 @@ class CustomTheme {
   }
 
   InputDecoration inputDateDecoration(
-      {String? hintTextString, bool? clearable, Function()? onPressClear}) {
+      {String? hintTextString,
+      bool? clearable,
+      Function()? onPressClear,
+      required bool hasValue}) {
     return InputDecoration(
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(
-              4.0,
-            ),
-          ),
-          borderSide: BorderSide(
-            width: 0.5,
-            color: colors('base'),
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 12,
+      ),
+      border: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(
+            4.0,
           ),
         ),
-        focusedBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(
-              4.0,
-            ),
-          ),
-          borderSide: BorderSide(
-            width: 0.5,
-            color: Colors.black87,
+        borderSide: BorderSide(
+          width: 0.5,
+          color: colors('base'),
+        ),
+      ),
+      focusedBorder: const OutlineInputBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(
+            4.0,
           ),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(
-              4.0,
-            ),
-          ),
-          borderSide: BorderSide(
-            width: 0.5,
-            color: colors('base'),
+        borderSide: BorderSide(
+          width: 0.5,
+          color: Colors.black87,
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(
+            4.0,
           ),
         ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(
-              4.0,
-            ),
-          ),
-          borderSide: BorderSide(
-            width: 0.5,
-            color: Colors.red.shade500,
+        borderSide: BorderSide(
+          width: 0.5,
+          color: colors('base'),
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(
+            4.0,
           ),
         ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(
-              4.0,
-            ),
-          ),
-          borderSide: BorderSide(
-            width: 0.5,
-            color: Colors.red.shade500,
+        borderSide: BorderSide(
+          width: 0.5,
+          color: Colors.red.shade500,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(
+            4.0,
           ),
         ),
-        hintText: hintTextString,
-        hintStyle: const TextStyle(
-          color: Colors.black38,
-          fontWeight: FontWeight.w400,
+        borderSide: BorderSide(
+          width: 0.5,
+          color: Colors.red.shade500,
         ),
-        suffixIcon: clearable == false
-            ? Icon(
-                Icons.calendar_month_outlined,
-                color: colors('base'),
-              )
-            : IconButton(
-                icon: const Icon(Icons.calendar_month_outlined),
-                onPressed: () {
-                  onPressClear!();
-                },
-              ));
+      ),
+      hintText: hintTextString,
+      hintStyle: const TextStyle(
+        color: Colors.black38,
+        fontWeight: FontWeight.w400,
+      ),
+      suffixIcon: hasValue
+          ? IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: onPressClear,
+            )
+          : null,
+    );
   }
 
   InputDecoration inputTimeDecoration([String? hintTextString]) {

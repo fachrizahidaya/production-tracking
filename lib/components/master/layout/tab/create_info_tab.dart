@@ -6,7 +6,6 @@ class CreateInfoTab extends StatefulWidget {
   final data;
   final form;
   final formKey;
-  final handleSubmit;
   final handleSelectMachine;
   final handleSelectWorkOrder;
   final isLoading;
@@ -45,58 +44,63 @@ class CreateInfoTab extends StatefulWidget {
   final itemGradeOption;
   final withQtyAndWeight;
 
-  const CreateInfoTab(
-      {super.key,
-      this.data,
-      this.form,
-      this.formKey,
-      this.handleSelectMachine,
-      this.handleSelectWorkOrder,
-      this.handleSubmit,
-      this.id,
-      this.isLoading,
-      this.isMaklon,
-      this.maklon,
-      this.withMaklonOrMachine,
-      this.withNoMaklonOrMachine,
-      this.withOnlyMaklon,
-      this.handleChangeInput,
-      this.handleSelectLengthUnit,
-      this.handleSelectUnit,
-      this.handleSelectWidthUnit,
-      this.allAttachments,
-      this.handlePickAttachments,
-      this.handleSelectQtyUnit,
-      this.handleSelectQtyUnitItem,
-      this.handleSelectWo,
-      this.initialLength,
-      this.initialNotes,
-      this.initialQty,
-      this.initialWeight,
-      this.initialWidth,
-      this.isChanged,
-      this.isFormIncomplete,
-      this.isSubmitting,
-      this.itemGradeOption,
-      this.length,
-      this.note,
-      this.notes,
-      this.processData,
-      this.processId,
-      this.qty,
-      this.qtyItem,
-      this.weight,
-      this.width,
-      this.withItemGrade,
-      this.withQtyAndWeight});
+  const CreateInfoTab({
+    super.key,
+    this.data,
+    this.form,
+    this.formKey,
+    this.handleSelectMachine,
+    this.handleSelectWorkOrder,
+    this.id,
+    this.isLoading,
+    this.isMaklon,
+    this.maklon,
+    this.withMaklonOrMachine,
+    this.withNoMaklonOrMachine,
+    this.withOnlyMaklon,
+    this.handleChangeInput,
+    this.handleSelectLengthUnit,
+    this.handleSelectUnit,
+    this.handleSelectWidthUnit,
+    this.allAttachments,
+    this.handlePickAttachments,
+    this.handleSelectQtyUnit,
+    this.handleSelectQtyUnitItem,
+    this.handleSelectWo,
+    this.initialLength,
+    this.initialNotes,
+    this.initialQty,
+    this.initialWeight,
+    this.initialWidth,
+    this.isChanged,
+    this.isFormIncomplete,
+    this.isSubmitting,
+    this.itemGradeOption,
+    this.length,
+    this.note,
+    this.notes,
+    this.processData,
+    this.processId,
+    this.qty,
+    this.qtyItem,
+    this.weight,
+    this.width,
+    this.withItemGrade,
+    this.withQtyAndWeight,
+  });
 
   @override
   State<CreateInfoTab> createState() => _CreateInfoTabState();
 }
 
-class _CreateInfoTabState extends State<CreateInfoTab> {
+class _CreateInfoTabState extends State<CreateInfoTab>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (widget.isLoading) {
       return Center(
         child: CircularProgressIndicator(),
@@ -120,7 +124,6 @@ class _CreateInfoTabState extends State<CreateInfoTab> {
               handleSelectUnit: widget.handleSelectUnit,
               handleChangeInput: widget.handleChangeInput,
               handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
-              handleSubmit: widget.handleSubmit,
               id: widget.id,
               data: widget.data,
               processId: widget.processId,

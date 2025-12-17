@@ -40,10 +40,12 @@ class CreatePrinting extends StatelessWidget {
     final message = await Provider.of<PrintingService>(context, listen: false)
         .addItem(printing, isLoading);
 
-    showAlertDialog(
-        context: context, title: 'Printing Created', message: message);
-
     Navigator.pushNamedAndRemoveUntil(context, '/printings', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Printing Dimulai', message: message);
+    });
   }
 
   @override

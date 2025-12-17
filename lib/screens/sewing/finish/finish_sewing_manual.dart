@@ -28,6 +28,11 @@ class _FinishSewingManualState extends State<FinishSewingManual> {
 
   @override
   void initState() {
+    widget.form?['length'] ??= '0';
+    widget.form?['width'] ??= '0';
+    widget.form?['length_unit_id'] ??= 4;
+    widget.form?['width_unit_id'] ??= 4;
+
     super.initState();
   }
 
@@ -44,7 +49,6 @@ class _FinishSewingManualState extends State<FinishSewingManual> {
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchSewingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       processService: _sewingService,

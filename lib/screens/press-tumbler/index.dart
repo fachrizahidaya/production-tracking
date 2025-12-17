@@ -1,11 +1,11 @@
-// ignore_for_file: prefer_final_fields
+// ignore_for_file: prefer_final_fields, use_build_context_synchronously
 
 import 'dart:async';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
+import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
@@ -29,21 +29,21 @@ class PressTumblerScreen extends StatefulWidget {
 class _PressTumblerScreenState extends State<PressTumblerScreen> {
   final MenuService _menuService = MenuService();
   final UserMenu _userMenu = UserMenu();
-  bool _isFiltered = false;
-  bool avaiableCreate = false;
-  bool _firstLoading = true;
-  final List<dynamic> _dataList = [];
 
+  bool _isFiltered = false;
+  bool _firstLoading = true;
   bool _hasMore = true;
   bool _canRead = false;
   bool _canCreate = false;
   bool _canDelete = false;
   bool _canUpdate = false;
-  bool _isLoading = false;
+  bool _isLoadMore = false;
+
+  final List<dynamic> _dataList = [];
   String _search = '';
-  Timer? _debounce;
-  int page = 0;
   Map<String, String> params = {'search': '', 'page': '0'};
+
+  Timer? _debounce;
 
   String dariTanggal = '';
   String sampaiTanggal = '';
@@ -51,19 +51,13 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
-    final firstDayOfMonth = DateTime(now.year, now.month, 1);
-    final today = now;
-
-    dariTanggal = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
-    sampaiTanggal = DateFormat('yyyy-MM-dd').format(today);
 
     setState(() {
       params = {
         'search': _search,
         'page': '0',
-        'start_date': dariTanggal,
-        'end_date': sampaiTanggal,
+        'start_date': '',
+        'end_date': '',
       };
     });
     Future.delayed(Duration.zero, () {
@@ -72,16 +66,33 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
     _intializeMenus();
   }
 
+  bool _checkIsFiltered() {
+    final filterKeys = [
+      'status',
+      'user_id',
+      'start_date',
+      'end_date',
+    ];
+
+    for (var key in filterKeys) {
+      if (params[key] != null && params[key]!.isNotEmpty) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   Future<void> _intializeMenus() async {
     try {
       await _menuService.handleFetchMenu();
       await _userMenu.handleLoadMenu();
 
       setState(() {
-        _canRead = _userMenu.checkMenu('Press Tumbler', 'read');
-        _canCreate = _userMenu.checkMenu('Press Tumbler', 'create');
-        _canDelete = _userMenu.checkMenu('Press Tumbler', 'delete');
-        _canUpdate = _userMenu.checkMenu('Press Tumbler', 'update');
+        _canRead = _userMenu.checkMenu('Press', 'read');
+        _canCreate = _userMenu.checkMenu('Press', 'create');
+        _canDelete = _userMenu.checkMenu('Press', 'delete');
+        _canUpdate = _userMenu.checkMenu('Press', 'update');
       });
     } catch (e) {
       throw Exception('Error initializing menus: $e');
@@ -93,7 +104,9 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
 
     _debounce = Timer(const Duration(milliseconds: 500), () {
       setState(() {
-        params = {'search': value, 'page': '0'};
+        _search = value;
+        params['search'] = value;
+        params['page'] = '0';
       });
       _loadMore();
     });
@@ -109,30 +122,21 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
       }
     });
 
-    if (params['start_date'] == null &&
-        params['end_date'] == null &&
-        params['user_id'] == null &&
-        params['status'] == null) {
-      setState(() {
-        _isFiltered = false;
-      });
-    } else {
-      setState(() {
-        _isFiltered = true;
-      });
-    }
+    _isFiltered = _checkIsFiltered();
 
     _loadMore();
   }
 
   Future<void> _submitFilter() async {
     Navigator.pop(context);
+    setState(() {
+      _isFiltered = _checkIsFiltered();
+    });
     _loadMore();
   }
 
   Future<void> _loadMore() async {
-    if (_isLoading) return;
-    _isLoading = true;
+    _isLoadMore = true;
 
     if (params['page'] == '0') {
       setState(() {
@@ -142,40 +146,42 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
       });
     }
 
-    final currentPage = int.parse(params['page']!);
+    String newPage = (int.parse(params['page']!) + 1).toString();
+    setState(() {
+      params['page'] = newPage;
+    });
 
-    try {
-      List<PressTumbler> loadData =
-          await Provider.of<PressTumblerService>(context, listen: false)
-              .getDataList(params);
+    await Provider.of<PressTumblerService>(context, listen: false)
+        .getDataList(params);
 
-      if (loadData.isEmpty) {
-        setState(() {
-          _firstLoading = false;
-          _hasMore = false;
-        });
-      } else {
-        setState(() {
-          _dataList.addAll(loadData);
-          _firstLoading = false;
-          params['page'] = (currentPage + 1).toString();
-          if (loadData.length < 20) {
-            _hasMore = false;
-          }
-        });
-      }
-    } finally {
-      _isLoading = false;
+    List<dynamic> loadData =
+        Provider.of<PressTumblerService>(context, listen: false).items;
+
+    if (loadData.isEmpty) {
+      setState(() {
+        _firstLoading = false;
+        _isLoadMore = false;
+        _hasMore = false;
+      });
+    } else {
+      setState(() {
+        _dataList.addAll(loadData);
+        _firstLoading = false;
+        _isLoadMore = false;
+      });
     }
   }
 
   _refetch() {
-    Future.delayed(Duration.zero, () {
-      setState(() {
-        params = {'search': _search, 'page': '0'};
-      });
-      _loadMore();
+    setState(() {
+      params = {
+        'search': _search,
+        'page': '0',
+        'start_date': dariTanggal,
+        'end_date': sampaiTanggal,
+      };
     });
+    _loadMore();
   }
 
   @override
@@ -186,18 +192,15 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
+        backgroundColor: Color(0xFFf9fafc),
         appBar: CustomAppBar(
-          title: 'Press Tumbler',
+          title: 'Press',
           onReturn: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
@@ -211,48 +214,47 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
             Expanded(
                 child: ProcessList(
               fetchData: (params) async {
-                return await Provider.of<PressTumblerService>(context,
-                        listen: false)
-                    .getDataList(params);
+                final service =
+                    Provider.of<PressTumblerService>(context, listen: false);
+                await service.getDataList(params);
+                return service.items;
               },
+              isLoadMore: _isLoadMore,
               service: PressTumblerService(),
               searchQuery: _search,
               canCreate: _canCreate,
               canRead: _canRead,
-              itemBuilder: (item) => Align(
-                alignment: Alignment.centerLeft,
-                child: ItemProcessCard(
-                  useCustomSize: true,
-                  customWidth: 930.0,
-                  customHeight: null,
-                  label: 'No. Press Tumbler',
-                  item: item,
-                  titleKey: 'pt_no',
-                  subtitleKey: 'work_orders',
-                  subtitleField: 'wo_no',
-                  isRework: (item) => item.rework == false,
-                  getStartTime: (item) => formatDateSafe(item.start_time),
-                  getEndTime: (item) => formatDateSafe(item.end_time),
-                  getStartBy: (item) => item.start_by?['name'] ?? '',
-                  getEndBy: (item) => item.end_by?['name'] ?? '',
-                  getStatus: (item) => item.status ?? '-',
-                  customBadgeBuilder: (status) => CustomBadge(
-                      title: status,
-                      withStatus: true,
-                      status: item.status,
-                      withDifferentColor: true,
-                      color: status == 'Diproses'
-                          ? Color(0xFFfff3c6)
-                          : Color(0xffd1fae4)),
-                ),
+              itemBuilder: (item) => ItemProcessCard(
+                useCustomSize: true,
+                customWidth: 930.0,
+                customHeight: null,
+                label: 'No. Press',
+                item: item,
+                titleKey: 'press_no',
+                subtitleKey: 'work_orders',
+                subtitleField: 'wo_no',
+                isRework: (item) => item['rework'] == false,
+                getStartTime: (item) => formatDateSafe(item['start_time']),
+                getEndTime: (item) => formatDateSafe(item['end_time']),
+                getStartBy: (item) => item['start_by']?['name'] ?? '',
+                getEndBy: (item) => item['end_by']?['name'] ?? '',
+                getStatus: (item) => item['status'] ?? '-',
+                customBadgeBuilder: (status) => CustomBadge(
+                    title: status,
+                    withStatus: true,
+                    status: item['status'],
+                    withDifferentColor: true,
+                    color: status == 'Diproses'
+                        ? Color(0xFFfff3c6)
+                        : Color(0xffd1fae4)),
               ),
               onItemTap: (context, item) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => PressTumblerDetail(
-                        id: item.id.toString(),
-                        no: item.pt_no.toString(),
+                        id: item['id'].toString(),
+                        no: item['press_no'].toString(),
                         canDelete: _canDelete,
                         canUpdate: _canUpdate,
                       ),
@@ -276,79 +278,6 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
                 dariTanggal: dariTanggal,
                 sampaiTanggal: sampaiTanggal,
               ),
-              showActions: () {
-                // ProcessSheet.showOptions(
-                //   context,
-                //   options: [
-                //     BottomSheetOption(
-                //       title: "Mulai Press Tumbler",
-                //       icon: Icons.add,
-                //       iconColor: CustomTheme().buttonColor('primary'),
-                //       onTap: () => Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //             builder: (_) => const CreatePressTumbler()),
-                //       ),
-                //     ),
-                //     BottomSheetOption(
-                //       title: "Selesai Press Tumbler",
-                //       icon: Icons.check_circle,
-                //       iconColor: CustomTheme().buttonColor('warning'),
-                //       onTap: () => Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //             builder: (_) => const FinishPressTumbler()),
-                //       ),
-                //     ),
-                //   ],
-                // );
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: Icon(Icons.add,
-                                  color: CustomTheme().buttonColor('primary')),
-                              title: const Text("Mulai Press Tumbler"),
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CreatePressTumbler(),
-                                  ),
-                                );
-                              },
-                            ),
-                            ListTile(
-                              leading: Icon(Icons.check_circle,
-                                  color: CustomTheme().buttonColor('warning')),
-                              title: const Text("Selesai Press Tumbler"),
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const FinishPressTumbler(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
               firstLoading: _firstLoading,
               isFiltered: _isFiltered,
               hasMore: _hasMore,
@@ -359,89 +288,45 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
             ))
           ],
         ),
-        bottomNavigationBar: isPortrait
-            ? CustomFloatingButton(
-                onPressed: () {
-                  // ProcessSheet.showOptions(
-                  //   context,
-                  //   options: [
-                  //     BottomSheetOption(
-                  //       title: "Mulai Press Tumbler",
-                  //       icon: Icons.add,
-                  //       iconColor: CustomTheme().buttonColor('primary'),
-                  //       onTap: () => Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //             builder: (_) => const CreatePressTumbler()),
-                  //       ),
-                  //     ),
-                  //     BottomSheetOption(
-                  //       title: "Selesai Press Tumbler",
-                  //       icon: Icons.check_circle,
-                  //       iconColor: CustomTheme().buttonColor('warning'),
-                  //       onTap: () => Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //             builder: (_) => const FinishPressTumbler()),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // );
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                leading: Icon(Icons.add,
-                                    color:
-                                        CustomTheme().buttonColor('primary')),
-                                title: const Text("Mulai Press Tumbler"),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CreatePressTumbler(),
-                                    ),
-                                  );
-                                },
-                              ),
-                              ListTile(
-                                leading: Icon(Icons.check_circle,
-                                    color:
-                                        CustomTheme().buttonColor('warning')),
-                                title: const Text("Selesai Press Tumbler"),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const FinishPressTumbler(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
+        floatingActionButton: CustomFloatingButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  final actions = [
+                    DialogActionItem(
+                      icon: Icons.add,
+                      iconColor: CustomTheme().buttonColor('primary'),
+                      title: 'Mulai Press',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const CreatePressTumbler(),
                           ),
-                        ),
-                      );
-                    },
-                  );
+                        );
+                      },
+                    ),
+                    DialogActionItem(
+                      icon: Icons.check_circle,
+                      iconColor: CustomTheme().buttonColor('warning'),
+                      title: 'Selesai Press',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const FinishPressTumbler(),
+                          ),
+                        );
+                      },
+                    ),
+                  ];
+                  return ActionDialog(actions: actions);
                 },
-                icon: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 128,
-                ))
-            : null,
+              );
+            },
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+            )),
       ),
     );
   }

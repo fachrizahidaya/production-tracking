@@ -46,14 +46,14 @@ class _FinishDyeingState extends State<FinishDyeing> {
     'wo_id': null,
     'machine_id': null,
     'unit_id': null,
-    'length_unit_id': null,
-    'width_unit_id': null,
+    'length_unit_id': 4,
+    'width_unit_id': 4,
     'rework_reference_id': null,
     'start_by_id': null,
     'end_by_id': null,
     'qty': null,
-    'width': null,
-    'length': null,
+    'width': '0',
+    'length': '0',
     'notes': '',
     'rework': null,
     'status': null,
@@ -91,8 +91,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
     });
 
     try {
-      final String woNo =
-          code.toString(); // QR contains wo_no like "WO/25/10/00059"
+      final String woNo = code.toString();
 
       if (woNo.isEmpty) {
         showAlertDialog(
@@ -101,11 +100,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
         return;
       }
 
-      // Prepare request body
       final woForm = {'wo_no': woNo};
       final ValueNotifier<bool> isSubmitting = ValueNotifier(false);
 
-      // Fetch process data using wo_no
       final processResponse =
           await _workOrderService.getProcessData(woForm, isSubmitting);
 
@@ -121,7 +118,6 @@ class _FinishDyeingState extends State<FinishDyeing> {
       final String woId = processResponse['wo_id'].toString();
       final String processId = processResponse['process_id'].toString();
 
-      // Check if work order exists
       final bool workOrderExists =
           workOrderOption.any((item) => item['value'].toString() == woId);
 
@@ -132,11 +128,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
         return;
       }
 
-      // If exists → continue to get WO details and navigate
       await _workOrderService.getDataView(woId);
       final data = _workOrderService.dataView;
 
-      // Update form values
       _form['wo_id'] = data['id']?.toString() ?? woId;
       _form['no_wo'] = data['wo_no']?.toString() ?? woNo;
       _form['process_id'] = processId;
@@ -145,7 +139,6 @@ class _FinishDyeingState extends State<FinishDyeing> {
         _isLoading = false;
       });
 
-      // Navigate to FinishDyeingManual
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -191,8 +184,14 @@ class _FinishDyeingState extends State<FinishDyeing> {
               ? int.tryParse(_form['rework_reference_id'].toString())
               : null,
           qty: (_form['qty']),
-          width: (_form['width']),
-          length: (_form['length']),
+          width: _form['width'] =
+              (_form['width'] == null || _form['width'].toString().isEmpty)
+                  ? '0'
+                  : _form['width'],
+          length: _form['length'] =
+              (_form['length'] == null || _form['length'].toString().isEmpty)
+                  ? '0'
+                  : _form['length'],
           notes: _form['notes'],
           rework: _form['rework'],
           status: _form['status'],
@@ -209,14 +208,16 @@ class _FinishDyeingState extends State<FinishDyeing> {
       final message = await Provider.of<DyeingService>(context, listen: false)
           .finishItem(id, dyeing, _firstLoading);
 
-      showAlertDialog(
-          context: context, title: 'Dyeing Finished', message: message);
-
       Navigator.pushNamedAndRemoveUntil(
         context,
         '/dyeings',
         (Route<dynamic> route) => false,
       );
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showAlertDialog(
+            context: context, title: 'Dyeing Selesai', message: message);
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),

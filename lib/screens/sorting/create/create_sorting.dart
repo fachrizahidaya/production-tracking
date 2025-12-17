@@ -38,10 +38,12 @@ class CreateSorting extends StatelessWidget {
     final message = await Provider.of<SortingService>(context, listen: false)
         .addItem(sorting, isLoading);
 
-    showAlertDialog(
-        context: context, title: 'Sorting Created', message: message);
-
     Navigator.pushNamedAndRemoveUntil(context, '/sortings', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Sorting Dimulai', message: message);
+    });
   }
 
   @override

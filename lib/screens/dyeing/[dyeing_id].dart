@@ -36,6 +36,7 @@ class DyeingDetail extends StatefulWidget {
 
 class _DyeingDetailState extends State<DyeingDetail> {
   final DyeingService _dyeingService = DyeingService();
+
   bool _firstLoading = true;
   final List<dynamic> _dataList = [];
   final ValueNotifier<bool> _processLoading = ValueNotifier(false);
@@ -50,12 +51,6 @@ class _DyeingDetailState extends State<DyeingDetail> {
 
   late List<dynamic> unitOption = [];
   late List<dynamic> machineOption = [];
-
-  bool _isLoadMore = true;
-  bool _hasMore = true;
-  String _search = '';
-  int page = 0;
-  Map<String, String> params = {'search': '', 'page': '0'};
 
   Map<String, dynamic> data = {};
 
@@ -172,25 +167,6 @@ class _DyeingDetailState extends State<DyeingDetail> {
         _form['attachments'] = List.from(data['attachments']);
       }
 
-      _firstLoading = false;
-    });
-  }
-
-  Future<void> _refetch() async {
-    // Future.delayed(Duration.zero, () {
-    //   setState(() {
-    //     params = {'search': _search, 'page': '0'};
-    //   });
-    //   _loadMore();
-    // });
-    setState(() {
-      _firstLoading = true;
-    });
-
-    await _dyeingService.getDataView(widget.id);
-
-    setState(() {
-      data = _dyeingService.dataView;
       _firstLoading = false;
     });
   }
@@ -450,22 +426,20 @@ class _DyeingDetailState extends State<DyeingDetail> {
           children: [
             Expanded(
               child: InfoTab(
-                data: data,
-                isLoading: _firstLoading,
-                handleChangeInput: _handleChangeInput,
-                qty: _qtyController,
-                length: _lengthController,
-                form: _form,
-                width: _widthController,
-                note: _noteController,
-                handleSelectUnit: _selectUnit,
-                handleSelectMachine: _selectMachine,
-                handleUpdate: _handleUpdate,
-                hasMore: _hasMore,
-                refetch: _refetch,
-                handleSelectLengthUnit: _selectLengthUnit,
-                handleSelectWidthUnit: _selectWidthUnit,
-              ),
+                  data: data,
+                  isLoading: _firstLoading,
+                  handleChangeInput: _handleChangeInput,
+                  qty: _qtyController,
+                  length: _lengthController,
+                  form: _form,
+                  width: _widthController,
+                  note: _noteController,
+                  handleSelectUnit: _selectUnit,
+                  handleSelectMachine: _selectMachine,
+                  handleUpdate: _handleUpdate,
+                  handleSelectLengthUnit: _selectLengthUnit,
+                  handleSelectWidthUnit: _selectWidthUnit,
+                  label: 'Dyeing'),
             )
           ],
         ),

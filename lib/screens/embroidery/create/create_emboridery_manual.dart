@@ -24,7 +24,6 @@ class CreateEmborideryManual extends StatelessWidget {
       data: data,
       form: form,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchEmbroideryOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       withOnlyMaklon: true,

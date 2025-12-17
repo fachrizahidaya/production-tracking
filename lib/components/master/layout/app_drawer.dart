@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/screens/home/index.dart';
 
 class AppDrawer extends StatefulWidget {
-  final Function() handleLogout;
+  final handleLogout;
   final handleFetchMenu;
 
   const AppDrawer(
@@ -16,24 +16,51 @@ class _AppDrawerState extends State<AppDrawer> {
   late Future<List<MenuItem>> menuItems;
   late Future<List<MenuItem>> _menuFuture;
 
+  List<String> menuOrder = [
+    'Dashboard',
+    'Dyeing',
+    'Press',
+    'Tumbler',
+    'Stenter',
+    'Long Sitting',
+    'Long Hemming',
+    'Cross Cutting',
+    'Sewing',
+    'Embroidery',
+    'Printing',
+    'Sorting',
+    'Packing',
+  ];
+
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
     final List<MenuItem> result = [];
 
     for (final menu in menus) {
       if (menu.subMenuItems.isEmpty) {
-        // Dashboard or any parent without children
         result.add(menu);
       } else {
-        // Convert each SubMenuItem → MenuItem
         for (final sub in menu.subMenuItems) {
-          result.add(MenuItem(
-            title: sub.title,
-            route: sub.route,
-            subMenuItems: const [],
-          ));
+          result.add(
+            MenuItem(
+              title: sub.title,
+              route: sub.route,
+              subMenuItems: const [],
+            ),
+          );
         }
       }
     }
+
+    result.sort((a, b) {
+      final aIndex = menuOrder.indexOf(a.title);
+      final bIndex = menuOrder.indexOf(b.title);
+
+      if (aIndex == -1 && bIndex == -1) return 0;
+      if (aIndex == -1) return 1;
+      if (bIndex == -1) return -1;
+
+      return aIndex.compareTo(bIndex);
+    });
 
     return result;
   }
@@ -85,23 +112,22 @@ class _AppDrawerState extends State<AppDrawer> {
 
                       return ListTile(
                         leading: Icon(
-                          item.title == 'Pencelupan (Dyeing)'
+                          item.title == 'Dyeing'
                               ? Icons.invert_colors_on_outlined
-                              : item.title == 'Press Tumbler'
-                                  ? Icons.content_copy_rounded
+                              : item.title == 'Press'
+                                  ? Icons.dry_outlined
                                   : item.title == 'Stenter'
                                       ? Icons.air
                                       : item.title == 'Long Sitting'
-                                          ? Icons.content_paste_outlined
+                                          ? Icons.cut_outlined
                                           : item.title == 'Long Hemming'
-                                              ? Icons.cut
+                                              ? Icons.link_outlined
                                               : item.title == 'Cross Cutting'
-                                                  ? Icons.cut
-                                                  : item.title ==
-                                                          'Jahit (Sewing)'
+                                                  ? Icons.cut_outlined
+                                                  : item.title == 'Sewing'
                                                       ? Icons.link_outlined
                                                       : item.title ==
-                                                              'Bordir (Embroidery)'
+                                                              'Embroidery'
                                                           ? Icons.link_outlined
                                                           : item.title ==
                                                                   'Printing'
@@ -119,8 +145,9 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                               'Packing'
                                                                           ? Icons
                                                                               .stacked_bar_chart_outlined
-                                                                          : Icons
-                                                                              .menu,
+                                                                          : item.title == 'Tumbler'
+                                                                              ? Icons.dry_cleaning_outlined
+                                                                              : Icons.menu,
                         ),
                         title: Text(item.title),
                         onTap: () {

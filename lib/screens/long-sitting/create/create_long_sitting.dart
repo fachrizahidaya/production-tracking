@@ -39,11 +39,13 @@ class CreateLongSitting extends StatelessWidget {
         await Provider.of<LongSittingService>(context, listen: false)
             .addItem(longSitting, isLoading);
 
-    showAlertDialog(
-        context: context, title: 'Long Sitting Created', message: message);
-
     Navigator.pushNamedAndRemoveUntil(
         context, '/long-sittings', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Long Sitting Dimulai', message: message);
+    });
   }
 
   @override

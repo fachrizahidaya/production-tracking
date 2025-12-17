@@ -168,14 +168,16 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
       final message = await Provider.of<DyeingService>(context, listen: false)
           .reworkItem(id, dyeing, _firstLoading);
 
-      showAlertDialog(
-          context: context, title: 'Dyeing Reworked', message: message);
-
       Navigator.pushNamedAndRemoveUntil(
         context,
         '/dyeings',
         (Route<dynamic> route) => false,
       );
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showAlertDialog(
+            context: context, title: 'Dyeing Dirework', message: message);
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),

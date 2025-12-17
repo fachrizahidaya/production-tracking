@@ -94,6 +94,12 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
       barsSpace: 6,
       barRods: [
         BarChartRodData(
+          toY: y2,
+          color: const Color(0xfff18800),
+          width: width,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        BarChartRodData(
           toY: y3,
           color: const Color(0xFF94a3b8),
           width: width,
@@ -102,12 +108,6 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
         BarChartRodData(
           toY: y1,
           color: const Color(0xFF10B981),
-          width: width,
-          borderRadius: BorderRadius.circular(4),
-        ),
-        BarChartRodData(
-          toY: y2,
-          color: const Color(0xfff18800),
           width: width,
           borderRadius: BorderRadius.circular(4),
         ),
@@ -214,17 +214,27 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
     final double chartRatio = allZero ? 3 : 2;
 
     return CustomCard(
-      child: Padding(
-        padding: PaddingColumn.screen,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: PaddingColumn.screen,
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  'Status Setiap Proses',
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Status Setiap Proses',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    Text(
+                      'Tracking progres setiap tahap Work Order',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ],
                 ),
                 Row(
                   children: [
@@ -234,95 +244,109 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
                 ),
               ],
             ),
-            AspectRatio(
-              aspectRatio: chartRatio,
-              child: widget.isFetching
-                  ? Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Center(child: CircularProgressIndicator()),
-                    )
-                  : BarChart(
-                      BarChartData(
-                        maxY: maxY,
-                        barGroups: barGroups,
-                        barTouchData: BarTouchData(
-                          enabled: true,
-                          touchCallback: (FlTouchEvent event, response) {
-                            if (!event.isInterestedForInteractions ||
-                                response == null ||
-                                response.spot == null) {
-                              setState(() => touchedIndex = null);
-                              return;
-                            }
-                            setState(() {
-                              touchedIndex =
-                                  response.spot!.touchedBarGroupIndex;
-                            });
-                          },
-                        ),
-                        gridData: FlGridData(
-                          show: true,
-                          drawHorizontalLine: false,
-                          drawVerticalLine: false,
-                          getDrawingHorizontalLine: (value) {
-                            if (value == 0 || value == maxY) {
-                              return FlLine(
-                                color: Colors.grey.withOpacity(0.3),
-                                strokeWidth: 1,
-                              );
-                            }
-                            return FlLine(
-                              color: Colors.transparent,
-                              strokeWidth: 0,
-                            );
-                          },
-                        ),
-                        titlesData: FlTitlesData(
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              getTitlesWidget: bottomTitles,
-                              reservedSize: 50,
+          ),
+          Divider(),
+          Column(
+            children: [
+              AspectRatio(
+                aspectRatio: chartRatio,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: widget.isFetching
+                      ? Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        )
+                      : BarChart(
+                          BarChartData(
+                            maxY: maxY,
+                            barGroups: barGroups,
+                            barTouchData: BarTouchData(
+                              enabled: true,
+                              touchCallback: (FlTouchEvent event, response) {
+                                if (!event.isInterestedForInteractions ||
+                                    response == null ||
+                                    response.spot == null) {
+                                  setState(() => touchedIndex = null);
+                                  return;
+                                }
+                                setState(() {
+                                  touchedIndex =
+                                      response.spot!.touchedBarGroupIndex;
+                                });
+                              },
                             ),
-                          ),
-                          leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 40,
-                              getTitlesWidget: (value, meta) {
-                                return Text(
-                                  value.toInt().toString(),
-                                  style: const TextStyle(
-                                    color: Color(0xff7589a2),
-                                    fontSize: 12,
-                                  ),
+                            gridData: FlGridData(
+                              show: true,
+                              drawHorizontalLine: false,
+                              drawVerticalLine: false,
+                              getDrawingHorizontalLine: (value) {
+                                if (value == 0 || value == maxY) {
+                                  return FlLine(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    strokeWidth: 1,
+                                  );
+                                }
+                                return FlLine(
+                                  color: Colors.transparent,
+                                  strokeWidth: 0,
                                 );
                               },
                             ),
-                          ),
-                          rightTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                          topTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
+                            titlesData: FlTitlesData(
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  getTitlesWidget: bottomTitles,
+                                  reservedSize: 50,
+                                ),
+                              ),
+                              leftTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 40,
+                                  getTitlesWidget: (value, meta) {
+                                    return Text(
+                                      value.toInt().toString(),
+                                      style: const TextStyle(
+                                        color: Color(0xff7589a2),
+                                        fontSize: 12,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              rightTitles: const AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                              topTitles: const AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                            ),
+                            borderData: FlBorderData(show: false),
                           ),
                         ),
-                        borderData: FlBorderData(show: false),
-                      ),
-                    ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildLegendItem(const Color(0xFF94a3b8), 'Menunggu Diproses'),
-                const SizedBox(width: 16),
-                _buildLegendItem(const Color(0xFF10B981), 'Selesai'),
-                const SizedBox(width: 16),
-                _buildLegendItem(const Color(0xfff18800), 'Diproses'),
-              ],
-            ),
-          ].separatedBy(const SizedBox(height: 16)),
-        ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildLegendItem(const Color(0xfff18800), 'Diproses'),
+                    _buildLegendItem(
+                        const Color(0xFF94a3b8), 'Menunggu Diproses'),
+                    _buildLegendItem(const Color(0xFF10B981), 'Selesai'),
+                  ].separatedBy(SizedBox(
+                    width: 16,
+                  )),
+                ),
+              ),
+            ].separatedBy(SizedBox(
+              height: 16,
+            )),
+          ),
+        ].separatedBy(const SizedBox(height: 16)),
       ),
     );
   }

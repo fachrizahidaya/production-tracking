@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/helpers/auth/auth_check.dart';
 import 'package:textile_tracking/models/dashboard/machine.dart';
+import 'package:textile_tracking/models/dashboard/work_order_summary.dart';
 import 'package:textile_tracking/models/master/unit.dart';
 import 'package:textile_tracking/models/dashboard/work_order_chart.dart';
 import 'package:textile_tracking/models/dashboard/work_order_process.dart';
@@ -23,13 +24,14 @@ import 'package:textile_tracking/models/process/printing.dart';
 import 'package:textile_tracking/models/process/sewing.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
+import 'package:textile_tracking/models/process/tumbler.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/auth/index.dart';
 import 'package:textile_tracking/screens/auth/eula.dart';
 import 'package:textile_tracking/screens/auth/privacy_policy.dart';
 import 'package:textile_tracking/screens/auth/terms_conditions.dart';
 import 'package:textile_tracking/screens/cross-cutting/index.dart';
-import 'package:textile_tracking/screens/dyeing/index.dart';
+import 'package:textile_tracking/screens/dyeing/list/index.dart';
 import 'package:textile_tracking/screens/embroidery/index.dart';
 import 'package:textile_tracking/screens/home/index.dart';
 import 'package:textile_tracking/screens/long-hemming/index.dart';
@@ -43,6 +45,7 @@ import 'package:textile_tracking/screens/sewing/index.dart';
 import 'package:textile_tracking/screens/sorting/index.dart';
 import 'package:textile_tracking/screens/stenter/index.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/screens/tumbler/index.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,6 +54,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => UserProvider()),
     ChangeNotifierProvider(create: (_) => DyeingService()),
     ChangeNotifierProvider(create: (_) => PressTumblerService()),
+    ChangeNotifierProvider(create: (_) => TumblerService()),
     ChangeNotifierProvider(create: (_) => StenterService()),
     ChangeNotifierProvider(create: (_) => LongSittingService()),
     ChangeNotifierProvider(create: (_) => LongHemmingService()),
@@ -70,6 +74,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => WorkOrderStatsService()),
     ChangeNotifierProvider(create: (_) => WorkOrderChartService()),
     ChangeNotifierProvider(create: (_) => WorkOrderProcessService()),
+    ChangeNotifierProvider(create: (_) => WorkOrderSummaryService()),
     ChangeNotifierProvider(create: (_) => MachineService()),
   ], child: MyApp()));
 }
@@ -111,7 +116,8 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => const Profile(),
         '/notification': (context) => const NotificationList(),
         '/dyeings': (context) => const DyeingScreen(),
-        '/press-tumblers': (context) => const PressTumblerScreen(),
+        '/press': (context) => const PressTumblerScreen(),
+        '/tumblers': (context) => const TumblerScreen(),
         '/stenters': (context) => const StenterScreen(),
         '/long-sittings': (context) => const LongSittingScreen(),
         '/long-hemmings': (context) => const LongHemmingScreen(),

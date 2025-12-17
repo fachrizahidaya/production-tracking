@@ -40,11 +40,13 @@ class CreateEmbroidery extends StatelessWidget {
     final message = await Provider.of<EmbroideryService>(context, listen: false)
         .addItem(embroidery, isLoading);
 
-    showAlertDialog(
-        context: context, title: 'Embroidery Created', message: message);
-
     Navigator.pushNamedAndRemoveUntil(
         context, '/embroideries', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Emroidery Dimulai', message: message);
+    });
   }
 
   @override

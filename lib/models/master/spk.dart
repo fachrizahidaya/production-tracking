@@ -38,7 +38,7 @@ class Spk {
 }
 
 class SpkService extends BaseService<Spk> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/spk';
+  final String baseUrl = '${dotenv.env['API_URL']}/spk';
 
   bool _isLoading = false;
   bool _hasMoreData = true;

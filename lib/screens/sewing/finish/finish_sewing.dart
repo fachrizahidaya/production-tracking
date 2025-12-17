@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/service/finish_process.dart';
-import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/sewing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/sewing/finish/finish_sewing_manual.dart';
@@ -18,10 +17,6 @@ class FinishSewing extends StatefulWidget {
 }
 
 class _FinishSewingState extends State<FinishSewing> {
-  int number = 0;
-
-  late List<dynamic> workOrderOption = [];
-
   final Map<String, dynamic> _form = {
     'wo_id': null,
     'machine_id': null,
@@ -56,22 +51,10 @@ class _FinishSewingState extends State<FinishSewing> {
   @override
   void initState() {
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
-    _handleFetchWorkOrder();
     super.initState();
 
     setState(() {
       _form['end_by_id'] = loggedInUser?.id;
-    });
-  }
-
-  Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchSewingFinishOptions();
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
-
-    setState(() {
-      workOrderOption = result;
     });
   }
 
@@ -125,9 +108,12 @@ class _FinishSewingState extends State<FinishSewing> {
         final message = await Provider.of<SewingService>(context, listen: false)
             .finishItem(id, sewing, isLoading);
 
-        showAlertDialog(
-            context: context, title: 'Sewing Created', message: message);
         Navigator.pushNamedAndRemoveUntil(context, '/sewings', (_) => false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showAlertDialog(
+              context: context, title: 'Sewing Selesai', message: message);
+        });
       },
     );
   }

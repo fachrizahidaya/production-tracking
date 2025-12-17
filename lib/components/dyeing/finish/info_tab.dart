@@ -4,6 +4,7 @@ import 'package:textile_tracking/components/dyeing/finish/create_form.dart';
 class InfoTab extends StatefulWidget {
   final id;
   final data;
+  final woData;
   final form;
   final formKey;
   final handleSubmit;
@@ -42,15 +43,20 @@ class InfoTab extends StatefulWidget {
       this.note,
       this.qty,
       this.width,
-      this.processId});
+      this.processId,
+      this.woData});
 
   @override
   State<InfoTab> createState() => _InfoTabState();
 }
 
-class _InfoTabState extends State<InfoTab> {
+class _InfoTabState extends State<InfoTab> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (widget.isLoading) {
       return Center(
         child: CircularProgressIndicator(),
@@ -81,6 +87,7 @@ class _InfoTabState extends State<InfoTab> {
               length: widget.length,
               dyeingData: widget.dyeingData,
               dyeingId: widget.dyeingId,
+              woData: widget.woData,
             ),
           ],
         ),

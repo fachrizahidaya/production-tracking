@@ -55,7 +55,6 @@ class _ListFormState extends State<ListForm> {
                   required: true,
                 ),
               )),
-
             CustomCard(
                 child: Padding(
               padding: PaddingColumn.screen,
@@ -67,27 +66,6 @@ class _ListFormState extends State<ListForm> {
                 required: true,
               ),
             )),
-            // ValueListenableBuilder<bool>(
-            //   valueListenable: widget.isSubmitting,
-            //   builder: (context, isSubmitting, _) {
-            //     return Align(
-            //       alignment: Alignment.center,
-            //       child: FormButton(
-            //         label: 'Simpan',
-            //         isLoading: isSubmitting,
-            //         onPressed: () async {
-            //           widget.isSubmitting.value = true;
-            //           try {
-            //             await widget.handleSubmit();
-            //           } finally {
-            //             widget.isSubmitting.value = false;
-            //           }
-            //         },
-            //         isDisabled: widget.isFormIncomplete,
-            //       ),
-            //     );
-            //   },
-            // ),
           ]),
     );
   }

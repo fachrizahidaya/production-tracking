@@ -39,11 +39,13 @@ class CreateCrossCutting extends StatelessWidget {
         await Provider.of<CrossCuttingService>(context, listen: false)
             .addItem(crossCutting, isLoading);
 
-    showAlertDialog(
-        context: context, title: 'Cross Cutting Created', message: message);
-
     Navigator.pushNamedAndRemoveUntil(
         context, '/cross-cuttings', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Cross Cutting Dimulai', message: message);
+    });
   }
 
   @override

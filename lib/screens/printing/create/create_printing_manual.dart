@@ -24,7 +24,6 @@ class CreatePrintingManual extends StatelessWidget {
       data: data,
       form: form,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchPrintingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       withOnlyMaklon: true,

@@ -18,6 +18,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? label;
   final user;
   final status;
+  final isTextEditor;
+  final handleSave;
 
   const CustomAppBar(
       {super.key,
@@ -35,7 +37,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.label,
       this.handleLogout,
       this.user,
-      this.status});
+      this.status,
+      this.isTextEditor = false,
+      this.handleSave});
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +72,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: Text('Hapus'),
                 ),
             ],
+          ),
+        if (isTextEditor)
+          IconButton(
+            icon: const Icon(Icons.check),
+            onPressed: () {
+              handleSave();
+            },
           ),
         if (isWithNotification)
           IconButton(

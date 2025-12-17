@@ -47,7 +47,7 @@ class WorkOrder {
 }
 
 class WorkOrderService extends BaseService<WorkOrder> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/work-orders';
+  final String baseUrl = '${dotenv.env['API_URL']}/work-orders';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
@@ -228,7 +228,7 @@ class WorkOrderService extends BaseService<WorkOrder> {
       String? token = prefs.getString('access_token');
 
       final response = await http.post(
-        Uri.parse('${dotenv.env['API_URL_DEV']}/wo/active-process'),
+        Uri.parse('${dotenv.env['API_URL']}/wo/active-process'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

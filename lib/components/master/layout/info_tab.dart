@@ -1,9 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/layout/list_info_section.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:html/parser.dart' as html_parser;
 
 class InfoTab extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -18,12 +23,9 @@ class InfoTab extends StatefulWidget {
   final Future<void> Function(String id)? handleUpdate;
   final Future<void> Function()? refetch;
   final bool? hasMore;
-
-  /// Dynamic fields: define text controllers for any fields you want to display
   final Map<String, TextEditingController> fieldControllers;
-
-  /// Define which fields appear and their labels
   final List<Map<String, String>> fieldConfigs;
+
   final weight;
   final length;
   final width;
@@ -39,6 +41,7 @@ class InfoTab extends StatefulWidget {
   final withMaklon;
   final maklon;
   final onlySewing;
+  final label;
 
   const InfoTab(
       {super.key,
@@ -70,7 +73,8 @@ class InfoTab extends StatefulWidget {
       this.handleSelectQtyItemUnit,
       this.withMaklon,
       this.maklon,
-      this.onlySewing});
+      this.onlySewing,
+      this.label});
 
   @override
   State<InfoTab> createState() => _InfoTabState();
@@ -148,6 +152,21 @@ class _InfoTabState extends State<InfoTab> {
         _isChanged = false;
       });
     }
+  }
+
+  String htmlToPlainText(dynamic htmlString) {
+    if (htmlString == null) return '';
+
+    if (htmlString is List) {
+      return htmlString.join(" ");
+    }
+
+    if (htmlString is! String) {
+      return htmlString.toString();
+    }
+
+    final document = html_parser.parse(htmlString);
+    return document.body?.text ?? '';
   }
 
   void _setInitialValues() {
@@ -260,6 +279,62 @@ class _InfoTabState extends State<InfoTab> {
       withMaklon: widget.withMaklon,
       maklon: widget.maklon,
       onlySewing: widget.onlySewing,
+      handleBuildAttachment: _buildAttachmentList,
+      handleHtmlText: htmlToPlainText,
+      label: widget.label,
     );
+  }
+
+  Widget _buildAttachmentList(BuildContext context) {
+    final existingAttachments =
+        (widget.data['attachments'] ?? []) as List<dynamic>;
+
+    final baseUrl = dotenv.env['IMAGE_URL_DEV'] ?? '';
+
+    return Wrap(spacing: 8, runSpacing: 8, children: [
+      Row(
+        children: [
+          Text(
+            'Lampiran',
+            style: TextStyle(fontSize: 16),
+          ),
+          CustomTheme().hGap('sm'),
+        ],
+      ),
+      if (existingAttachments.isEmpty)
+        const NoData()
+      else
+        ...existingAttachments.map<Widget>((item) {
+          final bool isNew = item.containsKey('path');
+          final String? filePath = isNew ? item['path'] : item['file_path'];
+          final String fileName = isNew
+              ? item['name']
+              : (item['file_name'] ?? filePath?.split('/').last ?? '');
+          final String extension = fileName.split('.').last.toLowerCase();
+
+          Widget preview;
+          if (extension == 'pdf') {
+            preview =
+                const Icon(Icons.picture_as_pdf, color: Colors.red, size: 60);
+          } else if (isNew && filePath != null) {
+            preview = Image.file(File(filePath), fit: BoxFit.cover);
+          } else if (filePath != null &&
+              ['png', 'jpg', 'jpeg', 'gif'].contains(extension)) {
+            preview = Image.network('$baseUrl$filePath',
+                fit: BoxFit.cover,
+                errorBuilder: (context, _, __) =>
+                    const Icon(Icons.broken_image, size: 60));
+          } else {
+            preview = const Icon(Icons.insert_drive_file, size: 60);
+          }
+
+          return Container(
+            width: 100,
+            height: 100,
+            color: Colors.white,
+            child: preview,
+          );
+        }),
+    ]);
   }
 }

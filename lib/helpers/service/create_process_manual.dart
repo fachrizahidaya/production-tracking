@@ -2,21 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/master/button/cancel_button.dart';
-import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/layout/tab/finish_info_tab.dart';
-import 'package:textile_tracking/components/master/layout/tab/finish_item_tab.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/components/master/form/create/create_section.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 
 class CreateProcessManual extends StatefulWidget {
   final String title;
-  final String? machineFilterValue;
   final dynamic id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
@@ -26,6 +19,7 @@ class CreateProcessManual extends StatefulWidget {
   final fetchMachine;
   final getMachineOptions;
   final maklon;
+  final label;
   final isMaklon;
   final withMaklonOrMachine;
   final withOnlyMaklon;
@@ -34,7 +28,6 @@ class CreateProcessManual extends StatefulWidget {
   const CreateProcessManual(
       {super.key,
       required this.title,
-      this.machineFilterValue,
       this.id,
       this.data,
       this.form,
@@ -44,6 +37,7 @@ class CreateProcessManual extends StatefulWidget {
       this.fetchMachine,
       this.getMachineOptions,
       this.maklon,
+      this.label,
       this.isMaklon,
       this.withMaklonOrMachine,
       this.withOnlyMaklon,
@@ -121,14 +115,6 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
       } else {
         await service.fetchOptions();
       }
-
-      // await service.fetchOptionsPressTumbler();
-      // var result = service.dataListOption;
-
-      // if (widget.machineFilterValue != null &&
-      //     widget.machineFilterValue!.isNotEmpty) {
-      //   result = result.toList();
-      // }
 
       final data = widget.getMachineOptions != null
           ? widget.getMachineOptions!(service)
@@ -236,90 +222,22 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Scaffold(
-          backgroundColor: const Color(0xFFf9fafc),
-          appBar: CustomAppBar(
-            title: widget.title,
-            onReturn: () => Navigator.pop(context),
-          ),
-          body: Column(
-            children: [
-              Container(
-                color: Colors.white,
-                child: TabBar(tabs: [
-                  Tab(
-                    text: 'Form',
-                  ),
-                  Tab(
-                    text: 'Barang',
-                  ),
-                ]),
-              ),
-              Expanded(
-                child: TabBarView(children: [
-                  FinishInfoTab(
-                    data: woData,
-                    id: widget.id,
-                    isLoading: _firstLoading,
-                    form: widget.form,
-                    formKey: _formKey,
-                    handleSubmit: widget.handleSubmit,
-                    handleSelectMachine: _selectMachine,
-                    handleSelectWorkOrder: _selectWorkOrder,
-                    maklon: widget.maklon,
-                    withMaklonOrMachine: widget.withMaklonOrMachine,
-                    withOnlyMaklon: widget.withOnlyMaklon,
-                    withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
-                  ),
-                  FinishItemTab(data: woData),
-                ]),
-              )
-            ],
-          ),
-          bottomNavigationBar: SafeArea(
-            child: Container(
-              padding: PaddingColumn.screen,
-              color: Colors.white,
-              child: ValueListenableBuilder<bool>(
-                valueListenable: _isSubmitting,
-                builder: (context, isSubmitting, _) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: CancelButton(
-                          label: 'Batal',
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ),
-                      Expanded(
-                          child: FormButton(
-                        label: 'Mulai',
-                        isLoading: isSubmitting,
-                        isDisabled:
-                            widget.form?['wo_id'] == null ? true : false,
-                        onPressed: () async {
-                          _isSubmitting.value = true;
-                          try {
-                            await widget.handleSubmit();
-                          } finally {
-                            _isSubmitting.value = false;
-                          }
-                        },
-                      ))
-                    ].separatedBy(SizedBox(
-                      width: 16,
-                    )),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
+      child: CreateSection(
+        id: widget.id,
+        title: widget.title,
+        maklon: widget.maklon,
+        form: widget.form,
+        label: widget.label,
+        formKey: _formKey,
+        woData: woData,
+        withMaklonOrMachine: widget.withMaklonOrMachine,
+        withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
+        withOnlyMaklon: widget.withOnlyMaklon,
+        handleSubmit: widget.handleSubmit,
+        firstLoading: _firstLoading,
+        isSubmitting: _isSubmitting,
+        selectMachine: _selectMachine,
+        selectWorkOrder: _selectWorkOrder,
       ),
     );
   }

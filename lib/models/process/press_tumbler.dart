@@ -4,7 +4,7 @@ import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 
 class PressTumbler {
   final int? id;
-  final String? pt_no;
+  final String? press_no;
   final String? wo_no;
   final String? start_time;
   final int? start_by_id;
@@ -30,7 +30,7 @@ class PressTumbler {
 
   PressTumbler(
       {this.id,
-      this.pt_no,
+      this.press_no,
       this.start_time,
       this.end_time,
       this.weight,
@@ -64,7 +64,7 @@ class PressTumbler {
       machine_id: json['machine_id'] as int?,
       start_by_id: json['start_by_id'] as int?,
       end_by_id: json['end_by_id'] as int?,
-      pt_no: json['pt_no'] ?? '',
+      press_no: json['press_no'] ?? '',
       start_time: json['start_time'] ?? '',
       end_time: json['end_time'] ?? '',
       weight: json['weight'] ?? '',
@@ -93,7 +93,7 @@ class PressTumbler {
       'machine_id': machine_id,
       'start_by_id': start_by_id,
       'end_by_id': end_by_id,
-      'pt_no': pt_no,
+      'press_no': press_no,
       'start_time': start_time,
       'end_time': end_time,
       'wo_no': wo_no,
@@ -116,7 +116,7 @@ class PressTumbler {
 class PressTumblerService extends BaseCrudService<PressTumbler> {
   PressTumblerService()
       : super(
-          endpoint: 'press-tumblers',
+          endpoint: 'press',
           fromJson: (json) => PressTumbler.fromJson(json),
           toJson: (item) => item.toJson(),
         );

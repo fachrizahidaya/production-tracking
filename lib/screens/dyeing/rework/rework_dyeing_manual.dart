@@ -303,6 +303,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                           InfoTab(
                             data: woData,
                             id: widget.id,
+                            label: 'Dyeing',
                             isLoading: _firstLoading,
                             form: widget.form,
                             formKey: _formKey,

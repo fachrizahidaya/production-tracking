@@ -28,6 +28,11 @@ class _FinishSortingManualState extends State<FinishSortingManual> {
 
   @override
   void initState() {
+    widget.form?['length'] ??= '0';
+    widget.form?['width'] ??= '0';
+    widget.form?['length_unit_id'] ??= 4;
+    widget.form?['width_unit_id'] ??= 4;
+
     super.initState();
   }
 
@@ -44,7 +49,6 @@ class _FinishSortingManualState extends State<FinishSortingManual> {
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchSortingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       processService: _sortingService,

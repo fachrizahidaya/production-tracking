@@ -38,7 +38,7 @@ class _HomeState extends State<Home> {
 
   Future<void> _handleExit(
       BuildContext context, ValueNotifier<bool> isLoading) async {
-    String url = '${dotenv.env['API_URL_DEV']}/logout';
+    String url = '${dotenv.env['API_URL']}/logout';
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('access_token');

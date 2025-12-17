@@ -73,19 +73,8 @@ class ListForm extends StatefulWidget {
 }
 
 class _ListFormState extends State<ListForm> {
-  late String _initialWeight;
-  late String _initialLength;
-  late String _initialWidth;
-  late String _initialNotes;
-  late bool _isChanged;
-
   @override
   void initState() {
-    _initialWeight = widget.initialWeight ?? '';
-    _initialLength = widget.initialLength ?? '';
-    _initialWidth = widget.initialWidth ?? '';
-    _initialNotes = widget.initialNotes ?? '';
-    _isChanged = widget.isChanged ?? false;
     super.initState();
   }
 
@@ -361,13 +350,7 @@ class _ListFormState extends State<ListForm> {
                       widget.isSubmitting.value = true;
                       try {
                         await widget.handleSubmit(widget.processId.toString());
-                        setState(() {
-                          _initialWeight = widget.weight.text;
-                          _initialLength = widget.length.text;
-                          _initialWidth = widget.width.text;
-                          _initialNotes = widget.note.text;
-                          _isChanged = false;
-                        });
+                        setState(() {});
                       } finally {
                         widget.isSubmitting.value = false;
                       }

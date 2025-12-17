@@ -18,8 +18,6 @@ class InfoTab extends StatefulWidget {
   final handleSelectUnit;
   final handleSelectMachine;
   final handleUpdate;
-  final refetch;
-  final hasMore;
   final handleSelectLengthUnit;
   final handleSelectWidthUnit;
   final label;
@@ -36,8 +34,6 @@ class InfoTab extends StatefulWidget {
       this.handleChangeInput,
       this.handleSelectUnit,
       this.handleUpdate,
-      this.refetch,
-      this.hasMore,
       this.handleSelectMachine,
       this.handleSelectLengthUnit,
       this.handleSelectWidthUnit,

@@ -5,6 +5,8 @@ import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/info_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/item_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/note_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/process_tab.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_spk.dart';
 
@@ -63,7 +65,7 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
         body: Column(
           children: [
             DefaultTabController(
-                length: 3,
+                length: 5,
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     final isPortrait = MediaQuery.of(context).orientation ==
@@ -77,12 +79,18 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
                       children: [
                         Container(
                           color: Colors.white,
-                          child: TabBar(tabs: [
+                          child: TabBar(isScrollable: true, tabs: [
                             Tab(
                               text: 'Informasi',
                             ),
                             Tab(
-                              text: 'Barang',
+                              text: 'Material',
+                            ),
+                            Tab(
+                              text: 'Proses Produksi',
+                            ),
+                            Tab(
+                              text: 'Catatan',
                             ),
                             Tab(
                               text: 'Lampiran',
@@ -97,6 +105,12 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
                               isLoading: _firstLoading,
                             ),
                             ItemTab(
+                              data: data,
+                            ),
+                            ProcessTab(
+                              data: data,
+                            ),
+                            NoteTab(
                               data: data,
                             ),
                             AttachmentTab(

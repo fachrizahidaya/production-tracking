@@ -9,9 +9,11 @@ import 'package:html/parser.dart' as html_parser;
 
 class ListInfo extends StatefulWidget {
   final data;
-  final existingAttachment;
 
-  const ListInfo({super.key, this.data, this.existingAttachment});
+  const ListInfo({
+    super.key,
+    this.data,
+  });
 
   @override
   State<ListInfo> createState() => _ListInfoState();
@@ -79,10 +81,6 @@ class _ListInfoState extends State<ListInfo> {
                                           .isNotEmpty
                                   ? '${NumberFormat("#,###.#").format(double.tryParse(widget.data['greige_qty'].toString()) ?? 0)} ${widget.data['greige_unit']?['code'] ?? ''}'
                                   : '-'),
-                          ViewText(
-                              viewLabel: 'Catatan',
-                              viewValue:
-                                  htmlToPlainText(widget.data?['notes'] ?? '-'))
                         ].separatedBy(SizedBox(
                           height: 8,
                         )),

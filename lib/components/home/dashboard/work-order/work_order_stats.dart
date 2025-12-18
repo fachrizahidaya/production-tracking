@@ -107,33 +107,28 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 600;
     final length = widget.data?.length ?? 0;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     if (length == 0) return const SizedBox();
 
-    return isMobile
-        ? Column(
+    return Column(
+      children: [
+        Row(
+          children: [
+            for (int i = 0; i < length && i < 2; i++)
+              Expanded(child: buildStatsCard(i))
+          ],
+        ),
+        if (length > 2)
+          Row(
             children: [
-              for (int i = 0; i < length; i++) buildStatsCard(i),
+              for (int i = 2; i < length; i++)
+                Expanded(child: buildStatsCard(i))
             ],
-          )
-        : Column(
-            children: [
-              Row(
-                children: [
-                  for (int i = 0; i < length && i < 2; i++)
-                    Expanded(child: buildStatsCard(i))
-                ],
-              ),
-              if (length > 2)
-                Row(
-                  children: [
-                    for (int i = 2; i < length; i++)
-                      Expanded(child: buildStatsCard(i))
-                  ],
-                ),
-            ],
-          );
+          ),
+      ],
+    );
   }
 }

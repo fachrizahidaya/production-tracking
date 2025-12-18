@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/home/dashboard/machine/machine_section.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
-import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -44,19 +44,24 @@ class _ActiveMachineState extends State<ActiveMachine> {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
-    List<dynamic> filteredAvailable = selectedProcess == 'All'
-        ? (widget.available ?? [])
-        : (widget.available ?? []).where((m) {
-            final process = m is Map ? (m['process_type'] ?? '') : '';
-            return process == selectedProcess;
-          }).toList();
+    List<dynamic> filterByProcess(
+      List<dynamic>? source,
+      String selectedProcess,
+    ) {
+      if (source == null) return [];
+      if (selectedProcess == 'All') return source;
 
-    List<dynamic> filteredUnavailable = selectedProcess == 'All'
-        ? (widget.unavailable ?? [])
-        : (widget.unavailable ?? []).where((m) {
-            final process = m is Map ? (m['process_type'] ?? '') : '';
-            return process == selectedProcess;
-          }).toList();
+      return source.where((m) {
+        final process = m is Map ? (m['process_type'] ?? '') : '';
+        return process == selectedProcess;
+      }).toList();
+    }
+
+    final filteredAvailable =
+        filterByProcess(widget.available, selectedProcess);
+
+    final filteredUnavailable =
+        filterByProcess(widget.unavailable, selectedProcess);
 
     return Column(
       children: [
@@ -163,343 +168,27 @@ class _ActiveMachineState extends State<ActiveMachine> {
               )
             else
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    flex: 1,
-                    child: Column(
-                      children: [
-                        CustomCard(
-                          color: Colors.green.shade100,
-                          child: Padding(
-                            padding: PaddingColumn.screen,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.check_circle_outline,
-                                ),
-                                Text(
-                                    'Mesin Tersedia (${filteredAvailable.length.toString()})')
-                              ].separatedBy(SizedBox(
-                                width: 8,
-                              )),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 500,
-                          child: filteredAvailable.isEmpty
-                              ? SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.7,
-                                  child: Center(child: NoData()))
-                              : SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      for (int i = 0;
-                                          i < filteredAvailable.length;
-                                          i++)
-                                        CustomCard(
-                                            withBorder: true,
-                                            child: Padding(
-                                              padding: PaddingColumn.screen,
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      CustomBadge(
-                                                        status:
-                                                            filteredAvailable[i]
-                                                                ['code'],
-                                                        title:
-                                                            filteredAvailable[i]
-                                                                ['code']!,
-                                                        withDifferentColor:
-                                                            true,
-                                                        color:
-                                                            Color(0xffeaeaec),
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .location_on_outlined,
-                                                            size: 16,
-                                                          ),
-                                                          if (isPortrait)
-                                                            SizedBox(
-                                                              width: 100,
-                                                              child: Text(
-                                                                filteredAvailable[
-                                                                        i][
-                                                                    'location'],
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                maxLines: 2,
-                                                              ),
-                                                            ),
-                                                          if (!isPortrait)
-                                                            Text(
-                                                              filteredAvailable[
-                                                                      i]
-                                                                  ['location'],
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 2,
-                                                            ),
-                                                        ].separatedBy(SizedBox(
-                                                          width: 4,
-                                                        )),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .local_laundry_service_outlined,
-                                                            size: 16,
-                                                          ),
-                                                          if (isPortrait)
-                                                            SizedBox(
-                                                              width: 150,
-                                                              child: Text(
-                                                                filteredAvailable[
-                                                                    i]['name'],
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                maxLines: 2,
-                                                              ),
-                                                            ),
-                                                          if (!isPortrait)
-                                                            Text(
-                                                              filteredAvailable[
-                                                                  i]['name'],
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 2,
-                                                            ),
-                                                        ].separatedBy(SizedBox(
-                                                          width: 4,
-                                                        )),
-                                                      ),
-                                                      CustomBadge(
-                                                        status:
-                                                            filteredAvailable[i]
-                                                                [
-                                                                'process_type'],
-                                                        title: filteredAvailable[
-                                                            i]['process_type']!,
-                                                        withDifferentColor:
-                                                            true,
-                                                        color:
-                                                            Color(0xffd1fae4),
-                                                      ),
-                                                    ].separatedBy(SizedBox(
-                                                      height: 8,
-                                                    )),
-                                                  ),
-                                                ].separatedBy(SizedBox(
-                                                  height: 8,
-                                                )),
-                                              ),
-                                            ))
-                                    ],
-                                  ),
-                                ),
-                        ),
-                      ],
+                    child: MachineSection(
+                      title: 'Mesin Tersedia',
+                      icon: Icons.check_circle_outline,
+                      headerColor: Colors.green.shade100,
+                      data: filteredAvailable,
+                      isPortrait: isPortrait,
                     ),
                   ),
                   Expanded(
-                    flex: 1,
-                    child: Column(
-                      children: [
-                        CustomCard(
-                          color: Colors.green.shade100,
-                          child: Padding(
-                            padding: PaddingColumn.screen,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(Icons.warning_outlined),
-                                Text(
-                                    'Mesin Sedang Digunakan (${filteredUnavailable.length.toString()})')
-                              ].separatedBy(SizedBox(
-                                width: 8,
-                              )),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 500,
-                          child: filteredUnavailable.isEmpty
-                              ? SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.7,
-                                  child: Center(child: NoData()))
-                              : SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      for (int i = 0;
-                                          i < filteredUnavailable.length;
-                                          i++)
-                                        CustomCard(
-                                            withBorder: true,
-                                            child: Padding(
-                                              padding: PaddingColumn.screen,
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      CustomBadge(
-                                                        status:
-                                                            filteredUnavailable[
-                                                                i]['code'],
-                                                        title:
-                                                            filteredUnavailable[
-                                                                i]['code']!,
-                                                        withDifferentColor:
-                                                            true,
-                                                        color:
-                                                            Color(0xffeaeaec),
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .location_on_outlined,
-                                                            size: 16,
-                                                          ),
-                                                          if (isPortrait)
-                                                            SizedBox(
-                                                              width: 100,
-                                                              child: Text(
-                                                                filteredUnavailable[
-                                                                        i][
-                                                                    'location'],
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                maxLines: 2,
-                                                              ),
-                                                            ),
-                                                          if (!isPortrait)
-                                                            Text(
-                                                              filteredUnavailable[
-                                                                      i]
-                                                                  ['location'],
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 2,
-                                                            ),
-                                                        ].separatedBy(SizedBox(
-                                                          width: 4,
-                                                        )),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .local_laundry_service_outlined,
-                                                            size: 16,
-                                                          ),
-                                                          if (isPortrait)
-                                                            SizedBox(
-                                                              width: 150,
-                                                              child: Text(
-                                                                filteredUnavailable[
-                                                                    i]['name'],
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                maxLines: 2,
-                                                              ),
-                                                            ),
-                                                          if (!isPortrait)
-                                                            Text(
-                                                              filteredUnavailable[
-                                                                  i]['name'],
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 2,
-                                                            )
-                                                        ].separatedBy(SizedBox(
-                                                          width: 4,
-                                                        )),
-                                                      ),
-                                                      CustomBadge(
-                                                        status:
-                                                            filteredUnavailable[
-                                                                    i][
-                                                                'process_type'],
-                                                        title:
-                                                            filteredUnavailable[
-                                                                    i][
-                                                                'process_type']!,
-                                                        withDifferentColor:
-                                                            true,
-                                                        color:
-                                                            Color(0xffd1fae4),
-                                                      ),
-                                                    ].separatedBy(SizedBox(
-                                                      height: 8,
-                                                    )),
-                                                  ),
-                                                ].separatedBy(SizedBox(
-                                                  height: 8,
-                                                )),
-                                              ),
-                                            ))
-                                    ],
-                                  ),
-                                ),
-                        )
-                      ],
+                    child: MachineSection(
+                      title: 'Mesin Sedang Digunakan',
+                      icon: Icons.warning_outlined,
+                      headerColor: Colors.green.shade100,
+                      data: filteredUnavailable,
+                      isPortrait: isPortrait,
                     ),
                   ),
                 ],
-              ),
+              )
           ].separatedBy(SizedBox(
             height: 16,
           )),

@@ -153,7 +153,8 @@ class CustomTheme {
       {String? hintTextString,
       bool? clearable,
       Function()? onPressClear,
-      required bool hasValue}) {
+      required bool hasValue,
+      withReset = false}) {
     return InputDecoration(
       filled: true,
       fillColor: Colors.white,
@@ -220,12 +221,15 @@ class CustomTheme {
         color: Colors.black38,
         fontWeight: FontWeight.w400,
       ),
-      suffixIcon: hasValue
+      suffixIcon: withReset == true
           ? IconButton(
-              icon: const Icon(Icons.close),
+              icon: const Icon(Icons.replay_outlined),
               onPressed: onPressClear,
             )
-          : null,
+          : IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: hasValue ? onPressClear : null,
+            ),
     );
   }
 

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/layout/custom_search_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
-import 'package:textile_tracking/helpers/service/base_service.dart';
+import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 
 class DashboardList<T> extends StatefulWidget {
-  final BaseService<T> service;
+  final BaseCrudService<T> service;
   final String searchQuery;
   final bool? canCreate;
   final bool? canDelete;
@@ -25,6 +25,7 @@ class DashboardList<T> extends StatefulWidget {
   final canRead;
   final showActions;
   final isFetching;
+  final isLoadMore;
 
   const DashboardList(
       {super.key,
@@ -46,7 +47,8 @@ class DashboardList<T> extends StatefulWidget {
       this.canRead,
       this.canDelete,
       this.showActions,
-      this.isFetching});
+      this.isFetching,
+      this.isLoadMore});
 
   @override
   State<DashboardList<T>> createState() => _DashboardListState<T>();
@@ -85,8 +87,15 @@ class _DashboardListState<T> extends State<DashboardList<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+    MediaQuery.of(context).orientation == Orientation.portrait;
+
+    if (widget.firstLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (widget.dataList.isEmpty) {
+      return const NoData();
+    }
 
     return CustomCard(
       child: Padding(
@@ -102,82 +111,35 @@ class _DashboardListState<T> extends State<DashboardList<T>> {
             ),
             Divider(),
             Expanded(
-              child: widget.firstLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : widget.dataList.isEmpty
-                      ? isPortrait
-                          ? SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.8,
-                              child: Center(child: NoData()))
-                          : Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.8,
-                                      child: Center(child: NoData())),
-                                ),
-                              ],
-                            )
-                      : (!isPortrait
-                          ? Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: ListView.builder(
-                                    controller: _scrollController,
-                                    itemCount: widget.dataList.length +
-                                        (widget.hasMore ? 1 : 0),
-                                    itemBuilder: (context, index) {
-                                      if (index == widget.dataList.length) {
-                                        return widget.hasMore
-                                            ? Padding(
-                                                padding: EdgeInsets.all(16),
-                                                child: Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                ),
-                                              )
-                                            : SizedBox.shrink();
-                                      }
+              child: CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        if (index >= widget.dataList.length) {
+                          if (!widget.isLoadMore) {
+                            Future.delayed(Duration.zero, () {
+                              widget.handleLoadMore();
+                            });
+                          }
 
-                                      final item = widget.dataList[index];
-                                      return GestureDetector(
-                                        onTap: () => widget.onItemTap
-                                            ?.call(context, item),
-                                        child: widget.itemBuilder(item),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            )
-                          : ListView.builder(
-                              controller: _scrollController,
-                              itemCount: widget.dataList.length +
-                                  (widget.hasMore ? 1 : 0),
-                              itemBuilder: (context, index) {
-                                if (index == widget.dataList.length) {
-                                  return widget.hasMore
-                                      ? Padding(
-                                          padding: EdgeInsets.all(16.0),
-                                          child: Center(
-                                              child:
-                                                  CircularProgressIndicator()),
-                                        )
-                                      : SizedBox.shrink();
-                                }
+                          return const SizedBox.shrink();
+                        }
 
-                                final item = widget.dataList[index];
-                                return GestureDetector(
-                                  onTap: () =>
-                                      widget.onItemTap?.call(context, item),
-                                  child: widget.itemBuilder(item),
-                                );
-                              },
-                            )),
+                        final item = widget.dataList[index];
+                        return GestureDetector(
+                          onTap: () => widget.onItemTap?.call(context, item),
+                          child: widget.itemBuilder(item),
+                        );
+                      },
+                      childCount: widget.hasMore
+                          ? widget.dataList.length + 1
+                          : widget.dataList.length,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

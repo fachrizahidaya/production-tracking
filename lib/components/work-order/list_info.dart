@@ -27,7 +27,8 @@ class _ListInfoState extends State<ListInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 600;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return SingleChildScrollView(
       child: Container(
@@ -50,7 +51,7 @@ class _ListInfoState extends State<ListInfo> {
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          if (isMobile)
+                          if (isPortrait)
                             CustomBadge(title: widget.data['status'] ?? '-'),
                           Text(
                               'Dibuat pada ${widget.data['wo_date'] != null ? DateFormat("dd MMMM yyyy").format(DateTime.parse(widget.data['wo_date'])) : '-'} oleh ${widget.data['user']?['name'] ?? ''}')
@@ -58,7 +59,7 @@ class _ListInfoState extends State<ListInfo> {
                           height: 4,
                         )),
                       ),
-                      if (!isMobile)
+                      if (!isPortrait)
                         CustomBadge(title: widget.data['status'] ?? '-'),
                     ],
                   )),

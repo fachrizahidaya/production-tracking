@@ -111,10 +111,11 @@ class _ListInfoSectionState extends State<ListInfoSection> {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
     final data = widget.data;
     final grades = widget.existingGrades;
-
-    final isMobile = MediaQuery.of(context).size.width < 600;
 
     return SingleChildScrollView(
         child: Container(
@@ -435,7 +436,7 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                 ),
               ),
             ),
-            if (!isMobile)
+            if (!isPortrait)
               Expanded(
                   flex: 1,
                   child: CustomCard(
@@ -468,7 +469,7 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                   )))
           ],
         ),
-        if (isMobile)
+        if (isPortrait)
           CustomCard(
               child: Padding(
             padding: PaddingColumn.screen,

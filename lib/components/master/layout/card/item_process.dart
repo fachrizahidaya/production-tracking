@@ -18,8 +18,8 @@ class ItemProcess extends StatefulWidget {
 class _ItemProcessState extends State<ItemProcess> {
   @override
   Widget build(BuildContext context) {
-    final sortingGrades = widget.item.processes['sorting']?['grades'] ?? [];
-    final packingGrades = widget.item.processes['packing']?['grades'] ?? [];
+    final sortingGrades = widget.item['processes']['sorting']?['grades'] ?? [];
+    final packingGrades = widget.item['processes']['packing']?['grades'] ?? [];
 
     return CustomCard(
       child: Column(
@@ -32,17 +32,17 @@ class _ItemProcessState extends State<ItemProcess> {
                 Row(
                   children: [
                     Text(
-                      widget.item.wo_no,
+                      widget.item['wo_no'],
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     CustomBadge(
                       withStatus: true,
                       icon: Icons.check_circle_outline,
-                      title: widget.item.status,
-                      color: widget.item.status == 'Menunggu Diproses'
+                      title: widget.item['status'],
+                      color: widget.item['status'] == 'Menunggu Diproses'
                           ? Color(0xffdbeaff)
-                          : widget.item.status == 'Diproses'
+                          : widget.item['status'] == 'Diproses'
                               ? Color(0xFFfff3c6)
                               : Color(0xffd1fae4),
                       withDifferentColor: true,
@@ -55,20 +55,20 @@ class _ItemProcessState extends State<ItemProcess> {
                   children: [
                     ViewText(
                       viewLabel: 'SPK',
-                      viewValue: widget.item.spk_no,
+                      viewValue: widget.item['spk_no'],
                     ),
                     ViewText(
                       viewLabel: 'Tanggal',
                       viewValue: DateFormat("dd MMMM yyyy")
-                          .format(DateTime.parse(widget.item.wo_date)),
+                          .format(DateTime.parse(widget.item['wo_date'])),
                     ),
                     ViewText(
                       viewLabel: 'Qty Material',
-                      viewValue: (widget.item.wo_qty).toString(),
+                      viewValue: (widget.item['wo_qty']).toString(),
                     ),
                     ViewText(
                       viewLabel: 'Qty Greige',
-                      viewValue: (widget.item.greige_qty).toString(),
+                      viewValue: (widget.item['greige_qty']).toString(),
                     ),
                   ].separatedBy(SizedBox(
                     width: 16,
@@ -132,11 +132,11 @@ class _ItemProcessState extends State<ItemProcess> {
   Widget _buildCard(
       title, item, icon, withQty, withWeight, withItemQty, withGrades, grades) {
     return Card(
-      color: widget.item.processes[item]['status'] == 'Menunggu Diproses'
+      color: widget.item['processes'][item]['status'] == 'Menunggu Diproses'
           ? Color(0xFFfafafa)
-          : widget.item.processes[item]['status'] == 'Diproses'
+          : widget.item['processes'][item]['status'] == 'Diproses'
               ? Color(0xFFfffbea)
-              : widget.item.processes[item]['status'] == 'Selesai'
+              : widget.item['processes'][item]['status'] == 'Selesai'
                   ? Color(0xfff0fdf4)
                   : Color(0xfff1f4fd),
       child: SizedBox(
@@ -162,12 +162,12 @@ class _ItemProcessState extends State<ItemProcess> {
                   CustomBadge(
                     withStatus: true,
                     icon: Icons.check_circle_outline,
-                    title: widget.item.processes[item]['status'],
+                    title: widget.item['processes'][item]['status'],
                     withDifferentColor: true,
-                    color: widget.item.processes[item]['status'] ==
+                    color: widget.item['processes'][item]['status'] ==
                             'Menunggu Diproses'
                         ? Color(0xFFf1f5f9)
-                        : widget.item.processes[item]['status'] == 'Diproses'
+                        : widget.item['processes'][item]['status'] == 'Diproses'
                             ? Color(0xFFfff3c6)
                             : Color(0xffd1fae4),
                   ),
@@ -177,8 +177,8 @@ class _ItemProcessState extends State<ItemProcess> {
                 Row(
                   children: [
                     Icon(Icons.shopping_cart_outlined),
-                    Text(widget.item.processes[item]['qty'] != null
-                        ? '${widget.item.processes[item]['qty']} ${widget.item.processes[item]['unit']['code']}'
+                    Text(widget.item['processes'][item]['qty'] != null
+                        ? '${widget.item['processes'][item]['qty']} ${widget.item['processes'][item]['unit']['code']}'
                         : '-'),
                   ].separatedBy(SizedBox(
                     width: 8,
@@ -188,8 +188,8 @@ class _ItemProcessState extends State<ItemProcess> {
                 Row(
                   children: [
                     Icon(Icons.shopping_cart_outlined),
-                    Text(widget.item.processes[item]['item_qty'] != null
-                        ? '${widget.item.processes[item]['item_qty']} ${widget.item.processes[item]['item_unit']['code']}'
+                    Text(widget.item['processes'][item]['item_qty'] != null
+                        ? '${widget.item['processes'][item]['item_qty']} ${widget.item['processes'][item]['item_unit']['code']}'
                         : '-'),
                   ].separatedBy(SizedBox(
                     width: 8,
@@ -199,8 +199,8 @@ class _ItemProcessState extends State<ItemProcess> {
                 Row(
                   children: [
                     Icon(Icons.line_weight_outlined),
-                    Text(widget.item.processes[item]['weight'] != null
-                        ? '${widget.item.processes[item]['weight']} ${widget.item.processes[item]['weight_unit']['code']}'
+                    Text(widget.item['processes'][item]['weight'] != null
+                        ? '${widget.item['processes'][item]['weight']} ${widget.item['processes'][item]['weight_unit']['code']}'
                         : '-'),
                   ].separatedBy(SizedBox(
                     width: 8,

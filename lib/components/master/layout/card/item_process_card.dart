@@ -45,9 +45,10 @@ class ItemProcessCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final status = getStatus?.call(item) ?? '-';
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
-    final isMobile = MediaQuery.of(context).size.width < 600;
+    final status = getStatus?.call(item) ?? '-';
 
     return CustomCard(
       useCustomSize: useCustomSize,
@@ -55,7 +56,7 @@ class ItemProcessCard extends StatelessWidget {
       customHeight: customHeight,
       child: Padding(
         padding: PaddingColumn.screen,
-        child: !isMobile
+        child: !isPortrait
             ? Column(
                 children: [
                   Row(

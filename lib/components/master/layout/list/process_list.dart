@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/custom_search_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 
 class ProcessList<T> extends StatefulWidget {
@@ -114,10 +115,11 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
         Expanded(
           child: RefreshIndicator(
             onRefresh: () async => widget.handleRefetch(),
-            child: ListView.builder(
+            child: ListView.separated(
               controller: _scrollController,
               physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.all(8),
+              padding: CustomTheme().padding('content'),
+              separatorBuilder: (context, index) => CustomTheme().vGap('2xl'),
               itemCount: widget.hasMore
                   ? widget.dataList.length + 1
                   : widget.dataList.length,

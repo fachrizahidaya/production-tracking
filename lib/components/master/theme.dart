@@ -18,6 +18,73 @@ class CustomTheme {
     );
   }
 
+  BoxDecoration dashboardCardTheme(bottomBorderColor) {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: const BorderRadius.all(
+        Radius.circular(12),
+      ),
+      border: Border.all(
+        // ignore: deprecated_member_use
+        color: Colors.grey.withOpacity(0.3),
+        width: 1,
+      ),
+      boxShadow: [
+        boxShadowTheme(),
+      ],
+    );
+  }
+
+  BoxDecoration statsCardTheme(bottomBorderColor) {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: const BorderRadius.all(
+        Radius.circular(12),
+      ),
+      border: Border(
+        bottom: BorderSide(
+          color: bottomBorderColor,
+          width: 2,
+        ),
+      ),
+      boxShadow: [
+        boxShadowTheme(),
+      ],
+    );
+  }
+
+  BoxDecoration processCardTheme(color) {
+    return BoxDecoration(
+      color: color,
+      borderRadius: const BorderRadius.all(
+        Radius.circular(8),
+      ),
+    );
+  }
+
+  BoxDecoration machineStatusCardTheme(color) {
+    return BoxDecoration(
+      color: color,
+      borderRadius: const BorderRadius.all(
+        Radius.circular(8),
+      ),
+    );
+  }
+
+  BoxDecoration badgeTheme(status) {
+    return BoxDecoration(
+      color: statusColor(status),
+      borderRadius: const BorderRadius.all(
+        Radius.circular(8),
+      ),
+      border: Border.all(
+        // ignore: deprecated_member_use
+        color: Colors.grey.withOpacity(0.3),
+        width: 1,
+      ),
+    );
+  }
+
   BoxShadow boxShadowTheme() {
     return BoxShadow(
       // ignore: deprecated_member_use
@@ -29,11 +96,16 @@ class CustomTheme {
   }
 
   BoxDecoration containerCardDecoration() {
-    return const BoxDecoration(
+    return BoxDecoration(
       borderRadius: BorderRadius.all(
         Radius.circular(12),
       ),
       color: Colors.white,
+      border: Border.all(
+        // ignore: deprecated_member_use
+        color: Colors.grey.withOpacity(0.3),
+        width: 1,
+      ),
     );
   }
 
@@ -333,7 +405,7 @@ class CustomTheme {
       case "Diproses":
       case "Dikirim":
       case "Tidak Aktif":
-        return Colors.grey.shade500;
+        return Color(0xFFfff3c6);
       case "Dibayar Sebagian":
       case "Diproses Sebagian":
       case "Dikirim Sebagian":
@@ -342,12 +414,13 @@ class CustomTheme {
       case "Panen Awal":
         return Colors.orange.shade200;
       case "Lunas":
+      case "Selesai":
       case "Terproses":
       case "Diterima":
       case "Dibayar":
       case "Permintaan Ditutup Lunas":
       case "Aktif":
-        return Colors.green.shade100;
+        return Color(0xffd1fae4);
       case "Difaktur":
       case "Ditutup":
       case "Ditutup Lunas":
@@ -355,8 +428,14 @@ class CustomTheme {
         return Colors.indigo.shade300;
       case "Dibatalkan":
         return Colors.red.shade100;
+      case "Rework":
+        return Color(0xFFe8edfc);
+      case "Total Work Orders":
+        return Color(0xffdbeaff);
+      case "Menunggu Diproses":
+        return Color(0xFFf1f5f9);
       default:
-        return Colors.grey.shade500;
+        return Colors.white;
     }
   }
 
@@ -485,6 +564,31 @@ class CustomTheme {
     }
   }
 
+  double iconSize(type) {
+    switch (type) {
+      case 'xs':
+        return 10;
+      case 'sm':
+        return 12;
+      case 'md':
+        return 14;
+      case 'lg':
+        return 16;
+      case 'xl':
+        return 20;
+      case '2xl':
+        return 24;
+      case '3xl':
+        return 28;
+      case '4xl':
+        return 30;
+      case '5xl':
+        return 32;
+      default:
+        return 14;
+    }
+  }
+
   BoxDecoration defaultButton() {
     return BoxDecoration(
       color: Colors.white,
@@ -553,6 +657,8 @@ class CustomTheme {
         return const SizedBox(width: 8);
       case 'xl':
         return const SizedBox(width: 12);
+      case '2xl':
+        return const SizedBox(width: 16);
       case '3xl':
         return const SizedBox(width: 20);
       case '4xl':
@@ -593,12 +699,48 @@ class CustomTheme {
     switch (type) {
       case 'card':
         return const EdgeInsets.all(12);
+      case 'badge':
+        return const EdgeInsets.symmetric(vertical: 6, horizontal: 12);
+      case 'badge-rework':
+        return const EdgeInsets.symmetric(vertical: 2, horizontal: 6);
       case 'content':
         return const EdgeInsets.all(16);
+      case 'process-content':
+        return const EdgeInsets.all(8);
       case 'list-card':
         return const EdgeInsets.all(12);
       default:
         return const EdgeInsets.all(16);
+    }
+  }
+
+  Icon icon(type) {
+    switch (type) {
+      case 'Menunggu Diproses':
+        return const Icon(
+          Icons.warning_outlined,
+          size: 16,
+        );
+      case 'Diproses':
+        return const Icon(
+          Icons.access_time_outlined,
+          size: 16,
+        );
+      case 'Selesai':
+        return const Icon(
+          Icons.task_alt_outlined,
+          size: 16,
+        );
+      case 'Rework':
+        return const Icon(
+          Icons.replay_outlined,
+          size: 14,
+        );
+      default:
+        return const Icon(
+          Icons.question_mark_outlined,
+          size: 16,
+        );
     }
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ItemProcessCard extends StatelessWidget {
@@ -22,6 +22,8 @@ class ItemProcessCard extends StatelessWidget {
   final useCustomSize;
   final customWidth;
   final customHeight;
+  final itemField;
+  final nestedField;
 
   const ItemProcessCard(
       {super.key,
@@ -41,238 +43,109 @@ class ItemProcessCard extends StatelessWidget {
       this.label,
       this.customHeight,
       this.customWidth,
-      this.useCustomSize});
+      this.useCustomSize,
+      this.itemField,
+      this.nestedField});
 
   @override
   Widget build(BuildContext context) {
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-
-    final status = getStatus?.call(item) ?? '-';
-
     return CustomCard(
-      useCustomSize: useCustomSize,
-      customWidth: customWidth,
-      customHeight: customHeight,
-      child: Padding(
-        padding: PaddingColumn.screen,
-        child: !isPortrait
-            ? Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            '${itemField(item, titleKey)}',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          if (item['rework'] == true)
-                            Icon(
-                              Icons.replay_outlined,
-                              size: 16,
-                            )
-                        ].separatedBy(SizedBox(
-                          width: 4,
-                        )),
-                      ),
-                      customBadgeBuilder?.call(status) ??
-                          CustomBadge(title: status),
-                    ],
-                  ),
-                  Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        '${nestedField(item, subtitleKey, subtitleField)}',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      Row(
-                        children: [
-                          // Icon(
-                          //   Icons.timelapse_outlined,
-                          //   size: 14,
-                          // ),
-                          Text(
-                            "Waktu Dibuat: ${getStartTime?.call(item) ?? '-'}"
-                            "${getStartBy?.call(item).isNotEmpty == true ? ", ${getStartBy!(item)}" : ""}",
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (item['machine'] != null)
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.local_laundry_service_outlined,
-                                  size: 14,
-                                ),
-                                Text(
-                                  '${item['machine']['name']}',
-                                ),
-                              ].separatedBy(SizedBox(
-                                width: 4,
-                              )),
-                            ),
-                          if (item['maklon'] == true)
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.business_outlined,
-                                  size: 14,
-                                ),
-                                Text(
-                                  '${item['maklon_name']}',
-                                ),
-                              ].separatedBy(SizedBox(
-                                width: 4,
-                              )),
-                            ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          // Icon(
-                          //   Icons.playlist_add_check_outlined,
-                          //   size: 14,
-                          // ),
-                          Text(
-                            "Waktu Selesai: ${getEndTime?.call(item) ?? '-'}"
-                            "${getEndBy?.call(item).isNotEmpty == true ? ", ${getEndBy!(item)}" : ""}",
-                          ),
-                        ],
-                      ),
-                    ].separatedBy(SizedBox(
-                      width: 4,
-                    )),
-                  ),
-                ],
-              )
-            : Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            '${itemField(item, titleKey)}',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ].separatedBy(SizedBox(
-                          width: 4,
-                        )),
-                      ),
+        useCustomSize: useCustomSize,
+        customWidth: customWidth,
+        customHeight: customHeight,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${itemField(item, titleKey)}',
+                      style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
+                    ),
+                    if (item['rework'] == true)
                       CustomBadge(
-                          withStatus: true,
-                          status: item['status'],
-                          title: item['status']!,
-                          withDifferentColor: true,
-                          color: item['status'] == 'Diproses'
-                              ? Color(0xFFfff3c6)
-                              : Color(0xffd1fae4)),
-                    ],
-                  ),
-                  Divider(),
-                  Column(
-                    children: [
+                        withStatus: true,
+                        status: 'Rework',
+                        title: 'Rework',
+                        rework: true,
+                      )
+                  ].separatedBy(CustomTheme().hGap('lg')),
+                ),
+                CustomBadge(
+                    withStatus: true,
+                    status: item['status'],
+                    title: item['status']!),
+              ],
+            ),
+            Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  '${nestedField(item, subtitleKey, subtitleField)}',
+                  style: TextStyle(
+                      fontSize: CustomTheme().fontSize('xl'),
+                      fontWeight: CustomTheme().fontWeight('bold')),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Waktu Dibuat: ${getStartTime?.call(item) ?? '-'}"
+                      "${getStartBy?.call(item).isNotEmpty == true ? ", ${getStartBy!(item)}" : ""}",
+                    ),
+                  ],
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (item['machine'] != null)
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          Icon(
+                            Icons.local_laundry_service_outlined,
+                            size: 14,
+                          ),
                           Text(
-                            '${item['work_orders']['wo_no']}',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                            '${item['machine']['name']}',
                           ),
-                        ],
+                        ].separatedBy(CustomTheme().hGap('lg')),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.local_laundry_service_outlined,
-                                size: 14,
-                              ),
-                              Text(
-                                '${item['machine']['name']}',
-                              ),
-                            ].separatedBy(SizedBox(
-                              width: 4,
-                            )),
-                          ),
-                        ],
-                      ),
+                    if (item['maklon'] == true)
                       Row(
                         children: [
+                          Icon(
+                            Icons.business_outlined,
+                            size: 14,
+                          ),
                           Text(
-                            "Waktu Dibuat: ${getStartTime?.call(item) ?? '-'}"
-                            "${getStartBy?.call(item).isNotEmpty == true ? ", ${getStartBy!(item)}" : ""}",
+                            '${item['maklon_name']}',
                           ),
-                        ].separatedBy(SizedBox(
-                          width: 4,
-                        )),
+                        ].separatedBy(CustomTheme().hGap('lg')),
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            "Waktu Selesai: ${getEndTime?.call(item) ?? '-'}"
-                            "${getEndBy?.call(item).isNotEmpty == true ? ", ${getEndBy!(item)}" : ""}",
-                          ),
-                        ].separatedBy(SizedBox(
-                          width: 4,
-                        )),
-                      ),
-                    ].separatedBy(SizedBox(
-                      height: 4,
-                    )),
-                  ),
-                ],
-              ),
-      ),
-    );
-  }
-
-  dynamic itemField(dynamic item, String key) {
-    if (item == null) return '-';
-    try {
-      return item.toJson()[key] ?? '-';
-    } catch (_) {
-      try {
-        return item[key] ?? '-';
-      } catch (_) {
-        return '-';
-      }
-    }
-  }
-
-  dynamic nestedField(dynamic item, String key, String subKey) {
-    try {
-      final nested = itemField(item, key);
-      if (nested is Map && nested[subKey] != null) return nested[subKey];
-      return '-';
-    } catch (_) {
-      return '-';
-    }
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Waktu Selesai: ${getEndTime?.call(item) ?? '-'}"
+                      "${getEndBy?.call(item).isNotEmpty == true ? ", ${getEndBy!(item)}" : ""}",
+                    ),
+                  ],
+                ),
+              ].separatedBy(CustomTheme().hGap('lg')),
+            ),
+          ],
+        ));
   }
 }

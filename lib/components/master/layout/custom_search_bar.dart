@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/margin_card.dart';
 
 class CustomSearchBar extends StatefulWidget {
   final Function(String) handleSearchChange;
@@ -33,10 +32,8 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: MarginCard.screen,
-        decoration: BoxDecoration(
-          color: Colors.white,
-        ),
+        padding: CustomTheme().padding('badge'),
+        color: Colors.white,
         child: Row(
           children: [
             Expanded(
@@ -76,45 +73,36 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8)),
                     child: IconButton(
-                      icon: Stack(
-                        children: [
-                          const Icon(
-                            Icons.refresh_outlined,
-                          ),
-                        ],
+                      icon: Icon(
+                        Icons.refresh_outlined,
                       ),
                       onPressed: () {
                         widget.handleRefetch();
                       },
                     ),
                   ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: IconButton(
-                    icon: Stack(
-                      children: [
-                        const Icon(
-                          Icons.tune,
-                        ),
-                        if (widget.isFiltered)
-                          Positioned(
-                              right: 0,
-                              top: 0,
-                              child: Container(
-                                width: 10,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                    color: CustomTheme().buttonColor('danger'),
-                                    shape: BoxShape.circle),
-                              ))
-                      ],
-                    ),
-                    onPressed: () {
-                      widget.showFilter();
-                    },
+                IconButton(
+                  icon: Stack(
+                    children: [
+                      Icon(
+                        Icons.tune,
+                      ),
+                      if (widget.isFiltered)
+                        Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                  color: CustomTheme().buttonColor('danger'),
+                                  shape: BoxShape.circle),
+                            ))
+                    ],
                   ),
+                  onPressed: () {
+                    widget.showFilter();
+                  },
                 ),
               ],
             )

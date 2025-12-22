@@ -199,6 +199,7 @@ class _DashboardState extends State<Dashboard> {
       summaryList =
           Provider.of<WorkOrderSummaryService>(context, listen: false).dataList;
     });
+    print('s: $summaryList');
   }
 
   void _handleFilter(String key, String value) {
@@ -372,7 +373,7 @@ class _DashboardState extends State<Dashboard> {
             headerSliverBuilder: (context, innerBoxIsScrolled) {
               return [
                 SliverPadding(
-                  padding: const EdgeInsets.all(8),
+                  padding: CustomTheme().padding('content'),
                   sliver: SliverList(
                     delegate: SliverChildListDelegate(
                       [
@@ -408,42 +409,43 @@ class _DashboardState extends State<Dashboard> {
                           data: pieList,
                           process: chartList,
                         ),
-                      ].separatedBy(SizedBox(
-                        height: 8,
-                      )),
+                      ].separatedBy(CustomTheme().vGap('2xl')),
                     ),
                   ),
                 ),
               ];
             },
-            body: WorkOrderProcessScreen(
-              data: _dataList,
-              search: _search,
-              handleSearch: _handleSearch,
-              firstLoading: _firstLoading,
-              hasMore: _hasMore,
-              handleLoadMore: _loadMore,
-              handleRefetch: _refetch,
-              isLoadMore: _isLoadMore,
-              filterWidget: ProcessFilter(
-                title: 'Filter',
-                params: params,
-                onHandleFilter: _handleProcessFilter,
-                onSubmitFilter: _submitFilter,
-                dariTanggal: dariTanggalProses,
-                sampaiTanggal: sampaiTanggalProses,
-                pickDate: _pickDate,
+            body: Padding(
+              padding: CustomTheme().padding('content'),
+              child: WorkOrderProcessScreen(
+                data: _dataList,
+                search: _search,
+                handleSearch: _handleSearch,
+                firstLoading: _firstLoading,
+                hasMore: _hasMore,
+                handleLoadMore: _loadMore,
+                handleRefetch: _refetch,
+                isLoadMore: _isLoadMore,
+                filterWidget: ProcessFilter(
+                  title: 'Filter',
+                  params: params,
+                  onHandleFilter: _handleProcessFilter,
+                  onSubmitFilter: _submitFilter,
+                  dariTanggal: dariTanggalProses,
+                  sampaiTanggal: sampaiTanggalProses,
+                  pickDate: _pickDate,
+                ),
+                handleFetchData: (params) async {
+                  final service = Provider.of<WorkOrderProcessService>(context,
+                      listen: false);
+                  await service.getDataList(params);
+                  return service.items;
+                },
+                handleBuildItem: (item) => ItemProcess(item: item),
+                onHandleFilter: _handleFilter,
+                service: WorkOrderProcessService(),
+                isFiltered: _isFiltered,
               ),
-              handleFetchData: (params) async {
-                final service = Provider.of<WorkOrderProcessService>(context,
-                    listen: false);
-                await service.getDataList(params);
-                return service.items;
-              },
-              handleBuildItem: (item) => ItemProcess(item: item),
-              onHandleFilter: _handleFilter,
-              service: WorkOrderProcessService(),
-              isFiltered: _isFiltered,
             ),
           ),
         ),

@@ -239,6 +239,8 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
                 getStartBy: (item) => item['start_by']?['name'] ?? '',
                 getEndBy: (item) => item['end_by']?['name'] ?? '',
                 getStatus: (item) => item['status'] ?? '-',
+                itemField: itemField,
+                nestedField: nestedField,
                 customBadgeBuilder: (status) => CustomBadge(
                     title: status,
                     withStatus: true,
@@ -329,5 +331,28 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
             )),
       ),
     );
+  }
+
+  dynamic itemField(dynamic item, String key) {
+    if (item == null) return '-';
+    try {
+      return item.toJson()[key] ?? '-';
+    } catch (_) {
+      try {
+        return item[key] ?? '-';
+      } catch (_) {
+        return '-';
+      }
+    }
+  }
+
+  dynamic nestedField(dynamic item, String key, String subKey) {
+    try {
+      final nested = itemField(item, key);
+      if (nested is Map && nested[subKey] != null) return nested[subKey];
+      return '-';
+    } catch (_) {
+      return '-';
+    }
   }
 }

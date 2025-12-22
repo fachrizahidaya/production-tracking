@@ -237,13 +237,9 @@ class _DyeingScreenState extends State<DyeingScreen> {
                 getEndBy: (item) => item['end_by']?['name'] ?? '',
                 getStatus: (item) => item['status'] ?? '-',
                 customBadgeBuilder: (status) => CustomBadge(
-                    title: status,
-                    withStatus: true,
-                    status: item['status'],
-                    withDifferentColor: true,
-                    color: status == 'Diproses'
-                        ? Color(0xFFfff3c6)
-                        : Color(0xffd1fae4)),
+                    withStatus: true, status: status, title: item['status']!),
+                itemField: itemField,
+                nestedField: nestedField,
               ),
               onItemTap: (context, item) {
                 Navigator.push(
@@ -338,5 +334,28 @@ class _DyeingScreenState extends State<DyeingScreen> {
             )),
       ),
     );
+  }
+
+  dynamic itemField(dynamic item, String key) {
+    if (item == null) return '-';
+    try {
+      return item.toJson()[key] ?? '-';
+    } catch (_) {
+      try {
+        return item[key] ?? '-';
+      } catch (_) {
+        return '-';
+      }
+    }
+  }
+
+  dynamic nestedField(dynamic item, String key, String subKey) {
+    try {
+      final nested = itemField(item, key);
+      if (nested is Map && nested[subKey] != null) return nested[subKey];
+      return '-';
+    } catch (_) {
+      return '-';
+    }
   }
 }

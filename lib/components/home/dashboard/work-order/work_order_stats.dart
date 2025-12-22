@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/home/dashboard/card/dasboard_card.dart';
+import 'package:textile_tracking/components/home/dashboard/card/stats_card.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
-import 'package:textile_tracking/helpers/util/margin_card.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderStats extends StatefulWidget {
@@ -61,46 +60,43 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
   Widget buildStatsCard(int i) {
     final item = widget.data[i];
 
-    return DasboardCard(
+    return StatsCard(
       withBottomBorder: true,
       bottomBorderColor: getBorderColor(i),
-      child: Padding(
-        padding: PaddingColumn.screen,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: getIconBgColor(i),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  padding: MarginCard.screen,
-                  child: Icon(
-                    getIcon(i),
-                    color: Colors.white,
-                    size: 24,
-                  ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: getIconBgColor(i),
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                Text(
-                  item['value'].toString(),
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ].separatedBy(const SizedBox(width: 8)),
-            ),
-            CustomBadge(
-              title: item['label'],
-              withDifferentColor: true,
-              color: getBadgeColor(i),
-              withStatus: i == 0 ? false : true,
-              status: item['label'],
-            )
-          ],
-        ),
+                padding: CustomTheme().padding('badge'),
+                child: Icon(
+                  getIcon(i),
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+              Text(
+                item['value'].toString(),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            ].separatedBy(const SizedBox(width: 8)),
+          ),
+          CustomBadge(
+            title: item['label'],
+            withDifferentColor: true,
+            color: getBadgeColor(i),
+            withStatus: i == 0 ? false : true,
+            status: item['label'],
+          )
+        ],
       ),
     );
   }
@@ -108,8 +104,6 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
   @override
   Widget build(BuildContext context) {
     final length = widget.data?.length ?? 0;
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
 
     if (length == 0) return const SizedBox();
 
@@ -119,16 +113,16 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
           children: [
             for (int i = 0; i < length && i < 2; i++)
               Expanded(child: buildStatsCard(i))
-          ],
+          ].separatedBy(CustomTheme().hGap('lg')),
         ),
         if (length > 2)
           Row(
             children: [
               for (int i = 2; i < length; i++)
                 Expanded(child: buildStatsCard(i))
-            ],
+            ].separatedBy(CustomTheme().hGap('lg')),
           ),
-      ],
+      ].separatedBy(CustomTheme().vGap('lg')),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
+import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/helpers/util/margin_card.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
@@ -46,7 +46,7 @@ class WorkOrderPieState extends State<WorkOrderPie> {
     return Row(
       children: [
         Expanded(
-          child: CustomCard(
+          child: DashboardCard(
             child: Column(
               children: [
                 Padding(

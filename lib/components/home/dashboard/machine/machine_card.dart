@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/master/text/view_text.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class MachineCard extends StatelessWidget {
@@ -18,54 +19,63 @@ class MachineCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget text(String value, double width) {
       return isPortrait
-          ? SizedBox(
-              width: width,
-              child: Text(value, maxLines: 2, overflow: TextOverflow.ellipsis),
-            )
-          : Text(value, maxLines: 2, overflow: TextOverflow.ellipsis);
+          ? Text(value, overflow: TextOverflow.ellipsis)
+          : Text(value, overflow: TextOverflow.ellipsis);
     }
 
-    return CustomCard(
-      withBorder: true,
-      child: Padding(
-        padding: PaddingColumn.screen,
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: CustomCard(
+        withBadgeBorder: true,
+        withBorder: true,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CustomBadge(
-                  status: data['code'],
-                  title: data['code'],
-                  withDifferentColor: true,
-                  color: const Color(0xffeaeaec),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        CustomBadge(
+                          title: data['code'],
+                          rework: true,
+                          status: 'Menunggu Diproses',
+                        ),
+                      ],
+                    ),
+                    text(data['name'], 150),
+                  ],
                 ),
                 Row(
                   children: [
                     const Icon(Icons.location_on_outlined, size: 16),
                     text(data['location'], 100),
-                  ].separatedBy(const SizedBox(width: 4)),
+                  ].separatedBy(CustomTheme().hGap('lg')),
                 ),
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: data['used_by']?.length != 0
+                  ? MainAxisAlignment.spaceBetween
+                  : MainAxisAlignment.end,
               children: [
-                Row(
-                  children: [
-                    const Icon(Icons.local_laundry_service_outlined, size: 16),
-                    text(data['name'], 150),
-                  ].separatedBy(const SizedBox(width: 4)),
-                ),
+                if (data['used_by']?.length != 0)
+                  ViewText(
+                    viewLabel: 'Work Order',
+                    viewValue: data['used_by'][0]['wo_no'],
+                  ),
                 CustomBadge(
-                  status: data['process_type'],
                   title: data['process_type'],
-                  withDifferentColor: true,
-                  color: const Color(0xffd1fae4),
+                  forMachine: true,
                 ),
               ],
             ),
-          ].separatedBy(const SizedBox(height: 8)),
+          ].separatedBy(CustomTheme().vGap('lg')),
         ),
       ),
     );

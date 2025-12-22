@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/home/dashboard/card/process_card.dart';
 import 'package:textile_tracking/components/home/dashboard/machine/machine_card.dart';
-import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class MachineSection extends StatelessWidget {
   final String title;
   final IconData icon;
-  final Color headerColor;
+  final headerColor;
   final List<dynamic> data;
   final bool isPortrait;
 
@@ -16,7 +16,7 @@ class MachineSection extends StatelessWidget {
     super.key,
     required this.title,
     required this.icon,
-    required this.headerColor,
+    this.headerColor,
     required this.data,
     required this.isPortrait,
   });
@@ -25,16 +25,14 @@ class MachineSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CustomCard(
-          color: headerColor,
-          child: Padding(
-            padding: PaddingColumn.screen,
-            child: Row(
-              children: [
-                Icon(icon),
-                Text('$title (${data.length})'),
-              ].separatedBy(const SizedBox(width: 8)),
-            ),
+        ProcessCard(
+          forMachine: true,
+          status: headerColor,
+          child: Row(
+            children: [
+              Icon(icon),
+              Text('$title (${data.length})'),
+            ].separatedBy(CustomTheme().hGap('lg')),
           ),
         ),
         SizedBox(

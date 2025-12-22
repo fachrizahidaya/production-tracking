@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/home/dashboard/card/custom_search_bar.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
-import 'package:textile_tracking/components/master/layout/custom_search_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
 
 class DashboardList<T> extends StatefulWidget {
   final BaseCrudService<T> service;
@@ -98,51 +98,50 @@ class _DashboardListState<T> extends State<DashboardList<T>> {
     }
 
     return CustomCard(
-      child: Padding(
-        padding: PaddingColumn.screen,
-        child: Column(
-          children: [
-            CustomSearchBar(
-              handleSearchChange: widget.handleSearch,
-              showFilter: _openFilter,
-              isFiltered: widget.isFiltered,
-              withRefresh: true,
-              handleRefetch: widget.handleRefetch,
-            ),
-            Divider(),
-            Expanded(
-              child: CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        if (index >= widget.dataList.length) {
-                          if (!widget.isLoadMore) {
-                            Future.delayed(Duration.zero, () {
-                              widget.handleLoadMore();
-                            });
-                          }
-
-                          return const SizedBox.shrink();
+      child: Column(
+        children: [
+          CustomSearchBar(
+            handleSearchChange: widget.handleSearch,
+            showFilter: _openFilter,
+            isFiltered: widget.isFiltered,
+            withRefresh: true,
+            handleRefetch: widget.handleRefetch,
+          ),
+          Expanded(
+            child: CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      if (index >= widget.dataList.length) {
+                        if (!widget.isLoadMore) {
+                          Future.delayed(Duration.zero, () {
+                            widget.handleLoadMore();
+                          });
                         }
 
-                        final item = widget.dataList[index];
-                        return GestureDetector(
+                        return const SizedBox.shrink();
+                      }
+
+                      final item = widget.dataList[index];
+                      return Padding(
+                        padding: CustomTheme().padding('process-content'),
+                        child: GestureDetector(
                           onTap: () => widget.onItemTap?.call(context, item),
                           child: widget.itemBuilder(item),
-                        );
-                      },
-                      childCount: widget.hasMore
-                          ? widget.dataList.length + 1
-                          : widget.dataList.length,
-                    ),
+                        ),
+                      );
+                    },
+                    childCount: widget.hasMore
+                        ? widget.dataList.length + 1
+                        : widget.dataList.length,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

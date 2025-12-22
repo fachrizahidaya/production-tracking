@@ -58,23 +58,20 @@ class _WorkOrderProcessScreenState extends State<WorkOrderProcessScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 1000,
-      child: DashboardList(
-        fetchData: widget.handleFetchData,
-        service: widget.service,
-        searchQuery: widget.search,
-        itemBuilder: widget.handleBuildItem,
-        filterWidget: widget.filterWidget,
-        handleRefetch: widget.handleRefetch,
-        handleLoadMore: widget.handleLoadMore,
-        handleSearch: widget.handleSearch,
-        dataList: widget.data,
-        firstLoading: widget.firstLoading,
-        hasMore: widget.hasMore,
-        isFiltered: widget.isFiltered,
-        isLoadMore: widget.isLoadMore,
-      ),
+    return DashboardList(
+      fetchData: widget.handleFetchData,
+      service: widget.service,
+      searchQuery: widget.search,
+      itemBuilder: widget.handleBuildItem,
+      filterWidget: widget.filterWidget,
+      handleRefetch: widget.handleRefetch,
+      handleLoadMore: widget.handleLoadMore,
+      handleSearch: widget.handleSearch,
+      dataList: widget.data,
+      firstLoading: widget.firstLoading,
+      hasMore: widget.hasMore,
+      isFiltered: widget.isFiltered,
+      isLoadMore: widget.isLoadMore,
     );
   }
 }

@@ -2,7 +2,7 @@
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
+import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -200,7 +200,7 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
 
     final double chartRatio = isPortrait ? 1.6 : (allZero ? 3 : 2);
 
-    return CustomCard(
+    return DashboardCard(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

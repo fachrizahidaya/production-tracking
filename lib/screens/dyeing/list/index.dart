@@ -12,6 +12,7 @@ import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/list/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_date_safe.dart';
+import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:provider/provider.dart';
@@ -238,8 +239,8 @@ class _DyeingScreenState extends State<DyeingScreen> {
                 getStatus: (item) => item['status'] ?? '-',
                 customBadgeBuilder: (status) => CustomBadge(
                     withStatus: true, status: status, title: item['status']!),
-                itemField: itemField,
-                nestedField: nestedField,
+                itemField: ItemField.get,
+                nestedField: ItemField.nested,
               ),
               onItemTap: (context, item) {
                 Navigator.push(
@@ -334,28 +335,5 @@ class _DyeingScreenState extends State<DyeingScreen> {
             )),
       ),
     );
-  }
-
-  dynamic itemField(dynamic item, String key) {
-    if (item == null) return '-';
-    try {
-      return item.toJson()[key] ?? '-';
-    } catch (_) {
-      try {
-        return item[key] ?? '-';
-      } catch (_) {
-        return '-';
-      }
-    }
-  }
-
-  dynamic nestedField(dynamic item, String key, String subKey) {
-    try {
-      final nested = itemField(item, key);
-      if (nested is Map && nested[subKey] != null) return nested[subKey];
-      return '-';
-    } catch (_) {
-      return '-';
-    }
   }
 }

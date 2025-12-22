@@ -13,6 +13,7 @@ import 'package:textile_tracking/components/master/layout/card/item_process_card
 import 'package:textile_tracking/components/master/layout/list/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_date_safe.dart';
+import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/printing.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/printing/%5Bprinting_id%5D.dart';
@@ -235,14 +236,10 @@ class _PrintingScreenState extends State<PrintingScreen> {
                 getStartBy: (item) => item['start_by']?['name'] ?? '',
                 getEndBy: (item) => item['end_by']?['name'] ?? '',
                 getStatus: (item) => item['status'] ?? '-',
+                itemField: ItemField.get,
+                nestedField: ItemField.nested,
                 customBadgeBuilder: (status) => CustomBadge(
-                    title: status,
-                    withStatus: true,
-                    status: item['status'],
-                    withDifferentColor: true,
-                    color: status == 'Diproses'
-                        ? Color(0xFFfff3c6)
-                        : Color(0xffd1fae4)),
+                    withStatus: true, status: status, title: item['status']!),
               ),
               onItemTap: (context, item) {
                 Navigator.push(

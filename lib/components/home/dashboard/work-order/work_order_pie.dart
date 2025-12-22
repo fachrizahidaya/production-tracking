@@ -43,72 +43,67 @@ class WorkOrderPieState extends State<WorkOrderPie> {
   Widget build(BuildContext context) {
     final isEmpty = widget.process.isEmpty;
 
-    return Row(
-      children: [
-        Expanded(
-          child: DashboardCard(
-            child: Column(
+    return DashboardCard(
+      child: Column(
+        children: [
+          Padding(
+            padding: PaddingColumn.screen,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: PaddingColumn.screen,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Alur Proses Produksi'),
-                          Text(
-                            'Tahapan lengkap proses produksi dari awal hingga akhir',
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                if (isEmpty)
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    child: Center(child: NoData()),
-                  )
-                else
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Row(
-                        children: List.generate(
-                          widget.process.length,
-                          (i) => Row(
-                            children: [
-                              _buildProcessItem(
-                                index: i,
-                                name: widget.process[i]['name'] ?? '',
-                              ),
-                              if (i != widget.process.length - 1)
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 12),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(bottom: 24),
-                                    child: Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      size: 18,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Alur Proses Produksi'),
+                    Text(
+                      'Tahapan lengkap proses produksi dari awal hingga akhir',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
-                  ),
-              ].separatedBy(const SizedBox(height: 16)),
+                  ],
+                ),
+              ],
             ),
           ),
-        ),
-      ],
+          Divider(),
+          if (isEmpty)
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.2,
+              child: Center(child: NoData()),
+            )
+          else
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Padding(
+                padding: PaddingColumn.screen,
+                child: Row(
+                  children: List.generate(
+                    widget.process.length,
+                    (i) => Row(
+                      children: [
+                        _buildProcessItem(
+                          index: i,
+                          name: widget.process[i]['name'] ?? '',
+                        ),
+                        if (i != widget.process.length - 1)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12),
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 24),
+                              child: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 18,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ].separatedBy(const SizedBox(height: 16)),
+      ),
     );
   }
 

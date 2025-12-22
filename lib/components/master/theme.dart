@@ -109,6 +109,33 @@ class CustomTheme {
     );
   }
 
+  BoxDecoration moreDataBadgeTheme(String status) {
+    switch (status) {
+      case 'Selesai':
+        return BoxDecoration(
+          color: Colors.green.shade100,
+          borderRadius: BorderRadius.circular(8),
+        );
+      case 'Diproses':
+        return BoxDecoration(
+          color: Colors.orange.shade100,
+          borderRadius: BorderRadius.circular(8),
+        );
+      case 'Menunggu Diproses':
+        return BoxDecoration(
+          color: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(8),
+        );
+      case 'more':
+        return BoxDecoration(
+          color: Colors.blueGrey.shade100,
+          borderRadius: BorderRadius.circular(8),
+        );
+      default:
+        return BoxDecoration();
+    }
+  }
+
   BoxDecoration containerBottomSheetDecoration() {
     return const BoxDecoration(
       borderRadius: BorderRadius.vertical(

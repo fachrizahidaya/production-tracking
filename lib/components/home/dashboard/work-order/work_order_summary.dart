@@ -164,42 +164,90 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary> {
           Divider(),
           Padding(
             padding: CustomTheme().padding('content'),
-            child: Column(
-              children: widget.data!
-                  .map<Widget>((item) => SummaryCard(
-                        data: item,
-                        icon: item['name'] == 'Dyeing'
-                            ? processIcons[0]
-                            : item['name'] == 'Press'
-                                ? processIcons[1]
-                                : item['name'] == 'Tumbler'
-                                    ? processIcons[2]
-                                    : item['name'] == 'Stenter'
-                                        ? processIcons[3]
-                                        : item['name'] == 'Long Sitting'
-                                            ? processIcons[4]
-                                            : item['name'] == 'Long Hemming'
-                                                ? processIcons[5]
-                                                : item['name'] ==
-                                                        'Cross Cutting'
-                                                    ? processIcons[6]
-                                                    : item['name'] == 'Sewing'
-                                                        ? processIcons[7]
-                                                        : item['name'] ==
-                                                                'Embroidery'
-                                                            ? processIcons[8]
-                                                            : item['name'] ==
-                                                                    'Printing'
-                                                                ? processIcons[
-                                                                    9]
-                                                                : item['name'] ==
-                                                                        'Sorting'
-                                                                    ? processIcons[
-                                                                        10]
-                                                                    : processIcons[
-                                                                        11],
-                      ))
-                  .toList(),
+            child: SizedBox(
+              height: 500,
+              child: CustomScrollView(
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final item = widget.data![index];
+                        return SummaryCard(
+                          data: item,
+                          icon: item['name'] == 'Dyeing'
+                              ? processIcons[0]
+                              : item['name'] == 'Press'
+                                  ? processIcons[1]
+                                  : item['name'] == 'Tumbler'
+                                      ? processIcons[2]
+                                      : item['name'] == 'Stenter'
+                                          ? processIcons[3]
+                                          : item['name'] == 'Long Sitting'
+                                              ? processIcons[4]
+                                              : item['name'] == 'Long Hemming'
+                                                  ? processIcons[5]
+                                                  : item['name'] ==
+                                                          'Cross Cutting'
+                                                      ? processIcons[6]
+                                                      : item['name'] == 'Sewing'
+                                                          ? processIcons[7]
+                                                          : item['name'] ==
+                                                                  'Embroidery'
+                                                              ? processIcons[8]
+                                                              : item['name'] ==
+                                                                      'Printing'
+                                                                  ? processIcons[
+                                                                      9]
+                                                                  : item['name'] ==
+                                                                          'Sorting'
+                                                                      ? processIcons[
+                                                                          10]
+                                                                      : processIcons[
+                                                                          11],
+                        );
+                      },
+                      childCount: widget.data!.length,
+                    ),
+                  ),
+                ],
+              ),
+              //    Column(
+              //   children: widget.data!
+              //       .map<Widget>((item) => SummaryCard(
+              //             data: item,
+              //             icon: item['name'] == 'Dyeing'
+              //                 ? processIcons[0]
+              //                 : item['name'] == 'Press'
+              //                     ? processIcons[1]
+              //                     : item['name'] == 'Tumbler'
+              //                         ? processIcons[2]
+              //                         : item['name'] == 'Stenter'
+              //                             ? processIcons[3]
+              //                             : item['name'] == 'Long Sitting'
+              //                                 ? processIcons[4]
+              //                                 : item['name'] == 'Long Hemming'
+              //                                     ? processIcons[5]
+              //                                     : item['name'] ==
+              //                                             'Cross Cutting'
+              //                                         ? processIcons[6]
+              //                                         : item['name'] == 'Sewing'
+              //                                             ? processIcons[7]
+              //                                             : item['name'] ==
+              //                                                     'Embroidery'
+              //                                                 ? processIcons[8]
+              //                                                 : item['name'] ==
+              //                                                         'Printing'
+              //                                                     ? processIcons[
+              //                                                         9]
+              //                                                     : item['name'] ==
+              //                                                             'Sorting'
+              //                                                         ? processIcons[
+              //                                                             10]
+              //                                                         : processIcons[
+              //                                                             11],
+              //           ))
+              //       .toList(),
+              // ),
             ),
           )
         ],

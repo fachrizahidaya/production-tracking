@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/components/home/dashboard/card/summary_card.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderSummary extends StatefulWidget {
@@ -69,6 +68,23 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary> {
     'Menunggu Diproses',
   ];
 
+  void _openFilter() {
+    if (widget.filterWidget != null) {
+      showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        enableDrag: true,
+        isDismissible: true,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return widget.filterWidget!;
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DashboardCard(
@@ -76,7 +92,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: PaddingColumn.screen,
+            padding: CustomTheme().padding('card'),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -86,75 +102,98 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary> {
                     Text('Perkembangan Proses Produksi'),
                     Text(
                       'Status setiap tahapan Work Order',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(
+                          fontSize: CustomTheme().fontSize('sm'),
+                          color: CustomTheme().colors('text-secondary')),
                     ),
                   ],
                 ),
                 Row(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8)),
-                      child: IconButton(
-                        icon: Stack(
-                          children: [
-                            const Icon(
-                              Icons.refresh_outlined,
-                            ),
-                          ],
-                        ),
-                        onPressed: () {
-                          widget.handleRefetch();
-                        },
+                    IconButton(
+                      icon: Icon(
+                        Icons.refresh_outlined,
                       ),
+                      onPressed: () {
+                        widget.handleRefetch();
+                      },
                     ),
-                  ].separatedBy(CustomTheme().hGap('lg')),
-                )
+                    IconButton(
+                      icon: Icon(
+                        Icons.tune,
+                      ),
+                      onPressed: () {
+                        _openFilter();
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Padding(
-              padding: PaddingColumn.screen,
+              padding: CustomTheme().padding('badge'),
               child: Row(
                 children: processFilters
                     .map((type) {
                       bool isSelected = selectedProcess == type;
 
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedProcess = type;
-                          });
-                          final mappedStatus = _mapStatusFilter(type);
+                      final mappedStatus = _mapStatusFilter(type);
 
-                          widget.handleRefetch(
-                            status: mappedStatus,
-                            fromDate: widget.dariTanggal,
-                            toDate: widget.sampaiTanggal,
-                          );
-                        },
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            side: BorderSide(
-                              color: isSelected
-                                  ? Colors.blue
-                                  : Colors.grey.shade400,
-                              width: 1.0,
-                            ),
-                          ),
-                          elevation: isSelected ? 3 : 1,
-                          color:
-                              isSelected ? Colors.blue.shade50 : Colors.white,
-                          child: Padding(
-                            padding: PaddingColumn.screen,
-                            child: Text(type),
-                          ),
-                        ),
+                      widget.handleRefetch(
+                        status: mappedStatus,
+                        fromDate: widget.dariTanggal,
+                        toDate: widget.sampaiTanggal,
                       );
+
+                      return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedProcess = type;
+                            });
+                          },
+                          child:
+                              // Card(
+                              //   shape: RoundedRectangleBorder(
+                              //     borderRadius: BorderRadius.circular(4),
+                              //     side: BorderSide(
+                              //       color: isSelected
+                              //           ? Colors.blue
+                              //           : Colors.grey.shade400,
+                              //       width: 1.0,
+                              //     ),
+                              //   ),
+                              //   elevation: isSelected ? 3 : 1,
+                              //   color:
+                              //       isSelected ? Colors.blue.shade50 : Colors.white,
+                              //   child: Padding(
+                              //     padding: PaddingColumn.screen,
+                              //     child: Text(type),
+                              //   ),
+                              // ),
+                              Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                              border: Border.all(
+                                  color: isSelected
+                                      ? CustomTheme().buttonColor('primary')
+                                      : Colors.grey.shade400,
+                                  width: 1),
+                              color: isSelected
+                                  ? CustomTheme().buttonColor('primary')
+                                  : Colors.white,
+                              boxShadow: [CustomTheme().boxShadowTheme()],
+                            ),
+                            padding: CustomTheme().padding('badge'),
+                            child: Text(
+                              type,
+                              style: TextStyle(
+                                  color: isSelected ? Colors.white : null),
+                            ),
+                          ));
                     })
                     .toList()
                     .separatedBy(CustomTheme().hGap('lg')),
@@ -162,17 +201,17 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary> {
             ),
           ),
           Divider(),
-          Padding(
-            padding: CustomTheme().padding('content'),
-            child: SizedBox(
-              height: 500,
-              child: CustomScrollView(
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final item = widget.data![index];
-                        return SummaryCard(
+          SizedBox(
+            height: 500,
+            child: CustomScrollView(
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final item = widget.data![index];
+                      return Padding(
+                        padding: CustomTheme().padding('badge'),
+                        child: SummaryCard(
                           data: item,
                           icon: item['name'] == 'Dyeing'
                               ? processIcons[0]
@@ -204,50 +243,13 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary> {
                                                                           10]
                                                                       : processIcons[
                                                                           11],
-                        );
-                      },
-                      childCount: widget.data!.length,
-                    ),
+                        ),
+                      );
+                    },
+                    childCount: widget.data!.length,
                   ),
-                ],
-              ),
-              //    Column(
-              //   children: widget.data!
-              //       .map<Widget>((item) => SummaryCard(
-              //             data: item,
-              //             icon: item['name'] == 'Dyeing'
-              //                 ? processIcons[0]
-              //                 : item['name'] == 'Press'
-              //                     ? processIcons[1]
-              //                     : item['name'] == 'Tumbler'
-              //                         ? processIcons[2]
-              //                         : item['name'] == 'Stenter'
-              //                             ? processIcons[3]
-              //                             : item['name'] == 'Long Sitting'
-              //                                 ? processIcons[4]
-              //                                 : item['name'] == 'Long Hemming'
-              //                                     ? processIcons[5]
-              //                                     : item['name'] ==
-              //                                             'Cross Cutting'
-              //                                         ? processIcons[6]
-              //                                         : item['name'] == 'Sewing'
-              //                                             ? processIcons[7]
-              //                                             : item['name'] ==
-              //                                                     'Embroidery'
-              //                                                 ? processIcons[8]
-              //                                                 : item['name'] ==
-              //                                                         'Printing'
-              //                                                     ? processIcons[
-              //                                                         9]
-              //                                                     : item['name'] ==
-              //                                                             'Sorting'
-              //                                                         ? processIcons[
-              //                                                             10]
-              //                                                         : processIcons[
-              //                                                             11],
-              //           ))
-              //       .toList(),
-              // ),
+                ),
+              ],
             ),
           )
         ],

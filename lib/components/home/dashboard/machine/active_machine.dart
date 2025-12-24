@@ -80,19 +80,15 @@ class _ActiveMachineState extends State<ActiveMachine> {
                     'Pemantauan ketersediaan mesin secara real-time',
                     style: TextStyle(
                         fontSize: CustomTheme().fontSize('sm'),
-                        color: Colors.grey),
+                        color: CustomTheme().colors('text-secondary')),
                   ),
                 ],
               ),
               Row(
                 children: [
                   IconButton(
-                    icon: Stack(
-                      children: [
-                        const Icon(
-                          Icons.refresh_outlined,
-                        ),
-                      ],
+                    icon: Icon(
+                      Icons.refresh_outlined,
                     ),
                     onPressed: () {
                       widget.handleRefetch();
@@ -116,35 +112,38 @@ class _ActiveMachineState extends State<ActiveMachine> {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Padding(
-            padding: CustomTheme().padding('card'),
+            padding: CustomTheme().padding('badge'),
             child: Row(
               children: processFilters
                   .map((type) {
                     bool isSelected = selectedProcess == type;
 
                     return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedProcess = type;
-                        });
-                      },
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          side: BorderSide(
-                            color:
-                                isSelected ? Colors.blue : Colors.grey.shade400,
-                            width: 1.0,
+                        onTap: () {
+                          setState(() {
+                            selectedProcess = type;
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            border: Border.all(
+                                color: isSelected
+                                    ? CustomTheme().buttonColor('primary')
+                                    : Colors.grey.shade400,
+                                width: 1),
+                            color: isSelected
+                                ? CustomTheme().buttonColor('primary')
+                                : Colors.white,
+                            boxShadow: [CustomTheme().boxShadowTheme()],
                           ),
-                        ),
-                        elevation: isSelected ? 3 : 1,
-                        color: isSelected ? Colors.blue.shade50 : Colors.white,
-                        child: Padding(
-                          padding: CustomTheme().padding('card'),
-                          child: Text(type),
-                        ),
-                      ),
-                    );
+                          padding: CustomTheme().padding('badge'),
+                          child: Text(
+                            type,
+                            style: TextStyle(
+                                color: isSelected ? Colors.white : null),
+                          ),
+                        ));
                   })
                   .toList()
                   .separatedBy(CustomTheme().hGap('lg')),
@@ -163,6 +162,7 @@ class _ActiveMachineState extends State<ActiveMachine> {
                   child: MachineSection(
                     title: 'Mesin Tersedia',
                     icon: Icons.check_circle_outline,
+                    status: Color(0xFF10b981),
                     headerColor: 'Selesai',
                     data: filteredAvailable,
                     isPortrait: isPortrait,
@@ -172,6 +172,7 @@ class _ActiveMachineState extends State<ActiveMachine> {
                   child: MachineSection(
                     title: 'Mesin Sedang Digunakan',
                     icon: Icons.warning_outlined,
+                    status: Color(0xfff18800),
                     headerColor: 'Diproses',
                     data: filteredUnavailable,
                     isPortrait: isPortrait,
@@ -180,7 +181,7 @@ class _ActiveMachineState extends State<ActiveMachine> {
               ].separatedBy(CustomTheme().hGap('2xl')),
             ),
           )
-      ].separatedBy(CustomTheme().vGap('lg')),
+      ],
     ));
   }
 }

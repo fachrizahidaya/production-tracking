@@ -17,13 +17,13 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
   Color getBorderColor(int i) {
     switch (i) {
       case 0:
-        return const Color(0xff3b82f6);
+        return CustomTheme().colors('primary');
       case 1:
-        return const Color(0xFF10b981);
+        return Color(0xFF10b981);
       case 2:
-        return const Color(0xfff18800);
+        return Color(0xfff18800);
       default:
-        return const Color(0xFF94a3b8);
+        return CustomTheme().colors('secondary');
     }
   }
 
@@ -64,6 +64,7 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
       withBottomBorder: true,
       bottomBorderColor: getBorderColor(i),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
@@ -71,23 +72,23 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
               Container(
                 decoration: BoxDecoration(
                   color: getIconBgColor(i),
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
                 ),
                 padding: CustomTheme().padding('badge'),
                 child: Icon(
                   getIcon(i),
                   color: Colors.white,
-                  size: 24,
+                  size: CustomTheme().iconSize('2xl'),
                 ),
               ),
               Text(
                 item['value'].toString(),
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+                style: TextStyle(
+                  fontSize: CustomTheme().fontSize('2xl'),
+                  fontWeight: CustomTheme().fontWeight('bold'),
                 ),
               )
-            ].separatedBy(const SizedBox(width: 8)),
+            ].separatedBy(CustomTheme().hGap('lg')),
           ),
           CustomBadge(
             title: item['label'],

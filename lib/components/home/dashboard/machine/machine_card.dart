@@ -4,6 +4,7 @@ import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class MachineCard extends StatelessWidget {
   final Map data;
@@ -65,9 +66,22 @@ class MachineCard extends StatelessWidget {
                   : MainAxisAlignment.end,
               children: [
                 if (data['used_by']?.length != 0)
-                  ViewText(
+                  ViewText<Map<String, dynamic>>(
                     viewLabel: 'Work Order',
-                    viewValue: data['used_by'][0]['wo_no'],
+                    viewValue: data['used_by'][0]?['wo_no']?.toString() ?? '-',
+                    item: data['used_by'][0],
+                    onItemTap: (context, workOrder) {
+                      if (workOrder['wo_id'] != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WorkOrderDetail(
+                              id: workOrder['wo_id'].toString(),
+                            ),
+                          ),
+                        );
+                      }
+                    },
                   ),
                 CustomBadge(
                   title: data['process_type'],

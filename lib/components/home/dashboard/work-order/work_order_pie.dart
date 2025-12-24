@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/margin_card.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -57,7 +58,9 @@ class WorkOrderPieState extends State<WorkOrderPie> {
                     Text('Alur Proses Produksi'),
                     Text(
                       'Tahapan lengkap proses produksi dari awal hingga akhir',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(
+                          fontSize: CustomTheme().fontSize('sm'),
+                          color: CustomTheme().colors('secondary')),
                     ),
                   ],
                 ),
@@ -74,7 +77,7 @@ class WorkOrderPieState extends State<WorkOrderPie> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Padding(
-                padding: PaddingColumn.screen,
+                padding: CustomTheme().padding('badge'),
                 child: Row(
                   children: List.generate(
                     widget.process.length,
@@ -85,15 +88,12 @@ class WorkOrderPieState extends State<WorkOrderPie> {
                           name: widget.process[i]['name'] ?? '',
                         ),
                         if (i != widget.process.length - 1)
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 12),
-                            child: Padding(
-                              padding: EdgeInsets.only(bottom: 24),
-                              child: Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                size: 18,
-                                color: Colors.grey,
-                              ),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 24),
+                            child: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: CustomTheme().iconSize('xl'),
+                              color: Colors.grey,
                             ),
                           ),
                       ],
@@ -102,7 +102,7 @@ class WorkOrderPieState extends State<WorkOrderPie> {
                 ),
               ),
             ),
-        ].separatedBy(const SizedBox(height: 16)),
+        ],
       ),
     );
   }
@@ -113,15 +113,13 @@ class WorkOrderPieState extends State<WorkOrderPie> {
         Column(
           children: [
             Container(
-              decoration: BoxDecoration(
-                color: const Color(0xff3b82f6),
-                borderRadius: BorderRadius.circular(4),
-              ),
+              decoration: CustomTheme()
+                  .processCardTheme(CustomTheme().colors('primary')),
               padding: MarginCard.screen,
               child: Icon(
                 getIcon(index),
                 color: Colors.white,
-                size: 32,
+                size: CustomTheme().iconSize('5xl'),
               ),
             ),
             SizedBox(
@@ -133,7 +131,7 @@ class WorkOrderPieState extends State<WorkOrderPie> {
                 textAlign: TextAlign.center,
               ),
             ),
-          ].separatedBy(const SizedBox(height: 8)),
+          ].separatedBy(CustomTheme().vGap('lg')),
         ),
       ],
     );

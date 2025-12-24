@@ -11,15 +11,16 @@ class MachineSection extends StatelessWidget {
   final headerColor;
   final List<dynamic> data;
   final bool isPortrait;
+  final status;
 
-  const MachineSection({
-    super.key,
-    required this.title,
-    required this.icon,
-    this.headerColor,
-    required this.data,
-    required this.isPortrait,
-  });
+  const MachineSection(
+      {super.key,
+      required this.title,
+      required this.icon,
+      this.headerColor,
+      required this.data,
+      required this.isPortrait,
+      this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,10 @@ class MachineSection extends StatelessWidget {
           status: headerColor,
           child: Row(
             children: [
-              Icon(icon),
+              Icon(
+                icon,
+                color: status,
+              ),
               Text('$title (${data.length})'),
             ].separatedBy(CustomTheme().hGap('lg')),
           ),

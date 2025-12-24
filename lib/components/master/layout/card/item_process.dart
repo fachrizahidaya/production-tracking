@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/components/home/dashboard/card/process_card.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
+import 'package:textile_tracking/components/master/text/clickable_text.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class ItemProcess extends StatefulWidget {
   final item;
@@ -32,11 +34,18 @@ class _ItemProcessState extends State<ItemProcess> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      widget.item['wo_no'],
-                      style: TextStyle(
-                          fontSize: CustomTheme().fontSize('xl'),
-                          fontWeight: CustomTheme().fontWeight('bold')),
+                    ClickableText(
+                      text: widget.item['wo_no'],
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WorkOrderDetail(
+                              id: widget.item['id'].toString(),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     CustomBadge(
                       withStatus: true,

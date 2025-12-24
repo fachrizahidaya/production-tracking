@@ -107,7 +107,9 @@ class _DashboardListState<T> extends State<DashboardList<T>> {
             withRefresh: true,
             handleRefetch: widget.handleRefetch,
           ),
-          Expanded(
+          Divider(),
+          SizedBox(
+            height: 1000,
             child: CustomScrollView(
               controller: _scrollController,
               slivers: [

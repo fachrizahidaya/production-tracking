@@ -175,9 +175,9 @@ class CustomTheme {
   }
 
   InputDecoration inputDecoration([
-    String? hintTextString,
-    Icon? prefIcon,
-    Icon? suffIcon,
+    hintTextString,
+    prefIcon,
+    suffIcon,
   ]) {
     return InputDecoration(
       filled: true,
@@ -541,7 +541,7 @@ class CustomTheme {
       case 'text-primary':
         return Colors.black;
       case 'text-secondary':
-        return Colors.black54;
+        return Color(0xFF71717b);
       case 'text-tertiary':
         return Colors.black38;
       default:
@@ -632,13 +632,15 @@ class CustomTheme {
 
   ButtonStyle primaryButton() {
     return TextButton.styleFrom(
-      backgroundColor: CustomTheme().colors('base'),
+      backgroundColor: CustomTheme().colors('primary'),
       foregroundColor: Colors.white,
-      textStyle: const TextStyle(fontSize: 16),
+      textStyle: TextStyle(
+        fontSize: 16,
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: CustomTheme().colors('base'),
+          color: CustomTheme().colors('primary'),
         ),
       ),
     );
@@ -662,7 +664,7 @@ class CustomTheme {
     return TextButton.styleFrom(
       backgroundColor: Colors.grey.shade300,
       foregroundColor: Colors.grey.shade600,
-      textStyle: const TextStyle(fontSize: 16),
+      textStyle: TextStyle(fontSize: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
@@ -747,16 +749,19 @@ class CustomTheme {
         return const Icon(
           Icons.warning_outlined,
           size: 16,
+          color: Color.fromRGBO(113, 113, 123, 1),
         );
       case 'Diproses':
         return const Icon(
           Icons.access_time_outlined,
           size: 16,
+          color: Color(0xfff18800),
         );
       case 'Selesai':
         return const Icon(
           Icons.task_alt_outlined,
           size: 16,
+          color: Color(0xFF10b981),
         );
       case 'Rework':
         return const Icon(

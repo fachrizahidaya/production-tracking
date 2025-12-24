@@ -45,9 +45,8 @@ class ViewText<T> extends StatelessWidget {
                     style: TextStyle(
                       fontSize: CustomTheme().fontSize('lg'),
                       fontWeight: CustomTheme().fontWeight('semibold'),
-                      color: isClickable
-                          ? CustomTheme().colors('primary')
-                          : CustomTheme().colors('text-primary'),
+                      color:
+                          isClickable ? CustomTheme().colors('primary') : null,
                       decoration: isClickable ? TextDecoration.underline : null,
                     ),
                     softWrap: true,

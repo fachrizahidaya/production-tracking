@@ -79,73 +79,71 @@ class _ListInfoState extends State<ListInfo> {
 
     return SingleChildScrollView(
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: CustomTheme().padding('content'),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomCard(
-                child: Padding(
-                    padding: PaddingColumn.screen,
-                    child: Column(
+                child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text(
+                          widget.data['dyeing_no']?.toString() ?? '-',
+                          style: TextStyle(
+                              fontSize: CustomTheme().fontSize('lg'),
+                              fontWeight: CustomTheme().fontWeight('bold')),
+                        ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.data['dyeing_no']?.toString() ?? '-',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                        'Dibuat pada ${widget.data['start_time'] != null ? DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['start_time'])) : '-'}'),
-                                    if (widget.data['rework'] == true)
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.replay_outlined,
-                                            size: 16,
-                                          ),
-                                          Text(
-                                            'Rework',
-                                          ),
-                                        ],
-                                      )
-                                  ],
-                                ),
-                              ].separatedBy(SizedBox(
-                                height: 4,
-                              )),
-                            ),
-                            CustomBadge(
-                              title: widget.data['status'] ?? '-',
-                              withDifferentColor: true,
-                              withStatus: true,
-                              status: widget.data['status'],
-                              color: widget.data['status'] == 'Diproses'
-                                  ? Color(0xFFfff3c6)
-                                  : Color(0xffd1fae4),
-                            ),
+                            Text(
+                                'Dibuat pada ${widget.data['start_time'] != null ? DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['start_time'])) : '-'}'),
+                            if (widget.data['rework'] == true)
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.replay_outlined,
+                                    size: 16,
+                                  ),
+                                  Text(
+                                    'Rework',
+                                  ),
+                                ],
+                              )
                           ],
                         ),
-                        SelectForm(
-                          isDisabled: widget.data['can_update'] ? false : true,
-                          label: 'Mesin',
-                          onTap: () => widget.handleSelectMachine(),
-                          selectedLabel: widget.form['nama_mesin'] ?? '',
-                          selectedValue: widget.form['machine_id'].toString(),
-                          required: false,
-                        )
                       ].separatedBy(SizedBox(
-                        height: 8,
+                        height: 4,
                       )),
-                    ))),
+                    ),
+                    CustomBadge(
+                      title: widget.data['status'] ?? '-',
+                      withDifferentColor: true,
+                      withStatus: true,
+                      status: widget.data['status'],
+                      color: widget.data['status'] == 'Diproses'
+                          ? Color(0xFFfff3c6)
+                          : Color(0xffd1fae4),
+                    ),
+                  ],
+                ),
+                SelectForm(
+                  isDisabled: widget.data['can_update'] ? false : true,
+                  label: 'Mesin',
+                  onTap: () => widget.handleSelectMachine(),
+                  selectedLabel: widget.form['nama_mesin'] ?? '',
+                  selectedValue: widget.form['machine_id'].toString(),
+                  required: false,
+                )
+              ].separatedBy(SizedBox(
+                height: 8,
+              )),
+            )),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

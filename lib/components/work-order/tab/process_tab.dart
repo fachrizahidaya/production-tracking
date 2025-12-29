@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/work-order/item/process_item.dart';
 
 class ProcessTab extends StatefulWidget {
@@ -13,54 +14,29 @@ class ProcessTab extends StatefulWidget {
 class _ProcessTabState extends State<ProcessTab> {
   @override
   Widget build(BuildContext context) {
-    final rawData = widget.data ?? {};
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
-    final List<Map<String, dynamic>> items = [];
+    final List<Map<String, dynamic>> items =
+        (widget.data?['processes'] ?? []).cast<Map<String, dynamic>>();
 
-    const processKeys = [
-      'dyeing',
-      'press',
-      'tumbler',
-      'stenter',
-      'long_sitting',
-      'long_hemming',
-      'cross_cutting',
-      'sewing',
-      'embroidery',
-      'printing',
-      'sorting',
-      'packing',
-    ];
-
-    for (final key in processKeys) {
-      final value = rawData[key];
-
-      if (value == null) continue;
-
-      if (value is List) {
-        for (final item in value) {
-          if (item is Map<String, dynamic>) {
-            items.add({
-              'process': key,
-              'data': item,
-            });
-          }
-        }
-      } else if (value is Map<String, dynamic>) {
-        items.add({
-          'process': key,
-          'data': value,
-        });
-      }
-    }
-
-    return items.isEmpty
-        ? const Center(child: Text('No Data'))
-        : ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              return ProcessItem(item: items[index]);
-            },
-          );
+    return Container(
+      child: items.isEmpty
+          ? Center(child: Text('No Data'))
+          : GridView.builder(
+              padding: CustomTheme().padding('content'),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: isPortrait ? 3 / 2 : 3 / 1,
+              ),
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return ProcessItem(item: item);
+              },
+            ),
+    );
   }
 }

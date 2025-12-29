@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:html/parser.dart' as html_parser;
 
 class NoteItem extends StatefulWidget {
@@ -32,17 +31,15 @@ class _NoteItemState extends State<NoteItem> {
     }
 
     return CustomCard(
-      child: Padding(
-          padding: PaddingColumn.screen,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ViewText(
-                viewLabel: 'Catatan ${widget.item['label']}',
-                viewValue: htmlToPlainText(widget.item['value']),
-              ),
-            ],
-          )),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ViewText(
+            viewLabel: 'Catatan ${widget.item['label']}',
+            viewValue: htmlToPlainText(widget.item['value']),
+          ),
+        ],
+      ),
     );
   }
 }

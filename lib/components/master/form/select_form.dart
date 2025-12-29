@@ -26,8 +26,6 @@ class SelectForm extends StatefulWidget {
 }
 
 class _SelectFormState extends State<SelectForm> {
-  final TextEditingController _textEditingController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return GroupForm(

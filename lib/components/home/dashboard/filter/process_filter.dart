@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/filter_select_form.dart';
@@ -32,8 +34,6 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
   TextEditingController dariTanggalInput = TextEditingController();
   TextEditingController sampaiTanggalInput = TextEditingController();
 
-  late List<dynamic> _dataList;
-
   List<dynamic> statusOption = [
     {'label': 'Menunggu Diproses', 'value': 'Menunggu Diproses'},
     {'label': 'Diproses', 'value': 'Diproses'},
@@ -56,17 +56,6 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
 
     dariTanggalInput.text = widget.dariTanggal;
     sampaiTanggalInput.text = widget.sampaiTanggal;
-  }
-
-  _searchDataOption(value) {
-    setState(() {
-      _dataList = statusOption
-          .where((element) => element['label']
-              .toString()
-              .toLowerCase()
-              .contains(value.toLowerCase()))
-          .toList();
-    });
   }
 
   @override
@@ -201,6 +190,9 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
               final result = await showDialog<List<Map<String, dynamic>>>(
                 context: context,
                 builder: (_) {
+                  List<dynamic> filteredList = List.from(statusOption);
+                  Timer? debounce;
+
                   return Dialog(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),
@@ -214,10 +206,29 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                       ),
                       child: StatefulBuilder(
                         builder: (context, setState) {
+                          void runSearch(String value) {
+                            if (debounce?.isActive ?? false) debounce!.cancel();
+
+                            debounce =
+                                Timer(const Duration(milliseconds: 300), () {
+                              setState(() {
+                                if (value.isEmpty) {
+                                  filteredList = List.from(statusOption);
+                                } else {
+                                  filteredList = statusOption
+                                      .where((e) => e['label']
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase()))
+                                      .toList();
+                                }
+                              });
+                            });
+                          }
+
                           return Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // 🔹 Header
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Column(
@@ -244,27 +255,25 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                                                 BorderRadius.circular(4),
                                           ),
                                         ),
-                                        onChanged: (value) {
-                                          _searchDataOption(value);
-                                        },
+                                        onChanged: runSearch,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-
-                              // 🔹 List of Options
                               Expanded(
                                 child: Scrollbar(
                                   thickness: 4,
                                   child: ListView.separated(
                                     physics:
                                         const AlwaysScrollableScrollPhysics(),
-                                    itemCount: statusOption.length,
+                                    itemCount: filteredList.length,
                                     itemBuilder: (context, index) {
+                                      final item = filteredList[index];
+
                                       final status = statusOption[index];
-                                      final isSelected =
-                                          selectedStatuses.contains(status);
+                                      final isSelected = selectedStatuses.any(
+                                          (s) => s['value'] == item['value']);
 
                                       return CheckboxListTile(
                                         value: isSelected,
@@ -293,8 +302,6 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                                   ),
                                 ),
                               ),
-
-                              // 🔹 Footer (Buttons)
                               Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Row(
@@ -302,15 +309,19 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                                   children: [
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.pop(context); // cancel
+                                        setState(() {
+                                          selectedStatuses.clear();
+                                          filteredList =
+                                              List.from(statusOption);
+                                        });
                                       },
-                                      child: const Text('Batal'),
+                                      child: const Text('Reset'),
                                     ),
                                     const SizedBox(width: 8),
                                     ElevatedButton(
                                       onPressed: () {
-                                        Navigator.pop(context,
-                                            selectedStatuses); // return selected
+                                        Navigator.pop(
+                                            context, selectedStatuses);
                                       },
                                       child: const Text('Simpan'),
                                     ),

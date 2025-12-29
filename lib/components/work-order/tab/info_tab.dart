@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/work-order/list_info.dart';
 
 class InfoTab extends StatefulWidget {
@@ -28,8 +29,11 @@ class _InfoTabState extends State<InfoTab> {
       );
     }
 
-    return ListInfo(
-      data: widget.data,
+    return SingleChildScrollView(
+      padding: CustomTheme().padding('content'),
+      child: ListInfo(
+        data: widget.data,
+      ),
     );
   }
 }

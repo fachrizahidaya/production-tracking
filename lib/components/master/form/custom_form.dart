@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class CustomForm extends StatefulWidget {
   final String hintText;
@@ -56,11 +57,8 @@ class _CustomFormState extends State<CustomForm> {
     return TextFormField(
       controller: widget.controller,
       obscureText: widget.isPassword && _obscureText,
-      decoration: InputDecoration(
-          hintText: widget.hintText,
-          hintStyle: TextStyle(color: Colors.grey),
-          border: OutlineInputBorder(),
-          suffixIcon: renderSuffix()),
+      decoration: CustomTheme().inputDecoration(
+          widget.hintText, null, widget.isPassword ? renderSuffix() : null),
       validator: renderValidate,
     );
   }

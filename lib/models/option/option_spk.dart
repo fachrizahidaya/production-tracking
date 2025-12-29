@@ -32,7 +32,6 @@ class OptionSpk {
 class OptionSpkService extends BaseService<OptionSpk> {
   bool _isLoading = false;
   bool _hasMoreData = true;
-  int _currentPage = 1;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
   final List<OptionSpk> _spk = [];
@@ -71,7 +70,6 @@ class OptionSpkService extends BaseService<OptionSpk> {
     if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
-      _currentPage = 1;
       _hasMoreData = true;
       _spk.clear();
     }

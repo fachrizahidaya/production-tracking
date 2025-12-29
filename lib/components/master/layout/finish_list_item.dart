@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class FinishListItem extends StatelessWidget {
@@ -12,95 +12,73 @@ class FinishListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
     return CustomCard(
-        child: Padding(
-            padding: PaddingColumn.screen,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        item['spk_item']?['item']['name'] ?? '-',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                      if (!isMobile)
-                        CustomBadge(
-                            title:
-                                item['spk_item']['item']['sku']?.toString() ??
-                                    '-'),
-                    ]),
-                if (isMobile)
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomBadge(
+                    title: item['spk_item']['item']['code']?.toString() ?? '-',
+                    rework: true,
+                    status: 'Menunggu Diproses',
+                  ),
                   Text(
-                    item['spk_item']['item']['sku']?.toString() ?? '-',
+                    item['spk_item']['item']['name']?.toString() ?? '-',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: CustomTheme().fontSize('lg'),
                     ),
                   ),
-                Divider(),
-                const SizedBox(
-                  height: 8,
+                ].separatedBy(CustomTheme().vGap('sm')),
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.shopping_cart_outlined,
+                    size: CustomTheme().iconSize('xl'),
+                  ),
+                  Text(
+                    '${item['qty']} ${item['unit']['code']}',
+                    style: TextStyle(
+                        fontSize: CustomTheme().fontSize('2xl'),
+                        fontWeight: CustomTheme().fontWeight('bold')),
+                  )
+                ].separatedBy(CustomTheme().hGap('lg')),
+              ),
+            ]),
+        Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.design_services_outlined,
                 ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        item['spk_item']?['spk']['spk_no'] ?? '-',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        item['spk_item']?['design'] ?? '-',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ]),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.shopping_cart_outlined,
-                            size: 14,
-                          ),
-                          Text(
-                            '${item['qty']} ${item['unit']['code']}',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ].separatedBy(SizedBox(
-                          width: 4,
-                        )),
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.colorize_outlined,
-                            size: 14,
-                          ),
-                          Text(
-                            item['spk_item']?['color'] ?? '-',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ].separatedBy(SizedBox(
-                          width: 4,
-                        )),
-                      ),
-                    ]),
-              ],
-            )));
+                Text(
+                  item['spk_item']?['design'] ?? '-',
+                ),
+              ].separatedBy(CustomTheme().hGap('lg')),
+            ),
+            Row(
+              children: [
+                Icon(
+                  Icons.color_lens_outlined,
+                ),
+                Text(
+                  item['spk_item']?['color'] ?? '-',
+                )
+              ].separatedBy(CustomTheme().hGap('lg')),
+            ),
+          ],
+        ),
+      ],
+    ));
   }
 }

@@ -1,5 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:html/parser.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/util/margin_card.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class CustomBadge extends StatelessWidget {
@@ -9,6 +9,8 @@ class CustomBadge extends StatelessWidget {
   final status;
   final withStatus;
   final icon;
+  final rework;
+  final forMachine;
 
   const CustomBadge(
       {super.key,
@@ -16,38 +18,27 @@ class CustomBadge extends StatelessWidget {
       this.color,
       this.withDifferentColor = false,
       this.status,
-      this.withStatus,
-      this.icon});
+      this.withStatus = false,
+      this.icon,
+      this.rework = false,
+      this.forMachine = false});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-          color: withDifferentColor == true ? color : Colors.green.shade100,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        padding: MarginCard.screen,
+        padding: CustomTheme().padding(rework ? 'badge-rework' : 'badge'),
+        decoration: forMachine == true
+            ? CustomTheme().containerCardDecoration()
+            : CustomTheme().badgeTheme(status),
         child: Row(
           children: [
-            if (withStatus == true)
-              Icon(
-                icon ??
-                    (status == 'Menunggu Diproses'
-                        ? Icons.warning_outlined
-                        : status == 'Diproses'
-                            ? Icons.access_time_outlined
-                            : status == 'Selesai'
-                                ? Icons.task_alt_outlined
-                                : null),
-                size: 16,
-              ),
+            if (withStatus == true) CustomTheme().icon(status),
             Text(
               title,
-              style: TextStyle(fontSize: 14),
+              style: TextStyle(
+                  fontSize: CustomTheme().fontSize(rework ? 'sm' : null)),
             ),
-          ].separatedBy(SizedBox(
-            width: 4,
-          )),
+          ].separatedBy(CustomTheme().hGap('lg')),
         ));
   }
 }

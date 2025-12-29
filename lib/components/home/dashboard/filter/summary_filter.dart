@@ -4,14 +4,14 @@ import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
-class ChartFilter<T> extends StatefulWidget {
+class SummaryFilter<T> extends StatefulWidget {
   final dariTanggal;
   final sampaiTanggal;
   final onHandleFilter;
   final pickDate;
   final params;
 
-  const ChartFilter(
+  const SummaryFilter(
       {super.key,
       this.dariTanggal,
       this.sampaiTanggal,
@@ -20,10 +20,10 @@ class ChartFilter<T> extends StatefulWidget {
       this.params});
 
   @override
-  State<ChartFilter<T>> createState() => _ChartFilterState<T>();
+  State<SummaryFilter<T>> createState() => _SummaryFilterState<T>();
 }
 
-class _ChartFilterState<T> extends State<ChartFilter<T>> {
+class _SummaryFilterState<T> extends State<SummaryFilter<T>> {
   TextEditingController dariTanggalInput = TextEditingController();
   TextEditingController sampaiTanggalInput = TextEditingController();
 
@@ -59,8 +59,8 @@ class _ChartFilterState<T> extends State<ChartFilter<T>> {
     final firstDayOfMonth = DateTime(now.year, now.month, 1);
 
     setState(() {
-      dariTanggalInput.text = widget.params['process_start_date'] ?? '';
-      sampaiTanggalInput.text = widget.params['process_end_date'] ?? '';
+      dariTanggalInput.text = widget.params['start_date'] ?? '';
+      sampaiTanggalInput.text = widget.params['end_date'] ?? '';
     });
 
     return Container(
@@ -85,7 +85,7 @@ class _ChartFilterState<T> extends State<ChartFilter<T>> {
                         onPressClear: () {
                           setState(() {
                             widget.onHandleFilter(
-                                'process_start_date',
+                                'start_date',
                                 DateFormat('yyyy-MM-dd')
                                     .format(firstDayOfMonth));
                           });
@@ -104,8 +104,7 @@ class _ChartFilterState<T> extends State<ChartFilter<T>> {
                           String formatted =
                               DateFormat('yyyy-MM-dd').format(pickedDate);
                           dariTanggalInput.text = formatted;
-                          widget.onHandleFilter(
-                              'process_start_date', formatted);
+                          widget.onHandleFilter('start_date', formatted);
                         });
                       }
                     },
@@ -123,7 +122,7 @@ class _ChartFilterState<T> extends State<ChartFilter<T>> {
                         hasValue: sampaiTanggalInput.text.isNotEmpty,
                         onPressClear: () {
                           setState(() {
-                            widget.onHandleFilter('process_end_date',
+                            widget.onHandleFilter('end_date',
                                 DateFormat('yyyy-MM-dd').format(now));
                           });
                         },
@@ -141,7 +140,7 @@ class _ChartFilterState<T> extends State<ChartFilter<T>> {
                           String formatted =
                               DateFormat('yyyy-MM-dd').format(pickedDate);
                           sampaiTanggalInput.text = formatted;
-                          widget.onHandleFilter('process_end_date', formatted);
+                          widget.onHandleFilter('end_date', formatted);
                         });
                       }
                     },

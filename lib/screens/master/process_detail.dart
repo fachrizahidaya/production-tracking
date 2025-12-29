@@ -523,44 +523,44 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
             )
           ],
         ),
-        bottomNavigationBar: data['can_update'] != true
-            ? null
-            : SafeArea(
-                child: Container(
-                  color: Colors.white,
-                  padding: PaddingColumn.screen,
-                  child: ValueListenableBuilder<bool>(
-                    valueListenable: _isSubmitting,
-                    builder: (context, isSubmitting, _) {
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: CancelButton(
-                              label: 'Batal',
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                          ),
-                          Expanded(
-                              child: FormButton(
-                            label: 'Simpan',
-                            isLoading: isSubmitting,
-                            onPressed: () async {
-                              _isSubmitting.value = true;
-                              try {
-                                await _handleUpdate(data['id'].toString());
-                              } finally {
-                                _isSubmitting.value = false;
-                              }
-                            },
-                          ))
-                        ].separatedBy(SizedBox(
-                          width: 16,
-                        )),
-                      );
-                    },
-                  ),
-                ),
-              ),
+        // bottomNavigationBar: data['can_update'] != true
+        //     ? null
+        //     : SafeArea(
+        //         child: Container(
+        //           color: Colors.white,
+        //           padding: PaddingColumn.screen,
+        //           child: ValueListenableBuilder<bool>(
+        //             valueListenable: _isSubmitting,
+        //             builder: (context, isSubmitting, _) {
+        //               return Row(
+        //                 children: [
+        //                   Expanded(
+        //                     child: CancelButton(
+        //                       label: 'Batal',
+        //                       onPressed: () => Navigator.pop(context),
+        //                     ),
+        //                   ),
+        //                   Expanded(
+        //                       child: FormButton(
+        //                     label: 'Simpan',
+        //                     isLoading: isSubmitting,
+        //                     onPressed: () async {
+        //                       _isSubmitting.value = true;
+        //                       try {
+        //                         await _handleUpdate(data['id'].toString());
+        //                       } finally {
+        //                         _isSubmitting.value = false;
+        //                       }
+        //                     },
+        //                   ))
+        //                 ].separatedBy(SizedBox(
+        //                   width: 16,
+        //                 )),
+        //               );
+        //             },
+        //           ),
+        //         ),
+        //       ),
       ),
     );
   }

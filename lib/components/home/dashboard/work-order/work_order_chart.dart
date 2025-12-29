@@ -2,15 +2,12 @@
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
+import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderChart extends StatefulWidget {
   final List<dynamic> data;
-  final onHandleFilter;
-  final dariTanggal;
-  final sampaiTanggal;
   final filterWidget;
   final handleRefetch;
   final isFetching;
@@ -18,9 +15,6 @@ class WorkOrderChart extends StatefulWidget {
   const WorkOrderChart(
       {super.key,
       required this.data,
-      this.onHandleFilter,
-      this.dariTanggal,
-      this.sampaiTanggal,
       this.filterWidget,
       this.handleRefetch,
       this.isFetching});
@@ -30,42 +24,26 @@ class WorkOrderChart extends StatefulWidget {
 }
 
 class _WorkOrderChartState extends State<WorkOrderChart> {
-  final double width = 22;
   List<BarChartGroupData> barGroups = [];
   double maxY = 0;
   int? touchedIndex;
 
-  final TextEditingController dariTanggalInput = TextEditingController();
-  final TextEditingController sampaiTanggalInput = TextEditingController();
-
   @override
   void initState() {
     super.initState();
-    _generateChartData();
-
-    dariTanggalInput.text = widget.dariTanggal;
-    sampaiTanggalInput.text = widget.sampaiTanggal;
   }
 
   @override
   void didUpdateWidget(covariant WorkOrderChart oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.dariTanggal != dariTanggalInput.text) {
-      dariTanggalInput.text = widget.dariTanggal;
-    }
-    if (widget.sampaiTanggal != sampaiTanggalInput.text) {
-      sampaiTanggalInput.text = widget.sampaiTanggal;
-    }
   }
 
   @override
   void dispose() {
-    dariTanggalInput.dispose();
-    sampaiTanggalInput.dispose();
     super.dispose();
   }
 
-  void _generateChartData() {
+  void _generateChartData(double barWidth, double barSpace) {
     barGroups.clear();
     double localMax = 0;
 
@@ -82,35 +60,31 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
               : awaitingProgress;
       if (processMax > localMax) localMax = processMax;
 
-      barGroups.add(makeGroupData(i, completed, inProgress, awaitingProgress));
+      barGroups.add(makeGroupData(
+          i, completed, inProgress, awaitingProgress, barWidth, barSpace));
     }
 
     maxY = localMax == 0 ? 1 : localMax + (localMax * 0.2);
   }
 
-  BarChartGroupData makeGroupData(int x, double y1, double y2, double y3) {
+  BarChartGroupData makeGroupData(
+    int x,
+    double y1,
+    double y2,
+    double y3,
+    double barWidth,
+    double barSpace,
+  ) {
     return BarChartGroupData(
       x: x,
-      barsSpace: 6,
+      barsSpace: barSpace,
       barRods: [
         BarChartRodData(
-          toY: y2,
-          color: const Color(0xfff18800),
-          width: width,
-          borderRadius: BorderRadius.circular(4),
-        ),
+            toY: y2, width: barWidth, color: const Color(0xfff18800)),
         BarChartRodData(
-          toY: y3,
-          color: const Color(0xFF94a3b8),
-          width: width,
-          borderRadius: BorderRadius.circular(4),
-        ),
+            toY: y3, width: barWidth, color: const Color(0xFF94a3b8)),
         BarChartRodData(
-          toY: y1,
-          color: const Color(0xFF10B981),
-          width: width,
-          borderRadius: BorderRadius.circular(4),
-        ),
+            toY: y1, width: barWidth, color: const Color(0xFF10B981)),
       ],
     );
   }
@@ -122,7 +96,12 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
 
     final name = widget.data[value.toInt()]['name'] ?? '';
 
-    final double groupWidth = (width * 2) + (6 * 2);
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    final double barWidth = isPortrait ? 12 : 22;
+
+    final double groupWidth = (barWidth * 3) + ((isPortrait ? 4 : 6) * 2);
 
     return SideTitleWidget(
       meta: meta,
@@ -205,15 +184,23 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    final double barWidth = isPortrait ? 12 : 22;
+    final double barSpace = isPortrait ? 4 : 6;
+
+    _generateChartData(barWidth, barSpace);
+
     final bool allZero = widget.data.every((item) {
       final completed = (item['completed'] ?? 0).toDouble();
       final inProgress = (item['inProgress'] ?? 0).toDouble();
       return completed == 0 && inProgress == 0;
     });
 
-    final double chartRatio = allZero ? 3 : 2;
+    final double chartRatio = isPortrait ? 1.6 : (allZero ? 3 : 2);
 
-    return CustomCard(
+    return DashboardCard(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

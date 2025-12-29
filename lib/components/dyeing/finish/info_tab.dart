@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/finish/create_form.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class InfoTab extends StatefulWidget {
   final id;
@@ -65,7 +66,7 @@ class _InfoTabState extends State<InfoTab> with AutomaticKeepAliveClientMixin {
 
     return SingleChildScrollView(
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: CustomTheme().padding('content'),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/home/dashboard/card/dasboard_card.dart';
+import 'package:textile_tracking/components/home/dashboard/card/stats_card.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
-import 'package:textile_tracking/helpers/util/margin_card.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderStats extends StatefulWidget {
@@ -18,13 +17,13 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
   Color getBorderColor(int i) {
     switch (i) {
       case 0:
-        return const Color(0xff3b82f6);
+        return CustomTheme().colors('primary');
       case 1:
-        return const Color(0xFF10b981);
+        return Color(0xFF10b981);
       case 2:
-        return const Color(0xfff18800);
+        return Color(0xfff18800);
       default:
-        return const Color(0xFF94a3b8);
+        return CustomTheme().colors('secondary');
     }
   }
 
@@ -61,79 +60,70 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
   Widget buildStatsCard(int i) {
     final item = widget.data[i];
 
-    return DasboardCard(
+    return StatsCard(
       withBottomBorder: true,
       bottomBorderColor: getBorderColor(i),
-      child: Padding(
-        padding: PaddingColumn.screen,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: getIconBgColor(i),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  padding: MarginCard.screen,
-                  child: Icon(
-                    getIcon(i),
-                    color: Colors.white,
-                    size: 24,
-                  ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: getIconBgColor(i),
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
                 ),
-                Text(
-                  item['value'].toString(),
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ].separatedBy(const SizedBox(width: 8)),
-            ),
-            CustomBadge(
-              title: item['label'],
-              withDifferentColor: true,
-              color: getBadgeColor(i),
-              withStatus: i == 0 ? false : true,
-              status: item['label'],
-            )
-          ],
-        ),
+                padding: CustomTheme().padding('badge'),
+                child: Icon(
+                  getIcon(i),
+                  color: Colors.white,
+                  size: CustomTheme().iconSize('2xl'),
+                ),
+              ),
+              Text(
+                item['value'].toString(),
+                style: TextStyle(
+                  fontSize: CustomTheme().fontSize('2xl'),
+                  fontWeight: CustomTheme().fontWeight('bold'),
+                ),
+              )
+            ].separatedBy(CustomTheme().hGap('lg')),
+          ),
+          CustomBadge(
+            title: item['label'],
+            withDifferentColor: true,
+            color: getBadgeColor(i),
+            withStatus: i == 0 ? false : true,
+            status: item['label'],
+          )
+        ],
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 600;
     final length = widget.data?.length ?? 0;
 
     if (length == 0) return const SizedBox();
 
-    return isMobile
-        ? Column(
+    return Column(
+      children: [
+        Row(
+          children: [
+            for (int i = 0; i < length && i < 2; i++)
+              Expanded(child: buildStatsCard(i))
+          ].separatedBy(CustomTheme().hGap('lg')),
+        ),
+        if (length > 2)
+          Row(
             children: [
-              for (int i = 0; i < length; i++) buildStatsCard(i),
-            ],
-          )
-        : Column(
-            children: [
-              Row(
-                children: [
-                  for (int i = 0; i < length && i < 2; i++)
-                    Expanded(child: buildStatsCard(i))
-                ],
-              ),
-              if (length > 2)
-                Row(
-                  children: [
-                    for (int i = 2; i < length; i++)
-                      Expanded(child: buildStatsCard(i))
-                  ],
-                ),
-            ],
-          );
+              for (int i = 2; i < length; i++)
+                Expanded(child: buildStatsCard(i))
+            ].separatedBy(CustomTheme().hGap('lg')),
+          ),
+      ].separatedBy(CustomTheme().vGap('lg')),
+    );
   }
 }

@@ -6,9 +6,9 @@ import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/layout/custom_badge.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
+import 'package:textile_tracking/components/master/text/clickable_text.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
@@ -75,455 +75,425 @@ class _ListInfoState extends State<ListInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 600;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return SingleChildScrollView(
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: CustomTheme().padding('content'),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomCard(
-                child: Padding(
-                    padding: PaddingColumn.screen,
-                    child: Column(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.data['dyeing_no']?.toString() ?? '-',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                        'Dibuat pada ${widget.data['start_time'] != null ? DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['start_time'])) : '-'}'),
-                                    if (widget.data['rework'] == true)
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.replay_outlined,
-                                            size: 16,
-                                          ),
-                                          Text(
-                                            'Rework',
-                                          ),
-                                        ],
-                                      )
-                                  ],
-                                ),
-                              ].separatedBy(SizedBox(
-                                height: 4,
-                              )),
+                            Text(
+                              widget.data['dyeing_no']?.toString() ?? '-',
+                              style: TextStyle(
+                                  fontSize: CustomTheme().fontSize('2xl'),
+                                  fontWeight: CustomTheme().fontWeight('bold')),
                             ),
-                            CustomBadge(
-                              title: widget.data['status'] ?? '-',
-                              withDifferentColor: true,
-                              withStatus: true,
-                              status: widget.data['status'],
-                              color: widget.data['status'] == 'Diproses'
-                                  ? Color(0xFFfff3c6)
-                                  : Color(0xffd1fae4),
-                            ),
-                          ],
+                            if (widget.data['rework'] == true)
+                              CustomBadge(
+                                title: 'Rework',
+                                status: 'Rework',
+                                withStatus: true,
+                                rework: true,
+                              ),
+                          ].separatedBy(CustomTheme().hGap('lg')),
                         ),
-                        SelectForm(
-                          isDisabled: widget.data['can_update'] ? false : true,
-                          label: 'Mesin',
-                          onTap: () => widget.handleSelectMachine(),
-                          selectedLabel: widget.form['nama_mesin'] ?? '',
-                          selectedValue: widget.form['machine_id'].toString(),
-                          required: false,
-                        )
-                      ].separatedBy(SizedBox(
-                        height: 8,
-                      )),
-                    ))),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.access_time_outlined,
+                              size: CustomTheme().iconSize('lg'),
+                            ),
+                            Text(
+                                'Dimulai pada ${widget.data['start_time'] != null ? DateFormat("dd MMMM yyyy, HH:mm").format(DateTime.parse(widget.data['start_time'])) : '-'}'),
+                          ].separatedBy(CustomTheme().hGap('sm')),
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.task_alt_outlined,
+                              size: CustomTheme().iconSize('lg'),
+                            ),
+                            Text(
+                                'Selesai pada ${widget.data['end_time'] != null ? DateFormat("dd MMMM yyyy, HH:mm").format(DateTime.parse(widget.data['end_time'])) : '-'}'),
+                          ].separatedBy(CustomTheme().hGap('sm')),
+                        ),
+                      ].separatedBy(CustomTheme().vGap('sm')),
+                    ),
+                    CustomBadge(
+                      title: widget.data['status'] ?? '-',
+                      withDifferentColor: true,
+                      withStatus: true,
+                      status: widget.data['status'],
+                      color: widget.data['status'] == 'Diproses'
+                          ? Color(0xFFfff3c6)
+                          : Color(0xffd1fae4),
+                    ),
+                  ],
+                ),
+                ClickableText(
+                  text: widget.data['work_orders']?['wo_no']?.toString() ?? '-',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WorkOrderDetail(
+                          id: widget.data['work_orders']['id'].toString(),
+                        ),
+                      ),
+                    );
+                  },
+                )
+                // SelectForm(
+                //   isDisabled: widget.data['can_update'] ? false : true,
+                //   label: 'Mesin',
+                //   onTap: () => widget.handleSelectMachine(),
+                //   selectedLabel: widget.form['nama_mesin'] ?? '',
+                //   selectedValue: widget.form['machine_id'].toString(),
+                //   required: false,
+                // )
+              ].separatedBy(CustomTheme().vGap('lg')),
+            )),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                    flex: 2,
-                    child: CustomCard(
-                        child: Padding(
-                      padding: PaddingColumn.screen,
+                  child: CustomCard(
                       child: Column(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text(
+                            'Informasi Proses',
+                            style: TextStyle(
+                                fontSize: CustomTheme().fontSize('xl'),
+                                fontWeight: CustomTheme().fontWeight('bold')),
+                          ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'INFORMASI PROSES',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
+                              if (widget.data['rework'] == true)
+                                ViewText(
+                                  viewLabel: 'Referensi Rework',
+                                  viewValue:
+                                      '${widget.data['rework_reference']['dyeing_no']}',
+                                ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  ViewText<Map<String, dynamic>>(
-                                    viewLabel: 'Work Order',
-                                    viewValue: widget.data['work_orders']
-                                                ?['wo_no']
-                                            ?.toString() ??
-                                        '-',
-                                    item: widget.data['work_orders'],
-                                    onItemTap: (context, workOrder) {
-                                      if (workOrder['id'] != null) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                WorkOrderDetail(
-                                              id: workOrder['id'].toString(),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
+                                  ViewText(
+                                    viewLabel: 'Mesin',
+                                    viewValue:
+                                        '${widget.data['machine']['name']}',
                                   ),
-                                  CustomBadge(
-                                    title: widget.data['work_orders']
-                                            ['status'] ??
-                                        '-',
-                                    withDifferentColor: true,
-                                    withStatus: true,
-                                    status: widget.data['work_orders']
-                                        ['status'],
-                                    color: widget.data['work_orders']
-                                                ['status'] ==
-                                            'Diproses'
-                                        ? Color(0xFFfff3c6)
-                                        : Color(0xffd1fae4),
-                                  )
+                                  ViewText(
+                                    viewLabel: 'Lokasi',
+                                    viewValue:
+                                        '${widget.data['machine']['location']}',
+                                  ),
                                 ],
                               ),
-                              ViewText(
-                                viewLabel: 'Tanggal',
-                                viewValue: widget.data['work_orders']
-                                            ['wo_date'] !=
-                                        null
-                                    ? DateFormat("dd MMMM yyyy").format(
-                                        DateTime.parse(widget
-                                            .data['work_orders']['wo_date']))
-                                    : '-',
-                              ),
                               if (widget.data['status'] == 'Selesai')
-                                Column(
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          flex: 2,
-                                          child: TextForm(
-                                            label: 'Panjang',
-                                            req: false,
-                                            controller: widget.length
-                                              ..text =
-                                                  (widget.length.text == '0')
-                                                      ? '0'
-                                                      : widget.length.text,
-                                            isDisabled:
-                                                widget.data['can_update']
-                                                    ? false
-                                                    : true,
-                                            handleChange: (value) {
-                                              setState(() {
-                                                widget.length.text =
-                                                    value.toString();
-                                                widget.handleChangeInput(
-                                                    'length', value);
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: SelectForm(
-                                              label: 'Satuan Panjang',
-                                              onTap: () => widget
-                                                  .handleSelectLengthUnit(),
-                                              isDisabled:
-                                                  widget.data['can_update']
-                                                      ? false
-                                                      : true,
-                                              selectedLabel: widget.form[
-                                                      'nama_satuan_panjang'] ??
-                                                  '',
-                                              selectedValue: widget
-                                                      .form['length_unit_id']
-                                                      ?.toString() ??
-                                                  '',
-                                              required: false),
-                                        ),
-                                      ].separatedBy(SizedBox(
-                                        width: 8,
-                                      )),
+                                    ViewText(
+                                      viewLabel: 'Qty Hasil Dyeing',
+                                      viewValue:
+                                          '${widget.data['qty']} ${widget.data['unit']['code']}',
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          flex: 2,
-                                          child: TextForm(
-                                            label: 'Lebar',
-                                            req: false,
-                                            isDisabled:
-                                                widget.data['can_update']
-                                                    ? false
-                                                    : true,
-                                            controller: widget.width
-                                              ..text = (widget.width.text == '0'
-                                                  ? '0'
-                                                  : widget.width.text),
-                                            handleChange: (value) {
-                                              setState(() {
-                                                widget.width.text =
-                                                    value.toString();
-                                                widget.handleChangeInput(
-                                                    'width', value);
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: SelectForm(
-                                              label: 'Satuan Lebar',
-                                              onTap: () => widget
-                                                  .handleSelectWidthUnit(),
-                                              isDisabled:
-                                                  widget.data['can_update']
-                                                      ? false
-                                                      : true,
-                                              selectedLabel: widget.form[
-                                                      'nama_satuan_lebar'] ??
-                                                  '',
-                                              selectedValue: widget
-                                                      .form['width_unit_id']
-                                                      ?.toString() ??
-                                                  '',
-                                              required: false),
-                                        ),
-                                      ].separatedBy(SizedBox(
-                                        width: 8,
-                                      )),
+                                    ViewText(
+                                      viewLabel: 'Panjang',
+                                      viewValue:
+                                          '${widget.data['length'] ?? '0'}',
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          flex: 2,
-                                          child: TextForm(
-                                            label: 'Qty Hasil Dyeing',
-                                            req: false,
-                                            isDisabled:
-                                                widget.data['can_update']
-                                                    ? false
-                                                    : true,
-                                            controller: widget.qty
-                                              ..text =
-                                                  (widget.qty.text.isEmpty ||
-                                                          widget.qty.text == '0'
-                                                      ? 'No Data'
-                                                      : widget.qty.text),
-                                            handleChange: (value) {
-                                              setState(() {
-                                                widget.qty.text =
-                                                    value.toString();
-                                                widget.handleChangeInput(
-                                                    'qty', value);
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: SelectForm(
-                                              label: 'Satuan Qty',
-                                              isDisabled:
-                                                  widget.data['can_update']
-                                                      ? false
-                                                      : true,
-                                              onTap: () =>
-                                                  widget.handleSelectUnit(),
-                                              selectedLabel:
-                                                  widget.form['nama_satuan'] ??
-                                                      '',
-                                              selectedValue: widget
-                                                      .form['unit_id']
-                                                      ?.toString() ??
-                                                  '',
-                                              required: false),
-                                        ),
-                                      ].separatedBy(SizedBox(
-                                        width: 8,
-                                      )),
+                                    ViewText(
+                                      viewLabel: 'Lebar',
+                                      viewValue:
+                                          '${widget.data['width'] ?? '0'}',
                                     ),
-                                  ].separatedBy(SizedBox(
-                                    height: 8,
-                                  )),
-                                )
-                            ].separatedBy(SizedBox(
-                              height: 8,
-                            )),
-                          ),
-                        ],
+                                  ],
+                                ),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //   crossAxisAlignment: CrossAxisAlignment.center,
+                              //   children: [
+                              //     Expanded(
+                              //       flex: 2,
+                              //       child: TextForm(
+                              //         label: 'Panjang',
+                              //         req: false,
+                              //         controller: widget.length
+                              //           ..text = (widget.length.text == '0')
+                              //               ? '0'
+                              //               : widget.length.text,
+                              //         isDisabled:
+                              //             widget.data['can_update'] ? false : true,
+                              //         handleChange: (value) {
+                              //           setState(() {
+                              //             widget.length.text = value.toString();
+                              //             widget.handleChangeInput('length', value);
+                              //           });
+                              //         },
+                              //       ),
+                              //     ),
+                              //     Expanded(
+                              //       flex: 1,
+                              //       child: SelectForm(
+                              //           label: 'Satuan Panjang',
+                              //           onTap: () =>
+                              //               widget.handleSelectLengthUnit(),
+                              //           isDisabled: widget.data['can_update']
+                              //               ? false
+                              //               : true,
+                              //           selectedLabel:
+                              //               widget.form['nama_satuan_panjang'] ??
+                              //                   '',
+                              //           selectedValue: widget.form['length_unit_id']
+                              //                   ?.toString() ??
+                              //               '',
+                              //           required: false),
+                              //     ),
+                              //   ].separatedBy(SizedBox(
+                              //     width: 8,
+                              //   )),
+                              // ),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //   crossAxisAlignment: CrossAxisAlignment.center,
+                              //   children: [
+                              //     Expanded(
+                              //       flex: 2,
+                              //       child: TextForm(
+                              //         label: 'Lebar',
+                              //         req: false,
+                              //         isDisabled:
+                              //             widget.data['can_update'] ? false : true,
+                              //         controller: widget.width
+                              //           ..text = (widget.width.text == '0'
+                              //               ? '0'
+                              //               : widget.width.text),
+                              //         handleChange: (value) {
+                              //           setState(() {
+                              //             widget.width.text = value.toString();
+                              //             widget.handleChangeInput('width', value);
+                              //           });
+                              //         },
+                              //       ),
+                              //     ),
+                              //     Expanded(
+                              //       flex: 1,
+                              //       child: SelectForm(
+                              //           label: 'Satuan Lebar',
+                              //           onTap: () => widget.handleSelectWidthUnit(),
+                              //           isDisabled: widget.data['can_update']
+                              //               ? false
+                              //               : true,
+                              //           selectedLabel:
+                              //               widget.form['nama_satuan_lebar'] ?? '',
+                              //           selectedValue: widget.form['width_unit_id']
+                              //                   ?.toString() ??
+                              //               '',
+                              //           required: false),
+                              //     ),
+                              //   ].separatedBy(SizedBox(
+                              //     width: 8,
+                              //   )),
+                              // ),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //   crossAxisAlignment: CrossAxisAlignment.center,
+                              //   children: [
+                              //     Expanded(
+                              //       flex: 2,
+                              //       child: TextForm(
+                              //         label: 'Qty Hasil Dyeing',
+                              //         req: false,
+                              //         isDisabled:
+                              //             widget.data['can_update'] ? false : true,
+                              //         controller: widget.qty
+                              //           ..text = (widget.qty.text.isEmpty ||
+                              //                   widget.qty.text == '0'
+                              //               ? 'No Data'
+                              //               : widget.qty.text),
+                              //         handleChange: (value) {
+                              //           setState(() {
+                              //             widget.qty.text = value.toString();
+                              //             widget.handleChangeInput('qty', value);
+                              //           });
+                              //         },
+                              //       ),
+                              //     ),
+                              //     Expanded(
+                              //       flex: 1,
+                              //       child: SelectForm(
+                              //           label: 'Satuan Qty',
+                              //           isDisabled: widget.data['can_update']
+                              //               ? false
+                              //               : true,
+                              //           onTap: () => widget.handleSelectUnit(),
+                              //           selectedLabel:
+                              //               widget.form['nama_satuan'] ?? '',
+                              //           selectedValue:
+                              //               widget.form['unit_id']?.toString() ??
+                              //                   '',
+                              //           required: false),
+                              //     ),
+                              //   ].separatedBy(SizedBox(
+                              //     width: 8,
+                              //   )),
+                              // ),
+                            ].separatedBy(CustomTheme().vGap('lg')),
+                          )
+                        ].separatedBy(CustomTheme().vGap('lg')),
                       ),
-                    ))),
-                if (!isMobile)
-                  Expanded(
-                      flex: 1,
-                      child: CustomCard(
-                          child: Padding(
-                        padding: PaddingColumn.screen,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'INFORMASI GREIGE & CATATAN',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            ViewText(
-                              viewLabel: 'Qty Greige',
-                              viewValue:
-                                  '${widget.data['work_orders']['greige_qty']} ${widget.data['work_orders']['greige_unit']['code']}',
-                            ),
-                            ViewText(
-                              viewLabel: 'Catatan Dyeing',
-                              viewValue: widget.handleHtml(
-                                widget.data['work_orders']['notes'] is Map
-                                    ? widget.data['work_orders']['notes']
-                                        [widget.label]
-                                    : '-',
-                              ),
-                            )
-                          ].separatedBy(SizedBox(
-                            height: 8,
-                          )),
-                        ),
-                      )))
-              ],
-            ),
-            if (isMobile)
-              CustomCard(
-                  child: Padding(
-                padding: PaddingColumn.screen,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'INFORMASI GREIGE & CATATAN',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    ViewText(
-                      viewLabel: 'Qty Greige',
-                      viewValue:
-                          '${widget.data['work_orders']['greige_qty']} ${widget.data['work_orders']['greige_unit']['code']}',
-                    ),
-                    ViewText(
-                      viewLabel: 'Catatan Dyeing',
-                      viewValue: widget.handleHtml(
-                        widget.data['work_orders']['notes'] is Map
-                            ? widget.data['work_orders']['notes'][widget.label]
-                            : '-',
-                      ),
-                    )
-                  ].separatedBy(SizedBox(
-                    height: 8,
+                    ],
                   )),
                 ),
-              )),
-            CustomCard(
-                child: Padding(
-              padding: PaddingColumn.screen,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                if (!isPortrait)
+                  Expanded(
+                    child: CustomCard(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Informasi Work Order',
+                          style: TextStyle(
+                              fontSize: CustomTheme().fontSize('xl'),
+                              fontWeight: CustomTheme().fontWeight('bold')),
+                        ),
+                        ViewText(
+                          viewLabel: 'Qty Greige',
+                          viewValue:
+                              '${widget.data['work_orders']['greige_qty']} ${widget.data['work_orders']['greige_unit']['code']}',
+                        ),
+                        ViewText(
+                          viewLabel: 'Catatan Dyeing',
+                          viewValue: widget.handleHtml(
+                            widget.data['work_orders']['notes'] is Map
+                                ? widget.data['work_orders']['notes']
+                                    [widget.label]
+                                : '-',
+                          ),
+                        )
+                      ].separatedBy(CustomTheme().vGap('lg')),
+                    )),
+                  ),
+              ].separatedBy(CustomTheme().hGap('2xl')),
+            ),
+            if (isPortrait)
+              Row(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'TIMELINE PROSES',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      ViewText(
-                        viewLabel: 'Dimulai oleh',
-                        viewValue: widget.data['start_time'] != null
-                            ? '${widget.data['start_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['start_time']))}'
-                            : '-',
-                      ),
-                      ViewText(
-                        viewLabel: 'Selesai oleh',
-                        viewValue: widget.data['end_time'] != null
-                            ? '${widget.data['end_by']['name']} pada ${DateFormat("dd MMMM yyyy HH:mm").format(DateTime.parse(widget.data['end_time']))}'
-                            : '-',
-                      ),
-                    ].separatedBy(SizedBox(
-                      height: 8,
+                  Expanded(
+                    child: CustomCard(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Informasi Work Order',
+                          style: TextStyle(
+                              fontSize: CustomTheme().fontSize('xl'),
+                              fontWeight: FontWeight.bold),
+                        ),
+                        ViewText(
+                          viewLabel: 'Qty Greige',
+                          viewValue:
+                              '${widget.data['work_orders']['greige_qty']} ${widget.data['work_orders']['greige_unit']['code']}',
+                        ),
+                        ViewText(
+                          viewLabel: 'Catatan Dyeing',
+                          viewValue: widget.handleHtml(
+                            widget.data['work_orders']['notes'] is Map
+                                ? widget.data['work_orders']['notes']
+                                    [widget.label]
+                                : '-',
+                          ),
+                        )
+                      ].separatedBy(CustomTheme().vGap('lg')),
                     )),
                   ),
                 ],
               ),
-            )),
             if (widget.data['status'] == 'Selesai')
-              CustomCard(
-                  child: Padding(
-                padding: PaddingColumn.screen,
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    Row(
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomCard(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Lampiran',
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(
+                              fontSize: CustomTheme().fontSize('xl'),
+                              fontWeight: CustomTheme().fontWeight('bold')),
                         ),
-                        CustomTheme().hGap('sm'),
-                      ],
-                    ),
-                    widget.handleBuildAttachment(context),
-                  ],
-                ),
-              )),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            widget.existingAttachment.isEmpty
+                                ? Text(
+                                    'No Data',
+                                    style: TextStyle(
+                                      fontSize: CustomTheme().fontSize('lg'),
+                                    ),
+                                  )
+                                : widget.handleBuildAttachment(context),
+                          ],
+                        ),
+                      ].separatedBy(CustomTheme().vGap('lg')),
+                    )),
+                  ),
+                ],
+              ),
             if (widget.data['status'] == 'Selesai')
-              CustomCard(
-                  child: Padding(
-                padding: PaddingColumn.screen,
-                child: Row(
-                  children: [
-                    ViewText(
-                      viewLabel: 'Catatan',
-                      viewValue: '${widget.data['notes'] ?? '-'}',
-                    ),
-                  ],
-                ),
-              ))
-          ],
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomCard(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Catatan',
+                          style: TextStyle(
+                              fontSize: CustomTheme().fontSize('xl'),
+                              fontWeight: CustomTheme().fontWeight('bold')),
+                        ),
+                        Text(
+                          '${widget.data['notes'] ?? '-'}',
+                          style: TextStyle(
+                            fontSize: CustomTheme().fontSize('lg'),
+                          ),
+                        )
+                      ].separatedBy(CustomTheme().vGap('lg')),
+                    )),
+                  ),
+                ],
+              )
+          ].separatedBy(CustomTheme().vGap('2xl')),
         ),
       ),
     );

@@ -263,98 +263,90 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFf9fafc),
-      appBar: CustomAppBar(
-        title: 'Rework Dyeing',
-        onReturn: () {
-          Navigator.pop(context);
+    return DefaultTabController(
+      length: 2,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          FocusScope.of(context).unfocus();
         },
-      ),
-      body: Column(
-        children: [
-          DefaultTabController(
-              length: 2,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final isPortrait = MediaQuery.of(context).orientation ==
-                      Orientation.portrait;
-                  final screenHeight = MediaQuery.of(context).size.height;
-
-                  final boxHeight =
-                      isPortrait ? screenHeight * 0.45 : screenHeight * 0.7;
-
-                  return Column(
+        child: Scaffold(
+          backgroundColor: const Color(0xFFf9fafc),
+          appBar: CustomAppBar(
+            title: 'Rework Dyeing',
+            onReturn: () {
+              Navigator.pop(context);
+            },
+          ),
+          body: Column(
+            children: [
+              Container(
+                color: Colors.white,
+                child: TabBar(tabs: [
+                  Tab(
+                    text: 'Form',
+                  ),
+                  Tab(
+                    text: 'Barang',
+                  ),
+                ]),
+              ),
+              Expanded(
+                child: TabBarView(children: [
+                  InfoTab(
+                    data: woData,
+                    id: widget.id,
+                    label: 'Dyeing',
+                    isLoading: _firstLoading,
+                    form: widget.form,
+                    formKey: _formKey,
+                    handleSubmit: widget.handleSubmit,
+                    handleSelectMachine: _selectMachine,
+                    handleSelectWorkOrder: _selectWorkOrder,
+                  ),
+                  ItemTab(
+                    data: woData,
+                  ),
+                ]),
+              ),
+            ],
+          ),
+          bottomNavigationBar: SafeArea(
+            child: Container(
+              padding: PaddingColumn.screen,
+              color: Colors.white,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: _isSubmitting,
+                builder: (context, isSubmitting, _) {
+                  return Row(
                     children: [
-                      Container(
-                        color: Colors.white,
-                        child: TabBar(tabs: [
-                          Tab(
-                            text: 'Form',
-                          ),
-                          Tab(
-                            text: 'Barang',
-                          ),
-                        ]),
+                      Expanded(
+                        child: CancelButton(
+                          label: 'Batal',
+                          onPressed: () => Navigator.pop(context),
+                        ),
                       ),
-                      SizedBox(
-                        height: boxHeight,
-                        child: TabBarView(children: [
-                          InfoTab(
-                            data: woData,
-                            id: widget.id,
-                            label: 'Dyeing',
-                            isLoading: _firstLoading,
-                            form: widget.form,
-                            formKey: _formKey,
-                            handleSubmit: widget.handleSubmit,
-                            handleSelectMachine: _selectMachine,
-                            handleSelectWorkOrder: _selectWorkOrder,
-                          ),
-                          ItemTab(
-                            data: woData,
-                          ),
-                        ]),
-                      )
-                    ],
+                      Expanded(
+                          child: FormButton(
+                        label: 'Simpan',
+                        isLoading: isSubmitting,
+                        onPressed: () async {
+                          _isSubmitting.value = true;
+                          try {
+                            await widget
+                                .handleSubmit(dyeingData['id'].toString());
+                          } finally {
+                            _isSubmitting.value = false;
+                          }
+                        },
+                      ))
+                    ].separatedBy(SizedBox(
+                      width: 16,
+                    )),
                   );
                 },
-              )),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: PaddingColumn.screen,
-          color: Colors.white,
-          child: ValueListenableBuilder<bool>(
-            valueListenable: _isSubmitting,
-            builder: (context, isSubmitting, _) {
-              return Row(
-                children: [
-                  Expanded(
-                    child: CancelButton(
-                      label: 'Batal',
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ),
-                  Expanded(
-                      child: FormButton(
-                    label: 'Simpan',
-                    isLoading: isSubmitting,
-                    onPressed: () async {
-                      _isSubmitting.value = true;
-                      try {
-                        await widget.handleSubmit(dyeingData['id'].toString());
-                      } finally {
-                        _isSubmitting.value = false;
-                      }
-                    },
-                  ))
-                ].separatedBy(SizedBox(
-                  width: 16,
-                )),
-              );
-            },
+              ),
+            ),
           ),
         ),
       ),

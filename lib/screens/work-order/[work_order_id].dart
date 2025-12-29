@@ -54,75 +54,60 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
-        appBar: CustomAppBar(
-          title: 'Work Order Detail',
-          onReturn: () {
-            Navigator.pop(context);
-          },
-        ),
-        body: Column(
-          children: [
-            DefaultTabController(
-                length: 5,
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isPortrait = MediaQuery.of(context).orientation ==
-                        Orientation.portrait;
-                    final screenHeight = MediaQuery.of(context).size.height;
-
-                    final boxHeight =
-                        isPortrait ? screenHeight * 0.45 : screenHeight * 0.7;
-
-                    return Column(
-                      children: [
-                        Container(
-                          color: Colors.white,
-                          child: TabBar(isScrollable: true, tabs: [
-                            Tab(
-                              text: 'Informasi',
-                            ),
-                            Tab(
-                              text: 'Material',
-                            ),
-                            Tab(
-                              text: 'Proses Produksi',
-                            ),
-                            Tab(
-                              text: 'Catatan',
-                            ),
-                            Tab(
-                              text: 'Lampiran',
-                            )
-                          ]),
-                        ),
-                        SizedBox(
-                          height: boxHeight,
-                          child: TabBarView(children: [
-                            InfoTab(
-                              data: data,
-                              isLoading: _firstLoading,
-                            ),
-                            ItemTab(
-                              data: data,
-                            ),
-                            ProcessTab(
-                              data: data,
-                            ),
-                            NoteTab(
-                              data: data,
-                            ),
-                            AttachmentTab(
-                              existingAttachment: data['attachments'] ?? [],
-                            )
-                          ]),
-                        )
-                      ],
-                    );
-                  },
-                )),
-          ],
-        ));
+    return DefaultTabController(
+      length: 5,
+      child: Scaffold(
+          backgroundColor: const Color(0xFFf9fafc),
+          appBar: CustomAppBar(
+            title: 'Work Order Detail',
+            onReturn: () {
+              Navigator.pop(context);
+            },
+          ),
+          body: Column(
+            children: [
+              Container(
+                color: Colors.white,
+                child: TabBar(isScrollable: true, tabs: [
+                  Tab(
+                    text: 'Informasi',
+                  ),
+                  Tab(
+                    text: 'Material',
+                  ),
+                  Tab(
+                    text: 'Proses Produksi',
+                  ),
+                  Tab(
+                    text: 'Catatan',
+                  ),
+                  Tab(
+                    text: 'Lampiran',
+                  )
+                ]),
+              ),
+              Expanded(
+                child: TabBarView(children: [
+                  InfoTab(
+                    data: data,
+                    isLoading: _firstLoading,
+                  ),
+                  ItemTab(
+                    data: data,
+                  ),
+                  ProcessTab(
+                    data: data,
+                  ),
+                  NoteTab(
+                    data: data,
+                  ),
+                  AttachmentTab(
+                    existingAttachment: data['attachments'] ?? [],
+                  )
+                ]),
+              ),
+            ],
+          )),
+    );
   }
 }

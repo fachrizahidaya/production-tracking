@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/create/list_item.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class ItemTab extends StatefulWidget {
   final dynamic data;
@@ -22,9 +23,10 @@ class _ItemTabState extends State<ItemTab> {
     return Container(
       child: items.isEmpty
           ? const Center(child: Text('No Data'))
-          : ListView.builder(
-              padding: EdgeInsets.only(top: 8),
+          : ListView.separated(
+              padding: CustomTheme().padding('content'),
               itemCount: items.length,
+              separatorBuilder: (context, index) => CustomTheme().vGap('2xl'),
               itemBuilder: (context, index) {
                 final item = items[index];
                 return ListItem(

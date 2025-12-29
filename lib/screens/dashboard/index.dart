@@ -5,16 +5,14 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/home/dashboard/filter/chart_filter.dart';
 import 'package:textile_tracking/components/home/dashboard/filter/process_filter.dart';
+import 'package:textile_tracking/components/home/dashboard/filter/summary_filter.dart';
 import 'package:textile_tracking/components/home/dashboard/machine/active_machine.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_process.dart';
-import 'package:textile_tracking/components/home/dashboard/work-order/work_order_chart.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_pie.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_stats.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_summary.dart';
 import 'package:textile_tracking/components/master/layout/card/item_process.dart';
-import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/dashboard/machine.dart';
@@ -34,12 +32,9 @@ class _DashboardState extends State<Dashboard> {
   List<dynamic> statsList = [];
   List<dynamic> chartList = [];
   List<dynamic> pieList = [];
-  List<dynamic> processList = [];
   List<dynamic> summaryList = [];
   Map<String, dynamic> machineList = {};
-
-  final TextEditingController dariTanggalInput = TextEditingController();
-  final TextEditingController sampaiTanggalInput = TextEditingController();
+  final List<dynamic> _dataList = [];
 
   String dariTanggal = '';
   String sampaiTanggal = '';
@@ -47,18 +42,20 @@ class _DashboardState extends State<Dashboard> {
   String sampaiTanggalProses = '';
   String dariTanggalSummary = '';
   String sampaiTanggalSummary = '';
+  String _search = '';
 
   bool isLoading = false;
+  bool _isLoadMore = false;
+  bool _isFiltered = false;
   Timer? _debounce;
+  Map<String, String> summaryParams = {'start_date': '', 'end_date': ''};
+  Map<String, String> chartParams = {'start_date': '', 'end_date': ''};
   Map<String, String> params = {'search': '', 'page': '0'};
-  bool _isLoading = false;
   bool _hasMore = true;
   bool _firstLoading = true;
   bool isChartLoading = false;
   bool isMachineLoading = false;
   bool isSummaryLoading = false;
-  String _search = '';
-  final List<dynamic> _dataList = [];
 
   @override
   void initState() {
@@ -74,13 +71,22 @@ class _DashboardState extends State<Dashboard> {
     dariTanggalSummary = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
     sampaiTanggalSummary = DateFormat('yyyy-MM-dd').format(now);
 
-    dariTanggalInput.text = dariTanggal;
-    sampaiTanggalInput.text = sampaiTanggal;
-
     setState(() {
       params = {
         'search': _search,
         'page': '0',
+        'start_date': dariTanggalProses,
+        'end_date': sampaiTanggalProses,
+      };
+    });
+    setState(() {
+      chartParams = {
+        'process_start_date': dariTanggal,
+        'process_end_date': sampaiTanggal,
+      };
+    });
+    setState(() {
+      summaryParams = {
         'start_date': dariTanggalProses,
         'end_date': sampaiTanggalProses,
       };
@@ -92,15 +98,23 @@ class _DashboardState extends State<Dashboard> {
     _loadDashboardData();
   }
 
+  bool _checkIsFiltered() {
+    final filterKeys = [
+      'status',
+    ];
+
+    for (var key in filterKeys) {
+      if (params[key] != null && params[key]!.isNotEmpty) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   @override
   void didUpdateWidget(covariant oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (dariTanggal != dariTanggalInput.text) {
-      dariTanggalInput.text = dariTanggal;
-    }
-    if (sampaiTanggal != sampaiTanggalInput.text) {
-      sampaiTanggalInput.text = sampaiTanggal;
-    }
   }
 
   Future<void> _loadDashboardData() async {
@@ -129,13 +143,8 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _handleFetchCharts({String? fromDate, String? toDate}) async {
     setState(() => isChartLoading = true);
 
-    final params = {
-      'process_start_date': fromDate ?? dariTanggal,
-      'process_end_date': toDate ?? sampaiTanggal,
-    };
-
     await Provider.of<WorkOrderChartService>(context, listen: false)
-        .getDataList(params);
+        .getDataList(chartParams);
 
     setState(() {
       chartList =
@@ -183,61 +192,60 @@ class _DashboardState extends State<Dashboard> {
   }) async {
     setState(() => isSummaryLoading = true);
 
-    final Map<String, String> params = {
-      'start_date': fromDate ?? dariTanggalSummary,
-      'end_date': toDate ?? sampaiTanggalSummary,
-      if (status != null) 'status': status,
-    };
-
     await Provider.of<WorkOrderSummaryService>(context, listen: false)
-        .getDataList(params);
+        .getDataList(summaryParams);
 
     setState(() {
       summaryList =
           Provider.of<WorkOrderSummaryService>(context, listen: false).dataList;
+      isSummaryLoading = false;
     });
   }
 
-  void _handleFilter(String type, String value) {
+  void _handleFilter(String key, String value) {
     setState(() {
-      if (type == 'dari_tanggal') dariTanggal = value;
-      if (type == 'sampai_tanggal') sampaiTanggal = value;
+      if (value.isEmpty) {
+        chartParams.remove(key);
+      } else {
+        chartParams[key] = value;
+      }
     });
 
-    _handleFetchCharts(
-      fromDate: dariTanggal,
-      toDate: sampaiTanggal,
-    );
+    _handleFetchCharts();
   }
 
-  void _handleSummaryFilter(String type, String value, String? status) {
+  void _handleSummaryFilter(String key, String value) {
     setState(() {
-      if (type == 'dari_tanggal') dariTanggalSummary = value;
-      if (type == 'sampai_tanggal') sampaiTanggalSummary = value;
+      if (value.isEmpty) {
+        summaryParams.remove(key);
+      } else {
+        summaryParams[key] = value;
+      }
     });
 
-    _handleFetchSummary(
-      fromDate: dariTanggalSummary,
-      toDate: sampaiTanggalSummary,
-      status: status,
-    );
+    _handleFetchSummary();
   }
 
   void _handleProcessFilter(String key, dynamic value) {
     setState(() {
       params['page'] = '0';
-      if (value != null && value.toString().isNotEmpty) {
-        params[key] = value.toString();
+      if (value.toString() != '') {
+        params[key.toString()] = value.toString();
       } else {
-        params.remove(key);
+        params.remove(key.toString());
       }
     });
+
+    _isFiltered = _checkIsFiltered();
 
     _loadMore();
   }
 
   Future<void> _submitFilter() async {
     Navigator.pop(context);
+    setState(() {
+      _isFiltered = _checkIsFiltered();
+    });
     _loadMore();
   }
 
@@ -281,15 +289,16 @@ class _DashboardState extends State<Dashboard> {
 
     _debounce = Timer(const Duration(milliseconds: 500), () {
       setState(() {
-        params = {'search': value, 'page': '0'};
+        _search = value;
+        params['search'] = value;
+        params['page'] = '0';
       });
       _loadMore();
     });
   }
 
   Future<void> _loadMore() async {
-    if (_isLoading) return;
-    _isLoading = true;
+    _isLoadMore = true;
 
     if (params['page'] == '0') {
       setState(() {
@@ -299,29 +308,29 @@ class _DashboardState extends State<Dashboard> {
       });
     }
 
-    final currentPage = int.parse(params['page']!);
+    String newPage = (int.parse(params['page']!) + 1).toString();
+    setState(() {
+      params['page'] = newPage;
+    });
 
-    try {
-      List loadData =
-          await Provider.of<WorkOrderProcessService>(context, listen: false)
-              .getDataProcess(params);
-      if (loadData.isEmpty) {
-        setState(() {
-          _firstLoading = false;
-          _hasMore = false;
-        });
-      } else {
-        setState(() {
-          _dataList.addAll(loadData);
-          _firstLoading = false;
-          params['page'] = (currentPage + 1).toString();
-          if (loadData.length < 20) {
-            _hasMore = false;
-          }
-        });
-      }
-    } finally {
-      _isLoading = false;
+    await Provider.of<WorkOrderProcessService>(context, listen: false)
+        .getDataList(params);
+
+    List<dynamic> loadData =
+        Provider.of<WorkOrderProcessService>(context, listen: false).items;
+
+    if (loadData.isEmpty) {
+      setState(() {
+        _firstLoading = false;
+        _isLoadMore = false;
+        _hasMore = false;
+      });
+    } else {
+      setState(() {
+        _dataList.addAll(loadData);
+        _firstLoading = false;
+        _isLoadMore = false;
+      });
     }
   }
 
@@ -341,117 +350,180 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   void dispose() {
-    dariTanggalInput.dispose();
-    sampaiTanggalInput.dispose();
     _debounce?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> dashboardSections = [];
-
-    dashboardSections.add(WorkOrderStats(data: statsList));
-
-    dashboardSections.add(
-      WorkOrderChart(
-        data: chartList,
-        dariTanggal: dariTanggal,
-        sampaiTanggal: sampaiTanggal,
-        onHandleFilter: _handleFilter,
-        filterWidget: ChartFilter(
-          dariTanggal: dariTanggalInput,
-          sampaiTanggal: sampaiTanggalInput,
-          onHandleFilter: _handleFilter,
-          pickDate: _pickDate,
-          handleProcess: _handleFilter,
-        ),
-        handleRefetch: _handleFetchCharts,
-        isFetching: isChartLoading,
-      ),
-    );
-
-    dashboardSections.add(WorkOrderSummary(
-      data: summaryList,
-      dariTanggal: dariTanggalSummary,
-      sampaiTanggal: sampaiTanggalSummary,
-      handleRefetch: _handleFetchSummary,
-      isFetching: isSummaryLoading,
-      handleProcess: _handleSummaryFilter,
-    ));
-
-    dashboardSections.add(ActiveMachine(
-      data: machineList,
-      available: machineList['available'],
-      unavailable: machineList['unavailable'],
-      handleRefetch: _handleFetchMachine,
-      isFetching: isMachineLoading,
-    ));
-
-    dashboardSections.add(
-      WorkOrderPie(
-        data: pieList,
-        process: chartList,
-      ),
-    );
-
-    dashboardSections.add(
-      WorkOrderProcessScreen(
-        data: _dataList,
-        search: _search,
-        handleSearch: _handleSearch,
-        firstLoading: _firstLoading,
-        hasMore: _hasMore,
-        handleLoadMore: _loadMore,
-        handleRefetch: _refetch,
-        filterWidget: ProcessFilter(
-          title: 'Filter',
-          params: params,
-          onHandleFilter: _handleProcessFilter,
-          onSubmitFilter: () {
-            _submitFilter();
-          },
-          dariTanggal: dariTanggalProses,
-          sampaiTanggal: sampaiTanggalProses,
-          pickDate: _pickDate,
-        ),
-        handleFetchData: (params) async {
-          return await Provider.of<WorkOrderProcessService>(context,
-                  listen: false)
-              .getDataProcess(params);
-        },
-        handleBuildItem: (item) => Align(
-          alignment: Alignment.centerLeft,
-          child: ItemProcess(
-            item: item,
-          ),
-        ),
-        onHandleFilter: _handleFilter,
-        service: WorkOrderProcessService(),
-        isFiltered: false,
-      ),
-    );
+    if (isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: Color(0xFFf9fafc),
-        body: isLoading
-            ? Center(child: CircularProgressIndicator())
-            : dashboardSections.isEmpty
-                ? Center(child: NoData())
-                : RefreshIndicator(
-                    onRefresh: () => _loadDashboardData(),
-                    child: SingleChildScrollView(
-                      physics: AlwaysScrollableScrollPhysics(),
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        children:
-                            dashboardSections.separatedBy(SizedBox(height: 8)),
+        backgroundColor: const Color(0xFFf9fafc),
+        body: RefreshIndicator(
+            onRefresh: () => _loadDashboardData(),
+            child: CustomScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              slivers: [
+                SliverPadding(
+                  padding: CustomTheme().padding('content'),
+                  sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                    WorkOrderStats(data: statsList),
+                    // WorkOrderChart(
+                    //   data: chartList,
+                    //   filterWidget: ChartFilter(
+                    //     dariTanggal: dariTanggal,
+                    //     sampaiTanggal: sampaiTanggal,
+                    //     onHandleFilter: _handleFilter,
+                    //     pickDate: _pickDate,
+                    //     params: chartParams,
+                    //   ),
+                    //   handleRefetch: _handleFetchCharts,
+                    //   isFetching: isChartLoading,
+                    // ),
+                    WorkOrderSummary(
+                      data: summaryList,
+                      handleRefetch: _handleFetchSummary,
+                      isFetching: isSummaryLoading,
+                      filterWidget: SummaryFilter(
+                        dariTanggal: dariTanggalSummary,
+                        sampaiTanggal: sampaiTanggalSummary,
+                        onHandleFilter: _handleSummaryFilter,
+                        pickDate: _pickDate,
+                        params: summaryParams,
                       ),
                     ),
-                  ),
+                    ActiveMachine(
+                      data: machineList,
+                      available: machineList['available'],
+                      unavailable: machineList['unavailable'],
+                      handleRefetch: _handleFetchMachine,
+                      isFetching: isMachineLoading,
+                    ),
+                    WorkOrderPie(
+                      data: pieList,
+                      process: chartList,
+                    ),
+                    WorkOrderProcessScreen(
+                      data: _dataList,
+                      search: _search,
+                      handleSearch: _handleSearch,
+                      firstLoading: _firstLoading,
+                      hasMore: _hasMore,
+                      handleLoadMore: _loadMore,
+                      handleRefetch: _refetch,
+                      isLoadMore: _isLoadMore,
+                      filterWidget: ProcessFilter(
+                        title: 'Filter',
+                        params: params,
+                        onHandleFilter: _handleProcessFilter,
+                        onSubmitFilter: _submitFilter,
+                        dariTanggal: dariTanggalProses,
+                        sampaiTanggal: sampaiTanggalProses,
+                        pickDate: _pickDate,
+                      ),
+                      handleFetchData: (params) async {
+                        final service = Provider.of<WorkOrderProcessService>(
+                            context,
+                            listen: false);
+                        await service.getDataList(params);
+                        return service.items;
+                      },
+                      handleBuildItem: (item) => ItemProcess(item: item),
+                      onHandleFilter: _handleFilter,
+                      service: WorkOrderProcessService(),
+                      isFiltered: _isFiltered,
+                    ),
+                  ].separatedBy(CustomTheme().vGap('2xl')))),
+                ),
+              ],
+            )
+            // NestedScrollView(
+            //   physics: const AlwaysScrollableScrollPhysics(),
+            //   headerSliverBuilder: (context, innerBoxIsScrolled) {
+            //     return [
+            //       SliverPadding(
+            //         padding: CustomTheme().padding('content'),
+            //         sliver: SliverList(
+            //           delegate: SliverChildListDelegate(
+            //             [
+            //               WorkOrderStats(data: statsList),
+            //               // WorkOrderChart(
+            //               //   data: chartList,
+            //               //   filterWidget: ChartFilter(
+            //               //     dariTanggal: dariTanggal,
+            //               //     sampaiTanggal: sampaiTanggal,
+            //               //     onHandleFilter: _handleFilter,
+            //               //     pickDate: _pickDate,
+            //               //     params: chartParams,
+            //               //   ),
+            //               //   handleRefetch: _handleFetchCharts,
+            //               //   isFetching: isChartLoading,
+            //               // ),
+            //               WorkOrderSummary(
+            //                 data: summaryList,
+            //                 dariTanggal: dariTanggalSummary,
+            //                 sampaiTanggal: sampaiTanggalSummary,
+            //                 handleRefetch: _handleFetchSummary,
+            //                 isFetching: isSummaryLoading,
+            //                 handleProcess: _handleSummaryFilter,
+            //               ),
+            //               ActiveMachine(
+            //                 data: machineList,
+            //                 available: machineList['available'],
+            //                 unavailable: machineList['unavailable'],
+            //                 handleRefetch: _handleFetchMachine,
+            //                 isFetching: isMachineLoading,
+            //               ),
+            //               WorkOrderPie(
+            //                 data: pieList,
+            //                 process: chartList,
+            //               ),
+            //               WorkOrderProcessScreen(
+            //                 data: _dataList,
+            //                 search: _search,
+            //                 handleSearch: _handleSearch,
+            //                 firstLoading: _firstLoading,
+            //                 hasMore: _hasMore,
+            //                 handleLoadMore: _loadMore,
+            //                 handleRefetch: _refetch,
+            //                 isLoadMore: _isLoadMore,
+            //                 filterWidget: ProcessFilter(
+            //                   title: 'Filter',
+            //                   params: params,
+            //                   onHandleFilter: _handleProcessFilter,
+            //                   onSubmitFilter: _submitFilter,
+            //                   dariTanggal: dariTanggalProses,
+            //                   sampaiTanggal: sampaiTanggalProses,
+            //                   pickDate: _pickDate,
+            //                 ),
+            //                 handleFetchData: (params) async {
+            //                   final service =
+            //                       Provider.of<WorkOrderProcessService>(context,
+            //                           listen: false);
+            //                   await service.getDataList(params);
+            //                   return service.items;
+            //                 },
+            //                 handleBuildItem: (item) => ItemProcess(item: item),
+            //                 onHandleFilter: _handleFilter,
+            //                 service: WorkOrderProcessService(),
+            //                 isFiltered: _isFiltered,
+            //               ),
+            //             ].separatedBy(CustomTheme().vGap('2xl')),
+            //           ),
+            //         ),
+            //       ),
+            //     ];
+            //   },
+            //   body: const SizedBox.shrink(),
+            // ),
+            ),
       ),
     );
   }

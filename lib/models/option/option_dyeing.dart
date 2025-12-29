@@ -34,7 +34,6 @@ class OptionDyeingService extends BaseService<OptionDyeing> {
 
   bool _isLoading = false;
   bool _hasMoreData = true;
-  int _currentPage = 1;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
   final List<OptionDyeing> _dyeing = [];
@@ -73,7 +72,6 @@ class OptionDyeingService extends BaseService<OptionDyeing> {
     if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
-      _currentPage = 1;
       _hasMoreData = true;
       _dyeing.clear();
     }

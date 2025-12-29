@@ -6,7 +6,6 @@ import 'package:textile_tracking/components/master/layout/attachment_picker.dart
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class FormSection extends StatefulWidget {
@@ -162,21 +161,18 @@ class _FormSectionState extends State<FormSection> {
       children: [
         if (widget.id == null)
           CustomCard(
-              child: Padding(
-            padding: PaddingColumn.screen,
-            child: SelectForm(
-              label: 'Work Order',
-              onTap: () => widget.handleSelectWo(),
-              selectedLabel: widget.form['no_wo'] ?? '',
-              selectedValue: widget.form['wo_id']?.toString() ?? '',
-              required: true,
-              validator: (value) {
-                if ((value == null || value.isEmpty)) {
-                  return 'Work Order wajib dipilih';
-                }
-                return null;
-              },
-            ),
+              child: SelectForm(
+            label: 'Work Order',
+            onTap: () => widget.handleSelectWo(),
+            selectedLabel: widget.form['no_wo'] ?? '',
+            selectedValue: widget.form['wo_id']?.toString() ?? '',
+            required: true,
+            validator: (value) {
+              if ((value == null || value.isEmpty)) {
+                return 'Work Order wajib dipilih';
+              }
+              return null;
+            },
           )),
         if (widget.form?['wo_id'] != null)
           Column(
@@ -185,238 +181,213 @@ class _FormSectionState extends State<FormSection> {
             children: [
               if (widget.withItemGrade == true)
                 CustomCard(
-                    child: Padding(
-                  padding: PaddingColumn.screen,
-                  child: Column(
-                    children: [
-                      if ((widget.itemGradeOption ?? []).isNotEmpty &&
-                          widget.grades.isNotEmpty &&
-                          widget.grades.length >= widget.itemGradeOption.length)
-                        for (int i = 0; i < widget.itemGradeOption.length; i++)
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: buildGradeRowConfig(i)
-                                .map((col) => Expanded(
-                                      flex: col['flex'],
-                                      child: col['child'],
-                                    ))
-                                .toList()
-                                .separatedBy(const SizedBox(width: 16)),
-                          ),
-                    ].separatedBy(const SizedBox(height: 16)),
-                  ),
+                    child: Column(
+                  children: [
+                    if ((widget.itemGradeOption ?? []).isNotEmpty &&
+                        widget.grades.isNotEmpty &&
+                        widget.grades.length >= widget.itemGradeOption.length)
+                      for (int i = 0; i < widget.itemGradeOption.length; i++)
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: buildGradeRowConfig(i)
+                              .map((col) => Expanded(
+                                    flex: col['flex'],
+                                    child: col['child'],
+                                  ))
+                              .toList()
+                              .separatedBy(const SizedBox(width: 16)),
+                        ),
+                  ].separatedBy(const SizedBox(height: 16)),
                 )),
               if (widget.withItemGrade == false)
                 CustomCard(
-                    child: Padding(
-                        padding: PaddingColumn.screen,
-                        child: Column(
-                          children: [
-                            ...formRows.map((row) {
-                              return Row(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Column(
+                    child: Column(
+                  children: [
+                    ...formRows.map((row) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              children: [
+                                TextForm(
+                                  label: row['label'],
+                                  req: row['req'],
+                                  isNumber: true,
+                                  controller: row['controller'],
+                                  handleChange: (value) {
+                                    final safeValue = (value == null ||
+                                            value.toString().trim().isEmpty)
+                                        ? '0'
+                                        : value.toString();
+
+                                    setState(() {
+                                      row['controller'].text = safeValue;
+                                      widget.handleChangeInput(
+                                        row['value'],
+                                        safeValue,
+                                      );
+
+                                      if (row['value'] == 'length') {
+                                        widget.handleChangeInput(
+                                            'length_unit_id', 4);
+                                      }
+
+                                      if (row['value'] == 'width') {
+                                        widget.handleChangeInput(
+                                            'width_unit_id', 4);
+                                      }
+
+                                      if (widget.withQtyAndWeight == false &&
+                                          row['value'] == 'weight') {
+                                        widget.validateWeight(value);
+                                      }
+                                    });
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return '${row['label']} wajib diisi';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                if (widget.withQtyAndWeight == false &&
+                                    row['value'] == 'weight' &&
+                                    widget.weightWarning != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 12),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        TextForm(
-                                          label: row['label'],
-                                          req: row['req'],
-                                          isNumber: true,
-                                          controller: row['controller'],
-                                          handleChange: (value) {
-                                            final safeValue = (value == null ||
-                                                    value
-                                                        .toString()
-                                                        .trim()
-                                                        .isEmpty)
-                                                ? '0'
-                                                : value.toString();
-
-                                            setState(() {
-                                              row['controller'].text =
-                                                  safeValue;
-                                              widget.handleChangeInput(
-                                                row['value'],
-                                                safeValue,
-                                              );
-
-                                              if (row['value'] == 'length') {
-                                                widget.handleChangeInput(
-                                                    'length_unit_id', 4);
-                                              }
-
-                                              if (row['value'] == 'width') {
-                                                widget.handleChangeInput(
-                                                    'width_unit_id', 4);
-                                              }
-
-                                              if (widget.withQtyAndWeight ==
-                                                      false &&
-                                                  row['value'] == 'weight') {
-                                                widget.validateWeight(value);
-                                              }
-                                            });
-                                          },
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.trim().isEmpty) {
-                                              return '${row['label']} wajib diisi';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                        if (widget.withQtyAndWeight == false &&
-                                            row['value'] == 'weight' &&
-                                            widget.weightWarning != null)
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 12),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const SizedBox(width: 8),
-                                                Expanded(
-                                                  child: Text(
-                                                    widget.weightWarning ?? '-',
-                                                    style: TextStyle(
-                                                      color: CustomTheme()
-                                                          .colors('warning'),
-                                                      fontSize: 13,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            widget.weightWarning ?? '-',
+                                            style: TextStyle(
+                                              color: CustomTheme()
+                                                  .colors('warning'),
+                                              fontSize: 13,
                                             ),
                                           ),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  if (row['withSelectUnit'] == true)
-                                    Expanded(
-                                      flex: 1,
-                                      child: SelectForm(
-                                        label: row['unitLabel'],
-                                        onTap: row['onSelect'],
-                                        selectedLabel: row['selectedLabel'],
-                                        selectedValue: row['selectedValue'],
-                                        required: row['req'],
-                                        validator: (value) {
-                                          if ((value == null ||
-                                              value.isEmpty)) {
-                                            return '${row['unitLabel']} wajib dipilih';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                ].separatedBy(const SizedBox(width: 16)),
-                              );
-                            }),
-                            if (widget.withQtyAndWeight == true)
-                              Row(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Column(
-                                      children: [
-                                        TextForm(
-                                          label: 'Jumlah',
-                                          req: true,
-                                          isNumber: true,
-                                          controller: widget.qty,
-                                          handleChange: (value) {
-                                            setState(() {
-                                              widget.qty.text =
-                                                  value.toString();
-                                              widget.handleChangeInput(
-                                                  'item_qty', value);
-                                              widget.validateQty(value);
-                                            });
-                                          },
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.trim().isEmpty) {
-                                              return 'Qty wajib diisi';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 12),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const SizedBox(width: 8),
-                                              Expanded(
-                                                child: Text(
-                                                  widget.weightWarning ?? '-',
-                                                  style: TextStyle(
-                                                    color: CustomTheme()
-                                                        .colors('warning'),
-                                                    fontSize: 13,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                              ],
+                            ),
+                          ),
+                          if (row['withSelectUnit'] == true)
+                            Expanded(
+                              flex: 1,
+                              child: SelectForm(
+                                label: row['unitLabel'],
+                                onTap: row['onSelect'],
+                                selectedLabel: row['selectedLabel'],
+                                selectedValue: row['selectedValue'],
+                                required: row['req'],
+                                validator: (value) {
+                                  if ((value == null || value.isEmpty)) {
+                                    return '${row['unitLabel']} wajib dipilih';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                        ].separatedBy(const SizedBox(width: 16)),
+                      );
+                    }),
+                    if (widget.withQtyAndWeight == true)
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              children: [
+                                TextForm(
+                                  label: 'Jumlah',
+                                  req: true,
+                                  isNumber: true,
+                                  controller: widget.qty,
+                                  handleChange: (value) {
+                                    setState(() {
+                                      widget.qty.text = value.toString();
+                                      widget.handleChangeInput(
+                                          'item_qty', value);
+                                      widget.validateQty(value);
+                                    });
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Qty wajib diisi';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 12),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          widget.weightWarning ?? '-',
+                                          style: TextStyle(
+                                            color:
+                                                CustomTheme().colors('warning'),
+                                            fontSize: 13,
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: SelectForm(
-                                      label: 'Satuan',
-                                      onTap: widget.handleSelectQtyUnitItem,
-                                      selectedLabel:
-                                          widget.form['nama_satuan'] ?? '',
-                                      selectedValue:
-                                          widget.form['unit_id']?.toString() ??
-                                              '',
-                                      required: true,
-                                      validator: (value) {
-                                        if ((value == null || value.isEmpty)) {
-                                          return 'Satuan wajib dipilih';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  )
-                                ].separatedBy(const SizedBox(width: 16)),
-                              ),
-                          ].separatedBy(const SizedBox(height: 8)),
-                        ))),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: SelectForm(
+                              label: 'Satuan',
+                              onTap: widget.handleSelectQtyUnitItem,
+                              selectedLabel: widget.form['nama_satuan'] ?? '',
+                              selectedValue:
+                                  widget.form['unit_id']?.toString() ?? '',
+                              required: true,
+                              validator: (value) {
+                                if ((value == null || value.isEmpty)) {
+                                  return 'Satuan wajib dipilih';
+                                }
+                                return null;
+                              },
+                            ),
+                          )
+                        ].separatedBy(const SizedBox(width: 16)),
+                      ),
+                  ].separatedBy(const SizedBox(height: 8)),
+                )),
               CustomCard(
-                  child: Padding(
-                padding: PaddingColumn.screen,
-                child: AttachmentPicker(
-                  attachments: widget.allAttachments,
-                  onAddAttachment: widget.handlePickAttachments,
-                  onDeleteAttachment: widget.handleDeleteAttachment,
-                  onPreviewImage: (isNew, filePath) {
-                    widget.showImageDialog(context, isNew, filePath);
-                  },
-                ),
+                  child: AttachmentPicker(
+                attachments: widget.allAttachments,
+                onAddAttachment: widget.handlePickAttachments,
+                onDeleteAttachment: widget.handleDeleteAttachment,
+                onPreviewImage: (isNew, filePath) {
+                  widget.showImageDialog(context, isNew, filePath);
+                },
               )),
               CustomCard(
-                  child: Padding(
-                padding: PaddingColumn.screen,
-                child: NoteEditor(
-                  controller: widget.note,
-                  formKey: 'notes',
-                  label: 'Catatan',
-                  form: widget.form,
-                  onChanged: (value) =>
-                      widget.handleChangeInput('notes', value),
-                ),
+                  child: NoteEditor(
+                controller: widget.note,
+                formKey: 'notes',
+                label: 'Catatan',
+                form: widget.form,
+                onChanged: (value) => widget.handleChangeInput('notes', value),
               )),
-            ],
+            ].separatedBy(CustomTheme().vGap('2xl')),
           ),
-      ],
+      ].separatedBy(CustomTheme().vGap('2xl')),
     );
   }
 }

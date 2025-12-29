@@ -767,6 +767,7 @@ class CustomTheme {
         return const Icon(
           Icons.replay_outlined,
           size: 14,
+          color: Color.fromRGBO(69, 97, 219, 1),
         );
       default:
         return const Icon(

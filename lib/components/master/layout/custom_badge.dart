@@ -9,7 +9,6 @@ class CustomBadge extends StatelessWidget {
   final status;
   final withStatus;
   final icon;
-  final child;
   final rework;
   final forMachine;
 
@@ -21,7 +20,6 @@ class CustomBadge extends StatelessWidget {
       this.status,
       this.withStatus = false,
       this.icon,
-      this.child,
       this.rework = false,
       this.forMachine = false});
 

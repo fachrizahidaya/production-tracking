@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/finish/create_form.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class CreateInfoTab extends StatefulWidget {
   final id;
@@ -109,7 +110,7 @@ class _CreateInfoTabState extends State<CreateInfoTab>
 
     return SingleChildScrollView(
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: CustomTheme().padding('content'),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

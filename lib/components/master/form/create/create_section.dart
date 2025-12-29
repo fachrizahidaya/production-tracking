@@ -69,7 +69,7 @@ class _CreateSectionState extends State<CreateSection> {
                   text: 'Form',
                 ),
                 Tab(
-                  text: 'Barang',
+                  text: 'Material',
                 ),
               ]),
             ),

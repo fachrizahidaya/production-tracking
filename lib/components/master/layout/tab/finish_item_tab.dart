@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/finish_list_item.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class FinishItemTab extends StatefulWidget {
   final dynamic data;
@@ -21,9 +22,9 @@ class _FinishItemTabState extends State<FinishItemTab> {
 
     return Container(
       child: items.isEmpty
-          ? const Center(child: Text('No Data'))
+          ? Center(child: Text('No Data'))
           : ListView.separated(
-              padding: EdgeInsets.only(top: 8),
+              padding: CustomTheme().padding('content'),
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final item = items[index];
@@ -31,7 +32,7 @@ class _FinishItemTabState extends State<FinishItemTab> {
                   item: item,
                 );
               },
-              separatorBuilder: (context, index) => const SizedBox(height: 16),
+              separatorBuilder: (context, index) => CustomTheme().vGap('2xl'),
             ),
     );
   }

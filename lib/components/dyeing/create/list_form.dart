@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ListForm extends StatefulWidget {
   final formKey;
@@ -45,28 +46,22 @@ class _ListFormState extends State<ListForm> {
           children: [
             if (widget.id == null)
               CustomCard(
-                  child: Padding(
-                padding: PaddingColumn.screen,
-                child: SelectForm(
-                  label: 'Work Order',
-                  onTap: () => widget.selectWorkOrder(),
-                  selectedLabel: widget.form?['no_wo'] ?? '',
-                  selectedValue: widget.form?['wo_id']?.toString() ?? '',
-                  required: true,
-                ),
+                  child: SelectForm(
+                label: 'Work Order',
+                onTap: () => widget.selectWorkOrder(),
+                selectedLabel: widget.form?['no_wo'] ?? '',
+                selectedValue: widget.form?['wo_id']?.toString() ?? '',
+                required: true,
               )),
             CustomCard(
-                child: Padding(
-              padding: PaddingColumn.screen,
-              child: SelectForm(
-                label: 'Mesin',
-                onTap: () => widget.selectMachine(),
-                selectedLabel: widget.form['nama_mesin'] ?? '',
-                selectedValue: widget.form['machine_id'].toString(),
-                required: true,
-              ),
+                child: SelectForm(
+              label: 'Mesin',
+              onTap: () => widget.selectMachine(),
+              selectedLabel: widget.form['nama_mesin'] ?? '',
+              selectedValue: widget.form['machine_id'].toString(),
+              required: true,
             )),
-          ]),
+          ].separatedBy(CustomTheme().vGap('xl'))),
     );
   }
 }

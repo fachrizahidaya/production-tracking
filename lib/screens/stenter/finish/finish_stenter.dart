@@ -1,8 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/helpers/service/finish_process.dart';
-import 'package:textile_tracking/models/option/option_work_order.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/screens/master/finish_process.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/stenter/finish/finish_stenter_manual.dart';
@@ -15,22 +17,18 @@ class FinishStenter extends StatefulWidget {
 }
 
 class _FinishStenterState extends State<FinishStenter> {
-  int number = 0;
-
-  late List<dynamic> workOrderOption = [];
-
   final Map<String, dynamic> _form = {
     'wo_id': null,
     'machine_id': null,
     'weight_unit_id': null,
-    'width_unit_id': null,
-    'length_unit_id': null,
+    'width_unit_id': 4,
+    'length_unit_id': 4,
     'rework_reference_id': null,
     'start_by_id': null,
     'end_by_id': null,
     'weight': null,
-    'width': null,
-    'length': null,
+    'width': '0',
+    'length': '0',
     'notes': '',
     'rework': null,
     'status': null,
@@ -49,23 +47,12 @@ class _FinishStenterState extends State<FinishStenter> {
   @override
   void initState() {
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
-    _handleFetchWorkOrder();
-    super.initState();
 
     setState(() {
       _form['end_by_id'] = loggedInUser?.id;
     });
-  }
 
-  Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchStenterFinishOptions();
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
-
-    setState(() {
-      workOrderOption = result;
-    });
+    super.initState();
   }
 
   @override
@@ -101,8 +88,14 @@ class _FinishStenterState extends State<FinishStenter> {
           length_unit_id:
               int.tryParse(form['length_unit_id']?.toString() ?? ''),
           weight: form['weight'],
-          width: form['width'],
-          length: form['length'],
+          width: _form['width'] =
+              (_form['width'] == null || _form['width'].toString().isEmpty)
+                  ? '0'
+                  : _form['width'],
+          length: form['length'] =
+              (_form['length'] == null || _form['length'].toString().isEmpty)
+                  ? '0'
+                  : _form['length'],
           notes: form['notes'],
           start_time: form['start_time'],
           end_time: form['end_time'],
@@ -115,9 +108,12 @@ class _FinishStenterState extends State<FinishStenter> {
             await Provider.of<StenterService>(context, listen: false)
                 .finishItem(id, stenter, isLoading);
 
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(message)));
         Navigator.pushNamedAndRemoveUntil(context, '/stenters', (_) => false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showAlertDialog(
+              context: context, title: 'Stenter Selesai', message: message);
+        });
       },
     );
   }

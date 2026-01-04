@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/create_process_manual.dart';
+import 'package:textile_tracking/screens/master/create_process_manual.dart';
 
 class CreateLongHemmingManual extends StatelessWidget {
   final dynamic id;
@@ -21,10 +21,10 @@ class CreateLongHemmingManual extends StatelessWidget {
     return CreateProcessManual(
       title: 'Mulai Long Hemming',
       id: id,
+      label: 'Long Hemming',
       data: data,
       form: form,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchLongHemmingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsLongHemming(),

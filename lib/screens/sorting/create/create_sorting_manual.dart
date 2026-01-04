@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/create_process_manual.dart';
+import 'package:textile_tracking/screens/master/create_process_manual.dart';
 
 class CreateSortingManual extends StatelessWidget {
   final dynamic id;
@@ -21,10 +21,10 @@ class CreateSortingManual extends StatelessWidget {
     return CreateProcessManual(
       title: 'Mulai Sorting',
       id: id,
+      label: 'Sorting',
       data: data,
       form: form,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchSortingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       withNoMaklonOrMachine: true,

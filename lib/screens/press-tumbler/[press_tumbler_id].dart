@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/models/process/press_tumbler.dart';
-import 'package:textile_tracking/screens/process_detail.dart';
+import 'package:textile_tracking/screens/master/process_detail.dart';
 
 class PressTumblerDetail extends StatefulWidget {
-  final String id;
-  final String no;
+  final id;
+  final no;
   final canDelete;
   final canUpdate;
 
@@ -28,7 +28,7 @@ class _PressTumblerDetailState extends State<PressTumblerDetail> {
     return ProcessDetail<PressTumbler>(
       id: widget.id,
       no: widget.no,
-      label: 'Press Tumbler',
+      label: 'Press',
       service: Provider.of<PressTumblerService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<PressTumblerService>(context, listen: false)
@@ -59,7 +59,7 @@ class _PressTumblerDetailState extends State<PressTumblerDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
-      route: '/press-tumblers',
+      route: '/press',
       fetchMachine: (service) => service.fetchOptionsPressTumbler(),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,

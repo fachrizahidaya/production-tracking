@@ -18,6 +18,73 @@ class CustomTheme {
     );
   }
 
+  BoxDecoration dashboardCardTheme(bottomBorderColor) {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: const BorderRadius.all(
+        Radius.circular(12),
+      ),
+      border: Border.all(
+        // ignore: deprecated_member_use
+        color: Colors.grey.withOpacity(0.3),
+        width: 1,
+      ),
+      boxShadow: [
+        boxShadowTheme(),
+      ],
+    );
+  }
+
+  BoxDecoration statsCardTheme(bottomBorderColor) {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: const BorderRadius.all(
+        Radius.circular(12),
+      ),
+      border: Border(
+        bottom: BorderSide(
+          color: bottomBorderColor,
+          width: 2,
+        ),
+      ),
+      boxShadow: [
+        boxShadowTheme(),
+      ],
+    );
+  }
+
+  BoxDecoration processCardTheme(color) {
+    return BoxDecoration(
+      color: color,
+      borderRadius: const BorderRadius.all(
+        Radius.circular(8),
+      ),
+    );
+  }
+
+  BoxDecoration machineStatusCardTheme(color) {
+    return BoxDecoration(
+      color: color,
+      borderRadius: const BorderRadius.all(
+        Radius.circular(8),
+      ),
+    );
+  }
+
+  BoxDecoration badgeTheme(status) {
+    return BoxDecoration(
+      color: statusColor(status),
+      borderRadius: const BorderRadius.all(
+        Radius.circular(8),
+      ),
+      border: Border.all(
+        // ignore: deprecated_member_use
+        color: Colors.grey.withOpacity(0.3),
+        width: 1,
+      ),
+    );
+  }
+
   BoxShadow boxShadowTheme() {
     return BoxShadow(
       // ignore: deprecated_member_use
@@ -29,12 +96,44 @@ class CustomTheme {
   }
 
   BoxDecoration containerCardDecoration() {
-    return const BoxDecoration(
+    return BoxDecoration(
       borderRadius: BorderRadius.all(
         Radius.circular(12),
       ),
       color: Colors.white,
+      border: Border.all(
+        // ignore: deprecated_member_use
+        color: Colors.grey.withOpacity(0.3),
+        width: 1,
+      ),
     );
+  }
+
+  BoxDecoration moreDataBadgeTheme(String status) {
+    switch (status) {
+      case 'Selesai':
+        return BoxDecoration(
+          color: Colors.green.shade100,
+          borderRadius: BorderRadius.circular(8),
+        );
+      case 'Diproses':
+        return BoxDecoration(
+          color: Colors.orange.shade100,
+          borderRadius: BorderRadius.circular(8),
+        );
+      case 'Menunggu Diproses':
+        return BoxDecoration(
+          color: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(8),
+        );
+      case 'more':
+        return BoxDecoration(
+          color: Colors.blueGrey.shade100,
+          borderRadius: BorderRadius.circular(8),
+        );
+      default:
+        return BoxDecoration();
+    }
   }
 
   BoxDecoration containerBottomSheetDecoration() {
@@ -76,9 +175,9 @@ class CustomTheme {
   }
 
   InputDecoration inputDecoration([
-    String? hintTextString,
-    Icon? prefIcon,
-    Icon? suffIcon,
+    hintTextString,
+    prefIcon,
+    suffIcon,
   ]) {
     return InputDecoration(
       filled: true,
@@ -150,84 +249,87 @@ class CustomTheme {
   }
 
   InputDecoration inputDateDecoration(
-      {String? hintTextString, bool? clearable, Function()? onPressClear}) {
+      {String? hintTextString,
+      bool? clearable,
+      Function()? onPressClear,
+      required bool hasValue,
+      withReset = false}) {
     return InputDecoration(
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 12,
+      ),
+      border: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(
+            4.0,
+          ),
         ),
-        border: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(
-              4.0,
+        borderSide: BorderSide(
+          width: 0.5,
+          color: colors('base'),
+        ),
+      ),
+      focusedBorder: const OutlineInputBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(
+            4.0,
+          ),
+        ),
+        borderSide: BorderSide(
+          width: 0.5,
+          color: Colors.black87,
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(
+            4.0,
+          ),
+        ),
+        borderSide: BorderSide(
+          width: 0.5,
+          color: colors('base'),
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(
+            4.0,
+          ),
+        ),
+        borderSide: BorderSide(
+          width: 0.5,
+          color: Colors.red.shade500,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(
+            4.0,
+          ),
+        ),
+        borderSide: BorderSide(
+          width: 0.5,
+          color: Colors.red.shade500,
+        ),
+      ),
+      hintText: hintTextString,
+      hintStyle: const TextStyle(
+        color: Colors.black38,
+        fontWeight: FontWeight.w400,
+      ),
+      suffixIcon: withReset == true
+          ? IconButton(
+              icon: const Icon(Icons.replay_outlined),
+              onPressed: onPressClear,
+            )
+          : IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: hasValue ? onPressClear : null,
             ),
-          ),
-          borderSide: BorderSide(
-            width: 0.5,
-            color: colors('base'),
-          ),
-        ),
-        focusedBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(
-              4.0,
-            ),
-          ),
-          borderSide: BorderSide(
-            width: 0.5,
-            color: Colors.black87,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(
-              4.0,
-            ),
-          ),
-          borderSide: BorderSide(
-            width: 0.5,
-            color: colors('base'),
-          ),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(
-              4.0,
-            ),
-          ),
-          borderSide: BorderSide(
-            width: 0.5,
-            color: Colors.red.shade500,
-          ),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(
-              4.0,
-            ),
-          ),
-          borderSide: BorderSide(
-            width: 0.5,
-            color: Colors.red.shade500,
-          ),
-        ),
-        hintText: hintTextString,
-        hintStyle: const TextStyle(
-          color: Colors.black38,
-          fontWeight: FontWeight.w400,
-        ),
-        suffixIcon: clearable == false
-            ? Icon(
-                Icons.calendar_month_outlined,
-                color: colors('base'),
-              )
-            : IconButton(
-                icon: const Icon(Icons.calendar_month_outlined),
-                onPressed: () {
-                  onPressClear!();
-                },
-              ));
+    );
   }
 
   InputDecoration inputTimeDecoration([String? hintTextString]) {
@@ -330,7 +432,7 @@ class CustomTheme {
       case "Diproses":
       case "Dikirim":
       case "Tidak Aktif":
-        return Colors.grey.shade500;
+        return Color(0xFFfff3c6);
       case "Dibayar Sebagian":
       case "Diproses Sebagian":
       case "Dikirim Sebagian":
@@ -339,12 +441,13 @@ class CustomTheme {
       case "Panen Awal":
         return Colors.orange.shade200;
       case "Lunas":
+      case "Selesai":
       case "Terproses":
       case "Diterima":
       case "Dibayar":
       case "Permintaan Ditutup Lunas":
       case "Aktif":
-        return Colors.green.shade100;
+        return Color(0xffd1fae4);
       case "Difaktur":
       case "Ditutup":
       case "Ditutup Lunas":
@@ -352,8 +455,14 @@ class CustomTheme {
         return Colors.indigo.shade300;
       case "Dibatalkan":
         return Colors.red.shade100;
+      case "Rework":
+        return Color(0xFFe8edfc);
+      case "Total Work Orders":
+        return Color(0xffdbeaff);
+      case "Menunggu Diproses":
+        return Color(0xFFf1f5f9);
       default:
-        return Colors.grey.shade500;
+        return Colors.white;
     }
   }
 
@@ -432,7 +541,7 @@ class CustomTheme {
       case 'text-primary':
         return Colors.black;
       case 'text-secondary':
-        return Colors.black54;
+        return Color(0xFF71717b);
       case 'text-tertiary':
         return Colors.black38;
       default:
@@ -482,6 +591,31 @@ class CustomTheme {
     }
   }
 
+  double iconSize(type) {
+    switch (type) {
+      case 'xs':
+        return 10;
+      case 'sm':
+        return 12;
+      case 'md':
+        return 14;
+      case 'lg':
+        return 16;
+      case 'xl':
+        return 20;
+      case '2xl':
+        return 24;
+      case '3xl':
+        return 28;
+      case '4xl':
+        return 30;
+      case '5xl':
+        return 32;
+      default:
+        return 14;
+    }
+  }
+
   BoxDecoration defaultButton() {
     return BoxDecoration(
       color: Colors.white,
@@ -498,13 +632,15 @@ class CustomTheme {
 
   ButtonStyle primaryButton() {
     return TextButton.styleFrom(
-      backgroundColor: CustomTheme().colors('base'),
+      backgroundColor: CustomTheme().colors('primary'),
       foregroundColor: Colors.white,
-      textStyle: const TextStyle(fontSize: 16),
+      textStyle: TextStyle(
+        fontSize: 16,
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: CustomTheme().colors('base'),
+          color: CustomTheme().colors('primary'),
         ),
       ),
     );
@@ -528,7 +664,7 @@ class CustomTheme {
     return TextButton.styleFrom(
       backgroundColor: Colors.grey.shade300,
       foregroundColor: Colors.grey.shade600,
-      textStyle: const TextStyle(fontSize: 16),
+      textStyle: TextStyle(fontSize: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
@@ -550,6 +686,8 @@ class CustomTheme {
         return const SizedBox(width: 8);
       case 'xl':
         return const SizedBox(width: 12);
+      case '2xl':
+        return const SizedBox(width: 16);
       case '3xl':
         return const SizedBox(width: 20);
       case '4xl':
@@ -590,12 +728,52 @@ class CustomTheme {
     switch (type) {
       case 'card':
         return const EdgeInsets.all(12);
+      case 'badge':
+        return const EdgeInsets.symmetric(vertical: 6, horizontal: 12);
+      case 'badge-rework':
+        return const EdgeInsets.symmetric(vertical: 2, horizontal: 6);
       case 'content':
         return const EdgeInsets.all(16);
+      case 'process-content':
+        return const EdgeInsets.all(8);
       case 'list-card':
         return const EdgeInsets.all(12);
       default:
         return const EdgeInsets.all(16);
+    }
+  }
+
+  Icon icon(type) {
+    switch (type) {
+      case 'Menunggu Diproses':
+        return const Icon(
+          Icons.warning_outlined,
+          size: 16,
+          color: Color.fromRGBO(113, 113, 123, 1),
+        );
+      case 'Diproses':
+        return const Icon(
+          Icons.access_time_outlined,
+          size: 16,
+          color: Color(0xfff18800),
+        );
+      case 'Selesai':
+        return const Icon(
+          Icons.task_alt_outlined,
+          size: 16,
+          color: Color(0xFF10b981),
+        );
+      case 'Rework':
+        return const Icon(
+          Icons.replay_outlined,
+          size: 14,
+          color: Color.fromRGBO(69, 97, 219, 1),
+        );
+      default:
+        return const Icon(
+          Icons.question_mark_outlined,
+          size: 16,
+        );
     }
   }
 

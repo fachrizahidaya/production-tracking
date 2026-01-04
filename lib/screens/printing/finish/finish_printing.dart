@@ -1,8 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/helpers/service/finish_process.dart';
-import 'package:textile_tracking/models/option/option_work_order.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/screens/master/finish_process.dart';
 import 'package:textile_tracking/models/process/printing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/printing/finish/finish_printing_manual.dart';
@@ -15,10 +17,6 @@ class FinishPrinting extends StatefulWidget {
 }
 
 class _FinishPrintingState extends State<FinishPrinting> {
-  int number = 0;
-
-  late List<dynamic> workOrderOption = [];
-
   final Map<String, dynamic> _form = {
     'wo_id': null,
     'machine_id': null,
@@ -53,22 +51,10 @@ class _FinishPrintingState extends State<FinishPrinting> {
   @override
   void initState() {
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
-    _handleFetchWorkOrder();
     super.initState();
 
     setState(() {
       _form['end_by_id'] = loggedInUser?.id;
-    });
-  }
-
-  Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchPrintingFinishOptions();
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
-
-    setState(() {
-      workOrderOption = result;
     });
   }
 
@@ -123,9 +109,12 @@ class _FinishPrintingState extends State<FinishPrinting> {
             await Provider.of<PrintingService>(context, listen: false)
                 .finishItem(id, printing, isLoading);
 
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(message)));
         Navigator.pushNamedAndRemoveUntil(context, '/printings', (_) => false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showAlertDialog(
+              context: context, title: 'Printing Selesai', message: message);
+        });
       },
     );
   }

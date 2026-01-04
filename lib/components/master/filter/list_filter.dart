@@ -1,12 +1,13 @@
+// ignore_for_file: prefer_typing_uninitialized_variables, use_build_context_synchronously
+
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/form/filter_select_form.dart';
+import 'package:textile_tracking/components/master/filter/filter_select_form.dart';
 import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
-import 'package:textile_tracking/models/option/option_machine.dart';
-import 'package:textile_tracking/models/option/option_operator.dart';
-import 'package:provider/provider.dart';
 
 class DropdownConfig<T> {
   final String id;
@@ -73,20 +74,12 @@ class ListFilter<T> extends StatefulWidget {
 class _ListFilterState<T> extends State<ListFilter<T>> {
   TextEditingController dariTanggalInput = TextEditingController();
   TextEditingController sampaiTanggalInput = TextEditingController();
-  bool _isFetchingMachine = false;
-  bool _isFetchingOperator = false;
   int? operatorId;
   String? namaOperator = '';
-  int? machineId;
-  String? namaMachine = '';
   int page = 0;
 
-  late List<dynamic> _dataList;
-
-  List<dynamic> machineOption = [];
   List<dynamic> operatorOption = [];
 
-  List<Map<String, dynamic>> selectedMachines = [];
   List<Map<String, dynamic>> selectedStatuses = [];
   List<Map<String, dynamic>> selectedOperators = [];
 
@@ -98,8 +91,6 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
   @override
   void initState() {
     super.initState();
-    _getOperator();
-    _getMachine();
 
     if (widget.params['status'] != null) {
       final activeStatuses = widget.params['status'].split(',');
@@ -119,95 +110,6 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
 
     dariTanggalInput.text = widget.dariTanggal;
     sampaiTanggalInput.text = widget.sampaiTanggal;
-
-    if (widget.params['machine_id'] != null) {
-      final activeMachines = widget.params['machine_id'].split(',');
-      selectedMachines = machineOption
-          .where((m) => activeMachines.contains(m['value'].toString()))
-          .toList()
-          .cast<Map<String, dynamic>>();
-    }
-  }
-
-  Future<void> _getMachine() async {
-    setState(() {
-      _isFetchingMachine = true;
-    });
-
-    final service = Provider.of<OptionMachineService>(context, listen: false);
-
-    try {
-      if (widget.fetchMachine != null) {
-        await widget.fetchMachine!(service);
-      } else {
-        await service.fetchOptions();
-      }
-
-      final data = widget.getMachineOptions != null
-          ? widget.getMachineOptions!(service)
-          : service.dataListOption;
-
-      setState(() {
-        machineOption = data;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
-    } finally {
-      setState(() {
-        _isFetchingMachine = false;
-      });
-    }
-  }
-
-  Future<void> _getOperator() async {
-    setState(() {
-      _isFetchingOperator = true;
-    });
-
-    final service = Provider.of<OptionOperatorService>(context, listen: false);
-    try {
-      if (widget.fetchOperators != null) {
-        await widget.fetchOperators!(service);
-      } else {
-        await service.fetchOptions();
-      }
-
-      final data = widget.getOperatorOptions != null
-          ? widget.getOperatorOptions!(service)
-          : service.dataListOption;
-
-      setState(() {
-        operatorOption = data;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
-    } finally {
-      setState(() {
-        _isFetchingOperator = false;
-      });
-    }
-    // ignore: use_build_context_synchronously
-    // final result = Provider.of<OptionOperatorService>(context, listen: false)
-    //     .dataListOption;
-
-    // setState(() {
-    //   operatorOption = result;
-    // });
-  }
-
-  _searchDataOption(value) {
-    setState(() {
-      _dataList = statusOption
-          .where((element) => element['label']
-              .toString()
-              .toLowerCase()
-              .contains(value.toLowerCase()))
-          .toList();
-    });
   }
 
   @override
@@ -230,10 +132,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      dariTanggalInput.text = widget.params['start_date'] ?? '';
-      sampaiTanggalInput.text = widget.params['end_date'] ?? '';
-    });
+    dariTanggalInput.text = widget.params['start_date'] ?? '';
+    sampaiTanggalInput.text = widget.params['end_date'] ?? '';
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -250,39 +150,31 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                   label: 'Dari Tanggal',
                   formControl: TextFormField(
                     controller: dariTanggalInput,
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
-                    decoration: CustomTheme()
-                        .inputDateDecoration(hintTextString: 'Pilih tanggal'),
-                    keyboardType: TextInputType.datetime,
                     readOnly: true,
+                    decoration: CustomTheme().inputDateDecoration(
+                      hintTextString: 'Pilih tanggal',
+                      hasValue: dariTanggalInput.text.isNotEmpty,
+                      onPressClear: () {
+                        setState(() {
+                          dariTanggalInput.clear();
+                          widget.onHandleFilter('start_date', '');
+                        });
+                      },
+                    ),
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime(2020),
                         lastDate: DateTime(2101),
-                        builder: (context, child) {
-                          return Theme(
-                            data: ThemeData.light().copyWith(
-                              colorScheme: ColorScheme.light(
-                                primary: CustomTheme().colors('base'),
-                                onPrimary: Colors.white,
-                                onSurface: Colors.black87,
-                              ),
-                            ),
-                            child: child!,
-                          );
-                        },
                       );
 
                       if (pickedDate != null) {
-                        String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(pickedDate);
                         setState(() {
-                          dariTanggalInput.text = formattedDate;
-                          widget.onHandleFilter('start_date', formattedDate);
+                          String formatted =
+                              DateFormat('yyyy-MM-dd').format(pickedDate);
+                          dariTanggalInput.text = formatted;
+                          widget.onHandleFilter('start_date', formatted);
                         });
                       }
                     },
@@ -294,39 +186,31 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                   label: 'Sampai Tanggal',
                   formControl: TextFormField(
                     controller: sampaiTanggalInput,
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
-                    decoration: CustomTheme()
-                        .inputDateDecoration(hintTextString: 'Pilih tanggal'),
-                    keyboardType: TextInputType.datetime,
                     readOnly: true,
+                    decoration: CustomTheme().inputDateDecoration(
+                      hintTextString: 'Pilih tanggal',
+                      hasValue: sampaiTanggalInput.text.isNotEmpty,
+                      onPressClear: () {
+                        setState(() {
+                          sampaiTanggalInput.clear();
+                          widget.onHandleFilter('end_date', '');
+                        });
+                      },
+                    ),
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime(2020),
                         lastDate: DateTime(2101),
-                        builder: (context, child) {
-                          return Theme(
-                            data: ThemeData.light().copyWith(
-                              colorScheme: ColorScheme.light(
-                                primary: CustomTheme().colors('base'),
-                                onPrimary: Colors.white,
-                                onSurface: Colors.black87,
-                              ),
-                            ),
-                            child: child!,
-                          );
-                        },
                       );
 
                       if (pickedDate != null) {
-                        String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(pickedDate);
                         setState(() {
-                          sampaiTanggalInput.text = formattedDate;
-                          widget.onHandleFilter('end_date', formattedDate);
+                          String formatted =
+                              DateFormat('yyyy-MM-dd').format(pickedDate);
+                          sampaiTanggalInput.text = formatted;
+                          widget.onHandleFilter('end_date', formatted);
                         });
                       }
                     },
@@ -343,6 +227,9 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
               final result = await showDialog<List<Map<String, dynamic>>>(
                 context: context,
                 builder: (_) {
+                  List<dynamic> filteredList = List.from(statusOption);
+                  Timer? debounce;
+
                   return Dialog(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),
@@ -356,10 +243,29 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                       ),
                       child: StatefulBuilder(
                         builder: (context, setState) {
+                          void runSearch(String value) {
+                            if (debounce?.isActive ?? false) debounce!.cancel();
+
+                            debounce =
+                                Timer(const Duration(milliseconds: 300), () {
+                              setState(() {
+                                if (value.isEmpty) {
+                                  filteredList = List.from(statusOption);
+                                } else {
+                                  filteredList = statusOption
+                                      .where((e) => e['label']
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase()))
+                                      .toList();
+                                }
+                              });
+                            });
+                          }
+
                           return Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // 🔹 Header
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Column(
@@ -386,45 +292,35 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                                 BorderRadius.circular(4),
                                           ),
                                         ),
-                                        onChanged: (value) {
-                                          _searchDataOption(value);
-                                        },
+                                        onChanged: runSearch,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-
-                              // 🔹 List of Options
                               Expanded(
                                 child: Scrollbar(
                                   thickness: 4,
                                   child: ListView.separated(
-                                    physics:
-                                        const AlwaysScrollableScrollPhysics(),
-                                    itemCount: statusOption.length,
+                                    itemCount: filteredList.length,
                                     itemBuilder: (context, index) {
-                                      final status = statusOption[index];
-                                      final isSelected =
-                                          selectedStatuses.contains(status);
+                                      final item = filteredList[index];
+                                      final isSelected = selectedStatuses.any(
+                                          (s) => s['value'] == item['value']);
 
                                       return CheckboxListTile(
                                         value: isSelected,
-                                        title: Text(
-                                          status['label'],
-                                          style: TextStyle(
-                                            fontWeight: isSelected
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                          ),
-                                        ),
+                                        title: Text(item['label']),
                                         activeColor: Colors.green,
                                         onChanged: (checked) {
                                           setState(() {
                                             if (checked == true) {
-                                              selectedStatuses.add(status);
+                                              selectedStatuses.add(item);
                                             } else {
-                                              selectedStatuses.remove(status);
+                                              selectedStatuses.removeWhere(
+                                                  (s) =>
+                                                      s['value'] ==
+                                                      item['value']);
                                             }
                                           });
                                         },
@@ -435,8 +331,6 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                   ),
                                 ),
                               ),
-
-                              // 🔹 Footer (Buttons)
                               Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Row(
@@ -444,15 +338,19 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                   children: [
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.pop(context); // cancel
+                                        setState(() {
+                                          selectedStatuses.clear();
+                                          filteredList =
+                                              List.from(statusOption);
+                                        });
                                       },
-                                      child: const Text('Batal'),
+                                      child: const Text('Reset'),
                                     ),
                                     const SizedBox(width: 8),
                                     ElevatedButton(
                                       onPressed: () {
-                                        Navigator.pop(context,
-                                            selectedStatuses); // return selected
+                                        Navigator.pop(
+                                            context, selectedStatuses);
                                       },
                                       child: const Text('Simpan'),
                                     ),
@@ -494,165 +392,6 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
             onSelectionChanged: (selected) {
               widget.onHandleFilter(
                   "status", selected.map((e) => e['value']).join(","));
-            },
-          ),
-          FilterSelectForm(
-            label: "Operator",
-            onTap: () async {
-              final result = await showDialog<List<Map<String, dynamic>>>(
-                context: context,
-                builder: (_) {
-                  return Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.85,
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: StatefulBuilder(
-                        builder: (context, setState) {
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // 🔹 Header
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      "Pilih Operator",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    SizedBox(
-                                      height: 40,
-                                      child: TextFormField(
-                                        decoration: InputDecoration(
-                                          hintText: 'Pencarian...',
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 12),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                          ),
-                                        ),
-                                        onChanged: (value) {
-                                          _searchDataOption(value);
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              // 🔹 List of Options
-                              Expanded(
-                                child: Scrollbar(
-                                  thickness: 4,
-                                  child: ListView.separated(
-                                    physics:
-                                        const AlwaysScrollableScrollPhysics(),
-                                    itemCount: operatorOption.length,
-                                    itemBuilder: (context, index) {
-                                      final user = operatorOption[index];
-                                      final isSelected =
-                                          selectedOperators.contains(user);
-
-                                      return CheckboxListTile(
-                                        value: isSelected,
-                                        title: Text(
-                                          user['label'],
-                                          style: TextStyle(
-                                            fontWeight: isSelected
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                          ),
-                                        ),
-                                        activeColor: Colors.green,
-                                        onChanged: (checked) {
-                                          setState(() {
-                                            if (checked == true) {
-                                              selectedOperators.add(user);
-                                            } else {
-                                              selectedOperators.remove(user);
-                                            }
-                                          });
-                                        },
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) =>
-                                        const Divider(height: 0.5),
-                                  ),
-                                ),
-                              ),
-
-                              // 🔹 Footer (Buttons)
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context); // cancel
-                                      },
-                                      child: const Text('Batal'),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context,
-                                            selectedOperators); // return selected
-                                      },
-                                      child: const Text('Simpan'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                },
-              );
-
-              if (result != null) {
-                setState(() {
-                  selectedOperators = result;
-                });
-                widget.onHandleFilter(
-                    "user_id", result.map((e) => e['value']).join(","));
-              }
-            },
-            selectedItems: selectedOperators,
-            required: false,
-            onRemoveItem: (item) {
-              setState(() {
-                selectedOperators.remove(item);
-              });
-              widget.onHandleFilter("user_id",
-                  selectedOperators.map((e) => e['value']).join(","));
-            },
-            onClearAll: () {
-              setState(() {
-                selectedOperators.clear();
-              });
-              widget.onHandleFilter("user_id", "");
-            },
-            onSelectionChanged: (selected) {
-              widget.onHandleFilter(
-                  "user_id", selected.map((e) => e['value']).join(","));
             },
           ),
         ].separatedBy(SizedBox(

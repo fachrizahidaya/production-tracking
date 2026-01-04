@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/helpers/service/create_process.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/screens/master/create_process.dart';
 import 'package:textile_tracking/models/process/packing.dart';
 import 'package:textile_tracking/screens/packing/create/create_packing_manual.dart';
 
@@ -35,10 +38,12 @@ class CreatePacking extends StatelessWidget {
     final message = await Provider.of<PackingService>(context, listen: false)
         .addItem(packing, isLoading);
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-
     Navigator.pushNamedAndRemoveUntil(context, '/packings', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Packing Dimulai', message: message);
+    });
   }
 
   @override

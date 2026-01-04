@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/helpers/service/create_process.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/screens/master/create_process.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
 import 'package:textile_tracking/screens/long-sitting/create/create_long_sitting_manual.dart';
 
@@ -36,11 +39,13 @@ class CreateLongSitting extends StatelessWidget {
         await Provider.of<LongSittingService>(context, listen: false)
             .addItem(longSitting, isLoading);
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-
     Navigator.pushNamedAndRemoveUntil(
         context, '/long-sittings', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Long Sitting Dimulai', message: message);
+    });
   }
 
   @override

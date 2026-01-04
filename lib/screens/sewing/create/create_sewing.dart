@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/helpers/service/create_process.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/screens/master/create_process.dart';
 import 'package:textile_tracking/models/process/sewing.dart';
 import 'package:textile_tracking/screens/sewing/create/create_sewing_manual.dart';
 
@@ -37,10 +40,12 @@ class CreateSewing extends StatelessWidget {
     final message = await Provider.of<SewingService>(context, listen: false)
         .addItem(sewing, isLoading);
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-
     Navigator.pushNamedAndRemoveUntil(context, '/sewings', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Sewing Dimulai', message: message);
+    });
   }
 
   @override

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/create_process_manual.dart';
+import 'package:textile_tracking/screens/master/create_process_manual.dart';
 
 class CreateLongSittingManual extends StatelessWidget {
   final dynamic id;
@@ -19,12 +19,12 @@ class CreateLongSittingManual extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CreateProcessManual(
-      title: 'Mulai Long Sitting',
+      title: 'Mulai Long Slitting',
       id: id,
+      label: 'Long Slitting',
       data: data,
       form: form,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchLongSittingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsLongSitting(),

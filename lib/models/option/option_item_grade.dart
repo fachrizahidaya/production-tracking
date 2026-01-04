@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -29,11 +31,10 @@ class OptionItemGrade {
 }
 
 class OptionItemGradeService extends BaseService<OptionItemGrade> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/item-grade/option';
+  final String baseUrl = '${dotenv.env['API_URL']}/item-grade/option';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
-  int _currentPage = 1;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
 
@@ -58,10 +59,10 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
 
   @override
   Future<void> addItem(
-      OptionItemGrade newWo, ValueNotifier<bool> isSubmitting) async {}
+      OptionItemGrade item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
-  Future<void> updateItem(String id, OptionItemGrade updatedWo,
+  Future<void> updateItem(String id, OptionItemGrade item,
       ValueNotifier<bool> isSubmitting) async {}
 
   @override
@@ -75,7 +76,6 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
     if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
-      _currentPage = 1;
       _hasMoreData = true;
       _ig.clear();
     }
@@ -88,7 +88,7 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
       final token = prefs.getString('access_token');
       if (token == null) throw Exception('Access token is missing');
 
-      final uri = Uri.parse('${dotenv.env['API_URL_DEV']}/item-grade/option');
+      final uri = Uri.parse('${dotenv.env['API_URL']}/item-grade/option');
 
       final response = await http.get(uri, headers: {
         'Authorization': 'Bearer $token',

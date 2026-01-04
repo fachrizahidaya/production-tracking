@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/finish_process_manual.dart';
+import 'package:textile_tracking/screens/master/finish_process_manual.dart';
 import 'package:textile_tracking/models/process/packing.dart';
 
 class FinishPackingManual extends StatefulWidget {
@@ -28,6 +28,11 @@ class _FinishPackingManualState extends State<FinishPackingManual> {
 
   @override
   void initState() {
+    widget.form?['length'] ??= '0';
+    widget.form?['width'] ??= '0';
+    widget.form?['length_unit_id'] ??= 4;
+    widget.form?['width_unit_id'] ??= 4;
+
     super.initState();
   }
 
@@ -41,16 +46,18 @@ class _FinishPackingManualState extends State<FinishPackingManual> {
     return FinishProcessManual(
       title: 'Selesai Packing',
       id: widget.id,
+      label: 'Packing',
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchPackingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       processService: _packingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'packing_id',
       withItemGrade: true,
+      withQtyAndWeight: false,
+      forDyeing: false,
       fetchItemGrade: (service) => service.fetchOptions(),
       getItemGradeOptions: (service) => service.dataListOption,
       processId: widget.processId,

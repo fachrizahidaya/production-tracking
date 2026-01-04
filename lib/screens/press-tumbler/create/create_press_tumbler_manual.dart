@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/create_process_manual.dart';
+import 'package:textile_tracking/screens/master/create_process_manual.dart';
 
 class CreatePressTumblerManual extends StatelessWidget {
   final dynamic id;
@@ -19,12 +19,12 @@ class CreatePressTumblerManual extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CreateProcessManual(
-      title: 'Mulai Press Tumber',
+      title: 'Mulai Press',
+      label: 'Press',
       id: id,
       data: data,
       form: form,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchPressTumblerOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsPressTumbler(),

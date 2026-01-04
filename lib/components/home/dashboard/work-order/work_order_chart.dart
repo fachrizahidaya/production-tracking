@@ -1,66 +1,49 @@
-import 'package:easy_localization/easy_localization.dart';
+// ignore_for_file: prefer_typing_uninitialized_variables, deprecated_member_use
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/home/dashboard/dasboard_card.dart';
-import 'package:textile_tracking/components/master/form/group_form.dart';
+import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderChart extends StatefulWidget {
   final List<dynamic> data;
-  final onHandleFilter;
-  final dariTanggal;
-  final sampaiTanggal;
+  final filterWidget;
+  final handleRefetch;
+  final isFetching;
 
   const WorkOrderChart(
       {super.key,
       required this.data,
-      this.onHandleFilter,
-      this.dariTanggal,
-      this.sampaiTanggal});
+      this.filterWidget,
+      this.handleRefetch,
+      this.isFetching});
 
   @override
   State<WorkOrderChart> createState() => _WorkOrderChartState();
 }
 
 class _WorkOrderChartState extends State<WorkOrderChart> {
-  final double width = 14;
   List<BarChartGroupData> barGroups = [];
   double maxY = 0;
   int? touchedIndex;
 
-  final TextEditingController dariTanggalInput = TextEditingController();
-  final TextEditingController sampaiTanggalInput = TextEditingController();
-
   @override
   void initState() {
     super.initState();
-    _generateChartData();
-
-    dariTanggalInput.text = widget.dariTanggal;
-    sampaiTanggalInput.text = widget.sampaiTanggal;
   }
 
   @override
   void didUpdateWidget(covariant WorkOrderChart oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.dariTanggal != dariTanggalInput.text) {
-      dariTanggalInput.text = widget.dariTanggal;
-    }
-    if (widget.sampaiTanggal != sampaiTanggalInput.text) {
-      sampaiTanggalInput.text = widget.sampaiTanggal;
-    }
   }
 
   @override
   void dispose() {
-    dariTanggalInput.dispose();
-    sampaiTanggalInput.dispose();
     super.dispose();
   }
 
-  void _generateChartData() {
+  void _generateChartData(double barWidth, double barSpace) {
     barGroups.clear();
     double localMax = 0;
 
@@ -68,35 +51,40 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
       final item = widget.data[i];
       final completed = (item['completed'] ?? 0).toDouble();
       final inProgress = (item['inProgress'] ?? 0).toDouble();
+      final awaitingProgress = (item['waiting'] ?? 0).toDouble();
 
-      final processMax = completed > inProgress ? completed : inProgress;
+      final processMax = completed > inProgress
+          ? completed
+          : inProgress > awaitingProgress
+              ? inProgress
+              : awaitingProgress;
       if (processMax > localMax) localMax = processMax;
 
-      barGroups.add(makeGroupData(i, completed, inProgress));
+      barGroups.add(makeGroupData(
+          i, completed, inProgress, awaitingProgress, barWidth, barSpace));
     }
 
     maxY = localMax == 0 ? 1 : localMax + (localMax * 0.2);
   }
 
-  BarChartGroupData makeGroupData(int x, double y1, double y2) {
-    final bool isTouched = x == touchedIndex;
-
+  BarChartGroupData makeGroupData(
+    int x,
+    double y1,
+    double y2,
+    double y3,
+    double barWidth,
+    double barSpace,
+  ) {
     return BarChartGroupData(
       x: x,
-      barsSpace: 6,
+      barsSpace: barSpace,
       barRods: [
         BarChartRodData(
-          toY: y1,
-          color: isTouched ? const Color(0xFF34D399) : const Color(0xFF10B981),
-          width: width,
-          borderRadius: BorderRadius.circular(4),
-        ),
+            toY: y2, width: barWidth, color: const Color(0xfff18800)),
         BarChartRodData(
-          toY: y2,
-          color: isTouched ? const Color(0xFFFFB84D) : const Color(0xfff18800),
-          width: width,
-          borderRadius: BorderRadius.circular(4),
-        ),
+            toY: y3, width: barWidth, color: const Color(0xFF94a3b8)),
+        BarChartRodData(
+            toY: y1, width: barWidth, color: const Color(0xFF10B981)),
       ],
     );
   }
@@ -107,204 +95,245 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
     }
 
     final name = widget.data[value.toInt()]['name'] ?? '';
-    final bool isTouched = value.toInt() == touchedIndex;
+
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    final double barWidth = isPortrait ? 12 : 22;
+
+    final double groupWidth = (barWidth * 3) + ((isPortrait ? 4 : 6) * 2);
 
     return SideTitleWidget(
       meta: meta,
       space: 8,
       child: SizedBox(
-        width: 60,
-        child: Text(
-          name,
-          style: TextStyle(
-            color: isTouched ? Colors.white : const Color(0xff7589a2),
-            fontWeight: FontWeight.bold,
-            fontSize: 10,
+        width: groupWidth,
+        child: SizedBox(
+          width: groupWidth,
+          child: Text(
+            name,
+            style: const TextStyle(
+              color: Color(0xff7589a2),
+              fontWeight: FontWeight.bold,
+              fontSize: 11,
+            ),
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            softWrap: true,
           ),
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-          softWrap: false,
         ),
       ),
     );
   }
 
-  Future<void> _pickDate({
-    required TextEditingController controller,
-    required String type,
-  }) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: controller.text.isNotEmpty
-          ? DateTime.tryParse(controller.text) ?? DateTime.now()
-          : DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2101),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: CustomTheme().colors('base'),
-              onPrimary: Colors.white,
-              onSurface: Colors.black87,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (pickedDate != null) {
-      final formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-      setState(() {
-        controller.text = formattedDate;
-      });
-      widget.onHandleFilter(type, formattedDate);
+  void _openFilter() {
+    if (widget.filterWidget != null) {
+      showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        enableDrag: true,
+        isDismissible: true,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return widget.filterWidget!;
+        },
+      );
     }
   }
 
   Widget _buildDateFilterRow() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(8)),
+      child: IconButton(
+        icon: Stack(
+          children: [
+            const Icon(
+              Icons.tune,
+            ),
+          ],
+        ),
+        onPressed: () {
+          _openFilter();
+        },
+      ),
+    );
+  }
 
-    return SizedBox(
-      width: 400,
-      child: Row(
-        children: [
-          Expanded(
-            child: GroupForm(
-              label: 'Dari Tanggal',
-              formControl: TextFormField(
-                controller: dariTanggalInput,
-                style: const TextStyle(fontSize: 14),
-                decoration: CustomTheme().inputDateDecoration(
-                  hintTextString: 'Pilih tanggal',
-                ),
-                keyboardType: TextInputType.datetime,
-                readOnly: true,
-                onTap: () => _pickDate(
-                  controller: dariTanggalInput,
-                  type: 'dari_tanggal',
-                ),
-              ),
+  Widget _buildRefetchRow() {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(8)),
+      child: IconButton(
+        icon: Stack(
+          children: [
+            const Icon(
+              Icons.refresh_outlined,
             ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: GroupForm(
-              label: 'Sampai Tanggal',
-              formControl: TextFormField(
-                controller: sampaiTanggalInput,
-                style: const TextStyle(fontSize: 14),
-                decoration: CustomTheme().inputDateDecoration(
-                  hintTextString: 'Pilih tanggal',
-                ),
-                keyboardType: TextInputType.datetime,
-                readOnly: true,
-                onTap: () => _pickDate(
-                  controller: sampaiTanggalInput,
-                  type: 'sampai_tanggal',
-                ),
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
+        onPressed: () {
+          widget.handleRefetch();
+        },
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    final double barWidth = isPortrait ? 12 : 22;
+    final double barSpace = isPortrait ? 4 : 6;
+
+    _generateChartData(barWidth, barSpace);
+
     final bool allZero = widget.data.every((item) {
       final completed = (item['completed'] ?? 0).toDouble();
       final inProgress = (item['inProgress'] ?? 0).toDouble();
       return completed == 0 && inProgress == 0;
     });
 
-    final double chartRatio = allZero ? 3 : 2;
+    final double chartRatio = isPortrait ? 1.6 : (allZero ? 3 : 2);
 
-    return DasboardCard(
-      child: Padding(
-        padding: PaddingColumn.screen,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
+    return DashboardCard(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: CustomTheme().padding('card'),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Expanded(
-                  child: Text('Status Setiap Proses'),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Status Setiap Proses',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    Text(
+                      'Tracking progres setiap tahap Work Order',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ],
                 ),
-                _buildDateFilterRow(),
+                Row(
+                  children: [
+                    _buildRefetchRow(),
+                    _buildDateFilterRow(),
+                  ],
+                ),
               ],
             ),
-            AspectRatio(
-              aspectRatio: chartRatio,
-              child: BarChart(
-                BarChartData(
-                  maxY: maxY,
-                  barGroups: barGroups,
-                  barTouchData: BarTouchData(
-                    enabled: true,
-                    touchCallback: (FlTouchEvent event, response) {
-                      if (!event.isInterestedForInteractions ||
-                          response == null ||
-                          response.spot == null) {
-                        setState(() => touchedIndex = null);
-                        return;
-                      }
-                      setState(() {
-                        touchedIndex = response.spot!.touchedBarGroupIndex;
-                      });
-                    },
-                  ),
-                  gridData: FlGridData(
-                    show: true,
-                    drawHorizontalLine: false,
-                    drawVerticalLine: true,
-                    getDrawingHorizontalLine: (value) {
-                      if (value == 0 || value == maxY) {
-                        return FlLine(
-                          color: Colors.grey.withOpacity(0.3),
-                          strokeWidth: 1,
-                        );
-                      }
-                      return FlLine(
-                        color: Colors.transparent,
-                        strokeWidth: 0,
-                      );
-                    },
-                  ),
-                  titlesData: FlTitlesData(
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: bottomTitles,
-                        reservedSize: 50,
-                      ),
-                    ),
-                    leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
-                    topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
-                  ),
-                  borderData: FlBorderData(show: false),
+          ),
+          Divider(),
+          Column(
+            children: [
+              AspectRatio(
+                aspectRatio: chartRatio,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: widget.isFetching
+                      ? Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        )
+                      : BarChart(
+                          BarChartData(
+                            maxY: maxY,
+                            barGroups: barGroups,
+                            barTouchData: BarTouchData(
+                              enabled: true,
+                              touchCallback: (FlTouchEvent event, response) {
+                                if (!event.isInterestedForInteractions ||
+                                    response == null ||
+                                    response.spot == null) {
+                                  setState(() => touchedIndex = null);
+                                  return;
+                                }
+                                setState(() {
+                                  touchedIndex =
+                                      response.spot!.touchedBarGroupIndex;
+                                });
+                              },
+                            ),
+                            gridData: FlGridData(
+                              show: true,
+                              drawHorizontalLine: false,
+                              drawVerticalLine: false,
+                              getDrawingHorizontalLine: (value) {
+                                if (value == 0 || value == maxY) {
+                                  return FlLine(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    strokeWidth: 1,
+                                  );
+                                }
+                                return FlLine(
+                                  color: Colors.transparent,
+                                  strokeWidth: 0,
+                                );
+                              },
+                            ),
+                            titlesData: FlTitlesData(
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  getTitlesWidget: bottomTitles,
+                                  reservedSize: 50,
+                                ),
+                              ),
+                              leftTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 40,
+                                  getTitlesWidget: (value, meta) {
+                                    return Text(
+                                      value.toInt().toString(),
+                                      style: const TextStyle(
+                                        color: Color(0xff7589a2),
+                                        fontSize: 12,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              rightTitles: const AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                              topTitles: const AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                            ),
+                            borderData: FlBorderData(show: false),
+                          ),
+                        ),
                 ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildLegendItem(const Color(0xFF10B981), 'Selesai'),
-                const SizedBox(width: 16),
-                _buildLegendItem(const Color(0xfff18800), 'Diproses'),
-              ],
-            ),
-          ].separatedBy(const SizedBox(height: 16)),
-        ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildLegendItem(const Color(0xfff18800), 'Diproses'),
+                    _buildLegendItem(
+                        const Color(0xFF94a3b8), 'Menunggu Diproses'),
+                    _buildLegendItem(const Color(0xFF10B981), 'Selesai'),
+                  ].separatedBy(SizedBox(
+                    width: 16,
+                  )),
+                ),
+              ),
+            ].separatedBy(SizedBox(
+              height: 16,
+            )),
+          ),
+        ].separatedBy(const SizedBox(height: 16)),
       ),
     );
   }
@@ -320,7 +349,6 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
             borderRadius: BorderRadius.circular(3),
           ),
         ),
-        const SizedBox(width: 6),
         Text(
           text,
           style: const TextStyle(
@@ -329,7 +357,9 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
             fontWeight: FontWeight.w500,
           ),
         ),
-      ],
+      ].separatedBy(SizedBox(
+        width: 8,
+      )),
     );
   }
 }

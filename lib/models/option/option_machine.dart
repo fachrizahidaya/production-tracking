@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides, prefer_final_fields
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -53,11 +55,11 @@ class OptionMachineService extends BaseService<OptionMachine> {
 
   @override
   Future<void> addItem(
-      OptionMachine newMachine, ValueNotifier<bool> isSubmitting) async {}
+      OptionMachine item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
-  Future<void> updateItem(String id, OptionMachine updatedMachine,
-      ValueNotifier<bool> isSubmitting) async {}
+  Future<void> updateItem(
+      String id, OptionMachine item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -78,7 +80,7 @@ class OptionMachineService extends BaseService<OptionMachine> {
       final token = prefs.getString('access_token');
       if (token == null) throw Exception('Access token is missing');
 
-      final uri = Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
+      final uri = Uri.parse('${dotenv.env['API_URL']}/machine/option')
           .replace(queryParameters: {
         if (process != null && process.isNotEmpty) 'process': process,
         if (searchQuery.isNotEmpty) 'search': searchQuery,
@@ -119,7 +121,11 @@ class OptionMachineService extends BaseService<OptionMachine> {
   }
 
   Future<void> fetchOptionsPressTumbler() async {
-    await _fetchOptionsGeneric(process: 'press_tumbler');
+    await _fetchOptionsGeneric(process: 'press');
+  }
+
+  Future<void> fetchOptionsTumbler() async {
+    await _fetchOptionsGeneric(process: 'tumbler');
   }
 
   Future<void> fetchOptionsStenter() async {

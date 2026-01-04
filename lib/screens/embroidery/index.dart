@@ -1,16 +1,19 @@
+// ignore_for_file: prefer_final_fields, use_build_context_synchronously
+
 import 'dart:async';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
+import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/layout/custom_badge.dart';
-import 'package:textile_tracking/components/master/layout/item_process_card.dart';
-import 'package:textile_tracking/components/master/layout/process_list.dart';
+import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/layout/card/custom_badge.dart';
+import 'package:textile_tracking/components/master/layout/card/item_process_card.dart';
+import 'package:textile_tracking/components/master/layout/list/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_date_safe.dart';
+import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/embroidery.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/embroidery/%5Bembroidery_id%5D.dart';
@@ -27,21 +30,21 @@ class EmbroideryScreen extends StatefulWidget {
 class _EmbroideryScreenState extends State<EmbroideryScreen> {
   final MenuService _menuService = MenuService();
   final UserMenu _userMenu = UserMenu();
-  bool _isFiltered = false;
-  bool avaiableCreate = false;
-  bool _firstLoading = true;
-  final List<dynamic> _dataList = [];
 
+  bool _isFiltered = false;
+  bool _firstLoading = true;
   bool _hasMore = true;
   bool _canRead = false;
   bool _canCreate = false;
   bool _canDelete = false;
   bool _canUpdate = false;
-  bool _isLoading = false;
+  bool _isLoadMore = false;
+
+  final List<dynamic> _dataList = [];
   String _search = '';
-  Timer? _debounce;
-  int page = 0;
   Map<String, String> params = {'search': '', 'page': '0'};
+
+  Timer? _debounce;
 
   String dariTanggal = '';
   String sampaiTanggal = '';
@@ -49,18 +52,13 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
-    final firstDayOfMonth = DateTime(now.year, now.month, 1);
-    final today = now;
 
-    dariTanggal = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
-    sampaiTanggal = DateFormat('yyyy-MM-dd').format(today);
     setState(() {
       params = {
         'search': _search,
         'page': '0',
-        'start_date': dariTanggal,
-        'end_date': sampaiTanggal,
+        'start_date': '',
+        'end_date': '',
       };
     });
     Future.delayed(Duration.zero, () {
@@ -69,20 +67,33 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
     _intializeMenus();
   }
 
-  Future<void> _intializeMenus() async {
-    try {
-      await _menuService.handleFetchMenu();
-      await _userMenu.handleLoadMenu();
+  bool _checkIsFiltered() {
+    final filterKeys = [
+      'status',
+      'user_id',
+      'start_date',
+      'end_date',
+    ];
 
-      setState(() {
-        _canRead = _userMenu.checkMenu('Bordir (Embroidery)', 'read');
-        _canCreate = _userMenu.checkMenu('Bordir (Embroidery)', 'create');
-        _canDelete = _userMenu.checkMenu('Bordir (Embroidery)', 'delete');
-        _canUpdate = _userMenu.checkMenu('Bordir (Embroidery)', 'update');
-      });
-    } catch (e) {
-      throw Exception('Error initializing menus: $e');
+    for (var key in filterKeys) {
+      if (params[key] != null && params[key]!.isNotEmpty) {
+        return true;
+      }
     }
+
+    return false;
+  }
+
+  Future<void> _intializeMenus() async {
+    await _menuService.handleFetchMenu();
+    await _userMenu.handleLoadMenu();
+
+    setState(() {
+      _canRead = _userMenu.checkMenu('Embroidery', 'read');
+      _canCreate = _userMenu.checkMenu('Embroidery', 'create');
+      _canDelete = _userMenu.checkMenu('Embroidery', 'delete');
+      _canUpdate = _userMenu.checkMenu('Embroidery', 'update');
+    });
   }
 
   Future<void> _handleSearch(String value) async {
@@ -90,7 +101,9 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
 
     _debounce = Timer(const Duration(milliseconds: 500), () {
       setState(() {
-        params = {'search': value, 'page': '0'};
+        _search = value;
+        params['search'] = value;
+        params['page'] = '0';
       });
       _loadMore();
     });
@@ -106,30 +119,21 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
       }
     });
 
-    if (params['start_date'] == null &&
-        params['end_date'] == null &&
-        params['user_id'] == null &&
-        params['status'] == null) {
-      setState(() {
-        _isFiltered = false;
-      });
-    } else {
-      setState(() {
-        _isFiltered = true;
-      });
-    }
+    _isFiltered = _checkIsFiltered();
 
     _loadMore();
   }
 
   Future<void> _submitFilter() async {
     Navigator.pop(context);
+    setState(() {
+      _isFiltered = _checkIsFiltered();
+    });
     _loadMore();
   }
 
   Future<void> _loadMore() async {
-    if (_isLoading) return;
-    _isLoading = true;
+    _isLoadMore = true;
 
     if (params['page'] == '0') {
       setState(() {
@@ -139,40 +143,42 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
       });
     }
 
-    final currentPage = int.parse(params['page']!);
+    String newPage = (int.parse(params['page']!) + 1).toString();
+    setState(() {
+      params['page'] = newPage;
+    });
 
-    try {
-      List<Embroidery> loadData =
-          await Provider.of<EmbroideryService>(context, listen: false)
-              .getDataList(params);
+    await Provider.of<EmbroideryService>(context, listen: false)
+        .getDataList(params);
 
-      if (loadData.isEmpty) {
-        setState(() {
-          _firstLoading = false;
-          _hasMore = false;
-        });
-      } else {
-        setState(() {
-          _dataList.addAll(loadData);
-          _firstLoading = false;
-          params['page'] = (currentPage + 1).toString();
-          if (loadData.length < 20) {
-            _hasMore = false;
-          }
-        });
-      }
-    } finally {
-      _isLoading = false;
+    List<dynamic> loadData =
+        Provider.of<EmbroideryService>(context, listen: false).items;
+
+    if (loadData.isEmpty) {
+      setState(() {
+        _firstLoading = false;
+        _isLoadMore = false;
+        _hasMore = false;
+      });
+    } else {
+      setState(() {
+        _dataList.addAll(loadData);
+        _firstLoading = false;
+        _isLoadMore = false;
+      });
     }
   }
 
   _refetch() {
-    Future.delayed(Duration.zero, () {
-      setState(() {
-        params = {'search': _search, 'page': '0'};
-      });
-      _loadMore();
+    setState(() {
+      params = {
+        'search': _search,
+        'page': '0',
+        'start_date': dariTanggal,
+        'end_date': sampaiTanggal,
+      };
     });
+    _loadMore();
   }
 
   @override
@@ -183,16 +189,13 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
+        backgroundColor: Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: 'Embroidery',
           onReturn: () {
@@ -208,14 +211,16 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
             Expanded(
                 child: ProcessList(
               fetchData: (params) async {
-                return await Provider.of<EmbroideryService>(context,
-                        listen: false)
-                    .getDataList(params);
+                final service =
+                    Provider.of<EmbroideryService>(context, listen: false);
+                await service.getDataList(params);
+                return service.items;
               },
               service: EmbroideryService(),
               searchQuery: _search,
               canCreate: _canCreate,
               canRead: _canRead,
+              isLoadMore: _isLoadMore,
               itemBuilder: (item) => ItemProcessCard(
                 useCustomSize: true,
                 customWidth: 930.0,
@@ -225,28 +230,24 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
                 titleKey: 'emb_no',
                 subtitleKey: 'work_orders',
                 subtitleField: 'wo_no',
-                isRework: (item) => item.rework == false,
-                getStartTime: (item) => formatDateSafe(item.start_time),
-                getEndTime: (item) => formatDateSafe(item.end_time),
-                getStartBy: (item) => item.start_by?['name'] ?? '',
-                getEndBy: (item) => item.end_by?['name'] ?? '',
-                getStatus: (item) => item.status ?? '-',
+                isRework: (item) => item['rework'] == false,
+                getStartTime: (item) => formatDateSafe(item['start_time']),
+                getEndTime: (item) => formatDateSafe(item['end_time']),
+                getStartBy: (item) => item['start_by']?['name'] ?? '',
+                getEndBy: (item) => item['end_by']?['name'] ?? '',
+                getStatus: (item) => item['status'] ?? '-',
+                itemField: ItemField.get,
+                nestedField: ItemField.nested,
                 customBadgeBuilder: (status) => CustomBadge(
-                    title: status,
-                    withStatus: true,
-                    status: item.status,
-                    withDifferentColor: true,
-                    color: status == 'Diproses'
-                        ? Color(0xFFfff3c6)
-                        : Color(0xffd1fae4)),
+                    withStatus: true, status: status, title: item['status']!),
               ),
               onItemTap: (context, item) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => EmbroideryDetail(
-                        id: item.id.toString(),
-                        no: item.emb_no.toString(),
+                        id: item['id'].toString(),
+                        no: item['emb_no'].toString(),
                         canDelete: _canDelete,
                         canUpdate: _canUpdate,
                       ),
@@ -265,55 +266,9 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
                 onSubmitFilter: () {
                   _submitFilter();
                 },
+                dariTanggal: dariTanggal,
+                sampaiTanggal: sampaiTanggal,
               ),
-              showActions: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: Icon(Icons.add,
-                                  color: CustomTheme().buttonColor('primary')),
-                              title: const Text("Mulai Embroidery"),
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CreateEmbroidery(),
-                                  ),
-                                );
-                              },
-                            ),
-                            ListTile(
-                              leading: Icon(Icons.check_circle,
-                                  color: CustomTheme().buttonColor('warning')),
-                              title: const Text("Selesai Embroidery"),
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const FinishEmbroidery(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
               firstLoading: _firstLoading,
               isFiltered: _isFiltered,
               hasMore: _hasMore,
@@ -324,64 +279,45 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
             ))
           ],
         ),
-        bottomNavigationBar: isPortrait
-            ? CustomFloatingButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                leading: Icon(Icons.add,
-                                    color:
-                                        CustomTheme().buttonColor('primary')),
-                                title: const Text("Mulai Embroidery"),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CreateEmbroidery(),
-                                    ),
-                                  );
-                                },
-                              ),
-                              ListTile(
-                                leading: Icon(Icons.check_circle,
-                                    color:
-                                        CustomTheme().buttonColor('warning')),
-                                title: const Text("Selesai Embroidery"),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const FinishEmbroidery(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
+        floatingActionButton: CustomFloatingButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  final actions = [
+                    DialogActionItem(
+                      icon: Icons.add,
+                      iconColor: CustomTheme().buttonColor('primary'),
+                      title: 'Mulai Embroidery',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const CreateEmbroidery(),
                           ),
-                        ),
-                      );
-                    },
-                  );
+                        );
+                      },
+                    ),
+                    DialogActionItem(
+                      icon: Icons.check_circle,
+                      iconColor: CustomTheme().buttonColor('warning'),
+                      title: 'Selesai Embroidery',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const FinishEmbroidery(),
+                          ),
+                        );
+                      },
+                    ),
+                  ];
+                  return ActionDialog(actions: actions);
                 },
-                icon: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 128,
-                ))
-            : null,
+              );
+            },
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+            )),
       ),
     );
   }

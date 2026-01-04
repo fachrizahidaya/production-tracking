@@ -11,7 +11,7 @@ class MenuService {
     try {
       String? token = await Storage.instance.getAccessToken();
 
-      final url = Uri.parse('${dotenv.env['API_URL_DEV']}/menus');
+      final url = Uri.parse('${dotenv.env['API_URL']}/menus');
       final response = await http.get(url, headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',

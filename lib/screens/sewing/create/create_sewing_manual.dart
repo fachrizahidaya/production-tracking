@@ -1,5 +1,7 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/create_process_manual.dart';
+import 'package:textile_tracking/screens/master/create_process_manual.dart';
 
 class CreateSewingManual extends StatelessWidget {
   final dynamic id;
@@ -23,12 +25,12 @@ class CreateSewingManual extends StatelessWidget {
     return CreateProcessManual(
       title: 'Mulai Sewing',
       id: id,
+      label: 'Sewing',
       data: data,
       form: form,
       maklon: _maklonController,
       isMaklon: true,
       handleSubmit: handleSubmit,
-      machineFilterValue: '2',
       fetchWorkOrder: (service) => service.fetchSewingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsSewing(),

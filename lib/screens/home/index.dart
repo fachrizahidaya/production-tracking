@@ -1,7 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:textile_tracking/components/master/layout/app_drawer.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/layout/drawer/app_drawer.dart';
+import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -36,7 +38,7 @@ class _HomeState extends State<Home> {
 
   Future<void> _handleExit(
       BuildContext context, ValueNotifier<bool> isLoading) async {
-    String url = '${dotenv.env['API_URL_DEV']}/logout';
+    String url = '${dotenv.env['API_URL']}/logout';
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('access_token');

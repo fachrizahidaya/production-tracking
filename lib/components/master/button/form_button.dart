@@ -18,15 +18,11 @@ class FormButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        child: ElevatedButton(
+    return ElevatedButton(
       onPressed: isDisabled || isLoading ? null : onPressed,
-      style: ElevatedButton.styleFrom(
-          backgroundColor: isDisabled || isLoading
-              ? CustomTheme().buttonColor('In Progress')
-              : (backgroundColor ?? CustomTheme().buttonColor('primary')),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
+      style: isDisabled || isLoading
+          ? CustomTheme().disabledButton()
+          : CustomTheme().primaryButton(),
       child: isLoading
           ? SizedBox(
               height: 20,
@@ -34,17 +30,13 @@ class FormButton extends StatelessWidget {
               child: CircularProgressIndicator(
                 strokeWidth: 2,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                    CustomTheme().colors('secondary')),
+                  CustomTheme().colors('secondary'),
+                ),
               ),
             )
           : Text(
               label,
-              style: TextStyle(
-                color: isDisabled
-                    ? CustomTheme().colors('secondary')
-                    : Colors.white,
-              ),
             ),
-    ));
+    );
   }
 }

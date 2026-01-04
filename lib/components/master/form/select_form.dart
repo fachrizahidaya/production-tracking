@@ -9,6 +9,7 @@ class SelectForm extends StatefulWidget {
   final String selectedValue;
   final bool required;
   final bool? isDisabled;
+  final validator;
 
   const SelectForm(
       {super.key,
@@ -17,15 +18,14 @@ class SelectForm extends StatefulWidget {
       required this.selectedLabel,
       required this.selectedValue,
       required this.required,
-      this.isDisabled = false});
+      this.isDisabled = false,
+      this.validator});
 
   @override
   State<SelectForm> createState() => _SelectFormState();
 }
 
 class _SelectFormState extends State<SelectForm> {
-  final TextEditingController _textEditingController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return GroupForm(
@@ -33,16 +33,11 @@ class _SelectFormState extends State<SelectForm> {
       formControl: Stack(
         children: [
           TextFormField(
-            enabled: widget.isDisabled == true ? false : true,
-            controller: _textEditingController,
-            decoration: CustomTheme().inputDateDecoration(),
-            keyboardType: TextInputType.text,
-            validator: (value) {
-              if (widget.required && (value == null || value.isEmpty)) {
-                return '${widget.label} is required';
-              }
-              return null;
-            },
+            controller: TextEditingController(text: widget.selectedValue),
+            validator: widget.required ? widget.validator : null,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            decoration: CustomTheme().inputDateDecoration(hasValue: false),
+            style: const TextStyle(fontSize: 0, height: 0), // hide the text
           ),
           Positioned(
             top: 0.5,

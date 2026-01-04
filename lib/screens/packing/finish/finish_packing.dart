@@ -1,8 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/helpers/service/finish_process.dart';
-import 'package:textile_tracking/models/option/option_work_order.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/screens/master/finish_process.dart';
 import 'package:textile_tracking/models/process/packing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/packing/finish/finish_packing_manual.dart';
@@ -15,10 +17,6 @@ class FinishPacking extends StatefulWidget {
 }
 
 class _FinishPackingState extends State<FinishPacking> {
-  int number = 0;
-
-  late List<dynamic> workOrderOption = [];
-
   final Map<String, dynamic> _form = {
     'wo_id': null,
     'machine_id': null,
@@ -49,22 +47,10 @@ class _FinishPackingState extends State<FinishPacking> {
   @override
   void initState() {
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
-    _handleFetchWorkOrder();
     super.initState();
 
     setState(() {
       _form['end_by_id'] = loggedInUser?.id;
-    });
-  }
-
-  Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchPackingFinishOptions();
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
-
-    setState(() {
-      workOrderOption = result;
     });
   }
 
@@ -116,9 +102,12 @@ class _FinishPackingState extends State<FinishPacking> {
             await Provider.of<PackingService>(context, listen: false)
                 .finishItem(id, packing, isLoading);
 
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(message)));
         Navigator.pushNamedAndRemoveUntil(context, '/packings', (_) => false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showAlertDialog(
+              context: context, title: 'Packing Selesai', message: message);
+        });
       },
       fetchItemGrade: (service) => service.fetchOptions(),
       getItemGradeOptions: (service) => service.dataListOption,

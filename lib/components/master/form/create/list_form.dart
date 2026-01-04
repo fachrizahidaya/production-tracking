@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
-import 'package:textile_tracking/components/master/layout/custom_card.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ListForm extends StatefulWidget {
@@ -13,10 +13,7 @@ class ListForm extends StatefulWidget {
   final attachments;
   final selectWorkOrder;
   final selectMachine;
-  final isSubmitting;
-  final isFormIncomplete;
   final handleSubmit;
-  final handlePickAttachments;
   final isMaklon;
   final maklon;
   final withMaklonOrMachine;
@@ -31,10 +28,7 @@ class ListForm extends StatefulWidget {
       this.data,
       this.selectWorkOrder,
       this.selectMachine,
-      this.isSubmitting,
-      this.isFormIncomplete,
       this.handleSubmit,
-      this.handlePickAttachments,
       this.attachments,
       this.maklon,
       this.isMaklon = false,
@@ -58,17 +52,14 @@ class _ListFormState extends State<ListForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomCard(
-                child: Padding(
-              padding: PaddingColumn.screen,
-              child: SelectForm(
-                label: 'Work Order',
-                onTap: () => widget.selectWorkOrder(),
-                selectedLabel: widget.form?['no_wo'] ?? '',
-                selectedValue: widget.form?['wo_id']?.toString() ?? '',
-                required: true,
-              ),
+                child: SelectForm(
+              label: 'Work Order',
+              onTap: () => widget.selectWorkOrder(),
+              selectedLabel: widget.form?['no_wo'] ?? '',
+              selectedValue: widget.form?['wo_id']?.toString() ?? '',
+              required: true,
             )),
-          ].separatedBy(const SizedBox(height: 16)),
+          ],
         ),
       );
     }
@@ -80,166 +71,138 @@ class _ListFormState extends State<ListForm> {
         children: [
           if (widget.id == null)
             CustomCard(
-                child: Padding(
-              padding: PaddingColumn.screen,
-              child: SelectForm(
-                label: 'Work Order',
-                onTap: () => widget.selectWorkOrder(),
-                selectedLabel: widget.form?['no_wo'] ?? '',
-                selectedValue: widget.form?['wo_id']?.toString() ?? '',
-                required: true,
-              ),
+                child: SelectForm(
+              label: 'Work Order',
+              onTap: () => widget.selectWorkOrder(),
+              selectedLabel: widget.form?['no_wo'] ?? '',
+              selectedValue: widget.form?['wo_id']?.toString() ?? '',
+              required: true,
             )),
           if (widget.withOnlyMaklon == true)
             CustomCard(
-                child: Padding(
-              padding: PaddingColumn.screen,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Maklon',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Row(
-                    children: [
-                      Switch(
-                        value: _isMaklon,
-                        onChanged: (value) {
-                          setState(() {
-                            _isMaklon = value;
-                            widget.form['maklon'] = value;
-                          });
-                        },
-                        activeColor: Colors.green,
-                        inactiveThumbColor: Colors.redAccent,
-                      ),
-                      Text(_isMaklon ? 'Ya' : 'Tidak'),
-                    ].separatedBy(const SizedBox(width: 8)),
-                  ),
-                  // if (_isMaklon)
-                  //   TextForm(
-                  //     label: 'Nama Maklon',
-                  //     req: false,
-                  //     controller: widget.maklon,
-                  //     handleChange: (value) {
-                  //       setState(() {
-                  //         widget.maklon.text = value.toString();
-                  //         widget.form['maklon_name'] = value.toString();
-                  //       });
-                  //     },
-                  //   ),
-                ],
-              ),
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Maklon',
+                  style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
+                ),
+                Row(
+                  children: [
+                    Switch(
+                      value: _isMaklon,
+                      onChanged: (value) {
+                        setState(() {
+                          _isMaklon = value;
+                          widget.form['maklon'] = value;
+                        });
+                      },
+                      activeColor: Colors.green,
+                      inactiveThumbColor: Colors.redAccent,
+                    ),
+                    Text(_isMaklon ? 'Ya' : 'Tidak'),
+                  ].separatedBy(CustomTheme().hGap('lg')),
+                ),
+              ],
             ))
           else if (widget.withMaklonOrMachine == true)
             CustomCard(
-                child: Padding(
-                    padding: PaddingColumn.screen,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Maklon',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        Row(
-                          children: [
-                            Switch(
-                              value: _isMaklon,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isMaklon = value;
-                                  widget.form['maklon'] = value;
-                                });
-                              },
-                              activeColor: Colors.green,
-                              inactiveThumbColor: Colors.redAccent,
-                            ),
-                            Text(_isMaklon ? 'Ya' : 'Tidak'),
-                          ].separatedBy(const SizedBox(width: 8)),
-                        ),
-                        if (_isMaklon)
-                          TextForm(
-                            label: 'Nama Maklon',
-                            req: false,
-                            controller: widget.maklon,
-                            handleChange: (value) {
-                              setState(() {
-                                widget.maklon.text = value.toString();
-                                widget.form['maklon_name'] = value.toString();
-                              });
-                            },
-                          )
-                        else
-                          SelectForm(
-                            label: 'Mesin',
-                            onTap: () => widget.selectMachine(),
-                            selectedLabel: widget.form['nama_mesin'] ?? '',
-                            selectedValue: widget.form['machine_id'].toString(),
-                            required: true,
-                          ),
-                      ],
-                    )))
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Maklon',
+                  style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
+                ),
+                Row(
+                  children: [
+                    Switch(
+                      value: _isMaklon,
+                      onChanged: (value) {
+                        setState(() {
+                          _isMaklon = value;
+                          widget.form['maklon'] = value;
+                        });
+                      },
+                      activeColor: Colors.green,
+                      inactiveThumbColor: Colors.redAccent,
+                    ),
+                    Text(_isMaklon ? 'Ya' : 'Tidak'),
+                  ].separatedBy(CustomTheme().hGap('lg')),
+                ),
+                if (_isMaklon)
+                  TextForm(
+                    label: 'Nama Maklon',
+                    req: false,
+                    controller: widget.maklon,
+                    handleChange: (value) {
+                      setState(() {
+                        widget.maklon.text = value.toString();
+                        widget.form['maklon_name'] = value.toString();
+                      });
+                    },
+                  )
+                else
+                  SelectForm(
+                    label: 'Mesin',
+                    onTap: () => widget.selectMachine(),
+                    selectedLabel: widget.form['nama_mesin'] ?? '',
+                    selectedValue: widget.form['machine_id'].toString(),
+                    required: true,
+                  ),
+              ],
+            ))
           else if (widget.isMaklon == true)
             CustomCard(
-                child: Padding(
-                    padding: PaddingColumn.screen,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Maklon',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Switch(
-                              value: _isMaklon,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isMaklon = value;
-                                  widget.form['maklon'] = value;
-                                });
-                              },
-                              activeColor: Colors.green,
-                              inactiveThumbColor: Colors.redAccent,
-                            ),
-                            Text(_isMaklon ? 'Yes' : 'No'),
-                          ].separatedBy(const SizedBox(width: 8)),
-                        ),
-                      ],
-                    )))
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Maklon',
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('lg'),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Switch(
+                      value: _isMaklon,
+                      onChanged: (value) {
+                        setState(() {
+                          _isMaklon = value;
+                          widget.form['maklon'] = value;
+                        });
+                      },
+                      activeColor: Colors.green,
+                      inactiveThumbColor: Colors.redAccent,
+                    ),
+                    Text(_isMaklon ? 'Yes' : 'No'),
+                  ].separatedBy(CustomTheme().hGap('lg')),
+                ),
+              ],
+            ))
           else
             CustomCard(
-                child: Padding(
-              padding: PaddingColumn.screen,
-              child: SelectForm(
-                label: 'Mesin',
-                onTap: () => widget.selectMachine(),
-                selectedLabel: widget.form['nama_mesin'] ?? '',
-                selectedValue: widget.form['machine_id'].toString(),
-                required: true,
-              ),
+                child: SelectForm(
+              label: 'Mesin',
+              onTap: () => widget.selectMachine(),
+              selectedLabel: widget.form['nama_mesin'] ?? '',
+              selectedValue: widget.form['machine_id'].toString(),
+              required: true,
             )),
           if (_isMaklon && widget.withMaklonOrMachine != true)
             CustomCard(
-                child: Padding(
-              padding: PaddingColumn.screen,
-              child: TextForm(
-                label: 'Nama Maklon',
-                req: false,
-                controller: widget.maklon,
-                handleChange: (value) {
-                  setState(() {
-                    widget.form['maklon_name'] = value.toString();
-                  });
-                },
-              ),
+                child: TextForm(
+              label: 'Nama Maklon',
+              req: false,
+              controller: widget.maklon,
+              handleChange: (value) {
+                setState(() {
+                  widget.form['maklon_name'] = value.toString();
+                });
+              },
             )),
-        ],
+        ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
   }

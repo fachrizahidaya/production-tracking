@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -28,11 +30,10 @@ class OptionDyeing {
 }
 
 class OptionDyeingService extends BaseService<OptionDyeing> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/units';
+  final String baseUrl = '${dotenv.env['API_URL']}/units';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
-  int _currentPage = 1;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
   final List<OptionDyeing> _dyeing = [];
@@ -55,11 +56,11 @@ class OptionDyeingService extends BaseService<OptionDyeing> {
 
   @override
   Future<void> addItem(
-      OptionDyeing newDyeing, ValueNotifier<bool> isSubmitting) async {}
+      OptionDyeing item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
-  Future<void> updateItem(String id, OptionDyeing updatedDyeing,
-      ValueNotifier<bool> isSubmitting) async {}
+  Future<void> updateItem(
+      String id, OptionDyeing item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -71,7 +72,6 @@ class OptionDyeingService extends BaseService<OptionDyeing> {
     if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
-      _currentPage = 1;
       _hasMoreData = true;
       _dyeing.clear();
     }
@@ -87,11 +87,10 @@ class OptionDyeingService extends BaseService<OptionDyeing> {
         throw Exception('Access token is missing');
       }
 
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/dyeing/option'),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
+      final response = await http
+          .get(Uri.parse('${dotenv.env['API_URL']}/dyeing/option'), headers: {
+        'Authorization': 'Bearer $token',
+      });
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);

@@ -1,12 +1,15 @@
+// ignore_for_file: prefer_final_fields, use_build_context_synchronously
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/dyeing/rework/submit_section.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/screens/dyeing/rework/rework_dyeing_manual.dart';
 
@@ -69,7 +72,6 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
   Future<void> _handleFetchWorkOrder() async {
     await Provider.of<OptionWorkOrderService>(context, listen: false)
         .fetchReworkOptions();
-    // ignore: use_build_context_synchronously
     final result = Provider.of<OptionWorkOrderService>(context, listen: false)
         .dataListOption;
 
@@ -94,9 +96,8 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
           _isLoading = false;
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Work Order not found")),
-        );
+        showAlertDialog(
+            context: context, title: 'Error', message: "Work Order not found");
 
         return;
       }
@@ -113,7 +114,6 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
       });
 
       Navigator.push(
-        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
           builder: (context) => ReworkDyeingManual(
@@ -129,7 +129,6 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
       setState(() {
         _isLoading = false;
       });
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: ${e.toString()}")),
       );
@@ -169,19 +168,17 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
       final message = await Provider.of<DyeingService>(context, listen: false)
           .reworkItem(id, dyeing, _firstLoading);
 
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
-
       Navigator.pushNamedAndRemoveUntil(
-        // ignore: use_build_context_synchronously
         context,
         '/dyeings',
         (Route<dynamic> route) => false,
       );
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showAlertDialog(
+            context: context, title: 'Dyeing Dirework', message: message);
+      });
     } catch (e) {
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
       );

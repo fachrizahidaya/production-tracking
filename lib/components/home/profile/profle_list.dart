@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/layout/custom_card.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class ProfleList<T> extends StatefulWidget {
   final Future<List<T>> Function({bool isInitialLoad, String? searchQuery})?
@@ -121,14 +121,14 @@ class _ProfleListState<T> extends State<ProfleList<T>> {
           ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              padding: PaddingColumn.screen,
+              padding: CustomTheme().padding('card'),
               itemCount: _items.length + (_hasMoreData ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index < _items.length) {
                   final item = _items[index];
 
                   return Padding(
-                    padding: PaddingColumn.screen,
+                    padding: CustomTheme().padding('card'),
                     child: GestureDetector(
                       onTap: () => widget.onTapItem,
                       child: CustomCard(child: widget.itemBuilder(item)),

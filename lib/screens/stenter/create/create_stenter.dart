@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/helpers/service/create_process.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/screens/master/create_process.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
 import 'package:textile_tracking/screens/stenter/create/create_stenter_manual.dart';
 
@@ -35,10 +38,12 @@ class CreateStenter extends StatelessWidget {
     final message = await Provider.of<StenterService>(context, listen: false)
         .addItem(stenter, isLoading);
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-
     Navigator.pushNamedAndRemoveUntil(context, '/stenters', (route) => false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showAlertDialog(
+          context: context, title: 'Stenter Dimulai', message: message);
+    });
   }
 
   @override

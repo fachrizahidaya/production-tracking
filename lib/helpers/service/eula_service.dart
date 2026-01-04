@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:textile_tracking/models/master/eula_model.dart';
+import 'package:textile_tracking/models/auth/eula_model.dart';
 
 class EulaService {
   static Future<EulaModel> loadEula() async {

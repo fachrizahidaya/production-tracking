@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -29,11 +31,10 @@ class OptionWorkOrder {
 }
 
 class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/wo/option';
+  final String baseUrl = '${dotenv.env['API_URL']}/wo/option';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
-  int _currentPage = 1;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
 
@@ -58,10 +59,10 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
 
   @override
   Future<void> addItem(
-      OptionWorkOrder newWo, ValueNotifier<bool> isSubmitting) async {}
+      OptionWorkOrder item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
-  Future<void> updateItem(String id, OptionWorkOrder updatedWo,
+  Future<void> updateItem(String id, OptionWorkOrder item,
       ValueNotifier<bool> isSubmitting) async {}
 
   @override
@@ -75,7 +76,6 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
     if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
-      _currentPage = 1;
       _hasMoreData = true;
       _wo.clear();
     }
@@ -88,7 +88,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final token = prefs.getString('access_token');
       if (token == null) throw Exception('Access token is missing');
 
-      final uri = Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
+      final uri = Uri.parse('${dotenv.env['API_URL']}/wo/option')
           .replace(queryParameters: {
         if (type != null && type.isNotEmpty) 'type': type,
         if (searchQuery.isNotEmpty) 'search': searchQuery,
@@ -157,7 +157,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
   }) async {
     await _fetchOptionsGeneric(
       isInitialLoad: isInitialLoad,
-      type: 'press_tumbler',
+      type: 'press',
       searchQuery: searchQuery,
     );
   }
@@ -168,7 +168,29 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
   }) async {
     await _fetchOptionsGeneric(
       isInitialLoad: isInitialLoad,
-      type: 'press_tumbler_finish',
+      type: 'press_finish',
+      searchQuery: searchQuery,
+    );
+  }
+
+  Future<void> fetchTumblerOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'tumbler',
+      searchQuery: searchQuery,
+    );
+  }
+
+  Future<void> fetchTumblerFinishOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'tumbler_finish',
       searchQuery: searchQuery,
     );
   }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/home/dashboard/dasboard_card.dart';
-import 'package:textile_tracking/components/master/layout/custom_badge.dart';
-import 'package:textile_tracking/helpers/util/margin_card.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/home/dashboard/card/stats_card.dart';
+import 'package:textile_tracking/components/master/layout/card/custom_badge.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderStats extends StatefulWidget {
@@ -15,232 +14,116 @@ class WorkOrderStats extends StatefulWidget {
 }
 
 class _WorkOrderStatsState extends State<WorkOrderStats> {
+  Color getBorderColor(int i) {
+    switch (i) {
+      case 0:
+        return CustomTheme().colors('primary');
+      case 1:
+        return Color(0xFF10b981);
+      case 2:
+        return Color(0xfff18800);
+      default:
+        return CustomTheme().colors('secondary');
+    }
+  }
+
+  Color getIconBgColor(int i) {
+    return getBorderColor(i);
+  }
+
+  IconData getIcon(int i) {
+    switch (i) {
+      case 0:
+        return Icons.work_outline;
+      case 1:
+        return Icons.task_alt_outlined;
+      case 2:
+        return Icons.access_time_outlined;
+      default:
+        return Icons.error_outline;
+    }
+  }
+
+  Color getBadgeColor(int i) {
+    switch (i) {
+      case 0:
+        return const Color(0xffdbeaff);
+      case 1:
+        return const Color(0xffd1fae4);
+      case 2:
+        return const Color(0xFFfff3c6);
+      default:
+        return const Color(0xFFf1f5f9);
+    }
+  }
+
+  Widget buildStatsCard(int i) {
+    final item = widget.data[i];
+
+    return StatsCard(
+      withBottomBorder: true,
+      bottomBorderColor: getBorderColor(i),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: getIconBgColor(i),
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                padding: CustomTheme().padding('badge'),
+                child: Icon(
+                  getIcon(i),
+                  color: Colors.white,
+                  size: CustomTheme().iconSize('2xl'),
+                ),
+              ),
+              Text(
+                item['value'].toString(),
+                style: TextStyle(
+                  fontSize: CustomTheme().fontSize('2xl'),
+                  fontWeight: CustomTheme().fontWeight('bold'),
+                ),
+              )
+            ].separatedBy(CustomTheme().hGap('lg')),
+          ),
+          CustomBadge(
+            title: item['label'],
+            withDifferentColor: true,
+            color: getBadgeColor(i),
+            withStatus: i == 0 ? false : true,
+            status: item['label'],
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 600;
+    final length = widget.data?.length ?? 0;
 
-    return !isMobile
-        ? Column(
+    if (length == 0) return const SizedBox();
+
+    return Column(
+      children: [
+        Row(
+          children: [
+            for (int i = 0; i < length && i < 2; i++)
+              Expanded(child: buildStatsCard(i))
+          ].separatedBy(CustomTheme().hGap('lg')),
+        ),
+        if (length > 2)
+          Row(
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  for (int i = 0; i < widget.data?.length && i < 2; i++)
-                    Expanded(
-                      flex: 1,
-                      child: DasboardCard(
-                          withBottomBorder: true,
-                          bottomBorderColor: i == 0
-                              ? Color(0xff3b82f6)
-                              : i == 1
-                                  ? Color(0xFF10b981)
-                                  : i == 2
-                                      ? Color(0xfff18800)
-                                      : Color(0xFF94a3b8),
-                          child: Padding(
-                            padding: PaddingColumn.screen,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          color: i == 0
-                                              ? Color(0xff3b82f6)
-                                              : i == 1
-                                                  ? Color(0xfff18800)
-                                                  : i == 2
-                                                      ? Color(0xFF10b981)
-                                                      : Color(0xFF94a3b8),
-                                          borderRadius:
-                                              BorderRadius.circular(4)),
-                                      padding: MarginCard.screen,
-                                      child: Icon(
-                                        i == 0
-                                            ? Icons.work_outline
-                                            : i == 1
-                                                ? Icons.task_alt_outlined
-                                                : i == 2
-                                                    ? Icons.access_time_outlined
-                                                    : Icons.error_outline,
-                                        color: Colors.white,
-                                        size: 24,
-                                      ),
-                                    ),
-                                    Text(
-                                      widget.data[i]['value'].toString(),
-                                      style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ].separatedBy(SizedBox(
-                                    width: 8,
-                                  )),
-                                ),
-                                CustomBadge(
-                                  title: widget.data[i]['label'],
-                                  withDifferentColor: true,
-                                  color: i == 0
-                                      ? Color(0xffdbeaff)
-                                      : i == 1
-                                          ? Color(0xffd1fae4)
-                                          : i == 2
-                                              ? Color(0xFFfff3c6)
-                                              : Color(0xFFf1f5f9),
-                                )
-                              ],
-                            ),
-                          )),
-                    ),
-                ],
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  for (int i = 2; i < widget.data?.length; i++)
-                    Expanded(
-                      flex: 1,
-                      child: DasboardCard(
-                          withBottomBorder: true,
-                          bottomBorderColor: i == 0
-                              ? Color(0xff3b82f6)
-                              : i == 1
-                                  ? Color(0xfff18800)
-                                  : i == 2
-                                      ? Color(0xFF10b981)
-                                      : Color(0xFF94a3b8),
-                          child: Padding(
-                            padding: PaddingColumn.screen,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          color: i == 0
-                                              ? Color(0xff3b82f6)
-                                              : i == 1
-                                                  ? Color(0xfff18800)
-                                                  : i == 2
-                                                      ? Color(0xFF10b981)
-                                                      : Color(0xFF94a3b8),
-                                          borderRadius:
-                                              BorderRadius.circular(4)),
-                                      padding: MarginCard.screen,
-                                      child: Icon(
-                                        i == 0
-                                            ? Icons.work_outline
-                                            : i == 1
-                                                ? Icons.task_alt_outlined
-                                                : i == 2
-                                                    ? Icons.access_time_outlined
-                                                    : Icons.error_outline,
-                                        color: Colors.white,
-                                        size: 24,
-                                      ),
-                                    ),
-                                    Text(
-                                      widget.data[i]['value'].toString(),
-                                      style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ].separatedBy(SizedBox(
-                                    width: 8,
-                                  )),
-                                ),
-                                CustomBadge(
-                                  title: widget.data[i]['label'],
-                                  withDifferentColor: true,
-                                  color: i == 0
-                                      ? Color(0xffdbeaff)
-                                      : i == 1
-                                          ? Color(0xffd1fae4)
-                                          : i == 2
-                                              ? Color(0xFFfff3c6)
-                                              : Color(0xFFf1f5f9),
-                                )
-                              ],
-                            ),
-                          )),
-                    ),
-                ],
-              ),
-            ],
-          )
-        : Column(
-            children: [
-              for (int i = 0; i < widget.data?.length; i++)
-                DasboardCard(
-                    withBottomBorder: true,
-                    bottomBorderColor: i == 0
-                        ? Color(0xff3b82f6)
-                        : i == 1
-                            ? Color(0xFF10b981)
-                            : i == 2
-                                ? Color(0xfff18800)
-                                : Color(0xFF94a3b8),
-                    child: Padding(
-                      padding: PaddingColumn.screen,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: i == 0
-                                        ? Color(0xff3b82f6)
-                                        : i == 1
-                                            ? Color(0xfff18800)
-                                            : i == 2
-                                                ? Color(0xFF10b981)
-                                                : Color(0xFF94a3b8),
-                                    borderRadius: BorderRadius.circular(4)),
-                                padding: MarginCard.screen,
-                                child: Icon(
-                                  i == 0
-                                      ? Icons.work_outline
-                                      : i == 1
-                                          ? Icons.task_alt_outlined
-                                          : i == 2
-                                              ? Icons.access_time_outlined
-                                              : Icons.error_outline,
-                                  color: Colors.white,
-                                  size: 24,
-                                ),
-                              ),
-                              Text(
-                                widget.data[i]['value'].toString(),
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold),
-                              ),
-                            ].separatedBy(SizedBox(
-                              width: 8,
-                            )),
-                          ),
-                          CustomBadge(
-                            title: widget.data[i]['label'],
-                            withDifferentColor: true,
-                            color: i == 0
-                                ? Color(0xffdbeaff)
-                                : i == 1
-                                    ? Color(0xffd1fae4)
-                                    : i == 2
-                                        ? Color(0xFFfff3c6)
-                                        : Color(0xFFf1f5f9),
-                          )
-                        ],
-                      ),
-                    ))
-            ],
-          );
+              for (int i = 2; i < length; i++)
+                Expanded(child: buildStatsCard(i))
+            ].separatedBy(CustomTheme().hGap('lg')),
+          ),
+      ].separatedBy(CustomTheme().vGap('lg')),
+    );
   }
 }

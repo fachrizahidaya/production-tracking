@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/helpers/auth/auth_check.dart';
+import 'package:textile_tracking/models/dashboard/machine.dart';
+import 'package:textile_tracking/models/dashboard/work_order_summary.dart';
 import 'package:textile_tracking/models/master/unit.dart';
-import 'package:textile_tracking/models/master/work_order_chart.dart';
-import 'package:textile_tracking/models/master/work_order_stats.dart';
+import 'package:textile_tracking/models/dashboard/work_order_chart.dart';
+import 'package:textile_tracking/models/dashboard/work_order_process.dart';
+import 'package:textile_tracking/models/dashboard/work_order_stats.dart';
 import 'package:textile_tracking/models/option/option_dyeing.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
@@ -21,6 +24,7 @@ import 'package:textile_tracking/models/process/printing.dart';
 import 'package:textile_tracking/models/process/sewing.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
+import 'package:textile_tracking/models/process/tumbler.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/auth/index.dart';
 import 'package:textile_tracking/screens/auth/eula.dart';
@@ -41,46 +45,43 @@ import 'package:textile_tracking/screens/sewing/index.dart';
 import 'package:textile_tracking/screens/sorting/index.dart';
 import 'package:textile_tracking/screens/stenter/index.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/screens/tumbler/index.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  // final store = Store(appReducer, initialState: AppState.initial());
-  runApp(MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => DyeingService()),
-        ChangeNotifierProvider(create: (_) => PressTumblerService()),
-        ChangeNotifierProvider(create: (_) => StenterService()),
-        ChangeNotifierProvider(create: (_) => LongSittingService()),
-        ChangeNotifierProvider(create: (_) => LongHemmingService()),
-        ChangeNotifierProvider(create: (_) => CrossCuttingService()),
-        ChangeNotifierProvider(create: (_) => SewingService()),
-        ChangeNotifierProvider(create: (_) => EmbroideryService()),
-        ChangeNotifierProvider(create: (_) => PrintingService()),
-        ChangeNotifierProvider(create: (_) => SortingService()),
-        ChangeNotifierProvider(create: (_) => PackingService()),
-        ChangeNotifierProvider(create: (_) => UnitService()),
-        ChangeNotifierProvider(create: (_) => OptionUnitService()),
-        ChangeNotifierProvider(create: (_) => OptionMachineService()),
-        ChangeNotifierProvider(create: (_) => OptionOperatorService()),
-        ChangeNotifierProvider(create: (_) => OptionWorkOrderService()),
-        ChangeNotifierProvider(create: (_) => OptionItemGradeService()),
-        ChangeNotifierProvider(create: (_) => OptionDyeingService()),
-        ChangeNotifierProvider(create: (_) => WorkOrderStatsService()),
-        ChangeNotifierProvider(create: (_) => WorkOrderChartService()),
-      ],
-      child: MyApp(
-          // store: store
-          )));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => UserProvider()),
+    ChangeNotifierProvider(create: (_) => DyeingService()),
+    ChangeNotifierProvider(create: (_) => PressTumblerService()),
+    ChangeNotifierProvider(create: (_) => TumblerService()),
+    ChangeNotifierProvider(create: (_) => StenterService()),
+    ChangeNotifierProvider(create: (_) => LongSittingService()),
+    ChangeNotifierProvider(create: (_) => LongHemmingService()),
+    ChangeNotifierProvider(create: (_) => CrossCuttingService()),
+    ChangeNotifierProvider(create: (_) => SewingService()),
+    ChangeNotifierProvider(create: (_) => EmbroideryService()),
+    ChangeNotifierProvider(create: (_) => PrintingService()),
+    ChangeNotifierProvider(create: (_) => SortingService()),
+    ChangeNotifierProvider(create: (_) => PackingService()),
+    ChangeNotifierProvider(create: (_) => UnitService()),
+    ChangeNotifierProvider(create: (_) => OptionUnitService()),
+    ChangeNotifierProvider(create: (_) => OptionMachineService()),
+    ChangeNotifierProvider(create: (_) => OptionOperatorService()),
+    ChangeNotifierProvider(create: (_) => OptionWorkOrderService()),
+    ChangeNotifierProvider(create: (_) => OptionItemGradeService()),
+    ChangeNotifierProvider(create: (_) => OptionDyeingService()),
+    ChangeNotifierProvider(create: (_) => WorkOrderStatsService()),
+    ChangeNotifierProvider(create: (_) => WorkOrderChartService()),
+    ChangeNotifierProvider(create: (_) => WorkOrderProcessService()),
+    ChangeNotifierProvider(create: (_) => WorkOrderSummaryService()),
+    ChangeNotifierProvider(create: (_) => MachineService()),
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
-  // final Store<AppState> store;
-
   const MyApp({
     super.key,
-    // required this.store
   });
 
   @override
@@ -115,7 +116,8 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => const Profile(),
         '/notification': (context) => const NotificationList(),
         '/dyeings': (context) => const DyeingScreen(),
-        '/press-tumblers': (context) => const PressTumblerScreen(),
+        '/press': (context) => const PressTumblerScreen(),
+        '/tumblers': (context) => const TumblerScreen(),
         '/stenters': (context) => const StenterScreen(),
         '/long-sittings': (context) => const LongSittingScreen(),
         '/long-hemmings': (context) => const LongHemmingScreen(),

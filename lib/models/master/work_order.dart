@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields, annotate_overrides
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -45,7 +47,7 @@ class WorkOrder {
 }
 
 class WorkOrderService extends BaseService<WorkOrder> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/work-orders';
+  final String baseUrl = '${dotenv.env['API_URL']}/work-orders';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
@@ -185,8 +187,7 @@ class WorkOrderService extends BaseService<WorkOrder> {
   }
 
   @override
-  Future<void> addItem(
-      WorkOrder newWorkOrder, ValueNotifier<bool> isSubmitting) async {
+  Future<void> addItem(WorkOrder item, ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -199,7 +200,7 @@ class WorkOrderService extends BaseService<WorkOrder> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(newWorkOrder.toJson()),
+        body: jsonEncode(item.toJson()),
       );
 
       if (response.statusCode == 200) {
@@ -227,7 +228,7 @@ class WorkOrderService extends BaseService<WorkOrder> {
       String? token = prefs.getString('access_token');
 
       final response = await http.post(
-        Uri.parse('${dotenv.env['API_URL_DEV']}/wo/active-process'),
+        Uri.parse('${dotenv.env['API_URL']}/wo/active-process'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -252,8 +253,8 @@ class WorkOrderService extends BaseService<WorkOrder> {
   }
 
   @override
-  Future<void> updateItem(String id, WorkOrder updatedWorkOrder,
-      ValueNotifier<bool> isSubmitting) async {
+  Future<void> updateItem(
+      String id, WorkOrder item, ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -266,7 +267,7 @@ class WorkOrderService extends BaseService<WorkOrder> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(updatedWorkOrder.toJson()),
+        body: jsonEncode(item.toJson()),
       );
 
       if (response.statusCode == 200) {

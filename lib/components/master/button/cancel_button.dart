@@ -25,13 +25,7 @@ class CancelButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
-      style: TextButton.styleFrom(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-          side: const BorderSide(color: Colors.grey),
-        ),
-      ),
+      style: CustomTheme().secondaryButton(),
       child: Text(
         label,
         style: TextStyle(color: CustomTheme().colors('danger')),

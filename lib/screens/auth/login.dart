@@ -1,12 +1,13 @@
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:textile_tracking/components/auth/login_form.dart';
+import 'package:textile_tracking/components/master/form/login/login_form.dart';
 import 'package:textile_tracking/helpers/auth/storage.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:provider/provider.dart';
@@ -69,7 +70,7 @@ class _LoginState extends State<Login> {
     final String username = _username.text;
     final String password = _password.text;
 
-    String url = '${dotenv.env['API_URL_DEV']}/login';
+    String url = '${dotenv.env['API_URL']}/login';
 
     try {
       setState(() {
@@ -140,46 +141,27 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final bool isPortrait = size.height > size.width;
-
-    final double dockWidth = isPortrait ? size.width * 0.85 : size.width * 0.5;
-    final double dockHeight =
-        isPortrait ? size.height * 0.5 : size.height * 0.8;
-
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-          backgroundColor: const Color(0xFFEBEBEB),
-          body: Center(
-            child: Container(
-                width: dockWidth,
-                height: dockHeight,
-                padding: PaddingColumn.screen,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 6,
-                        offset: const Offset(0, 3),
-                      )
-                    ]),
-                child: LoginForm(
-                  key: _key,
-                  username: _username,
-                  password: _password,
-                  isDisabled: !_isFormValid,
-                  isLoading: _isLoading,
-                  handlePress: () {
-                    _handleSubmit(context);
-                  },
-                )),
-          )),
-    );
+    return Scaffold(
+        backgroundColor: const Color(0xFFEBEBEB),
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Center(
+            child: SingleChildScrollView(
+              child: LoginForm(
+                key: _key,
+                username: _username,
+                password: _password,
+                isDisabled: !_isFormValid,
+                isLoading: _isLoading,
+                handlePress: () {
+                  _handleSubmit(context);
+                },
+              ),
+            ),
+          ),
+        ));
   }
 }

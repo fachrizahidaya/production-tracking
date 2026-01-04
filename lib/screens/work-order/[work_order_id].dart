@@ -1,14 +1,13 @@
 // ignore_for_file: file_names, use_build_context_synchronously, prefer_final_fields
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/info_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/item_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/note_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/process_tab.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
-import 'package:textile_tracking/models/option/option_spk.dart';
 
 class WorkOrderDetail extends StatefulWidget {
   final String id;
@@ -24,7 +23,6 @@ class WorkOrderDetail extends StatefulWidget {
 
 class _WorkOrderDetailState extends State<WorkOrderDetail> {
   final WorkOrderService _workOrderService = WorkOrderService();
-  final OptionSpkService _optionSpkService = OptionSpkService();
   bool _firstLoading = true;
 
   int page = 0;
@@ -49,7 +47,6 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
   void initState() {
     super.initState();
     _getDataView();
-    _optionSpkService.fetchOptions(isInitialLoad: true);
   }
 
   @override

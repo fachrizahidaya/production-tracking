@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class AttachmentTab extends StatefulWidget {
   final Map<String, dynamic>? data;
@@ -26,7 +26,7 @@ class _AttachmentTabState extends State<AttachmentTab> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: PaddingColumn.screen,
+      padding: CustomTheme().padding('card'),
       child: Wrap(
         spacing: 8,
         runSpacing: 8,

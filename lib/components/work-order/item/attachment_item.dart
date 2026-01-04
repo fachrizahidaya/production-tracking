@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:path/path.dart' as p;
 
@@ -39,21 +38,19 @@ class AttachmentItem extends StatelessWidget {
     }
 
     return CustomCard(
-        child: Padding(
-            padding: PaddingColumn.screen,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                previewWidget,
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    item['file_name']!,
-                  ),
-                ),
-              ].separatedBy(SizedBox(
-                width: 16,
-              )),
-            )));
+        child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        previewWidget,
+        Expanded(
+          flex: 1,
+          child: Text(
+            item['file_name']!,
+          ),
+        ),
+      ].separatedBy(SizedBox(
+        width: 16,
+      )),
+    ));
   }
 }

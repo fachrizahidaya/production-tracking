@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/layout/finish_list_item.dart';
+import 'package:textile_tracking/components/master/layout/card/finish_list_item.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
 class FinishItemTab extends StatefulWidget {

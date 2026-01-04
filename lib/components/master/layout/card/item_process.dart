@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/components/home/dashboard/card/process_card.dart';
-import 'package:textile_tracking/components/master/layout/custom_badge.dart';
+import 'package:textile_tracking/components/master/layout/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/text/clickable_text.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';

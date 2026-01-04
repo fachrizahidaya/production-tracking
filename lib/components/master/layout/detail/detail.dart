@@ -3,7 +3,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/layout/detail/list_info_section.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
@@ -193,36 +192,6 @@ class _DetailState extends State<Detail> {
     setState(() => _isChanged = changed);
   }
 
-  Future<void> _pickAttachments() async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
-        allowMultiple: true,
-      );
-
-      if (result != null && result.files.isNotEmpty) {
-        setState(() {
-          final currentAttachments =
-              List<Map<String, dynamic>>.from(widget.form['attachments'] ?? []);
-          final newFiles = result.files.map((file) {
-            return {
-              'name': file.name,
-              'path': file.path,
-              'extension': file.extension,
-            };
-          }).toList();
-
-          widget.form['attachments'] = [...currentAttachments, ...newFiles];
-        });
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error picking file: $e")),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final existingAttachments =
@@ -256,7 +225,7 @@ class _DetailState extends State<Detail> {
       handleSelectUnit: widget.handleSelectUnit,
       handleSelectLengthUnit: widget.handleSelectLengthUnit,
       handleSelectWidthUnit: widget.handleSelectWidthUnit,
-      handlePickAttachments: _pickAttachments,
+      handlePickAttachments: null,
       handleChangeInput: widget.handleChangeInput,
       checkForChanges: _checkForChanges,
       no: widget.no,

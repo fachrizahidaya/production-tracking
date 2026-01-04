@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/util/note_editor.dart';
+// import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/helpers/util/attachment_picker.dart';
@@ -457,14 +457,14 @@ class _FormSectionState extends State<FormSection> {
                   widget.showImageDialog(context, isNew, filePath);
                 },
               )),
-              CustomCard(
-                  child: NoteEditor(
-                controller: widget.note,
-                formKey: 'notes',
-                label: 'Catatan',
-                form: widget.form,
-                onChanged: (value) => widget.handleChangeInput('notes', value),
-              )),
+              // CustomCard(
+              //     child: NoteEditor(
+              //   controller: widget.note,
+              //   formKey: 'notes',
+              //   label: 'Catatan',
+              //   form: widget.form,
+              //   onChanged: (value) => widget.handleChangeInput('notes', value),
+              // )),
             ].separatedBy(CustomTheme().vGap('2xl')),
           ),
       ].separatedBy(CustomTheme().vGap('2xl')),

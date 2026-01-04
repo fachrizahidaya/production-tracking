@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/rework/list_form.dart';
 
@@ -39,36 +38,6 @@ class _CreateFormState extends State<CreateForm> {
     return woId == null || machineId == null;
   }
 
-  Future<void> _pickAttachments() async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
-        allowMultiple: true,
-      );
-
-      if (result != null && result.files.isNotEmpty) {
-        setState(() {
-          final existing = (widget.form['attachments'] as List?)
-                  ?.cast<Map<String, dynamic>>() ??
-              [];
-          for (final file in result.files) {
-            existing.add({
-              'name': file.name,
-              'path': file.path,
-              'extension': file.extension,
-            });
-          }
-          widget.form['attachments'] = existing;
-        });
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error picking file: $e")),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final attachments = (widget.form['attachments'] as List?) ?? [];
@@ -84,7 +53,7 @@ class _CreateFormState extends State<CreateForm> {
       isSubmitting: _isSubmitting,
       isFormIncomplete: _isFormIncomplete,
       handleSubmit: widget.handleSubmit,
-      handlePickAttachments: _pickAttachments,
+      handlePickAttachments: null,
     );
   }
 }

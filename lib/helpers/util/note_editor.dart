@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:textile_tracking/helpers/util/text_editor.dart';
+// import 'package:textile_tracking/helpers/util/text_editor.dart';
 
 class NoteEditor extends StatefulWidget {
   final String label;
@@ -48,29 +48,29 @@ class _NoteEditorState extends State<NoteEditor> {
             });
 
             // Open the TextEditor
-            final result = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => TextEditor(
-                  initialHtml: initialHtmlState,
-                ),
-              ),
-            );
+            // final result = await Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (_) => TextEditor(
+            //       initialHtml: initialHtmlState,
+            //     ),
+            //   ),
+            // );
 
             // When user finishes editing
-            if (result != null) {
-              setState(() {
-                widget.controller.text = result;
-              });
+            // if (result != null) {
+            //   setState(() {
+            //     widget.controller.text = result;
+            //   });
 
-              if (widget.form != null) {
-                widget.form![widget.formKey] = result;
-              }
+            //   if (widget.form != null) {
+            //     widget.form![widget.formKey] = result;
+            //   }
 
-              if (widget.onChanged != null) {
-                widget.onChanged!(result);
-              }
-            }
+            //   if (widget.onChanged != null) {
+            //     widget.onChanged!(result);
+            //   }
+            // }
           },
           child: Container(
             width: double.infinity,

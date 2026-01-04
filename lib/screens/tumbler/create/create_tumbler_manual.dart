@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/create_process_manual.dart';
+import 'package:textile_tracking/screens/master/create_process_manual.dart';
 
 class CreateTumblerManual extends StatelessWidget {
   final dynamic id;
@@ -21,6 +21,7 @@ class CreateTumblerManual extends StatelessWidget {
     return CreateProcessManual(
       title: 'Mulai Tumbler',
       id: id,
+      label: 'Tumbler',
       data: data,
       form: form,
       handleSubmit: handleSubmit,

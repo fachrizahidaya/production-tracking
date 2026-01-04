@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/create/info_tab.dart';
-import 'package:textile_tracking/components/dyeing/create/item_tab.dart';
+import 'package:textile_tracking/components/dyeing/rework/info_tab.dart';
+import 'package:textile_tracking/components/dyeing/rework/item_tab.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
@@ -313,7 +313,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
           ),
           bottomNavigationBar: SafeArea(
             child: Container(
-              padding: PaddingColumn.screen,
+              padding: CustomTheme().padding('card'),
               color: Colors.white,
               child: ValueListenableBuilder<bool>(
                 valueListenable: _isSubmitting,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/finish_process_manual.dart';
+import 'package:textile_tracking/screens/master/finish_process_manual.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
 
 class FinishSortingManual extends StatefulWidget {
@@ -46,6 +46,7 @@ class _FinishSortingManualState extends State<FinishSortingManual> {
     return FinishProcessManual(
       title: 'Selesai Sorting',
       id: widget.id,
+      label: 'Sorting',
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,
@@ -55,6 +56,8 @@ class _FinishSortingManualState extends State<FinishSortingManual> {
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'sorting_id',
       withItemGrade: true,
+      withQtyAndWeight: false,
+      forDyeing: false,
       fetchItemGrade: (service) => service.fetchOptions(),
       getItemGradeOptions: (service) => service.dataListOption,
       processId: widget.processId,

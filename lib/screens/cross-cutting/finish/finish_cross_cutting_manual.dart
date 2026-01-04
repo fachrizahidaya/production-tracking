@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/finish_process_manual.dart';
+import 'package:textile_tracking/screens/master/finish_process_manual.dart';
 import 'package:textile_tracking/models/process/cross_cutting.dart';
 
 class FinishCrossCuttingManual extends StatefulWidget {
@@ -47,6 +47,7 @@ class _FinishCrossCuttingManualState extends State<FinishCrossCuttingManual> {
     return FinishProcessManual(
       title: 'Selesai Cross Cutting',
       id: widget.id,
+      label: 'Cross Cutting',
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/finish_process_manual.dart';
+import 'package:textile_tracking/screens/master/finish_process_manual.dart';
 import 'package:textile_tracking/models/process/embroidery.dart';
 
 class FinishEmbroideryManual extends StatefulWidget {
@@ -46,6 +46,7 @@ class _FinishEmbroideryManualState extends State<FinishEmbroideryManual> {
     return FinishProcessManual(
       title: 'Selesai Embroidery',
       id: widget.id,
+      label: 'Embroidery',
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,
@@ -56,6 +57,7 @@ class _FinishEmbroideryManualState extends State<FinishEmbroideryManual> {
       idProcess: 'embroidery_id',
       withItemGrade: false,
       withQtyAndWeight: true,
+      forDyeing: false,
       processId: widget.processId,
     );
   }

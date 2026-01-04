@@ -2,15 +2,11 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/finish/submit_section.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/models/option/option_work_order.dart';
+import 'package:textile_tracking/screens/master/finish_process.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/screens/dyeing/finish/finish_dyeing_manual.dart';
 
 class FinishDyeing extends StatefulWidget {
@@ -21,20 +17,9 @@ class FinishDyeing extends StatefulWidget {
 }
 
 class _FinishDyeingState extends State<FinishDyeing> {
-  final MobileScannerController _controller = MobileScannerController();
-  bool _isLoading = false;
-  bool _isScannerStopped = false;
-  int number = 0;
-  final ValueNotifier<bool> _firstLoading = ValueNotifier(false);
-
-  final WorkOrderService _workOrderService = WorkOrderService();
-  late List<dynamic> workOrderOption = [];
-  String processId = '';
-
   @override
   void initState() {
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
-    _handleFetchWorkOrder();
     super.initState();
 
     setState(() {
@@ -68,163 +53,6 @@ class _FinishDyeingState extends State<FinishDyeing> {
     'nama_satuan_lebar': '',
   };
 
-  void _handleChangeInput(fieldName, value) {
-    setState(() {
-      _form[fieldName] = value;
-    });
-  }
-
-  Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchFinishOptions();
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
-
-    setState(() {
-      workOrderOption = result;
-    });
-  }
-
-  Future<void> _handleScan(code) async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final String woNo = code.toString();
-
-      if (woNo.isEmpty) {
-        showAlertDialog(
-            context: context, title: 'Error', message: "Invalid QR Code");
-        setState(() => _isLoading = false);
-        return;
-      }
-
-      final woForm = {'wo_no': woNo};
-      final ValueNotifier<bool> isSubmitting = ValueNotifier(false);
-
-      final processResponse =
-          await _workOrderService.getProcessData(woForm, isSubmitting);
-
-      if (processResponse == null) {
-        showAlertDialog(
-            context: context,
-            title: 'Error',
-            message: "No process data found for this Work Order");
-        setState(() => _isLoading = false);
-        return;
-      }
-
-      final String woId = processResponse['wo_id'].toString();
-      final String processId = processResponse['process_id'].toString();
-
-      final bool workOrderExists =
-          workOrderOption.any((item) => item['value'].toString() == woId);
-
-      if (!workOrderExists) {
-        showAlertDialog(
-            context: context, title: 'Error', message: "Work Order not found");
-        setState(() => _isLoading = false);
-        return;
-      }
-
-      await _workOrderService.getDataView(woId);
-      final data = _workOrderService.dataView;
-
-      _form['wo_id'] = data['id']?.toString() ?? woId;
-      _form['no_wo'] = data['wo_no']?.toString() ?? woNo;
-      _form['process_id'] = processId;
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => FinishDyeingManual(
-            id: woId,
-            processId: processId,
-            data: data,
-            form: _form,
-            handleSubmit: _handleSubmit,
-            handleChangeInput: _handleChangeInput,
-          ),
-        ),
-      );
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: ${e.toString()}")),
-      );
-    }
-  }
-
-  Future<void> _handleSubmit(id) async {
-    try {
-      final dyeing = Dyeing(
-          wo_id: _form['wo_id'] != null
-              ? int.tryParse(_form['wo_id'].toString())
-              : null,
-          unit_id: _form['unit_id'] != null
-              ? int.tryParse(_form['unit_id'].toString())
-              : null,
-          length_unit_id: _form['length_unit_id'] != null
-              ? int.tryParse(_form['length_unit_id'].toString())
-              : null,
-          width_unit_id: _form['width_unit_id'] != null
-              ? int.tryParse(_form['width_unit_id'].toString())
-              : null,
-          machine_id: _form['machine_id'] != null
-              ? int.tryParse(_form['machine_id'].toString())
-              : null,
-          rework_reference_id: _form['rework_reference_id'] != null
-              ? int.tryParse(_form['rework_reference_id'].toString())
-              : null,
-          qty: (_form['qty']),
-          width: _form['width'] =
-              (_form['width'] == null || _form['width'].toString().isEmpty)
-                  ? '0'
-                  : _form['width'],
-          length: _form['length'] =
-              (_form['length'] == null || _form['length'].toString().isEmpty)
-                  ? '0'
-                  : _form['length'],
-          notes: _form['notes'],
-          rework: _form['rework'],
-          status: _form['status'],
-          start_time: _form['start_time'],
-          end_time: _form['end_time'],
-          start_by_id: _form['start_by_id'] != null
-              ? int.tryParse(_form['start_by_id'].toString())
-              : null,
-          end_by_id: _form['end_by_id'] != null
-              ? int.tryParse(_form['end_by_id'])
-              : null,
-          attachments: _form['attachments']);
-
-      final message = await Provider.of<DyeingService>(context, listen: false)
-          .finishItem(id, dyeing, _firstLoading);
-
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/dyeings',
-        (Route<dynamic> route) => false,
-      );
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showAlertDialog(
-            context: context, title: 'Dyeing Selesai', message: message);
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
-    }
-  }
-
   @override
   void dispose() {
     _form.clear();
@@ -233,55 +61,55 @@ class _FinishDyeingState extends State<FinishDyeing> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        FocusScope.of(context).unfocus();
+    return FinishProcess(
+      title: 'Selesai Dyeing',
+      fetchWorkOrder: (service) async => await service.fetchFinishOptions(),
+      getWorkOrderOptions: (service) => service.dataListOption,
+      formPageBuilder: (context, id, processId, data, form, handleSubmit,
+              handleChangeInput) =>
+          FinishDyeingManual(
+        id: id,
+        processId: processId,
+        data: data,
+        form: form,
+        handleSubmit: handleSubmit,
+        handleChangeInput: handleChangeInput,
+      ),
+      handleSubmitToService: (context, id, form, isLoading) async {
+        final dyeing = Dyeing(
+          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+          unit_id: int.tryParse(form['unit_id']?.toString() ?? ''),
+          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
+          length_unit_id:
+              int.tryParse(form['length_unit_id']?.toString() ?? ''),
+          qty: form['qty'],
+          width: _form['width'] =
+              (_form['width'] == null || _form['width'].toString().isEmpty)
+                  ? '0'
+                  : _form['width'],
+          length: form['length'] =
+              (_form['length'] == null || _form['length'].toString().isEmpty)
+                  ? '0'
+                  : _form['length'],
+          notes: form['notes'],
+          start_time: form['start_time'],
+          end_time: form['end_time'],
+          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+          attachments: form['attachments'],
+        );
+
+        final message = await Provider.of<DyeingService>(context, listen: false)
+            .finishItem(id, dyeing, isLoading);
+
+        Navigator.pushNamedAndRemoveUntil(context, '/dyeings', (_) => false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showAlertDialog(
+              context: context, title: 'Dyeing Selesai', message: message);
+        });
       },
-      child: Scaffold(
-          backgroundColor: const Color(0xFFf9fafc),
-          appBar: CustomAppBar(
-            title: 'Selesai Dyeing',
-            onReturn: () {
-              Navigator.pop(context);
-            },
-          ),
-          body: SubmitSection(
-            isScannerStopped: _isScannerStopped,
-            form: _form,
-            controller: _controller,
-            handleScan: _handleScan,
-            handleSubmit: _handleSubmit,
-            handleRoute: _createRoute,
-            isLoading: _isLoading,
-            handleChangeInput: _handleChangeInput,
-          )),
     );
   }
-}
-
-Route _createRoute(dynamic form, handleSubmit, handleChangeInput) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => FinishDyeingManual(
-      id: null,
-      data: null,
-      processId: null,
-      form: form,
-      handleSubmit: handleSubmit,
-      handleChangeInput: handleChangeInput,
-    ),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 1.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-      var offsetAnimation = animation.drive(tween);
-
-      return SlideTransition(
-        position: offsetAnimation,
-        child: child,
-      );
-    },
-  );
 }

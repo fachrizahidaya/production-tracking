@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/create_process_manual.dart';
+import 'package:textile_tracking/screens/master/create_process_manual.dart';
 
 class CreateDyeingManual extends StatelessWidget {
   final dynamic id;

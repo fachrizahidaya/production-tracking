@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/finish_process_manual.dart';
+import 'package:textile_tracking/screens/master/finish_process_manual.dart';
 import 'package:textile_tracking/models/process/printing.dart';
 
 class FinishPrintingManual extends StatefulWidget {
@@ -46,6 +46,7 @@ class _FinishPrintingManualState extends State<FinishPrintingManual> {
     return FinishProcessManual(
       title: 'Selesai Printing',
       id: widget.id,
+      label: 'Printing',
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,
@@ -56,6 +57,7 @@ class _FinishPrintingManualState extends State<FinishPrintingManual> {
       idProcess: 'printing_id',
       withItemGrade: false,
       withQtyAndWeight: true,
+      forDyeing: false,
       processId: widget.processId,
     );
   }

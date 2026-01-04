@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/finish_process_manual.dart';
+import 'package:textile_tracking/screens/master/finish_process_manual.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
 
 class FinishLongSittingManual extends StatefulWidget {
@@ -45,8 +45,9 @@ class _FinishLongSittingManualState extends State<FinishLongSittingManual> {
   @override
   Widget build(BuildContext context) {
     return FinishProcessManual(
-      title: 'Selesai Long Sitting',
+      title: 'Selesai Long Slitting',
       id: widget.id,
+      label: 'Long Slitting',
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,
@@ -57,6 +58,8 @@ class _FinishLongSittingManualState extends State<FinishLongSittingManual> {
       idProcess: 'long_sitting_id',
       withItemGrade: false,
       processId: widget.processId,
+      withQtyAndWeight: false,
+      forDyeing: false,
     );
   }
 }

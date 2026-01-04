@@ -42,7 +42,7 @@ class MachineSection extends StatelessWidget {
         SizedBox(
           height: 500,
           child: data.isEmpty
-              ? const Center(child: NoData())
+              ? Center(child: NoData())
               : CustomScrollView(
                   slivers: [
                     SliverList(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/components/home/dashboard/machine/machine_section.dart';
-import 'package:textile_tracking/components/master/layout/custom_badge.dart';
+import 'package:textile_tracking/components/master/layout/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 

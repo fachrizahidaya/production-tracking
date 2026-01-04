@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/layout/custom_bottom_sheet.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
+import 'package:textile_tracking/components/master/layout/sheet/custom_bottom_sheet.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 void showBottomSheet(
     {required BuildContext context,
@@ -22,7 +22,7 @@ void showBottomSheet(
       isScrollControlled: true,
       isDismissible: true,
       builder: (context) => Padding(
-            padding: PaddingColumn.screen,
+            padding: CustomTheme().padding('card'),
             child: CustomBottomSheet(
                 fields: fields,
                 title: title,

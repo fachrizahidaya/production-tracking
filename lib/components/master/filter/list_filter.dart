@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/form/filter_select_form.dart';
+import 'package:textile_tracking/components/master/filter/filter_select_form.dart';
 import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';

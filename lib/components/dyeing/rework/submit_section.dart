@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/margin_search.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class SubmitSection extends StatefulWidget {
@@ -52,7 +51,7 @@ class _SubmitSectionState extends State<SubmitSection> {
         return Stack(
           children: [
             Container(
-              padding: MarginSearch.screen,
+              padding: CustomTheme().padding('content'),
               child: Column(
                 children: [
                   Expanded(
@@ -163,13 +162,9 @@ class _SubmitSectionState extends State<SubmitSection> {
                           }
                         },
                       ),
-                    ].separatedBy(SizedBox(
-                      height: 16,
-                    )),
+                    ].separatedBy(CustomTheme().vGap('xl')),
                   )),
-                ].separatedBy(SizedBox(
-                  height: 16,
-                )),
+                ].separatedBy(CustomTheme().vGap('xl')),
               ),
             ),
             if (widget.isLoading)

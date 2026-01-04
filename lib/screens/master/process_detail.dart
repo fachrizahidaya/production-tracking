@@ -6,12 +6,11 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/layout/info_tab.dart';
+import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/layout/detail/detail.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
@@ -43,6 +42,7 @@ class ProcessDetail<T> extends StatefulWidget {
   final withQtyAndWeight;
   final withMaklon;
   final onlySewing;
+  final forDyeing;
 
   const ProcessDetail(
       {super.key,
@@ -61,7 +61,8 @@ class ProcessDetail<T> extends StatefulWidget {
       this.withItemGrade,
       this.withQtyAndWeight,
       this.withMaklon,
-      this.onlySewing});
+      this.onlySewing,
+      this.forDyeing});
 
   @override
   State<ProcessDetail<T>> createState() => _ProcessDetailState<T>();
@@ -81,7 +82,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   final TextEditingController _qtyItemController = TextEditingController();
   List<TextEditingController> _qtyControllers = [];
   List<TextEditingController> _notesControllers = [];
-  final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
   Map<String, dynamic> data = {};
   final Map<String, dynamic> _form = {
@@ -91,7 +91,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     'length_unit_id': null,
     'width_unit_id': null,
     'item_unit_id': null,
+    'unit_id': null,
     'item_qty': null,
+    'qty': null,
     'weight': null,
     'width': null,
     'length': null,
@@ -480,7 +482,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         body: Column(
           children: [
             Expanded(
-              child: InfoTab(
+              child: Detail(
                 data: data,
                 isLoading: _firstLoading,
                 handleChangeInput: _handleChangeInput,
@@ -519,6 +521,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
                 maklon: _maklonNameController,
                 onlySewing: widget.onlySewing,
                 label: widget.label,
+                forDyeing: widget.forDyeing,
               ),
             )
           ],

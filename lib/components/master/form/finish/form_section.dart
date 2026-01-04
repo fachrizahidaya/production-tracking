@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/form/note_editor.dart';
+// import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
-import 'package:textile_tracking/components/master/layout/attachment_picker.dart';
+import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
@@ -13,12 +13,14 @@ class FormSection extends StatefulWidget {
   final form;
   final withItemGrade;
   final withQtyAndWeight;
+  final forDyeing;
   final itemGradeOption;
   final handleSelectQtyUnit;
   final length;
   final width;
   final weight;
   final note;
+  final notes;
   final handleChangeInput;
   final handleSelectLengthUnit;
   final handleSelectWidthUnit;
@@ -31,10 +33,13 @@ class FormSection extends StatefulWidget {
   final handlePickAttachments;
   final handleDeleteAttachment;
   final handleSelectQtyUnitItem;
+  final handleSelectQtyUnitDyeing;
   final showImageDialog;
   final validateWeight;
   final validateQty;
   final weightWarning;
+  final qtyWarning;
+  final label;
 
   const FormSection(
       {super.key,
@@ -54,16 +59,21 @@ class FormSection extends StatefulWidget {
       this.itemGradeOption,
       this.length,
       this.note,
+      this.notes,
       this.qty,
       this.showImageDialog,
       this.weight,
       this.width,
-      this.withItemGrade,
-      this.withQtyAndWeight,
+      this.withItemGrade = false,
+      this.withQtyAndWeight = false,
       this.handleDeleteAttachment,
       this.validateWeight,
       this.weightWarning,
-      this.validateQty});
+      this.validateQty,
+      this.qtyWarning,
+      this.forDyeing = false,
+      this.label,
+      this.handleSelectQtyUnitDyeing});
 
   @override
   State<FormSection> createState() => _FormSectionState();
@@ -95,17 +105,18 @@ class _FormSectionState extends State<FormSection> {
         'req': false,
         'withSelectUnit': false
       },
-      {
-        'label': 'Berat',
-        'controller': widget.weight,
-        'onSelect': widget.handleSelectUnit,
-        'selectedLabel': widget.form['nama_satuan_berat'] ?? '',
-        'selectedValue': widget.form['weight_unit_id']?.toString() ?? '',
-        'unitLabel': 'Satuan Berat',
-        'value': 'weight',
-        'req': widget.withQtyAndWeight == true ? false : true,
-        'withSelectUnit': true
-      },
+      if (widget.forDyeing == false)
+        {
+          'label': 'Berat',
+          'controller': widget.weight,
+          'onSelect': widget.handleSelectUnit,
+          'selectedLabel': widget.form['nama_satuan_berat'] ?? '',
+          'selectedValue': widget.form['weight_unit_id']?.toString() ?? '',
+          'unitLabel': 'Satuan Berat',
+          'value': 'weight',
+          'req': widget.withQtyAndWeight == true ? false : true,
+          'withSelectUnit': true
+        },
     ];
 
     List<Map<String, dynamic>> buildGradeRowConfig(int i) {
@@ -251,11 +262,10 @@ class _FormSectionState extends State<FormSection> {
                                     return null;
                                   },
                                 ),
-                                if (widget.withQtyAndWeight == false &&
-                                    row['value'] == 'weight' &&
+                                if (row['value'] == 'weight' &&
                                     widget.weightWarning != null)
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 12),
+                                    padding: EdgeInsets.only(top: 8),
                                     child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -305,7 +315,7 @@ class _FormSectionState extends State<FormSection> {
                             child: Column(
                               children: [
                                 TextForm(
-                                  label: 'Jumlah',
+                                  label: 'Qty Hasil ${widget.label}',
                                   req: true,
                                   isNumber: true,
                                   controller: widget.qty,
@@ -324,26 +334,27 @@ class _FormSectionState extends State<FormSection> {
                                     return null;
                                   },
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 12),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Text(
-                                          widget.weightWarning ?? '-',
-                                          style: TextStyle(
-                                            color:
-                                                CustomTheme().colors('warning'),
-                                            fontSize: 13,
+                                if (widget.qtyWarning != null)
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 8),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            widget.qtyWarning ?? '-',
+                                            style: TextStyle(
+                                              color: CustomTheme()
+                                                  .colors('warning'),
+                                              fontSize: 13,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
                               ],
                             ),
                           ),
@@ -352,6 +363,75 @@ class _FormSectionState extends State<FormSection> {
                             child: SelectForm(
                               label: 'Satuan',
                               onTap: widget.handleSelectQtyUnitItem,
+                              selectedLabel: widget.form['nama_satuan'] ?? '',
+                              selectedValue:
+                                  widget.form['item_unit_id']?.toString() ?? '',
+                              required: true,
+                              validator: (value) {
+                                if ((value == null || value.isEmpty)) {
+                                  return 'Satuan wajib dipilih';
+                                }
+                                return null;
+                              },
+                            ),
+                          )
+                        ].separatedBy(const SizedBox(width: 16)),
+                      ),
+                    if (widget.forDyeing == true)
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              children: [
+                                TextForm(
+                                  label: 'Qty Hasil ${widget.label}',
+                                  req: true,
+                                  isNumber: true,
+                                  controller: widget.qty,
+                                  handleChange: (value) {
+                                    setState(() {
+                                      widget.qty.text = value.toString();
+                                      widget.handleChangeInput('qty', value);
+                                      widget.validateWeight(value);
+                                    });
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Qty wajib diisi';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                if (widget.weightWarning != null)
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 8),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            widget.weightWarning ?? '-',
+                                            style: TextStyle(
+                                              color: CustomTheme()
+                                                  .colors('warning'),
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: SelectForm(
+                              label: 'Satuan',
+                              onTap: widget.handleSelectQtyUnitDyeing,
                               selectedLabel: widget.form['nama_satuan'] ?? '',
                               selectedValue:
                                   widget.form['unit_id']?.toString() ?? '',
@@ -377,14 +457,14 @@ class _FormSectionState extends State<FormSection> {
                   widget.showImageDialog(context, isNew, filePath);
                 },
               )),
-              CustomCard(
-                  child: NoteEditor(
-                controller: widget.note,
-                formKey: 'notes',
-                label: 'Catatan',
-                form: widget.form,
-                onChanged: (value) => widget.handleChangeInput('notes', value),
-              )),
+              // CustomCard(
+              //     child: NoteEditor(
+              //   controller: widget.note,
+              //   formKey: 'notes',
+              //   label: 'Catatan',
+              //   form: widget.form,
+              //   onChanged: (value) => widget.handleChangeInput('notes', value),
+              // )),
             ].separatedBy(CustomTheme().vGap('2xl')),
           ),
       ].separatedBy(CustomTheme().vGap('2xl')),

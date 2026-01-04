@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/helpers/service/finish_process.dart';
+import 'package:textile_tracking/screens/master/finish_process.dart';
 import 'package:textile_tracking/models/process/cross_cutting.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/cross-cutting/finish/finish_cross_cutting_manual.dart';

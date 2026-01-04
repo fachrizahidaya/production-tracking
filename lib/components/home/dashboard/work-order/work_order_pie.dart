@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/margin_card.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderPie extends StatefulWidget {
@@ -48,7 +46,7 @@ class WorkOrderPieState extends State<WorkOrderPie> {
       child: Column(
         children: [
           Padding(
-            padding: PaddingColumn.screen,
+            padding: CustomTheme().padding('card'),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -115,7 +113,7 @@ class WorkOrderPieState extends State<WorkOrderPie> {
             Container(
               decoration: CustomTheme()
                   .processCardTheme(CustomTheme().colors('primary')),
-              padding: MarginCard.screen,
+              padding: CustomTheme().padding('card'),
               child: Icon(
                 getIcon(index),
                 color: Colors.white,

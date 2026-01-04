@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/layout/dashboard_list.dart';
+import 'package:textile_tracking/components/home/dashboard/list/dashboard_list.dart';
 
 class WorkOrderProcessScreen extends StatefulWidget {
   final data;

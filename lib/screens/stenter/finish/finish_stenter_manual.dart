@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/finish_process_manual.dart';
+import 'package:textile_tracking/screens/master/finish_process_manual.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
 
 class FinishStenterManual extends StatefulWidget {
@@ -46,6 +46,7 @@ class _FinishStenterManualState extends State<FinishStenterManual> {
     return FinishProcessManual(
       title: 'Selesai Stenter',
       id: widget.id,
+      label: 'Stenter',
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,
@@ -56,6 +57,8 @@ class _FinishStenterManualState extends State<FinishStenterManual> {
       idProcess: 'stenter_id',
       withItemGrade: false,
       processId: widget.processId,
+      withQtyAndWeight: false,
+      forDyeing: false,
     );
   }
 }

@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/finish_process_manual.dart';
+import 'package:textile_tracking/screens/master/finish_process_manual.dart';
 import 'package:textile_tracking/models/process/tumbler.dart';
 
 class FinishTumblerManual extends StatefulWidget {
@@ -51,6 +51,7 @@ class _FinishTumblerManualState extends State<FinishTumblerManual> {
     return FinishProcessManual(
       title: 'Selesai Tumbler',
       id: widget.id,
+      label: 'Tumbler',
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,
@@ -61,6 +62,7 @@ class _FinishTumblerManualState extends State<FinishTumblerManual> {
       idProcess: 'tumbler_id',
       withItemGrade: false,
       processId: widget.processId,
+      withQtyAndWeight: false,
     );
   }
 }

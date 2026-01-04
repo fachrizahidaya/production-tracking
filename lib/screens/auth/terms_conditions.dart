@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/helpers/service/terms_conditions_service.dart';
 import 'package:textile_tracking/models/auth/terms_conditions_model.dart';
 

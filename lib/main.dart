@@ -31,7 +31,7 @@ import 'package:textile_tracking/screens/auth/eula.dart';
 import 'package:textile_tracking/screens/auth/privacy_policy.dart';
 import 'package:textile_tracking/screens/auth/terms_conditions.dart';
 import 'package:textile_tracking/screens/cross-cutting/index.dart';
-import 'package:textile_tracking/screens/dyeing/list/index.dart';
+import 'package:textile_tracking/screens/dyeing/index.dart';
 import 'package:textile_tracking/screens/embroidery/index.dart';
 import 'package:textile_tracking/screens/home/index.dart';
 import 'package:textile_tracking/screens/long-hemming/index.dart';

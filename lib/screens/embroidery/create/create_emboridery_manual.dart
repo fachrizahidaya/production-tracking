@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/create_process_manual.dart';
+import 'package:textile_tracking/screens/master/create_process_manual.dart';
 
 class CreateEmborideryManual extends StatelessWidget {
   final dynamic id;
@@ -21,6 +21,7 @@ class CreateEmborideryManual extends StatelessWidget {
     return CreateProcessManual(
       title: 'Mulai Embroidery',
       id: id,
+      label: 'Embroidery',
       data: data,
       form: form,
       handleSubmit: handleSubmit,

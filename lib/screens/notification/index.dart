@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
-import 'package:textile_tracking/helpers/util/margin_card.dart';
+import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class NotificationList extends StatefulWidget {
   const NotificationList({super.key});
@@ -20,8 +20,8 @@ class _NotificationListState extends State<NotificationList> {
         },
       ),
       body: Container(
-        padding: MarginCard.screen,
-        color: const Color(0xFFEBEBEB),
+        padding: CustomTheme().padding('content'),
+        color: Color(0xFFEBEBEB),
       ),
     );
   }

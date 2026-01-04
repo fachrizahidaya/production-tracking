@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/form/finish/create_form.dart';
+import 'package:textile_tracking/components/master/section/finish/create_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
 class CreateInfoTab extends StatefulWidget {
@@ -30,6 +30,8 @@ class CreateInfoTab extends StatefulWidget {
   final handleSelectWo;
   final handleSelectQtyUnit;
   final handleSelectQtyUnitItem;
+  final handleSelectQtyUnitDyeing;
+
   final isSubmitting;
   final isFormIncomplete;
   final isChanged;
@@ -44,51 +46,55 @@ class CreateInfoTab extends StatefulWidget {
   final withItemGrade;
   final itemGradeOption;
   final withQtyAndWeight;
+  final label;
+  final forDyeing;
 
-  const CreateInfoTab({
-    super.key,
-    this.data,
-    this.form,
-    this.formKey,
-    this.handleSelectMachine,
-    this.handleSelectWorkOrder,
-    this.id,
-    this.isLoading,
-    this.isMaklon,
-    this.maklon,
-    this.withMaklonOrMachine,
-    this.withNoMaklonOrMachine,
-    this.withOnlyMaklon,
-    this.handleChangeInput,
-    this.handleSelectLengthUnit,
-    this.handleSelectUnit,
-    this.handleSelectWidthUnit,
-    this.allAttachments,
-    this.handlePickAttachments,
-    this.handleSelectQtyUnit,
-    this.handleSelectQtyUnitItem,
-    this.handleSelectWo,
-    this.initialLength,
-    this.initialNotes,
-    this.initialQty,
-    this.initialWeight,
-    this.initialWidth,
-    this.isChanged,
-    this.isFormIncomplete,
-    this.isSubmitting,
-    this.itemGradeOption,
-    this.length,
-    this.note,
-    this.notes,
-    this.processData,
-    this.processId,
-    this.qty,
-    this.qtyItem,
-    this.weight,
-    this.width,
-    this.withItemGrade,
-    this.withQtyAndWeight,
-  });
+  const CreateInfoTab(
+      {super.key,
+      this.data,
+      this.form,
+      this.formKey,
+      this.handleSelectMachine,
+      this.handleSelectWorkOrder,
+      this.id,
+      this.isLoading,
+      this.isMaklon,
+      this.maklon,
+      this.withMaklonOrMachine,
+      this.withNoMaklonOrMachine,
+      this.withOnlyMaklon,
+      this.handleChangeInput,
+      this.handleSelectLengthUnit,
+      this.handleSelectUnit,
+      this.handleSelectWidthUnit,
+      this.allAttachments,
+      this.handlePickAttachments,
+      this.handleSelectQtyUnit,
+      this.handleSelectQtyUnitItem,
+      this.handleSelectQtyUnitDyeing,
+      this.handleSelectWo,
+      this.initialLength,
+      this.initialNotes,
+      this.initialQty,
+      this.initialWeight,
+      this.initialWidth,
+      this.isChanged,
+      this.isFormIncomplete,
+      this.isSubmitting,
+      this.itemGradeOption,
+      this.length,
+      this.note,
+      this.notes,
+      this.processData,
+      this.processId,
+      this.qty,
+      this.qtyItem,
+      this.weight,
+      this.width,
+      this.withItemGrade,
+      this.withQtyAndWeight,
+      this.label,
+      this.forDyeing});
 
   @override
   State<CreateInfoTab> createState() => _CreateInfoTabState();
@@ -125,6 +131,7 @@ class _CreateInfoTabState extends State<CreateInfoTab>
               handleSelectUnit: widget.handleSelectUnit,
               handleChangeInput: widget.handleChangeInput,
               handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
+              handleSelectQtyUnitDyeing: widget.handleSelectQtyUnitDyeing,
               id: widget.id,
               data: widget.data,
               processId: widget.processId,
@@ -139,6 +146,8 @@ class _CreateInfoTabState extends State<CreateInfoTab>
               qty: widget.qty,
               withQtyAndWeight: widget.withQtyAndWeight,
               qtyItem: widget.qtyItem,
+              label: widget.label,
+              forDyeing: widget.forDyeing,
             ),
           ],
         ),

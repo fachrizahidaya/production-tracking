@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/helpers/service/finish_process_manual.dart';
+import 'package:textile_tracking/screens/master/finish_process_manual.dart';
 import 'package:textile_tracking/models/process/long_hemming.dart';
 
 class FinishLongHemmingManual extends StatefulWidget {
@@ -47,6 +47,7 @@ class _FinishLongHemmingManualState extends State<FinishLongHemmingManual> {
     return FinishProcessManual(
       title: 'Selesai Long Hemming',
       id: widget.id,
+      label: 'Long Hemming',
       data: widget.data,
       form: widget.form,
       handleSubmit: widget.handleSubmit,
@@ -57,6 +58,8 @@ class _FinishLongHemmingManualState extends State<FinishLongHemmingManual> {
       idProcess: 'long_hemming_id',
       withItemGrade: false,
       processId: widget.processId,
+      withQtyAndWeight: false,
+      forDyeing: false,
     );
   }
 }

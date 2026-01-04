@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:textile_tracking/components/master/layout/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/layout/list/option_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/padding_column.dart';
 
 class Account extends StatefulWidget {
   const Account({super.key});
@@ -41,12 +40,9 @@ class _AccountState extends State<Account> {
             dataList: menuOptions,
             itemBuilder: (item) {
               return CustomCard(
-                child: Padding(
-                  padding: PaddingColumn.screen,
-                  child: Text(
-                    item['label'] ?? '',
-                    style: const TextStyle(fontSize: 16),
-                  ),
+                child: Text(
+                  item['label'] ?? '',
+                  style: const TextStyle(fontSize: 16),
                 ),
               );
             },

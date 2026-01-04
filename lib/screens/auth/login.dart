@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:textile_tracking/components/auth/login_form.dart';
+import 'package:textile_tracking/components/master/form/login/login_form.dart';
 import 'package:textile_tracking/helpers/auth/storage.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/providers/user_provider.dart';

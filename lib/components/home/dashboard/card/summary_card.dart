@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
-import 'package:textile_tracking/components/master/layout/custom_badge.dart';
+import 'package:textile_tracking/components/master/layout/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -92,7 +92,7 @@ class _SummaryCardState extends State<SummaryCard> {
             children: [
               Container(
                 width: 120,
-                height: 90,
+                height: 100,
                 padding: CustomTheme().padding('card'),
                 decoration: CustomTheme().processCardTheme(color),
                 child: Column(
@@ -117,7 +117,7 @@ class _SummaryCardState extends State<SummaryCard> {
               ),
               if (!isPortrait)
                 Container(
-                  height: 90,
+                  height: 100,
                   padding: CustomTheme().padding('card'),
                   decoration: CustomTheme().processCardTheme(Color(0xFFf9fafc)),
                   child: Row(

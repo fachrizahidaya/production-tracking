@@ -90,9 +90,7 @@ class ConfirmationDialog extends StatelessWidget {
                                   style: TextStyle(color: Colors.white),
                                 ))
                     ])
-                  ].separatedBy(SizedBox(
-                    height: 8,
-                  )),
+                  ].separatedBy(CustomTheme().vGap('lg')),
                 ),
               ),
             );

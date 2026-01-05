@@ -9,10 +9,13 @@ class NoData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'No Data',
-      style: TextStyle(
-          fontSize: fontSize, color: CustomTheme().colors('text-primary')),
+    return Padding(
+      padding: CustomTheme().padding('content'),
+      child: Text(
+        'No Data',
+        style: TextStyle(
+            fontSize: fontSize, color: CustomTheme().colors('text-primary')),
+      ),
     );
   }
 }

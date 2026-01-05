@@ -340,9 +340,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                           }
                         },
                       ))
-                    ].separatedBy(SizedBox(
-                      width: 16,
-                    )),
+                    ].separatedBy(CustomTheme().vGap('xl')),
                   );
                 },
               ),

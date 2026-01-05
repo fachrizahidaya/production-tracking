@@ -52,6 +52,7 @@ dependencies:
   webview_flutter: ^4.9.0
   image_picker: ^1.2.0
   html: ^0.15.6
+  quill_html_editor: ^2.2.8
 
 dev_dependencies:
   flutter_test:

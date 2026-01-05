@@ -659,9 +659,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                           }
                         },
                       ))
-                    ].separatedBy(SizedBox(
-                      width: 16,
-                    )),
+                    ].separatedBy(CustomTheme().vGap('xl')),
                   );
                 },
               ),

@@ -180,9 +180,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                   ),
                 ),
               ),
-            ].separatedBy(SizedBox(
-              width: 16,
-            )),
+            ].separatedBy(CustomTheme().vGap('xl')),
           ),
           FilterSelectForm(
             label: "Status",
@@ -365,9 +363,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                   "status", selected.map((e) => e['value']).join(","));
             },
           )
-        ].separatedBy(SizedBox(
-          height: 16,
-        )),
+        ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
   }

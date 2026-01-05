@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
@@ -123,9 +125,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                     ),
                   ],
                 ),
-            ].separatedBy(SizedBox(
-              height: 16,
-            )),
+            ].separatedBy(CustomTheme().vGap('xl')),
           )
         ],
       ),

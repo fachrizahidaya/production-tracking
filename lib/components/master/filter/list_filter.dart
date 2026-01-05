@@ -217,9 +217,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                   ),
                 ),
               ),
-            ].separatedBy(SizedBox(
-              width: 16,
-            )),
+            ].separatedBy(CustomTheme().vGap('xl')),
           ),
           FilterSelectForm(
             label: "Status",
@@ -394,9 +392,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                   "status", selected.map((e) => e['value']).join(","));
             },
           ),
-        ].separatedBy(SizedBox(
-          height: 16,
-        )),
+        ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
   }

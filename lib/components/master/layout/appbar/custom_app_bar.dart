@@ -115,9 +115,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           fontSize: 12,
                           color: CustomTheme().colors('secondary')),
                     ),
-                  ].separatedBy(SizedBox(
-                    height: 4,
-                  )),
+                  ].separatedBy(CustomTheme().vGap('sm')),
                 ),
               ),
               PopupMenuItem(

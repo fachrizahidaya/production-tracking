@@ -366,164 +366,90 @@ class _DashboardState extends State<Dashboard> {
       child: Scaffold(
         backgroundColor: const Color(0xFFf9fafc),
         body: RefreshIndicator(
-            onRefresh: () => _loadDashboardData(),
-            child: CustomScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              slivers: [
-                SliverPadding(
-                  padding: CustomTheme().padding('content'),
-                  sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                    WorkOrderStats(data: statsList),
-                    // WorkOrderChart(
-                    //   data: chartList,
-                    //   filterWidget: ChartFilter(
-                    //     dariTanggal: dariTanggal,
-                    //     sampaiTanggal: sampaiTanggal,
-                    //     onHandleFilter: _handleFilter,
-                    //     pickDate: _pickDate,
-                    //     params: chartParams,
-                    //   ),
-                    //   handleRefetch: _handleFetchCharts,
-                    //   isFetching: isChartLoading,
-                    // ),
-                    WorkOrderSummary(
-                      data: summaryList,
-                      handleRefetch: _handleFetchSummary,
-                      isFetching: isSummaryLoading,
-                      filterWidget: SummaryFilter(
-                        dariTanggal: dariTanggalSummary,
-                        sampaiTanggal: sampaiTanggalSummary,
-                        onHandleFilter: _handleSummaryFilter,
-                        pickDate: _pickDate,
-                        params: summaryParams,
-                      ),
+          onRefresh: () => _loadDashboardData(),
+          child: CustomScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            slivers: [
+              SliverPadding(
+                padding: CustomTheme().padding('content'),
+                sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                  WorkOrderStats(data: statsList),
+                  WorkOrderSummary(
+                    data: summaryList,
+                    handleRefetch: _handleFetchSummary,
+                    isFetching: isSummaryLoading,
+                    filterWidget: SummaryFilter(
+                      dariTanggal: dariTanggalSummary,
+                      sampaiTanggal: sampaiTanggalSummary,
+                      onHandleFilter: _handleSummaryFilter,
+                      pickDate: _pickDate,
+                      params: summaryParams,
                     ),
-                    ActiveMachine(
-                      data: machineList,
-                      available: machineList['available'],
-                      unavailable: machineList['unavailable'],
-                      handleRefetch: _handleFetchMachine,
-                      isFetching: isMachineLoading,
+                  ),
+                  ActiveMachine(
+                    data: machineList,
+                    available: machineList['available'],
+                    unavailable: machineList['unavailable'],
+                    handleRefetch: _handleFetchMachine,
+                    isFetching: isMachineLoading,
+                  ),
+                  WorkOrderPie(
+                    data: pieList,
+                    process: chartList,
+                  ),
+                  WorkOrderProcessScreen(
+                    data: _dataList,
+                    search: _search,
+                    handleSearch: _handleSearch,
+                    firstLoading: _firstLoading,
+                    hasMore: _hasMore,
+                    handleLoadMore: _loadMore,
+                    handleRefetch: _refetch,
+                    isLoadMore: _isLoadMore,
+                    filterWidget: ProcessFilter(
+                      title: 'Filter',
+                      params: params,
+                      onHandleFilter: _handleProcessFilter,
+                      onSubmitFilter: _submitFilter,
+                      dariTanggal: dariTanggalProses,
+                      sampaiTanggal: sampaiTanggalProses,
+                      pickDate: _pickDate,
                     ),
-                    WorkOrderPie(
-                      data: pieList,
-                      process: chartList,
-                    ),
-                    WorkOrderProcessScreen(
-                      data: _dataList,
-                      search: _search,
-                      handleSearch: _handleSearch,
-                      firstLoading: _firstLoading,
-                      hasMore: _hasMore,
-                      handleLoadMore: _loadMore,
-                      handleRefetch: _refetch,
-                      isLoadMore: _isLoadMore,
-                      filterWidget: ProcessFilter(
-                        title: 'Filter',
-                        params: params,
-                        onHandleFilter: _handleProcessFilter,
-                        onSubmitFilter: _submitFilter,
-                        dariTanggal: dariTanggalProses,
-                        sampaiTanggal: sampaiTanggalProses,
-                        pickDate: _pickDate,
-                      ),
-                      handleFetchData: (params) async {
-                        final service = Provider.of<WorkOrderProcessService>(
-                            context,
-                            listen: false);
-                        await service.getDataList(params);
-                        return service.items;
-                      },
-                      handleBuildItem: (item) => ItemProcess(item: item),
-                      onHandleFilter: _handleFilter,
-                      service: WorkOrderProcessService(),
-                      isFiltered: _isFiltered,
-                    ),
-                  ].separatedBy(CustomTheme().vGap('2xl')))),
-                ),
-              ],
-            )
-            // NestedScrollView(
-            //   physics: const AlwaysScrollableScrollPhysics(),
-            //   headerSliverBuilder: (context, innerBoxIsScrolled) {
-            //     return [
-            //       SliverPadding(
-            //         padding: CustomTheme().padding('content'),
-            //         sliver: SliverList(
-            //           delegate: SliverChildListDelegate(
-            //             [
-            //               WorkOrderStats(data: statsList),
-            //               // WorkOrderChart(
-            //               //   data: chartList,
-            //               //   filterWidget: ChartFilter(
-            //               //     dariTanggal: dariTanggal,
-            //               //     sampaiTanggal: sampaiTanggal,
-            //               //     onHandleFilter: _handleFilter,
-            //               //     pickDate: _pickDate,
-            //               //     params: chartParams,
-            //               //   ),
-            //               //   handleRefetch: _handleFetchCharts,
-            //               //   isFetching: isChartLoading,
-            //               // ),
-            //               WorkOrderSummary(
-            //                 data: summaryList,
-            //                 dariTanggal: dariTanggalSummary,
-            //                 sampaiTanggal: sampaiTanggalSummary,
-            //                 handleRefetch: _handleFetchSummary,
-            //                 isFetching: isSummaryLoading,
-            //                 handleProcess: _handleSummaryFilter,
-            //               ),
-            //               ActiveMachine(
-            //                 data: machineList,
-            //                 available: machineList['available'],
-            //                 unavailable: machineList['unavailable'],
-            //                 handleRefetch: _handleFetchMachine,
-            //                 isFetching: isMachineLoading,
-            //               ),
-            //               WorkOrderPie(
-            //                 data: pieList,
-            //                 process: chartList,
-            //               ),
-            //               WorkOrderProcessScreen(
-            //                 data: _dataList,
-            //                 search: _search,
-            //                 handleSearch: _handleSearch,
-            //                 firstLoading: _firstLoading,
-            //                 hasMore: _hasMore,
-            //                 handleLoadMore: _loadMore,
-            //                 handleRefetch: _refetch,
-            //                 isLoadMore: _isLoadMore,
-            //                 filterWidget: ProcessFilter(
-            //                   title: 'Filter',
-            //                   params: params,
-            //                   onHandleFilter: _handleProcessFilter,
-            //                   onSubmitFilter: _submitFilter,
-            //                   dariTanggal: dariTanggalProses,
-            //                   sampaiTanggal: sampaiTanggalProses,
-            //                   pickDate: _pickDate,
-            //                 ),
-            //                 handleFetchData: (params) async {
-            //                   final service =
-            //                       Provider.of<WorkOrderProcessService>(context,
-            //                           listen: false);
-            //                   await service.getDataList(params);
-            //                   return service.items;
-            //                 },
-            //                 handleBuildItem: (item) => ItemProcess(item: item),
-            //                 onHandleFilter: _handleFilter,
-            //                 service: WorkOrderProcessService(),
-            //                 isFiltered: _isFiltered,
-            //               ),
-            //             ].separatedBy(CustomTheme().vGap('2xl')),
-            //           ),
-            //         ),
-            //       ),
-            //     ];
-            //   },
-            //   body: const SizedBox.shrink(),
-            // ),
-            ),
+                    handleFetchData: (params) async {
+                      final service = Provider.of<WorkOrderProcessService>(
+                          context,
+                          listen: false);
+                      await service.getDataList(params);
+                      return service.items;
+                    },
+                    handleBuildItem: (item) => ItemProcess(item: item),
+                    onHandleFilter: _handleFilter,
+                    service: WorkOrderProcessService(),
+                    isFiltered: _isFiltered,
+                  ),
+                ].separatedBy(CustomTheme().vGap('2xl')))),
+              ),
+            ],
+          ),
+          // NestedScrollView(
+          //   physics: const AlwaysScrollableScrollPhysics(),
+          //   headerSliverBuilder: (context, innerBoxIsScrolled) {
+          //     return [
+          //       SliverPadding(
+          //         padding: CustomTheme().padding('content'),
+          //         sliver: SliverList(
+          //           delegate: SliverChildListDelegate(
+          //             [
+
+          //     ]),
+          //         ),
+          //       )
+          //     ];
+          //   },
+          //   body: SizedBox.shrink(),
+          // ),
+        ),
       ),
     );
   }

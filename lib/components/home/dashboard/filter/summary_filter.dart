@@ -147,13 +147,9 @@ class _SummaryFilterState<T> extends State<SummaryFilter<T>> {
                   ),
                 ),
               ),
-            ].separatedBy(SizedBox(
-              width: 16,
-            )),
+            ].separatedBy(CustomTheme().vGap('xl')),
           ),
-        ].separatedBy(SizedBox(
-          height: 16,
-        )),
+        ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
   }

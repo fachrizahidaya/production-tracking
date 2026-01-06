@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/form/finish/form_section.dart';
+import 'package:textile_tracking/components/master/form/finish/form_items.dart';
 
 class ListForm extends StatefulWidget {
   final formKey;
@@ -107,17 +107,17 @@ class _ListFormState extends State<ListForm> {
     final workOrders = widget.processData['work_orders'];
     if (workOrders == null) return 0;
 
-    if (workOrders['embroidery'] != null) {
-      return double.tryParse(
-            workOrders['embroidery']['item_qty']?.toString() ?? '0',
-          ) ??
-          0;
-    } else if (workOrders['printing'] != null) {
-      return double.tryParse(
-            workOrders['printing']['item_qty']?.toString() ?? '0',
-          ) ??
-          0;
-    }
+    // if (workOrders['embroidery'] != null) {
+    //   return double.tryParse(
+    //         workOrders['embroidery']['item_qty']?.toString() ?? '0',
+    //       ) ??
+    //       0;
+    // } else if (workOrders['printing'] != null) {
+    //   return double.tryParse(
+    //         workOrders['printing']['item_qty']?.toString() ?? '0',
+    //       ) ??
+    //       0;
+    // }
 
 // if items
     final List<dynamic>? items = workOrders['items'];
@@ -238,7 +238,7 @@ class _ListFormState extends State<ListForm> {
   Widget build(BuildContext context) {
     return Form(
       key: widget.formKey,
-      child: FormSection(
+      child: FormItems(
         id: widget.id,
         form: widget.form,
         withItemGrade: widget.withItemGrade,

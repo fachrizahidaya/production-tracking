@@ -57,9 +57,7 @@ class CustomAlertDialog extends StatelessWidget {
                     ),
                   ),
                 ])
-              ].separatedBy(SizedBox(
-                height: 8,
-              )),
+              ].separatedBy(CustomTheme().vGap('lg')),
             ),
           ),
         ));

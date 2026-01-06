@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/section/finish/create_form.dart';
+import 'package:textile_tracking/components/master/section/finish/finish_section.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
-class CreateInfoTab extends StatefulWidget {
+class FinishFormTab extends StatefulWidget {
   final id;
   final data;
   final form;
@@ -49,7 +49,7 @@ class CreateInfoTab extends StatefulWidget {
   final label;
   final forDyeing;
 
-  const CreateInfoTab(
+  const FinishFormTab(
       {super.key,
       this.data,
       this.form,
@@ -97,10 +97,10 @@ class CreateInfoTab extends StatefulWidget {
       this.forDyeing});
 
   @override
-  State<CreateInfoTab> createState() => _CreateInfoTabState();
+  State<FinishFormTab> createState() => _FinishFormTabState();
 }
 
-class _CreateInfoTabState extends State<CreateInfoTab>
+class _FinishFormTabState extends State<FinishFormTab>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
@@ -120,7 +120,7 @@ class _CreateInfoTabState extends State<CreateInfoTab>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CreateForm(
+            FinishSection(
               formKey: widget.formKey,
               form: widget.form,
               note: widget.note,

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:textile_tracking/components/master/section/finish/list_form.dart';
 
-class CreateForm extends StatefulWidget {
+class FinishSection extends StatefulWidget {
   final formKey;
   final form;
   final note;
@@ -34,7 +34,7 @@ class CreateForm extends StatefulWidget {
   final label;
   final forDyeing;
 
-  const CreateForm(
+  const FinishSection(
       {super.key,
       this.formKey,
       this.form,
@@ -65,10 +65,10 @@ class CreateForm extends StatefulWidget {
       this.handleSelectQtyUnitDyeing});
 
   @override
-  State<CreateForm> createState() => _CreateFormState();
+  State<FinishSection> createState() => _FinishSectionState();
 }
 
-class _CreateFormState extends State<CreateForm> {
+class _FinishSectionState extends State<FinishSection> {
   bool _isChanged = false;
   late String _initialWeight;
   late String _initialQty;
@@ -105,7 +105,7 @@ class _CreateFormState extends State<CreateForm> {
   }
 
   @override
-  void didUpdateWidget(covariant CreateForm oldWidget) {
+  void didUpdateWidget(covariant FinishSection oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.processData != oldWidget.processData &&
         widget.processData.isNotEmpty) {

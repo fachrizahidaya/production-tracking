@@ -7,17 +7,17 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:html/parser.dart' as html_parser;
 
-class CreateFormTab extends StatefulWidget {
+class WorkOrderInfoTab extends StatefulWidget {
   final data;
   final label;
 
-  const CreateFormTab({super.key, this.data, this.label});
+  const WorkOrderInfoTab({super.key, this.data, this.label});
 
   @override
-  State<CreateFormTab> createState() => _CreateFormTabState();
+  State<WorkOrderInfoTab> createState() => _WorkOrderInfoTabState();
 }
 
-class _CreateFormTabState extends State<CreateFormTab> {
+class _WorkOrderInfoTabState extends State<WorkOrderInfoTab> {
   String htmlToPlainText(dynamic htmlString) {
     if (htmlString == null) return '';
 

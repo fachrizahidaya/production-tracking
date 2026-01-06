@@ -329,9 +329,7 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
                   )),
                 ),
               ),
-            ].separatedBy(SizedBox(
-              height: 16,
-            )),
+            ].separatedBy(CustomTheme().vGap('xl')),
           ),
         ].separatedBy(const SizedBox(height: 16)),
       ),

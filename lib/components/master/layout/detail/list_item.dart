@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
@@ -10,7 +12,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
-class ListInfoSection extends StatefulWidget {
+class ListItem extends StatefulWidget {
   final Map<String, dynamic> data;
   final Map<String, dynamic> form;
   final ValueNotifier<bool> isSubmitting;
@@ -56,7 +58,7 @@ class ListInfoSection extends StatefulWidget {
   final label;
   final forDyeing;
 
-  const ListInfoSection(
+  const ListItem(
       {super.key,
       required this.data,
       required this.form,
@@ -103,10 +105,10 @@ class ListInfoSection extends StatefulWidget {
       this.forDyeing = false});
 
   @override
-  State<ListInfoSection> createState() => _ListInfoSectionState();
+  State<ListItem> createState() => _ListItemState();
 }
 
-class _ListInfoSectionState extends State<ListInfoSection> {
+class _ListItemState extends State<ListItem> {
   @override
   void initState() {
     super.initState();
@@ -117,7 +119,6 @@ class _ListInfoSectionState extends State<ListInfoSection> {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
-    final data = widget.data;
     final grades = widget.existingGrades;
 
     return SingleChildScrollView(
@@ -201,14 +202,6 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                     );
                   },
                 )
-                // SelectForm(
-                //   isDisabled: widget.data['can_update'] ? false : true,
-                //   label: 'Mesin',
-                //   onTap: () => widget.handleSelectMachine(),
-                //   selectedLabel: widget.form['nama_mesin'] ?? '',
-                //   selectedValue: widget.form['machine_id'].toString(),
-                //   required: false,
-                // )
               ].separatedBy(CustomTheme().vGap('lg')),
             )),
             Row(
@@ -250,65 +243,11 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                       ),
                                     ],
                                   ),
-                                if (widget.withMaklon == true)
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Maklon',
-                                        style: TextStyle(
-                                            fontSize:
-                                                CustomTheme().fontSize('lg')),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Switch(
-                                            value: data['maklon'],
-                                            onChanged: data['can_update']
-                                                ? (value) {
-                                                    setState(() {
-                                                      data['maklon'] = value;
-                                                      widget.form['maklon'] =
-                                                          value;
-                                                    });
-                                                  }
-                                                : null,
-                                            activeColor: Colors.green,
-                                            inactiveThumbColor:
-                                                Colors.redAccent,
-                                          ),
-                                          Text(data['maklon'] ? 'Ya' : 'Tidak'),
-                                        ],
-                                      ),
-                                    ],
+                                if (widget.data['maklon'] == true)
+                                  ViewText(
+                                    viewLabel: 'Nama Maklon',
+                                    viewValue: widget.data['maklon_name'],
                                   ),
-                                if (data['maklon'] == true)
-                                  TextForm(
-                                    label: 'Nama Maklon',
-                                    req: false,
-                                    controller: widget.maklon,
-                                    handleChange: (value) {
-                                      setState(() {
-                                        widget.maklon.text = value.toString();
-                                        widget.form['maklon_name'] =
-                                            value.toString();
-                                      });
-                                    },
-                                  ),
-                                // if (widget.onlySewing == true &&
-                                //     data['maklon'] == false)
-                                // SelectForm(
-                                //   label: 'Mesin',
-                                //   isDisabled:
-                                //       data['can_update'] ? false : true,
-                                //   onTap: widget.handleSelectMachine!,
-                                //   selectedLabel:
-                                //       widget.form['nama_mesin'] ?? '',
-                                //   selectedValue:
-                                //       widget.form['machine_id'].toString(),
-                                //   required: false,
-                                // ),
                                 if (widget.data['status'] == 'Selesai')
                                   Row(
                                     mainAxisAlignment:
@@ -323,227 +262,32 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                                           viewValue:
                                               '${widget.data['qty'] ?? '0'} ${widget.data['unit']['code']}',
                                         ),
-
-                                      // ViewText(
-                                      //   viewLabel: 'Berat',
-                                      //   viewValue:
-                                      //       '${widget.data['weight'] ?? '0'} ${widget.data['weight_unit']['code']}',
-                                      // ),
+                                      ViewText(
+                                        viewLabel: 'Berat',
+                                        viewValue:
+                                            '${widget.data['weight'] ?? '0'} ${widget.data['weight_unit']['code']}',
+                                      ),
                                       if (widget.withQtyAndWeight == true)
                                         ViewText(
                                           viewLabel:
                                               'Qty Hasil ${widget.label}',
                                           viewValue:
-                                              '${widget.data['weight'] ?? '0'} ${widget.data['weight_unit']['code']}',
+                                              '${widget.data['item_qty'] ?? '0'} ${widget.data['item_unit']['code']}',
                                         ),
-                                      // ViewText(
-                                      //   viewLabel: 'Panjang',
-                                      //   viewValue:
-                                      //       '${widget.data['length'] ?? '0'} ${widget.data['length_unit']['code']}',
-                                      // ),
-                                      // ViewText(
-                                      //   viewLabel: 'Lebar',
-                                      //   viewValue:
-                                      //       '${widget.data['width'] ?? '0'} ${widget.data['width_unit']['code']}',
-                                      // ),
+                                      ViewText(
+                                        viewLabel: 'Panjang',
+                                        viewValue:
+                                            '${widget.data['length'] ?? '0'} ${widget.data['length_unit']['code']}',
+                                      ),
+                                      ViewText(
+                                        viewLabel: 'Lebar',
+                                        viewValue:
+                                            '${widget.data['width'] ?? '0'} ${widget.data['width_unit']['code']}',
+                                      ),
                                     ],
                                   ),
                               ].separatedBy(CustomTheme().vGap('lg')),
                             ),
-
-                            // Column(
-                            //   children: [
-                            //     Row(
-                            //       mainAxisAlignment:
-                            //           MainAxisAlignment.spaceBetween,
-                            //       crossAxisAlignment: CrossAxisAlignment.center,
-                            //       children: [
-                            //         Expanded(
-                            //           flex: 2,
-                            //           child: TextForm(
-                            //             isDisabled:
-                            //                 data['can_update'] ? false : true,
-                            //             label: 'Panjang',
-                            //             req: false,
-                            //             controller: widget.length
-                            //               ..text = (widget.length.text == '0')
-                            //                   ? '0'
-                            //                   : widget.length.text,
-                            //             handleChange: (value) {
-                            //               setState(() {
-                            //                 widget.length.text = value.toString();
-                            //                 widget.handleChangeInput(
-                            //                     'length', value);
-                            //               });
-                            //             },
-                            //           ),
-                            //         ),
-                            //         Expanded(
-                            //           flex: 1,
-                            //           child: SelectForm(
-                            //               isDisabled:
-                            //                   data['can_update'] ? false : true,
-                            //               label: 'Satuan Panjang',
-                            //               onTap: () =>
-                            //                   widget.handleSelectLengthUnit(),
-                            //               selectedLabel: widget
-                            //                       .form['nama_satuan_panjang'] ??
-                            //                   '',
-                            //               selectedValue: widget
-                            //                       .form['length_unit_id']
-                            //                       ?.toString() ??
-                            //                   '',
-                            //               required: false),
-                            //         ),
-                            //       ].separatedBy(SizedBox(
-                            //         width: 8,
-                            //       )),
-                            //     ),
-                            //     Row(
-                            //       mainAxisAlignment:
-                            //           MainAxisAlignment.spaceBetween,
-                            //       crossAxisAlignment: CrossAxisAlignment.center,
-                            //       children: [
-                            //         Expanded(
-                            //           flex: 2,
-                            //           child: TextForm(
-                            //             isDisabled:
-                            //                 data['can_update'] ? false : true,
-                            //             label: 'Lebar',
-                            //             req: false,
-                            //             controller: widget.width
-                            //               ..text = (widget.width.text == '0')
-                            //                   ? '0'
-                            //                   : widget.width.text,
-                            //             handleChange: (value) {
-                            //               setState(() {
-                            //                 widget.length.text = value.toString();
-                            //                 widget.handleChangeInput(
-                            //                     'width', value);
-                            //               });
-                            //             },
-                            //           ),
-                            //         ),
-                            //         Expanded(
-                            //           flex: 1,
-                            //           child: SelectForm(
-                            //               isDisabled:
-                            //                   data['can_update'] ? false : true,
-                            //               label: 'Satuan Lebar',
-                            //               onTap: () =>
-                            //                   widget.handleSelectWidthUnit(),
-                            //               selectedLabel:
-                            //                   widget.form['nama_satuan_lebar'] ??
-                            //                       '',
-                            //               selectedValue: widget
-                            //                       .form['width_unit_id']
-                            //                       ?.toString() ??
-                            //                   '',
-                            //               required: false),
-                            //         ),
-                            //       ].separatedBy(SizedBox(
-                            //         width: 8,
-                            //       )),
-                            //     ),
-                            //     Row(
-                            //       mainAxisAlignment:
-                            //           MainAxisAlignment.spaceBetween,
-                            //       crossAxisAlignment: CrossAxisAlignment.center,
-                            //       children: [
-                            //         Expanded(
-                            //           flex: 2,
-                            //           child: TextForm(
-                            //             isDisabled:
-                            //                 data['can_update'] ? false : true,
-                            //             label: 'Berat',
-                            //             req: false,
-                            //             controller: widget.weight
-                            //               ..text = (widget.weight.text.isEmpty ||
-                            //                       widget.weight.text == '0'
-                            //                   ? 'No Data'
-                            //                   : widget.weight.text),
-                            //             handleChange: (value) {
-                            //               setState(() {
-                            //                 widget.weight.text = value.toString();
-                            //                 widget.handleChangeInput(
-                            //                     'weight', value);
-                            //               });
-                            //             },
-                            //           ),
-                            //         ),
-                            //         Expanded(
-                            //           flex: 1,
-                            //           child: SelectForm(
-                            //               isDisabled:
-                            //                   data['can_update'] ? false : true,
-                            //               label: 'Satuan Berat',
-                            //               onTap: () => widget.handleSelectUnit(),
-                            //               selectedLabel:
-                            //                   widget.form['nama_satuan_berat'] ??
-                            //                       '',
-                            //               selectedValue: widget
-                            //                       .form['weight_unit_id']
-                            //                       ?.toString() ??
-                            //                   '',
-                            //               required: false),
-                            //         ),
-                            //       ].separatedBy(SizedBox(
-                            //         width: 8,
-                            //       )),
-                            //     ),
-                            //     if (widget.withQtyAndWeight == true)
-                            //       Row(
-                            //         mainAxisAlignment:
-                            //             MainAxisAlignment.spaceBetween,
-                            //         crossAxisAlignment: CrossAxisAlignment.center,
-                            //         children: [
-                            //           Expanded(
-                            //             flex: 2,
-                            //             child: TextForm(
-                            //               label: 'Jumlah',
-                            //               isDisabled:
-                            //                   data['can_update'] ? false : true,
-                            //               req: false,
-                            //               controller: widget.qtyItem
-                            //                 ..text = (widget
-                            //                             .qtyItem.text.isEmpty ||
-                            //                         widget.qtyItem.text == '0')
-                            //                     ? 'No Data'
-                            //                     : widget.qtyItem.text,
-                            //               handleChange: (value) {
-                            //                 setState(() {
-                            //                   widget.qtyItem.text =
-                            //                       value.toString();
-                            //                   widget.handleChangeInput(
-                            //                       'item_qty', value);
-                            //                 });
-                            //               },
-                            //             ),
-                            //           ),
-                            //           Expanded(
-                            //             flex: 1,
-                            //             child: SelectForm(
-                            //                 label: 'Satuan',
-                            //                 isDisabled:
-                            //                     data['can_update'] ? false : true,
-                            //                 onTap: () =>
-                            //                     widget.handleSelectQtyItemUnit(),
-                            //                 selectedLabel:
-                            //                     widget.form['nama_satuan'] ?? '',
-                            //                 selectedValue: widget
-                            //                         .form['item_unit_id']
-                            //                         ?.toString() ??
-                            //                     '',
-                            //                 required: false),
-                            //           ),
-                            //         ].separatedBy(SizedBox(
-                            //           width: 8,
-                            //         )),
-                            //       ),
-                            //   ].separatedBy(SizedBox(
-                            //     height: 8,
-                            //   )),
-                            // )
                           ].separatedBy(CustomTheme().vGap('lg')),
                         ),
                       ].separatedBy(CustomTheme().vGap('lg')),
@@ -613,7 +357,8 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                   ),
                 ],
               ),
-            if (widget.withItemGrade == true && data['status'] == 'Selesai')
+            if (widget.withItemGrade == true &&
+                widget.data['status'] == 'Selesai')
               CustomCard(
                   child: Column(
                 children: [
@@ -698,13 +443,9 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                             },
                           ),
                         ),
-                      ].separatedBy(SizedBox(
-                        width: 16,
-                      )),
+                      ].separatedBy(CustomTheme().vGap('xl')),
                     ),
-                ].separatedBy(SizedBox(
-                  height: 16,
-                )),
+                ].separatedBy(CustomTheme().vGap('xl')),
               )),
             if (widget.data['status'] == 'Selesai')
               Row(
@@ -740,7 +481,7 @@ class _ListInfoSectionState extends State<ListInfoSection> {
                   ),
                 ],
               ),
-            if (data['status'] == 'Selesai')
+            if (widget.data['status'] == 'Selesai')
               Row(
                 children: [
                   Expanded(

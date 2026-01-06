@@ -118,9 +118,7 @@ class _ItemProcessState extends State<ItemProcess> {
               ].separatedBy(CustomTheme().hGap('2xl')),
             ),
           )
-        ].separatedBy(SizedBox(
-          height: 8,
-        )),
+        ].separatedBy(CustomTheme().vGap('lg')),
       ),
     );
   }
@@ -159,9 +157,7 @@ class _ItemProcessState extends State<ItemProcess> {
                 Text(widget.item['processes'][item]['qty'] != null
                     ? '${widget.item['processes'][item]['qty']} ${widget.item['processes'][item]['unit']['code']}'
                     : '-'),
-              ].separatedBy(SizedBox(
-                width: 8,
-              )),
+              ].separatedBy(CustomTheme().vGap('lg')),
             ),
           if (withItemQty)
             Row(
@@ -170,9 +166,7 @@ class _ItemProcessState extends State<ItemProcess> {
                 Text(widget.item['processes'][item]['item_qty'] != null
                     ? '${widget.item['processes'][item]['item_qty']} ${widget.item['processes'][item]['item_unit']['code']}'
                     : '-'),
-              ].separatedBy(SizedBox(
-                width: 8,
-              )),
+              ].separatedBy(CustomTheme().vGap('lg')),
             ),
           if (withWeight)
             Row(
@@ -181,9 +175,7 @@ class _ItemProcessState extends State<ItemProcess> {
                 Text(widget.item['processes'][item]['weight'] != null
                     ? '${widget.item['processes'][item]['weight']} ${widget.item['processes'][item]['weight_unit']['code']}'
                     : '-'),
-              ].separatedBy(SizedBox(
-                width: 8,
-              )),
+              ].separatedBy(CustomTheme().vGap('lg')),
             ),
           if (withGrades)
             Column(
@@ -196,9 +188,7 @@ class _ItemProcessState extends State<ItemProcess> {
                     }).toList()
                   : [const Text('-')],
             )
-        ].separatedBy(SizedBox(
-          height: 8,
-        )),
+        ].separatedBy(CustomTheme().vGap('lg')),
       ),
     );
   }

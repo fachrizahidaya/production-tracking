@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:path/path.dart' as p;
 
@@ -48,9 +49,7 @@ class AttachmentItem extends StatelessWidget {
             item['file_name']!,
           ),
         ),
-      ].separatedBy(SizedBox(
-        width: 16,
-      )),
+      ].separatedBy(CustomTheme().hGap('xl')),
     ));
   }
 }

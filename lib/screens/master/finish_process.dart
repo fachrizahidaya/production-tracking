@@ -15,7 +15,6 @@ import 'package:textile_tracking/providers/user_provider.dart';
 class FinishProcess extends StatefulWidget {
   final String title;
 
-  /// This builds the manual form page when the QR code is scanned or manually entered
   final Widget Function(
     BuildContext context,
     dynamic id,
@@ -26,17 +25,14 @@ class FinishProcess extends StatefulWidget {
     void Function(String fieldName, dynamic value) handleChangeInput,
   ) formPageBuilder;
 
-  /// Function for submission to service (context, id, form, loading)
   final Future<void> Function(
       BuildContext context,
       dynamic id,
       Map<String, dynamic> form,
       ValueNotifier<bool> isLoading)? handleSubmitToService;
 
-  /// Function to fetch the work order options (custom per process)
   final Future<void> Function(OptionWorkOrderService service)? fetchWorkOrder;
 
-  /// Function to get the work order option list (custom per process)
   final List<dynamic> Function(OptionWorkOrderService service)?
       getWorkOrderOptions;
 

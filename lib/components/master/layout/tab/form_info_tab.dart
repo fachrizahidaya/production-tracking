@@ -5,10 +5,10 @@ import 'package:textile_tracking/components/master/layout/card/custom_badge.dart
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
-import 'package:textile_tracking/components/master/section/create/create_form.dart';
+import 'package:textile_tracking/components/master/section/create/create_section.dart';
 import 'package:html/parser.dart' as html_parser;
 
-class FinishInfoTab extends StatefulWidget {
+class FormInfoTab extends StatefulWidget {
   final id;
   final data;
   final label;
@@ -24,7 +24,7 @@ class FinishInfoTab extends StatefulWidget {
   final withOnlyMaklon;
   final withNoMaklonOrMachine;
 
-  const FinishInfoTab(
+  const FormInfoTab(
       {super.key,
       this.data,
       this.form,
@@ -42,10 +42,10 @@ class FinishInfoTab extends StatefulWidget {
       this.withOnlyMaklon});
 
   @override
-  State<FinishInfoTab> createState() => _FinishInfoTabState();
+  State<FormInfoTab> createState() => _FormInfoTabState();
 }
 
-class _FinishInfoTabState extends State<FinishInfoTab> {
+class _FormInfoTabState extends State<FormInfoTab> {
   String htmlToPlainText(dynamic htmlString) {
     if (htmlString == null) return '';
 
@@ -74,7 +74,7 @@ class _FinishInfoTabState extends State<FinishInfoTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CreateForm(
+          CreateSection(
             formKey: widget.formKey,
             form: widget.form,
             maklon: widget.maklon,

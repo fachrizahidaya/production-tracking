@@ -6,9 +6,10 @@ import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
-class FormSection extends StatefulWidget {
+class FormItems extends StatefulWidget {
   final id;
   final form;
   final withItemGrade;
@@ -41,7 +42,7 @@ class FormSection extends StatefulWidget {
   final qtyWarning;
   final label;
 
-  const FormSection(
+  const FormItems(
       {super.key,
       this.allAttachments,
       this.form,
@@ -76,10 +77,10 @@ class FormSection extends StatefulWidget {
       this.handleSelectQtyUnitDyeing});
 
   @override
-  State<FormSection> createState() => _FormSectionState();
+  State<FormItems> createState() => _FormItemsState();
 }
 
-class _FormSectionState extends State<FormSection> {
+class _FormItemsState extends State<FormItems> {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> formRows = [
@@ -457,14 +458,14 @@ class _FormSectionState extends State<FormSection> {
                   widget.showImageDialog(context, isNew, filePath);
                 },
               )),
-              // CustomCard(
-              //     child: NoteEditor(
-              //   controller: widget.note,
-              //   formKey: 'notes',
-              //   label: 'Catatan',
-              //   form: widget.form,
-              //   onChanged: (value) => widget.handleChangeInput('notes', value),
-              // )),
+              CustomCard(
+                  child: NoteEditor(
+                controller: widget.note,
+                formKey: 'notes',
+                label: 'Catatan',
+                form: widget.form['notes'],
+                onChanged: (value) => widget.handleChangeInput('notes', value),
+              )),
             ].separatedBy(CustomTheme().vGap('2xl')),
           ),
       ].separatedBy(CustomTheme().vGap('2xl')),

@@ -48,9 +48,7 @@ class TextForm extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-          ].separatedBy(SizedBox(
-            width: 8,
-          )),
+          ].separatedBy(CustomTheme().hGap('sm')),
         ),
         TextFormField(
           enabled: isDisabled == true ? false : true,
@@ -68,9 +66,7 @@ class TextForm extends StatelessWidget {
           },
           validator: req ? validator : null,
         )
-      ].separatedBy(SizedBox(
-        height: 8,
-      )),
+      ].separatedBy(CustomTheme().vGap('lg')),
     );
   }
 }

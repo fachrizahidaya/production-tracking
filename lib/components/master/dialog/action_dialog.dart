@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class DialogActionItem {
   final IconData icon;
@@ -29,7 +30,7 @@ class ActionDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: CustomTheme().padding('dialog'),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: actions.map((item) {

@@ -142,7 +142,7 @@ class _HomeState extends State<Home> {
 
           return Scaffold(
             appBar: CustomAppBar(
-              title: 'Textile Tracking',
+              title: 'TexTrack',
               isWithNotification: true,
               handleLogout: () => _handleLogout(context),
               isWithAccount: true,

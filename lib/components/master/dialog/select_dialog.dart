@@ -57,7 +57,7 @@ class _SelectDialogState extends State<SelectDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: CustomTheme().padding('card'),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -113,8 +113,7 @@ class _SelectDialogState extends State<SelectDialog> {
                               Navigator.pop(context); // close dialog
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 12),
+                              padding: CustomTheme().padding('card'),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,

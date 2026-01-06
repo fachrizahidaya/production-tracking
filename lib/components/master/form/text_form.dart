@@ -36,7 +36,7 @@ class TextForm extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: CustomTheme().fontSize('md'),
               ),
             ),
             if (req)
@@ -44,8 +44,8 @@ class TextForm extends StatelessWidget {
                 '*',
                 style: TextStyle(
                   color: CustomTheme().colors('danger'),
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+                  fontSize: CustomTheme().fontSize('md'),
+                  fontWeight: CustomTheme().fontWeight('bold'),
                 ),
               ),
           ].separatedBy(CustomTheme().hGap('sm')),
@@ -53,7 +53,7 @@ class TextForm extends StatelessWidget {
         TextFormField(
           enabled: isDisabled == true ? false : true,
           controller: controller,
-          style: TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: CustomTheme().fontSize('md')),
           decoration:
               CustomTheme().inputDecoration().copyWith(hintText: 'Isi $label'),
           keyboardType:

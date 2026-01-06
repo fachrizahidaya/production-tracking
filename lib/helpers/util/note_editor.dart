@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/text_editor.dart';
 
 class NoteEditor extends StatefulWidget {
@@ -32,9 +33,9 @@ class _NoteEditorState extends State<NoteEditor> {
       children: [
         Text(
           widget.label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('md'),
+            fontWeight: CustomTheme().fontWeight('semibold'),
           ),
         ),
         const SizedBox(height: 8),
@@ -74,8 +75,8 @@ class _NoteEditorState extends State<NoteEditor> {
           },
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            constraints: const BoxConstraints(minHeight: 150),
+            padding: CustomTheme().padding('card'),
+            constraints: BoxConstraints(minHeight: 150),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),

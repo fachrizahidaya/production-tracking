@@ -336,7 +336,7 @@ class _ListItemState extends State<ListItem> {
                           'Informasi Work Order',
                           style: TextStyle(
                               fontSize: CustomTheme().fontSize('xl'),
-                              fontWeight: FontWeight.bold),
+                              fontWeight: CustomTheme().fontWeight('bold')),
                         ),
                         ViewText(
                           viewLabel: 'Qty Greige',

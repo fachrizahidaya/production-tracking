@@ -5,7 +5,7 @@
     <uses-sdk android:minSdkVersion="23"/>
 
     <application
-        android:label="Textile Tracking"
+        android:label="TexTrack"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

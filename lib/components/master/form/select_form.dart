@@ -46,7 +46,7 @@ class _SelectFormState extends State<SelectForm> {
             child: GestureDetector(
               onTap: widget.isDisabled == true ? null : widget.onTap,
               child: Container(
-                padding: const EdgeInsets.all(12),
+                padding: CustomTheme().padding('card'),
                 height: 47,
                 width: double.infinity,
                 decoration: CustomTheme().inputStaticDecorationRequired(),

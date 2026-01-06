@@ -4,7 +4,7 @@ class CustomTheme {
   BoxDecoration cardTheme() {
     return BoxDecoration(
       color: Colors.white,
-      borderRadius: const BorderRadius.all(
+      borderRadius: BorderRadius.all(
         Radius.circular(12),
       ),
       border: Border.all(
@@ -21,7 +21,7 @@ class CustomTheme {
   BoxDecoration dashboardCardTheme(bottomBorderColor) {
     return BoxDecoration(
       color: Colors.white,
-      borderRadius: const BorderRadius.all(
+      borderRadius: BorderRadius.all(
         Radius.circular(12),
       ),
       border: Border.all(
@@ -38,7 +38,7 @@ class CustomTheme {
   BoxDecoration statsCardTheme(bottomBorderColor) {
     return BoxDecoration(
       color: Colors.white,
-      borderRadius: const BorderRadius.all(
+      borderRadius: BorderRadius.all(
         Radius.circular(12),
       ),
       border: Border(
@@ -56,7 +56,7 @@ class CustomTheme {
   BoxDecoration processCardTheme(color) {
     return BoxDecoration(
       color: color,
-      borderRadius: const BorderRadius.all(
+      borderRadius: BorderRadius.all(
         Radius.circular(8),
       ),
     );
@@ -65,7 +65,7 @@ class CustomTheme {
   BoxDecoration machineStatusCardTheme(color) {
     return BoxDecoration(
       color: color,
-      borderRadius: const BorderRadius.all(
+      borderRadius: BorderRadius.all(
         Radius.circular(8),
       ),
     );
@@ -74,7 +74,7 @@ class CustomTheme {
   BoxDecoration badgeTheme(status) {
     return BoxDecoration(
       color: statusColor(status),
-      borderRadius: const BorderRadius.all(
+      borderRadius: BorderRadius.all(
         Radius.circular(8),
       ),
       border: Border.all(
@@ -91,7 +91,7 @@ class CustomTheme {
       color: Colors.grey.withOpacity(0.3),
       spreadRadius: 0,
       blurRadius: 2,
-      offset: const Offset(0, 2), // changes position of shadow
+      offset: Offset(0, 2), // changes position of shadow
     );
   }
 
@@ -137,7 +137,7 @@ class CustomTheme {
   }
 
   BoxDecoration containerBottomSheetDecoration() {
-    return const BoxDecoration(
+    return BoxDecoration(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(16),
       ),
@@ -147,7 +147,7 @@ class CustomTheme {
 
   BoxDecoration inputStaticDecorationRequired() {
     return BoxDecoration(
-      borderRadius: const BorderRadius.all(
+      borderRadius: BorderRadius.all(
         Radius.circular(
           12.0,
         ),
@@ -162,7 +162,7 @@ class CustomTheme {
 
   BoxDecoration inputStaticDecoration() {
     return BoxDecoration(
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(
             12.0,
           ),
@@ -182,9 +182,9 @@ class CustomTheme {
     return InputDecoration(
       filled: true,
       fillColor: Colors.white,
-      contentPadding: const EdgeInsets.all(12),
+      contentPadding: EdgeInsets.all(12),
       border: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(
             8.0,
           ),
@@ -195,7 +195,7 @@ class CustomTheme {
         ),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(
             8.0,
           ),
@@ -206,7 +206,7 @@ class CustomTheme {
         ),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(
             8.0,
           ),
@@ -217,7 +217,7 @@ class CustomTheme {
         ),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(
             8.0,
           ),
@@ -228,7 +228,7 @@ class CustomTheme {
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(
             8.0,
           ),
@@ -239,7 +239,7 @@ class CustomTheme {
         ),
       ),
       hintText: hintTextString,
-      hintStyle: const TextStyle(
+      hintStyle: TextStyle(
         color: Colors.black38,
         fontWeight: FontWeight.w400,
       ),
@@ -257,11 +257,11 @@ class CustomTheme {
     return InputDecoration(
       filled: true,
       fillColor: Colors.white,
-      contentPadding: const EdgeInsets.symmetric(
+      contentPadding: EdgeInsets.symmetric(
         horizontal: 12,
       ),
       border: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(
             4.0,
           ),
@@ -271,7 +271,7 @@ class CustomTheme {
           color: colors('base'),
         ),
       ),
-      focusedBorder: const OutlineInputBorder(
+      focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(
             4.0,
@@ -283,7 +283,7 @@ class CustomTheme {
         ),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(
             4.0,
           ),
@@ -294,7 +294,7 @@ class CustomTheme {
         ),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(
             4.0,
           ),
@@ -305,7 +305,7 @@ class CustomTheme {
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(
             4.0,
           ),
@@ -316,17 +316,17 @@ class CustomTheme {
         ),
       ),
       hintText: hintTextString,
-      hintStyle: const TextStyle(
+      hintStyle: TextStyle(
         color: Colors.black38,
         fontWeight: FontWeight.w400,
       ),
       suffixIcon: withReset == true
           ? IconButton(
-              icon: const Icon(Icons.replay_outlined),
+              icon: Icon(Icons.replay_outlined),
               onPressed: onPressClear,
             )
           : IconButton(
-              icon: const Icon(Icons.close),
+              icon: Icon(Icons.close),
               onPressed: hasValue ? onPressClear : null,
             ),
     );
@@ -336,11 +336,11 @@ class CustomTheme {
     return InputDecoration(
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(
+        contentPadding: EdgeInsets.symmetric(
           horizontal: 12,
         ),
         border: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
+          borderRadius: BorderRadius.all(
             Radius.circular(
               8.0,
             ),
@@ -350,7 +350,7 @@ class CustomTheme {
             color: colors('base'),
           ),
         ),
-        focusedBorder: const OutlineInputBorder(
+        focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(
               8.0,
@@ -362,7 +362,7 @@ class CustomTheme {
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
+          borderRadius: BorderRadius.all(
             Radius.circular(
               8.0,
             ),
@@ -373,7 +373,7 @@ class CustomTheme {
           ),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
+          borderRadius: BorderRadius.all(
             Radius.circular(
               8.0,
             ),
@@ -384,7 +384,7 @@ class CustomTheme {
           ),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
+          borderRadius: BorderRadius.all(
             Radius.circular(
               8.0,
             ),
@@ -395,7 +395,7 @@ class CustomTheme {
           ),
         ),
         hintText: hintTextString,
-        hintStyle: const TextStyle(
+        hintStyle: TextStyle(
           color: Colors.black38,
           fontWeight: FontWeight.w400,
         ),
@@ -409,9 +409,9 @@ class CustomTheme {
     return InputDecoration(
       filled: true,
       fillColor: Colors.grey.shade100,
-      contentPadding: const EdgeInsets.all(12),
+      contentPadding: EdgeInsets.all(12),
       border: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(
             8.0,
           ),
@@ -503,41 +503,40 @@ class CustomTheme {
   Color buttonColor(String name) {
     switch (name) {
       case 'base':
-        return const Color.fromRGBO(18, 69, 115, 1);
+        return Color.fromRGBO(18, 69, 115, 1);
       case 'primary':
-        return const Color.fromRGBO(69, 97, 219, 1);
+        return Color.fromRGBO(69, 97, 219, 1);
       case 'warning':
-        return const Color.fromRGBO(209, 135, 0, 1);
+        return Color.fromRGBO(209, 135, 0, 1);
       case 'In Progress':
-        return const Color.fromRGBO(28, 183, 214, 1);
+        return Color.fromRGBO(28, 183, 214, 1);
       case 'Finish':
       case 'Completed':
-        return const Color.fromRGBO(23, 199, 113, 1);
+        return Color.fromRGBO(23, 199, 113, 1);
       case 'danger':
       case 'Closed':
-        return const Color.fromRGBO(231, 0, 11, 1);
+        return Color.fromRGBO(231, 0, 11, 1);
       default:
-        return const Color.fromRGBO(148, 163, 184, 1);
+        return Color.fromRGBO(148, 163, 184, 1);
     }
   }
 
   Color colors(String name) {
     switch (name) {
       case 'base':
-        // return const Color.fromRGBO(30, 41, 59, 1);
-        return const Color.fromRGBO(18, 69, 115, 1);
+        return Color.fromRGBO(18, 69, 115, 1);
       case 'primary':
-        return const Color.fromRGBO(69, 97, 219, 1);
+        return Color.fromRGBO(69, 97, 219, 1);
       case 'secondary':
-        return const Color.fromRGBO(113, 113, 123, 1);
+        return Color.fromRGBO(113, 113, 123, 1);
       case 'warning':
-        return const Color.fromRGBO(255, 141, 52, 1);
+        return Color.fromRGBO(255, 141, 52, 1);
       case 'success':
-        return const Color.fromRGBO(23, 199, 113, 1);
+        return Color.fromRGBO(23, 199, 113, 1);
       case 'danger':
-        return const Color.fromRGBO(231, 0, 11, 1);
+        return Color.fromRGBO(231, 0, 11, 1);
       case 'info':
-        return const Color.fromRGBO(148, 163, 184, 1);
+        return Color.fromRGBO(148, 163, 184, 1);
       case 'text-primary':
         return Colors.black;
       case 'text-secondary':
@@ -545,7 +544,7 @@ class CustomTheme {
       case 'text-tertiary':
         return Colors.black38;
       default:
-        return const Color.fromRGBO(148, 163, 184, 1);
+        return Color.fromRGBO(148, 163, 184, 1);
     }
   }
 
@@ -619,7 +618,7 @@ class CustomTheme {
   BoxDecoration defaultButton() {
     return BoxDecoration(
       color: Colors.white,
-      borderRadius: const BorderRadius.all(
+      borderRadius: BorderRadius.all(
         Radius.circular(8),
       ),
       border: Border.all(
@@ -648,12 +647,12 @@ class CustomTheme {
 
   ButtonStyle secondaryButton() {
     return TextButton.styleFrom(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       foregroundColor: Colors.black87,
-      textStyle: const TextStyle(fontSize: 16),
+      textStyle: TextStyle(fontSize: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(
+        side: BorderSide(
           color: Colors.black26,
         ),
       ),
@@ -677,100 +676,102 @@ class CustomTheme {
   SizedBox hGap(size) {
     switch (size) {
       case 'xs':
-        return const SizedBox(width: 2);
+        return SizedBox(width: 2);
       case 'sm':
-        return const SizedBox(width: 4);
+        return SizedBox(width: 4);
       case 'md':
-        return const SizedBox(width: 6);
+        return SizedBox(width: 6);
       case 'lg':
-        return const SizedBox(width: 8);
+        return SizedBox(width: 8);
       case 'xl':
-        return const SizedBox(width: 12);
+        return SizedBox(width: 12);
       case '2xl':
-        return const SizedBox(width: 16);
+        return SizedBox(width: 16);
       case '3xl':
-        return const SizedBox(width: 20);
+        return SizedBox(width: 20);
       case '4xl':
-        return const SizedBox(width: 24);
+        return SizedBox(width: 24);
       case '5xl':
-        return const SizedBox(width: 30);
+        return SizedBox(width: 30);
       default:
-        return const SizedBox(width: 16);
+        return SizedBox(width: 16);
     }
   }
 
   SizedBox vGap(size) {
     switch (size) {
       case 'xs':
-        return const SizedBox(height: 2);
+        return SizedBox(height: 2);
       case 'sm':
-        return const SizedBox(height: 4);
+        return SizedBox(height: 4);
       case 'md':
-        return const SizedBox(height: 6);
+        return SizedBox(height: 6);
       case 'lg':
-        return const SizedBox(height: 8);
+        return SizedBox(height: 8);
       case 'xl':
-        return const SizedBox(height: 12);
+        return SizedBox(height: 12);
       case '2xl':
-        return const SizedBox(height: 16);
+        return SizedBox(height: 16);
       case '3xl':
-        return const SizedBox(height: 20);
+        return SizedBox(height: 20);
       case '4xl':
-        return const SizedBox(height: 24);
+        return SizedBox(height: 24);
       case '5xl':
-        return const SizedBox(height: 30);
+        return SizedBox(height: 30);
       default:
-        return const SizedBox(height: 16);
+        return SizedBox(height: 16);
     }
   }
 
   EdgeInsets padding(type) {
     switch (type) {
       case 'card':
-        return const EdgeInsets.all(12);
+        return EdgeInsets.all(12);
       case 'badge':
-        return const EdgeInsets.symmetric(vertical: 6, horizontal: 12);
+        return EdgeInsets.symmetric(vertical: 6, horizontal: 12);
+      case 'dialog':
+        return EdgeInsets.symmetric(vertical: 8, horizontal: 16);
       case 'badge-rework':
-        return const EdgeInsets.symmetric(vertical: 2, horizontal: 6);
+        return EdgeInsets.symmetric(vertical: 2, horizontal: 6);
       case 'content':
-        return const EdgeInsets.all(16);
+        return EdgeInsets.all(16);
       case 'process-content':
-        return const EdgeInsets.all(8);
+        return EdgeInsets.all(8);
       case 'list-card':
-        return const EdgeInsets.all(12);
+        return EdgeInsets.all(12);
       default:
-        return const EdgeInsets.all(16);
+        return EdgeInsets.all(16);
     }
   }
 
   Icon icon(type) {
     switch (type) {
       case 'Menunggu Diproses':
-        return const Icon(
+        return Icon(
           Icons.warning_outlined,
           size: 16,
           color: Color.fromRGBO(113, 113, 123, 1),
         );
       case 'Diproses':
-        return const Icon(
+        return Icon(
           Icons.access_time_outlined,
           size: 16,
           color: Color(0xfff18800),
         );
       case 'Selesai':
-        return const Icon(
+        return Icon(
           Icons.task_alt_outlined,
           size: 16,
           color: Color(0xFF10b981),
         );
       case 'Rework':
-        return const Icon(
+        return Icon(
           Icons.replay_outlined,
           size: 14,
           color: Color.fromRGBO(69, 97, 219, 1),
         );
       default:
-        return const Icon(
+        return Icon(
           Icons.question_mark_outlined,
           size: 16,
         );
@@ -783,12 +784,12 @@ class CustomTheme {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          margin: const EdgeInsets.symmetric(
+          margin: EdgeInsets.symmetric(
             vertical: 16,
           ),
           height: 4,
           width: 50,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             borderRadius: BorderRadius.all(
               Radius.circular(4),
             ),

@@ -44,13 +44,14 @@ class ConfirmationDialog extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: CustomTheme().fontSize('xl'),
+                          fontWeight: CustomTheme().fontWeight('bold')),
                     ),
                     Text(
                       message,
-                      style: const TextStyle(
-                        fontSize: 14,
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('sm'),
                       ),
                     ),
                     Row(mainAxisAlignment: MainAxisAlignment.end, children: [

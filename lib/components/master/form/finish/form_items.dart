@@ -278,7 +278,8 @@ class _FormItemsState extends State<FormItems> {
                                             style: TextStyle(
                                               color: CustomTheme()
                                                   .colors('warning'),
-                                              fontSize: 13,
+                                              fontSize:
+                                                  CustomTheme().fontSize('sm'),
                                             ),
                                           ),
                                         ),
@@ -349,7 +350,8 @@ class _FormItemsState extends State<FormItems> {
                                             style: TextStyle(
                                               color: CustomTheme()
                                                   .colors('warning'),
-                                              fontSize: 13,
+                                              fontSize:
+                                                  CustomTheme().fontSize('sm'),
                                             ),
                                           ),
                                         ),
@@ -418,7 +420,8 @@ class _FormItemsState extends State<FormItems> {
                                             style: TextStyle(
                                               color: CustomTheme()
                                                   .colors('warning'),
-                                              fontSize: 13,
+                                              fontSize:
+                                                  CustomTheme().fontSize('sm'),
                                             ),
                                           ),
                                         ),

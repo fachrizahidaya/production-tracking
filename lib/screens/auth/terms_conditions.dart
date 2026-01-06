@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/service/terms_conditions_service.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/auth/terms_conditions_model.dart';
 
 class TermsConditions extends StatefulWidget {
@@ -41,37 +43,37 @@ class _TermsConditionsState extends State<TermsConditions> {
             }
           }),
       body: ListView(
-        padding: EdgeInsets.all(24),
+        padding: CustomTheme().padding('content'),
         children: [
-          Text(
-            termsConditions!.title,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            termsConditions!.date,
-            style: TextStyle(color: Colors.grey),
-          ),
-          const SizedBox(
-            height: 16,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                termsConditions!.title,
+                style: TextStyle(
+                    fontSize: CustomTheme().fontSize('lg'),
+                    fontWeight: CustomTheme().fontWeight('bold')),
+              ),
+              Text(
+                termsConditions!.date,
+                style: TextStyle(color: Colors.grey),
+              ),
+            ],
           ),
           Text(termsConditions!.description),
-          SizedBox(height: 24),
           ...termsConditions!.data.map((section) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(section.name,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 8),
-                  Text(section.description),
-                ],
-              ),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(section.name,
+                    style: TextStyle(
+                        fontSize: CustomTheme().fontSize('xl'),
+                        fontWeight: CustomTheme().fontWeight('bold'))),
+                Text(section.description),
+              ].separatedBy(CustomTheme().vGap('lg')),
             );
           }),
-        ],
+        ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
   }

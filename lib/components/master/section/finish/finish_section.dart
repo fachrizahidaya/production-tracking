@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:textile_tracking/components/master/section/finish/list_form.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class FinishSection extends StatefulWidget {
   final formKey;
@@ -203,11 +204,11 @@ class _FinishSectionState extends State<FinishSection> {
           backgroundColor: Colors.black,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          insetPadding: const EdgeInsets.all(20),
+          insetPadding: CustomTheme().padding('content'),
           child: Container(
             width: MediaQuery.of(context).size.width * 0.8,
             height: MediaQuery.of(context).size.height * 0.6,
-            padding: const EdgeInsets.all(10),
+            padding: CustomTheme().padding('process-content'),
             child: InteractiveViewer(
               minScale: 1,
               maxScale: 4,

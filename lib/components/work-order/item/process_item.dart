@@ -29,7 +29,7 @@ class _ProcessItemState extends State<ProcessItem> {
             children: [
               Text(
                 widget.item['label'] ?? '-',
-                style: const TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
               ),
               CustomBadge(
                 title: hasData

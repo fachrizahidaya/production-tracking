@@ -25,7 +25,7 @@ class CustomAlertDialog extends StatelessWidget {
               maxHeight: maxDialogHeight,
               minWidth: dialogWidth),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            padding: CustomTheme().padding('dialog'),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,8 +35,9 @@ class CustomAlertDialog extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: CustomTheme().fontSize('xl'),
+                          fontWeight: CustomTheme().fontWeight('bold')),
                     ),
                     Text(
                       message,

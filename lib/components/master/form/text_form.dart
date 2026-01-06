@@ -48,7 +48,7 @@ class TextForm extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-          ].separatedBy(CustomTheme().vGap('lg')),
+          ].separatedBy(CustomTheme().hGap('sm')),
         ),
         TextFormField(
           enabled: isDisabled == true ? false : true,

@@ -125,7 +125,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                     ),
                   ],
                 ),
-            ].separatedBy(CustomTheme().vGap('xl')),
+            ].separatedBy(CustomTheme().hGap('xl')),
           )
         ],
       ),

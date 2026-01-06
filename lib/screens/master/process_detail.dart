@@ -3,17 +3,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/master/button/cancel_button.dart';
-import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/detail/detail.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
+import 'package:textile_tracking/screens/master/update_process.dart';
 
 class ProcessDetail<T> extends StatefulWidget {
   final String id;
@@ -82,6 +80,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   final TextEditingController _qtyItemController = TextEditingController();
   List<TextEditingController> _qtyControllers = [];
   List<TextEditingController> _notesControllers = [];
+  final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
   Map<String, dynamic> data = {};
   final Map<String, dynamic> _form = {
@@ -194,6 +193,35 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
     }
+  }
+
+  Future<void> _handleNavigateToUpdate() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UpdateProcess(
+          id: widget.id,
+          label: widget.label,
+          form: _form,
+          data: data,
+          handleUpdate: _handleUpdate,
+          handleSelectMachine: _selectMachine,
+          withMaklon: widget.withMaklon,
+          maklon: _maklonNameController,
+          qtyItem: _qtyItemController,
+          handleChangeInput: _handleChangeInput,
+          withQtyAndWeight: widget.withQtyAndWeight,
+          handleSelectQtyItemUnit: _selectQtyItemUnit,
+          length: _lengthController,
+          width: _widthController,
+          weight: _weightController,
+          handleSelectUnit: _selectUnit,
+          handleSelectWidthUnit: _selectWidthUnit,
+          handleSelectLengthUnit: _selectLengthUnit,
+          isSubmitting: _isSubmitting,
+        ),
+      ),
+    );
   }
 
   Future<void> _handleDelete(String id) async {
@@ -442,7 +470,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       builder: (_) => SelectDialog(
         label: 'Mesin',
         options: machineOption,
-        selected: _form['machine_id']?.toString(),
+        selected: _form['machine_id'].toString(),
         handleChangeValue: (e) {
           setState(() {
             _form['machine_id'] = e['value'].toString();
@@ -476,6 +504,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           canDelete: widget.canDelete,
           canUpdate: widget.canUpdate,
           handleDelete: _handleDelete,
+          handleUpdate: _handleNavigateToUpdate,
           id: data['id'],
           status: data['can_delete'],
         ),
@@ -526,44 +555,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
             )
           ],
         ),
-        // bottomNavigationBar: data['can_update'] != true
-        //     ? null
-        //     : SafeArea(
-        //         child: Container(
-        //           color: Colors.white,
-        //           padding: PaddingColumn.screen,
-        //           child: ValueListenableBuilder<bool>(
-        //             valueListenable: _isSubmitting,
-        //             builder: (context, isSubmitting, _) {
-        //               return Row(
-        //                 children: [
-        //                   Expanded(
-        //                     child: CancelButton(
-        //                       label: 'Batal',
-        //                       onPressed: () => Navigator.pop(context),
-        //                     ),
-        //                   ),
-        //                   Expanded(
-        //                       child: FormButton(
-        //                     label: 'Simpan',
-        //                     isLoading: isSubmitting,
-        //                     onPressed: () async {
-        //                       _isSubmitting.value = true;
-        //                       try {
-        //                         await _handleUpdate(data['id'].toString());
-        //                       } finally {
-        //                         _isSubmitting.value = false;
-        //                       }
-        //                     },
-        //                   ))
-        //                 ].separatedBy(SizedBox(
-        //                   width: 16,
-        //                 )),
-        //               );
-        //             },
-        //           ),
-        //         ),
-        //       ),
       ),
     );
   }

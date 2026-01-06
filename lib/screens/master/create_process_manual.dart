@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/section/create/create_section.dart';
+import 'package:textile_tracking/components/master/section/create/tab_section.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -222,7 +222,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: CreateSection(
+      child: TabSection(
         id: widget.id,
         title: widget.title,
         maklon: widget.maklon,

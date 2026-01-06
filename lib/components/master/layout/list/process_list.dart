@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_search_bar.dart';
+import 'package:textile_tracking/components/master/text/no_access.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
@@ -85,24 +86,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
   @override
   Widget build(BuildContext context) {
     if (!widget.canRead) {
-      return Center(child: Text('No Access'));
-    }
-
-    if (widget.firstLoading) {
-      return RefreshIndicator(
-          onRefresh: () async => widget.handleRefetch(),
-          child: Center(child: CircularProgressIndicator()));
-    }
-
-    if (widget.dataList.isEmpty) {
-      return ListView(
-        physics: AlwaysScrollableScrollPhysics(),
-        children: [
-          SizedBox(
-              height: MediaQuery.of(context).size.height * 0.7,
-              child: Center(child: NoData())),
-        ],
-      );
+      return NoAccess();
     }
 
     return Column(
@@ -115,32 +99,37 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
         Expanded(
           child: RefreshIndicator(
             onRefresh: () async => widget.handleRefetch(),
-            child: ListView.separated(
-              controller: _scrollController,
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: CustomTheme().padding('content'),
-              separatorBuilder: (context, index) => CustomTheme().vGap('2xl'),
-              itemCount: widget.hasMore
-                  ? widget.dataList.length + 1
-                  : widget.dataList.length,
-              itemBuilder: (context, index) {
-                if (index >= widget.dataList.length) {
-                  if (!widget.isLoadMore) {
-                    Future.delayed(Duration.zero, () {
-                      widget.handleLoadMore();
-                    });
-                  }
+            child: widget.dataList.isEmpty
+                ? NoData()
+                : widget.firstLoading == true
+                    ? Center(child: CircularProgressIndicator())
+                    : ListView.separated(
+                        controller: _scrollController,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        padding: CustomTheme().padding('content'),
+                        separatorBuilder: (context, index) =>
+                            CustomTheme().vGap('2xl'),
+                        itemCount: widget.hasMore
+                            ? widget.dataList.length + 1
+                            : widget.dataList.length,
+                        itemBuilder: (context, index) {
+                          if (index >= widget.dataList.length) {
+                            if (!widget.isLoadMore) {
+                              Future.delayed(Duration.zero, () {
+                                widget.handleLoadMore();
+                              });
+                            }
 
-                  return const SizedBox.shrink();
-                }
+                            return const SizedBox.shrink();
+                          }
 
-                final item = widget.dataList[index];
-                return GestureDetector(
-                  onTap: () => widget.onItemTap?.call(context, item),
-                  child: widget.itemBuilder(item),
-                );
-              },
-            ),
+                          final item = widget.dataList[index];
+                          return GestureDetector(
+                            onTap: () => widget.onItemTap?.call(context, item),
+                            child: widget.itemBuilder(item),
+                          );
+                        },
+                      ),
           ),
         ),
       ],

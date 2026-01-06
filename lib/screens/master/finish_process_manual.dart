@@ -5,9 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/layout/tab/create_form_tab.dart';
-import 'package:textile_tracking/components/master/layout/tab/create_info_tab.dart';
-import 'package:textile_tracking/components/master/layout/tab/create_item_tab.dart';
+import 'package:textile_tracking/components/master/layout/tab/work_order_info_tab.dart';
+import 'package:textile_tracking/components/master/layout/tab/finish_form_tab.dart';
+import 'package:textile_tracking/components/master/layout/tab/work_order_item_tab.dart';
 import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -491,7 +491,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       builder: (_) => SelectDialog(
         label: 'Satuan',
         options: unitOption,
-        // 👇 Preselect current unit for this grade
         selected: widget.form?['item_unit_id'].toString(),
         handleChangeValue: (e) {
           setState(() {
@@ -520,7 +519,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       builder: (_) => SelectDialog(
         label: 'Satuan',
         options: unitOption,
-        // 👇 Preselect current unit for this grade
         selected: widget.form?['unit_id'].toString(),
         handleChangeValue: (e) {
           setState(() {
@@ -581,7 +579,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
               ),
               Expanded(
                 child: TabBarView(children: [
-                  CreateInfoTab(
+                  FinishFormTab(
                     data: woData,
                     id: widget.id,
                     isLoading: _firstLoading,
@@ -612,11 +610,11 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                     label: widget.label,
                     forDyeing: widget.forDyeing,
                   ),
-                  CreateFormTab(
+                  WorkOrderInfoTab(
                     data: woData,
                     label: widget.label,
                   ),
-                  CreateItemTab(
+                  WorkOrderItemTab(
                     data: woData,
                   ),
                 ]),
@@ -659,7 +657,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                           }
                         },
                       ))
-                    ].separatedBy(CustomTheme().vGap('xl')),
+                    ].separatedBy(CustomTheme().hGap('xl')),
                   );
                 },
               ),

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
-class NoData extends StatelessWidget {
-  final double fontSize;
-  final Color? color;
-
-  const NoData({super.key, this.fontSize = 16.0, this.color});
+class NoAccess extends StatelessWidget {
+  const NoAccess({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +12,8 @@ class NoData extends StatelessWidget {
         child: Text(
           'No Data',
           style: TextStyle(
-              fontSize: fontSize, color: CustomTheme().colors('text-primary')),
+              fontSize: CustomTheme().fontSize('lg'),
+              color: CustomTheme().colors('text-primary')),
         ),
       ),
     );

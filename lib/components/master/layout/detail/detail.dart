@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:textile_tracking/components/master/layout/detail/list_info_section.dart';
+import 'package:textile_tracking/components/master/layout/detail/list_item.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:html/parser.dart' as html_parser;
@@ -212,7 +212,7 @@ class _DetailState extends State<Detail> {
       );
     }
 
-    return ListInfoSection(
+    return ListItem(
       data: widget.data,
       form: widget.form,
       isSubmitting: widget.isSubmitting ?? ValueNotifier(false),

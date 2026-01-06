@@ -49,7 +49,7 @@ class AttachmentItem extends StatelessWidget {
             item['file_name']!,
           ),
         ),
-      ].separatedBy(CustomTheme().vGap('xl')),
+      ].separatedBy(CustomTheme().hGap('xl')),
     ));
   }
 }

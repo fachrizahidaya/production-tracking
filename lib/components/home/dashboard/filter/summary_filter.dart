@@ -147,7 +147,7 @@ class _SummaryFilterState<T> extends State<SummaryFilter<T>> {
                   ),
                 ),
               ),
-            ].separatedBy(CustomTheme().vGap('xl')),
+            ].separatedBy(CustomTheme().hGap('xl')),
           ),
         ].separatedBy(CustomTheme().vGap('xl')),
       ),

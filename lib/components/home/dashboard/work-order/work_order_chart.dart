@@ -324,7 +324,7 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
                     _buildLegendItem(
                         const Color(0xFF94a3b8), 'Menunggu Diproses'),
                     _buildLegendItem(const Color(0xFF10B981), 'Selesai'),
-                  ].separatedBy(CustomTheme().vGap('xl')),
+                  ].separatedBy(CustomTheme().hGap('xl')),
                 ),
               ),
             ].separatedBy(CustomTheme().vGap('xl')),
@@ -353,7 +353,7 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
             fontWeight: FontWeight.w500,
           ),
         ),
-      ].separatedBy(CustomTheme().vGap('lg')),
+      ].separatedBy(CustomTheme().hGap('lg')),
     );
   }
 }

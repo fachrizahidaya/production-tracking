@@ -148,7 +148,7 @@ class _ChartFilterState<T> extends State<ChartFilter<T>> {
                   ),
                 ),
               ),
-            ].separatedBy(CustomTheme().vGap('xl')),
+            ].separatedBy(CustomTheme().hGap('xl')),
           ),
         ].separatedBy(CustomTheme().vGap('xl')),
       ),

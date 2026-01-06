@@ -180,7 +180,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                   ),
                 ),
               ),
-            ].separatedBy(CustomTheme().vGap('xl')),
+            ].separatedBy(CustomTheme().hGap('xl')),
           ),
           FilterSelectForm(
             label: "Status",

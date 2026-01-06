@@ -114,7 +114,7 @@ class _CreateSectionState extends State<CreateSection> {
                           }
                         },
                       ))
-                    ].separatedBy(CustomTheme().vGap('xl')),
+                    ].separatedBy(CustomTheme().hGap('xl')),
                   );
                 },
               ),

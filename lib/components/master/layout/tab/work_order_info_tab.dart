@@ -62,23 +62,17 @@ class _WorkOrderInfoTabState extends State<WorkOrderInfoTab> {
                     ),
                   ].separatedBy(CustomTheme().hGap('xl')),
                 ),
-                // ViewText(
-                //     viewLabel: 'Tanggal',
-                //     viewValue: widget.data['wo_date'] != null
-                //         ? DateFormat("dd MMM yyyy").format(
-                //             DateTime.parse(widget.data['wo_date']))
-                //         : '-'),
                 ViewText(
                     viewLabel: 'Jumlah Greige',
                     viewValue: widget.data['greige_qty'] != null &&
                             widget.data['greige_qty'].toString().isNotEmpty
                         ? '${NumberFormat("#,###.#").format(double.tryParse(widget.data['greige_qty'].toString()) ?? 0)} ${widget.data['greige_unit']?['code'] ?? ''}'
-                        : '-'),
+                        : 'No Data'),
                 ViewText(
                     viewLabel: 'Catatan ${widget.label}',
-                    viewValue: htmlToPlainText(widget.data['notes'] is Map
-                        ? widget.data['notes'][widget.label]
-                        : '-')),
+                    viewValue: widget.data['notes'] != null
+                        ? htmlToPlainText(widget.data['notes'])
+                        : 'No Data'),
               ].separatedBy(CustomTheme().vGap('xl')),
             )),
     );

@@ -149,14 +149,29 @@ class CustomTheme {
     return BoxDecoration(
       borderRadius: BorderRadius.all(
         Radius.circular(
-          12.0,
+          8.0,
         ),
       ),
       border: Border.all(
         width: 0.5,
-        color: Colors.transparent,
+        color: colors('text-primary'),
       ),
       color: Colors.white,
+    );
+  }
+
+  BoxDecoration inputStaticDecorationDisabled() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.all(
+        Radius.circular(
+          8.0,
+        ),
+      ),
+      border: Border.all(
+        width: 0.5,
+        color: colors('text-primary'),
+      ),
+      color: Colors.grey.shade400,
     );
   }
 

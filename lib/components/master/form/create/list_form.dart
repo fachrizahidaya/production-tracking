@@ -11,7 +11,6 @@ class ListForm extends StatefulWidget {
   final formKey;
   final id;
   final form;
-  final data;
   final attachments;
   final selectWorkOrder;
   final selectMachine;
@@ -27,7 +26,6 @@ class ListForm extends StatefulWidget {
       this.formKey,
       this.id,
       this.form,
-      this.data,
       this.selectWorkOrder,
       this.selectMachine,
       this.handleSubmit,

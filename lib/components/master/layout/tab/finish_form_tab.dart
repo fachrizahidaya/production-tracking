@@ -4,7 +4,6 @@ import 'package:textile_tracking/components/master/theme.dart';
 
 class FinishFormTab extends StatefulWidget {
   final id;
-  final data;
   final form;
   final formKey;
   final handleSelectMachine;
@@ -51,7 +50,6 @@ class FinishFormTab extends StatefulWidget {
 
   const FinishFormTab(
       {super.key,
-      this.data,
       this.form,
       this.formKey,
       this.handleSelectMachine,
@@ -133,7 +131,6 @@ class _FinishFormTabState extends State<FinishFormTab>
               handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
               handleSelectQtyUnitDyeing: widget.handleSelectQtyUnitDyeing,
               id: widget.id,
-              data: widget.data,
               processId: widget.processId,
               processData: widget.processData,
               isLoading: widget.isLoading,

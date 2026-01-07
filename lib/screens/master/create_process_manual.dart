@@ -158,7 +158,6 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   }
 
   Future<void> _getProcessView(id) async {
-    print('i: $id');
     await widget.processService.getDataView(id);
 
     setState(() {
@@ -188,7 +187,6 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
           options: workOrderOption,
           selected: widget.form?['wo_id']?.toString() ?? '',
           handleChangeValue: (selected) {
-            print('s: $selected');
             setState(() {
               widget.form?['wo_id'] = selected['value'].toString();
               widget.form?['no_wo'] = selected['label'].toString();

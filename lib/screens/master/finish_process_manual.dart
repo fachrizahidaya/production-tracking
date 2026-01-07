@@ -210,8 +210,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   Future<void> _getProcessView(id) async {
-    print('i: $id');
-
     await widget.processService.getDataView(id);
 
     setState(() {
@@ -374,7 +372,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         return SelectDialog(
           label: 'Satuan Panjang',
           options: unitOption,
-          selected: widget.form?['length_unit_id'].toString() ?? '4',
+          selected: widget.form?['length_unit_id'].toString() ?? '',
           handleChangeValue: (e) {
             setState(() {
               widget.form?['length_unit_id'] = e['value'].toString();
@@ -406,7 +404,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         return SelectDialog(
           label: 'Satuan Lebar',
           options: unitOption,
-          selected: widget.form?['width_unit_id'].toString() ?? '4',
+          selected: widget.form?['width_unit_id'].toString() ?? '',
           handleChangeValue: (e) {
             setState(() {
               widget.form?['width_unit_id'] = e['value'].toString();
@@ -486,7 +484,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       builder: (_) => SelectDialog(
         label: 'Satuan',
         options: unitOption,
-        selected: widget.form?['item_unit_id'].toString(),
+        selected: widget.form?['item_unit_id'].toString() ?? '',
         handleChangeValue: (e) {
           setState(() {
             widget.form?['item_unit_id'] = e['value'].toString();
@@ -514,11 +512,11 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       builder: (_) => SelectDialog(
         label: 'Satuan',
         options: unitOption,
-        selected: widget.form?['unit_id'].toString() ?? '1',
+        selected: widget.form?['unit_id'].toString() ?? '',
         handleChangeValue: (e) {
           setState(() {
-            widget.form?['unit_id'] = '1';
-            widget.form?['nama_satuan'] = 'Kilogram';
+            widget.form?['unit_id'] = e['value'].toString();
+            widget.form?['nama_satuan'] = e['label'].toString();
           });
         },
       ),

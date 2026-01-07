@@ -6,7 +6,6 @@ import 'package:textile_tracking/components/master/form/finish/form_items.dart';
 class ListForm extends StatefulWidget {
   final formKey;
   final form;
-  final data;
   final id;
   final processId;
   final length;
@@ -50,7 +49,6 @@ class ListForm extends StatefulWidget {
       this.id,
       this.handleSelectWo,
       this.form,
-      this.data,
       this.length,
       this.width,
       this.weight,
@@ -107,19 +105,6 @@ class _ListFormState extends State<ListForm> {
     final workOrders = widget.processData['work_orders'];
     if (workOrders == null) return 0;
 
-    // if (workOrders['embroidery'] != null) {
-    //   return double.tryParse(
-    //         workOrders['embroidery']['item_qty']?.toString() ?? '0',
-    //       ) ??
-    //       0;
-    // } else if (workOrders['printing'] != null) {
-    //   return double.tryParse(
-    //         workOrders['printing']['item_qty']?.toString() ?? '0',
-    //       ) ??
-    //       0;
-    // }
-
-// if items
     final List<dynamic>? items = workOrders['items'];
 
     if (items == null || items.isEmpty) return 0;

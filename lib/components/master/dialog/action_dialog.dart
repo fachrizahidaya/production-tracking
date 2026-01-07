@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/theme.dart';
 
 class DialogActionItem {
   final IconData icon;
@@ -27,23 +26,20 @@ class ActionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(12),
       ),
-      child: Padding(
-        padding: CustomTheme().padding('dialog'),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: actions.map((item) {
-            return ListTile(
-              leading: Icon(item.icon, color: item.iconColor),
-              title: Text(item.title),
-              onTap: () {
-                Navigator.pop(context);
-                item.onTap();
-              },
-            );
-          }).toList(),
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: actions.map((item) {
+          return ListTile(
+            leading: Icon(item.icon, color: item.iconColor),
+            title: Text(item.title),
+            onTap: () {
+              Navigator.pop(context);
+              item.onTap();
+            },
+          );
+        }).toList(),
       ),
     );
   }

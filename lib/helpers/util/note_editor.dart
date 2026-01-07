@@ -34,8 +34,7 @@ class _NoteEditorState extends State<NoteEditor> {
         Text(
           widget.label,
           style: TextStyle(
-            fontSize: CustomTheme().fontSize('md'),
-            fontWeight: CustomTheme().fontWeight('semibold'),
+            fontSize: CustomTheme().fontSize('lg'),
           ),
         ),
         const SizedBox(height: 8),

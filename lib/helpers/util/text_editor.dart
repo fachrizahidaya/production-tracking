@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-// import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
 
 class TextEditor extends StatefulWidget {
@@ -14,7 +14,7 @@ class TextEditor extends StatefulWidget {
 }
 
 class _TextEditorState extends State<TextEditor> {
-  // final QuillEditorController controller = QuillEditorController();
+  final QuillEditorController controller = QuillEditorController();
 
   @override
   void initState() {
@@ -23,7 +23,7 @@ class _TextEditorState extends State<TextEditor> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (widget.initialHtml != null && widget.initialHtml!.trim().isNotEmpty) {
         await Future.delayed(const Duration(milliseconds: 150));
-        // await controller.setText(widget.initialHtml);
+        await controller.setText(widget.initialHtml);
       }
     });
   }
@@ -37,33 +37,33 @@ class _TextEditorState extends State<TextEditor> {
           Navigator.pop(context);
         },
         isTextEditor: true,
-        // handleSave: () async {
-        //   final html = await controller.getText();
-        //   Navigator.pop(context, html);
-        // },
+        handleSave: () async {
+          final html = await controller.getText();
+          Navigator.pop(context, html);
+        },
       ),
       body: Column(
         children: [
-          // ToolBar(
-          //   controller: controller,
-          //   toolBarConfig: const [
-          //     ToolBarStyle.bold,
-          //     ToolBarStyle.italic,
-          //     ToolBarStyle.underline,
-          //     ToolBarStyle.link,
-          //     ToolBarStyle.listBullet,
-          //     ToolBarStyle.listOrdered,
-          //     ToolBarStyle.align,
-          //     ToolBarStyle.color,
-          //   ],
-          // ),
-          // Expanded(
-          //   child: QuillHtmlEditor(
-          //     minHeight: 100,
-          //     hintText: "Tulis catatan...",
-          //     controller: controller,
-          //   ),
-          // ),
+          ToolBar(
+            controller: controller,
+            toolBarConfig: const [
+              ToolBarStyle.bold,
+              ToolBarStyle.italic,
+              ToolBarStyle.underline,
+              ToolBarStyle.link,
+              ToolBarStyle.listBullet,
+              ToolBarStyle.listOrdered,
+              ToolBarStyle.align,
+              ToolBarStyle.color,
+            ],
+          ),
+          Expanded(
+            child: QuillHtmlEditor(
+              minHeight: 100,
+              hintText: "Tulis catatan...",
+              controller: controller,
+            ),
+          ),
         ],
       ),
     );

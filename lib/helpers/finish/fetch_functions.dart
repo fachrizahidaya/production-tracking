@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
@@ -6,9 +8,6 @@ import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 
 class FetchFunctions {
-  /// ===============================
-  /// FETCH WORK ORDER
-  /// ===============================
   static Future<void> fetchWorkOrder({
     required BuildContext context,
     required VoidCallback onStart,
@@ -41,9 +40,6 @@ class FetchFunctions {
     }
   }
 
-  /// ===============================
-  /// FETCH ITEM GRADE
-  /// ===============================
   static Future<void> fetchItemGrade({
     required BuildContext context,
     required VoidCallback onStart,
@@ -76,9 +72,6 @@ class FetchFunctions {
     }
   }
 
-  /// ===============================
-  /// FETCH UNIT
-  /// ===============================
   static Future<void> fetchUnit({
     required BuildContext context,
     required VoidCallback onStart,
@@ -100,9 +93,6 @@ class FetchFunctions {
     }
   }
 
-  /// ===============================
-  /// FETCH WORK ORDER VIEW
-  /// ===============================
   static Future<void> fetchWorkOrderView({
     required VoidCallback onStart,
     required VoidCallback onFinish,
@@ -116,9 +106,6 @@ class FetchFunctions {
     onFinish();
   }
 
-  /// ===============================
-  /// FETCH PROCESS VIEW
-  /// ===============================
   static Future<void> fetchProcessView({
     required dynamic processService,
     required String id,

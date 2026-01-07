@@ -51,10 +51,11 @@ class CreatePacking extends StatelessWidget {
     return CreateProcess(
       title: 'Mulai Packing',
       handleSubmitToService: _submitToService,
-      formPageBuilder: (context, id, data, form, handleSubmit) {
+      formPageBuilder: (context, id, processId, data, form, handleSubmit) {
         return CreatePackingManual(
           id: id,
           data: data,
+          processId: processId,
           form: form,
           handleSubmit: handleSubmit,
           fetchWorkOrder: (service) => service.fetchPackingOptions(id),

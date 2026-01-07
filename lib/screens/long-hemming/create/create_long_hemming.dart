@@ -53,11 +53,12 @@ class CreateLongHemming extends StatelessWidget {
     return CreateProcess(
       title: 'Mulai Long Hemming',
       handleSubmitToService: _submitToService,
-      formPageBuilder: (context, id, data, form, handleSubmit) {
+      formPageBuilder: (context, id, processId, data, form, handleSubmit) {
         return CreateLongHemmingManual(
           id: id,
           data: data,
           form: form,
+          processId: processId,
           handleSubmit: handleSubmit,
           fetchWorkOrder: (service) => service.fetchLongHemmingOptions(id),
         );

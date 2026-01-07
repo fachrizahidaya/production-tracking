@@ -61,10 +61,11 @@ class CreateDyeing extends StatelessWidget {
       fetchWorkOrder: (service) => service.fetchOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       handleSubmitToService: _submitToService,
-      formPageBuilder: (context, id, data, form, handleSubmit) {
+      formPageBuilder: (context, id, processId, data, form, handleSubmit) {
         return CreateDyeingManual(
           id: id,
           data: data,
+          processId: processId,
           form: form,
           handleSubmit: handleSubmit,
           fetchWorkOrder: (service) => service.fetchOptions(id),

@@ -2,15 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/master/button/cancel_button.dart';
-import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/master/button/process_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/layout/tab/work_order_info_tab.dart';
 import 'package:textile_tracking/components/master/layout/tab/finish_form_tab.dart';
 import 'package:textile_tracking/components/master/layout/tab/work_order_item_tab.dart';
 import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
@@ -101,10 +98,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
     if (widget.processId != null) {
       _getProcessView(widget.processId);
-    }
-
-    if (widget.data != null) {
-      woData = widget.data!;
     }
 
     _handleFetchWorkOrder();
@@ -217,6 +210,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   Future<void> _getProcessView(id) async {
+    print('i: $id');
+
     await widget.processService.getDataView(id);
 
     setState(() {
@@ -519,11 +514,11 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       builder: (_) => SelectDialog(
         label: 'Satuan',
         options: unitOption,
-        selected: widget.form?['unit_id'].toString(),
+        selected: widget.form?['unit_id'].toString() ?? '1',
         handleChangeValue: (e) {
           setState(() {
-            widget.form?['unit_id'] = e['value'].toString();
-            widget.form?['nama_satuan'] = e['label'].toString();
+            widget.form?['unit_id'] = '1';
+            widget.form?['nama_satuan'] = 'Kilogram';
           });
         },
       ),
@@ -580,7 +575,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
               Expanded(
                 child: TabBarView(children: [
                   FinishFormTab(
-                    data: woData,
                     id: widget.id,
                     isLoading: _firstLoading,
                     form: widget.form,
@@ -611,7 +605,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                     forDyeing: widget.forDyeing,
                   ),
                   WorkOrderInfoTab(
-                    data: woData,
+                    data: data['work_orders'],
                     label: widget.label,
                   ),
                   WorkOrderItemTab(
@@ -621,47 +615,14 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
               )
             ],
           ),
-          bottomNavigationBar: SafeArea(
-            child: Container(
-              color: Colors.white,
-              padding: CustomTheme().padding('card'),
-              child: ValueListenableBuilder<bool>(
-                valueListenable: _isSubmitting,
-                builder: (context, isSubmitting, _) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: CancelButton(
-                          label: 'Batal',
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ),
-                      Expanded(
-                          child: FormButton(
-                        label: 'Selesai',
-                        isLoading: isSubmitting,
-                        isDisabled:
-                            widget.form?['wo_id'] == null ? true : false,
-                        onPressed: () async {
-                          _isSubmitting.value = true;
-                          try {
-                            if (!_formKey.currentState!.validate()) {
-                              return;
-                            }
-
-                            await widget.handleSubmit(data['id'] != null
-                                ? data['id'].toString()
-                                : widget.processId);
-                          } finally {
-                            _isSubmitting.value = false;
-                          }
-                        },
-                      ))
-                    ].separatedBy(CustomTheme().hGap('xl')),
-                  );
-                },
-              ),
-            ),
+          bottomNavigationBar: ProcessButton(
+            data: data,
+            form: widget.form,
+            isSubmitting: _isSubmitting,
+            labelProcess: 'Selesai',
+            processId: processId,
+            formKey: _formKey,
+            handleSubmit: widget.handleSubmit,
           ),
         ),
       ),

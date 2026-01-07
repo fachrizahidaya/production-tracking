@@ -53,11 +53,12 @@ class CreateLongSitting extends StatelessWidget {
     return CreateProcess(
       title: 'Mulai Long Sitting',
       handleSubmitToService: _submitToService,
-      formPageBuilder: (context, id, data, form, handleSubmit) {
+      formPageBuilder: (context, id, processId, data, form, handleSubmit) {
         return CreateLongSittingManual(
           id: id,
           data: data,
           form: form,
+          processId: processId,
           handleSubmit: handleSubmit,
           fetchWorkOrder: (service) => service.fetchLongSittingOptions(id),
         );

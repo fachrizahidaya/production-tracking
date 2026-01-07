@@ -16,6 +16,7 @@ class CreateProcess extends StatefulWidget {
   final Widget Function(
       BuildContext context,
       dynamic id,
+      dynamic processId,
       Map<String, dynamic> data,
       Map<String, dynamic> form,
       Future<void> Function() handleSubmit) formPageBuilder;
@@ -147,6 +148,7 @@ class _CreateProcessState extends State<CreateProcess> {
           widget.formPageBuilder(
             context,
             woId,
+            processId,
             data,
             _form,
             _handleSubmit,
@@ -211,7 +213,7 @@ class _CreateProcessState extends State<CreateProcess> {
           handleScan: _handleScan,
           handleSubmit: _handleSubmit,
           handleRoute: (form, handleSubmit) => _createRoute(
-            widget.formPageBuilder(context, null, {}, form, handleSubmit),
+            widget.formPageBuilder(context, null, null, {}, form, handleSubmit),
           ),
           isLoading: _isLoading,
         ),

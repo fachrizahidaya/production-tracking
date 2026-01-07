@@ -51,7 +51,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           : null,
       title: Text(
         title,
-        style: const TextStyle(fontSize: 18),
+        style: TextStyle(fontSize: CustomTheme().fontSize('xl')),
       ),
       actions: [
         if (hasOptions && status == true)
@@ -120,7 +120,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     Text(
                       '@$user',
                       style: TextStyle(
-                          fontSize: 12,
+                          fontSize: CustomTheme().fontSize('sm'),
                           color: CustomTheme().colors('secondary')),
                     ),
                   ].separatedBy(CustomTheme().vGap('sm')),

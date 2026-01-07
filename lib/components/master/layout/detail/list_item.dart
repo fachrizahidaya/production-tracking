@@ -262,11 +262,12 @@ class _ListItemState extends State<ListItem> {
                                           viewValue:
                                               '${widget.data['qty'] ?? '0'} ${widget.data['unit']['code']}',
                                         ),
-                                      ViewText(
-                                        viewLabel: 'Berat',
-                                        viewValue:
-                                            '${widget.data['weight'] ?? '0'} ${widget.data['weight_unit']['code']}',
-                                      ),
+                                      if (widget.forDyeing == false)
+                                        ViewText(
+                                          viewLabel: 'Berat',
+                                          viewValue:
+                                              '${widget.data['weight'] ?? '0'} ${widget.data['weight_unit']['code']}',
+                                        ),
                                       if (widget.withQtyAndWeight == true)
                                         ViewText(
                                           viewLabel:
@@ -274,16 +275,16 @@ class _ListItemState extends State<ListItem> {
                                           viewValue:
                                               '${widget.data['item_qty'] ?? '0'} ${widget.data['item_unit']['code']}',
                                         ),
-                                      ViewText(
-                                        viewLabel: 'Panjang',
-                                        viewValue:
-                                            '${widget.data['length'] ?? '0'} ${widget.data['length_unit']['code']}',
-                                      ),
-                                      ViewText(
-                                        viewLabel: 'Lebar',
-                                        viewValue:
-                                            '${widget.data['width'] ?? '0'} ${widget.data['width_unit']['code']}',
-                                      ),
+                                      // ViewText(
+                                      //   viewLabel: 'Panjang',
+                                      //   viewValue:
+                                      //       '${widget.data['length'] ?? '0'} ${widget.data['length_unit']['code']}',
+                                      // ),
+                                      // ViewText(
+                                      //   viewLabel: 'Lebar',
+                                      //   viewValue:
+                                      //       '${widget.data['width'] ?? '0'} ${widget.data['width_unit']['code']}',
+                                      // ),
                                     ],
                                   ),
                               ].separatedBy(CustomTheme().vGap('lg')),
@@ -336,7 +337,7 @@ class _ListItemState extends State<ListItem> {
                           'Informasi Work Order',
                           style: TextStyle(
                               fontSize: CustomTheme().fontSize('xl'),
-                              fontWeight: FontWeight.bold),
+                              fontWeight: CustomTheme().fontWeight('bold')),
                         ),
                         ViewText(
                           viewLabel: 'Qty Greige',

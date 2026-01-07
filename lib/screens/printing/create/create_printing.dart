@@ -53,11 +53,12 @@ class CreatePrinting extends StatelessWidget {
     return CreateProcess(
         title: 'Mulai Printing',
         handleSubmitToService: _submitToService,
-        formPageBuilder: (context, id, data, form, handleSubmit) {
+        formPageBuilder: (context, id, processId, data, form, handleSubmit) {
           return CreatePrintingManual(
             id: id,
             data: data,
             form: form,
+            processId: processId,
             handleSubmit: handleSubmit,
             fetchWorkOrder: (service) => service.fetchPrintingOptions(id),
           );

@@ -7,7 +7,6 @@ class CreateSection extends StatefulWidget {
   final formKey;
   final form;
   final handleSubmit;
-  final data;
   final selectWorkOrder;
   final selectMachine;
   final id;
@@ -23,7 +22,6 @@ class CreateSection extends StatefulWidget {
       this.formKey,
       this.form,
       this.handleSubmit,
-      this.data,
       this.selectWorkOrder,
       this.selectMachine,
       this.id,
@@ -57,7 +55,6 @@ class _CreateSectionState extends State<CreateSection> {
       isMaklon: widget.isMaklon,
       id: widget.id,
       form: widget.form,
-      data: widget.data,
       attachments: attachments,
       maklon: widget.maklon,
       selectWorkOrder: widget.selectWorkOrder,

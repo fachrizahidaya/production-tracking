@@ -11,6 +11,7 @@ import 'package:html/parser.dart' as html_parser;
 class FormInfoTab extends StatefulWidget {
   final id;
   final data;
+  final processData;
   final label;
   final form;
   final formKey;
@@ -27,6 +28,7 @@ class FormInfoTab extends StatefulWidget {
   const FormInfoTab(
       {super.key,
       this.data,
+      this.processData,
       this.form,
       this.label,
       this.formKey,
@@ -80,7 +82,6 @@ class _FormInfoTabState extends State<FormInfoTab> {
             maklon: widget.maklon,
             isMaklon: widget.isMaklon,
             handleSubmit: widget.handleSubmit,
-            data: widget.data,
             selectWorkOrder: widget.handleSelectWorkOrder,
             selectMachine: widget.handleSelectMachine,
             id: widget.id,
@@ -123,12 +124,13 @@ class _FormInfoTabState extends State<FormInfoTab> {
                                       .toString()
                                       .isNotEmpty
                               ? '${NumberFormat("#,###.#").format(double.tryParse(widget.data['greige_qty'].toString()) ?? 0)} ${widget.data['greige_unit']?['code'] ?? ''}'
-                              : '-'),
+                              : 'No Data'),
                       ViewText(
                           viewLabel: 'Catatan ${widget.label}',
-                          viewValue: htmlToPlainText(widget.data['notes'] is Map
-                              ? widget.data['notes'][widget.label]
-                              : '-')),
+                          viewValue: widget.data['notes'] is Map
+                              ? htmlToPlainText(
+                                  widget.data['notes'][widget.label])
+                              : 'No Data'),
                     ].separatedBy(CustomTheme().vGap('lg')),
                   )),
                 ),

@@ -46,10 +46,10 @@ class _FilterSelectFormState extends State<FilterSelectForm> {
                     Expanded(
                       child: Text(
                         "Pilih ${widget.label}",
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.grey,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
+                          fontSize: CustomTheme().fontSize('lg'),
+                          fontWeight: CustomTheme().fontWeight('semibold'),
                         ),
                       ),
                     ),

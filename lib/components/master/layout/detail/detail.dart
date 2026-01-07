@@ -268,7 +268,7 @@ class _DetailState extends State<Detail> {
         children: [
           Text(
             'Lampiran',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
           ),
           CustomTheme().hGap('sm'),
         ],

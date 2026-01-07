@@ -15,6 +15,7 @@ class TabSection extends StatefulWidget {
   final form;
   final formKey;
   final woData;
+  final processData;
   final withMaklonOrMachine;
   final withNoMaklonOrMachine;
   final withOnlyMaklon;
@@ -40,7 +41,8 @@ class TabSection extends StatefulWidget {
       this.withMaklonOrMachine,
       this.withNoMaklonOrMachine,
       this.withOnlyMaklon,
-      this.woData});
+      this.woData,
+      this.processData});
 
   @override
   State<TabSection> createState() => _TabSectionState();
@@ -90,6 +92,7 @@ class _TabSectionState extends State<TabSection> {
               child: TabBarView(children: [
                 FormInfoTab(
                   data: widget.woData,
+                  processData: widget.processData,
                   id: widget.id,
                   isLoading: widget.firstLoading,
                   label: widget.label,

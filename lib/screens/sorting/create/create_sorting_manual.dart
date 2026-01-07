@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/models/process/sorting.dart';
 import 'package:textile_tracking/screens/master/create_process_manual.dart';
 
 class CreateSortingManual extends StatelessWidget {
@@ -7,6 +8,7 @@ class CreateSortingManual extends StatelessWidget {
   final Map<String, dynamic>? form;
   final handleSubmit;
   final fetchWorkOrder;
+  final processId;
 
   const CreateSortingManual(
       {super.key,
@@ -14,16 +16,22 @@ class CreateSortingManual extends StatelessWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.fetchWorkOrder});
+      this.fetchWorkOrder,
+      this.processId});
 
   @override
   Widget build(BuildContext context) {
+    final SortingService sortingService = SortingService();
+
     return CreateProcessManual(
       title: 'Mulai Sorting',
       id: id,
       label: 'Sorting',
       data: data,
       form: form,
+      processId: processId,
+      idProcess: 'sorting_id',
+      processService: sortingService,
       handleSubmit: handleSubmit,
       fetchWorkOrder: (service) => service.fetchSortingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,

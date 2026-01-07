@@ -143,7 +143,8 @@ class _FinishSubmitSectionState extends State<FinishSubmitSection> {
                     children: [
                       Text(
                         "Scan QR Work Order",
-                        style: TextStyle(fontSize: 18),
+                        style:
+                            TextStyle(fontSize: CustomTheme().fontSize('xl')),
                       ),
                       ElevatedButton.icon(
                         icon: const Icon(Icons.edit),

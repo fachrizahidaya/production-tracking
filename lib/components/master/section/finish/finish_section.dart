@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:textile_tracking/components/master/section/finish/list_form.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class FinishSection extends StatefulWidget {
   final formKey;
@@ -17,7 +18,6 @@ class FinishSection extends StatefulWidget {
   final handleSelectWidthUnit;
   final handleChangeInput;
   final id;
-  final data;
   final processId;
   final processData;
   final isLoading;
@@ -48,7 +48,6 @@ class FinishSection extends StatefulWidget {
       this.handleSelectWidthUnit,
       this.handleChangeInput,
       this.id,
-      this.data,
       this.processData,
       this.processId,
       this.isLoading,
@@ -80,11 +79,11 @@ class _FinishSectionState extends State<FinishSection> {
   @override
   void initState() {
     super.initState();
-    _initialQty = widget.data['qty']?.toString() ?? '';
-    _initialWeight = widget.data['weight']?.toString() ?? '';
-    _initialLength = widget.data['length']?.toString() ?? '';
-    _initialWidth = widget.data['width']?.toString() ?? '';
-    _initialNotes = widget.data['notes']?.toString() ?? '';
+    _initialQty = widget.processData['qty']?.toString() ?? '';
+    _initialWeight = widget.processData['weight']?.toString() ?? '';
+    _initialLength = widget.processData['length']?.toString() ?? '';
+    _initialWidth = widget.processData['width']?.toString() ?? '';
+    _initialNotes = widget.processData['notes']?.toString() ?? '';
 
     widget.qty.text = _initialQty;
     widget.weight.text = _initialWeight;
@@ -93,7 +92,7 @@ class _FinishSectionState extends State<FinishSection> {
     widget.width.text = _initialWidth;
 
     final existing =
-        (widget.data?['attachments'] ?? []).cast<Map<String, dynamic>>();
+        (widget.processData?['attachments'] ?? []).cast<Map<String, dynamic>>();
     final newOnes =
         (widget.form['attachments'] ?? []).cast<Map<String, dynamic>>();
 
@@ -122,8 +121,8 @@ class _FinishSectionState extends State<FinishSection> {
         widget.width.text = _initialWidth;
         widget.note.text = _initialNotes;
 
-        final existing =
-            (widget.data?['attachments'] ?? []).cast<Map<String, dynamic>>();
+        final existing = (widget.processData?['attachments'] ?? [])
+            .cast<Map<String, dynamic>>();
         final newOnes =
             (widget.form['attachments'] ?? []).cast<Map<String, dynamic>>();
 
@@ -203,11 +202,11 @@ class _FinishSectionState extends State<FinishSection> {
           backgroundColor: Colors.black,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          insetPadding: const EdgeInsets.all(20),
+          insetPadding: CustomTheme().padding('content'),
           child: Container(
             width: MediaQuery.of(context).size.width * 0.8,
             height: MediaQuery.of(context).size.height * 0.6,
-            padding: const EdgeInsets.all(10),
+            padding: CustomTheme().padding('process-content'),
             child: InteractiveViewer(
               minScale: 1,
               maxScale: 4,
@@ -271,7 +270,6 @@ class _FinishSectionState extends State<FinishSection> {
     return ListForm(
       formKey: widget.formKey,
       form: widget.form,
-      data: widget.data,
       id: widget.id,
       processId: widget.processId,
       length: widget.length,

@@ -8,7 +8,7 @@ class SelectForm extends StatefulWidget {
   final String selectedLabel;
   final String selectedValue;
   final bool required;
-  final bool? isDisabled;
+  final isDisabled;
   final validator;
 
   const SelectForm(
@@ -36,39 +36,35 @@ class _SelectFormState extends State<SelectForm> {
             controller: TextEditingController(text: widget.selectedValue),
             validator: widget.required ? widget.validator : null,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            decoration: CustomTheme().inputDateDecoration(hasValue: false),
-            style: const TextStyle(fontSize: 0, height: 0), // hide the text
+            decoration: CustomTheme().inputDecoration(),
           ),
-          Positioned(
-            top: 0.5,
-            left: 0.5,
-            right: 0.5,
-            child: GestureDetector(
-              onTap: widget.isDisabled == true ? null : widget.onTap,
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                height: 47,
-                width: double.infinity,
-                decoration: CustomTheme().inputStaticDecorationRequired(),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.selectedLabel != ''
-                            ? widget.selectedLabel
-                            : 'Pilih ${widget.label}',
-                      ),
+          GestureDetector(
+            onTap: widget.isDisabled == true ? null : widget.onTap,
+            child: Container(
+              padding: CustomTheme().padding('card'),
+              height: 52,
+              width: double.infinity,
+              decoration: widget.isDisabled
+                  ? CustomTheme().inputStaticDecorationDisabled()
+                  : CustomTheme().inputStaticDecorationRequired(),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.selectedLabel != ''
+                          ? widget.selectedLabel
+                          : 'Pilih ${widget.label}',
                     ),
-                    if (widget.isDisabled == false)
-                      Icon(
-                        Icons.arrow_drop_down,
-                        size: 18,
-                        color: CustomTheme().colors('base'),
-                      )
-                  ],
-                ),
+                  ),
+                  if (widget.isDisabled == false)
+                    Icon(
+                      Icons.arrow_drop_down,
+                      size: 18,
+                      color: CustomTheme().colors('base'),
+                    )
+                ],
               ),
             ),
           ),

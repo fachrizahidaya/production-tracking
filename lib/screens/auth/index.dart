@@ -42,7 +42,7 @@ class _AccountState extends State<Account> {
               return CustomCard(
                 child: Text(
                   item['label'] ?? '',
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
                 ),
               );
             },
@@ -55,7 +55,8 @@ class _AccountState extends State<Account> {
               'v.${dotenv.env['APP_VERSION']!}',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 16, color: CustomTheme().colors('text-secondary')),
+                  fontSize: CustomTheme().fontSize('lg'),
+                  color: CustomTheme().colors('text-secondary')),
             ),
           ),
         ],

@@ -24,6 +24,9 @@ class CreateProcessManual extends StatefulWidget {
   final withMaklonOrMachine;
   final withOnlyMaklon;
   final withNoMaklonOrMachine;
+  final processService;
+  final processId;
+  final idProcess;
 
   const CreateProcessManual(
       {super.key,
@@ -41,7 +44,10 @@ class CreateProcessManual extends StatefulWidget {
       this.isMaklon,
       this.withMaklonOrMachine,
       this.withOnlyMaklon,
-      this.withNoMaklonOrMachine});
+      this.withNoMaklonOrMachine,
+      this.processService,
+      this.processId,
+      this.idProcess});
 
   @override
   State<CreateProcessManual> createState() => _CreateProcessManualState();
@@ -57,7 +63,11 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   bool _isFetchingMachine = false;
   List<dynamic> workOrderOption = [];
   List<dynamic> machineOption = [];
+
+  Map<String, dynamic> data = {};
   Map<String, dynamic> woData = {};
+
+  var processId = '';
 
   @override
   void initState() {
@@ -65,8 +75,8 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
     _fetchWorkOrder();
     _fetchMachine();
 
-    if (widget.data != null) {
-      woData = widget.data!;
+    if (widget.processId != null) {
+      _getProcessView(widget.processId);
     }
   }
 
@@ -147,6 +157,14 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
     });
   }
 
+  Future<void> _getProcessView(id) async {
+    await widget.processService.getDataView(id);
+
+    setState(() {
+      data = widget.processService.dataView;
+    });
+  }
+
   void _selectWorkOrder() {
     if (_isFetchingWorkOrder) {
       showDialog(
@@ -172,8 +190,10 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
             setState(() {
               widget.form?['wo_id'] = selected['value'].toString();
               widget.form?['no_wo'] = selected['label'].toString();
+              processId = selected[widget.idProcess].toString();
             });
             _getDataView(selected['value'].toString());
+            _getProcessView(selected[widget.idProcess].toString());
           },
         );
       },
@@ -230,6 +250,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
         label: widget.label,
         formKey: _formKey,
         woData: woData,
+        processData: data,
         withMaklonOrMachine: widget.withMaklonOrMachine,
         withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
         withOnlyMaklon: widget.withOnlyMaklon,

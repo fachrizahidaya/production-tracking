@@ -93,7 +93,7 @@ class _FormItemsState extends State<FormItems> {
         'unitLabel': 'Satuan Panjang',
         'value': 'length',
         'req': false,
-        'withSelectUnit': false
+        'withSelectUnit': true
       },
       {
         'label': 'Lebar',
@@ -104,7 +104,7 @@ class _FormItemsState extends State<FormItems> {
         'unitLabel': 'Satuan Lebar',
         'value': 'width',
         'req': false,
-        'withSelectUnit': false
+        'withSelectUnit': true
       },
       if (widget.forDyeing == false)
         {
@@ -207,9 +207,9 @@ class _FormItemsState extends State<FormItems> {
                                     child: col['child'],
                                   ))
                               .toList()
-                              .separatedBy(const SizedBox(width: 16)),
+                              .separatedBy(CustomTheme().hGap('xl')),
                         ),
-                  ].separatedBy(const SizedBox(height: 16)),
+                  ].separatedBy(CustomTheme().vGap('xl')),
                 )),
               if (widget.withItemGrade == false)
                 CustomCard(
@@ -259,8 +259,27 @@ class _FormItemsState extends State<FormItems> {
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return '${row['label']} wajib diisi';
+                                    } else if (row['value'] == 'weight' &&
+                                        widget.weightWarning != null) {
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              widget.weightWarning ?? '-',
+                                              style: TextStyle(
+                                                color: CustomTheme()
+                                                    .colors('warning'),
+                                                fontSize: CustomTheme()
+                                                    .fontSize('sm'),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
                                     }
-                                    return null;
                                   },
                                 ),
                                 if (row['value'] == 'weight' &&
@@ -278,7 +297,8 @@ class _FormItemsState extends State<FormItems> {
                                             style: TextStyle(
                                               color: CustomTheme()
                                                   .colors('warning'),
-                                              fontSize: 13,
+                                              fontSize:
+                                                  CustomTheme().fontSize('sm'),
                                             ),
                                           ),
                                         ),
@@ -292,6 +312,7 @@ class _FormItemsState extends State<FormItems> {
                             Expanded(
                               flex: 1,
                               child: SelectForm(
+                                isDisabled: true,
                                 label: row['unitLabel'],
                                 onTap: row['onSelect'],
                                 selectedLabel: row['selectedLabel'],
@@ -305,7 +326,7 @@ class _FormItemsState extends State<FormItems> {
                                 },
                               ),
                             ),
-                        ].separatedBy(const SizedBox(width: 16)),
+                        ].separatedBy(CustomTheme().hGap('xl')),
                       );
                     }),
                     if (widget.withQtyAndWeight == true)
@@ -331,8 +352,26 @@ class _FormItemsState extends State<FormItems> {
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return 'Qty wajib diisi';
+                                    } else if (widget.qtyWarning != null) {
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              widget.qtyWarning ?? '-',
+                                              style: TextStyle(
+                                                color: CustomTheme()
+                                                    .colors('warning'),
+                                                fontSize: CustomTheme()
+                                                    .fontSize('sm'),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
                                     }
-                                    return null;
                                   },
                                 ),
                                 if (widget.qtyWarning != null)
@@ -349,7 +388,8 @@ class _FormItemsState extends State<FormItems> {
                                             style: TextStyle(
                                               color: CustomTheme()
                                                   .colors('warning'),
-                                              fontSize: 13,
+                                              fontSize:
+                                                  CustomTheme().fontSize('sm'),
                                             ),
                                           ),
                                         ),
@@ -376,7 +416,7 @@ class _FormItemsState extends State<FormItems> {
                               },
                             ),
                           )
-                        ].separatedBy(const SizedBox(width: 16)),
+                        ].separatedBy(CustomTheme().hGap('xl')),
                       ),
                     if (widget.forDyeing == true)
                       Row(
@@ -400,8 +440,26 @@ class _FormItemsState extends State<FormItems> {
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return 'Qty wajib diisi';
+                                    } else if (widget.weightWarning != null) {
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              widget.weightWarning ?? '-',
+                                              style: TextStyle(
+                                                color: CustomTheme()
+                                                    .colors('warning'),
+                                                fontSize: CustomTheme()
+                                                    .fontSize('sm'),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
                                     }
-                                    return null;
                                   },
                                 ),
                                 if (widget.weightWarning != null)
@@ -418,7 +476,8 @@ class _FormItemsState extends State<FormItems> {
                                             style: TextStyle(
                                               color: CustomTheme()
                                                   .colors('warning'),
-                                              fontSize: 13,
+                                              fontSize:
+                                                  CustomTheme().fontSize('sm'),
                                             ),
                                           ),
                                         ),
@@ -445,9 +504,9 @@ class _FormItemsState extends State<FormItems> {
                               },
                             ),
                           )
-                        ].separatedBy(const SizedBox(width: 16)),
+                        ].separatedBy(CustomTheme().hGap('xl')),
                       ),
-                  ].separatedBy(const SizedBox(height: 8)),
+                  ].separatedBy(CustomTheme().vGap('lg')),
                 )),
               CustomCard(
                   child: AttachmentPicker(

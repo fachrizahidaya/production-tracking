@@ -84,7 +84,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
     });
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -98,7 +98,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                   label: 'Dari Tanggal',
                   formControl: TextFormField(
                     controller: dariTanggalInput,
-                    style: const TextStyle(fontSize: 14),
+                    style: TextStyle(fontSize: CustomTheme().fontSize('md')),
                     decoration: CustomTheme().inputDateDecoration(
                         hintTextString: 'Pilih tanggal',
                         hasValue: dariTanggalInput.text.isNotEmpty),
@@ -142,7 +142,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                   label: 'Sampai Tanggal',
                   formControl: TextFormField(
                     controller: sampaiTanggalInput,
-                    style: const TextStyle(fontSize: 14),
+                    style: TextStyle(fontSize: CustomTheme().fontSize('md')),
                     decoration: CustomTheme().inputDateDecoration(
                         hintTextString: 'Pilih tanggal',
                         hasValue: dariTanggalInput.text.isNotEmpty),
@@ -228,15 +228,16 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(16.0),
+                                padding: CustomTheme().padding('content'),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
+                                    Text(
                                       "Pilih Status",
                                       style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                                        fontSize: CustomTheme().fontSize('xl'),
+                                        fontWeight:
+                                            CustomTheme().fontWeight('bold'),
                                       ),
                                     ),
                                     const SizedBox(height: 8),
@@ -301,7 +302,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(12.0),
+                                padding: CustomTheme().padding('card'),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [

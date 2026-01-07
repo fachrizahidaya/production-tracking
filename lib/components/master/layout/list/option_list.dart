@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class OptionList extends StatefulWidget {
   final dataList;
@@ -16,28 +17,24 @@ class OptionList extends StatefulWidget {
 class _OptionListState extends State<OptionList> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        Expanded(
-            child: Stack(
-          children: [
-            if (widget.dataList.isEmpty)
-              const Center(child: NoData())
-            else
-              ListView.builder(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(8),
-                itemCount: widget.dataList.length,
-                itemBuilder: (context, index) {
-                  final item = widget.dataList[index];
-                  return GestureDetector(
-                    onTap: () => widget.onItemTap?.call(context, item),
-                    child: widget.itemBuilder(item),
-                  );
-                },
-              ),
-          ],
-        ))
+        if (widget.dataList.isEmpty)
+          const Center(child: NoData())
+        else
+          ListView.separated(
+            separatorBuilder: (context, index) => CustomTheme().vGap('xl'),
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: CustomTheme().padding('content'),
+            itemCount: widget.dataList.length,
+            itemBuilder: (context, index) {
+              final item = widget.dataList[index];
+              return GestureDetector(
+                onTap: () => widget.onItemTap?.call(context, item),
+                child: widget.itemBuilder(item),
+              );
+            },
+          ),
       ],
     );
   }

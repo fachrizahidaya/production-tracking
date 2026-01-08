@@ -25,7 +25,6 @@ class FinishSection extends StatefulWidget {
   final itemGradeOption;
   final handleSelectQtyUnit;
   final qty;
-  final notes;
   final withQtyAndWeight;
   final handleSelectQtyUnitItem;
   final handleSelectQtyUnitDyeing;
@@ -55,7 +54,6 @@ class FinishSection extends StatefulWidget {
       this.itemGradeOption,
       this.handleSelectQtyUnit,
       this.qty,
-      this.notes,
       this.withQtyAndWeight,
       this.handleSelectQtyUnitItem,
       this.qtyItem,
@@ -295,7 +293,6 @@ class _FinishSectionState extends State<FinishSection> {
       withItemGrade: widget.withItemGrade,
       itemGradeOption: widget.itemGradeOption ?? [],
       handleSelectQtyUnit: widget.handleSelectQtyUnit,
-      notes: widget.notes,
       qty: widget.qty,
       withQtyAndWeight: widget.withQtyAndWeight,
       qtyItem: widget.qtyItem,

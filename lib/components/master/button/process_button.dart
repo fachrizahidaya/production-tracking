@@ -12,6 +12,7 @@ class ProcessButton extends StatefulWidget {
   final processId;
   final formKey;
   final handleSubmit;
+  final handleCancel;
 
   const ProcessButton(
       {super.key,
@@ -21,7 +22,8 @@ class ProcessButton extends StatefulWidget {
       this.labelProcess,
       this.isSubmitting,
       this.handleSubmit,
-      this.formKey});
+      this.formKey,
+      this.handleCancel});
 
   @override
   State<ProcessButton> createState() => _ProcessButtonState();
@@ -42,7 +44,7 @@ class _ProcessButtonState extends State<ProcessButton> {
                 Expanded(
                   child: CancelButton(
                     label: 'Batal',
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => widget.handleCancel(context),
                   ),
                 ),
                 Expanded(
@@ -56,10 +58,13 @@ class _ProcessButtonState extends State<ProcessButton> {
                       if (!widget.formKey.currentState!.validate()) {
                         return;
                       }
-
-                      await widget.handleSubmit(widget.data['id'] != null
-                          ? widget.data['id'].toString()
-                          : widget.processId);
+                      if (widget.processId != null) {
+                        await widget.handleSubmit(
+                          widget.data['id']?.toString() ?? widget.processId,
+                        );
+                      } else {
+                        await widget.handleSubmit();
+                      }
                     } finally {
                       widget.isSubmitting.value = false;
                     }

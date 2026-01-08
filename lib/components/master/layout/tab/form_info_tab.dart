@@ -15,7 +15,6 @@ class FormInfoTab extends StatefulWidget {
   final label;
   final form;
   final formKey;
-  final handleSubmit;
   final handleSelectMachine;
   final handleSelectWorkOrder;
   final isLoading;
@@ -34,7 +33,6 @@ class FormInfoTab extends StatefulWidget {
       this.formKey,
       this.handleSelectMachine,
       this.handleSelectWorkOrder,
-      this.handleSubmit,
       this.id,
       this.isLoading,
       this.isMaklon,
@@ -81,7 +79,6 @@ class _FormInfoTabState extends State<FormInfoTab> {
             form: widget.form,
             maklon: widget.maklon,
             isMaklon: widget.isMaklon,
-            handleSubmit: widget.handleSubmit,
             selectWorkOrder: widget.handleSelectWorkOrder,
             selectMachine: widget.handleSelectMachine,
             id: widget.id,

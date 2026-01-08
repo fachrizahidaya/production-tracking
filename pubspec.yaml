@@ -53,6 +53,7 @@ dependencies:
   image_picker: ^1.2.0
   html: ^0.15.6
   quill_html_editor: ^2.2.8
+  dio: ^5.9.0
 
 dev_dependencies:
   flutter_test:

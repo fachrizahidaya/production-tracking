@@ -21,7 +21,6 @@ class FormItems extends StatefulWidget {
   final width;
   final weight;
   final note;
-  final notes;
   final handleChangeInput;
   final handleSelectLengthUnit;
   final handleSelectWidthUnit;
@@ -60,7 +59,6 @@ class FormItems extends StatefulWidget {
       this.itemGradeOption,
       this.length,
       this.note,
-      this.notes,
       this.qty,
       this.showImageDialog,
       this.weight,
@@ -84,28 +82,28 @@ class _FormItemsState extends State<FormItems> {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> formRows = [
-      {
-        'label': 'Panjang',
-        'controller': widget.length,
-        'onSelect': widget.handleSelectLengthUnit,
-        'selectedLabel': widget.form['nama_satuan_panjang'] ?? '',
-        'selectedValue': widget.form['length_unit_id']?.toString() ?? '',
-        'unitLabel': 'Satuan Panjang',
-        'value': 'length',
-        'req': false,
-        'withSelectUnit': true
-      },
-      {
-        'label': 'Lebar',
-        'controller': widget.width,
-        'onSelect': widget.handleSelectWidthUnit,
-        'selectedLabel': widget.form['nama_satuan_lebar'] ?? '',
-        'selectedValue': widget.form['width_unit_id']?.toString() ?? '',
-        'unitLabel': 'Satuan Lebar',
-        'value': 'width',
-        'req': false,
-        'withSelectUnit': true
-      },
+      // {
+      //   'label': 'Panjang',
+      //   'controller': widget.length,
+      //   'onSelect': widget.handleSelectLengthUnit,
+      //   'selectedLabel': widget.form['nama_satuan_panjang'] ?? '',
+      //   'selectedValue': widget.form['length_unit_id']?.toString() ?? '',
+      //   'unitLabel': 'Satuan Panjang',
+      //   'value': 'length',
+      //   'req': false,
+      //   'withSelectUnit': true
+      // },
+      // {
+      //   'label': 'Lebar',
+      //   'controller': widget.width,
+      //   'onSelect': widget.handleSelectWidthUnit,
+      //   'selectedLabel': widget.form['nama_satuan_lebar'] ?? '',
+      //   'selectedValue': widget.form['width_unit_id']?.toString() ?? '',
+      //   'unitLabel': 'Satuan Lebar',
+      //   'value': 'width',
+      //   'req': false,
+      //   'withSelectUnit': true
+      // },
       if (widget.forDyeing == false)
         {
           'label': 'Berat',

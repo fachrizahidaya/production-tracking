@@ -2,8 +2,10 @@
 
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:textile_tracking/components/master/layout/detail/list_item.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
@@ -15,7 +17,6 @@ class Detail extends StatefulWidget {
   final Map<String, dynamic> form;
   final ValueNotifier<bool>? isSubmitting;
   final Function(String field, dynamic value)? handleChangeInput;
-  final VoidCallback? handleSelectUnit;
   final VoidCallback? handleSelectLengthUnit;
   final VoidCallback? handleSelectWidthUnit;
   final VoidCallback? handleSelectMachine;
@@ -52,7 +53,6 @@ class Detail extends StatefulWidget {
       required this.fieldConfigs,
       this.isSubmitting,
       this.handleChangeInput,
-      this.handleSelectUnit,
       this.handleSelectMachine,
       this.handleUpdate,
       this.refetch,
@@ -82,7 +82,6 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
-  bool _isChanged = false;
   late String _initialQty;
   late String _initialWeight;
   late String _initialLength;
@@ -149,8 +148,6 @@ class _DetailState extends State<Detail> {
         widget.width.text = _initialWidth;
         widget.note.text = _initialNotes;
         widget.maklon.text = _initialMaklonName;
-
-        _isChanged = false;
       });
     }
   }
@@ -180,80 +177,71 @@ class _DetailState extends State<Detail> {
     }
   }
 
-  void _checkForChanges() {
-    bool changed = false;
-    for (var field in widget.fieldConfigs) {
-      final name = field['name']!;
-      if (widget.fieldControllers[name]?.text != _initialValues[name]) {
-        changed = true;
-        break;
+  Future<void> _downloadImage(
+    BuildContext context,
+    bool isNew,
+    String imagePath,
+  ) async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final fileName = imagePath.split('/').last;
+      final savePath = '${dir.path}/$fileName';
+
+      if (isNew) {
+        // Local image → copy
+        await File(imagePath).copy(savePath);
+      } else {
+        // Network image → download
+        await Dio().download(imagePath, savePath);
       }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Image downloaded: $fileName')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Download failed')),
+      );
     }
-    setState(() => _isChanged = changed);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final existingAttachments =
-        (widget.data['attachments'] ?? []) as List<dynamic>;
-
-    final existingGrades = (widget.data['grades'] ?? []) as List<dynamic>;
-
-    if (widget.isLoading) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-
-    if (widget.data.isEmpty) {
-      return Container(
-        alignment: Alignment.center,
-        child: const NoData(),
-      );
-    }
-
-    return ListItem(
-      data: widget.data,
-      form: widget.form,
-      isSubmitting: widget.isSubmitting ?? ValueNotifier(false),
-      handleUpdate: widget.handleUpdate,
-      isChanged: _isChanged,
-      existingAttachment: existingAttachments,
-      fieldConfigs: widget.fieldConfigs,
-      fieldControllers: widget.fieldControllers,
-      handleSelectMachine: widget.handleSelectMachine,
-      handleSelectUnit: widget.handleSelectUnit,
-      handleSelectLengthUnit: widget.handleSelectLengthUnit,
-      handleSelectWidthUnit: widget.handleSelectWidthUnit,
-      handlePickAttachments: null,
-      handleChangeInput: widget.handleChangeInput,
-      checkForChanges: _checkForChanges,
-      no: widget.no,
-      length: widget.length,
-      width: widget.width,
-      weight: widget.weight,
-      note: widget.note,
-      initialLength: _initialLength,
-      initialNotes: _initialNotes,
-      initialWeight: _initialWeight,
-      initialWidth: _initialWidth,
-      initialMaklon: _initialMaklonName,
-      withItemGrade: widget.withItemGrade,
-      qty: widget.qty,
-      qtyItem: widget.qtyItem,
-      initialQty: _initialQty,
-      handleSelectQtyUnit: widget.handleSelectQtyUnit,
-      existingGrades: existingGrades,
-      notes: widget.notes,
-      withQtyAndWeight: widget.withQtyAndWeight,
-      handleSelectQtyItemUnit: widget.handleSelectQtyItemUnit,
-      withMaklon: widget.withMaklon,
-      maklon: widget.maklon,
-      onlySewing: widget.onlySewing,
-      handleBuildAttachment: _buildAttachmentList,
-      handleHtmlText: htmlToPlainText,
-      label: widget.label,
-      forDyeing: widget.forDyeing,
+  void _showImageDialog(BuildContext context, bool isNew, String filePath) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          insetPadding: CustomTheme().padding('content'),
+          child: Stack(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.6,
+                padding: CustomTheme().padding('process-content'),
+                child: InteractiveViewer(
+                  minScale: 1,
+                  maxScale: 4,
+                  child: isNew
+                      ? Image.file(File(filePath), fit: BoxFit.contain)
+                      : Image.network(filePath, fit: BoxFit.contain),
+                ),
+              ),
+              Positioned(
+                bottom: 8,
+                right: 8,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.download),
+                  label: const Text('Download'),
+                  onPressed: () => _downloadImage(context, isNew, filePath),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -264,15 +252,6 @@ class _DetailState extends State<Detail> {
     final baseUrl = dotenv.env['IMAGE_URL_DEV'] ?? '';
 
     return Wrap(spacing: 8, runSpacing: 8, children: [
-      Row(
-        children: [
-          Text(
-            'Lampiran',
-            style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
-          ),
-          CustomTheme().hGap('sm'),
-        ],
-      ),
       if (existingAttachments.isEmpty)
         const NoData()
       else
@@ -300,13 +279,62 @@ class _DetailState extends State<Detail> {
             preview = const Icon(Icons.insert_drive_file, size: 60);
           }
 
-          return Container(
-            width: 100,
-            height: 100,
-            color: Colors.white,
-            child: preview,
+          return GestureDetector(
+            onTap: filePath != null
+                ? () {
+                    _showImageDialog(
+                      context,
+                      isNew,
+                      isNew ? filePath : '$baseUrl$filePath',
+                    );
+                  }
+                : null,
+            child: Container(
+              width: 100,
+              height: 100,
+              color: Colors.white,
+              child: preview,
+            ),
           );
         }),
     ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final existingAttachments =
+        (widget.data['attachments'] ?? []) as List<dynamic>;
+
+    final existingGrades = (widget.data['grades'] ?? []) as List<dynamic>;
+
+    if (widget.isLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    if (widget.data.isEmpty) {
+      return Container(
+        alignment: Alignment.center,
+        child: const NoData(),
+      );
+    }
+
+    return ListItem(
+      data: widget.data,
+      form: widget.form,
+      existingAttachment: existingAttachments,
+      no: widget.no,
+      withItemGrade: widget.withItemGrade,
+      qty: widget.qty,
+      handleSelectQtyUnit: widget.handleSelectQtyUnit,
+      existingGrades: existingGrades,
+      notes: widget.notes,
+      withQtyAndWeight: widget.withQtyAndWeight,
+      handleBuildAttachment: _buildAttachmentList,
+      handleHtmlText: htmlToPlainText,
+      label: widget.label,
+      forDyeing: widget.forDyeing,
+    );
   }
 }

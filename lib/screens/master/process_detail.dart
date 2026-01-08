@@ -517,7 +517,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           width: _widthController,
           note: _noteController,
           form: _form,
-          handleSelectUnit: _selectUnit,
           handleSelectLengthUnit: _selectLengthUnit,
           handleSelectWidthUnit: _selectWidthUnit,
           handleSelectQtyItemUnit: _selectQtyItemUnit,

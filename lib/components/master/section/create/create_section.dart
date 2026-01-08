@@ -6,7 +6,6 @@ import 'package:textile_tracking/components/master/form/create/list_form.dart';
 class CreateSection extends StatefulWidget {
   final formKey;
   final form;
-  final handleSubmit;
   final selectWorkOrder;
   final selectMachine;
   final id;
@@ -21,7 +20,6 @@ class CreateSection extends StatefulWidget {
       {super.key,
       this.formKey,
       this.form,
-      this.handleSubmit,
       this.selectWorkOrder,
       this.selectMachine,
       this.id,
@@ -39,8 +37,6 @@ class CreateSection extends StatefulWidget {
 class _CreateSectionState extends State<CreateSection> {
   @override
   Widget build(BuildContext context) {
-    final attachments = (widget.form['attachments'] as List?) ?? [];
-
     if (widget.isLoading) {
       return Container(
         color: const Color(0xFFEBEBEB),
@@ -55,11 +51,9 @@ class _CreateSectionState extends State<CreateSection> {
       isMaklon: widget.isMaklon,
       id: widget.id,
       form: widget.form,
-      attachments: attachments,
       maklon: widget.maklon,
       selectWorkOrder: widget.selectWorkOrder,
       selectMachine: widget.selectMachine,
-      handleSubmit: widget.handleSubmit,
       withMaklonOrMachine: widget.withMaklonOrMachine,
       withOnlyMaklon: widget.withOnlyMaklon,
       withNoMaklonOrMachine: widget.withNoMaklonOrMachine,

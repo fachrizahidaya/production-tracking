@@ -11,10 +11,8 @@ class ListForm extends StatefulWidget {
   final formKey;
   final id;
   final form;
-  final attachments;
   final selectWorkOrder;
   final selectMachine;
-  final handleSubmit;
   final isMaklon;
   final maklon;
   final withMaklonOrMachine;
@@ -28,8 +26,6 @@ class ListForm extends StatefulWidget {
       this.form,
       this.selectWorkOrder,
       this.selectMachine,
-      this.handleSubmit,
-      this.attachments,
       this.maklon,
       this.isMaklon = false,
       this.withMaklonOrMachine = false,

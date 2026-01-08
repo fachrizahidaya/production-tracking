@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/button/cancel_button.dart';
+import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -21,82 +23,55 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final double dialogWidth = 280;
+    final double maxDialogWidth = 400;
+    final double maxDialogHeight = size.height * 0.9;
+
     return Dialog(
         backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final screenWidth = MediaQuery.of(context).size.width;
-            final dialogWidth = screenWidth < 600
-                ? screenWidth * 0.9 // mobile
-                : 400.0;
-
-            return ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: dialogWidth,
-                minWidth: 280,
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+              maxWidth: maxDialogWidth,
+              maxHeight: maxDialogHeight,
+              minWidth: dialogWidth),
+          child: Padding(
+            padding: CustomTheme().padding('dialog'),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: CustomTheme().fontSize('xl'),
+                          fontWeight: CustomTheme().fontWeight('bold')),
                     ),
                     Text(
                       message,
-                      style: const TextStyle(
-                        fontSize: 14,
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('md'),
                       ),
                     ),
-                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                      TextButton(
-                        onPressed: onCancel,
-                        style: TextButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                side: const BorderSide(color: Colors.grey))),
-                        child: Text(
-                          'Tidak',
-                          style:
-                              TextStyle(color: CustomTheme().colors('danger')),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      ElevatedButton(
-                          onPressed: isLoading ? null : onConfirm,
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: buttonBackground ??
-                                  CustomTheme().buttonColor('primary'),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4))),
-                          child: isLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : const Text(
-                                  'Ya',
-                                  style: TextStyle(color: Colors.white),
-                                ))
-                    ])
-                  ].separatedBy(SizedBox(
-                    height: 8,
-                  )),
+                  ],
                 ),
-              ),
-            );
-          },
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CancelButton(label: 'Tidak', onPressed: onCancel),
+                      FormButton(
+                        label: 'Ya',
+                        onPressed: isLoading ? null : onConfirm,
+                        isLoading: isLoading,
+                      ),
+                    ].separatedBy(CustomTheme().hGap('lg')))
+              ].separatedBy(CustomTheme().vGap('lg')),
+            ),
+          ),
         ));
   }
 }

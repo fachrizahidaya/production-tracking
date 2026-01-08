@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-// import 'package:textile_tracking/helpers/util/text_editor.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/text_editor.dart';
 
 class NoteEditor extends StatefulWidget {
   final String label;
   final TextEditingController controller;
-  final Map<String, dynamic>? form;
+  final form;
   final String formKey;
   final Function(String value)? onChanged;
 
@@ -32,9 +33,8 @@ class _NoteEditorState extends State<NoteEditor> {
       children: [
         Text(
           widget.label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('lg'),
           ),
         ),
         const SizedBox(height: 8),
@@ -48,34 +48,34 @@ class _NoteEditorState extends State<NoteEditor> {
             });
 
             // Open the TextEditor
-            // final result = await Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (_) => TextEditor(
-            //       initialHtml: initialHtmlState,
-            //     ),
-            //   ),
-            // );
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => TextEditor(
+                  initialHtml: initialHtmlState,
+                ),
+              ),
+            );
 
             // When user finishes editing
-            // if (result != null) {
-            //   setState(() {
-            //     widget.controller.text = result;
-            //   });
+            if (result != null) {
+              setState(() {
+                widget.controller.text = result;
+              });
 
-            //   if (widget.form != null) {
-            //     widget.form![widget.formKey] = result;
-            //   }
+              if (widget.form != null) {
+                widget.form![widget.formKey] = result;
+              }
 
-            //   if (widget.onChanged != null) {
-            //     widget.onChanged!(result);
-            //   }
-            // }
+              if (widget.onChanged != null) {
+                widget.onChanged!(result);
+              }
+            }
           },
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            constraints: const BoxConstraints(minHeight: 150),
+            padding: CustomTheme().padding('card'),
+            constraints: BoxConstraints(minHeight: 150),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),

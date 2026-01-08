@@ -94,19 +94,19 @@ class _DashboardListState<T> extends State<DashboardList<T>> {
     }
 
     return CustomCard(
-      child: widget.dataList.isEmpty
-          ? Center(child: NoData())
-          : Column(
-              children: [
-                CustomSearchBar(
-                  handleSearchChange: widget.handleSearch,
-                  showFilter: _openFilter,
-                  isFiltered: widget.isFiltered,
-                  withRefresh: true,
-                  handleRefetch: widget.handleRefetch,
-                ),
-                Divider(),
-                SizedBox(
+      child: Column(
+        children: [
+          CustomSearchBar(
+            handleSearchChange: widget.handleSearch,
+            showFilter: _openFilter,
+            isFiltered: widget.isFiltered,
+            withRefresh: true,
+            handleRefetch: widget.handleRefetch,
+          ),
+          Divider(),
+          widget.dataList.isEmpty
+              ? Center(child: NoData())
+              : SizedBox(
                   height: 500,
                   child: CustomScrollView(
                     controller: _scrollController,
@@ -142,8 +142,8 @@ class _DashboardListState<T> extends State<DashboardList<T>> {
                     ],
                   ),
                 ),
-              ],
-            ),
+        ],
+      ),
     );
   }
 }

@@ -112,10 +112,10 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
           width: groupWidth,
           child: Text(
             name,
-            style: const TextStyle(
+            style: TextStyle(
               color: Color(0xff7589a2),
-              fontWeight: FontWeight.bold,
-              fontSize: 11,
+              fontWeight: CustomTheme().fontWeight('bold'),
+              fontSize: CustomTheme().fontSize('sm'),
             ),
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
@@ -215,11 +215,13 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
                   children: [
                     Text(
                       'Status Setiap Proses',
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: CustomTheme().fontSize('md')),
                     ),
                     Text(
                       'Tracking progres setiap tahap Work Order',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(
+                          fontSize: CustomTheme().fontSize('sm'),
+                          color: Colors.grey),
                     ),
                   ],
                 ),
@@ -295,9 +297,9 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
                                   getTitlesWidget: (value, meta) {
                                     return Text(
                                       value.toInt().toString(),
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Color(0xff7589a2),
-                                        fontSize: 12,
+                                        fontSize: CustomTheme().fontSize('sm'),
                                       ),
                                     );
                                   },
@@ -329,9 +331,7 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
                   )),
                 ),
               ),
-            ].separatedBy(SizedBox(
-              height: 16,
-            )),
+            ].separatedBy(CustomTheme().vGap('xl')),
           ),
         ].separatedBy(const SizedBox(height: 16)),
       ),
@@ -351,10 +351,10 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
         ),
         Text(
           text,
-          style: const TextStyle(
+          style: TextStyle(
             color: Color(0xff7589a2),
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
+            fontSize: CustomTheme().fontSize('sm'),
+            fontWeight: CustomTheme().fontWeight('semibold'),
           ),
         ),
       ].separatedBy(SizedBox(

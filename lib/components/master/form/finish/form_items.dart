@@ -6,9 +6,10 @@ import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
-class FormSection extends StatefulWidget {
+class FormItems extends StatefulWidget {
   final id;
   final form;
   final withItemGrade;
@@ -20,7 +21,6 @@ class FormSection extends StatefulWidget {
   final width;
   final weight;
   final note;
-  final notes;
   final handleChangeInput;
   final handleSelectLengthUnit;
   final handleSelectWidthUnit;
@@ -41,7 +41,7 @@ class FormSection extends StatefulWidget {
   final qtyWarning;
   final label;
 
-  const FormSection(
+  const FormItems(
       {super.key,
       this.allAttachments,
       this.form,
@@ -59,7 +59,6 @@ class FormSection extends StatefulWidget {
       this.itemGradeOption,
       this.length,
       this.note,
-      this.notes,
       this.qty,
       this.showImageDialog,
       this.weight,
@@ -76,35 +75,35 @@ class FormSection extends StatefulWidget {
       this.handleSelectQtyUnitDyeing});
 
   @override
-  State<FormSection> createState() => _FormSectionState();
+  State<FormItems> createState() => _FormItemsState();
 }
 
-class _FormSectionState extends State<FormSection> {
+class _FormItemsState extends State<FormItems> {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> formRows = [
-      {
-        'label': 'Panjang',
-        'controller': widget.length,
-        'onSelect': widget.handleSelectLengthUnit,
-        'selectedLabel': widget.form['nama_satuan_panjang'] ?? '',
-        'selectedValue': widget.form['length_unit_id']?.toString() ?? '',
-        'unitLabel': 'Satuan Panjang',
-        'value': 'length',
-        'req': false,
-        'withSelectUnit': false
-      },
-      {
-        'label': 'Lebar',
-        'controller': widget.width,
-        'onSelect': widget.handleSelectWidthUnit,
-        'selectedLabel': widget.form['nama_satuan_lebar'] ?? '',
-        'selectedValue': widget.form['width_unit_id']?.toString() ?? '',
-        'unitLabel': 'Satuan Lebar',
-        'value': 'width',
-        'req': false,
-        'withSelectUnit': false
-      },
+      // {
+      //   'label': 'Panjang',
+      //   'controller': widget.length,
+      //   'onSelect': widget.handleSelectLengthUnit,
+      //   'selectedLabel': widget.form['nama_satuan_panjang'] ?? '',
+      //   'selectedValue': widget.form['length_unit_id']?.toString() ?? '',
+      //   'unitLabel': 'Satuan Panjang',
+      //   'value': 'length',
+      //   'req': false,
+      //   'withSelectUnit': true
+      // },
+      // {
+      //   'label': 'Lebar',
+      //   'controller': widget.width,
+      //   'onSelect': widget.handleSelectWidthUnit,
+      //   'selectedLabel': widget.form['nama_satuan_lebar'] ?? '',
+      //   'selectedValue': widget.form['width_unit_id']?.toString() ?? '',
+      //   'unitLabel': 'Satuan Lebar',
+      //   'value': 'width',
+      //   'req': false,
+      //   'withSelectUnit': true
+      // },
       if (widget.forDyeing == false)
         {
           'label': 'Berat',
@@ -206,9 +205,9 @@ class _FormSectionState extends State<FormSection> {
                                     child: col['child'],
                                   ))
                               .toList()
-                              .separatedBy(const SizedBox(width: 16)),
+                              .separatedBy(CustomTheme().hGap('xl')),
                         ),
-                  ].separatedBy(const SizedBox(height: 16)),
+                  ].separatedBy(CustomTheme().vGap('xl')),
                 )),
               if (widget.withItemGrade == false)
                 CustomCard(
@@ -258,8 +257,27 @@ class _FormSectionState extends State<FormSection> {
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return '${row['label']} wajib diisi';
+                                    } else if (row['value'] == 'weight' &&
+                                        widget.weightWarning != null) {
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              widget.weightWarning ?? '-',
+                                              style: TextStyle(
+                                                color: CustomTheme()
+                                                    .colors('warning'),
+                                                fontSize: CustomTheme()
+                                                    .fontSize('sm'),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
                                     }
-                                    return null;
                                   },
                                 ),
                                 if (row['value'] == 'weight' &&
@@ -277,7 +295,8 @@ class _FormSectionState extends State<FormSection> {
                                             style: TextStyle(
                                               color: CustomTheme()
                                                   .colors('warning'),
-                                              fontSize: 13,
+                                              fontSize:
+                                                  CustomTheme().fontSize('sm'),
                                             ),
                                           ),
                                         ),
@@ -291,6 +310,7 @@ class _FormSectionState extends State<FormSection> {
                             Expanded(
                               flex: 1,
                               child: SelectForm(
+                                isDisabled: true,
                                 label: row['unitLabel'],
                                 onTap: row['onSelect'],
                                 selectedLabel: row['selectedLabel'],
@@ -304,7 +324,7 @@ class _FormSectionState extends State<FormSection> {
                                 },
                               ),
                             ),
-                        ].separatedBy(const SizedBox(width: 16)),
+                        ].separatedBy(CustomTheme().hGap('xl')),
                       );
                     }),
                     if (widget.withQtyAndWeight == true)
@@ -330,8 +350,26 @@ class _FormSectionState extends State<FormSection> {
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return 'Qty wajib diisi';
+                                    } else if (widget.qtyWarning != null) {
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              widget.qtyWarning ?? '-',
+                                              style: TextStyle(
+                                                color: CustomTheme()
+                                                    .colors('warning'),
+                                                fontSize: CustomTheme()
+                                                    .fontSize('sm'),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
                                     }
-                                    return null;
                                   },
                                 ),
                                 if (widget.qtyWarning != null)
@@ -348,7 +386,8 @@ class _FormSectionState extends State<FormSection> {
                                             style: TextStyle(
                                               color: CustomTheme()
                                                   .colors('warning'),
-                                              fontSize: 13,
+                                              fontSize:
+                                                  CustomTheme().fontSize('sm'),
                                             ),
                                           ),
                                         ),
@@ -375,7 +414,7 @@ class _FormSectionState extends State<FormSection> {
                               },
                             ),
                           )
-                        ].separatedBy(const SizedBox(width: 16)),
+                        ].separatedBy(CustomTheme().hGap('xl')),
                       ),
                     if (widget.forDyeing == true)
                       Row(
@@ -399,8 +438,26 @@ class _FormSectionState extends State<FormSection> {
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
                                       return 'Qty wajib diisi';
+                                    } else if (widget.weightWarning != null) {
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              widget.weightWarning ?? '-',
+                                              style: TextStyle(
+                                                color: CustomTheme()
+                                                    .colors('warning'),
+                                                fontSize: CustomTheme()
+                                                    .fontSize('sm'),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
                                     }
-                                    return null;
                                   },
                                 ),
                                 if (widget.weightWarning != null)
@@ -417,7 +474,8 @@ class _FormSectionState extends State<FormSection> {
                                             style: TextStyle(
                                               color: CustomTheme()
                                                   .colors('warning'),
-                                              fontSize: 13,
+                                              fontSize:
+                                                  CustomTheme().fontSize('sm'),
                                             ),
                                           ),
                                         ),
@@ -444,9 +502,9 @@ class _FormSectionState extends State<FormSection> {
                               },
                             ),
                           )
-                        ].separatedBy(const SizedBox(width: 16)),
+                        ].separatedBy(CustomTheme().hGap('xl')),
                       ),
-                  ].separatedBy(const SizedBox(height: 8)),
+                  ].separatedBy(CustomTheme().vGap('lg')),
                 )),
               CustomCard(
                   child: AttachmentPicker(
@@ -457,14 +515,14 @@ class _FormSectionState extends State<FormSection> {
                   widget.showImageDialog(context, isNew, filePath);
                 },
               )),
-              // CustomCard(
-              //     child: NoteEditor(
-              //   controller: widget.note,
-              //   formKey: 'notes',
-              //   label: 'Catatan',
-              //   form: widget.form,
-              //   onChanged: (value) => widget.handleChangeInput('notes', value),
-              // )),
+              CustomCard(
+                  child: NoteEditor(
+                controller: widget.note,
+                formKey: 'notes',
+                label: 'Catatan',
+                form: widget.form['notes'],
+                onChanged: (value) => widget.handleChangeInput('notes', value),
+              )),
             ].separatedBy(CustomTheme().vGap('2xl')),
           ),
       ].separatedBy(CustomTheme().vGap('2xl')),

@@ -72,7 +72,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
         if (newItems.isNotEmpty) _currentPage++;
       } else {
-        throw Exception('Failed to load $endpoint data');
+        throw Exception('Gagal mengambil data');
       }
     } catch (e) {
       rethrow;
@@ -104,7 +104,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         _dataView = jsonDecode(response.body);
         notifyListeners();
       } else {
-        throw Exception('Failed to load $endpoint view');
+        throw Exception('Gagal mengambil data');
       }
     } catch (e) {
       rethrow;
@@ -159,13 +159,13 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       if (response.statusCode == 201) {
         final res = jsonDecode(response.body);
         await refetchItems();
-        return res['message'] ?? 'Created successfully';
+        return res['message'] ?? 'Proses telah ditambahkan';
       } else {
         final error = jsonDecode(response.body);
-        throw Exception(error['message'] ?? 'Failed to create item');
+        throw Exception(error['message'] ?? 'Gagal menambahkan proses');
       }
     } catch (e) {
-      throw Exception('Error adding $endpoint: $e');
+      throw Exception('Gagal menambahkan proses: $e');
     } finally {
       isSubmitting.value = false;
     }
@@ -217,10 +217,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
         if (response.statusCode == 200) {
           await refetchItems();
-          return jsonDecode(body)['message'] ?? 'Updated successfully';
+          return jsonDecode(body)['message'] ?? 'Proses telah diubah';
         } else {
           throw Exception(
-              jsonDecode(body)['message'] ?? 'Failed to update item');
+              jsonDecode(body)['message'] ?? 'Gagal mengubah proses');
         }
       } else {
         final body = {
@@ -242,11 +242,11 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
           return jsonDecode(response.body)['message'];
         } else {
           final error = jsonDecode(response.body);
-          throw Exception(error['message'] ?? 'Failed to update item');
+          throw Exception(error['message'] ?? 'Gagal mengubah proses');
         }
       }
     } catch (e) {
-      throw Exception('Error updating $endpoint: $e');
+      throw Exception('Gagal mengubah proses: $e');
     } finally {
       isSubmitting.value = false;
     }
@@ -301,10 +301,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
         if (response.statusCode == 200) {
           await refetchItems();
-          return jsonDecode(body)['message'] ?? 'Completed successfully';
+          return jsonDecode(body)['message'] ?? 'Proses telah selesai';
         } else {
           throw Exception(
-              jsonDecode(body)['message'] ?? 'Failed to finish item');
+              jsonDecode(body)['message'] ?? 'Gagal menyelesaikan proses');
         }
       } else {
         final body = {
@@ -326,11 +326,11 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
           return jsonDecode(response.body)['message'];
         } else {
           final error = jsonDecode(response.body);
-          throw Exception(error['message'] ?? 'Failed to finish item');
+          throw Exception(error['message'] ?? 'Gagal menyelesaikan proses');
         }
       }
     } catch (e) {
-      throw Exception('Error finishing $endpoint: $e');
+      throw Exception('Gagal menyelesaikan proses: $e');
     } finally {
       isSubmitting.value = false;
     }
@@ -394,11 +394,11 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
           final jsonResponse = jsonDecode(responseBody);
           await refetchItems();
           notifyListeners();
-          return jsonResponse['message'] ?? 'Rework successful';
+          return jsonResponse['message'] ?? 'Proses telah Rework';
         } else {
           var responseData = await response.stream.bytesToString();
-          throw Exception(jsonDecode(responseData)['message'] ??
-              'Failed to add dyeing with attachments');
+          throw Exception(
+              jsonDecode(responseData)['message'] ?? 'Gagal Rework proses');
         }
       } else {
         final body = {
@@ -419,11 +419,11 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
           return jsonDecode(response.body)['message'];
         } else {
           final error = jsonDecode(response.body);
-          throw Exception(error['message'] ?? 'Failed to rework item');
+          throw Exception(error['message'] ?? 'Gagal Rework proses');
         }
       }
     } catch (e) {
-      throw Exception("Error rework dyeing: $e");
+      throw Exception("Gagal Rework proses: $e");
     } finally {
       isSubmitting.value = false;
     }
@@ -449,10 +449,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         return res['message'];
       } else {
         final error = jsonDecode(response.body);
-        throw Exception(error['message'] ?? 'Failed to delete item');
+        throw Exception(error['message'] ?? 'Gagal menghapus proses');
       }
     } catch (e) {
-      throw Exception('Error deleting $endpoint: $e');
+      throw Exception('Gagal menghapus proses: $e');
     } finally {
       isSubmitting.value = false;
     }

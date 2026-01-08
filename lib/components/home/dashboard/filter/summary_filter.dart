@@ -64,7 +64,7 @@ class _SummaryFilterState<T> extends State<SummaryFilter<T>> {
     });
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -147,13 +147,9 @@ class _SummaryFilterState<T> extends State<SummaryFilter<T>> {
                   ),
                 ),
               ),
-            ].separatedBy(SizedBox(
-              width: 16,
-            )),
+            ].separatedBy(CustomTheme().hGap('xl')),
           ),
-        ].separatedBy(SizedBox(
-          height: 16,
-        )),
+        ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
   }

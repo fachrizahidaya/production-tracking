@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/section/finish/create_form.dart';
+import 'package:textile_tracking/components/master/section/finish/finish_section.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
-class CreateInfoTab extends StatefulWidget {
+class FinishFormTab extends StatefulWidget {
   final id;
-  final data;
   final form;
   final formKey;
   final handleSelectMachine;
@@ -26,7 +25,6 @@ class CreateInfoTab extends StatefulWidget {
   final note;
   final qty;
   final qtyItem;
-  final notes;
   final handleSelectWo;
   final handleSelectQtyUnit;
   final handleSelectQtyUnitItem;
@@ -49,9 +47,8 @@ class CreateInfoTab extends StatefulWidget {
   final label;
   final forDyeing;
 
-  const CreateInfoTab(
+  const FinishFormTab(
       {super.key,
-      this.data,
       this.form,
       this.formKey,
       this.handleSelectMachine,
@@ -84,7 +81,6 @@ class CreateInfoTab extends StatefulWidget {
       this.itemGradeOption,
       this.length,
       this.note,
-      this.notes,
       this.processData,
       this.processId,
       this.qty,
@@ -97,10 +93,10 @@ class CreateInfoTab extends StatefulWidget {
       this.forDyeing});
 
   @override
-  State<CreateInfoTab> createState() => _CreateInfoTabState();
+  State<FinishFormTab> createState() => _FinishFormTabState();
 }
 
-class _CreateInfoTabState extends State<CreateInfoTab>
+class _FinishFormTabState extends State<FinishFormTab>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
@@ -120,7 +116,7 @@ class _CreateInfoTabState extends State<CreateInfoTab>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CreateForm(
+            FinishSection(
               formKey: widget.formKey,
               form: widget.form,
               note: widget.note,
@@ -133,7 +129,6 @@ class _CreateInfoTabState extends State<CreateInfoTab>
               handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
               handleSelectQtyUnitDyeing: widget.handleSelectQtyUnitDyeing,
               id: widget.id,
-              data: widget.data,
               processId: widget.processId,
               processData: widget.processData,
               isLoading: widget.isLoading,
@@ -142,7 +137,6 @@ class _CreateInfoTabState extends State<CreateInfoTab>
               withItemGrade: widget.withItemGrade,
               itemGradeOption: widget.itemGradeOption,
               handleSelectQtyUnit: widget.handleSelectQtyUnit,
-              notes: widget.notes,
               qty: widget.qty,
               withQtyAndWeight: widget.withQtyAndWeight,
               qtyItem: widget.qtyItem,

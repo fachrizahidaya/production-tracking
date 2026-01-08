@@ -2,15 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/master/button/cancel_button.dart';
-import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/master/button/process_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/layout/tab/create_form_tab.dart';
-import 'package:textile_tracking/components/master/layout/tab/create_info_tab.dart';
-import 'package:textile_tracking/components/master/layout/tab/create_item_tab.dart';
+import 'package:textile_tracking/components/master/layout/tab/work_order_info_tab.dart';
+import 'package:textile_tracking/components/master/layout/tab/finish_form_tab.dart';
+import 'package:textile_tracking/components/master/layout/tab/work_order_item_tab.dart';
 import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
@@ -68,6 +67,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   bool _isFetchingUnit = false;
   bool _isFetchingGrade = false;
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _listFormKey = GlobalKey();
@@ -101,10 +101,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
     if (widget.processId != null) {
       _getProcessView(widget.processId);
-    }
-
-    if (widget.data != null) {
-      woData = widget.data!;
     }
 
     _handleFetchWorkOrder();
@@ -291,6 +287,26 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     });
   }
 
+  Future<void> _handleCancel(BuildContext context) async {
+    if (context.mounted) {
+      if (widget.form?['wo_id'] != null) {
+        showConfirmationDialog(
+            context: context,
+            isLoading: _isLoading,
+            onConfirm: () async {
+              await Future.delayed(const Duration(milliseconds: 200));
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            title: 'Batal',
+            message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
+            buttonBackground: CustomTheme().buttonColor('danger'));
+      } else {
+        Navigator.pop(context);
+      }
+    }
+  }
+
   _selectWorkOrder() {
     if (_isFetchingWorkOrder) {
       showDialog(
@@ -379,7 +395,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         return SelectDialog(
           label: 'Satuan Panjang',
           options: unitOption,
-          selected: widget.form?['length_unit_id'].toString() ?? '4',
+          selected: widget.form?['length_unit_id'].toString() ?? '',
           handleChangeValue: (e) {
             setState(() {
               widget.form?['length_unit_id'] = e['value'].toString();
@@ -411,7 +427,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         return SelectDialog(
           label: 'Satuan Lebar',
           options: unitOption,
-          selected: widget.form?['width_unit_id'].toString() ?? '4',
+          selected: widget.form?['width_unit_id'].toString() ?? '',
           handleChangeValue: (e) {
             setState(() {
               widget.form?['width_unit_id'] = e['value'].toString();
@@ -491,8 +507,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       builder: (_) => SelectDialog(
         label: 'Satuan',
         options: unitOption,
-        // 👇 Preselect current unit for this grade
-        selected: widget.form?['item_unit_id'].toString(),
+        selected: widget.form?['item_unit_id'].toString() ?? '',
         handleChangeValue: (e) {
           setState(() {
             widget.form?['item_unit_id'] = e['value'].toString();
@@ -520,8 +535,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       builder: (_) => SelectDialog(
         label: 'Satuan',
         options: unitOption,
-        // 👇 Preselect current unit for this grade
-        selected: widget.form?['unit_id'].toString(),
+        selected: widget.form?['unit_id'].toString() ?? '',
         handleChangeValue: (e) {
           setState(() {
             widget.form?['unit_id'] = e['value'].toString();
@@ -560,7 +574,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
           appBar: CustomAppBar(
             title: widget.title,
             onReturn: () {
-              Navigator.pop(context);
+              _handleCancel(context);
             },
           ),
           body: Column(
@@ -581,8 +595,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
               ),
               Expanded(
                 child: TabBarView(children: [
-                  CreateInfoTab(
-                    data: woData,
+                  FinishFormTab(
                     id: widget.id,
                     isLoading: _firstLoading,
                     form: widget.form,
@@ -607,65 +620,30 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                     withItemGrade: widget.withItemGrade,
                     itemGradeOption: itemGradeOption,
                     handleSelectQtyUnit: _selectQtyUnit,
-                    notes: _notesControllers,
                     withQtyAndWeight: widget.withQtyAndWeight,
                     label: widget.label,
                     forDyeing: widget.forDyeing,
                   ),
-                  CreateFormTab(
-                    data: woData,
+                  WorkOrderInfoTab(
+                    data: data['work_orders'],
                     label: widget.label,
                   ),
-                  CreateItemTab(
+                  WorkOrderItemTab(
                     data: woData,
                   ),
                 ]),
               )
             ],
           ),
-          bottomNavigationBar: SafeArea(
-            child: Container(
-              color: Colors.white,
-              padding: CustomTheme().padding('card'),
-              child: ValueListenableBuilder<bool>(
-                valueListenable: _isSubmitting,
-                builder: (context, isSubmitting, _) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: CancelButton(
-                          label: 'Batal',
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ),
-                      Expanded(
-                          child: FormButton(
-                        label: 'Selesai',
-                        isLoading: isSubmitting,
-                        isDisabled:
-                            widget.form?['wo_id'] == null ? true : false,
-                        onPressed: () async {
-                          _isSubmitting.value = true;
-                          try {
-                            if (!_formKey.currentState!.validate()) {
-                              return;
-                            }
-
-                            await widget.handleSubmit(data['id'] != null
-                                ? data['id'].toString()
-                                : widget.processId);
-                          } finally {
-                            _isSubmitting.value = false;
-                          }
-                        },
-                      ))
-                    ].separatedBy(SizedBox(
-                      width: 16,
-                    )),
-                  );
-                },
-              ),
-            ),
+          bottomNavigationBar: ProcessButton(
+            data: data,
+            form: widget.form,
+            isSubmitting: _isSubmitting,
+            labelProcess: 'Selesai',
+            processId: processId,
+            formKey: _formKey,
+            handleSubmit: widget.handleSubmit,
+            handleCancel: _handleCancel,
           ),
         ),
       ),

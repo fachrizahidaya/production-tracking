@@ -15,7 +15,6 @@ import 'package:textile_tracking/providers/user_provider.dart';
 class FinishProcess extends StatefulWidget {
   final String title;
 
-  /// This builds the manual form page when the QR code is scanned or manually entered
   final Widget Function(
     BuildContext context,
     dynamic id,
@@ -26,17 +25,14 @@ class FinishProcess extends StatefulWidget {
     void Function(String fieldName, dynamic value) handleChangeInput,
   ) formPageBuilder;
 
-  /// Function for submission to service (context, id, form, loading)
   final Future<void> Function(
       BuildContext context,
       dynamic id,
       Map<String, dynamic> form,
       ValueNotifier<bool> isLoading)? handleSubmitToService;
 
-  /// Function to fetch the work order options (custom per process)
   final Future<void> Function(OptionWorkOrderService service)? fetchWorkOrder;
 
-  /// Function to get the work order option list (custom per process)
   final List<dynamic> Function(OptionWorkOrderService service)?
       getWorkOrderOptions;
 
@@ -72,12 +68,14 @@ class _FinishProcessState extends State<FinishProcess> {
   final Map<String, dynamic> _form = {
     'wo_id': null,
     'machine_id': null,
+    'unit_id': null,
     'item_unit_id': null,
-    'length_unit_id': null,
-    'width_unit_id': null,
-    'weight_unit_id': null,
+    'length_unit_id': 4,
+    'width_unit_id': 4,
+    'weight_unit_id': 1,
     'start_by_id': null,
     'end_by_id': null,
+    'qty': null,
     'item_qty': null,
     'width': null,
     'weight': null,
@@ -90,9 +88,9 @@ class _FinishProcessState extends State<FinishProcess> {
     'no_wo': '',
     'nama_mesin': '',
     'nama_satuan': '',
-    'nama_satuan_panjang': '',
-    'nama_satuan_lebar': '',
-    'nama_satuan_berat': '',
+    'nama_satuan_panjang': 'CM',
+    'nama_satuan_lebar': 'CM',
+    'nama_satuan_berat': 'KG',
     'maklon': false,
     'maklon_name': '',
     'grades': []

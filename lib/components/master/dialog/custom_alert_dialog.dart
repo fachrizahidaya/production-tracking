@@ -17,7 +17,7 @@ class CustomAlertDialog extends StatelessWidget {
     final double maxDialogHeight = size.height * 0.9;
 
     return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         backgroundColor: Colors.white,
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -25,7 +25,7 @@ class CustomAlertDialog extends StatelessWidget {
               maxHeight: maxDialogHeight,
               minWidth: dialogWidth),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            padding: CustomTheme().padding('dialog'),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,8 +35,9 @@ class CustomAlertDialog extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: CustomTheme().fontSize('xl'),
+                          fontWeight: CustomTheme().fontWeight('bold')),
                     ),
                     Text(
                       message,
@@ -57,9 +58,7 @@ class CustomAlertDialog extends StatelessWidget {
                     ),
                   ),
                 ])
-              ].separatedBy(SizedBox(
-                height: 8,
-              )),
+              ].separatedBy(CustomTheme().vGap('lg')),
             ),
           ),
         ));

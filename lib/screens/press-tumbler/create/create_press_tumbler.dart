@@ -52,10 +52,11 @@ class CreatePressTumbler extends StatelessWidget {
     return CreateProcess(
       title: 'Mulai Press',
       handleSubmitToService: _submitToService,
-      formPageBuilder: (context, id, data, form, handleSubmit) {
+      formPageBuilder: (context, id, processId, data, form, handleSubmit) {
         return CreatePressTumblerManual(
           id: id,
           data: data,
+          processId: processId,
           form: form,
           handleSubmit: handleSubmit,
           fetchWorkOrder: (service) => service.fetchPressTumblerOptions(id),

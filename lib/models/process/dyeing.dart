@@ -21,6 +21,7 @@ class Dyeing {
   final int? length_unit_id;
   final int? wo_id;
   final int? machine_id;
+  final dynamic rework_reference;
   final int? rework_reference_id;
   final attachments;
   final dynamic work_orders;
@@ -52,7 +53,8 @@ class Dyeing {
       this.end_by,
       this.length_unit_id,
       this.width_unit_id,
-      this.machine});
+      this.machine,
+      this.rework_reference});
 
   factory Dyeing.fromJson(Map<String, dynamic> json) {
     return Dyeing(
@@ -71,10 +73,11 @@ class Dyeing {
         length: json['length'] ?? '',
         status: json['status'] ?? '',
         rework: json['rework'] as bool?,
+        work_orders: json['work_orders'],
         notes: json['notes'] ?? '',
         attachments: json['attachments'] ?? [],
         machine: json['machine'] ?? {},
-        work_orders: json['work_orders'],
+        rework_reference: json['rework_reference'],
         start_by: json['start_by'],
         end_by: json['end_by'],
         width_unit_id: json['width_unit_id'] as int?,
@@ -102,6 +105,7 @@ class Dyeing {
       'attachments': attachments,
       'machine': machine,
       'work_orders': work_orders,
+      'rework_reference': rework_reference,
       'start_by': start_by,
       'end_by': end_by,
       'notes': notes,

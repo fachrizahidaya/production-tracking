@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/auth/auth_check.dart';
 import 'package:textile_tracking/models/dashboard/machine.dart';
 import 'package:textile_tracking/models/dashboard/work_order_summary.dart';
@@ -87,13 +88,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Textile Tracking',
+      title: 'TexTrack',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        appBarTheme: const AppBarTheme(
+        appBarTheme: AppBarTheme(
             backgroundColor: Colors.white,
             surfaceTintColor: Colors.white,
-            titleTextStyle: TextStyle(color: Colors.black, fontSize: 18)),
+            titleTextStyle: TextStyle(
+                color: CustomTheme().colors('text-primary'),
+                fontSize: CustomTheme().fontSize('xl'))),
         drawerTheme: const DrawerThemeData(backgroundColor: Colors.white),
         bottomSheetTheme:
             const BottomSheetThemeData(backgroundColor: Colors.white),

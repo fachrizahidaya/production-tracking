@@ -26,23 +26,20 @@ class ActionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(12),
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: actions.map((item) {
-            return ListTile(
-              leading: Icon(item.icon, color: item.iconColor),
-              title: Text(item.title),
-              onTap: () {
-                Navigator.pop(context);
-                item.onTap();
-              },
-            );
-          }).toList(),
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: actions.map((item) {
+          return ListTile(
+            leading: Icon(item.icon, color: item.iconColor),
+            title: Text(item.title),
+            onTap: () {
+              Navigator.pop(context);
+              item.onTap();
+            },
+          );
+        }).toList(),
       ),
     );
   }

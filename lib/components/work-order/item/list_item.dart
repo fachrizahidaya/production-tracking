@@ -24,31 +24,46 @@ class ListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomBadge(
-                  title: item['spk_item']['item']['code']?.toString() ?? '-',
+                  title: item['item_code']?.toString() ?? '-',
                   rework: true,
                   status: 'Menunggu Diproses',
                 ),
                 Text(
-                  item['spk_item']['item']['name']?.toString() ?? '-',
+                  item['item_name']?.toString() ?? '-',
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('lg'),
                   ),
                 ),
               ].separatedBy(CustomTheme().vGap('sm')),
             ),
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.shopping_cart_outlined,
-                  size: CustomTheme().iconSize('xl'),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.shopping_cart_outlined,
+                      size: CustomTheme().iconSize('xl'),
+                    ),
+                    Text(
+                      '${item['qty']} ${item['unit']['code']}',
+                      style: TextStyle(
+                          fontSize: CustomTheme().fontSize('2xl'),
+                          fontWeight: CustomTheme().fontWeight('bold')),
+                    )
+                  ].separatedBy(CustomTheme().hGap('lg')),
                 ),
-                Text(
-                  '${item['qty']} ${item['unit']['code']}',
-                  style: TextStyle(
-                      fontSize: CustomTheme().fontSize('2xl'),
-                      fontWeight: CustomTheme().fontWeight('bold')),
-                )
-              ].separatedBy(CustomTheme().hGap('lg')),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.format_line_spacing_outlined,
+                    ),
+                    Text(
+                      item?['variants'][3]['value'] ?? '-',
+                    ),
+                  ].separatedBy(CustomTheme().hGap('lg')),
+                ),
+              ],
             ),
           ],
         ),
@@ -63,7 +78,7 @@ class ListItem extends StatelessWidget {
                   Icons.design_services_outlined,
                 ),
                 Text(
-                  item['spk_item']?['design'] ?? '-',
+                  item?['variants'][0]['value'] ?? '-',
                 ),
               ].separatedBy(CustomTheme().hGap('lg')),
             ),
@@ -73,7 +88,7 @@ class ListItem extends StatelessWidget {
                   Icons.color_lens_outlined,
                 ),
                 Text(
-                  item['spk_item']?['color'] ?? '-',
+                  item?['variants'][2]['value'] ?? '-',
                 )
               ].separatedBy(CustomTheme().hGap('lg')),
             ),

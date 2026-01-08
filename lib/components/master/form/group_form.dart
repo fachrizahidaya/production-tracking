@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class GroupForm extends StatelessWidget {
   final label;
@@ -29,21 +30,18 @@ class GroupForm extends StatelessWidget {
             Text(
               label,
             ),
-            CustomTheme().hGap('sm'),
             if (req)
               Text(
                 '*',
                 style: TextStyle(
                   color: CustomTheme().colors('danger'),
-                  fontSize: 16,
+                  fontSize: CustomTheme().fontSize('lg'),
                 ),
               ),
-          ],
+          ].separatedBy(
+            CustomTheme().hGap('sm'),
+          ),
         ),
-        const SizedBox(
-          height: 6,
-        ),
-        // SizedBox(height: 40, child: formControl),
         AbsorbPointer(
           absorbing: isDisabled, // Prevent interactions when disabled
           child: Opacity(
@@ -51,7 +49,9 @@ class GroupForm extends StatelessWidget {
             child: formControl,
           ),
         ),
-      ],
+      ].separatedBy(
+        CustomTheme().vGap('lg'),
+      ),
     );
   }
 }

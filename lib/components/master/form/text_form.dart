@@ -36,7 +36,7 @@ class TextForm extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: CustomTheme().fontSize('md'),
               ),
             ),
             if (req)
@@ -44,18 +44,16 @@ class TextForm extends StatelessWidget {
                 '*',
                 style: TextStyle(
                   color: CustomTheme().colors('danger'),
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+                  fontSize: CustomTheme().fontSize('md'),
+                  fontWeight: CustomTheme().fontWeight('bold'),
                 ),
               ),
-          ].separatedBy(SizedBox(
-            width: 8,
-          )),
+          ].separatedBy(CustomTheme().hGap('sm')),
         ),
         TextFormField(
           enabled: isDisabled == true ? false : true,
           controller: controller,
-          style: TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: CustomTheme().fontSize('md')),
           decoration:
               CustomTheme().inputDecoration().copyWith(hintText: 'Isi $label'),
           keyboardType:
@@ -68,9 +66,7 @@ class TextForm extends StatelessWidget {
           },
           validator: req ? validator : null,
         )
-      ].separatedBy(SizedBox(
-        height: 8,
-      )),
+      ].separatedBy(CustomTheme().vGap('lg')),
     );
   }
 }

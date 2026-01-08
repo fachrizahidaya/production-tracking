@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class AttachmentPicker extends StatelessWidget {
   final List attachments;
@@ -24,11 +25,11 @@ class AttachmentPicker extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: [
-        const Row(
+        Row(
           children: [
             Text(
               'Lampiran',
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
           ],
         ),

@@ -51,7 +51,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           : null,
       title: Text(
         title,
-        style: const TextStyle(fontSize: 18),
+        style: TextStyle(fontSize: CustomTheme().fontSize('xl')),
       ),
       actions: [
         if (hasOptions && status == true)
@@ -61,11 +61,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             onSelected: (value) {
               final String stringId = id.toString();
 
+              if (value == 'update' && canUpdate == true) {
+                handleUpdate();
+              }
               if (value == 'delete' && canDelete == true) {
                 handleDelete(stringId);
               }
             },
             itemBuilder: (context) => [
+              if (canUpdate == true)
+                PopupMenuItem(
+                  value: 'update',
+                  child: Text('Edit'),
+                ),
               if (canDelete == true)
                 PopupMenuItem(
                   value: 'delete',
@@ -112,12 +120,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     Text(
                       '@$user',
                       style: TextStyle(
-                          fontSize: 12,
+                          fontSize: CustomTheme().fontSize('sm'),
                           color: CustomTheme().colors('secondary')),
                     ),
-                  ].separatedBy(SizedBox(
-                    height: 4,
-                  )),
+                  ].separatedBy(CustomTheme().vGap('sm')),
                 ),
               ),
               PopupMenuItem(

@@ -7,17 +7,17 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:html/parser.dart' as html_parser;
 
-class CreateFormTab extends StatefulWidget {
+class WorkOrderInfoTab extends StatefulWidget {
   final data;
   final label;
 
-  const CreateFormTab({super.key, this.data, this.label});
+  const WorkOrderInfoTab({super.key, this.data, this.label});
 
   @override
-  State<CreateFormTab> createState() => _CreateFormTabState();
+  State<WorkOrderInfoTab> createState() => _WorkOrderInfoTabState();
 }
 
-class _CreateFormTabState extends State<CreateFormTab> {
+class _WorkOrderInfoTabState extends State<WorkOrderInfoTab> {
   String htmlToPlainText(dynamic htmlString) {
     if (htmlString == null) return '';
 
@@ -62,23 +62,17 @@ class _CreateFormTabState extends State<CreateFormTab> {
                     ),
                   ].separatedBy(CustomTheme().hGap('xl')),
                 ),
-                // ViewText(
-                //     viewLabel: 'Tanggal',
-                //     viewValue: widget.data['wo_date'] != null
-                //         ? DateFormat("dd MMM yyyy").format(
-                //             DateTime.parse(widget.data['wo_date']))
-                //         : '-'),
                 ViewText(
                     viewLabel: 'Jumlah Greige',
                     viewValue: widget.data['greige_qty'] != null &&
                             widget.data['greige_qty'].toString().isNotEmpty
                         ? '${NumberFormat("#,###.#").format(double.tryParse(widget.data['greige_qty'].toString()) ?? 0)} ${widget.data['greige_unit']?['code'] ?? ''}'
-                        : '-'),
+                        : 'No Data'),
                 ViewText(
                     viewLabel: 'Catatan ${widget.label}',
-                    viewValue: htmlToPlainText(widget.data['notes'] is Map
-                        ? widget.data['notes'][widget.label]
-                        : '-')),
+                    viewValue: widget.data['notes'] != null
+                        ? htmlToPlainText(widget.data['notes'])
+                        : 'No Data'),
               ].separatedBy(CustomTheme().vGap('xl')),
             )),
     );

@@ -136,7 +136,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
     sampaiTanggalInput.text = widget.params['end_date'] ?? '';
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -217,9 +217,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                   ),
                 ),
               ),
-            ].separatedBy(SizedBox(
-              width: 16,
-            )),
+            ].separatedBy(CustomTheme().hGap('xl')),
           ),
           FilterSelectForm(
             label: "Status",
@@ -267,15 +265,16 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(16.0),
+                                padding: CustomTheme().padding('content'),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
+                                    Text(
                                       "Pilih Status",
                                       style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                                        fontSize: CustomTheme().fontSize('xl'),
+                                        fontWeight:
+                                            CustomTheme().fontWeight('bold'),
                                       ),
                                     ),
                                     const SizedBox(height: 8),
@@ -332,7 +331,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(12.0),
+                                padding: CustomTheme().padding('card'),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -394,9 +393,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                   "status", selected.map((e) => e['value']).join(","));
             },
           ),
-        ].separatedBy(SizedBox(
-          height: 16,
-        )),
+        ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
   }

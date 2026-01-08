@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
@@ -9,11 +11,8 @@ class ListForm extends StatefulWidget {
   final formKey;
   final id;
   final form;
-  final data;
-  final attachments;
   final selectWorkOrder;
   final selectMachine;
-  final handleSubmit;
   final isMaklon;
   final maklon;
   final withMaklonOrMachine;
@@ -25,11 +24,8 @@ class ListForm extends StatefulWidget {
       this.formKey,
       this.id,
       this.form,
-      this.data,
       this.selectWorkOrder,
       this.selectMachine,
-      this.handleSubmit,
-      this.attachments,
       this.maklon,
       this.isMaklon = false,
       this.withMaklonOrMachine = false,

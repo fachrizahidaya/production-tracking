@@ -59,21 +59,31 @@ class ItemProcessCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       '${itemField(item, titleKey)}',
                       style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
                     ),
                     if (item['rework'] == true)
-                      CustomBadge(
-                        withStatus: true,
-                        status: 'Rework',
-                        title: 'Rework',
-                        rework: true,
-                      )
-                  ].separatedBy(CustomTheme().hGap('lg')),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CustomBadge(
+                            withStatus: true,
+                            status: 'Rework',
+                            title: 'Rework',
+                            rework: true,
+                          ),
+                          CustomBadge(
+                            status: 'Menunggu Diproses',
+                            title: item['rework_reference']['dyeing_no'],
+                            rework: true,
+                          )
+                        ].separatedBy(CustomTheme().hGap('md')),
+                      ),
+                  ].separatedBy(CustomTheme().vGap('lg')),
                 ),
                 CustomBadge(
                     withStatus: true,

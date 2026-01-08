@@ -5,16 +5,16 @@ import 'package:textile_tracking/components/master/layout/card/custom_badge.dart
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
-import 'package:textile_tracking/components/master/section/create/create_form.dart';
+import 'package:textile_tracking/components/master/section/create/create_section.dart';
 import 'package:html/parser.dart' as html_parser;
 
-class FinishInfoTab extends StatefulWidget {
+class FormInfoTab extends StatefulWidget {
   final id;
   final data;
+  final processData;
   final label;
   final form;
   final formKey;
-  final handleSubmit;
   final handleSelectMachine;
   final handleSelectWorkOrder;
   final isLoading;
@@ -24,15 +24,15 @@ class FinishInfoTab extends StatefulWidget {
   final withOnlyMaklon;
   final withNoMaklonOrMachine;
 
-  const FinishInfoTab(
+  const FormInfoTab(
       {super.key,
       this.data,
+      this.processData,
       this.form,
       this.label,
       this.formKey,
       this.handleSelectMachine,
       this.handleSelectWorkOrder,
-      this.handleSubmit,
       this.id,
       this.isLoading,
       this.isMaklon,
@@ -42,10 +42,10 @@ class FinishInfoTab extends StatefulWidget {
       this.withOnlyMaklon});
 
   @override
-  State<FinishInfoTab> createState() => _FinishInfoTabState();
+  State<FormInfoTab> createState() => _FormInfoTabState();
 }
 
-class _FinishInfoTabState extends State<FinishInfoTab> {
+class _FormInfoTabState extends State<FormInfoTab> {
   String htmlToPlainText(dynamic htmlString) {
     if (htmlString == null) return '';
 
@@ -74,13 +74,11 @@ class _FinishInfoTabState extends State<FinishInfoTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CreateForm(
+          CreateSection(
             formKey: widget.formKey,
             form: widget.form,
             maklon: widget.maklon,
             isMaklon: widget.isMaklon,
-            handleSubmit: widget.handleSubmit,
-            data: widget.data,
             selectWorkOrder: widget.handleSelectWorkOrder,
             selectMachine: widget.handleSelectMachine,
             id: widget.id,
@@ -123,12 +121,13 @@ class _FinishInfoTabState extends State<FinishInfoTab> {
                                       .toString()
                                       .isNotEmpty
                               ? '${NumberFormat("#,###.#").format(double.tryParse(widget.data['greige_qty'].toString()) ?? 0)} ${widget.data['greige_unit']?['code'] ?? ''}'
-                              : '-'),
+                              : 'No Data'),
                       ViewText(
                           viewLabel: 'Catatan ${widget.label}',
-                          viewValue: htmlToPlainText(widget.data['notes'] is Map
-                              ? widget.data['notes'][widget.label]
-                              : '-')),
+                          viewValue: widget.data['notes'] is Map
+                              ? htmlToPlainText(
+                                  widget.data['notes'][widget.label])
+                              : 'No Data'),
                     ].separatedBy(CustomTheme().vGap('lg')),
                   )),
                 ),

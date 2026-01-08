@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
@@ -89,8 +91,9 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
             children: [
               Text(
                 widget.title,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: CustomTheme().fontSize('lg'),
+                    fontWeight: CustomTheme().fontWeight('bold')),
               ),
               if (widget.onDelete != null && widget.isAllowed)
                 TextButton(
@@ -123,9 +126,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                     ),
                   ],
                 ),
-            ].separatedBy(SizedBox(
-              height: 16,
-            )),
+            ].separatedBy(CustomTheme().hGap('xl')),
           )
         ],
       ),
@@ -309,16 +310,18 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                                         .bottom,
                                   ),
                                   child: Container(
-                                    padding: const EdgeInsets.all(16),
+                                    padding: CustomTheme().padding('card'),
                                     height: 500,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text("Select ${field.label}",
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold)),
+                                            style: TextStyle(
+                                                fontSize: CustomTheme()
+                                                    .fontSize('lg'),
+                                                fontWeight: CustomTheme()
+                                                    .fontWeight('bold'))),
                                         const SizedBox(height: 12),
                                         TextField(
                                           decoration: const InputDecoration(
@@ -418,8 +421,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                                   field.selectedValues!.isNotEmpty)
                                 ...field.selectedValues!.map((item) {
                                   return Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
+                                    padding: CustomTheme().padding('badge'),
                                     decoration: BoxDecoration(
                                       color: Colors.blue.shade50,
                                       border: Border.all(
@@ -430,8 +432,9 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(item,
-                                            style:
-                                                const TextStyle(fontSize: 12)),
+                                            style: TextStyle(
+                                                fontSize: CustomTheme()
+                                                    .fontSize('sm'))),
                                         const SizedBox(width: 4),
                                         if (widget.isAllowed)
                                           GestureDetector(
@@ -455,8 +458,9 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                                   field.selectedValues!.isEmpty)
                                 Text(
                                   field.hint,
-                                  style: const TextStyle(
-                                      color: Colors.grey, fontSize: 14),
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: CustomTheme().fontSize('md')),
                                 ),
                             ],
                           ),

@@ -341,7 +341,7 @@ class CustomTheme {
               onPressed: onPressClear,
             )
           : IconButton(
-              icon: Icon(Icons.close),
+              icon: hasValue ? Icon(Icons.close) : Icon(null),
               onPressed: hasValue ? onPressClear : null,
             ),
     );

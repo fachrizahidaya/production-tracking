@@ -15,94 +15,36 @@ import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 class ListItem extends StatefulWidget {
   final Map<String, dynamic> data;
   final Map<String, dynamic> form;
-  final ValueNotifier<bool> isSubmitting;
   final List<dynamic> existingAttachment;
-  final Future<void> Function(String id)? handleUpdate;
-  final String? initialWeight;
-  final String? initialLength;
-  final String? initialWidth;
-  final String? initialNotes;
-  final String? initialMaklon;
-  final bool? isChanged;
-  final VoidCallback? handleSelectMachine;
-  final Widget Function(Map<String, dynamic> data)? extraTopSection;
-  final Widget Function(Map<String, dynamic> data)? extraBottomSection;
-
-  final weight;
-  final length;
-  final width;
-  final note;
-  final maklon;
   final qty;
-  final qtyItem;
   final notes;
-  final fieldConfigs;
-  final fieldControllers;
-  final handleSelectUnit;
-  final handleSelectLengthUnit;
-  final handleSelectWidthUnit;
   final handleSelectQtyUnit;
-  final handleSelectQtyItemUnit;
-  final handlePickAttachments;
-  final handleChangeInput;
   final handleBuildAttachment;
   final handleHtmlText;
-  final checkForChanges;
   final no;
   final withItemGrade;
   final existingGrades;
   final withQtyAndWeight;
-  final initialQty;
-  final withMaklon;
-  final onlySewing;
   final label;
   final forDyeing;
 
-  const ListItem(
-      {super.key,
-      required this.data,
-      required this.form,
-      required this.isSubmitting,
-      required this.existingAttachment,
-      this.handleUpdate,
-      this.initialWeight,
-      this.initialLength,
-      this.initialWidth,
-      this.initialNotes,
-      this.isChanged,
-      this.weight,
-      this.length,
-      this.width,
-      this.note,
-      this.handleSelectMachine,
-      this.extraTopSection,
-      this.extraBottomSection,
-      this.fieldConfigs,
-      this.fieldControllers,
-      this.handleSelectUnit,
-      this.handlePickAttachments,
-      this.handleChangeInput,
-      this.checkForChanges,
-      this.no,
-      this.handleSelectLengthUnit,
-      this.handleSelectWidthUnit,
-      this.withItemGrade = false,
-      this.qty,
-      this.handleSelectQtyUnit,
-      this.existingGrades,
-      this.notes,
-      this.withQtyAndWeight = false,
-      this.initialQty,
-      this.qtyItem,
-      this.handleSelectQtyItemUnit,
-      this.withMaklon = false,
-      this.maklon,
-      this.initialMaklon,
-      this.onlySewing = false,
-      this.handleBuildAttachment,
-      this.handleHtmlText,
-      this.label,
-      this.forDyeing = false});
+  const ListItem({
+    super.key,
+    required this.data,
+    required this.form,
+    required this.existingAttachment,
+    this.no,
+    this.withItemGrade = false,
+    this.qty,
+    this.handleSelectQtyUnit,
+    this.existingGrades,
+    this.notes,
+    this.withQtyAndWeight = false,
+    this.handleBuildAttachment,
+    this.handleHtmlText,
+    this.label,
+    this.forDyeing = false,
+  });
 
   @override
   State<ListItem> createState() => _ListItemState();

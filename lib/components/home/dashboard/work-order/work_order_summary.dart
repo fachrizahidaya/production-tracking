@@ -154,26 +154,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary> {
                               selectedProcess = type;
                             });
                           },
-                          child:
-                              // Card(
-                              //   shape: RoundedRectangleBorder(
-                              //     borderRadius: BorderRadius.circular(4),
-                              //     side: BorderSide(
-                              //       color: isSelected
-                              //           ? Colors.blue
-                              //           : Colors.grey.shade400,
-                              //       width: 1.0,
-                              //     ),
-                              //   ),
-                              //   elevation: isSelected ? 3 : 1,
-                              //   color:
-                              //       isSelected ? Colors.blue.shade50 : Colors.white,
-                              //   child: Padding(
-                              //     padding: PaddingColumn.screen,
-                              //     child: Text(type),
-                              //   ),
-                              // ),
-                              Container(
+                          child: Container(
                             decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(8)),

@@ -8,6 +8,8 @@ import 'package:textile_tracking/components/master/layout/tab/work_order_info_ta
 import 'package:textile_tracking/components/master/layout/tab/finish_form_tab.dart';
 import 'package:textile_tracking/components/master/layout/tab/work_order_item_tab.dart';
 import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
@@ -65,6 +67,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   bool _isFetchingUnit = false;
   bool _isFetchingGrade = false;
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _listFormKey = GlobalKey();
@@ -282,6 +285,26 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['maklon_name'] = data['maklon_name'].toString();
       }
     });
+  }
+
+  Future<void> _handleCancel(BuildContext context) async {
+    if (context.mounted) {
+      if (widget.form?['wo_id'] != null) {
+        showConfirmationDialog(
+            context: context,
+            isLoading: _isLoading,
+            onConfirm: () async {
+              await Future.delayed(const Duration(milliseconds: 200));
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            title: 'Batal',
+            message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
+            buttonBackground: CustomTheme().buttonColor('danger'));
+      } else {
+        Navigator.pop(context);
+      }
+    }
   }
 
   _selectWorkOrder() {
@@ -551,7 +574,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
           appBar: CustomAppBar(
             title: widget.title,
             onReturn: () {
-              Navigator.pop(context);
+              _handleCancel(context);
             },
           ),
           body: Column(
@@ -597,7 +620,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                     withItemGrade: widget.withItemGrade,
                     itemGradeOption: itemGradeOption,
                     handleSelectQtyUnit: _selectQtyUnit,
-                    notes: _notesControllers,
                     withQtyAndWeight: widget.withQtyAndWeight,
                     label: widget.label,
                     forDyeing: widget.forDyeing,
@@ -621,6 +643,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             processId: processId,
             formKey: _formKey,
             handleSubmit: widget.handleSubmit,
+            handleCancel: _handleCancel,
           ),
         ),
       ),

@@ -14,7 +14,6 @@ class ListForm extends StatefulWidget {
   final note;
   final qty;
   final qtyItem;
-  final notes;
   final handleSelectWo;
   final handleChangeInput;
   final handleSelectUnit;
@@ -71,7 +70,6 @@ class ListForm extends StatefulWidget {
       this.withItemGrade = false,
       this.itemGradeOption,
       this.handleSelectQtyUnit,
-      this.notes,
       this.qty,
       this.withQtyAndWeight = false,
       this.handleSelectQtyUnitItem,
@@ -234,7 +232,6 @@ class _ListFormState extends State<ListForm> {
         width: widget.width,
         weight: widget.weight,
         note: widget.note,
-        notes: widget.notes,
         handleChangeInput: widget.handleChangeInput,
         handleSelectLengthUnit: widget.handleSelectLengthUnit,
         handleSelectWidthUnit: widget.handleSelectWidthUnit,

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
@@ -5,6 +7,7 @@ import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.
 import 'package:textile_tracking/components/master/layout/tab/form_info_tab.dart';
 import 'package:textile_tracking/components/master/layout/tab/work_order_item_tab.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class TabSection extends StatefulWidget {
@@ -49,6 +52,28 @@ class TabSection extends StatefulWidget {
 }
 
 class _TabSectionState extends State<TabSection> {
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+
+  Future<void> _handleCancel(BuildContext context) async {
+    if (context.mounted) {
+      if (widget.form?['wo_id'] != null) {
+        showConfirmationDialog(
+            context: context,
+            isLoading: _isLoading,
+            onConfirm: () async {
+              await Future.delayed(const Duration(milliseconds: 200));
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            title: 'Batal',
+            message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
+            buttonBackground: CustomTheme().buttonColor('danger'));
+      } else {
+        Navigator.pop(context);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isDisabled;
@@ -73,7 +98,7 @@ class _TabSectionState extends State<TabSection> {
         backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: widget.title,
-          onReturn: () => Navigator.pop(context),
+          onReturn: () => _handleCancel(context),
         ),
         body: Column(
           children: [
@@ -98,7 +123,6 @@ class _TabSectionState extends State<TabSection> {
                   label: widget.label,
                   form: widget.form,
                   formKey: widget.formKey,
-                  handleSubmit: widget.handleSubmit,
                   handleSelectMachine: widget.selectMachine,
                   handleSelectWorkOrder: widget.selectWorkOrder,
                   maklon: widget.maklon,
@@ -123,7 +147,7 @@ class _TabSectionState extends State<TabSection> {
                     Expanded(
                       child: CancelButton(
                         label: 'Batal',
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () => _handleCancel(context),
                       ),
                     ),
                     Expanded(

@@ -25,7 +25,6 @@ class FinishFormTab extends StatefulWidget {
   final note;
   final qty;
   final qtyItem;
-  final notes;
   final handleSelectWo;
   final handleSelectQtyUnit;
   final handleSelectQtyUnitItem;
@@ -82,7 +81,6 @@ class FinishFormTab extends StatefulWidget {
       this.itemGradeOption,
       this.length,
       this.note,
-      this.notes,
       this.processData,
       this.processId,
       this.qty,
@@ -139,7 +137,6 @@ class _FinishFormTabState extends State<FinishFormTab>
               withItemGrade: widget.withItemGrade,
               itemGradeOption: widget.itemGradeOption,
               handleSelectQtyUnit: widget.handleSelectQtyUnit,
-              notes: widget.notes,
               qty: widget.qty,
               withQtyAndWeight: widget.withQtyAndWeight,
               qtyItem: widget.qtyItem,

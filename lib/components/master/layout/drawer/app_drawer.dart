@@ -32,6 +32,12 @@ class _AppDrawerState extends State<AppDrawer> {
     'Packing',
   ];
 
+  final List<String> hiddenMenus = [
+    'SPK',
+    'Work Order',
+    'Proses Produksi',
+  ];
+
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
     final List<MenuItem> result = [];
 
@@ -103,7 +109,9 @@ class _AppDrawerState extends State<AppDrawer> {
                   }
 
                   final rawMenus = snapshot.data!;
-                  final menus = flattenMenus(rawMenus);
+                  final menus = flattenMenus(rawMenus)
+                      .where((item) => !hiddenMenus.contains(item.title))
+                      .toList();
 
                   return ListView.builder(
                     itemCount: menus.length,

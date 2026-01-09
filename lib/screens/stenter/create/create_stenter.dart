@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/screens/master/create/index.dart';
+import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
 import 'package:textile_tracking/screens/stenter/create/create_stenter_manual.dart';
 

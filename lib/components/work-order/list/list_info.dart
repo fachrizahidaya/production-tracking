@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/layout/card/custom_badge.dart';
-import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
+import 'package:textile_tracking/components/master/card/custom_card.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';

@@ -12,7 +12,7 @@ import 'package:textile_tracking/components/home/dashboard/work-order/work_order
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_pie.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_stats.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_summary.dart';
-import 'package:textile_tracking/components/master/layout/card/item_process.dart';
+import 'package:textile_tracking/components/master/card/item_process.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/dashboard/machine.dart';

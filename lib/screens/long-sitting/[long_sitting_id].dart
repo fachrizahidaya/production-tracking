@@ -64,6 +64,7 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withMaklon: false,
+      forDyeing: false,
     );
   }
 }

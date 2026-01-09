@@ -64,6 +64,7 @@ class _StenterDetailState extends State<StenterDetail> {
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withMaklon: false,
+      forDyeing: false,
     );
   }
 }

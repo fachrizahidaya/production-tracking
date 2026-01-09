@@ -63,6 +63,7 @@ class _SortingDetailState extends State<SortingDetail> {
       route: '/sortings',
       withItemGrade: true,
       withMaklon: false,
+      forDyeing: false,
     );
   }
 }

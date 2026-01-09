@@ -69,6 +69,7 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
       withItemGrade: false,
       withQtyAndWeight: true,
       withMaklon: false,
+      forDyeing: false,
     );
   }
 }

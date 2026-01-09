@@ -61,6 +61,7 @@ class _PackingDetailState extends State<PackingDetail> {
       route: '/packings',
       withItemGrade: true,
       withMaklon: false,
+      forDyeing: false,
     );
   }
 }

@@ -64,6 +64,7 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withMaklon: false,
+      forDyeing: false,
     );
   }
 }

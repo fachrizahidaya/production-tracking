@@ -68,6 +68,7 @@ class _PrintingDetailState extends State<PrintingDetail> {
       withItemGrade: false,
       withQtyAndWeight: true,
       withMaklon: true,
+      forDyeing: false,
     );
   }
 }

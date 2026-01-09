@@ -64,6 +64,7 @@ class _PressTumblerDetailState extends State<PressTumblerDetail> {
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withMaklon: false,
+      forDyeing: false,
     );
   }
 }

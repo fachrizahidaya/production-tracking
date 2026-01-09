@@ -68,6 +68,7 @@ class _EmbroideryDetailState extends State<EmbroideryDetail> {
       withItemGrade: false,
       withQtyAndWeight: true,
       withMaklon: true,
+      forDyeing: false,
     );
   }
 }

@@ -71,6 +71,7 @@ class _SewingDetailState extends State<SewingDetail> {
       withQtyAndWeight: true,
       withMaklon: true,
       onlySewing: true,
+      forDyeing: false,
     );
   }
 }

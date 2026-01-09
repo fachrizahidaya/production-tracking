@@ -64,6 +64,7 @@ class _TumblerDetailState extends State<TumblerDetail> {
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withMaklon: false,
+      forDyeing: false,
     );
   }
 }

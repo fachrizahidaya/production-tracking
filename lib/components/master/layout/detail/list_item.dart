@@ -18,9 +18,9 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class ListItem extends StatefulWidget {
-  final Map<String, dynamic> data;
-  final Map<String, dynamic> form;
-  final List<dynamic> existingAttachment;
+  final data;
+  final form;
+  final existingAttachment;
   final qty;
   final notes;
   final handleSelectQtyUnit;
@@ -34,9 +34,9 @@ class ListItem extends StatefulWidget {
 
   const ListItem({
     super.key,
-    required this.data,
-    required this.form,
-    required this.existingAttachment,
+    this.data,
+    this.form,
+    this.existingAttachment,
     this.no,
     this.withItemGrade = false,
     this.qty,
@@ -351,7 +351,7 @@ class _ListItemState extends State<ListItem> with TickerProviderStateMixin {
                           Row(
                             children: [
                               Text(
-                                  'Dimulai pada ${widget.data['start_time'] != null ? DateFormat("dd MMMM yyyy, HH:mm").format(DateTime.parse(widget.data['start_time'])) : '-'}'),
+                                  'Dibuat pada ${widget.data['start_time'] != null ? DateFormat("dd MMMM yyyy, HH:mm").format(DateTime.parse(widget.data['start_time'])) : '-'}'),
                             ].separatedBy(CustomTheme().hGap('sm')),
                           ),
                           // Row(
@@ -411,52 +411,57 @@ class _ListItemState extends State<ListItem> with TickerProviderStateMixin {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   if (widget.data['status'] == 'Selesai')
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                    Column(
                                       children: [
-                                        if (widget.forDyeing == true)
-                                          ViewText(
-                                            viewLabel:
-                                                'Qty Hasil ${widget.label}',
-                                            viewValue: widget.data['qty'] !=
-                                                    null
-                                                ? '${formatNumber(widget.data['qty'])} ${widget.data['unit']['code']}'
-                                                : '0',
-                                          ),
-                                        if (widget.forDyeing == false)
-                                          ViewText(
-                                            viewLabel: 'Berat',
-                                            viewValue: widget.data['weight'] !=
-                                                    null
-                                                ? '${formatNumber(widget.data['weight'])} ${widget.data['weight_unit']['code']}'
-                                                : '0',
-                                          ),
-                                        if (widget.withQtyAndWeight == true)
-                                          ViewText(
-                                            viewLabel:
-                                                'Qty Hasil ${widget.label}',
-                                            viewValue: widget
-                                                        .data['item_qty'] !=
-                                                    null
-                                                ? '${formatNumber(widget.data['item_qty'])} ${widget.data['item_unit']['code']}'
-                                                : '0',
-                                          ),
-                                        // ViewText(
-                                        //   viewLabel: 'Panjang',
-                                        //   viewValue:
-                                        //       '${widget.data['length'] != null ? formatNumber(widget.data['length']) : '0'} ${widget.data['length_unit']['code']}',
-                                        // ),
-                                        // ViewText(
-                                        //   viewLabel: 'Lebar',
-                                        //   viewValue:
-                                        //       '${widget.data['width'] != null ? formatNumber(widget.data['width']) : '0'} ${widget.data['width_unit']['code']}',
-                                        // ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            if (widget.forDyeing == true)
+                                              ViewText(
+                                                viewLabel:
+                                                    'Qty Hasil ${widget.label}',
+                                                viewValue: widget.data['qty'] !=
+                                                        null
+                                                    ? '${formatNumber(widget.data['qty'])} ${widget.data['unit']['code']}'
+                                                    : '0',
+                                              ),
+                                            if (widget.forDyeing == false)
+                                              ViewText(
+                                                viewLabel: 'Berat',
+                                                viewValue: widget
+                                                            .data['weight'] !=
+                                                        null
+                                                    ? '${formatNumber(widget.data['weight'])} ${widget.data['weight_unit']['code']}'
+                                                    : '0',
+                                              ),
+                                            if (widget.withQtyAndWeight == true)
+                                              ViewText(
+                                                viewLabel:
+                                                    'Qty Hasil ${widget.label}',
+                                                viewValue: widget
+                                                            .data['item_qty'] !=
+                                                        null
+                                                    ? '${formatNumber(widget.data['item_qty'])} ${widget.data['item_unit']['code']}'
+                                                    : '0',
+                                              ),
+                                            // ViewText(
+                                            //   viewLabel: 'Panjang',
+                                            //   viewValue:
+                                            //       '${widget.data['length'] != null ? formatNumber(widget.data['length']) : '0'} ${widget.data['length_unit']['code']}',
+                                            // ),
+                                            // ViewText(
+                                            //   viewLabel: 'Lebar',
+                                            //   viewValue:
+                                            //       '${widget.data['width'] != null ? formatNumber(widget.data['width']) : '0'} ${widget.data['width_unit']['code']}',
+                                            // ),
+                                          ],
+                                        ),
+                                        Divider(),
                                       ],
                                     ),
-                                  Divider(),
                                   if (widget.data['machine_id'] != null)
                                     Column(
                                       crossAxisAlignment:
@@ -543,31 +548,32 @@ class _ListItemState extends State<ListItem> with TickerProviderStateMixin {
                                                   CustomTheme().hGap('md')),
                                             ),
                                           ),
-                                          ViewText(
-                                            childLabel: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.circle,
-                                                  size: 12,
-                                                  color: CustomTheme()
-                                                      .statusColor('Selesai'),
-                                                ),
-                                                Text('Selesai Proses')
-                                              ].separatedBy(
-                                                  CustomTheme().hGap('md')),
+                                          if (widget.data['end_by'] != null)
+                                            ViewText(
+                                              childLabel: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.circle,
+                                                    size: 12,
+                                                    color: CustomTheme()
+                                                        .statusColor('Selesai'),
+                                                  ),
+                                                  Text('Selesai Proses')
+                                                ].separatedBy(
+                                                    CustomTheme().hGap('md')),
+                                              ),
+                                              childValue: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Icon(Icons.person_2_outlined),
+                                                  Text(
+                                                      'Oleh: ${widget.data['end_by']['name']}, ${widget.data['end_time'] != null ? DateFormat("dd MMMM yyyy, HH.mm").format(DateTime.parse(widget.data['end_time'])) : '-'}')
+                                                ].separatedBy(
+                                                    CustomTheme().hGap('md')),
+                                              ),
                                             ),
-                                            childValue: Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Icon(Icons.person_2_outlined),
-                                                Text(
-                                                    'Oleh: ${widget.data['end_by']['name']}, ${widget.data['end_time'] != null ? DateFormat("dd MMMM yyyy, HH.mm").format(DateTime.parse(widget.data['end_time'])) : '-'}')
-                                              ].separatedBy(
-                                                  CustomTheme().hGap('md')),
-                                            ),
-                                          ),
                                         ].separatedBy(CustomTheme().vGap('xl')),
                                       ),
                                     ].separatedBy(CustomTheme().vGap('xl')),
@@ -589,7 +595,7 @@ class _ListItemState extends State<ListItem> with TickerProviderStateMixin {
                         Text(
                           'Informasi Work Order',
                           style: TextStyle(
-                              fontSize: CustomTheme().fontSize('xl'),
+                              fontSize: CustomTheme().fontSize('lg'),
                               fontWeight: CustomTheme().fontWeight('bold')),
                         ),
                         Row(
@@ -653,7 +659,7 @@ class _ListItemState extends State<ListItem> with TickerProviderStateMixin {
                           Text(
                             'Informasi Work Order',
                             style: TextStyle(
-                                fontSize: CustomTheme().fontSize('xl'),
+                                fontSize: CustomTheme().fontSize('lg'),
                                 fontWeight: CustomTheme().fontWeight('bold')),
                           ),
                           Row(

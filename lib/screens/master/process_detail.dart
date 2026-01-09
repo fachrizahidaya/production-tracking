@@ -80,6 +80,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   List<TextEditingController> _qtyControllers = [];
   List<TextEditingController> _notesControllers = [];
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   Map<String, dynamic> data = {};
   final Map<String, dynamic> _form = {
@@ -233,6 +234,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           handleSelectWidthUnit: _selectWidthUnit,
           handleSelectLengthUnit: _selectLengthUnit,
           isSubmitting: _isSubmitting,
+          formKey: _formKey,
         ),
       ),
     );

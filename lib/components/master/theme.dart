@@ -18,23 +18,6 @@ class CustomTheme {
     );
   }
 
-  BoxDecoration dashboardCardTheme(bottomBorderColor) {
-    return BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.all(
-        Radius.circular(12),
-      ),
-      border: Border.all(
-        // ignore: deprecated_member_use
-        color: Colors.grey.withOpacity(0.3),
-        width: 1,
-      ),
-      boxShadow: [
-        boxShadowTheme(),
-      ],
-    );
-  }
-
   BoxDecoration statsCardTheme(bottomBorderColor) {
     return BoxDecoration(
       color: Colors.white,
@@ -90,8 +73,8 @@ class CustomTheme {
       // ignore: deprecated_member_use
       color: Colors.grey.withOpacity(0.3),
       spreadRadius: 0,
-      blurRadius: 2,
-      offset: Offset(0, 2), // changes position of shadow
+      blurRadius: 1,
+      offset: Offset(0, 1), // changes position of shadow
     );
   }
 
@@ -173,20 +156,6 @@ class CustomTheme {
       ),
       color: Colors.grey.shade400,
     );
-  }
-
-  BoxDecoration inputStaticDecoration() {
-    return BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(
-            12.0,
-          ),
-        ),
-        border: Border.all(
-          width: 0.5,
-          color: colors('base'),
-        ),
-        color: Colors.white);
   }
 
   InputDecoration inputDecoration([

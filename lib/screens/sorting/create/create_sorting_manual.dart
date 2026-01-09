@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
-import 'package:textile_tracking/screens/master/create_process_manual.dart';
+import 'package:textile_tracking/screens/master/create/create_process_manual.dart';
 
 class CreateSortingManual extends StatelessWidget {
   final dynamic id;

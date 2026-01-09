@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/layout/card/finish_list_item.dart';
+import 'package:textile_tracking/components/master/layout/card/list_item.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
 class WorkOrderItemTab extends StatefulWidget {
@@ -28,7 +28,7 @@ class _WorkOrderItemTabState extends State<WorkOrderItemTab> {
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final item = items[index];
-                return FinishListItem(
+                return ListItem(
                   item: item,
                 );
               },

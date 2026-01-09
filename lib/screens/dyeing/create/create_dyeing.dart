@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/screens/master/create_process.dart';
+import 'package:textile_tracking/screens/master/create/index.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/screens/dyeing/create/create_dyeing_manual.dart';
 

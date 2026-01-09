@@ -24,8 +24,27 @@ class ActiveMachine extends StatefulWidget {
   State<ActiveMachine> createState() => _ActiveMachineState();
 }
 
-class _ActiveMachineState extends State<ActiveMachine> {
+class _ActiveMachineState extends State<ActiveMachine>
+    with TickerProviderStateMixin {
   String selectedProcess = 'All';
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    _tabController = TabController(
+      length: processFilters.length,
+      vsync: this,
+    );
+
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) return;
+
+      setState(() {
+        selectedIndex = _tabController.index;
+      });
+    });
+    super.initState();
+  }
 
   final List<String> processFilters = [
     'All',
@@ -38,6 +57,114 @@ class _ActiveMachineState extends State<ActiveMachine> {
     'Cross Cutting',
     'Sewing'
   ];
+
+  int selectedIndex = 0;
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildProcessFilter() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Padding(
+        padding: CustomTheme().padding('badge'),
+        child: Row(
+          children: List.generate(processFilters.length, (index) {
+            final isSelected = selectedIndex == index;
+
+            return GestureDetector(
+              onTap: () {
+                _tabController.animateTo(index);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isSelected
+                        ? CustomTheme().buttonColor('primary')
+                        : Colors.grey.shade400,
+                  ),
+                  color: isSelected
+                      ? CustomTheme().buttonColor('primary')
+                      : Colors.white,
+                ),
+                padding: CustomTheme().padding('badge'),
+                child: Text(
+                  processFilters[index],
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+            );
+          }).separatedBy(CustomTheme().hGap('lg')),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSwipeContent(
+    List<dynamic>? available,
+    List<dynamic>? unavailable,
+    bool isPortrait,
+  ) {
+    List<dynamic> filterByProcess(
+      List<dynamic>? source,
+      String process,
+    ) {
+      if (source == null) return [];
+      if (process == 'All') return source;
+
+      return source.where((m) {
+        final p = m is Map ? (m['process_type'] ?? '') : '';
+        return p == process;
+      }).toList();
+    }
+
+    return SizedBox(
+      height: 580,
+      child: TabBarView(
+        controller: _tabController,
+        children: processFilters.map((process) {
+          final filteredAvailable = filterByProcess(available, process);
+          final filteredUnavailable = filterByProcess(unavailable, process);
+
+          return widget.isFetching
+              ? const Center(child: CircularProgressIndicator())
+              : Padding(
+                  padding: CustomTheme().padding('content'),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: MachineSection(
+                          title: 'Mesin Tersedia',
+                          icon: Icons.check_circle_outline,
+                          status: const Color(0xFF10b981),
+                          headerColor: 'Selesai',
+                          data: filteredAvailable,
+                          isPortrait: isPortrait,
+                        ),
+                      ),
+                      Expanded(
+                        child: MachineSection(
+                          title: 'Mesin Sedang Digunakan',
+                          icon: Icons.warning_outlined,
+                          status: const Color(0xfff18800),
+                          headerColor: 'Diproses',
+                          data: filteredUnavailable,
+                          isPortrait: isPortrait,
+                        ),
+                      ),
+                    ].separatedBy(CustomTheme().hGap('2xl')),
+                  ),
+                );
+        }).toList(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,78 +236,9 @@ class _ActiveMachineState extends State<ActiveMachine> {
             ],
           ),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Padding(
-            padding: CustomTheme().padding('badge'),
-            child: Row(
-              children: processFilters
-                  .map((type) {
-                    bool isSelected = selectedProcess == type;
-
-                    return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedProcess = type;
-                          });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            border: Border.all(
-                                color: isSelected
-                                    ? CustomTheme().buttonColor('primary')
-                                    : Colors.grey.shade400,
-                                width: 1),
-                            color: isSelected
-                                ? CustomTheme().buttonColor('primary')
-                                : Colors.white,
-                            boxShadow: [CustomTheme().boxShadowTheme()],
-                          ),
-                          padding: CustomTheme().padding('badge'),
-                          child: Text(
-                            type,
-                            style: TextStyle(
-                                color: isSelected ? Colors.white : null),
-                          ),
-                        ));
-                  })
-                  .toList()
-                  .separatedBy(CustomTheme().hGap('lg')),
-            ),
-          ),
-        ),
+        _buildProcessFilter(),
         Divider(),
-        if (widget.isFetching)
-          Center(child: CircularProgressIndicator())
-        else
-          Padding(
-            padding: CustomTheme().padding('content'),
-            child: Row(
-              children: [
-                Expanded(
-                  child: MachineSection(
-                    title: 'Mesin Tersedia',
-                    icon: Icons.check_circle_outline,
-                    status: Color(0xFF10b981),
-                    headerColor: 'Selesai',
-                    data: filteredAvailable,
-                    isPortrait: isPortrait,
-                  ),
-                ),
-                Expanded(
-                  child: MachineSection(
-                    title: 'Mesin Sedang Digunakan',
-                    icon: Icons.warning_outlined,
-                    status: Color(0xfff18800),
-                    headerColor: 'Diproses',
-                    data: filteredUnavailable,
-                    isPortrait: isPortrait,
-                  ),
-                ),
-              ].separatedBy(CustomTheme().hGap('2xl')),
-            ),
-          )
+        _buildSwipeContent(filteredAvailable, filteredUnavailable, isPortrait)
       ],
     ));
   }

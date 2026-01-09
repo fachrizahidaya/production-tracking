@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
-import 'package:textile_tracking/screens/master/process_detail.dart';
+import 'package:textile_tracking/screens/master/detail/%5Bprocess_id%5D.dart';
 
 class LongSittingDetail extends StatefulWidget {
   final String id;
@@ -64,6 +64,7 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withMaklon: false,
+      forDyeing: false,
     );
   }
 }

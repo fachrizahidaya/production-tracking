@@ -29,7 +29,7 @@ class _ProcessTabState extends State<ProcessTab> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: isPortrait ? 3 / 2 : 3 / 1,
+                childAspectRatio: isPortrait ? 3 / 2 : 3 / 1.2,
               ),
               itemCount: items.length,
               itemBuilder: (context, index) {

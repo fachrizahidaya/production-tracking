@@ -36,7 +36,7 @@ class _NoteItemState extends State<NoteItem> {
         children: [
           ViewText(
             viewLabel: 'Catatan ${widget.item['label']}',
-            viewValue: htmlToPlainText(widget.item['value']),
+            viewValue: htmlToPlainText(widget.item['content']),
           ),
         ],
       ),

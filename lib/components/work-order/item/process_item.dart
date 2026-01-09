@@ -32,6 +32,7 @@ class _ProcessItemState extends State<ProcessItem> {
                 style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
               ),
               CustomBadge(
+                withStatus: true,
                 title: hasData
                     ? data.first['status'] ?? 'Menunggu Diproses'
                     : 'Menunggu Diproses',

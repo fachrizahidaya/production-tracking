@@ -5,8 +5,8 @@ import 'package:textile_tracking/components/master/layout/card/custom_card.dart'
 import 'package:textile_tracking/components/master/layout/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/format_html.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
-import 'package:html/parser.dart' as html_parser;
 
 class InfoTab extends StatefulWidget {
   final id;
@@ -36,11 +36,6 @@ class InfoTab extends StatefulWidget {
 }
 
 class _InfoTabState extends State<InfoTab> {
-  String htmlToPlainText(String htmlString) {
-    final document = html_parser.parse(htmlString);
-    return document.body?.text ?? '';
-  }
-
   @override
   Widget build(BuildContext context) {
     if (widget.isLoading) {

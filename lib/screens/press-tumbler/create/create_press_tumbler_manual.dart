@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/models/process/press_tumbler.dart';
-import 'package:textile_tracking/screens/master/create/create_process_manual.dart';
+import 'package:textile_tracking/screens/create/create_process_manual.dart';
 
 class CreatePressTumblerManual extends StatelessWidget {
   final dynamic id;

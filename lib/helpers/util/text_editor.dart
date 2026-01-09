@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:quill_html_editor_v3/quill_html_editor_v3.dart';
-import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 
 class TextEditor extends StatefulWidget {
   final initialHtml;

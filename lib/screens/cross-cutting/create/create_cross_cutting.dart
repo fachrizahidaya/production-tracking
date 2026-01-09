@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/screens/master/create/index.dart';
+import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/models/process/cross_cutting.dart';
 import 'package:textile_tracking/screens/cross-cutting/create/create_cross_cutting_manual.dart';
 

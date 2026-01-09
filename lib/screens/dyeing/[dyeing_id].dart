@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/screens/master/detail/%5Bprocess_id%5D.dart';
+import 'package:textile_tracking/screens/detail/%5Bprocess_id%5D.dart';
 
 class DyeingDetail extends StatefulWidget {
   final String id;

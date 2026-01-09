@@ -742,6 +742,10 @@ class CustomTheme {
     switch (type) {
       case 'card':
         return EdgeInsets.all(12);
+      case 'content-detail':
+        return EdgeInsets.symmetric(vertical: 16);
+      case 'card-detail':
+        return EdgeInsets.symmetric(horizontal: 16);
       case 'badge':
         return EdgeInsets.symmetric(vertical: 6, horizontal: 12);
       case 'dialog':

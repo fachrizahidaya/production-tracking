@@ -6,26 +6,25 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/detail/list_item.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:html/parser.dart' as html_parser;
 
 class Detail extends StatefulWidget {
-  final Map<String, dynamic> data;
-  final bool isLoading;
-  final Map<String, dynamic> form;
-  final ValueNotifier<bool>? isSubmitting;
-  final Function(String field, dynamic value)? handleChangeInput;
-  final VoidCallback? handleSelectLengthUnit;
-  final VoidCallback? handleSelectWidthUnit;
-  final VoidCallback? handleSelectMachine;
-  final Future<void> Function(String id)? handleUpdate;
-  final Future<void> Function()? refetch;
-  final bool? hasMore;
-  final Map<String, TextEditingController> fieldControllers;
-  final List<Map<String, String>> fieldConfigs;
-
+  final data;
+  final isLoading;
+  final form;
+  final isSubmitting;
+  final handleChangeInput;
+  final handleSelectLengthUnit;
+  final handleSelectWidthUnit;
+  final handleSelectMachine;
+  final handleUpdate;
+  final refetch;
+  final hasMore;
+  final fieldControllers;
+  final fieldConfigs;
   final weight;
   final length;
   final width;
@@ -43,6 +42,10 @@ class Detail extends StatefulWidget {
   final onlySewing;
   final label;
   final forDyeing;
+  final canDelete;
+  final canUpdate;
+  final handleDelete;
+  final handleNavigateToUpdate;
 
   const Detail(
       {super.key,
@@ -75,7 +78,11 @@ class Detail extends StatefulWidget {
       this.maklon,
       this.onlySewing,
       this.label,
-      this.forDyeing});
+      this.forDyeing,
+      this.canDelete,
+      this.canUpdate,
+      this.handleNavigateToUpdate,
+      this.handleDelete});
 
   @override
   State<Detail> createState() => _DetailState();
@@ -150,21 +157,6 @@ class _DetailState extends State<Detail> {
         widget.maklon.text = _initialMaklonName;
       });
     }
-  }
-
-  String htmlToPlainText(dynamic htmlString) {
-    if (htmlString == null) return '';
-
-    if (htmlString is List) {
-      return htmlString.join(" ");
-    }
-
-    if (htmlString is! String) {
-      return htmlString.toString();
-    }
-
-    final document = html_parser.parse(htmlString);
-    return document.body?.text ?? '';
   }
 
   void _setInitialValues() {
@@ -245,59 +237,53 @@ class _DetailState extends State<Detail> {
     );
   }
 
-  Widget _buildAttachmentList(BuildContext context) {
+  List<Widget> _buildAttachmentList(BuildContext context) {
     final existingAttachments =
         (widget.data['attachments'] ?? []) as List<dynamic>;
 
     final baseUrl = dotenv.env['IMAGE_URL_DEV'] ?? '';
 
-    return Wrap(spacing: 8, runSpacing: 8, children: [
-      if (existingAttachments.isEmpty)
-        const NoData()
-      else
-        ...existingAttachments.map<Widget>((item) {
-          final bool isNew = item.containsKey('path');
-          final String? filePath = isNew ? item['path'] : item['file_path'];
-          final String fileName = isNew
-              ? item['name']
-              : (item['file_name'] ?? filePath?.split('/').last ?? '');
-          final String extension = fileName.split('.').last.toLowerCase();
+    return existingAttachments.map<Widget>((item) {
+      final bool isNew = item.containsKey('path');
+      final String? filePath = isNew ? item['path'] : item['file_path'];
+      final String fileName = isNew
+          ? item['name']
+          : (item['file_name'] ?? filePath?.split('/').last ?? '');
+      final String extension = fileName.split('.').last.toLowerCase();
 
-          Widget preview;
-          if (extension == 'pdf') {
-            preview =
-                const Icon(Icons.picture_as_pdf, color: Colors.red, size: 60);
-          } else if (isNew && filePath != null) {
-            preview = Image.file(File(filePath), fit: BoxFit.cover);
-          } else if (filePath != null &&
-              ['png', 'jpg', 'jpeg', 'gif'].contains(extension)) {
-            preview = Image.network('$baseUrl$filePath',
-                fit: BoxFit.cover,
-                errorBuilder: (context, _, __) =>
-                    const Icon(Icons.broken_image, size: 60));
-          } else {
-            preview = const Icon(Icons.insert_drive_file, size: 60);
-          }
+      Widget preview;
+      if (extension == 'pdf') {
+        preview = const Icon(Icons.picture_as_pdf, color: Colors.red, size: 60);
+      } else if (isNew && filePath != null) {
+        preview = Image.file(File(filePath), fit: BoxFit.cover);
+      } else if (filePath != null &&
+          ['png', 'jpg', 'jpeg', 'gif'].contains(extension)) {
+        preview = Image.network('$baseUrl$filePath',
+            fit: BoxFit.cover,
+            errorBuilder: (context, _, __) =>
+                const Icon(Icons.broken_image, size: 60));
+      } else {
+        preview = const Icon(Icons.insert_drive_file, size: 60);
+      }
 
-          return GestureDetector(
-            onTap: filePath != null
-                ? () {
-                    _showImageDialog(
-                      context,
-                      isNew,
-                      isNew ? filePath : '$baseUrl$filePath',
-                    );
-                  }
-                : null,
-            child: Container(
-              width: 100,
-              height: 100,
-              color: Colors.white,
-              child: preview,
-            ),
-          );
-        }),
-    ]);
+      return GestureDetector(
+        onTap: filePath != null
+            ? () {
+                _showImageDialog(
+                  context,
+                  isNew,
+                  isNew ? filePath : '$baseUrl$filePath',
+                );
+              }
+            : null,
+        child: Container(
+          width: 100,
+          height: 100,
+          color: Colors.white,
+          child: preview,
+        ),
+      );
+    }).toList();
   }
 
   @override
@@ -307,34 +293,45 @@ class _DetailState extends State<Detail> {
 
     final existingGrades = (widget.data['grades'] ?? []) as List<dynamic>;
 
-    if (widget.isLoading) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-
-    if (widget.data.isEmpty) {
-      return Container(
-        alignment: Alignment.center,
-        child: const NoData(),
-      );
-    }
-
-    return ListItem(
-      data: widget.data,
-      form: widget.form,
-      existingAttachment: existingAttachments,
-      no: widget.no,
-      withItemGrade: widget.withItemGrade,
-      qty: widget.qty,
-      handleSelectQtyUnit: widget.handleSelectQtyUnit,
-      existingGrades: existingGrades,
-      notes: widget.notes,
-      withQtyAndWeight: widget.withQtyAndWeight,
-      handleBuildAttachment: _buildAttachmentList,
-      handleHtmlText: htmlToPlainText,
-      label: widget.label,
-      forDyeing: widget.forDyeing,
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFf9fafc),
+        appBar: CustomAppBar(
+          title: '${widget.label} Detail',
+          onReturn: () => Navigator.pop(context),
+          canDelete: widget.canDelete,
+          canUpdate: widget.canUpdate,
+          handleDelete: widget.handleDelete,
+          handleUpdate: widget.handleNavigateToUpdate,
+          id: widget.data['id'],
+          status: widget.data['can_delete'],
+        ),
+        body: widget.isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : widget.data.isEmpty
+                ? NoData()
+                : ListItem(
+                    data: widget.data,
+                    form: widget.form,
+                    existingAttachment: existingAttachments,
+                    no: widget.no,
+                    withItemGrade: widget.withItemGrade,
+                    qty: widget.qty,
+                    handleSelectQtyUnit: widget.handleSelectQtyUnit,
+                    existingGrades: existingGrades,
+                    notes: widget.notes,
+                    withQtyAndWeight: widget.withQtyAndWeight,
+                    handleBuildAttachment: _buildAttachmentList,
+                    label: widget.label,
+                    forDyeing: widget.forDyeing,
+                  ),
+      ),
     );
   }
 }

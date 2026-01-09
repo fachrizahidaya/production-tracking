@@ -4,7 +4,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/layout/detail/detail.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
@@ -112,6 +111,21 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
   late List<dynamic> unitOption = [];
   late List<dynamic> machineOption = [];
+
+  final fieldConfigs = [
+    {'name': 'weight', 'label': 'Berat'},
+    {'name': 'length', 'label': 'Panjang'},
+    {'name': 'width', 'label': 'Lebar'},
+    {'name': 'notes', 'label': 'Catatan'},
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _getDataView();
+    _handleFetchUnit();
+    _handleFetchMachine();
+  }
 
   void _handleChangeInput(String fieldName, dynamic value) {
     setState(() {
@@ -412,7 +426,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       builder: (_) => SelectDialog(
         label: 'Satuan',
         options: unitOption,
-        // 👇 Preselect current unit for this grade
         selected: _form['grades'][index]['unit_id'].toString(),
         handleChangeValue: (e) {
           setState(() {
@@ -441,7 +454,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       builder: (_) => SelectDialog(
         label: 'Satuan',
         options: unitOption,
-        // 👇 Preselect current unit for this grade
         selected: _form['item_unit_id'].toString(),
         handleChangeValue: (e) {
           setState(() {
@@ -482,73 +494,45 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _getDataView();
-    _handleFetchUnit();
-    _handleFetchMachine();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        FocusScope.of(context).unfocus();
+    return Detail(
+      data: data,
+      isLoading: _firstLoading,
+      handleChangeInput: _handleChangeInput,
+      weight: _weightController,
+      length: _lengthController,
+      width: _widthController,
+      note: _noteController,
+      form: _form,
+      handleSelectLengthUnit: _selectLengthUnit,
+      handleSelectWidthUnit: _selectWidthUnit,
+      handleSelectQtyItemUnit: _selectQtyItemUnit,
+      handleSelectMachine: _selectMachine,
+      handleUpdate: _handleUpdate,
+      refetch: _getDataView,
+      fieldConfigs: fieldConfigs,
+      fieldControllers: {
+        'weight': _weightController,
+        'length': _lengthController,
+        'width': _widthController,
+        'notes': _noteController,
       },
-      child: Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
-        appBar: CustomAppBar(
-          title: '${widget.label} Detail',
-          onReturn: () => Navigator.pop(context),
-          canDelete: widget.canDelete,
-          canUpdate: widget.canUpdate,
-          handleDelete: _handleDelete,
-          handleUpdate: _handleNavigateToUpdate,
-          id: data['id'],
-          status: data['can_delete'],
-        ),
-        body: Detail(
-          data: data,
-          isLoading: _firstLoading,
-          handleChangeInput: _handleChangeInput,
-          weight: _weightController,
-          length: _lengthController,
-          width: _widthController,
-          note: _noteController,
-          form: _form,
-          handleSelectLengthUnit: _selectLengthUnit,
-          handleSelectWidthUnit: _selectWidthUnit,
-          handleSelectQtyItemUnit: _selectQtyItemUnit,
-          handleSelectMachine: _selectMachine,
-          handleUpdate: _handleUpdate,
-          refetch: _getDataView,
-          fieldConfigs: [
-            {'name': 'weight', 'label': 'Berat'},
-            {'name': 'length', 'label': 'Panjang'},
-            {'name': 'width', 'label': 'Lebar'},
-            {'name': 'notes', 'label': 'Catatan'},
-          ],
-          fieldControllers: {
-            'weight': _weightController,
-            'length': _lengthController,
-            'width': _widthController,
-            'notes': _noteController,
-          },
-          no: widget.no,
-          withItemGrade: widget.withItemGrade,
-          qty: _qtyControllers,
-          handleSelectQtyUnit: _selectQtyUnit,
-          notes: _notesControllers,
-          withQtyAndWeight: widget.withQtyAndWeight,
-          qtyItem: _qtyItemController,
-          withMaklon: widget.withMaklon,
-          maklon: _maklonNameController,
-          onlySewing: widget.onlySewing,
-          label: widget.label,
-          forDyeing: widget.forDyeing,
-        ),
-      ),
+      no: widget.no,
+      withItemGrade: widget.withItemGrade,
+      qty: _qtyControllers,
+      handleSelectQtyUnit: _selectQtyUnit,
+      notes: _notesControllers,
+      withQtyAndWeight: widget.withQtyAndWeight,
+      qtyItem: _qtyItemController,
+      withMaklon: widget.withMaklon,
+      maklon: _maklonNameController,
+      onlySewing: widget.onlySewing,
+      label: widget.label,
+      forDyeing: widget.forDyeing,
+      canDelete: widget.canDelete,
+      canUpdate: widget.canUpdate,
+      handleDelete: _handleDelete,
+      handleNavigateToUpdate: _handleNavigateToUpdate,
     );
   }
 }

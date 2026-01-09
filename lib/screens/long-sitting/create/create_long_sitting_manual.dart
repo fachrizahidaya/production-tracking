@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
-import 'package:textile_tracking/screens/master/create/create_process_manual.dart';
+import 'package:textile_tracking/screens/create/create_process_manual.dart';
 
 class CreateLongSittingManual extends StatelessWidget {
   final dynamic id;

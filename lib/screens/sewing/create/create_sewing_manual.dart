@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/models/process/sewing.dart';
-import 'package:textile_tracking/screens/master/create/create_process_manual.dart';
+import 'package:textile_tracking/screens/create/create_process_manual.dart';
 
 class CreateSewingManual extends StatelessWidget {
   final dynamic id;

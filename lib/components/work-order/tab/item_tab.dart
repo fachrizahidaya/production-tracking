@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/layout/card/list_item.dart';
+import 'package:textile_tracking/components/master/card/list_item.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
 class ItemTab extends StatefulWidget {

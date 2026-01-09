@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/models/process/packing.dart';
-import 'package:textile_tracking/screens/master/create_process_manual.dart';
+import 'package:textile_tracking/screens/master/create/create_process_manual.dart';
 
 class CreatePackingManual extends StatelessWidget {
   final dynamic id;

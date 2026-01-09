@@ -589,7 +589,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                     text: 'Informasi',
                   ),
                   Tab(
-                    text: 'Barang',
+                    text: 'Material',
                   ),
                 ]),
               ),

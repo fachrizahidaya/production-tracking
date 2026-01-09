@@ -27,8 +27,10 @@ class WorkOrderSummary extends StatefulWidget {
   State<WorkOrderSummary> createState() => _WorkOrderSummaryState();
 }
 
-class _WorkOrderSummaryState extends State<WorkOrderSummary> {
+class _WorkOrderSummaryState extends State<WorkOrderSummary>
+    with TickerProviderStateMixin {
   String selectedProcess = 'All';
+  late TabController _tabController;
 
   static const List<IconData> processIcons = [
     Icons.invert_colors_on_outlined,
@@ -45,6 +47,35 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary> {
     Icons.stacked_bar_chart_outlined,
     Icons.dangerous,
   ];
+
+  @override
+  void initState() {
+    _tabController = TabController(
+      length: processFilters.length,
+      vsync: this,
+    );
+
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) return;
+
+      setState(() {
+        selectedIndex = _tabController.index;
+      });
+
+      _refetchByTab(_tabController.index);
+    });
+    super.initState();
+  }
+
+  void _refetchByTab(int index) {
+    final status = _mapStatusFilter(processFilters[index]);
+
+    widget.handleRefetch(
+      status: status,
+      fromDate: widget.dariTanggal,
+      toDate: widget.sampaiTanggal,
+    );
+  }
 
   String? _mapStatusFilter(String filter) {
     switch (filter) {
@@ -68,6 +99,8 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary> {
     'Menunggu Diproses',
   ];
 
+  int selectedIndex = 0;
+
   void _openFilter() {
     if (widget.filterWidget != null) {
       showModalBottomSheet(
@@ -83,6 +116,117 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary> {
         },
       );
     }
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildProcessFilter() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Padding(
+        padding: CustomTheme().padding('badge'),
+        child: Row(
+          children: List.generate(processFilters.length, (index) {
+            final isSelected = selectedIndex == index;
+
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedIndex = index;
+                });
+
+                _tabController.animateTo(index);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isSelected
+                        ? CustomTheme().buttonColor('primary')
+                        : Colors.grey.shade400,
+                  ),
+                  color: isSelected
+                      ? CustomTheme().buttonColor('primary')
+                      : Colors.white,
+                  boxShadow: [CustomTheme().boxShadowTheme()],
+                ),
+                padding: CustomTheme().padding('badge'),
+                child: Text(
+                  processFilters[index],
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+            );
+          }).separatedBy(CustomTheme().hGap('lg')),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSwipeContent() {
+    return SizedBox(
+      height: 500,
+      child: TabBarView(
+        controller: _tabController,
+        children: processFilters.map((filter) {
+          return CustomScrollView(
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final item = widget.data![index];
+
+                    return Padding(
+                      padding: CustomTheme().padding('badge'),
+                      child: SummaryCard(
+                        data: item,
+                        icon: item['name'] == 'Dyeing'
+                            ? processIcons[0]
+                            : item['name'] == 'Press'
+                                ? processIcons[1]
+                                : item['name'] == 'Tumbler'
+                                    ? processIcons[2]
+                                    : item['name'] == 'Stenter'
+                                        ? processIcons[3]
+                                        : item['name'] == 'Long Sitting'
+                                            ? processIcons[4]
+                                            : item['name'] == 'Long Hemming'
+                                                ? processIcons[5]
+                                                : item['name'] ==
+                                                        'Cross Cutting'
+                                                    ? processIcons[6]
+                                                    : item['name'] == 'Sewing'
+                                                        ? processIcons[7]
+                                                        : item['name'] ==
+                                                                'Embroidery'
+                                                            ? processIcons[8]
+                                                            : item['name'] ==
+                                                                    'Printing'
+                                                                ? processIcons[
+                                                                    9]
+                                                                : item['name'] ==
+                                                                        'Sorting'
+                                                                    ? processIcons[
+                                                                        10]
+                                                                    : processIcons[
+                                                                        11],
+                      ),
+                    );
+                  },
+                  childCount: widget.data!.length,
+                ),
+              ),
+            ],
+          );
+        }).toList(),
+      ),
+    );
   }
 
   @override
@@ -131,108 +275,9 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary> {
               ],
             ),
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: CustomTheme().padding('badge'),
-              child: Row(
-                children: processFilters
-                    .map((type) {
-                      bool isSelected = selectedProcess == type;
-
-                      final mappedStatus = _mapStatusFilter(type);
-
-                      widget.handleRefetch(
-                        status: mappedStatus,
-                        fromDate: widget.dariTanggal,
-                        toDate: widget.sampaiTanggal,
-                      );
-
-                      return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedProcess = type;
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
-                              border: Border.all(
-                                  color: isSelected
-                                      ? CustomTheme().buttonColor('primary')
-                                      : Colors.grey.shade400,
-                                  width: 1),
-                              color: isSelected
-                                  ? CustomTheme().buttonColor('primary')
-                                  : Colors.white,
-                              boxShadow: [CustomTheme().boxShadowTheme()],
-                            ),
-                            padding: CustomTheme().padding('badge'),
-                            child: Text(
-                              type,
-                              style: TextStyle(
-                                  color: isSelected ? Colors.white : null),
-                            ),
-                          ));
-                    })
-                    .toList()
-                    .separatedBy(CustomTheme().hGap('lg')),
-              ),
-            ),
-          ),
+          _buildProcessFilter(),
           Divider(),
-          SizedBox(
-            height: 500,
-            child: CustomScrollView(
-              slivers: [
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final item = widget.data![index];
-                      return Padding(
-                        padding: CustomTheme().padding('badge'),
-                        child: SummaryCard(
-                          data: item,
-                          icon: item['name'] == 'Dyeing'
-                              ? processIcons[0]
-                              : item['name'] == 'Press'
-                                  ? processIcons[1]
-                                  : item['name'] == 'Tumbler'
-                                      ? processIcons[2]
-                                      : item['name'] == 'Stenter'
-                                          ? processIcons[3]
-                                          : item['name'] == 'Long Sitting'
-                                              ? processIcons[4]
-                                              : item['name'] == 'Long Hemming'
-                                                  ? processIcons[5]
-                                                  : item['name'] ==
-                                                          'Cross Cutting'
-                                                      ? processIcons[6]
-                                                      : item['name'] == 'Sewing'
-                                                          ? processIcons[7]
-                                                          : item['name'] ==
-                                                                  'Embroidery'
-                                                              ? processIcons[8]
-                                                              : item['name'] ==
-                                                                      'Printing'
-                                                                  ? processIcons[
-                                                                      9]
-                                                                  : item['name'] ==
-                                                                          'Sorting'
-                                                                      ? processIcons[
-                                                                          10]
-                                                                      : processIcons[
-                                                                          11],
-                        ),
-                      );
-                    },
-                    childCount: widget.data!.length,
-                  ),
-                ),
-              ],
-            ),
-          )
+          _buildSwipeContent()
         ],
       ),
     );

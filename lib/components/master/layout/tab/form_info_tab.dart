@@ -4,9 +4,9 @@ import 'package:textile_tracking/components/master/layout/card/custom_card.dart'
 import 'package:textile_tracking/components/master/layout/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/format_html.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/components/master/section/create/create_section.dart';
-import 'package:html/parser.dart' as html_parser;
 
 class FormInfoTab extends StatefulWidget {
   final id;
@@ -46,21 +46,6 @@ class FormInfoTab extends StatefulWidget {
 }
 
 class _FormInfoTabState extends State<FormInfoTab> {
-  String htmlToPlainText(dynamic htmlString) {
-    if (htmlString == null) return '';
-
-    if (htmlString is List) {
-      return htmlString.join(" ");
-    }
-
-    if (htmlString is! String) {
-      return htmlString.toString();
-    }
-
-    final document = html_parser.parse(htmlString);
-    return document.body?.text ?? '';
-  }
-
   @override
   Widget build(BuildContext context) {
     if (widget.isLoading) {

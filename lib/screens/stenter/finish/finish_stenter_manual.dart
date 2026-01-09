@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/screens/master/finish_process_manual.dart';
+import 'package:textile_tracking/screens/master/finish/%5Bfinish_process_id%5D.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
 
 class FinishStenterManual extends StatefulWidget {

@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
 class ViewText<T> extends StatelessWidget {
-  final String viewLabel;
+  final viewLabel;
   final viewValue;
   final childValue;
+  final childLabel;
   final T? item;
   final void Function(BuildContext context, T item)? onItemTap;
 
-  const ViewText({
-    super.key,
-    required this.viewLabel,
-    this.viewValue,
-    this.item,
-    this.onItemTap,
-    this.childValue,
-  });
+  const ViewText(
+      {super.key,
+      this.viewLabel,
+      this.viewValue,
+      this.item,
+      this.onItemTap,
+      this.childValue,
+      this.childLabel});
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +27,13 @@ class ViewText<T> extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          viewLabel,
-          style: TextStyle(
-            fontSize: CustomTheme().fontSize('md'),
-          ),
-        ),
+        childLabel ??
+            Text(
+              viewLabel,
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize('md'),
+              ),
+            ),
         CustomTheme().vGap('xs'),
         GestureDetector(
             onTap: isClickable ? () => onItemTap!(context, item as T) : null,

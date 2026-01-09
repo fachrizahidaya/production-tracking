@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/models/process/long_hemming.dart';
-import 'package:textile_tracking/screens/master/create_process_manual.dart';
+import 'package:textile_tracking/screens/master/create/create_process_manual.dart';
 
 class CreateLongHemmingManual extends StatelessWidget {
   final dynamic id;

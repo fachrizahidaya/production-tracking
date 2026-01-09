@@ -287,7 +287,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                     text: 'Form',
                   ),
                   Tab(
-                    text: 'Barang',
+                    text: 'Material',
                   ),
                 ]),
               ),

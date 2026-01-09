@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/models/process/printing.dart';
-import 'package:textile_tracking/screens/master/process_detail.dart';
+import 'package:textile_tracking/screens/master/detail/%5Bprocess_id%5D.dart';
 
 class PrintingDetail extends StatefulWidget {
   final String id;

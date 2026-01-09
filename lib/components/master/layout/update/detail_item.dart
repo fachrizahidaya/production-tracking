@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
 import 'package:textile_tracking/components/master/layout/card/custom_detail_badge.dart';
 import 'package:textile_tracking/components/master/layout/detail/material_item.dart';
-import 'package:textile_tracking/components/master/text/clickable_text.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_html.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
-import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class DetailItem extends StatefulWidget {
   final data;
@@ -91,44 +89,41 @@ class _DetailItemState extends State<DetailItem> with TickerProviderStateMixin {
   Widget _buildProcessWoFilter() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Padding(
-        padding: CustomTheme().padding('card-detail'),
-        child: Row(
-          children: List.generate(itemWoFilters.length, (index) {
-            final isSelected = selectedItemWoIndex == index;
+      child: Row(
+        children: List.generate(itemWoFilters.length, (index) {
+          final isSelected = selectedItemWoIndex == index;
 
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedItemWoIndex = index;
-                });
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedItemWoIndex = index;
+              });
 
-                _tabWoController.animateTo(index);
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: isSelected
-                        ? CustomTheme().buttonColor('primary')
-                        : Colors.grey.shade400,
-                  ),
+              _tabWoController.animateTo(index);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
                   color: isSelected
                       ? CustomTheme().buttonColor('primary')
-                      : Colors.white,
-                  boxShadow: [CustomTheme().boxShadowTheme()],
+                      : Colors.grey.shade400,
                 ),
-                padding: CustomTheme().padding('badge'),
-                child: Text(
-                  itemWoFilters[index],
-                  style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black,
-                  ),
+                color: isSelected
+                    ? CustomTheme().buttonColor('primary')
+                    : Colors.white,
+                boxShadow: [CustomTheme().boxShadowTheme()],
+              ),
+              padding: CustomTheme().padding('badge'),
+              child: Text(
+                itemWoFilters[index],
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.black,
                 ),
               ),
-            );
-          }).separatedBy(CustomTheme().hGap('lg')),
-        ),
+            ),
+          );
+        }).separatedBy(CustomTheme().hGap('lg')),
       ),
     );
   }
@@ -140,36 +135,32 @@ class _DetailItemState extends State<DetailItem> with TickerProviderStateMixin {
     return TabBarView(
       controller: _tabWoController,
       children: [
-        Padding(
-          padding: CustomTheme().padding('card-detail'),
-          child: Row(
-            children: [
-              Expanded(
-                child: CustomCard(
-                  child: widget.data['work_orders']['notes'] != null
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              htmlToPlainText(
-                                  widget.data['work_orders']['notes']),
-                              style: TextStyle(
-                                fontSize: CustomTheme().fontSize('lg'),
-                              ),
+        Row(
+          children: [
+            Expanded(
+              child: CustomCard(
+                child: widget.data['work_orders']['notes'] != null
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            htmlToPlainText(
+                                widget.data['work_orders']['notes']),
+                            style: TextStyle(
+                              fontSize: CustomTheme().fontSize('lg'),
                             ),
-                          ].separatedBy(CustomTheme().vGap('lg')),
-                        )
-                      : NoData(),
-                ),
+                          ),
+                        ].separatedBy(CustomTheme().vGap('lg')),
+                      )
+                    : NoData(),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         Container(
           child: items.isEmpty
               ? Center(child: Text('No Data'))
               : ListView.separated(
-                  padding: CustomTheme().padding('content'),
                   physics: AlwaysScrollableScrollPhysics(),
                   itemCount: items.length,
                   itemBuilder: (context, index) {
@@ -189,157 +180,127 @@ class _DetailItemState extends State<DetailItem> with TickerProviderStateMixin {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
-    return SingleChildScrollView(
-        child: Padding(
-      padding: CustomTheme().padding('content-detail'),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: CustomTheme().padding('card-detail'),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: CustomCard(child: Placeholder()),
-                  ),
-                  if (!isPortrait)
-                    Expanded(
-                        child: CustomCard(
-                            child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (!isPortrait)
+                Expanded(
+                    child: CustomCard(
+                        child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Informasi Work Order',
+                      style: TextStyle(
+                          fontSize: CustomTheme().fontSize('lg'),
+                          fontWeight: CustomTheme().fontWeight('bold')),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Informasi Work Order',
-                          style: TextStyle(
-                              fontSize: CustomTheme().fontSize('lg'),
-                              fontWeight: CustomTheme().fontWeight('bold')),
+                        CustomDetailBadge(
+                            width: 280.0,
+                            status: 'Menunggu Diproses',
+                            label: 'Nomor Work Order',
+                            value: widget.data['work_orders']?['wo_no']
+                                    ?.toString() ??
+                                'No Data'),
+                        CustomDetailBadge(
+                          width: 280.0,
+                          status: 'Menunggu Diproses',
+                          label: 'Tanggal Work Order',
+                          value: widget.data['start_time'] != null
+                              ? DateFormat("dd MMM yyyy").format(
+                                  DateTime.parse(widget.data['start_time']))
+                              : NoData(),
                         ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CustomDetailBadge(
+                        CustomDetailBadge(
+                          width: 280.0,
+                          status: 'Menunggu Diproses',
+                          label: 'Qty Greige',
+                          value:
+                              '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']['code']}',
+                        ),
+                        CustomDetailBadge(
+                          width: 280.0,
+                          status: 'Menunggu Diproses',
+                          label: 'Dibuat oleh',
+                          value: 'No Data',
+                        ),
+                      ],
+                    )
+                  ].separatedBy(CustomTheme().vGap('lg')),
+                )))
+            ].separatedBy(CustomTheme().hGap('2xl')),
+          ),
+          if (isPortrait)
+            Row(
+              children: [
+                Expanded(
+                  child: CustomCard(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Informasi Work Order',
+                        style: TextStyle(
+                            fontSize: CustomTheme().fontSize('lg'),
+                            fontWeight: CustomTheme().fontWeight('bold')),
+                      ),
+                      Wrap(
+                        spacing: 8.0,
+                        runSpacing: 8.0,
+                        children: [
+                          CustomDetailBadge(
                               width: 180.0,
                               status: 'Menunggu Diproses',
                               label: 'Nomor Work Order',
-                              child: ClickableText(
-                                text: widget.data['work_orders']?['wo_no']
-                                        ?.toString() ??
-                                    'No Data',
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => WorkOrderDetail(
-                                        id: widget.data['work_orders']['id']
-                                            .toString(),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            CustomDetailBadge(
-                              width: 180.0,
-                              status: 'Menunggu Diproses',
-                              label: 'Tanggal Work Order',
-                              value: widget.data['start_time'] != null
-                                  ? DateFormat("dd MMM yyyy").format(
-                                      DateTime.parse(widget.data['start_time']))
-                                  : NoData(),
-                            ),
-                            CustomDetailBadge(
-                              width: 180.0,
-                              status: 'Menunggu Diproses',
-                              label: 'Qty Greige',
-                              value:
-                                  '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']['code']}',
-                            ),
-                          ],
-                        )
-                      ].separatedBy(CustomTheme().vGap('lg')),
-                    )))
-                ].separatedBy(CustomTheme().hGap('2xl')),
-              ),
-            ),
-            if (isPortrait)
-              Padding(
-                padding: CustomTheme().padding('card-detail'),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: CustomCard(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Informasi Work Order',
-                            style: TextStyle(
-                                fontSize: CustomTheme().fontSize('lg'),
-                                fontWeight: CustomTheme().fontWeight('bold')),
+                              value: widget.data['work_orders']?['wo_no']
+                                      ?.toString() ??
+                                  'No Data'),
+                          CustomDetailBadge(
+                            width: 180.0,
+                            status: 'Menunggu Diproses',
+                            label: 'Tanggal Work Order',
+                            value: widget.data['start_time'] != null
+                                ? DateFormat("dd MMM yyyy").format(
+                                    DateTime.parse(widget.data['start_time']))
+                                : NoData(),
                           ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomDetailBadge(
-                                width: 220.0,
-                                status: 'Menunggu Diproses',
-                                label: 'Nomor Work Order',
-                                child: ClickableText(
-                                  text: widget.data['work_orders']?['wo_no']
-                                          ?.toString() ??
-                                      'No Data',
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => WorkOrderDetail(
-                                          id: widget.data['work_orders']['id']
-                                              .toString(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              CustomDetailBadge(
-                                width: 220.0,
-                                status: 'Menunggu Diproses',
-                                label: 'Tanggal Work Order',
-                                value: widget.data['start_time'] != null
-                                    ? DateFormat("dd MMM yyyy").format(
-                                        DateTime.parse(
-                                            widget.data['start_time']))
-                                    : NoData(),
-                              ),
-                              CustomDetailBadge(
-                                width: 220.0,
-                                status: 'Menunggu Diproses',
-                                label: 'Qty Greige',
-                                value:
-                                    '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']['code']}',
-                              ),
-                            ],
-                          )
-                        ].separatedBy(CustomTheme().vGap('lg')),
-                      )),
-                    ),
-                  ],
+                          CustomDetailBadge(
+                            width: 180.0,
+                            status: 'Menunggu Diproses',
+                            label: 'Qty Greige',
+                            value:
+                                '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']['code']}',
+                          ),
+                          CustomDetailBadge(
+                            width: 180.0,
+                            status: 'Menunggu Diproses',
+                            label: 'Dibuat oleh',
+                            value: 'No Data',
+                          ),
+                        ],
+                      )
+                    ].separatedBy(CustomTheme().vGap('lg')),
+                  )),
                 ),
-              ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildProcessWoFilter(),
-                SizedBox(
-                  height: 300,
-                  child: _buildSwipeWoContent(),
-                ),
-              ].separatedBy(CustomTheme().vGap('xl')),
+              ],
             ),
-          ].separatedBy(CustomTheme().vGap('xl'))),
-    ));
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildProcessWoFilter(),
+              SizedBox(
+                height: 300,
+                child: _buildSwipeWoContent(),
+              ),
+            ].separatedBy(CustomTheme().vGap('xl')),
+          ),
+        ].separatedBy(CustomTheme().vGap('xl')));
   }
 }

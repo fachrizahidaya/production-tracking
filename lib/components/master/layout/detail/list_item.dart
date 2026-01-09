@@ -354,16 +354,6 @@ class _ListItemState extends State<ListItem> with TickerProviderStateMixin {
                                   'Dibuat pada ${widget.data['start_time'] != null ? DateFormat("dd MMMM yyyy, HH:mm").format(DateTime.parse(widget.data['start_time'])) : '-'}'),
                             ].separatedBy(CustomTheme().hGap('sm')),
                           ),
-                          // Row(
-                          //   children: [
-                          //     Icon(
-                          //       Icons.task_alt_outlined,
-                          //       size: CustomTheme().iconSize('lg'),
-                          //     ),
-                          //     Text(
-                          //         'Selesai pada ${widget.data['end_time'] != null ? DateFormat("dd MMMM yyyy, HH:mm").format(DateTime.parse(widget.data['end_time'])) : '-'}'),
-                          //   ].separatedBy(CustomTheme().hGap('sm')),
-                          // ),
                         ].separatedBy(CustomTheme().vGap('sm')),
                       ),
                       CustomBadge(
@@ -377,20 +367,6 @@ class _ListItemState extends State<ListItem> with TickerProviderStateMixin {
                       ),
                     ],
                   ),
-                  // ClickableText(
-                  //   text:
-                  //       widget.data['work_orders']?['wo_no']?.toString() ?? '-',
-                  //   onTap: () {
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //         builder: (context) => WorkOrderDetail(
-                  //           id: widget.data['work_orders']['id'].toString(),
-                  //         ),
-                  //       ),
-                  //     );
-                  //   },
-                  // )
                 ].separatedBy(CustomTheme().vGap('lg')),
               )),
             ),

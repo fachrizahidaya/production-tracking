@@ -75,113 +75,103 @@ class _UpdateProcessState extends State<UpdateProcess> {
             onReturn: () => Navigator.pop(context),
             id: widget.id,
           ),
-          body: Column(
-            children: [
-              Expanded(
-                  child: SingleChildScrollView(
-                      child: Container(
-                padding: CustomTheme().padding('content'),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (widget.data['machine_id'] != null)
-                        CustomCard(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SelectForm(
-                              label: 'Mesin',
-                              onTap: () => widget.handleSelectMachine(),
-                              selectedLabel: widget.form['nama_mesin'] ?? '',
-                              selectedValue:
-                                  widget.form['machine_id'].toString(),
-                              required: false,
-                            )
-                          ].separatedBy(CustomTheme().vGap('lg')),
-                        )),
-                      if (widget.data['maklon'] != null)
-                        CustomCard(
-                          child: Column(
+          body: SingleChildScrollView(
+              child: Container(
+            padding: CustomTheme().padding('content'),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (widget.data['machine_id'] != null)
+                    CustomCard(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SelectForm(
+                          label: 'Mesin',
+                          onTap: () => widget.handleSelectMachine(),
+                          selectedLabel: widget.form['nama_mesin'] ?? '',
+                          selectedValue: widget.form['machine_id'].toString(),
+                          required: false,
+                        )
+                      ].separatedBy(CustomTheme().vGap('lg')),
+                    )),
+                  if (widget.data['maklon'] != null)
+                    CustomCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      if (widget.withMaklon == true)
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                  if (widget.withMaklon == true)
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Maklon',
+                                          style: TextStyle(
+                                              fontSize:
+                                                  CustomTheme().fontSize('lg')),
+                                        ),
+                                        Row(
                                           children: [
-                                            Text(
-                                              'Maklon',
-                                              style: TextStyle(
-                                                  fontSize: CustomTheme()
-                                                      .fontSize('lg')),
+                                            Switch(
+                                              value: widget.data['maklon'],
+                                              onChanged: widget
+                                                      .data['can_update']
+                                                  ? (value) {
+                                                      setState(() {
+                                                        widget.data['maklon'] =
+                                                            value;
+                                                        widget.form['maklon'] =
+                                                            value;
+                                                      });
+                                                    }
+                                                  : null,
+                                              activeColor: Colors.green,
+                                              inactiveThumbColor:
+                                                  Colors.redAccent,
                                             ),
-                                            Row(
-                                              children: [
-                                                Switch(
-                                                  value: widget.data['maklon'],
-                                                  onChanged:
-                                                      widget.data['can_update']
-                                                          ? (value) {
-                                                              setState(() {
-                                                                widget.data[
-                                                                        'maklon'] =
-                                                                    value;
-                                                                widget.form[
-                                                                        'maklon'] =
-                                                                    value;
-                                                              });
-                                                            }
-                                                          : null,
-                                                  activeColor: Colors.green,
-                                                  inactiveThumbColor:
-                                                      Colors.redAccent,
-                                                ),
-                                                Text(widget.data['maklon']
-                                                    ? 'Ya'
-                                                    : 'Tidak'),
-                                              ],
-                                            ),
+                                            Text(widget.data['maklon']
+                                                ? 'Ya'
+                                                : 'Tidak'),
                                           ],
                                         ),
-                                      if (widget.data['maklon'] == true)
-                                        TextForm(
-                                          label: 'Nama Maklon',
-                                          req: false,
-                                          controller: widget.maklon,
-                                          handleChange: (value) {
-                                            setState(() {
-                                              widget.maklon.text =
-                                                  value.toString();
-                                              widget.form['maklon_name'] =
-                                                  value.toString();
-                                            });
-                                          },
-                                        ),
-                                    ].separatedBy(CustomTheme().vGap('lg')),
-                                  ),
+                                      ],
+                                    ),
+                                  if (widget.data['maklon'] == true)
+                                    TextForm(
+                                      label: 'Nama Maklon',
+                                      req: false,
+                                      controller: widget.maklon,
+                                      handleChange: (value) {
+                                        setState(() {
+                                          widget.maklon.text = value.toString();
+                                          widget.form['maklon_name'] =
+                                              value.toString();
+                                        });
+                                      },
+                                    ),
                                 ].separatedBy(CustomTheme().vGap('lg')),
                               ),
                             ].separatedBy(CustomTheme().vGap('lg')),
                           ),
-                        ),
-                    ].separatedBy(CustomTheme().vGap('xl'))),
-              ))),
-              DetailItem(
-                data: widget.data,
-                form: widget.form,
-                withQtyAndWeight: widget.withQtyAndWeight,
-                label: widget.label,
-                forDyeing: widget.forDyeing,
-              )
-            ],
-          ),
+                        ].separatedBy(CustomTheme().vGap('lg')),
+                      ),
+                    ),
+                  DetailItem(
+                    data: widget.data,
+                    form: widget.form,
+                    withQtyAndWeight: widget.withQtyAndWeight,
+                    label: widget.label,
+                    forDyeing: widget.forDyeing,
+                  )
+                ].separatedBy(CustomTheme().vGap('xl'))),
+          )),
           bottomNavigationBar: SafeArea(
             child: Container(
               color: Colors.white,

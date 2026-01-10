@@ -5,7 +5,6 @@ import 'package:textile_tracking/components/home/dashboard/list/dashboard_list.d
 
 class WorkOrderProcessScreen extends StatefulWidget {
   final data;
-  final onHandleFilter;
   final filterWidget;
   final handleSearch;
   final search;
@@ -22,7 +21,6 @@ class WorkOrderProcessScreen extends StatefulWidget {
   const WorkOrderProcessScreen(
       {super.key,
       this.data,
-      this.onHandleFilter,
       this.filterWidget,
       this.handleSearch,
       this.search,

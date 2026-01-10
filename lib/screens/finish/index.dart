@@ -14,7 +14,6 @@ import 'package:textile_tracking/providers/user_provider.dart';
 
 class FinishProcess extends StatefulWidget {
   final String title;
-
   final Widget Function(
     BuildContext context,
     dynamic id,

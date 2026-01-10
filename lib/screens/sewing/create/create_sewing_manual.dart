@@ -37,7 +37,6 @@ class CreateSewingManual extends StatelessWidget {
       idProcess: 'sewing_id',
       processService: sewingService,
       maklon: _maklonController,
-      isMaklon: true,
       handleSubmit: handleSubmit,
       fetchWorkOrder: (service) => service.fetchSewingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,

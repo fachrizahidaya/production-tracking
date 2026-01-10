@@ -358,12 +358,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                       ),
                       CustomBadge(
                         title: widget.data['status'] ?? '-',
-                        withDifferentColor: true,
                         withStatus: true,
                         status: widget.data['status'],
-                        color: widget.data['status'] == 'Diproses'
-                            ? Color(0xFFfff3c6)
-                            : Color(0xffd1fae4),
                       ),
                     ],
                   ),

@@ -8,7 +8,6 @@ class SummaryFilter<T> extends StatefulWidget {
   final dariTanggal;
   final sampaiTanggal;
   final onHandleFilter;
-  final pickDate;
   final params;
 
   const SummaryFilter(
@@ -16,7 +15,6 @@ class SummaryFilter<T> extends StatefulWidget {
       this.dariTanggal,
       this.sampaiTanggal,
       this.onHandleFilter,
-      this.pickDate,
       this.params});
 
   @override

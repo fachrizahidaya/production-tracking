@@ -28,7 +28,6 @@ class MachineCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 8),
       child: CustomCard(
         withBadgeBorder: true,
-        withBorder: true,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

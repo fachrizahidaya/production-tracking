@@ -11,20 +11,15 @@ class ProcessFilter<T> extends StatefulWidget {
   final dariTanggal;
   final sampaiTanggal;
   final onHandleFilter;
-  final onSubmitFilter;
-  final pickDate;
   final params;
-  final String title;
 
-  const ProcessFilter(
-      {super.key,
-      this.dariTanggal,
-      this.sampaiTanggal,
-      this.onHandleFilter,
-      this.pickDate,
-      this.params,
-      required this.title,
-      this.onSubmitFilter});
+  const ProcessFilter({
+    super.key,
+    this.dariTanggal,
+    this.sampaiTanggal,
+    this.onHandleFilter,
+    this.params,
+  });
 
   @override
   State<ProcessFilter<T>> createState() => _ProcessFilterState<T>();

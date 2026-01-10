@@ -4,22 +4,16 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class CustomBadge extends StatelessWidget {
   final String title;
-  final color;
-  final withDifferentColor;
   final status;
   final withStatus;
-  final icon;
   final rework;
   final forMachine;
 
   const CustomBadge(
       {super.key,
       required this.title,
-      this.color,
-      this.withDifferentColor = false,
       this.status,
       this.withStatus = false,
-      this.icon,
       this.rework = false,
       this.forMachine = false});
 

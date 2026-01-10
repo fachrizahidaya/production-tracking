@@ -12,15 +12,15 @@ String formatDateSafe(String? dateString) {
 
     // Try common alternate formats (e.g. "2025-10-07 09:00:00")
     final possibleFormats = [
-      DateFormat("yyyy-MM-dd HH:mm:ss"),
-      DateFormat("yyyy/MM/dd HH:mm:ss"),
-      DateFormat("dd-MM-yyyy HH:mm:ss"),
+      DateFormat("yyyy-MM-dd HH.mm.ss"),
+      DateFormat("yyyy/MM/dd HH.mm.ss"),
+      DateFormat("dd-MM-yyyy HH.mm.ss"),
     ];
 
     for (var fmt in possibleFormats) {
       try {
         final parsedAlt = fmt.parse(dateString);
-        return DateFormat("dd MMM yyyy HH:mm").format(parsedAlt);
+        return DateFormat("dd MMM yyyy HH.mm").format(parsedAlt);
       } catch (_) {}
     }
 

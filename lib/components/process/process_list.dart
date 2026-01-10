@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/card/custom_search_bar.dart';
+import 'package:textile_tracking/components/process/custom_search_bar.dart';
 import 'package:textile_tracking/components/master/text/no_access.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 
 class ProcessList<T> extends StatefulWidget {
-  final BaseCrudService<T> service;
-  final String searchQuery;
-  final canCreate;
-  final bool? canDelete;
   final Widget Function(T item) itemBuilder;
-  final Future<void> Function(BuildContext context, T? currentItem)? onForm;
   final void Function(BuildContext context, T item)? onItemTap;
   final Future<List<T>> Function(Map<String, String> params) fetchData;
   final Widget? filterWidget;
@@ -23,16 +17,11 @@ class ProcessList<T> extends StatefulWidget {
   final hasMore;
   final isFiltered;
   final canRead;
-  final showActions;
   final isLoadMore;
 
   const ProcessList(
       {super.key,
-      required this.service,
-      required this.searchQuery,
       required this.itemBuilder,
-      this.canCreate,
-      this.onForm,
       this.onItemTap,
       required this.fetchData,
       this.filterWidget,
@@ -44,8 +33,6 @@ class ProcessList<T> extends StatefulWidget {
       this.hasMore,
       this.isFiltered,
       this.canRead,
-      this.canDelete,
-      this.showActions,
       this.isLoadMore});
 
   @override

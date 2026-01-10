@@ -7,11 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/card/item_process_card.dart';
 import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/format_date_safe.dart';
 import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
@@ -34,7 +32,6 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
   bool _firstLoading = true;
   bool _hasMore = true;
   bool _canRead = false;
-  bool _canCreate = false;
   bool _canDelete = false;
   bool _canUpdate = false;
   bool _isLoadMore = false;
@@ -90,7 +87,6 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
 
       setState(() {
         _canRead = _userMenu.checkMenu('Long Sitting', 'read');
-        _canCreate = _userMenu.checkMenu('Long Sitting', 'create');
         _canDelete = _userMenu.checkMenu('Long Sitting', 'delete');
         _canUpdate = _userMenu.checkMenu('Long Sitting', 'update');
       });
@@ -220,29 +216,15 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                 return service.items;
               },
               isLoadMore: _isLoadMore,
-              service: LongSittingService(),
-              searchQuery: _search,
-              canCreate: _canCreate,
               canRead: _canRead,
               itemBuilder: (item) => ItemProcessCard(
-                useCustomSize: true,
-                customWidth: 930.0,
-                customHeight: null,
                 label: 'No. Long Sitting',
                 item: item,
                 titleKey: 'ls_no',
                 subtitleKey: 'work_orders',
                 subtitleField: 'wo_no',
-                isRework: (item) => item['rework'] == false,
-                getStartTime: (item) => formatDateSafe(item['start_time']),
-                getEndTime: (item) => formatDateSafe(item['end_time']),
-                getStartBy: (item) => item['start_by']?['name'] ?? '',
-                getEndBy: (item) => item['end_by']?['name'] ?? '',
-                getStatus: (item) => item['status'] ?? '-',
                 itemField: ItemField.get,
                 nestedField: ItemField.nested,
-                customBadgeBuilder: (status) => CustomBadge(
-                    withStatus: true, status: status, title: item['status']!),
               ),
               onItemTap: (context, item) {
                 Navigator.push(
@@ -274,52 +256,6 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                 dariTanggal: dariTanggal,
                 sampaiTanggal: sampaiTanggal,
               ),
-              showActions: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: Icon(Icons.add,
-                                  color: CustomTheme().buttonColor('primary')),
-                              title: Text("Mulai Long Sitting"),
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => CreateLongSitting(),
-                                  ),
-                                );
-                              },
-                            ),
-                            ListTile(
-                              leading: Icon(Icons.check_circle,
-                                  color: CustomTheme().buttonColor('warning')),
-                              title: Text("Selesai Long Sitting"),
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => FinishLongSitting(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
               firstLoading: _firstLoading,
               isFiltered: _isFiltered,
               hasMore: _hasMore,

@@ -8,10 +8,8 @@ import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/card/item_process_card.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/format_date_safe.dart';
 import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
@@ -36,7 +34,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
   bool _firstLoading = true;
   bool _hasMore = true;
   bool _canRead = false;
-  bool _canCreate = false;
   bool _canDelete = false;
   bool _isLoadMore = false;
   bool _canUpdate = false;
@@ -91,7 +88,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
 
     setState(() {
       _canRead = _userMenu.checkMenu('Dyeing', 'read');
-      _canCreate = _userMenu.checkMenu('Dyeing', 'create');
       _canDelete = _userMenu.checkMenu('Dyeing', 'delete');
       _canUpdate = _userMenu.checkMenu('Dyeing', 'update');
     });
@@ -207,80 +203,60 @@ class _DyeingScreenState extends State<DyeingScreen> {
             }
           },
         ),
-        body: Column(
-          children: [
-            Expanded(
-                child: ProcessList(
-              fetchData: (params) async {
-                final service =
-                    Provider.of<DyeingService>(context, listen: false);
-                await service.getDataList(params);
-                return service.items;
-              },
-              service: DyeingService(),
-              searchQuery: _search,
-              canCreate: _canCreate,
-              canRead: _canRead,
-              isLoadMore: _isLoadMore,
-              itemBuilder: (item) => ItemProcessCard(
-                useCustomSize: true,
-                customWidth: 930.0,
-                customHeight: null,
-                label: 'No. Dyeing',
-                item: item,
-                titleKey: 'dyeing_no',
-                subtitleKey: 'work_orders',
-                subtitleField: 'wo_no',
-                isRework: (item) => item['rework'] == true,
-                getStartTime: (item) => formatDateSafe(item['start_time']),
-                getEndTime: (item) => formatDateSafe(item['end_time']),
-                getStartBy: (item) => item['start_by']?['name'] ?? '',
-                getEndBy: (item) => item['end_by']?['name'] ?? '',
-                getStatus: (item) => item['status'] ?? '-',
-                customBadgeBuilder: (status) => CustomBadge(
-                    withStatus: true, status: status, title: item['status']!),
-                itemField: ItemField.get,
-                nestedField: ItemField.nested,
-              ),
-              onItemTap: (context, item) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DyeingDetail(
-                        id: item['id'].toString(),
-                        no: item['dyeing_no'].toString(),
-                        canDelete: _canDelete,
-                        canUpdate: _canUpdate,
-                      ),
-                    )).then((value) {
-                  if (value == true) {
-                    _refetch();
-                  } else {
-                    return null;
-                  }
-                });
-              },
-              filterWidget: ListFilter(
-                title: 'Filter',
-                params: params,
-                onHandleFilter: _handleFilter,
-                onSubmitFilter: () {
-                  _submitFilter();
-                },
-                fetchMachine: (service) => service.fetchOptionsDyeing(),
-                getMachineOptions: (service) => service.dataListOption,
-                dariTanggal: dariTanggal,
-                sampaiTanggal: sampaiTanggal,
-              ),
-              firstLoading: _firstLoading,
-              isFiltered: _isFiltered,
-              hasMore: _hasMore,
-              handleLoadMore: _loadMore,
-              handleRefetch: _refetch,
-              handleSearch: _handleSearch,
-              dataList: _dataList,
-            ))
-          ],
+        body: ProcessList(
+          fetchData: (params) async {
+            final service = Provider.of<DyeingService>(context, listen: false);
+            await service.getDataList(params);
+            return service.items;
+          },
+          canRead: _canRead,
+          isLoadMore: _isLoadMore,
+          itemBuilder: (item) => ItemProcessCard(
+            label: 'No. Dyeing',
+            item: item,
+            titleKey: 'dyeing_no',
+            subtitleKey: 'work_orders',
+            subtitleField: 'wo_no',
+            itemField: ItemField.get,
+            nestedField: ItemField.nested,
+          ),
+          onItemTap: (context, item) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DyeingDetail(
+                    id: item['id'].toString(),
+                    no: item['dyeing_no'].toString(),
+                    canDelete: _canDelete,
+                    canUpdate: _canUpdate,
+                  ),
+                )).then((value) {
+              if (value == true) {
+                _refetch();
+              } else {
+                return null;
+              }
+            });
+          },
+          filterWidget: ListFilter(
+            title: 'Filter',
+            params: params,
+            onHandleFilter: _handleFilter,
+            onSubmitFilter: () {
+              _submitFilter();
+            },
+            fetchMachine: (service) => service.fetchOptionsDyeing(),
+            getMachineOptions: (service) => service.dataListOption,
+            dariTanggal: dariTanggal,
+            sampaiTanggal: sampaiTanggal,
+          ),
+          firstLoading: _firstLoading,
+          isFiltered: _isFiltered,
+          hasMore: _hasMore,
+          handleLoadMore: _loadMore,
+          handleRefetch: _refetch,
+          handleSearch: _handleSearch,
+          dataList: _dataList,
         ),
         floatingActionButton: CustomFloatingButton(
             onPressed: () {

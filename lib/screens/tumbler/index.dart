@@ -9,10 +9,8 @@ import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/card/item_process_card.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/format_date_safe.dart';
 import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/tumbler.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
@@ -35,7 +33,6 @@ class _TumblerScreenState extends State<TumblerScreen> {
   bool _firstLoading = true;
   bool _hasMore = true;
   bool _canRead = false;
-  bool _canCreate = false;
   bool _canDelete = false;
   bool _canUpdate = false;
   bool _isLoadMore = false;
@@ -91,7 +88,6 @@ class _TumblerScreenState extends State<TumblerScreen> {
 
       setState(() {
         _canRead = _userMenu.checkMenu('Tumbler', 'read');
-        _canCreate = _userMenu.checkMenu('Tumbler', 'create');
         _canDelete = _userMenu.checkMenu('Tumbler', 'delete');
         _canUpdate = _userMenu.checkMenu('Tumbler', 'update');
       });
@@ -221,27 +217,13 @@ class _TumblerScreenState extends State<TumblerScreen> {
                 return service.items;
               },
               isLoadMore: _isLoadMore,
-              service: TumblerService(),
-              searchQuery: _search,
-              canCreate: _canCreate,
               canRead: _canRead,
               itemBuilder: (item) => ItemProcessCard(
-                useCustomSize: true,
-                customWidth: 930.0,
-                customHeight: null,
                 label: 'No. Tumbler',
                 item: item,
                 titleKey: 'tumbler_no',
                 subtitleKey: 'work_orders',
                 subtitleField: 'wo_no',
-                isRework: (item) => item['rework'] == false,
-                getStartTime: (item) => formatDateSafe(item['start_time']),
-                getEndTime: (item) => formatDateSafe(item['end_time']),
-                getStartBy: (item) => item['start_by']?['name'] ?? '',
-                getEndBy: (item) => item['end_by']?['name'] ?? '',
-                getStatus: (item) => item['status'] ?? '-',
-                customBadgeBuilder: (status) => CustomBadge(
-                    withStatus: true, status: status, title: item['status']!),
                 itemField: ItemField.get,
                 nestedField: ItemField.nested,
               ),

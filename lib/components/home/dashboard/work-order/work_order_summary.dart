@@ -7,21 +7,18 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 class WorkOrderSummary extends StatefulWidget {
   final data;
   final handleRefetch;
-  final handleProcess;
-  final isFetching;
   final dariTanggal;
   final sampaiTanggal;
   final filterWidget;
 
-  const WorkOrderSummary(
-      {super.key,
-      this.data,
-      this.handleRefetch,
-      this.isFetching,
-      this.dariTanggal,
-      this.filterWidget,
-      this.sampaiTanggal,
-      this.handleProcess});
+  const WorkOrderSummary({
+    super.key,
+    this.data,
+    this.handleRefetch,
+    this.dariTanggal,
+    this.filterWidget,
+    this.sampaiTanggal,
+  });
 
   @override
   State<WorkOrderSummary> createState() => _WorkOrderSummaryState();

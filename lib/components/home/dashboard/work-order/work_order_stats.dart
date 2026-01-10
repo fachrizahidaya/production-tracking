@@ -61,7 +61,6 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
     final item = widget.data[i];
 
     return StatsCard(
-      withBottomBorder: true,
       bottomBorderColor: getBorderColor(i),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,8 +91,6 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
           ),
           CustomBadge(
             title: item['label'],
-            withDifferentColor: true,
-            color: getBadgeColor(i),
             withStatus: i == 0 ? false : true,
             status: item['label'],
           )

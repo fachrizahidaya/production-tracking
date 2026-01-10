@@ -202,18 +202,6 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  void _handleFilter(String key, String value) {
-    setState(() {
-      if (value.isEmpty) {
-        chartParams.remove(key);
-      } else {
-        chartParams[key] = value;
-      }
-    });
-
-    _handleFetchCharts();
-  }
-
   void _handleSummaryFilter(String key, String value) {
     setState(() {
       if (value.isEmpty) {
@@ -239,49 +227,6 @@ class _DashboardState extends State<Dashboard> {
     _isFiltered = _checkIsFiltered();
 
     _loadMore();
-  }
-
-  Future<void> _submitFilter() async {
-    Navigator.pop(context);
-    setState(() {
-      _isFiltered = _checkIsFiltered();
-    });
-    _loadMore();
-  }
-
-  Future<void> _pickDate({
-    required TextEditingController controller,
-    required String type,
-    handleProcess,
-  }) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: controller.text.isNotEmpty
-          ? DateTime.tryParse(controller.text) ?? DateTime.now()
-          : DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2101),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: CustomTheme().colors('base'),
-              onPrimary: Colors.white,
-              onSurface: Colors.black87,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (pickedDate != null) {
-      final formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-      setState(() {
-        controller.text = formattedDate;
-      });
-      handleProcess(type, formattedDate);
-    }
   }
 
   Future<void> _handleSearch(String value) async {
@@ -376,12 +321,10 @@ class _DashboardState extends State<Dashboard> {
                 WorkOrderSummary(
                   data: summaryList,
                   handleRefetch: _handleFetchSummary,
-                  isFetching: isSummaryLoading,
                   filterWidget: SummaryFilter(
                     dariTanggal: dariTanggalSummary,
                     sampaiTanggal: sampaiTanggalSummary,
                     onHandleFilter: _handleSummaryFilter,
-                    pickDate: _pickDate,
                     params: summaryParams,
                   ),
                 ),
@@ -406,13 +349,10 @@ class _DashboardState extends State<Dashboard> {
                   handleRefetch: _refetch,
                   isLoadMore: _isLoadMore,
                   filterWidget: ProcessFilter(
-                    title: 'Filter',
                     params: params,
                     onHandleFilter: _handleProcessFilter,
-                    onSubmitFilter: _submitFilter,
                     dariTanggal: dariTanggalProses,
                     sampaiTanggal: sampaiTanggalProses,
-                    pickDate: _pickDate,
                   ),
                   handleFetchData: (params) async {
                     final service = Provider.of<WorkOrderProcessService>(
@@ -422,7 +362,6 @@ class _DashboardState extends State<Dashboard> {
                     return service.items;
                   },
                   handleBuildItem: (item) => ItemProcess(item: item),
-                  onHandleFilter: _handleFilter,
                   service: WorkOrderProcessService(),
                   isFiltered: _isFiltered,
                 ),

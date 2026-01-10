@@ -20,7 +20,6 @@ class CreateProcessManual extends StatefulWidget {
   final getMachineOptions;
   final maklon;
   final label;
-  final isMaklon;
   final withMaklonOrMachine;
   final withOnlyMaklon;
   final withNoMaklonOrMachine;
@@ -41,7 +40,6 @@ class CreateProcessManual extends StatefulWidget {
       this.getMachineOptions,
       this.maklon,
       this.label,
-      this.isMaklon,
       this.withMaklonOrMachine,
       this.withOnlyMaklon,
       this.withNoMaklonOrMachine,

@@ -12,17 +12,13 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 class DropdownConfig<T> {
   final String id;
   final String hint;
-  final Future<List<DropdownMenuItem<T>>> Function()? fetchDropdownItems;
   final List<DropdownMenuItem<T>>? manualDropdownItems;
-  final T? selectedValue;
   final ValueChanged<T?> onChanged;
 
   DropdownConfig({
     required this.id,
     required this.hint,
-    this.fetchDropdownItems,
     this.manualDropdownItems,
-    this.selectedValue,
     required this.onChanged,
   });
 

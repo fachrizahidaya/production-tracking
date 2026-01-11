@@ -318,18 +318,6 @@ class _DetailState extends State<Detail> {
                 ? NoData()
                 : DetailList(
                     data: widget.data,
-                    form: widget.form,
-                    existingAttachment: existingAttachments,
-                    no: widget.no,
-                    withItemGrade: widget.withItemGrade,
-                    qty: widget.qty,
-                    handleSelectQtyUnit: widget.handleSelectQtyUnit,
-                    existingGrades: existingGrades,
-                    notes: widget.notes,
-                    withQtyAndWeight: widget.withQtyAndWeight,
-                    handleBuildAttachment: _buildAttachmentList,
-                    label: widget.label,
-                    forDyeing: widget.forDyeing,
                   ),
       ),
     );

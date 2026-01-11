@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/home/dashboard/list/dashboard_list.dart';
+import 'package:textile_tracking/components/home/dashboard/work-order/process/process_list.dart';
 
 class WorkOrderProcessScreen extends StatefulWidget {
   final data;
@@ -56,7 +56,7 @@ class _WorkOrderProcessScreenState extends State<WorkOrderProcessScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DashboardList(
+    return ProcessList(
       fetchData: widget.handleFetchData,
       service: widget.service,
       searchQuery: widget.search,

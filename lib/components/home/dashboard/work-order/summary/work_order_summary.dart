@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
-import 'package:textile_tracking/components/home/dashboard/card/summary_card.dart';
+import 'package:textile_tracking/components/home/dashboard/work-order/summary/summary_card.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -183,36 +183,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                       padding: CustomTheme().padding('badge'),
                       child: SummaryCard(
                         data: item,
-                        icon: item['name'] == 'Dyeing'
-                            ? processIcons[0]
-                            : item['name'] == 'Press'
-                                ? processIcons[1]
-                                : item['name'] == 'Tumbler'
-                                    ? processIcons[2]
-                                    : item['name'] == 'Stenter'
-                                        ? processIcons[3]
-                                        : item['name'] == 'Long Sitting'
-                                            ? processIcons[4]
-                                            : item['name'] == 'Long Hemming'
-                                                ? processIcons[5]
-                                                : item['name'] ==
-                                                        'Cross Cutting'
-                                                    ? processIcons[6]
-                                                    : item['name'] == 'Sewing'
-                                                        ? processIcons[7]
-                                                        : item['name'] ==
-                                                                'Embroidery'
-                                                            ? processIcons[8]
-                                                            : item['name'] ==
-                                                                    'Printing'
-                                                                ? processIcons[
-                                                                    9]
-                                                                : item['name'] ==
-                                                                        'Sorting'
-                                                                    ? processIcons[
-                                                                        10]
-                                                                    : processIcons[
-                                                                        11],
                       ),
                     );
                   },

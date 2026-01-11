@@ -105,22 +105,16 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 
     if (length == 0) return const SizedBox();
 
-    return Column(
+    return Wrap(
+      spacing: 16,
+      runSpacing: 8,
       children: [
-        Row(
-          children: [
-            for (int i = 0; i < length && i < 2; i++)
-              Expanded(child: buildStatsCard(i))
-          ].separatedBy(CustomTheme().hGap('lg')),
-        ),
-        if (length > 2)
-          Row(
-            children: [
-              for (int i = 2; i < length; i++)
-                Expanded(child: buildStatsCard(i))
-            ].separatedBy(CustomTheme().hGap('lg')),
+        for (int i = 0; i < length; i++)
+          SizedBox(
+            width: (MediaQuery.of(context).size.width - 48) / 2,
+            child: buildStatsCard(i),
           ),
-      ].separatedBy(CustomTheme().vGap('lg')),
+      ],
     );
   }
 }

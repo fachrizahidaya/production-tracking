@@ -5,7 +5,7 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 
-class DashboardList<T> extends StatefulWidget {
+class ProcessList<T> extends StatefulWidget {
   final BaseCrudService<T> service;
   final String searchQuery;
   final bool? canCreate;
@@ -27,7 +27,7 @@ class DashboardList<T> extends StatefulWidget {
   final isFetching;
   final isLoadMore;
 
-  const DashboardList(
+  const ProcessList(
       {super.key,
       required this.service,
       required this.searchQuery,
@@ -51,10 +51,10 @@ class DashboardList<T> extends StatefulWidget {
       this.isLoadMore});
 
   @override
-  State<DashboardList<T>> createState() => _DashboardListState<T>();
+  State<ProcessList<T>> createState() => _ProcessListState<T>();
 }
 
-class _DashboardListState<T> extends State<DashboardList<T>> {
+class _ProcessListState<T> extends State<ProcessList<T>> {
   final ScrollController _scrollController = ScrollController();
 
   @override

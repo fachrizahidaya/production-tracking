@@ -42,7 +42,7 @@ class MachineSection extends StatelessWidget {
         SizedBox(
           height: 500,
           child: data.isEmpty
-              ? Center(child: NoData())
+              ? NoData()
               : CustomScrollView(
                   slivers: [
                     SliverList(
@@ -59,7 +59,7 @@ class MachineSection extends StatelessWidget {
                   ],
                 ),
         ),
-      ],
+      ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
 }

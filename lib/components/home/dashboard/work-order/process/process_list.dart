@@ -89,10 +89,6 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
   Widget build(BuildContext context) {
     MediaQuery.of(context).orientation == Orientation.portrait;
 
-    if (widget.firstLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
     return CustomCard(
       child: Column(
         children: [
@@ -105,43 +101,46 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
           ),
           Divider(),
           widget.dataList.isEmpty
-              ? Center(child: NoData())
-              : SizedBox(
-                  height: 500,
-                  child: CustomScrollView(
-                    controller: _scrollController,
-                    slivers: [
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            if (index >= widget.dataList.length) {
-                              if (!widget.isLoadMore) {
-                                Future.delayed(Duration.zero, () {
-                                  widget.handleLoadMore();
-                                });
-                              }
+              ? NoData()
+              : widget.firstLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : SizedBox(
+                      height: 500,
+                      child: CustomScrollView(
+                        controller: _scrollController,
+                        slivers: [
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                if (index >= widget.dataList.length) {
+                                  if (!widget.isLoadMore) {
+                                    Future.delayed(Duration.zero, () {
+                                      widget.handleLoadMore();
+                                    });
+                                  }
 
-                              return const SizedBox.shrink();
-                            }
+                                  return const SizedBox.shrink();
+                                }
 
-                            final item = widget.dataList[index];
-                            return Padding(
-                              padding: CustomTheme().padding('process-content'),
-                              child: GestureDetector(
-                                onTap: () =>
-                                    widget.onItemTap?.call(context, item),
-                                child: widget.itemBuilder(item),
-                              ),
-                            );
-                          },
-                          childCount: widget.hasMore
-                              ? widget.dataList.length + 1
-                              : widget.dataList.length,
-                        ),
+                                final item = widget.dataList[index];
+                                return Padding(
+                                  padding:
+                                      CustomTheme().padding('process-content'),
+                                  child: GestureDetector(
+                                    onTap: () =>
+                                        widget.onItemTap?.call(context, item),
+                                    child: widget.itemBuilder(item),
+                                  ),
+                                );
+                              },
+                              childCount: widget.hasMore
+                                  ? widget.dataList.length + 1
+                                  : widget.dataList.length,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
         ],
       ),
     );

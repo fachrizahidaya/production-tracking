@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
@@ -35,6 +36,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
   bool _canDelete = false;
   bool _canUpdate = false;
   bool _isLoadMore = false;
+  bool _showFab = true;
 
   final List<dynamic> _dataList = [];
   String _search = '';
@@ -205,66 +207,79 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
             }
           },
         ),
-        body: Column(
-          children: [
-            Expanded(
-                child: ProcessList(
-              fetchData: (params) async {
-                final service =
-                    Provider.of<LongSittingService>(context, listen: false);
-                await service.getDataList(params);
-                return service.items;
+        body: NotificationListener(
+          onNotification: (notification) {
+            if (notification is UserScrollNotification) {
+              if (notification.direction == ScrollDirection.reverse) {
+                // scrolling down
+                if (_showFab) {
+                  setState(() => _showFab = false);
+                }
+              } else if (notification.direction == ScrollDirection.forward) {
+                // scrolling up
+                if (!_showFab) {
+                  setState(() => _showFab = true);
+                }
+              }
+            }
+            return false;
+          },
+          child: ProcessList(
+            fetchData: (params) async {
+              final service =
+                  Provider.of<LongSittingService>(context, listen: false);
+              await service.getDataList(params);
+              return service.items;
+            },
+            isLoadMore: _isLoadMore,
+            canRead: _canRead,
+            itemBuilder: (item) => ItemProcessCard(
+              label: 'No. Long Sitting',
+              item: item,
+              titleKey: 'ls_no',
+              subtitleKey: 'work_orders',
+              subtitleField: 'wo_no',
+              itemField: ItemField.get,
+              nestedField: ItemField.nested,
+            ),
+            onItemTap: (context, item) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LongSittingDetail(
+                      id: item['id'].toString(),
+                      no: item['ls_no'].toString(),
+                      canDelete: _canDelete,
+                      canUpdate: _canUpdate,
+                    ),
+                  )).then((value) {
+                if (value == true) {
+                  _refetch();
+                } else {
+                  return null;
+                }
+              });
+            },
+            filterWidget: ListFilter(
+              title: 'Filter',
+              params: params,
+              onHandleFilter: _handleFilter,
+              onSubmitFilter: () {
+                _submitFilter();
               },
-              isLoadMore: _isLoadMore,
-              canRead: _canRead,
-              itemBuilder: (item) => ItemProcessCard(
-                label: 'No. Long Sitting',
-                item: item,
-                titleKey: 'ls_no',
-                subtitleKey: 'work_orders',
-                subtitleField: 'wo_no',
-                itemField: ItemField.get,
-                nestedField: ItemField.nested,
-              ),
-              onItemTap: (context, item) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LongSittingDetail(
-                        id: item['id'].toString(),
-                        no: item['ls_no'].toString(),
-                        canDelete: _canDelete,
-                        canUpdate: _canUpdate,
-                      ),
-                    )).then((value) {
-                  if (value == true) {
-                    _refetch();
-                  } else {
-                    return null;
-                  }
-                });
-              },
-              filterWidget: ListFilter(
-                title: 'Filter',
-                params: params,
-                onHandleFilter: _handleFilter,
-                onSubmitFilter: () {
-                  _submitFilter();
-                },
-                fetchMachine: (service) => service.fetchOptionsLongSitting(),
-                getMachineOptions: (service) => service.dataListOption,
-                dariTanggal: dariTanggal,
-                sampaiTanggal: sampaiTanggal,
-              ),
-              firstLoading: _firstLoading,
-              isFiltered: _isFiltered,
-              hasMore: _hasMore,
-              handleLoadMore: _loadMore,
-              handleRefetch: _refetch,
-              handleSearch: _handleSearch,
-              dataList: _dataList,
-            ))
-          ],
+              fetchMachine: (service) => service.fetchOptionsLongSitting(),
+              getMachineOptions: (service) => service.dataListOption,
+              dariTanggal: dariTanggal,
+              sampaiTanggal: sampaiTanggal,
+            ),
+            firstLoading: _firstLoading,
+            isFiltered: _isFiltered,
+            hasMore: _hasMore,
+            handleLoadMore: _loadMore,
+            handleRefetch: _refetch,
+            handleSearch: _handleSearch,
+            dataList: _dataList,
+          ),
         ),
         floatingActionButton: CustomFloatingButton(
             onPressed: () {
@@ -316,6 +331,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
             icon: Icon(
               Icons.add,
               color: Colors.white,
+              size: 48,
             )),
       ),
     );

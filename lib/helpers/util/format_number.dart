@@ -5,6 +5,6 @@ String formatNumber(dynamic value) {
 
   final number = value is num ? value : num.tryParse(value.toString()) ?? 0;
 
-  final formatter = NumberFormat('#,##0', 'id_ID');
+  final formatter = NumberFormat('#,##0', 'en_US');
   return formatter.format(number);
 }

@@ -125,7 +125,7 @@ class _ActiveMachineState extends State<ActiveMachine>
     }
 
     return SizedBox(
-      height: 580,
+      height: 600,
       child: TabBarView(
         controller: _tabController,
         children: processFilters.map((process) {

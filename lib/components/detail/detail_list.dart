@@ -498,7 +498,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         'value': widget.data['work_orders']?['greige_qty'] != null
             ? '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']?['code'] ?? ''}'
             : '-',
-        'icon': Icons.person_outline,
+        'icon': Icons.layers_outlined,
       },
       {
         'label': 'Tanggal',
@@ -506,7 +506,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             ? DateFormat("dd MMM yyyy")
                 .format(DateTime.parse(widget.data['work_orders']['wo_date']))
             : '-',
-        'icon': Icons.support_agent_outlined,
+        'icon': Icons.calendar_today_outlined,
       },
     ];
 
@@ -556,7 +556,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           'value': widget.data['qty'] != null
               ? '${formatNumber(widget.data['qty'])} ${widget.data['unit']['code']}'
               : '0 ${widget.data['unit'] != null ? widget.data['unit']['code'] : ''}',
-          'icon': Icons.access_time_outlined,
+          'icon': Icons.trolley,
         },
       if (widget.withQtyAndWeight == true)
         {
@@ -564,7 +564,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           'value': widget.data['item_qty'] != null
               ? '${formatNumber(widget.data['item_qty'])} ${widget.data['item_unit']['code']}'
               : '0 ${widget.data['item_unit'] != null ? widget.data['item_unit']['code'] : ''}',
-          'icon': Icons.access_time_outlined,
+          'icon': Icons.trolley,
         },
       if (widget.forDyeing == false)
         {
@@ -572,7 +572,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           'value': widget.data['weight'] != null
               ? '${formatNumber(widget.data['weight'])} ${widget.data['weight_unit']['code']}'
               : '0 ${widget.data['weight_unit'] != null ? widget.data['weight_unit']['code'] : ''}',
-          'icon': Icons.business_outlined,
+          'icon': Icons.layers_outlined,
         },
       if (widget.data['maklon'] == true)
         {

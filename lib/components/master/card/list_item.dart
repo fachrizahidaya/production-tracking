@@ -256,28 +256,28 @@ class ListItem extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          if (item['category'] != null)
-            _buildInfoChip(
-              icon: Icons.category_outlined,
-              label: item['category']['name']?.toString() ?? '-',
-              isTablet: isTablet,
-            ),
-          if (item['supplier'] != null) ...[
-            const SizedBox(width: 8),
-            _buildInfoChip(
-              icon: Icons.local_shipping_outlined,
-              label: item['supplier']['name']?.toString() ?? '-',
-              isTablet: isTablet,
-            ),
-          ],
-          if (item['location'] != null) ...[
-            const SizedBox(width: 8),
-            _buildInfoChip(
-              icon: Icons.location_on_outlined,
-              label: item['location']?.toString() ?? '-',
-              isTablet: isTablet,
-            ),
-          ],
+          // if (item['category'] != null)
+          //   _buildInfoChip(
+          //     icon: Icons.category_outlined,
+          //     label: item['category']['name']?.toString() ?? '-',
+          //     isTablet: isTablet,
+          //   ),
+          // if (item['supplier'] != null) ...[
+          //   const SizedBox(width: 8),
+          //   _buildInfoChip(
+          //     icon: Icons.local_shipping_outlined,
+          //     label: item['supplier']['name']?.toString() ?? '-',
+          //     isTablet: isTablet,
+          //   ),
+          // ],
+          // if (item['location'] != null) ...[
+          //   const SizedBox(width: 8),
+          //   _buildInfoChip(
+          //     icon: Icons.location_on_outlined,
+          //     label: item['location']?.toString() ?? '-',
+          //     isTablet: isTablet,
+          //   ),
+          // ],
         ],
       ),
     );
@@ -394,7 +394,7 @@ class ListItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.shopping_cart_outlined,
+            Icons.trolley,
             size: isTablet ? 24 : 20,
             color: CustomTheme().buttonColor('primary'),
           ),

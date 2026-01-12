@@ -171,6 +171,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                     withQtyAndWeight: widget.withQtyAndWeight,
                     label: widget.label,
                     forDyeing: widget.forDyeing,
+                    withNote: true,
                   )
                 ].separatedBy(CustomTheme().vGap('xl'))),
           )),

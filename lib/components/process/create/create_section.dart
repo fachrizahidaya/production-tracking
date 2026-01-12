@@ -37,15 +37,6 @@ class CreateSection extends StatefulWidget {
 class _CreateSectionState extends State<CreateSection> {
   @override
   Widget build(BuildContext context) {
-    if (widget.isLoading) {
-      return Container(
-        color: const Color(0xFFEBEBEB),
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
     return ListForm(
       formKey: widget.formKey,
       isMaklon: widget.isMaklon,

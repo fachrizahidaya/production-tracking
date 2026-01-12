@@ -23,10 +23,7 @@ class _InfoTabState extends State<InfoTab> {
     }
 
     if (widget.data.isEmpty) {
-      return Container(
-        alignment: Alignment.center,
-        child: const NoData(),
-      );
+      return const NoData();
     }
 
     return SingleChildScrollView(

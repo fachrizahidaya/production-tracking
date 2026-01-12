@@ -112,9 +112,12 @@ class _ProcessItemState extends State<ProcessItem>
 
   /// Header Section
   Widget _buildHeader(bool hasData, List<dynamic> data, bool isTablet) {
-    final status = hasData
-        ? (data.first['status']?.toString() ?? 'Menunggu Diproses')
-        : 'Menunggu Diproses';
+    final bool hasProcessData = data.isNotEmpty;
+
+    final String status = !hasProcessData
+        ? 'Menunggu Diproses'
+        : (data.first['status']?.toString() ?? 'Menunggu Diproses');
+
     final statusConfig = _getStatusConfig(status);
 
     return InkWell(
@@ -267,74 +270,47 @@ class _ProcessItemState extends State<ProcessItem>
 
   /// Expandable Details Section
   Widget _buildExpandableDetails(Map<String, dynamic> data, bool isTablet) {
-    return SizeTransition(
-      sizeFactor: _expandAnimation,
-      child: Container(
-        padding: EdgeInsets.all(isTablet ? 16 : 14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Time Section
-            if (data['start_time'] != null || data['end_time'] != null) ...[
-              _buildSectionTitle(
-                icon: Icons.access_time_outlined,
-                title: 'Waktu Proses',
-                isTablet: isTablet,
-              ),
-              SizedBox(height: isTablet ? 14 : 12),
-              _buildTimeSection(data, isTablet),
-              SizedBox(height: isTablet ? 16 : 14),
-            ],
+    return ClipRect(
+      child: SizeTransition(
+        sizeFactor: _expandAnimation,
+        axisAlignment: -1,
+        child: Container(
+          padding: EdgeInsets.all(isTablet ? 16 : 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Time Section
+              if (data['start_time'] != null || data['end_time'] != null) ...[
+                _buildSectionTitle(
+                  icon: Icons.access_time_outlined,
+                  title: 'Waktu Proses',
+                  isTablet: isTablet,
+                ),
+                SizedBox(height: isTablet ? 14 : 12),
+                _buildTimeSection(data, isTablet),
+                SizedBox(height: isTablet ? 16 : 14),
+              ],
 
-            // Quantity & Weight Section
-            if (data['qty'] != null || data['weight'] != null) ...[
-              _buildSectionTitle(
-                icon: Icons.scale_outlined,
-                title: 'Kuantitas',
-                isTablet: isTablet,
-              ),
-              SizedBox(height: isTablet ? 14 : 12),
-              _buildQuantitySection(data, isTablet),
-              SizedBox(height: isTablet ? 16 : 14),
-            ],
+              // Quantity & Weight Section
 
-            // Machine & Operator Section
-            if (data['machine'] != null || data['operator'] != null) ...[
-              _buildSectionTitle(
-                icon: Icons.people_outline,
-                title: 'Sumber Daya',
-                isTablet: isTablet,
-              ),
-              SizedBox(height: isTablet ? 14 : 12),
-              _buildResourceSection(data, isTablet),
-              SizedBox(height: isTablet ? 16 : 14),
-            ],
+              // Machine & Operator Section
 
-            // Grades Section
-            if (data['grades'] != null &&
-                (data['grades'] as List).isNotEmpty) ...[
-              _buildSectionTitle(
-                icon: Icons.grade_outlined,
-                title: 'Grades',
-                isTablet: isTablet,
-              ),
-              SizedBox(height: isTablet ? 14 : 12),
-              _buildGradesSection(data['grades'], isTablet),
-              SizedBox(height: isTablet ? 16 : 14),
-            ],
+              // Grades Section
+              if (data['grades'] != null &&
+                  (data['grades'] as List).isNotEmpty) ...[
+                _buildSectionTitle(
+                  icon: Icons.grade_outlined,
+                  title: 'Grades',
+                  isTablet: isTablet,
+                ),
+                SizedBox(height: isTablet ? 14 : 12),
+                _buildGradesSection(data['grades'], isTablet),
+                SizedBox(height: isTablet ? 16 : 14),
+              ],
 
-            // Remarks Section
-            if (data['remarks'] != null &&
-                data['remarks'].toString().isNotEmpty) ...[
-              _buildSectionTitle(
-                icon: Icons.notes_outlined,
-                title: 'Keterangan',
-                isTablet: isTablet,
-              ),
-              SizedBox(height: isTablet ? 10 : 8),
-              _buildRemarksSection(data['remarks'], isTablet),
+              // Remarks Section
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -382,48 +358,68 @@ class _ProcessItemState extends State<ProcessItem>
 
   /// Time Section
   Widget _buildTimeSection(Map<String, dynamic> data, bool isTablet) {
+    final isNarrow = !isTablet;
+
     return Container(
       padding: EdgeInsets.all(isTablet ? 14 : 12),
       decoration: BoxDecoration(
         color: Colors.blue.withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.blue.withOpacity(0.2),
-        ),
+        border: Border.all(color: Colors.blue.withOpacity(0.2)),
       ),
-      child: Row(
-        children: [
-          if (data['start_time'] != null)
-            Expanded(
-              child: _buildTimeItem(
-                icon: Icons.play_circle_outline,
-                label: 'Waktu Mulai',
-                value: _formatTime(data['start_time']),
-                color: Colors.green,
-                isTablet: isTablet,
-              ),
+      child: isNarrow
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (data['start_time'] != null)
+                  _buildTimeItem(
+                    icon: Icons.play_circle_outline,
+                    label: 'Waktu Mulai',
+                    value: _formatTime(data['start_time']),
+                    color: Colors.green,
+                    isTablet: isTablet,
+                  ),
+                if (data['start_time'] != null && data['end_time'] != null)
+                  const SizedBox(height: 12),
+                if (data['end_time'] != null)
+                  _buildTimeItem(
+                    icon: Icons.stop_circle_outlined,
+                    label: 'Waktu Selesai',
+                    value: _formatTime(data['end_time']),
+                    color: Colors.red,
+                    isTablet: isTablet,
+                  ),
+              ],
+            )
+          : Row(
+              children: [
+                if (data['start_time'] != null)
+                  Expanded(
+                    child: _buildTimeItem(
+                      icon: Icons.play_circle_outline,
+                      label: 'Waktu Mulai',
+                      value: _formatTime(data['start_time']),
+                      color: Colors.green,
+                      isTablet: isTablet,
+                    ),
+                  ),
+                if (data['start_time'] != null && data['end_time'] != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Icon(Icons.arrow_forward, color: Colors.grey[400]),
+                  ),
+                if (data['end_time'] != null)
+                  Expanded(
+                    child: _buildTimeItem(
+                      icon: Icons.stop_circle_outlined,
+                      label: 'Waktu Selesai',
+                      value: _formatTime(data['end_time']),
+                      color: Colors.red,
+                      isTablet: isTablet,
+                    ),
+                  ),
+              ],
             ),
-          if (data['start_time'] != null && data['end_time'] != null)
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: isTablet ? 12 : 8),
-              child: Icon(
-                Icons.arrow_forward,
-                size: isTablet ? 20 : 16,
-                color: Colors.grey[400],
-              ),
-            ),
-          if (data['end_time'] != null)
-            Expanded(
-              child: _buildTimeItem(
-                icon: Icons.stop_circle_outlined,
-                label: 'Waktu Selesai',
-                value: _formatTime(data['end_time']),
-                color: Colors.red,
-                isTablet: isTablet,
-              ),
-            ),
-        ],
-      ),
     );
   }
 
@@ -710,28 +706,22 @@ class _ProcessItemState extends State<ProcessItem>
   Map<String, dynamic> _getStatusConfig(String status) {
     final lowerStatus = status.toLowerCase();
 
-    if (lowerStatus.contains('selesai') || lowerStatus.contains('completed')) {
+    if (status.contains('Selesai')) {
       return {
         'label': 'Selesai',
         'color': Colors.green,
       };
-    }
-    if (lowerStatus.contains('proses') || lowerStatus.contains('progress')) {
+    } else if (status.contains('Diproses')) {
       return {
-        'label': 'Sedang Diproses',
+        'label': 'Diproses',
         'color': Colors.blue,
       };
-    }
-    if (lowerStatus.contains('rework')) {
+    } else {
       return {
-        'label': 'Rework',
-        'color': Colors.red,
+        'label': 'Menunggu Diproses',
+        'color': Colors.orange,
       };
     }
-    return {
-      'label': 'Menunggu Diproses',
-      'color': Colors.orange,
-    };
   }
 
   IconData _getProcessIcon(String? label) {

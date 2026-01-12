@@ -69,19 +69,43 @@ class ItemProcessCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                item[titleKey] ?? '-',
-                style: TextStyle(
-                  fontSize: isTablet ? 18 : 16,
-                  fontWeight: CustomTheme().fontWeight('bold'),
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    item[titleKey] ?? '-',
+                    style: TextStyle(
+                      fontSize: isTablet ? 14 : 12,
+                      fontWeight: CustomTheme().fontWeight('bold'),
+                    ),
+                  ),
+                  if (item['rework'] == true)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CustomBadge(
+                          withStatus: true,
+                          status: 'Rework',
+                          title: 'Rework',
+                          rework: true,
+                        ),
+                        CustomBadge(
+                          status: 'Menunggu Diproses',
+                          title: item['rework_reference'] != null
+                              ? item['rework_reference']['dyeing_no']
+                              : '-',
+                          rework: true,
+                        )
+                      ].separatedBy(CustomTheme().hGap('md')),
+                    ),
+                ].separatedBy(CustomTheme().hGap('xl')),
               ),
-              if (item[subtitleField] != null) ...[
+              if (item[subtitleKey] != null) ...[
                 const SizedBox(height: 4),
                 Text(
-                  '${item[subtitleField][subtitleKey] ?? '-'}',
+                  '${item[subtitleKey][subtitleField] ?? '-'}',
                   style: TextStyle(
-                    fontSize: isTablet ? 14 : 12,
+                    fontSize: isTablet ? 18 : 16,
                     color: Colors.grey[600],
                   ),
                 ),
@@ -411,13 +435,11 @@ class ItemProcessCard extends StatelessWidget {
   /// Helper untuk mendapatkan label status
   String _getStatusLabel(String? status) {
     switch (status) {
-      case 'pending':
-        return 'Pending';
-      case 'in_progress':
-        return 'Proses';
-      case 'completed':
+      case 'Diproses':
+        return 'Diproses';
+      case 'Selesai':
         return 'Selesai';
-      case 'rework':
+      case 'Rework':
         return 'Rework';
       default:
         return status ?? '-';

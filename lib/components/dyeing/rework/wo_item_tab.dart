@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/card/list_item.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
-class ItemTab extends StatefulWidget {
+class WoItemTab extends StatefulWidget {
   final dynamic data;
 
-  const ItemTab({
+  const WoItemTab({
     super.key,
     this.data,
   });
 
   @override
-  State<ItemTab> createState() => _ItemTabState();
+  State<WoItemTab> createState() => _WoItemTabState();
 }
 
-class _ItemTabState extends State<ItemTab> {
+class _WoItemTabState extends State<WoItemTab> {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> items =

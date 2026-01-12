@@ -1,30 +1,105 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/card/custom_card.dart';
 import 'package:textile_tracking/components/master/card/custom_detail_badge.dart';
+import 'package:textile_tracking/components/master/card/list_item.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/format_html.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class DetailList extends StatefulWidget {
   final dynamic data;
+  final no;
   final String? processType;
   final VoidCallback? onRefresh;
+  final existingAttachment;
+  final existingGrades;
+  final handleBuildAttachment;
+  final withItemGrade;
+  final withQtyAndWeight;
+  final withMaklon;
+  final label;
+  final forDyeing;
+  final maklon;
 
-  const DetailList({
-    super.key,
-    required this.data,
-    this.processType,
-    this.onRefresh,
-  });
+  const DetailList(
+      {super.key,
+      required this.data,
+      this.processType,
+      this.onRefresh,
+      this.existingAttachment,
+      this.existingGrades,
+      this.handleBuildAttachment,
+      this.no,
+      this.forDyeing = false,
+      this.label,
+      this.withItemGrade = false,
+      this.withQtyAndWeight = false,
+      this.maklon,
+      this.withMaklon});
 
   @override
   State<DetailList> createState() => _DetailListState();
 }
 
-class _DetailListState extends State<DetailList> {
+class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
+  late TabController _tabWoController;
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    _tabWoController = TabController(
+      length: itemWoFilters.length,
+      vsync: this,
+    );
+
+    _tabController = TabController(
+      length: itemFilters.length,
+      vsync: this,
+    );
+
+    _tabWoController.addListener(() {
+      if (_tabWoController.indexIsChanging) return;
+
+      setState(() {
+        selectedItemWoIndex = _tabWoController.index;
+      });
+    });
+
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) return;
+
+      setState(() {
+        selectedIndex = _tabController.index;
+      });
+    });
+    super.initState();
+  }
+
+  final List<String> itemWoFilters = [
+    'Catatan Work Order',
+    'Material Work Order',
+  ];
+
+  final List<String> itemFilters = [
+    'Catatan Proses',
+    'Lampiran Proses',
+  ];
+
+  int selectedIndex = 0;
+  int selectedItemWoIndex = 0;
+
+  @override
+  void dispose() {
+    _tabWoController.dispose();
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -86,22 +161,47 @@ class _DetailListState extends State<DetailList> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Work Order',
-                      style: TextStyle(
-                        fontSize: isTablet ? 14 : 12,
-                        color: Colors.white.withOpacity(0.8),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    // Text(
+                    //   'Work Order',
+                    //   style: TextStyle(
+                    //     fontSize: isTablet ? 14 : 12,
+                    //     color: Colors.white.withOpacity(0.8),
+                    //     fontWeight: FontWeight.w500,
+                    //   ),
+                    // ),
                     const SizedBox(height: 4),
-                    Text(
-                      widget.data['work_orders']?['wo_number'] ?? '-',
-                      style: TextStyle(
-                        fontSize: isTablet ? 24 : 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          widget.no ?? '-',
+                          style: TextStyle(
+                            fontSize: isTablet ? 24 : 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        if (widget.data['rework'] == true)
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CustomBadge(
+                                withStatus: true,
+                                status: 'Rework',
+                                title: 'Rework',
+                                rework: true,
+                              ),
+                              CustomBadge(
+                                status: 'Menunggu Diproses',
+                                title: widget.data['rework_reference'] != null
+                                    ? widget.data['rework_reference']
+                                        ['dyeing_no']
+                                    : '-',
+                                rework: true,
+                              )
+                            ].separatedBy(CustomTheme().hGap('md')),
+                          ),
+                      ].separatedBy(CustomTheme().hGap('xl')),
                     ),
                   ],
                 ),
@@ -127,28 +227,10 @@ class _DetailListState extends State<DetailList> {
         horizontal: isTablet ? 16 : 12,
         vertical: isTablet ? 8 : 6,
       ),
-      decoration: BoxDecoration(
-        color: statusConfig['bgColor'],
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            statusConfig['icon'],
-            size: isTablet ? 16 : 14,
-            color: statusConfig['textColor'],
-          ),
-          const SizedBox(width: 6),
-          Text(
-            statusConfig['label'],
-            style: TextStyle(
-              fontSize: isTablet ? 13 : 11,
-              fontWeight: FontWeight.w600,
-              color: statusConfig['textColor'],
-            ),
-          ),
-        ],
+      child: CustomBadge(
+        title: widget.data['status']?.toString() ?? '-',
+        withStatus: true,
+        status: widget.data['status']?.toString() ?? '-',
       ),
     );
   }
@@ -166,10 +248,10 @@ class _DetailListState extends State<DetailList> {
           Expanded(
             child: _buildQuickInfoItem(
               icon: Icons.calendar_today_outlined,
-              label: 'Tanggal',
-              value: widget.data['start_time'] != null
+              label: 'Tanggal Dibuat',
+              value: widget.data['created_at'] != null
                   ? DateFormat("dd MMM yyyy")
-                      .format(DateTime.parse(widget.data['start_time']))
+                      .format(DateTime.parse(widget.data['created_at']))
                   : '-',
               isTablet: isTablet,
             ),
@@ -177,11 +259,9 @@ class _DetailListState extends State<DetailList> {
           _buildVerticalDivider(),
           Expanded(
             child: _buildQuickInfoItem(
-              icon: Icons.inventory_2_outlined,
-              label: 'Qty Greige',
-              value: widget.data['work_orders']?['greige_qty'] != null
-                  ? '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']?['code'] ?? ''}'
-                  : '-',
+              icon: Icons.location_on_outlined,
+              label: 'Lokasi',
+              value: widget.data['machine']?['location'] ?? '-',
               isTablet: isTablet,
             ),
           ),
@@ -263,11 +343,16 @@ class _DetailListState extends State<DetailList> {
                 child: _buildWorkOrderInfo(true),
               ),
               const SizedBox(height: 16),
-              _buildInfoCard(
-                title: 'Informasi Greige',
-                icon: Icons.layers_outlined,
-                child: _buildGreigeInfo(true),
-              ),
+              if (widget.withItemGrade == true)
+                _buildInfoCard(
+                  title: 'Informasi Grade',
+                  icon: Icons.layers_outlined,
+                  child: _buildGradeInfo(true),
+                ),
+              const SizedBox(height: 16),
+              Column(
+                children: [_buildProcessFilter(), _buildSwipeContent()],
+              )
             ],
           ),
         ),
@@ -288,6 +373,10 @@ class _DetailListState extends State<DetailList> {
                 icon: Icons.timeline_outlined,
                 child: _buildTimelineInfo(true),
               ),
+              const SizedBox(height: 16),
+              Column(
+                children: [_buildProcessWoFilter(), _buildSwipeWoContent()],
+              )
             ],
           ),
         ),
@@ -305,11 +394,12 @@ class _DetailListState extends State<DetailList> {
           child: _buildWorkOrderInfo(false),
         ),
         const SizedBox(height: 16),
-        _buildInfoCard(
-          title: 'Informasi Greige',
-          icon: Icons.layers_outlined,
-          child: _buildGreigeInfo(false),
-        ),
+        if (widget.withItemGrade == true)
+          _buildInfoCard(
+            title: 'Informasi Greige',
+            icon: Icons.layers_outlined,
+            child: _buildGradeInfo(false),
+          ),
         const SizedBox(height: 16),
         _buildInfoCard(
           title: 'Informasi Proses',
@@ -404,19 +494,19 @@ class _DetailListState extends State<DetailList> {
         'icon': Icons.tag,
       },
       {
-        'label': 'Customer',
-        'value': widget.data['work_orders']?['customer']?['name'] ?? '-',
+        'label': 'Qty Greige',
+        'value': widget.data['work_orders']?['greige_qty'] != null
+            ? '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']?['code'] ?? ''}'
+            : '-',
         'icon': Icons.person_outline,
       },
       {
-        'label': 'Marketing',
-        'value': widget.data['work_orders']?['marketing']?['name'] ?? '-',
+        'label': 'Tanggal',
+        'value': widget.data['work_orders']['wo_date'] != null
+            ? DateFormat("dd MMM yyyy")
+                .format(DateTime.parse(widget.data['work_orders']['wo_date']))
+            : '-',
         'icon': Icons.support_agent_outlined,
-      },
-      {
-        'label': 'Jenis Order',
-        'value': widget.data['work_orders']?['order_type'] ?? '-',
-        'icon': Icons.category_outlined,
       },
     ];
 
@@ -424,33 +514,22 @@ class _DetailListState extends State<DetailList> {
   }
 
   /// Greige Info Section
-  Widget _buildGreigeInfo(bool isTablet) {
+  Widget _buildGradeInfo(bool isTablet) {
     final items = [
+      for (int i = 0; i < widget.existingGrades.length; i++)
+        {
+          'label':
+              'Grade ${widget.existingGrades[i]['item_grade']['code']}: ${widget.existingGrades[i]['item_grade']['description']?.split('-').first.trim()}',
+          'value':
+              '${widget.existingGrades[i]['qty']} ${widget.existingGrades[i]['unit']['code']}',
+          'icon': Icons.texture,
+        },
       {
-        'label': 'Jenis Greige',
-        'value': widget.data['work_orders']?['greige']?['name'] ?? '-',
-        'icon': Icons.texture,
-      },
-      {
-        'label': 'Qty Greige',
+        'label': 'Total Hasil ${widget.label}',
         'value': widget.data['work_orders']?['greige_qty'] != null
             ? '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']?['code'] ?? ''}'
             : '-',
         'icon': Icons.straighten,
-      },
-      {
-        'label': 'Lebar Greige',
-        'value': widget.data['work_orders']?['greige_width'] != null
-            ? '${widget.data['work_orders']['greige_width']} cm'
-            : '-',
-        'icon': Icons.width_normal,
-      },
-      {
-        'label': 'Gramasi',
-        'value': widget.data['work_orders']?['gramasi'] != null
-            ? '${widget.data['work_orders']['gramasi']} gsm'
-            : '-',
-        'icon': Icons.scale_outlined,
       },
     ];
 
@@ -460,28 +539,63 @@ class _DetailListState extends State<DetailList> {
   /// Process Info Section
   Widget _buildProcessInfo(bool isTablet) {
     final items = [
-      {
-        'label': 'Mesin',
-        'value': widget.data['machine']?['name'] ?? '-',
-        'icon': Icons.local_laundry_service_outlined,
-      },
-      {
-        'label': 'Operator',
-        'value': widget.data['operator']?['name'] ?? '-',
-        'icon': Icons.engineering_outlined,
-      },
-      {
-        'label': 'Shift',
-        'value': widget.data['shift'] ?? '-',
-        'icon': Icons.access_time_outlined,
-      },
-      {
-        'label': 'Maklon',
-        'value': widget.data['maklon'] == true
-            ? (widget.data['maklon_name'] ?? 'Ya')
-            : 'Tidak',
-        'icon': Icons.business_outlined,
-      },
+      // {
+      //   'label': 'Panjang',
+      //   'value':
+      //       '${widget.data['length'] != null ? formatNumber(widget.data['length']) : '0'} ${widget.data['length_unit']['code']}',
+      //   'icon': Icons.local_laundry_service_outlined,
+      // },
+      // {
+      //   'label': 'Lebar',
+      //   'value': '${widget.data['width'] != null ? formatNumber(widget.data['width']) : '0'} ${widget.data['width_unit']['code']}',
+      //   'icon': Icons.engineering_outlined,
+      // },
+      if (widget.forDyeing == true)
+        {
+          'label': 'Qty Hasil ${widget.label}',
+          'value': widget.data['qty'] != null
+              ? '${formatNumber(widget.data['qty'])} ${widget.data['unit']['code']}'
+              : '0 ${widget.data['unit'] != null ? widget.data['unit']['code'] : ''}',
+          'icon': Icons.access_time_outlined,
+        },
+      if (widget.withQtyAndWeight == true)
+        {
+          'label': 'Qty Hasil ${widget.label}',
+          'value': widget.data['item_qty'] != null
+              ? '${formatNumber(widget.data['item_qty'])} ${widget.data['item_unit']['code']}'
+              : '0 ${widget.data['item_unit'] != null ? widget.data['item_unit']['code'] : ''}',
+          'icon': Icons.access_time_outlined,
+        },
+      if (widget.forDyeing == false)
+        {
+          'label': 'Berat',
+          'value': widget.data['weight'] != null
+              ? '${formatNumber(widget.data['weight'])} ${widget.data['weight_unit']['code']}'
+              : '0 ${widget.data['weight_unit'] != null ? widget.data['weight_unit']['code'] : ''}',
+          'icon': Icons.business_outlined,
+        },
+      if (widget.data['maklon'] == true)
+        {
+          'label': 'Maklon',
+          'value': widget.data['maklon'] == true
+              ? (widget.data['maklon_name'] ?? 'Ya')
+              : 'Tidak',
+          'icon': Icons.business_outlined,
+        },
+      if (widget.data['rework'] == true)
+        {
+          'label': 'Rework',
+          'value': widget.data['rework'] == true ? 'Ya' : 'Tidak',
+          'icon': Icons.business_outlined,
+        },
+      if (widget.data['rework'] == true)
+        {
+          'label': 'Referensi Rework',
+          'value': widget.data['rework_reference'] != null
+              ? widget.data['rework_reference']['dyeing_no']
+              : '-',
+          'icon': Icons.business_outlined,
+        },
     ];
 
     return _buildInfoGrid(items, isTablet);
@@ -741,6 +855,208 @@ class _DetailListState extends State<DetailList> {
     );
   }
 
+  Widget _buildProcessWoFilter() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Padding(
+        padding: CustomTheme().padding('card-detail'),
+        child: Row(
+          children: List.generate(itemWoFilters.length, (index) {
+            final isSelected = selectedItemWoIndex == index;
+
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedItemWoIndex = index;
+                });
+
+                _tabWoController.animateTo(index);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isSelected
+                        ? CustomTheme().buttonColor('primary')
+                        : Colors.grey.shade400,
+                  ),
+                  color: isSelected
+                      ? CustomTheme().buttonColor('primary')
+                      : Colors.white,
+                  boxShadow: [CustomTheme().boxShadowTheme()],
+                ),
+                padding: CustomTheme().padding('badge'),
+                child: Text(
+                  itemWoFilters[index],
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+            );
+          }).separatedBy(CustomTheme().hGap('lg')),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProcessFilter() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Padding(
+        padding: CustomTheme().padding('card-detail'),
+        child: Row(
+          children: List.generate(itemFilters.length, (index) {
+            final isSelected = selectedIndex == index;
+
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedIndex = index;
+                });
+
+                _tabController.animateTo(index);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isSelected
+                        ? CustomTheme().buttonColor('primary')
+                        : Colors.grey.shade400,
+                  ),
+                  color: isSelected
+                      ? CustomTheme().buttonColor('primary')
+                      : Colors.white,
+                  boxShadow: [CustomTheme().boxShadowTheme()],
+                ),
+                padding: CustomTheme().padding('badge'),
+                child: Text(
+                  itemFilters[index],
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+            );
+          }).separatedBy(CustomTheme().hGap('lg')),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSwipeWoContent() {
+    final List<Map<String, dynamic>> items =
+        (widget.data['work_orders']['items'] ?? [])
+            .cast<Map<String, dynamic>>();
+    return SizedBox(
+      height: 300,
+      child: TabBarView(
+        controller: _tabWoController,
+        children: [
+          Padding(
+            padding: CustomTheme().padding('content'),
+            child: Row(
+              children: [
+                Expanded(
+                  child: CustomCard(
+                    child: widget.data['work_orders']['notes'] != null
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                htmlToPlainText(
+                                    widget.data['work_orders']['notes']),
+                                style: TextStyle(
+                                  fontSize: CustomTheme().fontSize('lg'),
+                                ),
+                              ),
+                            ].separatedBy(CustomTheme().vGap('lg')),
+                          )
+                        : NoData(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            child: items.isEmpty
+                ? Center(child: Text('No Data'))
+                : ListView.separated(
+                    padding: CustomTheme().padding('content'),
+                    physics: AlwaysScrollableScrollPhysics(),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+                      return ListItem(item: item);
+                    },
+                    separatorBuilder: (context, index) =>
+                        CustomTheme().vGap('xl'),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSwipeContent() {
+    return SizedBox(
+      height: 300,
+      child: TabBarView(
+        controller: _tabController,
+        children: [
+          Padding(
+            padding: CustomTheme().padding('content'),
+            child: Row(
+              children: [
+                Expanded(
+                  child: CustomCard(
+                    child: widget.data['notes'] != null
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                htmlToPlainText(widget.data['notes']),
+                                style: TextStyle(
+                                  fontSize: CustomTheme().fontSize('lg'),
+                                ),
+                              ),
+                            ].separatedBy(CustomTheme().vGap('lg')),
+                          )
+                        : NoData(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: CustomTheme().padding('content'),
+            child: Row(
+              children: [
+                Expanded(
+                  child: CustomCard(
+                    child: widget.existingAttachment.isEmpty
+                        ? NoData()
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: widget.handleBuildAttachment(context),
+                              ),
+                            ].separatedBy(CustomTheme().vGap('lg')),
+                          ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// Get Status Configuration
   Map<String, dynamic> _getStatusConfig(String status) {
     switch (status.toLowerCase()) {
@@ -753,21 +1069,14 @@ class _DetailListState extends State<DetailList> {
           'textColor': Colors.green[700],
         };
       case 'in_progress':
-      case 'proses':
+      case 'Diproses':
         return {
-          'label': 'Dalam Proses',
+          'label': 'Diproses',
           'icon': Icons.hourglass_top,
           'bgColor': Colors.blue.withOpacity(0.2),
           'textColor': Colors.blue[700],
         };
-      case 'pending':
-      case 'menunggu':
-        return {
-          'label': 'Menunggu',
-          'icon': Icons.schedule,
-          'bgColor': Colors.orange.withOpacity(0.2),
-          'textColor': Colors.orange[700],
-        };
+
       case 'rework':
         return {
           'label': 'Rework',

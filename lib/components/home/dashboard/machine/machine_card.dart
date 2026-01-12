@@ -66,7 +66,7 @@ class MachineCard extends StatelessWidget {
                         SizedBox(height: isTablet ? 16 : 12),
 
                         // Stats Section
-                        _buildStatsSection(isTablet),
+                        // _buildStatsSection(isTablet),
 
                         // Current Job (if any)
                         if (_hasCurrentJob()) ...[
@@ -178,7 +178,7 @@ class MachineCard extends StatelessWidget {
           ),
 
           // Status Badge
-          _buildStatusBadge(status, statusConfig, isTablet),
+          // _buildStatusBadge(status, statusConfig, isTablet),
         ],
       ),
     );
@@ -525,7 +525,9 @@ class MachineCard extends StatelessWidget {
 
   /// Current Job Section
   Widget _buildCurrentJob(bool isTablet) {
-    final currentJob = data['current_job'];
+    final currentJob = data['used_by'] != null && data['used_by'].isNotEmpty
+        ? data['used_by'][0]
+        : null;
     if (currentJob == null) return const SizedBox.shrink();
 
     return Container(
@@ -565,38 +567,38 @@ class MachineCard extends StatelessWidget {
               ),
               const Spacer(),
               // Live indicator
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'LIVE',
-                      style: TextStyle(
-                        fontSize: isTablet ? 10 : 9,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.symmetric(
+              //     horizontal: 8,
+              //     vertical: 4,
+              //   ),
+              //   decoration: BoxDecoration(
+              //     color: Colors.red.withOpacity(0.1),
+              //     borderRadius: BorderRadius.circular(12),
+              //   ),
+              //   child: Row(
+              //     mainAxisSize: MainAxisSize.min,
+              //     children: [
+              //       Container(
+              //         width: 6,
+              //         height: 6,
+              //         decoration: const BoxDecoration(
+              //           color: Colors.red,
+              //           shape: BoxShape.circle,
+              //         ),
+              //       ),
+              //       const SizedBox(width: 4),
+              //       Text(
+              //         'LIVE',
+              //         style: TextStyle(
+              //           fontSize: isTablet ? 10 : 9,
+              //           fontWeight: FontWeight.bold,
+              //           color: Colors.red,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
           SizedBox(height: isTablet ? 12 : 10),
@@ -699,7 +701,7 @@ class MachineCard extends StatelessWidget {
 
   /// Helper Methods
   bool _hasCurrentJob() {
-    return data['current_job'] != null;
+    return data['used_by']?.length != 0;
   }
 
   String _getMachineStatus() {

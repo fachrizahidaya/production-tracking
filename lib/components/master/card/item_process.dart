@@ -1,7 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/process_card.dart';
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
+import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class ItemProcess extends StatefulWidget {
   final dynamic item;
@@ -62,8 +65,8 @@ class _ItemProcessState extends State<ItemProcess> {
 
   /// Header Section
   Widget _buildHeader(bool isTablet) {
-    final itemName = widget.item['name']?.toString() ?? 'Item';
-    final itemCode = widget.item['code']?.toString() ?? '-';
+    final itemName = widget.item['wo_no']?.toString() ?? 'Item';
+    final itemCode = widget.item['spk_no']?.toString() ?? '-';
     final overallStatus = _getOverallStatus();
     final statusConfig = _getStatusConfig(overallStatus);
 
@@ -111,15 +114,27 @@ class _ItemProcessState extends State<ItemProcess> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  itemName,
-                  style: TextStyle(
-                    fontSize: isTablet ? 18 : 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WorkOrderDetail(
+                          id: widget.item['id'].toString(),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    itemName,
+                    style: TextStyle(
+                      fontSize: isTablet ? 18 : 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[800],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
                 Row(
@@ -128,13 +143,14 @@ class _ItemProcessState extends State<ItemProcess> {
                     if (widget.item['wo_no'] != null) ...[
                       const SizedBox(width: 8),
                       Icon(
-                        Icons.assignment_outlined,
+                        Icons.calendar_month_outlined,
                         size: isTablet ? 14 : 12,
                         color: Colors.grey[500],
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        widget.item['wo_no'].toString(),
+                        DateFormat("dd MMM yyyy")
+                            .format(DateTime.parse(widget.item['wo_date'])),
                         style: TextStyle(
                           fontSize: isTablet ? 12 : 11,
                           color: Colors.grey[600],
@@ -148,7 +164,11 @@ class _ItemProcessState extends State<ItemProcess> {
           ),
 
           // Overall Status Badge
-          _buildStatusBadge(overallStatus, statusConfig, isTablet),
+          CustomBadge(
+            withStatus: true,
+            title: widget.item['status'],
+            status: widget.item['status'],
+          ),
         ],
       ),
     );
@@ -467,7 +487,7 @@ class _ItemProcessState extends State<ItemProcess> {
     if (process['qty'] != null) {
       details.add(_buildDetailItem(
         icon: Icons.inventory_2_outlined,
-        label: 'Quantity',
+        label: 'Qty',
         value: '${formatNumber(process['qty'])} ${process['unit'] ?? 'pcs'}',
         isTablet: isTablet,
       ));
@@ -487,43 +507,43 @@ class _ItemProcessState extends State<ItemProcess> {
     if (process['item_qty'] != null) {
       details.add(_buildDetailItem(
         icon: Icons.format_list_numbered,
-        label: 'Jumlah Item',
+        label: 'Qty',
         value: formatNumber(process['item_qty']),
         isTablet: isTablet,
       ));
     }
 
     // Machine
-    if (process['machine'] != null) {
-      details.add(_buildDetailItem(
-        icon: Icons.precision_manufacturing_outlined,
-        label: 'Mesin',
-        value: process['machine']['name'] ?? '-',
-        isTablet: isTablet,
-      ));
-    }
+    // if (process['machine'] != null) {
+    //   details.add(_buildDetailItem(
+    //     icon: Icons.precision_manufacturing_outlined,
+    //     label: 'Mesin',
+    //     value: process['machine']['name'] ?? '-',
+    //     isTablet: isTablet,
+    //   ));
+    // }
 
     // Operator
-    if (process['operator'] != null) {
-      details.add(_buildDetailItem(
-        icon: Icons.person_outline,
-        label: 'Operator',
-        value: process['operator']['name'] ?? '-',
-        isTablet: isTablet,
-      ));
-    }
+    // if (process['operator'] != null) {
+    //   details.add(_buildDetailItem(
+    //     icon: Icons.person_outline,
+    //     label: 'Operator',
+    //     value: process['operator']['name'] ?? '-',
+    //     isTablet: isTablet,
+    //   ));
+    // }
 
     // Remarks
-    if (process['remarks'] != null &&
-        process['remarks'].toString().isNotEmpty) {
-      details.add(_buildDetailItem(
-        icon: Icons.notes_outlined,
-        label: 'Keterangan',
-        value: process['remarks'].toString(),
-        isTablet: isTablet,
-        isFullWidth: true,
-      ));
-    }
+    // if (process['remarks'] != null &&
+    //     process['remarks'].toString().isNotEmpty) {
+    //   details.add(_buildDetailItem(
+    //     icon: Icons.notes_outlined,
+    //     label: 'Keterangan',
+    //     value: process['remarks'].toString(),
+    //     isTablet: isTablet,
+    //     isFullWidth: true,
+    //   ));
+    // }
 
     if (details.isEmpty) return const SizedBox.shrink();
 
@@ -844,49 +864,42 @@ class _ItemProcessState extends State<ItemProcess> {
   /// Helper Methods
   String _getOverallStatus() {
     final processes = widget.item['processes'] as Map<String, dynamic>? ?? {};
-    if (processes.isEmpty) return 'pending';
+    if (processes.isEmpty) return 'Menunggu Diproses';
 
     final statuses = processes.values
         .map((p) => (p['status']?.toString().toLowerCase() ?? 'pending'))
         .toList();
 
-    if (statuses.every((s) => s == 'completed' || s == 'selesai')) {
+    if (statuses.every((s) => s == 'completed' || s == 'Selesai')) {
       return 'completed';
     }
-    if (statuses.any((s) => s == 'in_progress' || s == 'proses')) {
+    if (statuses.any((s) => s == 'in_progress' || s == 'Diproses')) {
       return 'in_progress';
     }
-    if (statuses.any((s) => s == 'rework')) {
-      return 'rework';
-    }
-    return 'pending';
+
+    return 'Menunggu Diproses';
   }
 
   Map<String, dynamic> _getStatusConfig(String status) {
     switch (status.toLowerCase()) {
       case 'completed':
-      case 'selesai':
+      case 'Selesai':
         return {
           'label': 'Selesai',
           'color': Colors.green,
           'icon': Icons.check_circle_outline,
         };
       case 'in_progress':
-      case 'proses':
+      case 'Diproses':
         return {
           'label': 'Diproses',
           'color': Colors.blue,
           'icon': Icons.hourglass_top_outlined,
         };
-      case 'rework':
-        return {
-          'label': 'Rework',
-          'color': Colors.red,
-          'icon': Icons.replay_outlined,
-        };
+
       default:
         return {
-          'label': 'Menunggu',
+          'label': 'Menunggu Diproses',
           'color': Colors.orange,
           'icon': Icons.schedule_outlined,
         };
@@ -903,21 +916,16 @@ class _ItemProcessState extends State<ItemProcess> {
           'icon': Icons.check,
         };
       case 'in_progress':
-      case 'proses':
+      case 'Diproses':
         return {
-          'label': 'Proses',
+          'label': 'Diproses',
           'color': Colors.blue,
           'icon': Icons.sync,
         };
-      case 'rework':
-        return {
-          'label': 'Rework',
-          'color': Colors.red,
-          'icon': Icons.replay,
-        };
+
       default:
         return {
-          'label': 'Pending',
+          'label': 'Menunggu Diproses',
           'color': Colors.grey,
           'icon': Icons.schedule,
         };
@@ -932,24 +940,53 @@ class _ItemProcessState extends State<ItemProcess> {
           'icon': Icons.color_lens_outlined,
           'color': Colors.purple,
         };
-      case 'finishing':
+      case 'press':
         return {
-          'title': 'Finishing',
+          'title': 'Press',
           'icon': Icons.auto_fix_high_outlined,
           'color': Colors.teal,
         };
-      case 'qc':
-      case 'quality_control':
+      case 'tumbler':
         return {
-          'title': 'Quality Control',
+          'title': 'Tumbler',
           'icon': Icons.verified_outlined,
           'color': Colors.indigo,
         };
-      case 'packing':
+      case 'stenter':
         return {
-          'title': 'Packing',
-          'icon': Icons.inventory_2_outlined,
-          'color': Colors.brown,
+          'title': 'Stenter',
+          'icon': Icons.verified_outlined,
+          'color': Colors.indigo,
+        };
+      case 'long-sitting':
+        return {
+          'title': 'Long Sitting',
+          'icon': Icons.verified_outlined,
+          'color': Colors.indigo,
+        };
+      case 'long-hemming':
+        return {
+          'title': 'Long Hemming',
+          'icon': Icons.verified_outlined,
+          'color': Colors.indigo,
+        };
+      case 'cross-cutting':
+        return {
+          'title': 'Cross Cutting',
+          'icon': Icons.verified_outlined,
+          'color': Colors.indigo,
+        };
+      case 'sewing':
+        return {
+          'title': 'Sewing',
+          'icon': Icons.print_outlined,
+          'color': Colors.pink,
+        };
+      case 'embroidery':
+        return {
+          'title': 'Embroidery',
+          'icon': Icons.local_laundry_service_outlined,
+          'color': Colors.cyan,
         };
       case 'printing':
         return {
@@ -957,11 +994,17 @@ class _ItemProcessState extends State<ItemProcess> {
           'icon': Icons.print_outlined,
           'color': Colors.pink,
         };
-      case 'washing':
+      case 'sorting':
         return {
-          'title': 'Washing',
-          'icon': Icons.local_laundry_service_outlined,
-          'color': Colors.cyan,
+          'title': 'Sorting',
+          'icon': Icons.print_outlined,
+          'color': Colors.pink,
+        };
+      case 'packing':
+        return {
+          'title': 'Packing',
+          'icon': Icons.inventory_2_outlined,
+          'color': Colors.brown,
         };
       default:
         return {
@@ -975,11 +1018,17 @@ class _ItemProcessState extends State<ItemProcess> {
   List<String> _getOrderedProcessKeys(Map<String, dynamic> processes) {
     final order = [
       'dyeing',
+      'press',
+      'tumbler',
+      'stenter',
+      'long-sitting',
+      'long-hemming',
+      'cross-cutting',
+      'sewing'
+          'embroidery',
       'printing',
-      'washing',
-      'finishing',
-      'qc',
-      'packing'
+      'sorting',
+      'packing',
     ];
     final keys = processes.keys.toList();
 
@@ -998,11 +1047,12 @@ class _ItemProcessState extends State<ItemProcess> {
   bool _hasProcessDetails(Map<String, dynamic> process) {
     return process['qty'] != null ||
         process['weight'] != null ||
-        process['item_qty'] != null ||
-        process['machine'] != null ||
-        process['operator'] != null ||
-        (process['remarks'] != null &&
-            process['remarks'].toString().isNotEmpty);
+        process['item_qty'] != null;
+    // ||
+    // process['machine'] != null ||
+    // process['operator'] != null ||
+    // (process['remarks'] != null &&
+    //     process['remarks'].toString().isNotEmpty);
   }
 
   String _formatDateTime(dynamic dateTime) {
@@ -1128,13 +1178,12 @@ class CompactItemProcess extends StatelessWidget {
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'completed':
-      case 'selesai':
+      case 'Selesai':
         return Colors.green;
       case 'in_progress':
-      case 'proses':
+      case 'Diproses':
         return Colors.blue;
-      case 'rework':
-        return Colors.red;
+
       default:
         return Colors.grey;
     }

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
-import 'package:textile_tracking/components/work-order/tab/info_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/wo_info_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/item_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/note_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/process_tab.dart';

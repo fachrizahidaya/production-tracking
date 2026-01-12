@@ -75,15 +75,12 @@ class ListItem extends StatelessWidget {
 
     switch (status) {
       case 'completed':
-      case 'selesai':
+      case 'Selesai':
         accentColor = Colors.green;
         break;
       case 'in_progress':
-      case 'proses':
+      case 'Diproses':
         accentColor = Colors.blue;
-        break;
-      case 'rework':
-        accentColor = Colors.red;
         break;
       default:
         accentColor = Colors.orange;
@@ -211,10 +208,10 @@ class ListItem extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        if (item['description'] != null) ...[
+        if (item['variants'][0] != null) ...[
           const SizedBox(height: 4),
           Text(
-            item['description'].toString(),
+            item['variants'][0]['value'].toString(),
             style: TextStyle(
               fontSize: isTablet ? 13 : 11,
               color: Colors.grey[500],
@@ -232,20 +229,20 @@ class ListItem extends StatelessWidget {
     if (isTablet) {
       return Row(
         children: [
-          if (item['category'] != null)
+          if (item['variants'][3] != null)
             Expanded(
               child: _buildInfoChip(
-                icon: Icons.category_outlined,
-                label: item['category']['name']?.toString() ?? '-',
+                icon: Icons.design_services_outlined,
+                label: item['variants'][3]['value']?.toString() ?? '-',
                 isTablet: isTablet,
               ),
             ),
-          if (item['supplier'] != null) ...[
+          if (item['variants'][2] != null) ...[
             const SizedBox(width: 8),
             Expanded(
               child: _buildInfoChip(
-                icon: Icons.local_shipping_outlined,
-                label: item['supplier']['name']?.toString() ?? '-',
+                icon: Icons.color_lens_outlined,
+                label: item['variants'][2]['value']?.toString() ?? '-',
                 isTablet: isTablet,
               ),
             ),
@@ -337,12 +334,6 @@ class ListItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CustomBadge(
-          title: _getStatusLabel(status),
-          rework: isRework,
-          status: status,
-          withStatus: true,
-        ),
         if (isRework) ...[
           SizedBox(height: isTablet ? 8 : 6),
           Container(
@@ -437,24 +428,5 @@ class ListItem extends StatelessWidget {
       return formatNumber(qty);
     }
     return qty.toString();
-  }
-
-  /// Get Status Label
-  String _getStatusLabel(String status) {
-    switch (status.toLowerCase()) {
-      case 'completed':
-      case 'selesai':
-        return 'Selesai';
-      case 'in_progress':
-      case 'proses':
-        return 'Dalam Proses';
-      case 'pending':
-      case 'menunggu':
-        return 'Menunggu';
-      case 'rework':
-        return 'Rework';
-      default:
-        return status;
-    }
   }
 }

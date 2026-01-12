@@ -1,95 +1,75 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/dyeing/rework/create_form.dart';
 import 'package:textile_tracking/components/master/card/custom_card.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/components/process/create/create_section.dart';
 import 'package:textile_tracking/components/process/info_tab.dart';
 import 'package:textile_tracking/helpers/util/format_html.dart';
-import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
-class FormInfoTab extends StatefulWidget {
+class ReworkInfoTab extends StatefulWidget {
   final id;
-  final data;
-  final processData;
   final label;
+  final data;
   final form;
   final formKey;
+  final handleSubmit;
   final handleSelectMachine;
   final handleSelectWorkOrder;
   final isLoading;
-  final maklon;
-  final isMaklon;
-  final withMaklonOrMachine;
-  final withOnlyMaklon;
-  final withNoMaklonOrMachine;
 
-  const FormInfoTab(
+  const ReworkInfoTab(
       {super.key,
       this.data,
-      this.processData,
       this.form,
-      this.label,
       this.formKey,
       this.handleSelectMachine,
       this.handleSelectWorkOrder,
+      this.handleSubmit,
       this.id,
       this.isLoading,
-      this.isMaklon,
-      this.maklon,
-      this.withMaklonOrMachine,
-      this.withNoMaklonOrMachine,
-      this.withOnlyMaklon});
+      this.label});
 
   @override
-  State<FormInfoTab> createState() => _FormInfoTabState();
+  State<ReworkInfoTab> createState() => _ReworkInfoTabState();
 }
 
-class _FormInfoTabState extends State<FormInfoTab> {
+class _ReworkInfoTabState extends State<ReworkInfoTab> {
   @override
   Widget build(BuildContext context) {
     if (widget.isLoading) {
-      return Container(
-        color: const Color(0xFFEBEBEB),
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+      return Center(
+        child: CircularProgressIndicator(),
       );
     }
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final isTablet = constraints.maxWidth > 600;
-
         return SingleChildScrollView(
-          padding: EdgeInsets.all(isTablet ? 20 : 16),
+          padding: CustomTheme().padding('content'),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CreateSection(
-                formKey: widget.formKey,
+              CreateForm(
                 form: widget.form,
-                maklon: widget.maklon,
-                isMaklon: widget.isMaklon,
+                formKey: widget.formKey,
+                handleSubmit: widget.handleSubmit,
+                data: widget.data,
                 selectWorkOrder: widget.handleSelectWorkOrder,
                 selectMachine: widget.handleSelectMachine,
                 id: widget.id,
                 isLoading: widget.isLoading,
-                withMaklonOrMachine: widget.withMaklonOrMachine,
-                withOnlyMaklon: widget.withOnlyMaklon,
-                withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
               ),
-              if (widget.form?['wo_id'] != null) ...[
-                SizedBox(height: isTablet ? 24 : 16),
+              if (widget.form?['wo_id'] != null)
                 InfoTab(
                   data: widget.data,
                   label: widget.label,
                   isTablet: isTablet,
-                ),
-              ],
-            ],
+                )
+            ].separatedBy(CustomTheme().vGap('xl')),
           ),
         );
       },

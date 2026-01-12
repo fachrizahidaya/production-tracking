@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
 import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
@@ -37,6 +38,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
   bool _canDelete = false;
   bool _isLoadMore = false;
   bool _canUpdate = false;
+  bool _showFab = true;
 
   final List<dynamic> _dataList = [];
   String _search = '';
@@ -203,112 +205,141 @@ class _DyeingScreenState extends State<DyeingScreen> {
             }
           },
         ),
-        body: ProcessList(
-          fetchData: (params) async {
-            final service = Provider.of<DyeingService>(context, listen: false);
-            await service.getDataList(params);
-            return service.items;
-          },
-          canRead: _canRead,
-          isLoadMore: _isLoadMore,
-          itemBuilder: (item) => ItemProcessCard(
-            label: 'No. Dyeing',
-            item: item,
-            titleKey: 'dyeing_no',
-            subtitleKey: 'work_orders',
-            subtitleField: 'wo_no',
-            itemField: ItemField.get,
-            nestedField: ItemField.nested,
-          ),
-          onItemTap: (context, item) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DyeingDetail(
-                    id: item['id'].toString(),
-                    no: item['dyeing_no'].toString(),
-                    canDelete: _canDelete,
-                    canUpdate: _canUpdate,
-                  ),
-                )).then((value) {
-              if (value == true) {
-                _refetch();
-              } else {
-                return null;
+        body: NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            if (notification is UserScrollNotification) {
+              if (notification.direction == ScrollDirection.reverse) {
+                // scrolling down
+                if (_showFab) {
+                  setState(() => _showFab = false);
+                }
+              } else if (notification.direction == ScrollDirection.forward) {
+                // scrolling up
+                if (!_showFab) {
+                  setState(() => _showFab = true);
+                }
               }
-            });
+            }
+            return false;
           },
-          filterWidget: ListFilter(
-            title: 'Filter',
-            params: params,
-            onHandleFilter: _handleFilter,
-            onSubmitFilter: () {
-              _submitFilter();
+          child: ProcessList(
+            fetchData: (params) async {
+              final service =
+                  Provider.of<DyeingService>(context, listen: false);
+              await service.getDataList(params);
+              return service.items;
             },
-            fetchMachine: (service) => service.fetchOptionsDyeing(),
-            getMachineOptions: (service) => service.dataListOption,
-            dariTanggal: dariTanggal,
-            sampaiTanggal: sampaiTanggal,
+            canRead: _canRead,
+            isLoadMore: _isLoadMore,
+            itemBuilder: (item) => ItemProcessCard(
+              label: 'No. Dyeing',
+              item: item,
+              titleKey: 'dyeing_no',
+              subtitleKey: 'work_orders',
+              subtitleField: 'wo_no',
+              itemField: ItemField.get,
+              nestedField: ItemField.nested,
+            ),
+            onItemTap: (context, item) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DyeingDetail(
+                      id: item['id'].toString(),
+                      no: item['dyeing_no'].toString(),
+                      canDelete: _canDelete,
+                      canUpdate: _canUpdate,
+                    ),
+                  )).then((value) {
+                if (value == true) {
+                  _refetch();
+                } else {
+                  return null;
+                }
+              });
+            },
+            filterWidget: ListFilter(
+              title: 'Filter',
+              params: params,
+              onHandleFilter: _handleFilter,
+              onSubmitFilter: () {
+                _submitFilter();
+              },
+              fetchMachine: (service) => service.fetchOptionsDyeing(),
+              getMachineOptions: (service) => service.dataListOption,
+              dariTanggal: dariTanggal,
+              sampaiTanggal: sampaiTanggal,
+            ),
+            firstLoading: _firstLoading,
+            isFiltered: _isFiltered,
+            hasMore: _hasMore,
+            handleLoadMore: _loadMore,
+            handleRefetch: _refetch,
+            handleSearch: _handleSearch,
+            dataList: _dataList,
           ),
-          firstLoading: _firstLoading,
-          isFiltered: _isFiltered,
-          hasMore: _hasMore,
-          handleLoadMore: _loadMore,
-          handleRefetch: _refetch,
-          handleSearch: _handleSearch,
-          dataList: _dataList,
         ),
-        floatingActionButton: CustomFloatingButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  final actions = [
-                    DialogActionItem(
-                      icon: Icons.add_outlined,
-                      iconColor: CustomTheme().buttonColor('primary'),
-                      title: 'Mulai Dyeing',
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const CreateDyeing(),
-                          ),
-                        );
-                      },
-                    ),
-                    DialogActionItem(
-                      icon: Icons.check_circle_outline,
-                      iconColor: CustomTheme().buttonColor('warning'),
-                      title: 'Selesai Dyeing',
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const FinishDyeing(),
-                          ),
-                        );
-                      },
-                    ),
-                    DialogActionItem(
-                      icon: Icons.replay_outlined,
-                      iconColor: CustomTheme().buttonColor('danger'),
-                      title: 'Rework Dyeing',
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const ReworkDyeing(),
-                          ),
-                        );
-                      },
-                    ),
-                  ];
-                  return ActionDialog(actions: actions);
-                },
-              );
-            },
-            icon: const Icon(
-              Icons.add,
-              color: Colors.white,
-            )),
+        floatingActionButton: AnimatedSlide(
+          duration: const Duration(milliseconds: 200),
+          offset: _showFab ? Offset.zero : const Offset(0, 1),
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 200),
+            opacity: _showFab ? 1 : 0,
+            child: CustomFloatingButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    final actions = [
+                      DialogActionItem(
+                        icon: Icons.add_outlined,
+                        iconColor: CustomTheme().buttonColor('primary'),
+                        title: 'Mulai Dyeing',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const CreateDyeing(),
+                            ),
+                          );
+                        },
+                      ),
+                      DialogActionItem(
+                        icon: Icons.check_circle_outline,
+                        iconColor: CustomTheme().buttonColor('warning'),
+                        title: 'Selesai Dyeing',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const FinishDyeing(),
+                            ),
+                          );
+                        },
+                      ),
+                      DialogActionItem(
+                        icon: Icons.replay_outlined,
+                        iconColor: CustomTheme().buttonColor('danger'),
+                        title: 'Rework Dyeing',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const ReworkDyeing(),
+                            ),
+                          );
+                        },
+                      ),
+                    ];
+                    return ActionDialog(actions: actions);
+                  },
+                );
+              },
+              icon: const Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 48,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -137,46 +137,49 @@ class _DetailWorkOrderState extends State<DetailWorkOrder>
     final List<Map<String, dynamic>> items =
         (widget.data['work_orders']['items'] ?? [])
             .cast<Map<String, dynamic>>();
-    return TabBarView(
-      controller: _tabWoController,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: CustomCard(
-                child: widget.data['work_orders']['notes'] != null
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            htmlToPlainText(
-                                widget.data['work_orders']['notes']),
-                            style: TextStyle(
-                              fontSize: CustomTheme().fontSize('lg'),
+    return SizedBox(
+      height: 500,
+      child: TabBarView(
+        controller: _tabWoController,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: CustomCard(
+                  child: widget.data['work_orders']['notes'] != null
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              htmlToPlainText(
+                                  widget.data['work_orders']['notes']),
+                              style: TextStyle(
+                                fontSize: CustomTheme().fontSize('lg'),
+                              ),
                             ),
-                          ),
-                        ].separatedBy(CustomTheme().vGap('lg')),
-                      )
-                    : NoData(),
-              ),
-            ),
-          ],
-        ),
-        Container(
-          child: items.isEmpty
-              ? Center(child: Text('No Data'))
-              : ListView.separated(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    final item = items[index];
-                    return ListItem(item: item);
-                  },
-                  separatorBuilder: (context, index) =>
-                      CustomTheme().vGap('xl'),
+                          ].separatedBy(CustomTheme().vGap('lg')),
+                        )
+                      : NoData(),
                 ),
-        ),
-      ],
+              ),
+            ],
+          ),
+          Container(
+            child: items.isEmpty
+                ? Center(child: Text('No Data'))
+                : ListView.separated(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+                      return ListItem(item: item);
+                    },
+                    separatorBuilder: (context, index) =>
+                        CustomTheme().vGap('xl'),
+                  ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -188,137 +191,15 @@ class _DetailWorkOrderState extends State<DetailWorkOrder>
     return LayoutBuilder(
       builder: (context, constraints) {
         final isTablet = constraints.maxWidth > 600;
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [_buildWorkOrderCard(isTablet)],
-          ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildWorkOrderCard(isTablet),
+            _buildProcessWoFilter(),
+            _buildSwipeWoContent()
+          ].separatedBy(CustomTheme().vGap('')),
         );
       },
-      // Column(
-      //     crossAxisAlignment: CrossAxisAlignment.start,
-      //     children: [
-      //       Row(
-      //         crossAxisAlignment: CrossAxisAlignment.start,
-      //         children: [
-      //           if (!isPortrait)
-      //             Expanded(
-      //                 child: CustomCard(
-      //                     child: Column(
-      //               crossAxisAlignment: CrossAxisAlignment.start,
-      //               children: [
-      //                 Text(
-      //                   'Informasi Work Order',
-      //                   style: TextStyle(
-      //                       fontSize: CustomTheme().fontSize('lg'),
-      //                       fontWeight: CustomTheme().fontWeight('bold')),
-      //                 ),
-      //                 Row(
-      //                   crossAxisAlignment: CrossAxisAlignment.center,
-      //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //                   children: [
-      //                     CustomDetailBadge(
-      //                         width: 280.0,
-      //                         status: 'Menunggu Diproses',
-      //                         label: 'Nomor Work Order',
-      //                         value: widget.data['work_orders']?['wo_no']
-      //                                 ?.toString() ??
-      //                             'No Data'),
-      //                     CustomDetailBadge(
-      //                       width: 280.0,
-      //                       status: 'Menunggu Diproses',
-      //                       label: 'Tanggal Work Order',
-      //                       value: widget.data['start_time'] != null
-      //                           ? DateFormat("dd MMM yyyy").format(
-      //                               DateTime.parse(widget.data['start_time']))
-      //                           : NoData(),
-      //                     ),
-      //                     CustomDetailBadge(
-      //                       width: 280.0,
-      //                       status: 'Menunggu Diproses',
-      //                       label: 'Qty Greige',
-      //                       value:
-      //                           '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']['code']}',
-      //                     ),
-      //                     CustomDetailBadge(
-      //                       width: 280.0,
-      //                       status: 'Menunggu Diproses',
-      //                       label: 'Dibuat oleh',
-      //                       value: widget.data['work_orders']['user']['name'] ??
-      //                           'No Data',
-      //                     ),
-      //                   ],
-      //                 )
-      //               ].separatedBy(CustomTheme().vGap('lg')),
-      //             )))
-      //         ].separatedBy(CustomTheme().hGap('2xl')),
-      //       ),
-      //       if (isPortrait)
-      //         Row(
-      //           children: [
-      //             Expanded(
-      //               child: CustomCard(
-      //                   child: Column(
-      //                 crossAxisAlignment: CrossAxisAlignment.start,
-      //                 children: [
-      //                   Text(
-      //                     'Informasi Work Order',
-      //                     style: TextStyle(
-      //                         fontSize: CustomTheme().fontSize('lg'),
-      //                         fontWeight: CustomTheme().fontWeight('bold')),
-      //                   ),
-      //                   Wrap(
-      //                     spacing: 8.0,
-      //                     runSpacing: 8.0,
-      //                     children: [
-      //                       CustomDetailBadge(
-      //                           width: 180.0,
-      //                           status: 'Menunggu Diproses',
-      //                           label: 'Nomor Work Order',
-      //                           value: widget.data['work_orders']?['wo_no']
-      //                                   ?.toString() ??
-      //                               'No Data'),
-      //                       CustomDetailBadge(
-      //                         width: 180.0,
-      //                         status: 'Menunggu Diproses',
-      //                         label: 'Tanggal Work Order',
-      //                         value: widget.data['start_time'] != null
-      //                             ? DateFormat("dd MMM yyyy").format(
-      //                                 DateTime.parse(widget.data['start_time']))
-      //                             : NoData(),
-      //                       ),
-      //                       CustomDetailBadge(
-      //                         width: 180.0,
-      //                         status: 'Menunggu Diproses',
-      //                         label: 'Qty Greige',
-      //                         value:
-      //                             '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']['code']}',
-      //                       ),
-      //                       CustomDetailBadge(
-      //                         width: 180.0,
-      //                         status: 'Menunggu Diproses',
-      //                         label: 'Dibuat oleh',
-      //                         value: widget.data['work_orders']['user']['name'] ??
-      //                             'No Data',
-      //                       ),
-      //                     ],
-      //                   )
-      //                 ].separatedBy(CustomTheme().vGap('lg')),
-      //               )),
-      //             ),
-      //           ],
-      //         ),
-      //       Column(
-      //         crossAxisAlignment: CrossAxisAlignment.start,
-      //         children: [
-      //           _buildProcessWoFilter(),
-      //           SizedBox(
-      //             height: 300,
-      //             child: _buildSwipeWoContent(),
-      //           ),
-      //         ].separatedBy(CustomTheme().vGap('xl')),
-      //       ),
-      //     ].separatedBy(CustomTheme().vGap('xl'))),
     );
   }
 

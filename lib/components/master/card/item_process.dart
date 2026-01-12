@@ -23,6 +23,9 @@ class ItemProcess extends StatefulWidget {
 }
 
 class _ItemProcessState extends State<ItemProcess> {
+  bool _showAllTimeline = false;
+  static const int _collapsedTimelineCount = 3;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -237,10 +240,15 @@ class _ItemProcessState extends State<ItemProcess> {
   Widget _buildProcessTimeline(Map<String, dynamic> processes, bool isTablet) {
     final processKeys = _getOrderedProcessKeys(processes);
 
+    final visibleKeys = _showAllTimeline
+        ? processKeys
+        : processKeys.take(_collapsedTimelineCount).toList();
+
+    final hasMore = processKeys.length > _collapsedTimelineCount;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Section Title
         _buildSectionTitle(
           icon: Icons.timeline_outlined,
           title: 'Alur Proses',
@@ -248,21 +256,69 @@ class _ItemProcessState extends State<ItemProcess> {
         ),
         SizedBox(height: isTablet ? 20 : 16),
 
-        // Timeline
-        ...processKeys.asMap().entries.map((entry) {
-          final index = entry.key;
-          final key = entry.value;
-          final process = processes[key] ?? {};
-          final isLast = index == processKeys.length - 1;
+        /// Timeline Items
+        AnimatedSize(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          child: Column(
+            children: visibleKeys.asMap().entries.map((entry) {
+              final index = entry.key;
+              final key = entry.value;
+              final process = processes[key] ?? {};
+              final isLast = index == visibleKeys.length - 1;
 
-          return _buildTimelineItem(
-            processKey: key,
-            process: process,
-            index: index,
-            isLast: isLast,
-            isTablet: isTablet,
-          );
-        }).toList(),
+              return _buildTimelineItem(
+                processKey: key,
+                process: process,
+                index: index,
+                isLast: isLast,
+                isTablet: isTablet,
+              );
+            }).toList(),
+          ),
+        ),
+
+        /// Expand / Collapse Button
+        if (hasMore) ...[
+          SizedBox(height: isTablet ? 16 : 12),
+          Center(
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () {
+                setState(() {
+                  _showAllTimeline = !_showAllTimeline;
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      _showAllTimeline ? Icons.expand_less : Icons.expand_more,
+                      size: isTablet ? 20 : 18,
+                      color: CustomTheme().buttonColor('primary'),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      _showAllTimeline
+                          ? 'Sembunyikan Proses'
+                          : 'Lihat Semua Proses',
+                      style: TextStyle(
+                        fontSize: isTablet ? 13 : 12,
+                        fontWeight: FontWeight.w600,
+                        color: CustomTheme().buttonColor('primary'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -449,31 +505,11 @@ class _ItemProcessState extends State<ItemProcess> {
         horizontal: isTablet ? 10 : 8,
         vertical: isTablet ? 6 : 4,
       ),
-      decoration: BoxDecoration(
-        color: config['color'].withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: isTablet ? 8 : 6,
-            height: isTablet ? 8 : 6,
-            decoration: BoxDecoration(
-              color: config['color'],
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 6),
-          Text(
-            config['label'],
-            style: TextStyle(
-              fontSize: isTablet ? 11 : 10,
-              fontWeight: FontWeight.w600,
-              color: config['color'],
-            ),
-          ),
-        ],
+      child: CustomBadge(
+        withStatus: true,
+        rework: true,
+        title: widget.item['status'],
+        status: widget.item['status'],
       ),
     );
   }
@@ -488,7 +524,8 @@ class _ItemProcessState extends State<ItemProcess> {
       details.add(_buildDetailItem(
         icon: Icons.inventory_2_outlined,
         label: 'Qty',
-        value: '${formatNumber(process['qty'])} ${process['unit'] ?? 'pcs'}',
+        value:
+            '${formatNumber(process['qty'])} ${process['unit']['code'] ?? 'pcs'}',
         isTablet: isTablet,
       ));
     }
@@ -514,36 +551,10 @@ class _ItemProcessState extends State<ItemProcess> {
     }
 
     // Machine
-    // if (process['machine'] != null) {
-    //   details.add(_buildDetailItem(
-    //     icon: Icons.precision_manufacturing_outlined,
-    //     label: 'Mesin',
-    //     value: process['machine']['name'] ?? '-',
-    //     isTablet: isTablet,
-    //   ));
-    // }
 
     // Operator
-    // if (process['operator'] != null) {
-    //   details.add(_buildDetailItem(
-    //     icon: Icons.person_outline,
-    //     label: 'Operator',
-    //     value: process['operator']['name'] ?? '-',
-    //     isTablet: isTablet,
-    //   ));
-    // }
 
     // Remarks
-    // if (process['remarks'] != null &&
-    //     process['remarks'].toString().isNotEmpty) {
-    //   details.add(_buildDetailItem(
-    //     icon: Icons.notes_outlined,
-    //     label: 'Keterangan',
-    //     value: process['remarks'].toString(),
-    //     isTablet: isTablet,
-    //     isFullWidth: true,
-    //   ));
-    // }
 
     if (details.isEmpty) return const SizedBox.shrink();
 
@@ -871,10 +882,10 @@ class _ItemProcessState extends State<ItemProcess> {
         .toList();
 
     if (statuses.every((s) => s == 'completed' || s == 'Selesai')) {
-      return 'completed';
+      return 'Selesai';
     }
     if (statuses.any((s) => s == 'in_progress' || s == 'Diproses')) {
-      return 'in_progress';
+      return 'Diproses';
     }
 
     return 'Menunggu Diproses';

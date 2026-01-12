@@ -950,7 +950,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         (widget.data['work_orders']['items'] ?? [])
             .cast<Map<String, dynamic>>();
     return SizedBox(
-      height: 300,
+      height: 500,
       child: TabBarView(
         controller: _tabWoController,
         children: [
@@ -1001,7 +1001,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
 
   Widget _buildSwipeContent() {
     return SizedBox(
-      height: 300,
+      height: 500,
       child: TabBarView(
         controller: _tabController,
         children: [

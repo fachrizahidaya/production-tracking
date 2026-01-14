@@ -28,6 +28,8 @@ class FinishSection extends StatefulWidget {
   final withQtyAndWeight;
   final handleSelectQtyUnitItem;
   final handleSelectQtyUnitDyeing;
+  final data;
+  final forPacking;
 
   final qtyItem;
   final label;
@@ -59,7 +61,9 @@ class FinishSection extends StatefulWidget {
       this.qtyItem,
       this.label,
       this.forDyeing,
-      this.handleSelectQtyUnitDyeing});
+      this.handleSelectQtyUnitDyeing,
+      this.data,
+      this.forPacking});
 
   @override
   State<FinishSection> createState() => _FinishSectionState();
@@ -259,12 +263,6 @@ class _FinishSectionState extends State<FinishSection> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isLoading) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-
     return ListForm(
       formKey: widget.formKey,
       form: widget.form,
@@ -300,6 +298,8 @@ class _FinishSectionState extends State<FinishSection> {
       handleDeleteAttachment: _handleDeleteAttachment,
       label: widget.label,
       forDyeing: widget.forDyeing,
+      data: widget.data,
+      forPacking: widget.forPacking,
     );
   }
 }

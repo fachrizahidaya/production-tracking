@@ -5,6 +5,7 @@ import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/create_section.dart';
+import 'package:textile_tracking/components/process/finish/work_order_item_tab.dart';
 import 'package:textile_tracking/components/process/info_tab.dart';
 import 'package:textile_tracking/helpers/util/format_html.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
@@ -51,11 +52,8 @@ class _FormInfoTabState extends State<FormInfoTab> {
   @override
   Widget build(BuildContext context) {
     if (widget.isLoading) {
-      return Container(
-        color: const Color(0xFFEBEBEB),
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+      return Center(
+        child: CircularProgressIndicator(),
       );
     }
 
@@ -64,7 +62,7 @@ class _FormInfoTabState extends State<FormInfoTab> {
         final isTablet = constraints.maxWidth > 600;
 
         return SingleChildScrollView(
-          padding: EdgeInsets.all(isTablet ? 20 : 16),
+          padding: CustomTheme().padding('content'),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -82,14 +80,17 @@ class _FormInfoTabState extends State<FormInfoTab> {
                 withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
               ),
               if (widget.form?['wo_id'] != null) ...[
-                SizedBox(height: isTablet ? 24 : 16),
                 InfoTab(
                   data: widget.data,
                   label: widget.label,
                   isTablet: isTablet,
+                  withNote: true,
                 ),
               ],
-            ],
+              WorkOrderItemTab(
+                data: widget.data,
+              )
+            ].separatedBy(CustomTheme().vGap('2xl')),
           ),
         );
       },

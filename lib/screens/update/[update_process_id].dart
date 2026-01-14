@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
@@ -9,6 +9,7 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/card/custom_card.dart';
 import 'package:textile_tracking/components/update/detail_work_order.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class UpdateProcess extends StatefulWidget {
@@ -63,6 +64,44 @@ class UpdateProcess extends StatefulWidget {
 }
 
 class _UpdateProcessState extends State<UpdateProcess> {
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+
+  Future<void> _handleCancel(BuildContext context) async {
+    if (context.mounted) {
+      showConfirmationDialog(
+          context: context,
+          isLoading: _isLoading,
+          onConfirm: () async {
+            await Future.delayed(const Duration(milliseconds: 200));
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          title: 'Batal Edit Proses ${widget.label}',
+          message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
+          buttonBackground: CustomTheme().buttonColor('danger'));
+    }
+  }
+
+  Future<void> _handleSubmit(BuildContext context) async {
+    if (context.mounted) {
+      showConfirmationDialog(
+          context: context,
+          isLoading: widget.isSubmitting,
+          onConfirm: () async {
+            await Future.delayed(const Duration(milliseconds: 200));
+            widget.isSubmitting.value = true;
+            try {
+              await widget.handleUpdate(widget.data['id'].toString());
+            } finally {
+              widget.isSubmitting.value = false;
+            }
+          },
+          title: 'Edit Proses ${widget.label}',
+          message: 'Anda yakin ingin mengubah proses?',
+          buttonBackground: CustomTheme().buttonColor('primary'));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -74,7 +113,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
           backgroundColor: const Color(0xFFf9fafc),
           appBar: CustomAppBar(
             title: 'Edit ${widget.label}',
-            onReturn: () => Navigator.pop(context),
+            onReturn: () => _handleCancel(context),
             id: widget.id,
           ),
           body: SingleChildScrollView(
@@ -187,22 +226,17 @@ class _UpdateProcessState extends State<UpdateProcess> {
                       Expanded(
                         child: CancelButton(
                           label: 'Batal',
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => _handleCancel(context),
+                          customHeight: 48.0,
                         ),
                       ),
                       Expanded(
                           child: FormButton(
                         label: 'Simpan',
-                        isLoading: isSubmitting,
-                        onPressed: () async {
-                          widget.isSubmitting.value = true;
-                          try {
-                            await widget
-                                .handleUpdate(widget.data['id'].toString());
-                          } finally {
-                            widget.isSubmitting.value = false;
-                          }
+                        onPressed: () {
+                          _handleSubmit(context);
                         },
+                        customHeight: 48.0,
                       ))
                     ].separatedBy(CustomTheme().hGap('xl')),
                   );

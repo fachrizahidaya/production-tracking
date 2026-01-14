@@ -3,6 +3,7 @@ import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/card/custom_card.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ListItem extends StatelessWidget {
   final dynamic item;
@@ -28,10 +29,9 @@ class ListItem extends StatelessWidget {
           onTap: onTap,
           onLongPress: onLongPress,
           child: Container(
-            margin: EdgeInsets.only(bottom: isTablet ? 12 : 8),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
@@ -41,16 +41,16 @@ class ListItem extends StatelessWidget {
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               child: IntrinsicHeight(
                 child: Row(
                   children: [
                     // Left Accent Bar
-                    _buildAccentBar(),
+
                     // Main Content
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.all(isTablet ? 16 : 12),
+                        padding: CustomTheme().padding('card'),
                         child: isTablet
                             ? _buildTabletLayout()
                             : _buildMobileLayout(),
@@ -68,7 +68,6 @@ class ListItem extends StatelessWidget {
     );
   }
 
-  /// Left Accent Bar berdasarkan status
   Widget _buildAccentBar() {
     final status = item['status']?.toString().toLowerCase() ?? 'pending';
     Color accentColor;
@@ -108,22 +107,18 @@ class ListItem extends StatelessWidget {
       children: [
         // Item Icon
         _buildItemIcon(true),
-        const SizedBox(width: 16),
         // Item Info
         Expanded(
           flex: 2,
           child: _buildItemInfo(true),
         ),
-        const SizedBox(width: 16),
         // Additional Info
         Expanded(
           flex: 2,
           child: _buildAdditionalInfo(true),
         ),
-        const SizedBox(width: 16),
         // Status Badge
-        _buildStatusSection(true),
-      ],
+      ].separatedBy(CustomTheme().hGap('xl')),
     );
   }
 
@@ -137,22 +132,20 @@ class ListItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildItemIcon(false),
-            const SizedBox(width: 12),
             Expanded(child: _buildItemInfo(false)),
-            _buildStatusSection(false),
-          ],
+          ].separatedBy(CustomTheme().vGap('xl')),
         ),
         const SizedBox(height: 12),
         // Bottom Row: Additional Info
         _buildAdditionalInfo(false),
-      ],
+      ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
 
   /// Item Icon
   Widget _buildItemIcon(bool isTablet) {
     return Container(
-      padding: EdgeInsets.all(isTablet ? 14 : 12),
+      padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -162,7 +155,7 @@ class ListItem extends StatelessWidget {
             CustomTheme().buttonColor('primary').withOpacity(0.05),
           ],
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Icon(
         Icons.inventory_2_outlined,
@@ -180,36 +173,35 @@ class ListItem extends StatelessWidget {
       children: [
         // Item Code Badge
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: CustomTheme().padding('badge'),
           decoration: BoxDecoration(
             color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(8),
             border: Border.all(color: Colors.grey[300]!),
           ),
           child: Text(
             item['item_code']?.toString() ?? '-',
             style: TextStyle(
-              fontSize: isTablet ? 12 : 11,
-              fontWeight: FontWeight.w600,
+              fontSize: CustomTheme().fontSize('sm'),
+              fontWeight: CustomTheme().fontWeight('semibold'),
               color: Colors.grey[700],
               letterSpacing: 0.5,
             ),
           ),
         ),
-        SizedBox(height: isTablet ? 8 : 6),
+        // SizedBox(height: isTablet ? 8 : 6),
         // Item Name
         Text(
           item['item_name']?.toString() ?? '-',
           style: TextStyle(
-            fontSize: isTablet ? 16 : 14,
-            fontWeight: FontWeight.w600,
+            fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
+            fontWeight: CustomTheme().fontWeight('semibold'),
             color: Colors.grey[800],
           ),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
         if (item['variants'][0] != null) ...[
-          const SizedBox(height: 4),
           Text(
             item['variants'][0]['value'].toString(),
             style: TextStyle(
@@ -220,7 +212,7 @@ class ListItem extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ],
-      ],
+      ].separatedBy(CustomTheme().vGap('lg')),
     );
   }
 
@@ -238,7 +230,6 @@ class ListItem extends StatelessWidget {
               ),
             ),
           if (item['variants'][2] != null) ...[
-            const SizedBox(width: 8),
             Expanded(
               child: _buildInfoChip(
                 icon: Icons.color_lens_outlined,
@@ -247,7 +238,7 @@ class ListItem extends StatelessWidget {
               ),
             ),
           ],
-        ],
+        ].separatedBy(CustomTheme().hGap('lg')),
       );
     }
 
@@ -256,28 +247,16 @@ class ListItem extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          // if (item['category'] != null)
-          //   _buildInfoChip(
-          //     icon: Icons.category_outlined,
-          //     label: item['category']['name']?.toString() ?? '-',
-          //     isTablet: isTablet,
-          //   ),
-          // if (item['supplier'] != null) ...[
-          //   const SizedBox(width: 8),
-          //   _buildInfoChip(
-          //     icon: Icons.local_shipping_outlined,
-          //     label: item['supplier']['name']?.toString() ?? '-',
-          //     isTablet: isTablet,
-          //   ),
-          // ],
-          // if (item['location'] != null) ...[
-          //   const SizedBox(width: 8),
-          //   _buildInfoChip(
-          //     icon: Icons.location_on_outlined,
-          //     label: item['location']?.toString() ?? '-',
-          //     isTablet: isTablet,
-          //   ),
-          // ],
+          _buildInfoChip(
+            icon: Icons.design_services_outlined,
+            label: item['variants'][3]['value']?.toString() ?? '-',
+            isTablet: isTablet,
+          ),
+          _buildInfoChip(
+            icon: Icons.color_lens_outlined,
+            label: item['variants'][2]['value']?.toString() ?? '-',
+            isTablet: isTablet,
+          ),
         ],
       ),
     );
@@ -290,10 +269,7 @@ class ListItem extends StatelessWidget {
     required bool isTablet,
   }) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isTablet ? 12 : 10,
-        vertical: isTablet ? 8 : 6,
-      ),
+      padding: CustomTheme().padding('badge'),
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(8),
@@ -307,20 +283,19 @@ class ListItem extends StatelessWidget {
             size: isTablet ? 16 : 14,
             color: Colors.grey[600],
           ),
-          const SizedBox(width: 6),
           Flexible(
             child: Text(
               label,
               style: TextStyle(
-                fontSize: isTablet ? 13 : 11,
+                fontSize: CustomTheme().fontSize('sm'),
                 color: Colors.grey[700],
-                fontWeight: FontWeight.w500,
+                fontWeight: CustomTheme().fontWeight('semibold'),
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
-        ],
+        ].separatedBy(CustomTheme().hGap('md')),
       ),
     );
   }
@@ -370,10 +345,7 @@ class ListItem extends StatelessWidget {
   /// Quantity Section
   Widget _buildQuantitySection(bool isTablet) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isTablet ? 20 : 16,
-        vertical: isTablet ? 16 : 12,
-      ),
+      padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -393,27 +365,20 @@ class ListItem extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.trolley,
-            size: isTablet ? 24 : 20,
-            color: CustomTheme().buttonColor('primary'),
-          ),
-          SizedBox(height: isTablet ? 8 : 6),
           Text(
             _formatQuantity(item['qty']),
             style: TextStyle(
-              fontSize: isTablet ? 20 : 18,
-              fontWeight: FontWeight.bold,
+              fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
+              fontWeight: CustomTheme().fontWeight('bold'),
               color: CustomTheme().buttonColor('primary'),
             ),
           ),
-          const SizedBox(height: 2),
           Text(
             item['unit']?['code']?.toString() ?? '-',
             style: TextStyle(
-              fontSize: isTablet ? 12 : 11,
+              fontSize: CustomTheme().fontSize('sm'),
               color: Colors.grey[600],
-              fontWeight: FontWeight.w500,
+              fontWeight: CustomTheme().fontWeight('semibold'),
             ),
           ),
         ],

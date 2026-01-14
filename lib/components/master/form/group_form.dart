@@ -7,18 +7,22 @@ class GroupForm extends StatelessWidget {
   final formControl;
   final bool req;
   final bool? disabled;
+  final errorText;
+  final errorMinHeight;
 
-  const GroupForm({
-    super.key,
-    this.label,
-    this.formControl,
-    this.req = false,
-    this.disabled,
-  });
+  const GroupForm(
+      {super.key,
+      this.label,
+      this.formControl,
+      this.req = false,
+      this.disabled,
+      this.errorText,
+      this.errorMinHeight = 20});
 
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = disabled ?? false;
+    final bool hasError = errorText != null && errorText!.isNotEmpty;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -43,12 +47,20 @@ class GroupForm extends StatelessWidget {
           ),
         ),
         AbsorbPointer(
-          absorbing: isDisabled, // Prevent interactions when disabled
+          absorbing: isDisabled,
           child: Opacity(
-            opacity: isDisabled ? 0.5 : 1.0, // Adjust opacity if disabled
+            opacity: isDisabled ? 0.5 : 1.0,
             child: formControl,
           ),
         ),
+        if (hasError)
+          Text(
+            errorText!,
+            style: TextStyle(
+              color: CustomTheme().colors('danger'),
+              fontSize: CustomTheme().fontSize('sm'),
+            ),
+          ),
       ].separatedBy(
         CustomTheme().vGap('lg'),
       ),

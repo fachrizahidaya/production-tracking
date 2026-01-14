@@ -90,7 +90,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
   }
 
   final List<String> processFilters = [
-    'All',
+    'Semua',
     'Selesai',
     'Diproses',
     'Menunggu Diproses',
@@ -121,6 +121,11 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     super.dispose();
   }
 
+  bool get _showProgress {
+    final filter = processFilters[selectedIndex];
+    return filter == 'Semua';
+  }
+
   Widget _buildProcessFilter() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -136,7 +141,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                   selectedIndex = index;
                 });
 
-                _tabController.animateTo(index);
+                // _tabController.animateTo(index);
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -168,32 +173,37 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
 
   Widget _buildSwipeContent() {
     return SizedBox(
-      height: 500,
-      child: TabBarView(
-        controller: _tabController,
-        children: processFilters.map((filter) {
-          return CustomScrollView(
-            slivers: [
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final item = widget.data![index];
+        height: 500,
+        child:
+            // TabBarView(
+            //   controller: _tabController,
+            //   children:
+            //   processFilters.map((filter) {
+            //     return
+            CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final item = widget.data![index];
 
-                    return Padding(
-                      padding: CustomTheme().padding('badge'),
-                      child: SummaryCard(
-                        data: item,
-                      ),
-                    );
-                  },
-                  childCount: widget.data!.length,
-                ),
+                  return Padding(
+                    padding: CustomTheme().padding('badge'),
+                    child: SummaryCard(
+                      data: item,
+                      showProgress: _showProgress,
+                      filter: processFilters[selectedIndex],
+                    ),
+                  );
+                },
+                childCount: widget.data!.length,
               ),
-            ],
-          );
-        }).toList(),
-      ),
-    );
+            ),
+          ],
+        )
+        //   }).toList(),
+        // ),
+        );
   }
 
   @override

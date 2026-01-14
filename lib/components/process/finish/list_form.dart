@@ -22,6 +22,7 @@ class ListForm extends StatefulWidget {
   final handleSelectWidthUnit;
   final handleSelectQtyUnitItem;
   final handleSelectQtyUnitDyeing;
+  final data;
 
   final handleSelectMachine;
   final isFormIncomplete;
@@ -41,6 +42,7 @@ class ListForm extends StatefulWidget {
   final showImageDialog;
   final label;
   final forDyeing;
+  final forPacking;
 
   const ListForm(
       {super.key,
@@ -79,7 +81,9 @@ class ListForm extends StatefulWidget {
       this.handleDeleteAttachment,
       this.label,
       this.forDyeing,
-      this.handleSelectQtyUnitDyeing});
+      this.handleSelectQtyUnitDyeing,
+      this.data,
+      this.forPacking});
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -97,6 +101,12 @@ class _ListFormState extends State<ListForm> {
         .toList();
     _syncGradesWithOptions();
     super.initState();
+  }
+
+  double? get greigeQty {
+    return double.tryParse(
+      widget.processData['work_orders']?['greige_qty']?.toString() ?? '',
+    );
   }
 
   double _getTotalItemQty() {
@@ -252,6 +262,9 @@ class _ListFormState extends State<ListForm> {
         qtyWarning: _itemWarningValidationMessage,
         label: widget.label,
         forDyeing: widget.forDyeing,
+        data: widget.data,
+        forPacking: widget.forPacking,
+        greigeQty: greigeQty,
       ),
     );
   }

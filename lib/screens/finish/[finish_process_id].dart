@@ -9,6 +9,7 @@ import 'package:textile_tracking/components/process/finish/finish_form_tab.dart'
 import 'package:textile_tracking/components/process/finish/work_order_item_tab.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
@@ -34,6 +35,7 @@ class FinishProcessManual extends StatefulWidget {
   final fetchItemGrade;
   final getItemGradeOptions;
   final processId;
+  final forPacking;
 
   const FinishProcessManual(
       {super.key,
@@ -54,7 +56,8 @@ class FinishProcessManual extends StatefulWidget {
       this.getItemGradeOptions,
       this.withQtyAndWeight,
       this.processId,
-      this.forDyeing});
+      this.forDyeing,
+      this.forPacking});
 
   @override
   State<FinishProcessManual> createState() => _FinishProcessManualState();
@@ -301,6 +304,32 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             title: 'Batal',
             message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
             buttonBackground: CustomTheme().buttonColor('danger'));
+      } else {
+        Navigator.pop(context);
+      }
+    }
+  }
+
+  Future<void> _handleSubmit(BuildContext context) async {
+    if (context.mounted) {
+      if (widget.form?['wo_id'] != null) {
+        showConfirmationDialog(
+            context: context,
+            isLoading: _isSubmitting,
+            onConfirm: () async {
+              await Future.delayed(const Duration(milliseconds: 200));
+              _isSubmitting.value = true;
+              try {
+                await widget.handleSubmit(
+                  data['id']?.toString() ?? processId,
+                );
+              } finally {
+                _isSubmitting.value = false;
+              }
+            },
+            title: 'Selesai Proses ${widget.label}',
+            message: 'Anda yakin ingin menyelesaikan proses?',
+            buttonBackground: CustomTheme().buttonColor('primary'));
       } else {
         Navigator.pop(context);
       }
@@ -563,7 +592,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length:
+          // 2,
+          3,
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
@@ -588,9 +619,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                   Tab(
                     text: 'Informasi',
                   ),
-                  Tab(
-                    text: 'Material',
-                  ),
+                  Tab(text: 'Lampiran'
+                      // 'Material',
+                      ),
                 ]),
               ),
               Expanded(
@@ -623,14 +654,19 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                     withQtyAndWeight: widget.withQtyAndWeight,
                     label: widget.label,
                     forDyeing: widget.forDyeing,
+                    data: data['work_orders'],
+                    forPacking: widget.forPacking,
                   ),
                   WorkOrderInfoTab(
                     data: data['work_orders'],
                     label: widget.label,
                   ),
-                  WorkOrderItemTab(
-                    data: woData,
-                  ),
+                  // WorkOrderItemTab(
+                  //   data: woData,
+                  // ),
+                  AttachmentTab(
+                    existingAttachment: woData['attachments'] ?? [],
+                  )
                 ]),
               )
             ],
@@ -642,7 +678,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             labelProcess: 'Selesai',
             processId: processId,
             formKey: _formKey,
-            handleSubmit: widget.handleSubmit,
+            handleSubmit: _handleSubmit,
             handleCancel: _handleCancel,
           ),
         ),

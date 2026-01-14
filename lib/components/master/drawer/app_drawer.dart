@@ -36,6 +36,7 @@ class _AppDrawerState extends State<AppDrawer> {
     'SPK',
     'Work Order',
     'Proses Produksi',
+    'Laporan'
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
@@ -152,7 +153,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                       : item.title ==
                                                                               'Packing'
                                                                           ? Icons
-                                                                              .stacked_bar_chart_outlined
+                                                                              .layers_outlined
                                                                           : item.title == 'Tumbler'
                                                                               ? Icons.dry_cleaning_outlined
                                                                               : Icons.menu,

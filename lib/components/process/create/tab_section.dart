@@ -7,6 +7,7 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/process/create/form_info_tab.dart';
 import 'package:textile_tracking/components/process/finish/work_order_item_tab.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -65,9 +66,33 @@ class _TabSectionState extends State<TabSection> {
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            title: 'Batal',
+            title: 'Batal Mulai Proses ${widget.label}',
             message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
             buttonBackground: CustomTheme().buttonColor('danger'));
+      } else {
+        Navigator.pop(context);
+      }
+    }
+  }
+
+  Future<void> _handleSubmit(BuildContext context) async {
+    if (context.mounted) {
+      if (widget.form?['wo_id'] != null) {
+        showConfirmationDialog(
+            context: context,
+            isLoading: widget.isSubmitting,
+            onConfirm: () async {
+              await Future.delayed(const Duration(milliseconds: 200));
+              widget.isSubmitting.value = true;
+              try {
+                await widget.handleSubmit();
+              } finally {
+                widget.isSubmitting.value = false;
+              }
+            },
+            title: 'Mulai Proses ${widget.label}',
+            message: 'Anda yakin ingin memulai proses?',
+            buttonBackground: CustomTheme().buttonColor('primary'));
       } else {
         Navigator.pop(context);
       }
@@ -109,7 +134,7 @@ class _TabSectionState extends State<TabSection> {
                   text: 'Form',
                 ),
                 Tab(
-                  text: 'Material',
+                  text: 'Lampiran',
                 ),
               ]),
             ),
@@ -130,7 +155,10 @@ class _TabSectionState extends State<TabSection> {
                   withOnlyMaklon: widget.withOnlyMaklon,
                   withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
                 ),
-                WorkOrderItemTab(data: widget.woData),
+                // WorkOrderItemTab(data: widget.woData),
+                AttachmentTab(
+                  existingAttachment: widget.woData['attachments'] ?? [],
+                ),
               ]),
             )
           ],
@@ -148,21 +176,17 @@ class _TabSectionState extends State<TabSection> {
                       child: CancelButton(
                         label: 'Batal',
                         onPressed: () => _handleCancel(context),
+                        customHeight: 48.0,
                       ),
                     ),
                     Expanded(
                         child: FormButton(
                       label: 'Mulai',
-                      isLoading: isSubmitting,
                       isDisabled: isDisabled,
-                      onPressed: () async {
-                        widget.isSubmitting.value = true;
-                        try {
-                          await widget.handleSubmit();
-                        } finally {
-                          widget.isSubmitting.value = false;
-                        }
+                      onPressed: () {
+                        _handleSubmit(context);
                       },
+                      customHeight: 48.0,
                     ))
                   ].separatedBy(CustomTheme().hGap('xl')),
                 );

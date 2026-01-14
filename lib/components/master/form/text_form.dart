@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/text/thousand_separator_input_formatter.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class TextForm extends StatelessWidget {
   final label;
@@ -12,6 +12,7 @@ class TextForm extends StatelessWidget {
   final isNumber;
   final isDisabled;
   final validator;
+  final inputFormatters;
 
   const TextForm(
       {super.key,
@@ -22,51 +23,38 @@ class TextForm extends StatelessWidget {
       this.handleChange,
       this.isNumber,
       this.isDisabled = false,
-      this.validator});
+      this.validator,
+      this.inputFormatters});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('md'),
-              ),
-            ),
-            if (req)
-              Text(
-                '*',
-                style: TextStyle(
-                  color: CustomTheme().colors('danger'),
-                  fontSize: CustomTheme().fontSize('md'),
-                  fontWeight: CustomTheme().fontWeight('bold'),
-                ),
-              ),
-          ].separatedBy(CustomTheme().hGap('sm')),
-        ),
-        TextFormField(
-          enabled: isDisabled == true ? false : true,
-          controller: controller,
-          style: TextStyle(fontSize: CustomTheme().fontSize('md')),
-          decoration:
-              CustomTheme().inputDecoration().copyWith(hintText: 'Isi $label'),
-          keyboardType:
-              isNumber == true ? TextInputType.number : TextInputType.text,
-          inputFormatters:
-              isNumber == true ? [ThousandsSeparatorInputFormatter()] : [],
-          onChanged: (value) {
-            String rawValue = value.replaceAll(',', '');
-            handleChange(rawValue);
-          },
-          validator: req ? validator : null,
-        )
-      ].separatedBy(CustomTheme().vGap('lg')),
+    return FormField(
+      validator: validator,
+      builder: (FormFieldState<String> field) {
+        return GroupForm(
+          label: label,
+          req: req,
+          errorText: field.errorText,
+          disabled: isDisabled,
+          formControl: TextFormField(
+            enabled: isDisabled == true ? false : true,
+            controller: controller,
+            style: TextStyle(fontSize: CustomTheme().fontSize('md')),
+            decoration: CustomTheme()
+                .inputDecoration()
+                .copyWith(hintText: 'Isi $label'),
+            keyboardType:
+                isNumber == true ? TextInputType.number : TextInputType.text,
+            inputFormatters:
+                isNumber == true ? [ThousandsSeparatorInputFormatter()] : [],
+            onChanged: (value) {
+              String rawValue = value.replaceAll(',', '');
+              handleChange(rawValue);
+            },
+            // validator: req ? validator : null,
+          ),
+        );
+      },
     );
   }
 }

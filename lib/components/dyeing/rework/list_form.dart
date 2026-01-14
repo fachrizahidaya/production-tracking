@@ -40,28 +40,33 @@ class _ListFormState extends State<ListForm> {
   Widget build(BuildContext context) {
     return Form(
       key: widget.formKey,
-      child: Column(
+      child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             if (widget.id == null)
-              CustomCard(
-                  child: SelectForm(
-                label: 'Work Order',
-                onTap: () => widget.selectWorkOrder(),
-                selectedLabel: widget.form?['no_wo'] ?? '',
-                selectedValue: widget.form?['wo_id']?.toString() ?? '',
-                required: true,
-              )),
-            CustomCard(
-                child: SelectForm(
-              label: 'Mesin',
-              onTap: () => widget.selectMachine(),
-              selectedLabel: widget.form['nama_mesin'] ?? '',
-              selectedValue: widget.form['machine_id'].toString(),
-              required: true,
-            )),
-          ].separatedBy(CustomTheme().vGap('xl'))),
+              Expanded(
+                child: CustomCard(
+                    child: SelectForm(
+                  label: 'Work Order',
+                  onTap: () => widget.selectWorkOrder(),
+                  selectedLabel: widget.form?['no_wo'] ?? '',
+                  selectedValue: widget.form?['wo_id']?.toString() ?? '',
+                  required: true,
+                )),
+              ),
+            if (widget.form?['wo_id'] != null)
+              Expanded(
+                child: CustomCard(
+                    child: SelectForm(
+                  label: 'Mesin',
+                  onTap: () => widget.selectMachine(),
+                  selectedLabel: widget.form['nama_mesin'] ?? '',
+                  selectedValue: widget.form['machine_id'].toString(),
+                  required: true,
+                )),
+              ),
+          ].separatedBy(CustomTheme().hGap('xl'))),
     );
   }
 }

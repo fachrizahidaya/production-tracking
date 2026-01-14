@@ -1,19 +1,25 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/card/custom_card.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class SummaryCard extends StatefulWidget {
   final dynamic data;
   final VoidCallback? onTap;
   final bool isSelected;
+  final showProgress;
+  final filter;
 
-  const SummaryCard({
-    super.key,
-    required this.data,
-    this.onTap,
-    this.isSelected = false,
-  });
+  const SummaryCard(
+      {super.key,
+      required this.data,
+      this.onTap,
+      this.isSelected = false,
+      this.showProgress,
+      this.filter});
 
   @override
   State<SummaryCard> createState() => _SummaryCardState();
@@ -34,6 +40,32 @@ class _SummaryCardState extends State<SummaryCard>
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.98).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
+  }
+
+  int _getFilteredTotal(Map<String, dynamic> summary) {
+    switch (widget.filter) {
+      case 'Selesai':
+        return summary['completed'] ?? 0;
+      case 'Diproses':
+        return summary['in_progress'] ?? 0;
+      case 'Menunggu Diproses':
+        return summary['waiting'] ?? 0;
+      default:
+        return _getTotalCount(summary); // Semua
+    }
+  }
+
+  Color _getHeaderStatusColor(Map<String, dynamic> summary) {
+    switch (widget.filter) {
+      // case 'Selesai':
+      //   return const Color(0xFF10b981); // green
+      // case 'Diproses':
+      //   return Colors.blue;
+      // case 'Menunggu Diproses':
+      //   return Colors.orange;
+      default:
+        return _getSummaryColor(summary); // fallback lama
+    }
   }
 
   @override
@@ -72,7 +104,7 @@ class _SummaryCardState extends State<SummaryCard>
       duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: widget.isSelected
               ? CustomTheme().buttonColor('primary')
@@ -90,7 +122,7 @@ class _SummaryCardState extends State<SummaryCard>
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -99,18 +131,17 @@ class _SummaryCardState extends State<SummaryCard>
 
             // Content Section
             Padding(
-              padding: EdgeInsets.all(isTablet ? 16 : 12),
+              padding: CustomTheme().padding('card'),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Progress Section
-                  _buildProgressSection(summary, progress, isTablet),
-
-                  SizedBox(height: isTablet ? 16 : 12),
+                  if (widget.showProgress)
+                    _buildProgressSection(summary, progress, isTablet),
 
                   // Status Grid
                   _buildStatusGrid(summary, isTablet),
-                ],
+                ].separatedBy(CustomTheme().vGap('lg')),
               ),
             ),
           ],
@@ -122,10 +153,10 @@ class _SummaryCardState extends State<SummaryCard>
   /// Header Section dengan nama dan total
   Widget _buildHeader(Color statusColor, bool isTablet) {
     final summary = widget.data['summary'] ?? {};
-    final total = _getTotalCount(summary);
+    final total = _getFilteredTotal(summary);
 
     return Container(
-      padding: EdgeInsets.all(isTablet ? 16 : 12),
+      padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -146,10 +177,10 @@ class _SummaryCardState extends State<SummaryCard>
         children: [
           // Icon Container
           Container(
-            padding: EdgeInsets.all(isTablet ? 12 : 10),
+            padding: CustomTheme().padding('card'),
             decoration: BoxDecoration(
               color: statusColor.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               _getProcessIcon(widget.data['name']),
@@ -157,7 +188,6 @@ class _SummaryCardState extends State<SummaryCard>
               color: statusColor,
             ),
           ),
-          SizedBox(width: isTablet ? 14 : 12),
 
           // Name and Subtitle
           Expanded(
@@ -167,28 +197,20 @@ class _SummaryCardState extends State<SummaryCard>
                 Text(
                   widget.data['name'] ?? '-',
                   style: TextStyle(
-                    fontSize: isTablet ? 16 : 14,
-                    fontWeight: FontWeight.bold,
+                    fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
+                    fontWeight: CustomTheme().fontWeight('bold'),
                     color: Colors.grey[800],
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  _getProcessSubtitle(widget.data['name']),
-                  style: TextStyle(
-                    fontSize: isTablet ? 12 : 11,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
+              ].separatedBy(CustomTheme().vGap('sm')),
             ),
           ),
 
           // Total Badge
           _buildTotalBadge(total, statusColor, isTablet),
-        ],
+        ].separatedBy(CustomTheme().hGap('xl')),
       ),
     );
   }
@@ -196,13 +218,10 @@ class _SummaryCardState extends State<SummaryCard>
   /// Total Badge
   Widget _buildTotalBadge(int total, Color color, bool isTablet) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isTablet ? 14 : 12,
-        vertical: isTablet ? 8 : 6,
-      ),
+      padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: color.withOpacity(0.3),
         ),
@@ -215,16 +234,15 @@ class _SummaryCardState extends State<SummaryCard>
             size: isTablet ? 16 : 14,
             color: color,
           ),
-          const SizedBox(width: 6),
           Text(
             formatNumber(total),
             style: TextStyle(
-              fontSize: isTablet ? 16 : 14,
-              fontWeight: FontWeight.bold,
+              fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
+              fontWeight: CustomTheme().fontWeight('bold'),
               color: color,
             ),
           ),
-        ],
+        ].separatedBy(CustomTheme().hGap('md')),
       ),
     );
   }
@@ -244,22 +262,21 @@ class _SummaryCardState extends State<SummaryCard>
             Text(
               'Progress Penyelesaian',
               style: TextStyle(
-                fontSize: isTablet ? 13 : 12,
-                fontWeight: FontWeight.w500,
+                fontSize: CustomTheme().fontSize('sm'),
+                fontWeight: CustomTheme().fontWeight('semibold'),
                 color: Colors.grey[700],
               ),
             ),
             Text(
               '${(progress * 100).toStringAsFixed(0)}%',
               style: TextStyle(
-                fontSize: isTablet ? 14 : 13,
-                fontWeight: FontWeight.bold,
+                fontSize: CustomTheme().fontSize('md'),
+                fontWeight: CustomTheme().fontWeight('bold'),
                 color: _getProgressColor(progress),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
         // Progress Bar
         Stack(
           children: [
@@ -267,11 +284,11 @@ class _SummaryCardState extends State<SummaryCard>
               height: isTablet ? 10 : 8,
               decoration: BoxDecoration(
                 color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(6),
               ),
             ),
             AnimatedContainer(
-              duration: const Duration(milliseconds: 500),
+              duration: Duration(milliseconds: 500),
               curve: Curves.easeOutCubic,
               height: isTablet ? 10 : 8,
               width: (MediaQuery.of(context).size.width - 100) * progress,
@@ -285,7 +302,7 @@ class _SummaryCardState extends State<SummaryCard>
                     _getProgressColor(progress).withOpacity(0.7),
                   ],
                 ),
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(6),
                 boxShadow: [
                   BoxShadow(
                     color: _getProgressColor(progress).withOpacity(0.3),
@@ -297,69 +314,74 @@ class _SummaryCardState extends State<SummaryCard>
             ),
           ],
         ),
-        const SizedBox(height: 6),
         Text(
           '$completed dari $total selesai',
           style: TextStyle(
-            fontSize: isTablet ? 11 : 10,
+            fontSize: CustomTheme().fontSize('sm'),
             color: Colors.grey[500],
           ),
         ),
-      ],
+      ].separatedBy(CustomTheme().vGap('md')),
     );
   }
 
   /// Status Grid
   Widget _buildStatusGrid(Map<String, dynamic> summary, bool isTablet) {
-    final statusItems = [
+    final allItems = [
       _StatusItem(
         label: 'Selesai',
         value: summary['completed'] ?? 0,
-        icon: Icons.check_circle_outline,
-        color: Colors.green,
+        icon: Icons.task_alt_outlined,
+        color: const Color(0xffd1fae4),
+        iconColor: const Color(0xFF10b981),
       ),
       _StatusItem(
         label: 'Diproses',
         value: summary['in_progress'] ?? 0,
-        icon: Icons.hourglass_top_outlined,
-        color: Colors.blue,
+        icon: Icons.access_time_outlined,
+        color: const Color(0xFFfff3c6),
+        iconColor: const Color(0xfff18800),
       ),
       _StatusItem(
-        label: 'Menunggu',
+        label: 'Menunggu Diproses',
         value: summary['waiting'] ?? 0,
-        icon: Icons.schedule_outlined,
-        color: Colors.orange,
+        icon: Icons.error_outline,
+        color: const Color(0xFFf1f5f9),
+        iconColor: const Color.fromRGBO(113, 113, 123, 1),
       ),
-      if (summary['rework'] != null && summary['rework'] > 0)
-        _StatusItem(
-          label: 'Rework',
-          value: summary['rework'] ?? 0,
-          icon: Icons.replay_outlined,
-          color: Colors.red,
-        ),
     ];
 
-    return Wrap(
-      spacing: isTablet ? 12 : 8,
-      runSpacing: isTablet ? 12 : 8,
-      children: statusItems.map((item) {
-        return _buildStatusItem(item, isTablet);
-      }).toList(),
+    // 👇 FILTER BASED ON ACTIVE TAB
+    final filteredItems = allItems.where((item) {
+      switch (widget.filter) {
+        case 'Selesai':
+          return item.label == 'Selesai';
+        case 'Diproses':
+          return item.label == 'Diproses';
+        case 'Menunggu Diproses':
+          return item.label == 'Menunggu Diproses';
+        default:
+          return true; // Semua
+      }
+    }).toList();
+
+    return Row(
+      children: filteredItems
+          .map((item) => _buildStatusItem(item, isTablet))
+          .toList()
+          .separatedBy(SizedBox(width: isTablet ? 12 : 8)),
     );
   }
 
   /// Status Item Widget
   Widget _buildStatusItem(_StatusItem item, bool isTablet) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isTablet ? 12 : 10,
-        vertical: isTablet ? 10 : 8,
-      ),
+      padding: CustomTheme().padding('badge'),
       decoration: BoxDecoration(
-        color: item.color.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(10),
+        color: item.color,
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: item.color.withOpacity(0.2),
+          color: Colors.grey.withOpacity(0.3),
         ),
       ),
       child: Row(
@@ -368,30 +390,29 @@ class _SummaryCardState extends State<SummaryCard>
           Icon(
             item.icon,
             size: isTablet ? 18 : 16,
-            color: item.color,
+            color: item.iconColor,
           ),
-          const SizedBox(width: 6),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 formatNumber(item.value),
                 style: TextStyle(
-                  fontSize: isTablet ? 15 : 14,
-                  fontWeight: FontWeight.bold,
-                  color: item.color,
+                  fontSize: CustomTheme().fontSize('md'),
+                  fontWeight: CustomTheme().fontWeight('bold'),
+                  color: item.iconColor,
                 ),
               ),
               Text(
                 item.label,
                 style: TextStyle(
-                  fontSize: isTablet ? 10 : 9,
+                  fontSize: CustomTheme().fontSize('xs'),
                   color: Colors.grey[600],
                 ),
               ),
             ],
           ),
-        ],
+        ].separatedBy(CustomTheme().hGap('lg')),
       ),
     );
   }
@@ -401,22 +422,17 @@ class _SummaryCardState extends State<SummaryCard>
     final completed = summary['completed'] ?? 0;
     final inProgress = summary['in_progress'] ?? 0;
     final waiting = summary['waiting'] ?? 0;
-    final rework = summary['rework'] ?? 0;
-
-    if (rework > 0) {
-      return Colors.red;
-    }
 
     if (inProgress > 0) {
-      return Colors.blue;
+      return Color(0xfff18800);
     }
 
     if (waiting > 0) {
-      return Colors.orange;
+      return Color.fromRGBO(113, 113, 123, 1);
     }
 
     if (completed > 0) {
-      return Colors.green;
+      return Color(0xFF10b981);
     }
 
     return Colors.grey;
@@ -453,53 +469,46 @@ class _SummaryCardState extends State<SummaryCard>
 
     final lowerName = name.toLowerCase();
     if (lowerName.contains('dyeing')) {
+      return Icons.invert_colors_on_outlined;
+    }
+    if (lowerName.contains('press')) {
+      return Icons.layers_outlined;
+    }
+    if (lowerName.contains('tumbler')) {
+      return Icons.dry_cleaning_outlined;
+    }
+    if (lowerName.contains('stenter')) {
+      return Icons.air_outlined;
+    }
+    if (lowerName.contains('long sitting')) {
+      return Icons.content_paste_outlined;
+    }
+    if (lowerName.contains('long hemming')) {
+      return Icons.cut_outlined;
+    }
+    if (lowerName.contains('cross cutting')) {
+      return Icons.cut_outlined;
+    }
+    if (lowerName.contains('sewing')) {
+      return Icons.link_outlined;
+    }
+    if (lowerName.contains('embroidery')) {
       return Icons.color_lens_outlined;
-    }
-    if (lowerName.contains('finishing')) {
-      return Icons.auto_fix_high_outlined;
-    }
-    if (lowerName.contains('qc') || lowerName.contains('quality')) {
-      return Icons.verified_outlined;
-    }
-    if (lowerName.contains('packing')) {
-      return Icons.inventory_2_outlined;
     }
     if (lowerName.contains('printing')) {
       return Icons.print_outlined;
     }
-    if (lowerName.contains('washing')) {
-      return Icons.local_laundry_service_outlined;
+    if (lowerName.contains('sorting')) {
+      return Icons.sort_outlined;
+    }
+    if (lowerName.contains('packing')) {
+      return Icons.inventory_2_outlined;
     }
 
     return Icons.settings_outlined;
   }
 
   /// Get Process Subtitle
-  String _getProcessSubtitle(String? name) {
-    if (name == null) return 'Proses produksi';
-
-    final lowerName = name.toLowerCase();
-    if (lowerName.contains('dyeing')) {
-      return 'Proses pewarnaan kain';
-    }
-    if (lowerName.contains('finishing')) {
-      return 'Proses finishing kain';
-    }
-    if (lowerName.contains('qc') || lowerName.contains('quality')) {
-      return 'Quality control';
-    }
-    if (lowerName.contains('packing')) {
-      return 'Proses pengemasan';
-    }
-    if (lowerName.contains('printing')) {
-      return 'Proses printing kain';
-    }
-    if (lowerName.contains('washing')) {
-      return 'Proses pencucian kain';
-    }
-
-    return 'Proses produksi';
-  }
 }
 
 /// Status Item Model
@@ -508,13 +517,14 @@ class _StatusItem {
   final int value;
   final IconData icon;
   final Color color;
+  final Color iconColor;
 
-  _StatusItem({
-    required this.label,
-    required this.value,
-    required this.icon,
-    required this.color,
-  });
+  _StatusItem(
+      {required this.label,
+      required this.value,
+      required this.icon,
+      required this.color,
+      required this.iconColor});
 }
 
 /// Grid Summary Card untuk dashboard
@@ -713,9 +723,17 @@ class CompactSummaryCard extends StatelessWidget {
     if (name == null) return Icons.category_outlined;
 
     final lowerName = name.toLowerCase();
-    if (lowerName.contains('dyeing')) return Icons.color_lens_outlined;
-    if (lowerName.contains('finishing')) return Icons.auto_fix_high_outlined;
-    if (lowerName.contains('qc')) return Icons.verified_outlined;
+    if (lowerName.contains('dyeing')) return Icons.invert_colors_on_outlined;
+    if (lowerName.contains('press')) return Icons.layers_outlined;
+    if (lowerName.contains('tumbler')) return Icons.dry_cleaning_outlined;
+    if (lowerName.contains('stenter')) return Icons.air;
+    if (lowerName.contains('long sitting')) return Icons.content_paste_outlined;
+    if (lowerName.contains('long hemming')) return Icons.cut_outlined;
+    if (lowerName.contains('cross cutting')) return Icons.cut_outlined;
+    if (lowerName.contains('sewing')) return Icons.link_outlined;
+    if (lowerName.contains('embroidery')) return Icons.color_lens_outlined;
+    if (lowerName.contains('printing')) return Icons.print_outlined;
+    if (lowerName.contains('sorting')) return Icons.sort_outlined;
     if (lowerName.contains('packing')) return Icons.inventory_2_outlined;
 
     return Icons.settings_outlined;

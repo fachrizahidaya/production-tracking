@@ -20,20 +20,25 @@ class _WorkOrderItemTabState extends State<WorkOrderItemTab> {
     final List<Map<String, dynamic>> items =
         (widget.data?['items'] ?? []).cast<Map<String, dynamic>>();
 
-    return Container(
-      child: items.isEmpty
-          ? const Center(child: Text('No Data'))
-          : ListView.separated(
-              padding: CustomTheme().padding('content'),
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                final item = items[index];
-                return ListItem(
-                  item: item,
-                );
-              },
-              separatorBuilder: (context, index) => CustomTheme().vGap('2xl'),
-            ),
+    return SizedBox(
+      height: 500,
+      child:
+          // items.isEmpty
+          //     ? const Center(child: Text('No Data'))
+          //     :
+          ListView.separated(
+        // padding: CustomTheme().padding('content'),
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final item = items[index];
+          return ListItem(
+            item: item,
+          );
+        },
+        separatorBuilder: (context, index) => CustomTheme().vGap('2xl'),
+      ),
     );
   }
 }

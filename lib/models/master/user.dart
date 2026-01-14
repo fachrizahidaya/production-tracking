@@ -1,6 +1,7 @@
 class User {
   final String? id;
   final String username;
+  final String? name;
   final String? type;
   final String? status;
   final String? token;
@@ -12,5 +13,6 @@ class User {
       this.type,
       this.status,
       this.token,
-      this.role});
+      this.role,
+      this.name});
 }

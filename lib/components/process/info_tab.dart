@@ -1,9 +1,12 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_html.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class InfoTab extends StatefulWidget {
   final data;
@@ -44,7 +47,7 @@ class _InfoTabState extends State<InfoTab> {
         children: [
           _buildCardHeader(isTablet),
           Padding(
-            padding: EdgeInsets.all(isTablet ? 20 : 16),
+            padding: CustomTheme().padding('card'),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -59,7 +62,7 @@ class _InfoTabState extends State<InfoTab> {
 
   Widget _buildCardHeader(bool isTablet) {
     return Container(
-      padding: EdgeInsets.all(isTablet ? 20 : 16),
+      padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -70,8 +73,8 @@ class _InfoTabState extends State<InfoTab> {
           ],
         ),
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
         ),
       ),
       child: Row(
@@ -82,10 +85,10 @@ class _InfoTabState extends State<InfoTab> {
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: CustomTheme().padding('card'),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     Icons.assignment_outlined,
@@ -93,7 +96,6 @@ class _InfoTabState extends State<InfoTab> {
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(width: isTablet ? 16 : 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,27 +103,28 @@ class _InfoTabState extends State<InfoTab> {
                       Text(
                         widget.data['wo_no']?.toString() ?? '-',
                         style: TextStyle(
-                          fontSize: isTablet ? 22 : 18,
-                          fontWeight: FontWeight.bold,
+                          fontSize:
+                              CustomTheme().fontSize(isTablet ? '2xl' : 'xl'),
+                          fontWeight: CustomTheme().fontWeight('bold'),
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 4),
                       Text(
                         widget.data['created_at'] != null
                             ? DateFormat("dd MMM yyyy").format(
                                 DateTime.parse(widget.data['created_at']))
                             : '-',
                         style: TextStyle(
-                          fontSize: isTablet ? 13 : 11,
+                          fontSize:
+                              CustomTheme().fontSize(isTablet ? 'md' : 'sm'),
                           color: Colors.white.withOpacity(0.8),
-                          fontWeight: FontWeight.w500,
+                          fontWeight: CustomTheme().fontWeight('semibold'),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
+              ].separatedBy(CustomTheme().hGap('xl')),
             ),
           ),
           _buildStatusBadge(isTablet),
@@ -131,19 +134,11 @@ class _InfoTabState extends State<InfoTab> {
   }
 
   Widget _buildStatusBadge(bool isTablet) {
-    final status = widget.data['status']?.toString().toLowerCase() ?? 'pending';
-    final statusConfig = _getStatusConfig(status);
-
-    return Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: isTablet ? 14 : 12,
-          vertical: isTablet ? 8 : 6,
-        ),
-        child: CustomBadge(
-          title: widget.data['status']?.toString() ?? '-',
-          withStatus: true,
-          status: widget.data['status']?.toString() ?? '-',
-        ));
+    return CustomBadge(
+      title: widget.data['status']?.toString() ?? '-',
+      withStatus: true,
+      status: widget.data['status']?.toString() ?? '-',
+    );
   }
 
   Widget _buildQuickInfoRow(bool isTablet) {
@@ -271,7 +266,6 @@ class _InfoTabState extends State<InfoTab> {
             ],
           ),
         ),
-        const SizedBox(width: 16),
         if (widget.withNote == true)
           Expanded(
             child: Column(
@@ -291,7 +285,7 @@ class _InfoTabState extends State<InfoTab> {
               ],
             ),
           ),
-      ],
+      ].separatedBy(CustomTheme().hGap('xl')),
     );
   }
 
@@ -309,7 +303,6 @@ class _InfoTabState extends State<InfoTab> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
         if (widget.withNote == true)
           _buildInfoSection(
             title: 'Catatan Work Order',
@@ -321,7 +314,7 @@ class _InfoTabState extends State<InfoTab> {
                       : 'No Data')
             ],
           ),
-      ],
+      ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
 
@@ -331,82 +324,75 @@ class _InfoTabState extends State<InfoTab> {
     required List<Widget> children,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                icon,
-                size: 18,
-                color: CustomTheme().buttonColor('primary'),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey[800],
+        padding: CustomTheme().padding('card'),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 18,
+                  color: CustomTheme().buttonColor('primary'),
                 ),
-              ),
-            ],
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[800],
+                  ),
+                ),
+              ].separatedBy(CustomTheme().hGap('lg')),
+            ),
+            const Divider(height: 1),
+            ...children,
+          ].separatedBy(
+            CustomTheme().vGap('xl'),
           ),
-          const SizedBox(height: 12),
-          const Divider(height: 1),
-          const SizedBox(height: 12),
-          ...children,
-        ],
-      ),
-    );
+        ));
   }
 
   Widget _buildInfoRow({
     required String label,
     required String value,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey[600],
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            ':',
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 120,
+          child: Text(
+            label,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: CustomTheme().fontSize('md'),
               color: Colors.grey[600],
             ),
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[800],
-              ),
+        ),
+        Text(
+          ':',
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('md'),
+            color: Colors.grey[600],
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('md'),
+              fontWeight: CustomTheme().fontWeight('semibold'),
+              color: Colors.grey[800],
             ),
           ),
-        ],
-      ),
+        ),
+      ].separatedBy(CustomTheme().hGap('lg')),
     );
   }
 
@@ -433,21 +419,18 @@ class _InfoTabState extends State<InfoTab> {
   Widget _buildInfo({
     required String value,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey[800],
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('md'),
+            fontWeight: CustomTheme().fontWeight('semibold'),
+            color: Colors.grey[800],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -479,7 +462,7 @@ class _InfoTabState extends State<InfoTab> {
       case 'in_progress':
       case 'proses':
         return {
-          'label': 'Dalam Proses',
+          'label': 'Diproses',
           'icon': Icons.hourglass_top,
           'bgColor': Colors.white,
           'textColor': Colors.blue[700],
@@ -487,18 +470,12 @@ class _InfoTabState extends State<InfoTab> {
       case 'pending':
       case 'menunggu':
         return {
-          'label': 'Menunggu',
+          'label': 'Menunggu Diproses',
           'icon': Icons.schedule,
           'bgColor': Colors.white,
           'textColor': Colors.orange[700],
         };
-      case 'rework':
-        return {
-          'label': 'Rework',
-          'icon': Icons.replay,
-          'bgColor': Colors.white,
-          'textColor': Colors.red[700],
-        };
+
       default:
         return {
           'label': status,

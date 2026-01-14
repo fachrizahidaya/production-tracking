@@ -20,7 +20,6 @@ class Detail extends StatefulWidget {
   final handleSelectLengthUnit;
   final handleSelectWidthUnit;
   final handleSelectMachine;
-  final handleUpdate;
   final refetch;
   final hasMore;
   final fieldControllers;
@@ -45,6 +44,7 @@ class Detail extends StatefulWidget {
   final canDelete;
   final canUpdate;
   final handleDelete;
+  final handleRefetch;
   final handleNavigateToUpdate;
 
   const Detail(
@@ -57,7 +57,6 @@ class Detail extends StatefulWidget {
       this.isSubmitting,
       this.handleChangeInput,
       this.handleSelectMachine,
-      this.handleUpdate,
       this.refetch,
       this.hasMore,
       this.length,
@@ -82,7 +81,8 @@ class Detail extends StatefulWidget {
       this.canDelete,
       this.canUpdate,
       this.handleNavigateToUpdate,
-      this.handleDelete});
+      this.handleDelete,
+      this.handleRefetch});
 
   @override
   State<Detail> createState() => _DetailState();
@@ -301,7 +301,7 @@ class _DetailState extends State<Detail> {
       child: Scaffold(
         backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
-          title: '${widget.label} Detail',
+          title: 'Detail Proses ${widget.label}',
           onReturn: () => Navigator.pop(context),
           canDelete: widget.canDelete,
           canUpdate: widget.canUpdate,
@@ -327,6 +327,7 @@ class _DetailState extends State<Detail> {
                     label: widget.label,
                     forDyeing: widget.forDyeing,
                     maklon: widget.maklon,
+                    onRefresh: widget.handleRefetch,
                   ),
       ),
     );

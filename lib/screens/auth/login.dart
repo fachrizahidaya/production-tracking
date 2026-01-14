@@ -51,17 +51,19 @@ class _LoginState extends State<Login> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
     final username = prefs.getString('username');
+    final name = prefs.getString('name');
     final id = prefs.getString('user_id');
 
     if (token != null && !JwtDecoder.isExpired(token)) {
       if (context.mounted) {
         Provider.of<UserProvider>(context, listen: false)
-            .handleLogin(username ?? '', token, id ?? '');
+            .handleLogin(username ?? '', name ?? '', token, id ?? '');
         Navigator.pushReplacementNamed(context, '/dashboard');
       }
     } else {
       await prefs.remove('access_token');
       await prefs.remove('username');
+      await prefs.remove('name');
       await prefs.remove('user_id');
     }
   }
@@ -86,6 +88,7 @@ class _LoginState extends State<Login> {
 
         if (response['access_token'] != null) {
           final String username = response['username'] ?? '';
+          final String name = response['name'] ?? '';
           final String token = response['access_token'] ?? '';
           final String id = response['user_id'].toString();
 
@@ -104,7 +107,7 @@ class _LoginState extends State<Login> {
 
           if (context.mounted) {
             Provider.of<UserProvider>(context, listen: false)
-                .handleLogin(username, token, id);
+                .handleLogin(username, name, token, id);
             Navigator.pushReplacementNamed(context, '/dashboard');
             _username.clear();
             _password.clear();

@@ -54,6 +54,7 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
 
     widget.form?['length'] ??= '0';
     widget.form?['width'] ??= '0';
+    widget.form?['qty'] ??= '0';
 
     super.initState();
   }

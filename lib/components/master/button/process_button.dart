@@ -44,14 +44,15 @@ class _ProcessButtonState extends State<ProcessButton> {
                 Expanded(
                   child: CancelButton(
                     label: 'Batal',
+                    customHeight: 48.0,
                     onPressed: () => widget.handleCancel(context),
                   ),
                 ),
                 Expanded(
                     child: FormButton(
                   label: widget.labelProcess,
-                  isLoading: isSubmitting,
                   isDisabled: widget.form?['wo_id'] == null ? true : false,
+                  customHeight: 48.0,
                   onPressed: () async {
                     widget.isSubmitting.value = true;
                     try {
@@ -59,11 +60,7 @@ class _ProcessButtonState extends State<ProcessButton> {
                         return;
                       }
                       if (widget.processId != null) {
-                        await widget.handleSubmit(
-                          widget.data['id']?.toString() ?? widget.processId,
-                        );
-                      } else {
-                        await widget.handleSubmit();
+                        await widget.handleSubmit(context);
                       }
                     } finally {
                       widget.isSubmitting.value = false;

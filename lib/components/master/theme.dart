@@ -152,9 +152,9 @@ class CustomTheme {
       ),
       border: Border.all(
         width: 0.5,
-        color: colors('text-primary'),
+        color: colors('text-primary').withOpacity(0.5),
       ),
-      color: Colors.grey.shade400,
+      color: Colors.grey.shade200.withOpacity(0.5),
     );
   }
 
@@ -736,7 +736,7 @@ class CustomTheme {
     switch (type) {
       case 'Menunggu Diproses':
         return Icon(
-          Icons.warning_outlined,
+          Icons.error_outline,
           size: 16,
           color: Color.fromRGBO(113, 113, 123, 1),
         );

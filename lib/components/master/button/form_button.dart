@@ -7,6 +7,7 @@ class FormButton extends StatelessWidget {
   final bool isDisabled;
   final VoidCallback? onPressed;
   final Color? backgroundColor;
+  final customHeight;
 
   const FormButton(
       {super.key,
@@ -14,15 +15,21 @@ class FormButton extends StatelessWidget {
       required this.onPressed,
       this.isLoading = false,
       this.isDisabled = false,
-      this.backgroundColor});
+      this.backgroundColor,
+      this.customHeight});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: isDisabled || isLoading ? null : onPressed,
-      style: isDisabled || isLoading
-          ? CustomTheme().disabledButton()
-          : CustomTheme().primaryButton(),
+      style: (isDisabled || isLoading
+              ? CustomTheme().disabledButton()
+              : CustomTheme().primaryButton())
+          .copyWith(
+        minimumSize: customHeight != null
+            ? MaterialStateProperty.all(Size(double.infinity, customHeight))
+            : null,
+      ),
       child: isLoading
           ? SizedBox(
               height: 20,

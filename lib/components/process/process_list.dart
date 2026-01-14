@@ -86,10 +86,10 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
         Expanded(
           child: RefreshIndicator(
             onRefresh: () async => widget.handleRefetch(),
-            child: widget.dataList.isEmpty
-                ? NoData()
-                : widget.firstLoading == true
-                    ? Center(child: CircularProgressIndicator())
+            child: widget.firstLoading == true
+                ? Center(child: CircularProgressIndicator())
+                : widget.dataList.isEmpty
+                    ? NoData()
                     : ListView.separated(
                         controller: _scrollController,
                         physics: AlwaysScrollableScrollPhysics(),

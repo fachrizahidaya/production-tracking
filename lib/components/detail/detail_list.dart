@@ -15,7 +15,7 @@ class DetailList extends StatefulWidget {
   final dynamic data;
   final no;
   final String? processType;
-  final VoidCallback? onRefresh;
+  final onRefresh;
   final existingAttachment;
   final existingGrades;
   final handleBuildAttachment;
@@ -107,21 +107,24 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         final isTablet = constraints.maxWidth > 600;
         final isLargeTablet = constraints.maxWidth > 900;
 
-        return SingleChildScrollView(
-          padding: EdgeInsets.all(isTablet ? 24 : 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Section
-              _buildHeaderSection(isTablet),
-              SizedBox(height: isTablet ? 24 : 16),
+        return RefreshIndicator(
+          onRefresh: () async => widget.onRefresh(),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(isTablet ? 24 : 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header Section
+                _buildHeaderSection(isTablet),
+                SizedBox(height: isTablet ? 24 : 16),
 
-              // Main Content
-              if (isTablet)
-                _buildTabletLayout(isLargeTablet)
-              else
-                _buildMobileLayout(),
-            ],
+                // Main Content
+                if (isTablet)
+                  _buildTabletLayout(isLargeTablet)
+                else
+                  _buildMobileLayout(),
+              ],
+            ),
           ),
         );
       },

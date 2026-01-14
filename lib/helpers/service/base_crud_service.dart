@@ -162,10 +162,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         return res['message'] ?? 'Proses telah ditambahkan';
       } else {
         final error = jsonDecode(response.body);
-        throw Exception(error['message'] ?? 'Gagal menambahkan proses');
+        throw (error['message'] ?? 'Gagal menambahkan proses');
       }
     } catch (e) {
-      throw Exception('Gagal menambahkan proses: $e');
+      throw ('$e');
     } finally {
       isSubmitting.value = false;
     }
@@ -242,11 +242,11 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
           return jsonDecode(response.body)['message'];
         } else {
           final error = jsonDecode(response.body);
-          throw Exception(error['message'] ?? 'Gagal mengubah proses');
+          throw (error['message'] ?? 'Gagal mengubah proses');
         }
       }
     } catch (e) {
-      throw Exception('Gagal mengubah proses: $e');
+      throw ('$e');
     } finally {
       isSubmitting.value = false;
     }
@@ -326,11 +326,11 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
           return jsonDecode(response.body)['message'];
         } else {
           final error = jsonDecode(response.body);
-          throw Exception(error['message'] ?? 'Gagal menyelesaikan proses');
+          throw (error['message'] ?? 'Gagal menyelesaikan proses');
         }
       }
     } catch (e) {
-      throw Exception('Gagal menyelesaikan proses: $e');
+      throw ('$e');
     } finally {
       isSubmitting.value = false;
     }
@@ -419,11 +419,11 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
           return jsonDecode(response.body)['message'];
         } else {
           final error = jsonDecode(response.body);
-          throw Exception(error['message'] ?? 'Gagal Rework proses');
+          throw (error['message'] ?? 'Gagal Rework proses');
         }
       }
     } catch (e) {
-      throw Exception("Gagal Rework proses: $e");
+      throw ("$e");
     } finally {
       isSubmitting.value = false;
     }
@@ -449,10 +449,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         return res['message'];
       } else {
         final error = jsonDecode(response.body);
-        throw Exception(error['message'] ?? 'Gagal menghapus proses');
+        throw (error['message'] ?? 'Gagal menghapus proses');
       }
     } catch (e) {
-      throw Exception('Gagal menghapus proses: $e');
+      throw ('$e');
     } finally {
       isSubmitting.value = false;
     }

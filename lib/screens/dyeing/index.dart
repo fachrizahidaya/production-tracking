@@ -32,6 +32,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
   final UserMenu _userMenu = UserMenu();
 
   bool _isFiltered = false;
+
   bool _firstLoading = true;
   bool _hasMore = true;
   bool _canRead = false;

@@ -20,6 +20,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final status;
   final isTextEditor;
   final handleSave;
+  final name;
 
   const CustomAppBar(
       {super.key,
@@ -39,10 +40,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.user,
       this.status,
       this.isTextEditor = false,
-      this.handleSave});
+      this.handleSave,
+      this.name});
 
   @override
   Widget build(BuildContext context) {
+    String getInitial(String? name) {
+      if (name == null || name.trim().isEmpty) return '?';
+      return name.trim()[0].toUpperCase();
+    }
+
     final bool hasOptions = (canDelete == true || canUpdate == true);
     return AppBar(
       leading: onReturn != null
@@ -69,7 +76,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               }
             },
             itemBuilder: (context) => [
-              if (canUpdate == true)
+              if (canUpdate == true &&
+                  (label == 'Sorting' || label == 'Packing'))
                 PopupMenuItem(
                   value: 'update',
                   child: Text('Edit'),
@@ -97,7 +105,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         if (isWithAccount)
           PopupMenuButton<String>(
-            icon: Icon(Icons.account_circle_outlined),
+            icon: CircleAvatar(
+              radius: 16,
+              backgroundColor: CustomTheme().colors('primary'),
+              child: Text(
+                getInitial(name),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: CustomTheme().fontSize('sm'),
+                ),
+              ),
+            ),
             color: Colors.white,
             offset: const Offset(0, 40),
             onSelected: (value) {
@@ -113,9 +132,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               PopupMenuItem(
                 value: 'user',
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      user,
+                      name,
                     ),
                     Text(
                       '@$user',

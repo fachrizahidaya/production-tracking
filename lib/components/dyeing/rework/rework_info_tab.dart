@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/rework/create_form.dart';
+import 'package:textile_tracking/components/dyeing/rework/wo_item_tab.dart';
 import 'package:textile_tracking/components/master/card/custom_card.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
@@ -68,7 +69,11 @@ class _ReworkInfoTabState extends State<ReworkInfoTab> {
                   data: widget.data,
                   label: widget.label,
                   isTablet: isTablet,
-                )
+                  withNote: true,
+                ),
+              WoItemTab(
+                data: widget.data,
+              )
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
         );

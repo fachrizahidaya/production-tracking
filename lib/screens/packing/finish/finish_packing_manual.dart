@@ -59,6 +59,7 @@ class _FinishPackingManualState extends State<FinishPackingManual> {
       fetchItemGrade: (service) => service.fetchOptions(),
       getItemGradeOptions: (service) => service.dataListOption,
       processId: widget.processId,
+      forPacking: true,
     );
   }
 }

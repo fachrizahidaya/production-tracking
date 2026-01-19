@@ -251,6 +251,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     }
   }
 
+  Future<void> _handleNavigateToFinish() async {}
+
   Future<void> _handleDelete(String id) async {
     showConfirmationDialog(
       context: context,
@@ -546,6 +548,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       handleDelete: _handleDelete,
       handleNavigateToUpdate: _handleNavigateToUpdate,
       handleRefetch: _getDataView,
+      handleNavigateToFinish: _handleNavigateToFinish,
     );
   }
 }

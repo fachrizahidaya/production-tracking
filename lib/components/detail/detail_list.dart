@@ -1,8 +1,9 @@
+// ignore_for_file: deprecated_member_use, unnecessary_null_comparison
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/card/custom_card.dart';
-import 'package:textile_tracking/components/master/card/custom_detail_badge.dart';
 import 'package:textile_tracking/components/master/card/list_item.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
@@ -110,13 +111,11 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         return RefreshIndicator(
           onRefresh: () async => widget.onRefresh(),
           child: SingleChildScrollView(
-            padding: EdgeInsets.all(isTablet ? 24 : 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header Section
                 _buildHeaderSection(isTablet),
-                SizedBox(height: isTablet ? 24 : 16),
 
                 // Main Content
                 if (isTablet)
@@ -133,108 +132,132 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
 
   /// Header Section dengan Work Order Info
   Widget _buildHeaderSection(bool isTablet) {
-    return Container(
-      padding: EdgeInsets.all(isTablet ? 20 : 16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            CustomTheme().buttonColor('primary'),
-            CustomTheme().buttonColor('primary').withOpacity(0.8),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: CustomTheme().buttonColor('primary').withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Text(
-                    //   'Work Order',
-                    //   style: TextStyle(
-                    //     fontSize: isTablet ? 14 : 12,
-                    //     color: Colors.white.withOpacity(0.8),
-                    //     fontWeight: FontWeight.w500,
-                    //   ),
-                    // ),
-                    const SizedBox(height: 4),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          widget.no ?? '-',
-                          style: TextStyle(
-                            fontSize: isTablet ? 24 : 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        if (widget.data['rework'] == true)
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              CustomBadge(
-                                withStatus: true,
-                                status: 'Rework',
-                                title: 'Rework',
-                                rework: true,
-                              ),
-                              CustomBadge(
-                                status: 'Menunggu Diproses',
-                                title: widget.data['rework_reference'] != null
-                                    ? widget.data['rework_reference']
-                                        ['dyeing_no']
-                                    : '-',
-                                rework: true,
-                              )
-                            ].separatedBy(CustomTheme().hGap('md')),
-                          ),
-                      ].separatedBy(CustomTheme().hGap('xl')),
-                    ),
-                  ],
-                ),
-              ),
-              _buildStatusBadge(isTablet),
+    return Padding(
+      padding: CustomTheme().padding('content'),
+      child: Container(
+        padding: CustomTheme().padding('card'),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              CustomTheme().buttonColor('primary'),
+              CustomTheme().buttonColor('primary').withOpacity(0.8),
             ],
           ),
-          SizedBox(height: isTablet ? 20 : 16),
-          // Quick Info Row
-          _buildQuickInfoRow(isTablet),
-        ],
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: CustomTheme().buttonColor('primary').withOpacity(0.3),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.no ?? '-',
+                            style: TextStyle(
+                              fontSize: isTablet ? 24 : 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          if (widget.data['rework'] == true)
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CustomBadge(
+                                  withStatus: true,
+                                  status: 'Rework',
+                                  title: 'Rework',
+                                  rework: true,
+                                ),
+                                CustomBadge(
+                                  status: 'Menunggu Diproses',
+                                  title: widget.data['rework_reference'] != null
+                                      ? widget.data['rework_reference']
+                                          ['dyeing_no']
+                                      : '-',
+                                  rework: true,
+                                )
+                              ].separatedBy(CustomTheme().hGap('md')),
+                            ),
+                        ].separatedBy(CustomTheme().hGap('xl')),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WorkOrderDetail(
+                                id: widget.data['work_orders']?['id']
+                                        .toString() ??
+                                    '-',
+                              ),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.data['work_orders']?['wo_no'] ?? '-',
+                              style: TextStyle(
+                                fontSize: CustomTheme().fontSize('md'),
+                                color: Colors.white.withOpacity(0.8),
+                                fontWeight:
+                                    CustomTheme().fontWeight('semibold'),
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: CustomTheme()
+                                    .buttonColor('primary')
+                                    .withOpacity(0.1),
+                              ),
+                              child: Icon(
+                                Icons.chevron_right_outlined,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ].separatedBy(CustomTheme().vGap('sm')),
+                  ),
+                ),
+                _buildStatusBadge(isTablet),
+              ],
+            ),
+            // Quick Info Row
+            _buildQuickInfoRow(isTablet),
+          ].separatedBy(CustomTheme().vGap('xl')),
+        ),
       ),
     );
   }
 
   /// Status Badge
   Widget _buildStatusBadge(bool isTablet) {
-    final status = widget.data['status'] ?? 'pending';
-    final statusConfig = _getStatusConfig(status);
-
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isTablet ? 16 : 12,
-        vertical: isTablet ? 8 : 6,
-      ),
-      child: CustomBadge(
-        title: widget.data['status']?.toString() ?? '-',
-        withStatus: true,
-        status: widget.data['status']?.toString() ?? '-',
-      ),
+    return CustomBadge(
+      title: widget.data['status']?.toString() ?? '-',
+      withStatus: true,
+      status: widget.data['status']?.toString() ?? '-',
     );
   }
 
@@ -259,21 +282,31 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               isTablet: isTablet,
             ),
           ),
+          if (widget.data['maklon'] == false ||
+              widget.data['maklon_name'] == null)
+            _buildVerticalDivider(),
+          if (widget.data['maklon'] == true ||
+              widget.data['maklon_name'] != null)
+            Container(),
+          if (widget.data['maklon'] == false ||
+              widget.data['maklon_name'] == null)
+            Expanded(
+              child: _buildQuickInfoItem(
+                icon: Icons.local_laundry_service_outlined,
+                label: 'Mesin',
+                value: widget.data['machine']?['name'] ?? '-',
+                isTablet: isTablet,
+              ),
+            ),
+          if (widget.data['maklon'] == true ||
+              widget.data['maklon_name'] != null)
+            Container(),
           _buildVerticalDivider(),
           Expanded(
             child: _buildQuickInfoItem(
               icon: Icons.location_on_outlined,
               label: 'Lokasi',
               value: widget.data['machine']?['location'] ?? '-',
-              isTablet: isTablet,
-            ),
-          ),
-          _buildVerticalDivider(),
-          Expanded(
-            child: _buildQuickInfoItem(
-              icon: Icons.local_laundry_service_outlined,
-              label: 'Mesin',
-              value: widget.data['machine']?['name'] ?? '-',
               isTablet: isTablet,
             ),
           ),
@@ -296,15 +329,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           size: isTablet ? 20 : 18,
           color: Colors.white.withOpacity(0.9),
         ),
-        const SizedBox(height: 6),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: isTablet ? 11 : 10,
-            color: Colors.white.withOpacity(0.7),
-          ),
-        ),
-        const SizedBox(height: 2),
+        // Text(
+        //   label,
+        //   style: TextStyle(
+        //     fontSize: isTablet ? 11 : 10,
+        //     color: Colors.white.withOpacity(0.7),
+        //   ),
+        // ),
         Text(
           value,
           style: TextStyle(
@@ -316,7 +347,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-      ],
+      ].separatedBy(CustomTheme().vGap('sm')),
     );
   }
 
@@ -332,89 +363,83 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
 
   /// Layout untuk Tablet
   Widget _buildTabletLayout(bool isLargeTablet) {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Left Column
-        Expanded(
-          flex: isLargeTablet ? 1 : 1,
-          child: Column(
-            children: [
-              _buildInfoCard(
-                title: 'Informasi Work Order',
-                icon: Icons.description_outlined,
-                child: _buildWorkOrderInfo(true),
-              ),
-              const SizedBox(height: 16),
-              if (widget.withItemGrade == true)
-                _buildInfoCard(
-                  title: 'Informasi Grade',
-                  icon: Icons.layers_outlined,
-                  child: _buildGradeInfo(true),
-                ),
-              const SizedBox(height: 16),
-              Column(
-                children: [_buildProcessFilter(), _buildSwipeContent()],
-              )
-            ],
-          ),
+        _buildInfoCard(
+          title: 'Informasi Work Order',
+          icon: Icons.description_outlined,
+          child: _buildWorkOrderInfo(true),
         ),
-        const SizedBox(width: 16),
-        // Right Column
-        Expanded(
-          flex: isLargeTablet ? 1 : 1,
-          child: Column(
-            children: [
-              _buildInfoCard(
-                title: 'Informasi Proses',
-                icon: Icons.settings_outlined,
-                child: _buildProcessInfo(true),
-              ),
-              const SizedBox(height: 16),
-              _buildInfoCard(
-                title: 'Timeline',
-                icon: Icons.timeline_outlined,
-                child: _buildTimelineInfo(true),
-              ),
-              const SizedBox(height: 16),
-              Column(
-                children: [_buildProcessWoFilter(), _buildSwipeWoContent()],
-              )
-            ],
+        if (widget.withItemGrade == false)
+          _buildInfoCard(
+            title: 'Informasi Proses',
+            icon: Icons.settings_outlined,
+            child: _buildProcessInfo(true),
           ),
+        if (widget.label == 'Packing')
+          _buildInfoCard(
+            title: 'Informasi Berat',
+            icon: Icons.layers_outlined,
+            child: _buildWeightInfo(true),
+          ),
+        _buildInfoCard(
+          title: 'Timeline Proses',
+          icon: Icons.timeline_outlined,
+          child: _buildTimelineInfo(true),
         ),
-      ],
+        if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
+          _buildInfoCard(
+            title: 'Informasi Grade',
+            icon: Icons.layers_outlined,
+            child: _buildGradeInfo(true),
+          ),
+        _buildProcessFilter(),
+        _buildSwipeContent(),
+        _buildProcessWoFilter(),
+        _buildSwipeWoContent()
+      ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
 
   /// Layout untuk Mobile
   Widget _buildMobileLayout() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildInfoCard(
           title: 'Informasi Work Order',
           icon: Icons.description_outlined,
           child: _buildWorkOrderInfo(false),
         ),
-        const SizedBox(height: 16),
-        if (widget.withItemGrade == true)
+        if (widget.withItemGrade == false)
           _buildInfoCard(
-            title: 'Informasi Greige',
-            icon: Icons.layers_outlined,
-            child: _buildGradeInfo(false),
+            title: 'Informasi Proses',
+            icon: Icons.settings_outlined,
+            child: _buildProcessInfo(false),
           ),
-        const SizedBox(height: 16),
+        if (widget.label == 'Packing')
+          _buildInfoCard(
+            title: 'Informasi Berat',
+            icon: Icons.layers_outlined,
+            child: _buildWeightInfo(false),
+          ),
         _buildInfoCard(
-          title: 'Informasi Proses',
-          icon: Icons.settings_outlined,
-          child: _buildProcessInfo(false),
-        ),
-        const SizedBox(height: 16),
-        _buildInfoCard(
-          title: 'Timeline',
+          title: 'Timeline Proses',
           icon: Icons.timeline_outlined,
           child: _buildTimelineInfo(false),
         ),
+        if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
+          if (widget.withItemGrade == true)
+            _buildInfoCard(
+              title: 'Informasi Grade',
+              icon: Icons.layers_outlined,
+              child: _buildGradeInfo(false),
+            ),
+        _buildProcessFilter(),
+        _buildSwipeContent(),
+        _buildProcessWoFilter(),
+        _buildSwipeWoContent()
       ],
     );
   }
@@ -425,64 +450,66 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     required IconData icon,
     required Widget child,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Card Header
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.grey[50],
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
+    return Padding(
+      padding: CustomTheme().padding('card-detail'),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Card Header
+            Container(
+              padding: CustomTheme().padding('card'),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: CustomTheme().padding('process-content'),
+                    decoration: BoxDecoration(
+                      color:
+                          CustomTheme().buttonColor('primary').withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      icon,
+                      size: 18,
+                      color: CustomTheme().buttonColor('primary'),
+                    ),
+                  ),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('md'),
+                      fontWeight: CustomTheme().fontWeight('semibold'),
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                ].separatedBy(CustomTheme().hGap('xl')),
               ),
             ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color:
-                        CustomTheme().buttonColor('primary').withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    icon,
-                    size: 18,
-                    color: CustomTheme().buttonColor('primary'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[800],
-                  ),
-                ),
-              ],
+            // Card Content
+            Padding(
+              padding: CustomTheme().padding('content'),
+              child: child,
             ),
-          ),
-          // Card Content
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: child,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -494,7 +521,29 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         'label': 'No. Work Order',
         'value': widget.data['work_orders']?['wo_no'] ?? '-',
         'id': widget.data['work_orders']?['id'] ?? '-',
-        'icon': Icons.tag,
+        'icon': Icons.content_paste_outlined,
+        'navigate': () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WorkOrderDetail(
+                id: widget.data['work_orders']?['id'].toString() ?? '-',
+              ),
+            ),
+          );
+        },
+        'right-icon': Icons.chevron_right_outlined,
+      },
+      {
+        'label': 'Tanggal Work Order',
+        'value': widget.data['work_orders']['wo_date'] != null
+            ? DateFormat("dd MMM yyyy")
+                .format(DateTime.parse(widget.data['work_orders']['wo_date']))
+            : '-',
+        'id': widget.data['work_orders']?['id'] ?? '-',
+        'icon': Icons.calendar_today_outlined,
+        'right-icon': null,
+        'navigate': null
       },
       {
         'label': 'Qty Greige',
@@ -502,6 +551,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             ? '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']?['code'] ?? ''}'
             : '-',
         'icon': Icons.layers_outlined,
+        'navigate': null,
+        'right-icon': null,
       },
       {
         'label': 'Tanggal',
@@ -510,6 +561,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 .format(DateTime.parse(widget.data['work_orders']['wo_date']))
             : '-',
         'icon': Icons.calendar_today_outlined,
+        'navigate': null,
+        'right-icon': null,
       },
     ];
 
@@ -518,22 +571,37 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
 
   /// Greige Info Section
   Widget _buildGradeInfo(bool isTablet) {
+    double getTotalGradeQty() {
+      final List<dynamic>? grades = widget.existingGrades;
+
+      if (grades == null || grades.isEmpty) return 0;
+
+      return grades.fold<double>(0.0, (sum, item) {
+        final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
+        return sum + qty;
+      });
+    }
+
+    final totalQty = getTotalGradeQty();
+
     final items = [
       for (int i = 0; i < widget.existingGrades.length; i++)
         {
           'label':
               'Grade ${widget.existingGrades[i]['item_grade']['code']}: ${widget.existingGrades[i]['item_grade']['description']?.split('-').first.trim()}',
-          'value':
-              '${widget.existingGrades[i]['qty']} ${widget.existingGrades[i]['unit']['code']}',
+          'value': widget.existingGrades[i]['qty'] != null
+              ? '${widget.existingGrades[i]['qty']} ${widget.existingGrades[i]['unit']['code']}'
+              : '-',
           'icon': Icons.texture,
         },
-      {
-        'label': 'Total Hasil ${widget.label}',
-        'value': widget.data['work_orders']?['greige_qty'] != null
-            ? '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']?['code'] ?? ''}'
-            : '-',
-        'icon': Icons.straighten,
-      },
+      if (widget.existingGrades.isNotEmpty)
+        {
+          'label': 'Total Hasil ${widget.label}',
+          'value': totalQty != null
+              ? '${formatNumber(totalQty)} ${widget.existingGrades[0]['unit']['code'] ?? ''}'
+              : '-',
+          'icon': Icons.straighten,
+        },
     ];
 
     return _buildInfoGrid(items, isTablet);
@@ -542,24 +610,25 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
   /// Process Info Section
   Widget _buildProcessInfo(bool isTablet) {
     final items = [
-      // {
-      //   'label': 'Panjang',
-      //   'value':
-      //       '${widget.data['length'] != null ? formatNumber(widget.data['length']) : '0'} ${widget.data['length_unit']['code']}',
-      //   'icon': Icons.local_laundry_service_outlined,
-      // },
-      // {
-      //   'label': 'Lebar',
-      //   'value': '${widget.data['width'] != null ? formatNumber(widget.data['width']) : '0'} ${widget.data['width_unit']['code']}',
-      //   'icon': Icons.engineering_outlined,
-      // },
+      {
+        'label': 'Panjang',
+        'value':
+            '${widget.data['length'] != null ? formatNumber(widget.data['length']) : '0'} ${widget.data['length_unit'] != null ? widget.data['length_unit']['code'] : 'CM'}',
+        'icon': Icons.numbers_outlined,
+      },
+      {
+        'label': 'Lebar',
+        'value':
+            '${widget.data['width'] != null ? formatNumber(widget.data['width']) : '0'} ${widget.data['width_unit'] != null ? widget.data['width_unit']['code'] : 'CM'}',
+        'icon': Icons.width_normal_outlined,
+      },
       if (widget.forDyeing == true)
         {
           'label': 'Qty Hasil ${widget.label}',
           'value': widget.data['qty'] != null
               ? '${formatNumber(widget.data['qty'])} ${widget.data['unit']['code']}'
               : '0 ${widget.data['unit'] != null ? widget.data['unit']['code'] : ''}',
-          'icon': Icons.trolley,
+          'icon': Icons.layers_outlined,
         },
       if (widget.withQtyAndWeight == true)
         {
@@ -580,9 +649,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       if (widget.data['maklon'] == true)
         {
           'label': 'Maklon',
-          'value': widget.data['maklon'] == true
-              ? (widget.data['maklon_name'] ?? 'Ya')
-              : 'Tidak',
+          'value': widget.data['maklon_name'] ?? '-',
           'icon': Icons.business_outlined,
         },
       if (widget.data['rework'] == true)
@@ -599,6 +666,31 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               : '-',
           'icon': Icons.business_outlined,
         },
+    ];
+
+    return _buildInfoGrid(items, isTablet);
+  }
+
+  Widget _buildWeightInfo(bool isTablet) {
+    final items = [
+      {
+        'label': 'Berat 1 Lusin',
+        'value':
+            '${widget.data['weight_per_dozen'] != null ? formatNumber(widget.data['weight_per_dozen']) : '0'} ${'KG'}',
+        'icon': Icons.numbers_outlined,
+      },
+      {
+        'label': 'Gramasi',
+        'value':
+            '${widget.data['gsm'] != null ? formatNumber(widget.data['gsm']) : '0'} ${'GSM'}',
+        'icon': Icons.numbers_outlined,
+      },
+      {
+        'label': 'Total Berat',
+        'value':
+            '${widget.data['total_weight'] != null ? formatNumber(widget.data['total_weight']) : '0'} ${'KG'}',
+        'icon': Icons.numbers_outlined,
+      },
     ];
 
     return _buildInfoGrid(items, isTablet);
@@ -635,18 +727,19 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
   Widget _buildInfoGrid(List<Map<String, dynamic>> items, bool isTablet) {
     if (isTablet) {
       return Wrap(
-        spacing: 16,
+        spacing: 8,
         runSpacing: 16,
         children: items.map((item) {
           return SizedBox(
             width: (MediaQuery.of(context).size.width - 100) / 4,
             child: _buildInfoItem(
-              label: item['label'],
-              value: item['value'],
-              icon: item['icon'],
-              id: item['id'].toString(),
-              isTablet: isTablet,
-            ),
+                label: item['label'],
+                value: item['value'],
+                icon: item['icon'],
+                id: item['id'].toString(),
+                isTablet: isTablet,
+                navigateTo: item['navigate'],
+                rightIcon: item['right-icon']),
           );
         }).toList(),
       );
@@ -669,59 +762,49 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
   }
 
   /// Single Info Item
-  Widget _buildInfoItem({
-    required String label,
-    required String value,
-    required String id,
-    required IconData icon,
-    required bool isTablet,
-  }) {
-    return Container(
-      padding: EdgeInsets.all(isTablet ? 14 : 12),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
+  Widget _buildInfoItem(
+      {required String label,
+      required String value,
+      required String id,
+      required IconData icon,
+      required bool isTablet,
+      navigateTo,
+      rightIcon}) {
+    return GestureDetector(
+      onTap: navigateTo,
+      child: Container(
+        padding: CustomTheme().padding('card'),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                icon,
+                size: isTablet ? 18 : 16,
+                color: CustomTheme().buttonColor('primary'),
+              ),
             ),
-            child: Icon(
-              icon,
-              size: isTablet ? 18 : 16,
-              color: CustomTheme().buttonColor('primary'),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: isTablet ? 12 : 11,
-                    color: Colors.grey[600],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: isTablet ? 12 : 11,
+                      color: Colors.grey[600],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => WorkOrderDetail(
-                          id: id,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Text(
+                  Text(
                     value,
                     style: TextStyle(
                       fontSize: isTablet ? 14 : 13,
@@ -731,11 +814,11 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                ].separatedBy(CustomTheme().vGap('sm')),
+              ),
             ),
-          ),
-        ],
+          ].separatedBy(CustomTheme().hGap('md')),
+        ),
       ),
     );
   }
@@ -760,7 +843,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: CustomTheme().padding('process-content'),
                   decoration: BoxDecoration(
                     color: iconColor.withOpacity(0.1),
                     shape: BoxShape.circle,
@@ -786,15 +869,14 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               ],
             ),
           ),
-          const SizedBox(width: 12),
           // Timeline Content
           Expanded(
             child: Container(
               margin: EdgeInsets.only(bottom: isLast ? 0 : 16),
-              padding: const EdgeInsets.all(14),
+              padding: CustomTheme().padding('card'),
               decoration: BoxDecoration(
                 color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey[200]!),
               ),
               child: Column(
@@ -808,7 +890,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                       color: Colors.grey[800],
                     ),
                   ),
-                  const SizedBox(height: 8),
                   Row(
                     children: [
                       Icon(
@@ -816,7 +897,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                         size: 14,
                         color: Colors.grey[500],
                       ),
-                      const SizedBox(width: 6),
                       Text(
                         time != null
                             ? DateFormat("dd MMM yyyy, HH:mm")
@@ -827,10 +907,9 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                           color: Colors.grey[600],
                         ),
                       ),
-                    ],
+                    ].separatedBy(CustomTheme().hGap('md')),
                   ),
                   if (user != null && user.isNotEmpty) ...[
-                    const SizedBox(height: 6),
                     Row(
                       children: [
                         Icon(
@@ -838,22 +917,21 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                           size: 14,
                           color: Colors.grey[500],
                         ),
-                        const SizedBox(width: 6),
                         Text(
                           user,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: CustomTheme().fontSize('sm'),
                             color: Colors.grey[600],
                           ),
                         ),
-                      ],
+                      ].separatedBy(CustomTheme().hGap('md')),
                     ),
                   ],
-                ],
+                ].separatedBy(CustomTheme().vGap('md')),
               ),
             ),
           ),
-        ],
+        ].separatedBy(CustomTheme().hGap('xl')),
       ),
     );
   }
@@ -949,151 +1027,84 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
   }
 
   Widget _buildSwipeWoContent() {
-    final List<Map<String, dynamic>> items =
-        (widget.data['work_orders']['items'] ?? [])
-            .cast<Map<String, dynamic>>();
-    return SizedBox(
-      height: 500,
-      child: TabBarView(
-        controller: _tabWoController,
-        children: [
-          Padding(
-            padding: CustomTheme().padding('content'),
-            child: Row(
-              children: [
-                Expanded(
-                  child: CustomCard(
-                    child: widget.data['work_orders']['notes'] != null
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                htmlToPlainText(
-                                    widget.data['work_orders']['notes']),
-                                style: TextStyle(
-                                  fontSize: CustomTheme().fontSize('lg'),
-                                ),
-                              ),
-                            ].separatedBy(CustomTheme().vGap('lg')),
-                          )
-                        : NoData(),
-                  ),
+    final items = (widget.data['work_orders']['items'] ?? [])
+        .cast<Map<String, dynamic>>();
+
+    switch (selectedItemWoIndex) {
+      case 0:
+        return Padding(
+          padding: CustomTheme().padding('card-detail'),
+          child: CustomCard(
+            child: widget.data['work_orders']['notes'] != null
+                ? Text(
+                    htmlToPlainText(widget.data['work_orders']['notes']),
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('lg'),
+                    ),
+                  )
+                : NoData(),
+          ),
+        );
+
+      case 1:
+        if (items.isEmpty) {
+          return const Center(child: Text('No Data'));
+        }
+
+        return Padding(
+          padding: CustomTheme().padding('card-detail'),
+          child: Column(
+            children: [
+              ...items.map(
+                (item) => Column(
+                  children: [
+                    ListItem(item: item),
+                    CustomTheme().vGap('xl'),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Container(
-            child: items.isEmpty
-                ? Center(child: Text('No Data'))
-                : ListView.separated(
-                    padding: CustomTheme().padding('content'),
-                    physics: AlwaysScrollableScrollPhysics(),
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      final item = items[index];
-                      return ListItem(item: item);
-                    },
-                    separatorBuilder: (context, index) =>
-                        CustomTheme().vGap('xl'),
-                  ),
-          ),
-        ],
-      ),
-    );
+        );
+
+      default:
+        return const SizedBox.shrink();
+    }
   }
 
   Widget _buildSwipeContent() {
-    return SizedBox(
-      height: 500,
-      child: TabBarView(
-        controller: _tabController,
-        children: [
-          Padding(
-            padding: CustomTheme().padding('content'),
-            child: Row(
-              children: [
-                Expanded(
-                  child: CustomCard(
-                    child: widget.data['notes'] != null
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                htmlToPlainText(widget.data['notes']),
-                                style: TextStyle(
-                                  fontSize: CustomTheme().fontSize('lg'),
-                                ),
-                              ),
-                            ].separatedBy(CustomTheme().vGap('lg')),
-                          )
-                        : NoData(),
-                  ),
-                ),
-              ],
-            ),
+    switch (selectedIndex) {
+      case 0:
+        return Padding(
+          padding: CustomTheme().padding('card-detail'),
+          child: CustomCard(
+            child: widget.data['notes'] != null
+                ? Text(
+                    htmlToPlainText(widget.data['notes']),
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('lg'),
+                    ),
+                  )
+                : NoData(),
           ),
-          Padding(
-            padding: CustomTheme().padding('content'),
-            child: Row(
-              children: [
-                Expanded(
-                  child: CustomCard(
-                    child: widget.existingAttachment.isEmpty
-                        ? NoData()
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: widget.handleBuildAttachment(context),
-                              ),
-                            ].separatedBy(CustomTheme().vGap('lg')),
-                          ),
+        );
+
+      case 1:
+        return Padding(
+          padding: CustomTheme().padding('card-detail'),
+          child: CustomCard(
+            child: widget.existingAttachment.isEmpty
+                ? NoData()
+                : Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: widget.handleBuildAttachment(context),
                   ),
-                ),
-              ],
-            ),
           ),
-        ],
-      ),
-    );
-  }
+        );
 
-  /// Get Status Configuration
-  Map<String, dynamic> _getStatusConfig(String status) {
-    switch (status.toLowerCase()) {
-      case 'completed':
-      case 'selesai':
-        return {
-          'label': 'Selesai',
-          'icon': Icons.check_circle,
-          'bgColor': Colors.green.withOpacity(0.2),
-          'textColor': Colors.green[700],
-        };
-      case 'in_progress':
-      case 'Diproses':
-        return {
-          'label': 'Diproses',
-          'icon': Icons.hourglass_top,
-          'bgColor': Colors.blue.withOpacity(0.2),
-          'textColor': Colors.blue[700],
-        };
-
-      case 'rework':
-        return {
-          'label': 'Rework',
-          'icon': Icons.replay,
-          'bgColor': Colors.red.withOpacity(0.2),
-          'textColor': Colors.red[700],
-        };
       default:
-        return {
-          'label': status,
-          'icon': Icons.info_outline,
-          'bgColor': Colors.grey.withOpacity(0.2),
-          'textColor': Colors.grey[700],
-        };
+        return const SizedBox.shrink();
     }
   }
 }

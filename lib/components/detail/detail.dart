@@ -46,6 +46,7 @@ class Detail extends StatefulWidget {
   final handleDelete;
   final handleRefetch;
   final handleNavigateToUpdate;
+  final handleNavigateToFinish;
 
   const Detail(
       {super.key,
@@ -82,7 +83,8 @@ class Detail extends StatefulWidget {
       this.canUpdate,
       this.handleNavigateToUpdate,
       this.handleDelete,
-      this.handleRefetch});
+      this.handleRefetch,
+      this.handleNavigateToFinish});
 
   @override
   State<Detail> createState() => _DetailState();
@@ -307,6 +309,7 @@ class _DetailState extends State<Detail> {
           canUpdate: widget.canUpdate,
           handleDelete: widget.handleDelete,
           handleUpdate: widget.handleNavigateToUpdate,
+          handleFinish: widget.handleNavigateToFinish,
           id: widget.data['id'],
           status: widget.data['can_delete'],
         ),

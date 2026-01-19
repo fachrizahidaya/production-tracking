@@ -31,6 +31,7 @@ class _FinishCrossCuttingManualState extends State<FinishCrossCuttingManual> {
   void initState() {
     widget.form?['length'] ??= '0';
     widget.form?['width'] ??= '0';
+    widget.form?['item_qty'] ??= '0';
     widget.form?['weight'] ??= '0';
 
     super.initState();

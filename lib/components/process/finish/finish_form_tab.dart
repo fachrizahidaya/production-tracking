@@ -30,6 +30,9 @@ class FinishFormTab extends StatefulWidget {
   final handleSelectQtyUnitItem;
   final handleSelectQtyUnitDyeing;
   final data;
+  final weightDozen;
+  final gsm;
+  final totalWeight;
 
   final isSubmitting;
   final isFormIncomplete;
@@ -94,7 +97,10 @@ class FinishFormTab extends StatefulWidget {
       this.label,
       this.forDyeing,
       this.data,
-      this.forPacking});
+      this.forPacking,
+      this.weightDozen,
+      this.gsm,
+      this.totalWeight});
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();
@@ -151,6 +157,9 @@ class _FinishFormTabState extends State<FinishFormTab>
                   forDyeing: widget.forDyeing,
                   data: widget.data,
                   forPacking: widget.forPacking,
+                  gsm: widget.gsm,
+                  weightDozen: widget.weightDozen,
+                  totalWeight: widget.totalWeight,
                 ),
               ],
             ),

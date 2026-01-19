@@ -24,6 +24,9 @@ class FormItems extends StatefulWidget {
   final length;
   final width;
   final weight;
+  final weightDozen;
+  final gsm;
+  final totalWeight;
   final note;
   final handleChangeInput;
   final handleSelectLengthUnit;
@@ -81,16 +84,16 @@ class FormItems extends StatefulWidget {
       this.handleSelectQtyUnitDyeing,
       this.data,
       this.forPacking = false,
-      this.greigeQty});
+      this.greigeQty,
+      this.gsm,
+      this.totalWeight,
+      this.weightDozen});
 
   @override
   State<FormItems> createState() => _FormItemsState();
 }
 
 class _FormItemsState extends State<FormItems> {
-  late TextEditingController gsmController;
-  late TextEditingController totalBeratController;
-
   double beratLusin = 0;
   double gsm = 0;
   double totalBerat = 0;
@@ -98,8 +101,6 @@ class _FormItemsState extends State<FormItems> {
   @override
   void initState() {
     super.initState();
-    gsmController = TextEditingController();
-    totalBeratController = TextEditingController();
   }
 
   double getTotalItemQty() {
@@ -260,25 +261,29 @@ class _FormItemsState extends State<FormItems> {
     void calculateFromBeratLusin(double value) {
       final maxQty = getMaxQtyFromItems();
 
+      final size = widget.data['items'][0]['variants'][1]['value'];
+      final panjang = int.tryParse(size.split('X')[0]) ?? 0;
+      final lebar = int.tryParse(size.split('X')[1]) ?? 0;
+
       setState(() {
         beratLusin = value;
 
-        gsm = (beratLusin * 10000000) /
-            (12 *
-                int.parse(widget.data['items'][0]['variants'][1]['value']
-                    ?.split('X')[0]) *
-                int.parse(widget.data['items'][0]['variants'][1]['value']
-                    ?.split('X')[1]));
+        if (panjang == 0 || lebar == 0) {
+          gsm = 0;
+        } else {
+          gsm = (beratLusin * 10000000) / (12 * panjang * lebar);
+        }
+
         totalBerat = maxQty == 0 ? 0 : beratLusin / (12 * maxQty);
 
-        gsmController.text = gsm.toStringAsFixed(2);
-        totalBeratController.text = totalBerat.toStringAsFixed(2);
+        widget.gsm.text = gsm.toStringAsFixed(2);
+        widget.totalWeight.text = totalBerat.toStringAsFixed(2);
       });
     }
 
     final List<Map<String, dynamic>> formRows = [
       {
-        'label': 'Panjang (CM)',
+        'label': 'Panjang',
         'controller': widget.length,
         'onSelect': widget.handleSelectLengthUnit,
         'selectedLabel': widget.form['nama_satuan_panjang'] ?? '',
@@ -286,10 +291,11 @@ class _FormItemsState extends State<FormItems> {
         'unitLabel': 'Satuan Panjang',
         'value': 'length',
         'req': false,
-        'withSelectUnit': false
+        'withSelectUnit': false,
+        'staticUnit': 'CM'
       },
       {
-        'label': 'Lebar (CM)',
+        'label': 'Lebar',
         'controller': widget.width,
         'onSelect': widget.handleSelectWidthUnit,
         'selectedLabel': widget.form['nama_satuan_lebar'] ?? '',
@@ -297,11 +303,12 @@ class _FormItemsState extends State<FormItems> {
         'unitLabel': 'Satuan Lebar',
         'value': 'width',
         'req': false,
-        'withSelectUnit': false
+        'withSelectUnit': false,
+        'staticUnit': 'CM'
       },
       if (widget.forDyeing == false)
         {
-          'label': 'Berat (KG)',
+          'label': 'Berat',
           'controller': widget.weight,
           'onSelect': widget.handleSelectUnit,
           'selectedLabel': widget.form['nama_satuan_berat'] ?? '',
@@ -309,7 +316,8 @@ class _FormItemsState extends State<FormItems> {
           'unitLabel': 'Satuan Berat',
           'value': 'weight',
           'req': widget.withQtyAndWeight == true ? false : true,
-          'withSelectUnit': false
+          'withSelectUnit': false,
+          'staticUnit': 'KG'
         },
     ];
 
@@ -355,6 +363,7 @@ class _FormItemsState extends State<FormItems> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Expanded(
                                 flex: 2,
@@ -423,7 +432,25 @@ class _FormItemsState extends State<FormItems> {
                                     },
                                   ),
                                 ),
-                            ].separatedBy(CustomTheme().hGap('xl')),
+                              if (row['staticUnit'] != null) ...[
+                                Container(
+                                  padding: EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade400,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    row['staticUnit'],
+                                    style: TextStyle(
+                                      fontSize: CustomTheme().fontSize('md'),
+                                      fontWeight:
+                                          CustomTheme().fontWeight('semibold'),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ].separatedBy(CustomTheme()
+                                .hGap(row['staticUnit'] != null ? 'xs' : 'xl')),
                           ),
                           Row(
                             children: [
@@ -649,8 +676,15 @@ class _FormItemsState extends State<FormItems> {
                           label: 'Berat 1 Lusin (KG)',
                           req: true,
                           isNumber: true,
+                          controller: widget.weightDozen,
+                          inputFormatters: [ThousandsSeparatorInputFormatter()],
                           handleChange: (val) {
-                            final input = double.tryParse(val) ?? 0;
+                            widget.handleChangeInput('weight_per_dozen', val);
+
+                            final cleanValue =
+                                val.replaceAll('.', '').replaceAll(',', '');
+                            final input = double.tryParse(cleanValue) ?? 0;
+
                             calculateFromBeratLusin(input);
                           },
                         ),
@@ -659,17 +693,31 @@ class _FormItemsState extends State<FormItems> {
                       Expanded(
                         flex: 1,
                         child: TextForm(
-                            label: 'GSM',
-                            isDisabled: true,
-                            controller: gsmController),
+                          label: 'GSM',
+                          isDisabled: true,
+                          controller: widget.gsm,
+                          handleChange: (value) {
+                            setState(() {
+                              widget.gsm.text = value.toString();
+                              widget.handleChangeInput('gsm', value);
+                            });
+                          },
+                        ),
                       ),
                       CustomTheme().hGap('xl'),
                       Expanded(
                         flex: 1,
                         child: TextForm(
-                            label: 'Total Berat (KG)',
-                            isDisabled: true,
-                            controller: totalBeratController),
+                          label: 'Total Berat (KG)',
+                          isDisabled: true,
+                          controller: widget.totalWeight,
+                          handleChange: (value) {
+                            setState(() {
+                              widget.totalWeight.text = value.toString();
+                              widget.handleChangeInput('total_weight', value);
+                            });
+                          },
+                        ),
                       ),
                     ],
                   ),

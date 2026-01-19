@@ -14,7 +14,7 @@ class ListForm extends StatefulWidget {
   final selectWorkOrder;
   final selectMachine;
   final isMaklon;
-  final maklon;
+  final maklonName;
   final withMaklonOrMachine;
   final withOnlyMaklon;
   final withNoMaklonOrMachine;
@@ -26,7 +26,7 @@ class ListForm extends StatefulWidget {
       this.form,
       this.selectWorkOrder,
       this.selectMachine,
-      this.maklon,
+      this.maklonName,
       this.isMaklon = false,
       this.withMaklonOrMachine = false,
       this.withOnlyMaklon = false,
@@ -38,6 +38,11 @@ class ListForm extends StatefulWidget {
 
 class _ListFormState extends State<ListForm> {
   bool _isMaklon = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +81,7 @@ class _ListFormState extends State<ListForm> {
                 required: true,
               )),
             ),
-          if (widget.withOnlyMaklon == true)
+          if (widget.withOnlyMaklon == true && widget.form?['wo_id'] != null)
             Expanded(
               child: CustomCard(
                   child: Column(
@@ -107,10 +112,23 @@ class _ListFormState extends State<ListForm> {
                       Text(_isMaklon ? 'Ya' : 'Tidak'),
                     ].separatedBy(CustomTheme().hGap('lg')),
                   ),
+                  if (_isMaklon)
+                    TextForm(
+                      label: 'Nama Maklon',
+                      req: false,
+                      controller: widget.maklonName,
+                      handleChange: (value) {
+                        setState(() {
+                          widget.maklonName.text = value.toString();
+                          widget.form['maklon_name'] = value.toString();
+                        });
+                      },
+                    )
                 ],
               )),
             )
-          else if (widget.withMaklonOrMachine == true)
+          else if (widget.withMaklonOrMachine == true &&
+              widget.form?['wo_id'] != null)
             Expanded(
               child: CustomCard(
                   child: Column(
@@ -122,18 +140,21 @@ class _ListFormState extends State<ListForm> {
                   ),
                   Row(
                     children: [
-                      Switch(
-                        value: _isMaklon,
-                        onChanged: widget.form?['wo_id'] != null
-                            ? (value) {
-                                setState(() {
-                                  _isMaklon = value;
-                                  widget.form['maklon'] = value;
-                                });
-                              }
-                            : null,
-                        activeColor: Colors.green,
-                        inactiveThumbColor: Colors.redAccent,
+                      Opacity(
+                        opacity: widget.form?['wo_id'] != null ? 1.0 : 0.5,
+                        child: Switch(
+                          value: _isMaklon,
+                          onChanged: widget.form?['wo_id'] != null
+                              ? (value) {
+                                  setState(() {
+                                    _isMaklon = value;
+                                    widget.form['maklon'] = value;
+                                  });
+                                }
+                              : null,
+                          activeColor: Colors.green,
+                          inactiveThumbColor: Colors.redAccent,
+                        ),
                       ),
                       Text(_isMaklon ? 'Ya' : 'Tidak'),
                     ].separatedBy(CustomTheme().hGap('lg')),
@@ -142,10 +163,10 @@ class _ListFormState extends State<ListForm> {
                     TextForm(
                       label: 'Nama Maklon',
                       req: false,
-                      controller: widget.maklon,
+                      controller: widget.maklonName,
                       handleChange: (value) {
                         setState(() {
-                          widget.maklon.text = value.toString();
+                          widget.maklonName.text = value.toString();
                           widget.form['maklon_name'] = value.toString();
                         });
                       },
@@ -161,39 +182,6 @@ class _ListFormState extends State<ListForm> {
                 ],
               )),
             )
-          else if (widget.isMaklon == true)
-            Expanded(
-              child: CustomCard(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Maklon',
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('lg'),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Switch(
-                        value: _isMaklon,
-                        onChanged: widget.form?['wo_id'] != null
-                            ? (value) {
-                                setState(() {
-                                  _isMaklon = value;
-                                  widget.form['maklon'] = value;
-                                });
-                              }
-                            : null,
-                        activeColor: Colors.green,
-                        inactiveThumbColor: Colors.redAccent,
-                      ),
-                      Text(_isMaklon ? 'Yes' : 'No'),
-                    ].separatedBy(CustomTheme().hGap('lg')),
-                  ),
-                ],
-              )),
-            )
           else if (widget.form?['wo_id'] != null)
             Expanded(
               child: CustomCard(
@@ -203,20 +191,6 @@ class _ListFormState extends State<ListForm> {
                 selectedLabel: widget.form['nama_mesin'] ?? '',
                 selectedValue: widget.form['machine_id'].toString(),
                 required: true,
-              )),
-            ),
-          if (_isMaklon && widget.withMaklonOrMachine != true)
-            Expanded(
-              child: CustomCard(
-                  child: TextForm(
-                label: 'Nama Maklon',
-                req: false,
-                controller: widget.maklon,
-                handleChange: (value) {
-                  setState(() {
-                    widget.form['maklon_name'] = value.toString();
-                  });
-                },
               )),
             ),
         ].separatedBy(CustomTheme().hGap('xl')),

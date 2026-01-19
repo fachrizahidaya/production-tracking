@@ -30,6 +30,8 @@ class _FinishSewingManualState extends State<FinishSewingManual> {
   void initState() {
     widget.form?['length'] ??= '0';
     widget.form?['width'] ??= '0';
+    widget.form?['weight'] ??= '0';
+    widget.form?['item_qty'] ??= '0';
 
     super.initState();
   }

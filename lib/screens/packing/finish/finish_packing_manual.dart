@@ -28,9 +28,6 @@ class _FinishPackingManualState extends State<FinishPackingManual> {
 
   @override
   void initState() {
-    widget.form?['length'] ??= '0';
-    widget.form?['width'] ??= '0';
-
     super.initState();
   }
 

@@ -11,6 +11,9 @@ class ListForm extends StatefulWidget {
   final length;
   final width;
   final weight;
+  final weightDozen;
+  final gsm;
+  final totalWeight;
   final note;
   final qty;
   final qtyItem;
@@ -27,11 +30,6 @@ class ListForm extends StatefulWidget {
   final handleSelectMachine;
   final isFormIncomplete;
   final isChanged;
-  final initialQty;
-  final initialWeight;
-  final initialLength;
-  final initialWidth;
-  final initialNotes;
   final allAttachments;
   final handlePickAttachments;
   final handleDeleteAttachment;
@@ -62,10 +60,6 @@ class ListForm extends StatefulWidget {
       this.isFormIncomplete,
       this.processId,
       this.isChanged,
-      this.initialWeight,
-      this.initialLength,
-      this.initialWidth,
-      this.initialNotes,
       this.allAttachments,
       this.handlePickAttachments,
       this.processData,
@@ -75,7 +69,6 @@ class ListForm extends StatefulWidget {
       this.qty,
       this.withQtyAndWeight = false,
       this.handleSelectQtyUnitItem,
-      this.initialQty,
       this.qtyItem,
       this.showImageDialog,
       this.handleDeleteAttachment,
@@ -83,7 +76,10 @@ class ListForm extends StatefulWidget {
       this.forDyeing,
       this.handleSelectQtyUnitDyeing,
       this.data,
-      this.forPacking});
+      this.forPacking,
+      this.gsm,
+      this.totalWeight,
+      this.weightDozen});
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -265,6 +261,9 @@ class _ListFormState extends State<ListForm> {
         data: widget.data,
         forPacking: widget.forPacking,
         greigeQty: greigeQty,
+        gsm: widget.gsm,
+        weightDozen: widget.weightDozen,
+        totalWeight: widget.totalWeight,
       ),
     );
   }

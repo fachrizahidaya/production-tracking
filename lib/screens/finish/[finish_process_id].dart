@@ -6,10 +6,8 @@ import 'package:textile_tracking/components/master/button/process_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/process/finish/work_order_info_tab.dart';
 import 'package:textile_tracking/components/process/finish/finish_form_tab.dart';
-import 'package:textile_tracking/components/process/finish/work_order_item_tab.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
@@ -79,6 +77,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   final TextEditingController _lengthController = TextEditingController();
   final TextEditingController _widthController = TextEditingController();
   final TextEditingController _qtyController = TextEditingController();
+  final TextEditingController _weightDozenController = TextEditingController();
+  final TextEditingController _gsmController = TextEditingController();
+  final TextEditingController _totalWeightController = TextEditingController();
   final TextEditingController _qtyItemController = TextEditingController();
   final List<TextEditingController> _qtyControllers = [];
   final List<TextEditingController> _notesControllers = [];
@@ -101,6 +102,11 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     _lengthController.text = widget.form?['length']?.toString() ?? '';
     _widthController.text = widget.form?['width']?.toString() ?? '';
     _noteController.text = widget.form?['notes']?.toString() ?? '';
+    _weightDozenController.text =
+        widget.form?['weight_per_dozen']?.toString() ?? '';
+    _gsmController.text = widget.form?['gsm']?.toString() ?? '';
+    _totalWeightController.text =
+        widget.form?['total_weight']?.toString() ?? '';
 
     if (widget.processId != null) {
       _getProcessView(widget.processId);
@@ -232,6 +238,18 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       if (data['weight'] != null) {
         _weightController.text = data['weight'].toString();
         widget.form?['weight'] = data['weight'];
+      }
+      if (data['weight_per_dozen'] != null) {
+        _weightDozenController.text = data['weight_per_dozen'].toString();
+        widget.form?['weight_per_dozen'] = data['weight_per_dozen'];
+      }
+      if (data['gsm'] != null) {
+        _gsmController.text = data['gsm'].toString();
+        widget.form?['gsm'] = data['gsm'];
+      }
+      if (data['total_weight'] != null) {
+        _totalWeightController.text = data['total_weight'].toString();
+        widget.form?['total_weight'] = data['total_weight'];
       }
       if (data['item_qty'] != null) {
         _qtyItemController.text = data['item_qty'].toString();
@@ -592,9 +610,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length:
-          // 2,
-          3,
+      length: 2,
+      // 3,
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
@@ -619,9 +636,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                   Tab(
                     text: 'Informasi',
                   ),
-                  Tab(text: 'Lampiran'
-                      // 'Material',
-                      ),
                 ]),
               ),
               Expanded(
@@ -643,6 +657,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                     note: _noteController,
                     qtyItem: _qtyControllers,
                     weight: _weightController,
+                    gsm: _gsmController,
+                    weightDozen: _weightDozenController,
+                    totalWeight: _totalWeightController,
                     handleSelectWo: _selectWorkOrder,
                     handleSelectQtyUnitItem: _selectQtyItemUnit,
                     handleSelectQtyUnitDyeing: _selectQtyDyeingUnit,
@@ -661,12 +678,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                     data: data['work_orders'],
                     label: widget.label,
                   ),
-                  // WorkOrderItemTab(
-                  //   data: woData,
-                  // ),
-                  AttachmentTab(
-                    existingAttachment: woData['attachments'] ?? [],
-                  )
                 ]),
               )
             ],

@@ -12,6 +12,9 @@ class FinishSection extends StatefulWidget {
   final weight;
   final width;
   final length;
+  final weightDozen;
+  final gsm;
+  final totalWeight;
   final handleSelectWo;
   final handleSelectUnit;
   final handleSelectLengthUnit;
@@ -63,7 +66,10 @@ class FinishSection extends StatefulWidget {
       this.forDyeing,
       this.handleSelectQtyUnitDyeing,
       this.data,
-      this.forPacking});
+      this.forPacking,
+      this.gsm,
+      this.weightDozen,
+      this.totalWeight});
 
   @override
   State<FinishSection> createState() => _FinishSectionState();
@@ -71,27 +77,11 @@ class FinishSection extends StatefulWidget {
 
 class _FinishSectionState extends State<FinishSection> {
   bool _isChanged = false;
-  late String _initialWeight;
-  late String _initialQty;
-  late String _initialLength;
-  late String _initialNotes;
-  late String _initialWidth;
   late List<Map<String, dynamic>> allAttachments;
 
   @override
   void initState() {
     super.initState();
-    _initialQty = widget.processData['qty']?.toString() ?? '';
-    _initialWeight = widget.processData['weight']?.toString() ?? '';
-    _initialLength = widget.processData['length']?.toString() ?? '';
-    _initialWidth = widget.processData['width']?.toString() ?? '';
-    _initialNotes = widget.processData['notes']?.toString() ?? '';
-
-    widget.qty.text = _initialQty;
-    widget.weight.text = _initialWeight;
-    widget.note.text = _initialNotes;
-    widget.length.text = _initialLength;
-    widget.width.text = _initialWidth;
 
     final existing =
         (widget.processData?['attachments'] ?? []).cast<Map<String, dynamic>>();
@@ -111,18 +101,6 @@ class _FinishSectionState extends State<FinishSection> {
     if (widget.processData != oldWidget.processData &&
         widget.processData.isNotEmpty) {
       setState(() {
-        _initialQty = widget.processData['qty']?.toString() ?? '';
-        _initialWeight = widget.processData['weight']?.toString() ?? '';
-        _initialLength = widget.processData['length']?.toString() ?? '';
-        _initialWidth = widget.processData['width']?.toString() ?? '';
-        _initialNotes = widget.processData['notes']?.toString() ?? '';
-
-        widget.qty.text = _initialWeight;
-        widget.weight.text = _initialWeight;
-        widget.length.text = _initialLength;
-        widget.width.text = _initialWidth;
-        widget.note.text = _initialNotes;
-
         final existing = (widget.processData?['attachments'] ?? [])
             .cast<Map<String, dynamic>>();
         final newOnes =
@@ -277,10 +255,6 @@ class _FinishSectionState extends State<FinishSection> {
       handleSelectUnit: widget.handleSelectUnit,
       isFormIncomplete: _isFormIncomplete,
       isChanged: _isChanged,
-      initialWeight: _initialWeight,
-      initialLength: _initialLength,
-      initialWidth: _initialWidth,
-      initialNotes: _initialNotes,
       allAttachments: allAttachments,
       handlePickAttachments: _pickAttachments,
       processData: widget.processData,
@@ -300,6 +274,9 @@ class _FinishSectionState extends State<FinishSection> {
       forDyeing: widget.forDyeing,
       data: widget.data,
       forPacking: widget.forPacking,
+      gsm: widget.gsm,
+      weightDozen: widget.weightDozen,
+      totalWeight: widget.totalWeight,
     );
   }
 }

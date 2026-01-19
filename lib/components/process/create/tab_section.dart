@@ -5,9 +5,7 @@ import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/process/create/form_info_tab.dart';
-import 'package:textile_tracking/components/process/finish/work_order_item_tab.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -15,7 +13,8 @@ class TabSection extends StatefulWidget {
   final id;
   final title;
   final label;
-  final maklon;
+  final maklonName;
+  final isMaklon;
   final form;
   final formKey;
   final woData;
@@ -39,14 +38,15 @@ class TabSection extends StatefulWidget {
       this.handleSubmit,
       this.id,
       this.isSubmitting,
-      this.maklon,
+      this.maklonName,
       this.selectMachine,
       this.selectWorkOrder,
       this.withMaklonOrMachine,
       this.withNoMaklonOrMachine,
       this.withOnlyMaklon,
       this.woData,
-      this.processData});
+      this.processData,
+      this.isMaklon});
 
   @override
   State<TabSection> createState() => _TabSectionState();
@@ -125,43 +125,21 @@ class _TabSectionState extends State<TabSection> {
           title: widget.title,
           onReturn: () => _handleCancel(context),
         ),
-        body: Column(
-          children: [
-            Container(
-              color: Colors.white,
-              child: TabBar(tabs: [
-                Tab(
-                  text: 'Form',
-                ),
-                Tab(
-                  text: 'Lampiran',
-                ),
-              ]),
-            ),
-            Expanded(
-              child: TabBarView(children: [
-                FormInfoTab(
-                  data: widget.woData,
-                  processData: widget.processData,
-                  id: widget.id,
-                  isLoading: widget.firstLoading,
-                  label: widget.label,
-                  form: widget.form,
-                  formKey: widget.formKey,
-                  handleSelectMachine: widget.selectMachine,
-                  handleSelectWorkOrder: widget.selectWorkOrder,
-                  maklon: widget.maklon,
-                  withMaklonOrMachine: widget.withMaklonOrMachine,
-                  withOnlyMaklon: widget.withOnlyMaklon,
-                  withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
-                ),
-                // WorkOrderItemTab(data: widget.woData),
-                AttachmentTab(
-                  existingAttachment: widget.woData['attachments'] ?? [],
-                ),
-              ]),
-            )
-          ],
+        body: FormInfoTab(
+          data: widget.woData,
+          processData: widget.processData,
+          id: widget.id,
+          isLoading: widget.firstLoading,
+          label: widget.label,
+          form: widget.form,
+          formKey: widget.formKey,
+          handleSelectMachine: widget.selectMachine,
+          handleSelectWorkOrder: widget.selectWorkOrder,
+          maklonName: widget.maklonName,
+          withMaklonOrMachine: widget.withMaklonOrMachine,
+          withOnlyMaklon: widget.withOnlyMaklon,
+          withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
+          isMaklon: widget.isMaklon,
         ),
         bottomNavigationBar: SafeArea(
           child: Container(

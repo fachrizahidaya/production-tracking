@@ -28,9 +28,6 @@ class _FinishSortingManualState extends State<FinishSortingManual> {
 
   @override
   void initState() {
-    widget.form?['length'] ??= '0';
-    widget.form?['width'] ??= '0';
-
     super.initState();
   }
 

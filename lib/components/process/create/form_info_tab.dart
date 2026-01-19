@@ -1,14 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/card/custom_card.dart';
-import 'package:textile_tracking/components/master/card/custom_badge.dart';
-import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/create_section.dart';
-import 'package:textile_tracking/components/process/finish/work_order_item_tab.dart';
 import 'package:textile_tracking/components/process/info_tab.dart';
-import 'package:textile_tracking/helpers/util/format_html.dart';
-import 'package:textile_tracking/helpers/util/format_number.dart';
+import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/item_tab.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class FormInfoTab extends StatefulWidget {
@@ -21,7 +16,7 @@ class FormInfoTab extends StatefulWidget {
   final handleSelectMachine;
   final handleSelectWorkOrder;
   final isLoading;
-  final maklon;
+  final maklonName;
   final isMaklon;
   final withMaklonOrMachine;
   final withOnlyMaklon;
@@ -39,7 +34,7 @@ class FormInfoTab extends StatefulWidget {
       this.id,
       this.isLoading,
       this.isMaklon,
-      this.maklon,
+      this.maklonName,
       this.withMaklonOrMachine,
       this.withNoMaklonOrMachine,
       this.withOnlyMaklon});
@@ -69,7 +64,7 @@ class _FormInfoTabState extends State<FormInfoTab> {
               CreateSection(
                 formKey: widget.formKey,
                 form: widget.form,
-                maklon: widget.maklon,
+                maklonName: widget.maklonName,
                 isMaklon: widget.isMaklon,
                 selectWorkOrder: widget.handleSelectWorkOrder,
                 selectMachine: widget.handleSelectMachine,
@@ -86,10 +81,13 @@ class _FormInfoTabState extends State<FormInfoTab> {
                   isTablet: isTablet,
                   withNote: true,
                 ),
+                ItemTab(
+                  data: widget.data,
+                ),
+                AttachmentTab(
+                  existingAttachment: widget.data['attachments'] ?? [],
+                )
               ],
-              WorkOrderItemTab(
-                data: widget.data,
-              )
             ].separatedBy(CustomTheme().vGap('2xl')),
           ),
         );

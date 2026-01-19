@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/card/custom_card.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -55,19 +54,6 @@ class _SummaryCardState extends State<SummaryCard>
     }
   }
 
-  Color _getHeaderStatusColor(Map<String, dynamic> summary) {
-    switch (widget.filter) {
-      // case 'Selesai':
-      //   return const Color(0xFF10b981); // green
-      // case 'Diproses':
-      //   return Colors.blue;
-      // case 'Menunggu Diproses':
-      //   return Colors.orange;
-      default:
-        return _getSummaryColor(summary); // fallback lama
-    }
-  }
-
   @override
   void dispose() {
     _animationController.dispose();
@@ -97,7 +83,6 @@ class _SummaryCardState extends State<SummaryCard>
   Widget _buildCard(bool isTablet) {
     final summary = widget.data['summary'] ?? {};
     final statusColor = _getSummaryColor(summary);
-    final total = _getTotalCount(summary);
     final progress = _getProgress(summary);
 
     return AnimatedContainer(
@@ -457,10 +442,7 @@ class _SummaryCardState extends State<SummaryCard>
 
   /// Get Progress Color
   Color _getProgressColor(double progress) {
-    if (progress >= 0.8) return Colors.green;
-    if (progress >= 0.5) return Colors.blue;
-    if (progress >= 0.25) return Colors.orange;
-    return Colors.red;
+    return Colors.green;
   }
 
   /// Get Process Icon

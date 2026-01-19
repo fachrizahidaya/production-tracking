@@ -9,7 +9,6 @@ import 'package:textile_tracking/components/home/dashboard/filter/process_filter
 import 'package:textile_tracking/components/home/dashboard/filter/summary_filter.dart';
 import 'package:textile_tracking/components/home/dashboard/machine/active_machine.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/process/work_order_process.dart';
-import 'package:textile_tracking/components/home/dashboard/work-order/work_order_pie.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_stats.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/summary/work_order_summary.dart';
 import 'package:textile_tracking/components/master/card/item_process.dart';
@@ -330,10 +329,6 @@ class _DashboardState extends State<Dashboard> {
                   unavailable: machineList['unavailable'],
                   handleRefetch: _handleFetchMachine,
                   isFetching: isMachineLoading,
-                ),
-                WorkOrderPie(
-                  data: pieList,
-                  process: chartList,
                 ),
                 WorkOrderProcessScreen(
                   data: _dataList,

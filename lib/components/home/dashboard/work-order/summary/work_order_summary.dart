@@ -29,22 +29,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
   String selectedProcess = 'All';
   late TabController _tabController;
 
-  static const List<IconData> processIcons = [
-    Icons.invert_colors_on_outlined,
-    Icons.dry_outlined,
-    Icons.dry_cleaning_outlined,
-    Icons.air,
-    Icons.cut_outlined,
-    Icons.link_outlined,
-    Icons.cut,
-    Icons.link_outlined,
-    Icons.numbers_outlined,
-    Icons.print_outlined,
-    Icons.sort,
-    Icons.stacked_bar_chart_outlined,
-    Icons.dangerous,
-  ];
-
   @override
   void initState() {
     _tabController = TabController(
@@ -103,7 +87,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(12),
         ),
         enableDrag: true,
         isDismissible: true,

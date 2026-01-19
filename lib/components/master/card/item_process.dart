@@ -1,9 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/home/dashboard/card/process_card.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class ItemProcess extends StatefulWidget {
@@ -37,7 +39,7 @@ class _ItemProcessState extends State<ItemProcess> {
         return Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
@@ -74,7 +76,7 @@ class _ItemProcessState extends State<ItemProcess> {
     final statusConfig = _getStatusConfig(overallStatus);
 
     return Container(
-      padding: EdgeInsets.all(isTablet ? 20 : 16),
+      padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -85,8 +87,8 @@ class _ItemProcessState extends State<ItemProcess> {
           ],
         ),
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
         ),
         border: Border(
           bottom: BorderSide(
@@ -99,10 +101,10 @@ class _ItemProcessState extends State<ItemProcess> {
         children: [
           // Icon Container
           Container(
-            padding: EdgeInsets.all(isTablet ? 14 : 12),
+            padding: CustomTheme().padding('process-content'),
             decoration: BoxDecoration(
               color: statusConfig['color'].withOpacity(0.15),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(4),
             ),
             child: Icon(
               Icons.inventory_2_outlined,
@@ -110,7 +112,6 @@ class _ItemProcessState extends State<ItemProcess> {
               color: statusConfig['color'],
             ),
           ),
-          SizedBox(width: isTablet ? 16 : 12),
 
           // Item Info
           Expanded(
@@ -131,26 +132,23 @@ class _ItemProcessState extends State<ItemProcess> {
                   child: Text(
                     itemName,
                     style: TextStyle(
-                      fontSize: isTablet ? 18 : 16,
-                      fontWeight: FontWeight.bold,
+                      fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
+                      fontWeight: CustomTheme().fontWeight('bold'),
                       color: Colors.grey[800],
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(height: 4),
                 Row(
                   children: [
-                    _buildCodeBadge(itemCode, isTablet),
+                    _buildSpkBadge(itemCode, isTablet),
                     if (widget.item['wo_no'] != null) ...[
-                      const SizedBox(width: 8),
                       Icon(
                         Icons.calendar_month_outlined,
                         size: isTablet ? 14 : 12,
                         color: Colors.grey[500],
                       ),
-                      const SizedBox(width: 4),
                       Text(
                         DateFormat("dd MMM yyyy")
                             .format(DateTime.parse(widget.item['wo_date'])),
@@ -160,9 +158,9 @@ class _ItemProcessState extends State<ItemProcess> {
                         ),
                       ),
                     ],
-                  ],
+                  ].separatedBy(CustomTheme().hGap('sm')),
                 ),
-              ],
+              ].separatedBy(CustomTheme().vGap('sm')),
             ),
           ),
 
@@ -172,27 +170,24 @@ class _ItemProcessState extends State<ItemProcess> {
             title: widget.item['status'],
             status: widget.item['status'],
           ),
-        ],
+        ].separatedBy(CustomTheme().hGap('xl')),
       ),
     );
   }
 
   /// Code Badge
-  Widget _buildCodeBadge(String code, bool isTablet) {
+  Widget _buildSpkBadge(String code, bool isTablet) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isTablet ? 10 : 8,
-        vertical: isTablet ? 4 : 3,
-      ),
+      padding: CustomTheme().padding('badge-rework'),
       decoration: BoxDecoration(
         color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         code,
         style: TextStyle(
-          fontSize: isTablet ? 11 : 10,
-          fontWeight: FontWeight.w600,
+          fontSize: CustomTheme().fontSize('xs'),
+          fontWeight: CustomTheme().fontWeight('semibold'),
           color: Colors.grey[700],
         ),
       ),
@@ -200,41 +195,6 @@ class _ItemProcessState extends State<ItemProcess> {
   }
 
   /// Status Badge
-  Widget _buildStatusBadge(
-      String status, Map<String, dynamic> config, bool isTablet) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isTablet ? 14 : 12,
-        vertical: isTablet ? 8 : 6,
-      ),
-      decoration: BoxDecoration(
-        color: config['color'].withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: config['color'].withOpacity(0.3),
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            config['icon'],
-            size: isTablet ? 16 : 14,
-            color: config['color'],
-          ),
-          const SizedBox(width: 6),
-          Text(
-            config['label'],
-            style: TextStyle(
-              fontSize: isTablet ? 12 : 11,
-              fontWeight: FontWeight.w600,
-              color: config['color'],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   /// Process Timeline
   Widget _buildProcessTimeline(Map<String, dynamic> processes, bool isTablet) {
@@ -254,7 +214,6 @@ class _ItemProcessState extends State<ItemProcess> {
           title: 'Alur Proses',
           isTablet: isTablet,
         ),
-        SizedBox(height: isTablet ? 20 : 16),
 
         /// Timeline Items
         AnimatedSize(
@@ -283,43 +242,35 @@ class _ItemProcessState extends State<ItemProcess> {
           SizedBox(height: isTablet ? 16 : 12),
           Center(
             child: InkWell(
-              borderRadius: BorderRadius.circular(20),
               onTap: () {
                 setState(() {
                   _showAllTimeline = !_showAllTimeline;
                 });
               },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      _showAllTimeline ? Icons.expand_less : Icons.expand_more,
-                      size: isTablet ? 20 : 18,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    _showAllTimeline ? Icons.expand_less : Icons.expand_more,
+                    size: isTablet ? 20 : 18,
+                    color: CustomTheme().buttonColor('primary'),
+                  ),
+                  Text(
+                    _showAllTimeline
+                        ? 'Sembunyikan Proses'
+                        : 'Lihat Semua Proses',
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('sm'),
+                      fontWeight: CustomTheme().fontWeight('semibold'),
                       color: CustomTheme().buttonColor('primary'),
                     ),
-                    const SizedBox(width: 6),
-                    Text(
-                      _showAllTimeline
-                          ? 'Sembunyikan Proses'
-                          : 'Lihat Semua Proses',
-                      style: TextStyle(
-                        fontSize: isTablet ? 13 : 12,
-                        fontWeight: FontWeight.w600,
-                        color: CustomTheme().buttonColor('primary'),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ].separatedBy(CustomTheme().hGap('sm')),
               ),
             ),
           ),
         ],
-      ],
+      ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
 
@@ -385,7 +336,6 @@ class _ItemProcessState extends State<ItemProcess> {
               ],
             ),
           ),
-          SizedBox(width: isTablet ? 12 : 8),
 
           // Process Card Content
           Expanded(
@@ -401,7 +351,7 @@ class _ItemProcessState extends State<ItemProcess> {
               ),
             ),
           ),
-        ],
+        ].separatedBy(CustomTheme().hGap('xl')),
       ),
     );
   }
@@ -415,10 +365,10 @@ class _ItemProcessState extends State<ItemProcess> {
     required bool isTablet,
   }) {
     return Container(
-      padding: EdgeInsets.all(isTablet ? 16 : 12),
+      padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: statusConfig['color'].withOpacity(0.3),
         ),
@@ -437,10 +387,10 @@ class _ItemProcessState extends State<ItemProcess> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: CustomTheme().padding('process-content'),
                 decoration: BoxDecoration(
                   color: processConfig['color'].withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 child: Icon(
                   processConfig['icon'],
@@ -448,7 +398,6 @@ class _ItemProcessState extends State<ItemProcess> {
                   color: processConfig['color'],
                 ),
               ),
-              SizedBox(width: isTablet ? 12 : 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -456,8 +405,9 @@ class _ItemProcessState extends State<ItemProcess> {
                     Text(
                       processConfig['title'],
                       style: TextStyle(
-                        fontSize: isTablet ? 15 : 14,
-                        fontWeight: FontWeight.bold,
+                        fontSize:
+                            CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
+                        fontWeight: CustomTheme().fontWeight('bold'),
                         color: Colors.grey[800],
                       ),
                     ),
@@ -466,7 +416,7 @@ class _ItemProcessState extends State<ItemProcess> {
                       Text(
                         _formatDateTime(process['updated_at']),
                         style: TextStyle(
-                          fontSize: isTablet ? 11 : 10,
+                          fontSize: CustomTheme().fontSize('xs'),
                           color: Colors.grey[500],
                         ),
                       ),
@@ -475,8 +425,8 @@ class _ItemProcessState extends State<ItemProcess> {
                 ),
               ),
               // Status Chip
-              _buildMiniStatusBadge(statusConfig, isTablet),
-            ],
+              _buildMiniStatusBadge(process, statusConfig, isTablet),
+            ].separatedBy(CustomTheme().hGap('md')),
           ),
 
           // Process Details
@@ -499,18 +449,13 @@ class _ItemProcessState extends State<ItemProcess> {
   }
 
   /// Mini Status Badge
-  Widget _buildMiniStatusBadge(Map<String, dynamic> config, bool isTablet) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isTablet ? 10 : 8,
-        vertical: isTablet ? 6 : 4,
-      ),
-      child: CustomBadge(
-        withStatus: true,
-        rework: true,
-        title: widget.item['status'],
-        status: widget.item['status'],
-      ),
+  Widget _buildMiniStatusBadge(Map<String, dynamic> process,
+      Map<String, dynamic> config, bool isTablet) {
+    return CustomBadge(
+      withStatus: true,
+      rework: true,
+      title: process['status'],
+      status: process['status'],
     );
   }
 
@@ -587,10 +532,10 @@ class _ItemProcessState extends State<ItemProcess> {
       mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
       children: [
         Container(
-          padding: const EdgeInsets.all(6),
+          padding: CustomTheme().padding('process-content'),
           decoration: BoxDecoration(
             color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(4),
           ),
           child: Icon(
             icon,
@@ -598,7 +543,6 @@ class _ItemProcessState extends State<ItemProcess> {
             color: Colors.grey[600],
           ),
         ),
-        const SizedBox(width: 8),
         Flexible(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -606,15 +550,15 @@ class _ItemProcessState extends State<ItemProcess> {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: isTablet ? 10 : 9,
+                  fontSize: CustomTheme().fontSize('xs'),
                   color: Colors.grey[500],
                 ),
               ),
               Text(
                 value,
                 style: TextStyle(
-                  fontSize: isTablet ? 13 : 12,
-                  fontWeight: FontWeight.w600,
+                  fontSize: CustomTheme().fontSize('sm'),
+                  fontWeight: CustomTheme().fontWeight('semibold'),
                   color: Colors.grey[800],
                 ),
                 maxLines: isFullWidth ? 2 : 1,
@@ -623,7 +567,7 @@ class _ItemProcessState extends State<ItemProcess> {
             ],
           ),
         ),
-      ],
+      ].separatedBy(CustomTheme().hGap('lg')),
     );
 
     if (isTablet && !isFullWidth) {
@@ -639,10 +583,10 @@ class _ItemProcessState extends State<ItemProcess> {
   /// Grades Section
   Widget _buildGradesSection(List<dynamic> grades, bool isTablet) {
     return Container(
-      padding: EdgeInsets.all(isTablet ? 12 : 10),
+      padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(
         color: Colors.purple.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(4),
         border: Border.all(
           color: Colors.purple.withOpacity(0.2),
         ),
@@ -661,14 +605,13 @@ class _ItemProcessState extends State<ItemProcess> {
               Text(
                 'Grades',
                 style: TextStyle(
-                  fontSize: isTablet ? 12 : 11,
-                  fontWeight: FontWeight.w600,
+                  fontSize: CustomTheme().fontSize('sm'),
+                  fontWeight: CustomTheme().fontWeight('semibold'),
                   color: Colors.purple[700],
                 ),
               ),
             ],
           ),
-          SizedBox(height: isTablet ? 10 : 8),
           Wrap(
             spacing: isTablet ? 10 : 8,
             runSpacing: isTablet ? 8 : 6,
@@ -676,7 +619,7 @@ class _ItemProcessState extends State<ItemProcess> {
               return _buildGradeChip(grade, isTablet);
             }).toList(),
           ),
-        ],
+        ].separatedBy(CustomTheme().vGap('lg')),
       ),
     );
   }
@@ -852,7 +795,6 @@ class _ItemProcessState extends State<ItemProcess> {
           size: isTablet ? 20 : 18,
           color: CustomTheme().buttonColor('primary'),
         ),
-        const SizedBox(width: 8),
         Text(
           title,
           style: TextStyle(
@@ -861,14 +803,13 @@ class _ItemProcessState extends State<ItemProcess> {
             color: Colors.grey[800],
           ),
         ),
-        const SizedBox(width: 12),
         Expanded(
           child: Divider(
             color: Colors.grey[300],
             thickness: 1,
           ),
         ),
-      ],
+      ].separatedBy(CustomTheme().hGap('xl')),
     );
   }
 
@@ -905,6 +846,13 @@ class _ItemProcessState extends State<ItemProcess> {
         return {
           'label': 'Diproses',
           'color': Colors.blue,
+          'icon': Icons.hourglass_top_outlined,
+        };
+      case 'waiting':
+      case 'Menunggu Diproses':
+        return {
+          'label': 'Menunggu Diproses',
+          'color': Colors.grey,
           'icon': Icons.hourglass_top_outlined,
         };
 
@@ -948,55 +896,55 @@ class _ItemProcessState extends State<ItemProcess> {
       case 'dyeing':
         return {
           'title': 'Dyeing',
-          'icon': Icons.color_lens_outlined,
+          'icon': Icons.invert_colors_on_outlined,
           'color': Colors.purple,
         };
       case 'press':
         return {
           'title': 'Press',
-          'icon': Icons.auto_fix_high_outlined,
+          'icon': Icons.layers_outlined,
           'color': Colors.teal,
         };
       case 'tumbler':
         return {
           'title': 'Tumbler',
-          'icon': Icons.verified_outlined,
+          'icon': Icons.dry_cleaning_outlined,
           'color': Colors.indigo,
         };
       case 'stenter':
         return {
           'title': 'Stenter',
-          'icon': Icons.verified_outlined,
+          'icon': Icons.air_outlined,
           'color': Colors.indigo,
         };
       case 'long-sitting':
         return {
           'title': 'Long Sitting',
-          'icon': Icons.verified_outlined,
+          'icon': Icons.content_paste_outlined,
           'color': Colors.indigo,
         };
       case 'long-hemming':
         return {
           'title': 'Long Hemming',
-          'icon': Icons.verified_outlined,
+          'icon': Icons.cut_outlined,
           'color': Colors.indigo,
         };
       case 'cross-cutting':
         return {
           'title': 'Cross Cutting',
-          'icon': Icons.verified_outlined,
+          'icon': Icons.cut_outlined,
           'color': Colors.indigo,
         };
       case 'sewing':
         return {
           'title': 'Sewing',
-          'icon': Icons.print_outlined,
+          'icon': Icons.link_outlined,
           'color': Colors.pink,
         };
       case 'embroidery':
         return {
           'title': 'Embroidery',
-          'icon': Icons.local_laundry_service_outlined,
+          'icon': Icons.color_lens_outlined,
           'color': Colors.cyan,
         };
       case 'printing':
@@ -1008,7 +956,7 @@ class _ItemProcessState extends State<ItemProcess> {
       case 'sorting':
         return {
           'title': 'Sorting',
-          'icon': Icons.print_outlined,
+          'icon': Icons.sort_outlined,
           'color': Colors.pink,
         };
       case 'packing':
@@ -1035,8 +983,8 @@ class _ItemProcessState extends State<ItemProcess> {
       'long-sitting',
       'long-hemming',
       'cross-cutting',
-      'sewing'
-          'embroidery',
+      'sewing',
+      'embroidery',
       'printing',
       'sorting',
       'packing',
@@ -1059,11 +1007,6 @@ class _ItemProcessState extends State<ItemProcess> {
     return process['qty'] != null ||
         process['weight'] != null ||
         process['item_qty'] != null;
-    // ||
-    // process['machine'] != null ||
-    // process['operator'] != null ||
-    // (process['remarks'] != null &&
-    //     process['remarks'].toString().isNotEmpty);
   }
 
   String _formatDateTime(dynamic dateTime) {

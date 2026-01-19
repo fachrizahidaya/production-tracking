@@ -18,7 +18,8 @@ class CreateProcessManual extends StatefulWidget {
   final getWorkOrderOptions;
   final fetchMachine;
   final getMachineOptions;
-  final maklon;
+  final maklonName;
+  final isMaklon;
   final label;
   final withMaklonOrMachine;
   final withOnlyMaklon;
@@ -38,14 +39,15 @@ class CreateProcessManual extends StatefulWidget {
       this.getWorkOrderOptions,
       this.fetchMachine,
       this.getMachineOptions,
-      this.maklon,
+      this.maklonName,
       this.label,
       this.withMaklonOrMachine,
       this.withOnlyMaklon,
       this.withNoMaklonOrMachine,
       this.processService,
       this.processId,
-      this.idProcess});
+      this.idProcess,
+      this.isMaklon});
 
   @override
   State<CreateProcessManual> createState() => _CreateProcessManualState();
@@ -55,6 +57,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final WorkOrderService _workOrderService = WorkOrderService();
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
+  final TextEditingController _maklonNameController = TextEditingController();
 
   bool _firstLoading = false;
   bool _isFetchingWorkOrder = false;
@@ -238,28 +241,24 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length:
-          // 1,
-          2,
-      child: TabSection(
-        id: widget.id,
-        title: widget.title,
-        maklon: widget.maklon,
-        form: widget.form,
-        label: widget.label,
-        formKey: _formKey,
-        woData: woData,
-        processData: data,
-        withMaklonOrMachine: widget.withMaklonOrMachine,
-        withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
-        withOnlyMaklon: widget.withOnlyMaklon,
-        handleSubmit: widget.handleSubmit,
-        firstLoading: _firstLoading,
-        isSubmitting: _isSubmitting,
-        selectMachine: _selectMachine,
-        selectWorkOrder: _selectWorkOrder,
-      ),
+    return TabSection(
+      id: widget.id,
+      title: widget.title,
+      maklonName: _maklonNameController,
+      isMaklon: widget.isMaklon,
+      form: widget.form,
+      label: widget.label,
+      formKey: _formKey,
+      woData: woData,
+      processData: data,
+      withMaklonOrMachine: widget.withMaklonOrMachine,
+      withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
+      withOnlyMaklon: widget.withOnlyMaklon,
+      handleSubmit: widget.handleSubmit,
+      firstLoading: _firstLoading,
+      isSubmitting: _isSubmitting,
+      selectMachine: _selectMachine,
+      selectWorkOrder: _selectWorkOrder,
     );
   }
 }

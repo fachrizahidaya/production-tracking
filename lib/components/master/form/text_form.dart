@@ -40,9 +40,9 @@ class TextForm extends StatelessWidget {
             enabled: isDisabled == true ? false : true,
             controller: controller,
             style: TextStyle(fontSize: CustomTheme().fontSize('md')),
-            decoration: CustomTheme()
-                .inputDecoration()
-                .copyWith(hintText: 'Isi $label'),
+            decoration: CustomTheme().inputDecoration().copyWith(
+                  hintText: 'Isi $label',
+                ),
             keyboardType:
                 isNumber == true ? TextInputType.number : TextInputType.text,
             inputFormatters:

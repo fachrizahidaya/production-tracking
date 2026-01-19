@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/card/custom_card.dart';
@@ -36,23 +38,32 @@ class ItemProcessCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header Section
-              _buildHeader(isTablet),
-
-              const Divider(height: 24),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(isTablet),
+                  const Divider(),
+                ],
+              ),
 
               // Info Section
-              _buildInfoSection(isTablet),
 
               // Machine & Maklon Section
-              if (_hasMachineOrMaklon()) ...[
-                SizedBox(height: isTablet ? 16 : 12),
-                _buildMachineAndMaklonSection(isTablet),
-              ],
+
+              Row(
+                children: [
+                  if (item['machine_id'] != null)
+                    _buildMachineAndMaklonSection(isTablet),
+                  if (item['maklon_name'] != null)
+                    _buildMaklonSection(isTablet),
+                  if (item['start_time'] != null)
+                    _buildStartTimeSection(isTablet),
+                  if (item['end_time'] != null) _buildEndTimeSection(isTablet)
+                ].separatedBy(CustomTheme().hGap('xl')),
+              ),
 
               // Timestamps Section
-              SizedBox(height: isTablet ? 16 : 12),
-              _buildTimestampSection(isTablet),
-            ],
+            ].separatedBy(CustomTheme().vGap('lg')),
           ),
         );
       },
@@ -75,7 +86,7 @@ class ItemProcessCard extends StatelessWidget {
                   Text(
                     item[titleKey] ?? '-',
                     style: TextStyle(
-                      fontSize: isTablet ? 14 : 12,
+                      fontSize: CustomTheme().fontSize(isTablet ? 'md' : 'sm'),
                       fontWeight: CustomTheme().fontWeight('bold'),
                     ),
                   ),
@@ -101,26 +112,24 @@ class ItemProcessCard extends StatelessWidget {
                 ].separatedBy(CustomTheme().hGap('xl')),
               ),
               if (item[subtitleKey] != null) ...[
-                const SizedBox(height: 4),
                 Text(
                   '${item[subtitleKey][subtitleField] ?? '-'}',
                   style: TextStyle(
-                    fontSize: isTablet ? 18 : 16,
+                    fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
                     color: Colors.grey[600],
                   ),
                 ),
               ],
-            ],
+            ].separatedBy(CustomTheme().vGap('sm')),
           ),
         ),
-        const SizedBox(width: 12),
         if (item['status'] != null)
           CustomBadge(
             title: _getStatusLabel(item['status']),
             status: item['status'],
             withStatus: true,
           ),
-      ],
+      ].separatedBy(CustomTheme().hGap('xl')),
     );
   }
 
@@ -185,33 +194,107 @@ class ItemProcessCard extends StatelessWidget {
 
   /// Section untuk Mesin dan Maklon
   Widget _buildMachineAndMaklonSection(bool isTablet) {
-    return Container(
-      padding: EdgeInsets.all(isTablet ? 16 : 12),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[200]!),
+    return Expanded(
+      child: Container(
+        padding: CustomTheme().padding('card'),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: isTablet
+            ? Row(
+                children: [
+                  if (item['machine'] != null)
+                    Expanded(child: _buildMachineInfo(isTablet)),
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (item['machine'] != null) _buildMachineInfo(isTablet),
+                ],
+              ),
       ),
-      child: isTablet
-          ? Row(
-              children: [
-                if (item['machine'] != null)
-                  Expanded(child: _buildMachineInfo(isTablet)),
-                if (item['machine'] != null && item['maklon'] == true)
-                  const SizedBox(width: 24),
-                if (item['maklon'] == true)
-                  Expanded(child: _buildMaklonInfo(isTablet)),
-              ],
-            )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (item['machine'] != null) _buildMachineInfo(isTablet),
-                if (item['machine'] != null && item['maklon'] == true)
-                  const SizedBox(height: 12),
-                if (item['maklon'] == true) _buildMaklonInfo(isTablet),
-              ],
-            ),
+    );
+  }
+
+  Widget _buildMaklonSection(bool isTablet) {
+    return Expanded(
+      child: Container(
+        padding: CustomTheme().padding('card'),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: isTablet
+            ? Row(
+                children: [
+                  if (item['maklon'] == true)
+                    Expanded(child: _buildMaklonInfo(isTablet)),
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (item['maklon'] == true) _buildMaklonInfo(isTablet),
+                ],
+              ),
+      ),
+    );
+  }
+
+  Widget _buildStartTimeSection(bool isTablet) {
+    return Expanded(
+      child: Container(
+        padding: CustomTheme().padding('card'),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: isTablet
+            ? Row(
+                children: [
+                  if (item['start_time'] != null)
+                    Expanded(child: _buildTimeInfo(isTablet)),
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (item['start_time'] != null) _buildTimeInfo(isTablet)
+                ],
+              ),
+      ),
+    );
+  }
+
+  Widget _buildEndTimeSection(bool isTablet) {
+    return Expanded(
+      child: Container(
+        padding: CustomTheme().padding('card'),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: isTablet
+            ? Row(
+                children: [
+                  if (item['end_time'] != null) ...[
+                    Expanded(child: _buildEndTimeInfo(isTablet)),
+                  ]
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (item['end_time'] != null) _buildEndTimeInfo(isTablet),
+                ],
+              ),
+      ),
     );
   }
 
@@ -221,10 +304,10 @@ class ItemProcessCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: CustomTheme().padding('process-content'),
           decoration: BoxDecoration(
             color: CustomTheme().buttonColor('primary').withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(4),
           ),
           child: Icon(
             Icons.local_laundry_service_outlined,
@@ -232,7 +315,6 @@ class ItemProcessCard extends StatelessWidget {
             color: CustomTheme().buttonColor('primary'),
           ),
         ),
-        const SizedBox(width: 12),
         Flexible(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,24 +322,109 @@ class ItemProcessCard extends StatelessWidget {
               Text(
                 'Mesin',
                 style: TextStyle(
-                  fontSize: isTablet ? 12 : 10,
+                  fontSize: CustomTheme().fontSize(isTablet ? 12 : 10),
                   color: Colors.grey[600],
-                  fontWeight: FontWeight.w500,
+                  fontWeight: CustomTheme().fontWeight('semibold'),
                 ),
               ),
-              const SizedBox(height: 2),
               Text(
                 item['machine']['name'] ?? '-',
                 style: TextStyle(
-                  fontSize: isTablet ? 14 : 13,
-                  fontWeight: FontWeight.w600,
+                  fontSize: CustomTheme().fontSize('md'),
+                  fontWeight: CustomTheme().fontWeight('semibold'),
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
-            ],
+            ].separatedBy(CustomTheme().vGap('sm')),
           ),
         ),
-      ],
+      ].separatedBy(CustomTheme().hGap('xl')),
+    );
+  }
+
+  Widget _buildTimeInfo(bool isTablet) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: CustomTheme().padding('process-content'),
+          decoration: BoxDecoration(
+            color: CustomTheme().buttonColor('primary').withOpacity(0.1),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Icon(
+            Icons.play_circle_outline,
+            size: isTablet ? 20 : 18,
+            color: CustomTheme().buttonColor('primary'),
+          ),
+        ),
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Mulai Proses',
+                style: TextStyle(
+                  fontSize: CustomTheme().fontSize(isTablet ? 12 : 10),
+                  color: Colors.grey[600],
+                  fontWeight: CustomTheme().fontWeight('semibold'),
+                ),
+              ),
+              Text(
+                '${formatDateSafe(item['start_time'])}${item['start_by']?['name'] != null && item['start_by']?['name'].isNotEmpty ? " • ${item['start_by']?['name']}" : ""}',
+                style: TextStyle(
+                  fontSize: CustomTheme().fontSize('md'),
+                  fontWeight: CustomTheme().fontWeight('semibold'),
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ].separatedBy(CustomTheme().vGap('sm')),
+          ),
+        ),
+      ].separatedBy(CustomTheme().hGap('xl')),
+    );
+  }
+
+  Widget _buildEndTimeInfo(bool isTablet) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: CustomTheme().padding('process-content'),
+          decoration: BoxDecoration(
+            color: CustomTheme().buttonColor('primary').withOpacity(0.1),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Icon(
+            Icons.check_circle_outline,
+            size: isTablet ? 20 : 18,
+            color: Colors.green,
+          ),
+        ),
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Selesai Proses',
+                style: TextStyle(
+                  fontSize: CustomTheme().fontSize(isTablet ? 12 : 10),
+                  color: Colors.grey[600],
+                  fontWeight: CustomTheme().fontWeight('semibold'),
+                ),
+              ),
+              Text(
+                '${formatDateSafe(item['end_time'])}${item['end_by']?['name'] != null && item['end_by']?['name'].isNotEmpty ? " • ${item['end_by']?['name']}" : ""}',
+                style: TextStyle(
+                  fontSize: CustomTheme().fontSize('md'),
+                  fontWeight: CustomTheme().fontWeight('semibold'),
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ].separatedBy(CustomTheme().vGap('sm')),
+          ),
+        ),
+      ].separatedBy(CustomTheme().hGap('xl')),
     );
   }
 
@@ -428,9 +595,6 @@ class ItemProcessCard extends StatelessWidget {
   }
 
   /// Helper untuk mengecek apakah ada machine atau maklon
-  bool _hasMachineOrMaklon() {
-    return item['machine'] != null || item['maklon'] == true;
-  }
 
   /// Helper untuk mendapatkan label status
   String _getStatusLabel(String? status) {

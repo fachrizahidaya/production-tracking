@@ -13,6 +13,9 @@ class Packing {
   final String? weight;
   final String? width;
   final String? length;
+  final String? weight_per_dozen;
+  final String? gsm;
+  final String? total_weight;
   final String? notes;
   final String? status;
   final int? weight_unit_id;
@@ -54,7 +57,10 @@ class Packing {
       this.grades,
       this.machine,
       this.maklon,
-      this.maklon_name});
+      this.maklon_name,
+      this.weight_per_dozen,
+      this.gsm,
+      this.total_weight});
 
   factory Packing.fromJson(Map<String, dynamic> json) {
     return Packing(
@@ -72,6 +78,9 @@ class Packing {
       weight: json['weight'] ?? '',
       width: json['width'] ?? '',
       length: json['length'] ?? '',
+      weight_per_dozen: json['weight_per_dozen'] ?? '',
+      gsm: json['gsm'] ?? '',
+      total_weight: json['total_weight'] ?? '',
       status: json['status'] ?? '',
       notes: json['notes'] ?? '',
       attachments: json['attachments'] ?? [],
@@ -112,6 +121,9 @@ class Packing {
       'machine': machine,
       'maklon': maklon == true ? 1 : 0,
       'maklon_name': maklon == true ? maklon_name : '',
+      'weight_per_dozen': weight_per_dozen,
+      'gsm': gsm,
+      'total_weight': total_weight,
     };
   }
 }

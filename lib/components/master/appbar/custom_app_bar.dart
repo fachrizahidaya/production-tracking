@@ -13,6 +13,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool? canUpdate;
   final handleDelete;
   final handleUpdate;
+  final handleFinish;
   final handleLogout;
   final id;
   final String? label;
@@ -41,7 +42,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.status,
       this.isTextEditor = false,
       this.handleSave,
-      this.name});
+      this.name,
+      this.handleFinish});
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +70,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             onSelected: (value) {
               final String stringId = id.toString();
 
+              if (value == 'finish' && canUpdate == true) {
+                handleFinish();
+              }
               if (value == 'update' && canUpdate == true) {
                 handleUpdate();
               }
@@ -76,16 +81,34 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               }
             },
             itemBuilder: (context) => [
+              // if (canUpdate == true )
+              //   PopupMenuItem(
+              //     value: 'finish',
+              //     child: Text('Selesai Proses'),
+              //   ),
               if (canUpdate == true &&
-                  (label == 'Sorting' || label == 'Packing'))
+                  (label != 'Sorting' || label != 'Packing'))
                 PopupMenuItem(
                   value: 'update',
-                  child: Text('Edit'),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.edit_outlined,
+                        size: 14,
+                      ),
+                      Text('Edit'),
+                    ].separatedBy(CustomTheme().hGap('sm')),
+                  ),
                 ),
               if (canDelete == true)
                 PopupMenuItem(
                   value: 'delete',
-                  child: Text('Hapus'),
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete_outline, size: 14),
+                      Text('Hapus'),
+                    ].separatedBy(CustomTheme().hGap('sm')),
+                  ),
                 ),
             ],
           ),

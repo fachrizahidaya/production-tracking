@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use, duplicate_ignore
+
 import 'package:flutter/material.dart';
 
 class CustomTheme {
@@ -717,6 +719,8 @@ class CustomTheme {
         return EdgeInsets.symmetric(horizontal: 16);
       case 'badge':
         return EdgeInsets.symmetric(vertical: 6, horizontal: 12);
+      case 'item-detail':
+        return EdgeInsets.symmetric(vertical: 16, horizontal: 12);
       case 'dialog':
         return EdgeInsets.symmetric(vertical: 8, horizontal: 16);
       case 'badge-rework':

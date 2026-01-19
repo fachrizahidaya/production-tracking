@@ -113,7 +113,8 @@ class _InfoTabState extends State<InfoTab> {
                         widget.data['created_at'] != null
                             ? DateFormat("dd MMM yyyy").format(
                                 DateTime.parse(widget.data['created_at']))
-                            : '-',
+                            : DateFormat("dd MMM yyyy")
+                                .format(DateTime.parse(widget.data['wo_date'])),
                         style: TextStyle(
                           fontSize:
                               CustomTheme().fontSize(isTablet ? 'md' : 'sm'),
@@ -447,42 +448,5 @@ class _InfoTabState extends State<InfoTab> {
       return '${NumberFormat("#,###.#").format(qty)} $unit'.trim();
     }
     return '$qty $unit'.trim();
-  }
-
-  Map<String, dynamic> _getStatusConfig(String status) {
-    switch (status.toLowerCase()) {
-      case 'completed':
-      case 'selesai':
-        return {
-          'label': 'Selesai',
-          'icon': Icons.check_circle,
-          'bgColor': Colors.white,
-          'textColor': Colors.green[700],
-        };
-      case 'in_progress':
-      case 'proses':
-        return {
-          'label': 'Diproses',
-          'icon': Icons.hourglass_top,
-          'bgColor': Colors.white,
-          'textColor': Colors.blue[700],
-        };
-      case 'pending':
-      case 'menunggu':
-        return {
-          'label': 'Menunggu Diproses',
-          'icon': Icons.schedule,
-          'bgColor': Colors.white,
-          'textColor': Colors.orange[700],
-        };
-
-      default:
-        return {
-          'label': status,
-          'icon': Icons.info_outline,
-          'bgColor': Colors.white,
-          'textColor': Colors.grey[700],
-        };
-    }
   }
 }

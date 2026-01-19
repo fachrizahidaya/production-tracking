@@ -1,19 +1,19 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/card/custom_badge.dart';
-import 'package:textile_tracking/components/master/card/custom_card.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ListItem extends StatelessWidget {
-  final dynamic item;
+  final item;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
   final bool showActions;
 
   const ListItem({
     super.key,
-    required this.item,
+    this.item,
     this.onTap,
     this.onLongPress,
     this.showActions = false,
@@ -68,45 +68,12 @@ class ListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildAccentBar() {
-    final status = item['status']?.toString().toLowerCase() ?? 'pending';
-    Color accentColor;
-
-    switch (status) {
-      case 'completed':
-      case 'Selesai':
-        accentColor = Colors.green;
-        break;
-      case 'in_progress':
-      case 'Diproses':
-        accentColor = Colors.blue;
-        break;
-      default:
-        accentColor = Colors.orange;
-    }
-
-    return Container(
-      width: 4,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            accentColor,
-            accentColor.withOpacity(0.6),
-          ],
-        ),
-      ),
-    );
-  }
-
   /// Layout untuk Tablet
   Widget _buildTabletLayout() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Item Icon
-        _buildItemIcon(true),
         // Item Info
         Expanded(
           flex: 2,
@@ -131,11 +98,9 @@ class ListItem extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildItemIcon(false),
             Expanded(child: _buildItemInfo(false)),
           ].separatedBy(CustomTheme().vGap('xl')),
         ),
-        const SizedBox(height: 12),
         // Bottom Row: Additional Info
         _buildAdditionalInfo(false),
       ].separatedBy(CustomTheme().vGap('xl')),
@@ -143,27 +108,6 @@ class ListItem extends StatelessWidget {
   }
 
   /// Item Icon
-  Widget _buildItemIcon(bool isTablet) {
-    return Container(
-      padding: CustomTheme().padding('card'),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            CustomTheme().buttonColor('primary').withOpacity(0.15),
-            CustomTheme().buttonColor('primary').withOpacity(0.05),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Icon(
-        Icons.inventory_2_outlined,
-        size: isTablet ? 28 : 24,
-        color: CustomTheme().buttonColor('primary'),
-      ),
-    );
-  }
 
   /// Item Info (Code + Name)
   Widget _buildItemInfo(bool isTablet) {
@@ -189,7 +133,6 @@ class ListItem extends StatelessWidget {
             ),
           ),
         ),
-        // SizedBox(height: isTablet ? 8 : 6),
         // Item Name
         Text(
           item['item_name']?.toString() ?? '-',
@@ -301,46 +244,6 @@ class ListItem extends StatelessWidget {
   }
 
   /// Status Section dengan Badge
-  Widget _buildStatusSection(bool isTablet) {
-    final status = item['status']?.toString() ?? 'Menunggu Diproses';
-    final isRework = item['rework'] == true;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (isRework) ...[
-          SizedBox(height: isTablet ? 8 : 6),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.replay,
-                  size: isTablet ? 14 : 12,
-                  color: Colors.red,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  'Rework',
-                  style: TextStyle(
-                    fontSize: isTablet ? 11 : 10,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.red,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ],
-    );
-  }
 
   /// Quantity Section
   Widget _buildQuantitySection(bool isTablet) {

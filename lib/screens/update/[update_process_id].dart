@@ -65,6 +65,13 @@ class UpdateProcess extends StatefulWidget {
 
 class _UpdateProcessState extends State<UpdateProcess> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+  bool _isMaklon = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isMaklon = widget.data['maklon'] ?? false;
+  }
 
   Future<void> _handleCancel(BuildContext context) async {
     if (context.mounted) {
@@ -91,6 +98,15 @@ class _UpdateProcessState extends State<UpdateProcess> {
             await Future.delayed(const Duration(milliseconds: 200));
             widget.isSubmitting.value = true;
             try {
+              if (_isMaklon == true) {
+                widget.form['machine_id'] = null;
+                widget.form['nama_mesin'] = null;
+                widget.form['maklon'] = true;
+              } else if (_isMaklon == false) {
+                widget.form['maklon_name'] = null;
+                widget.form['maklon'] = false;
+              }
+
               await widget.handleUpdate(widget.data['id'].toString());
             } finally {
               widget.isSubmitting.value = false;
@@ -122,7 +138,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (widget.data['machine_id'] != null)
+                  if (widget.data['machine_id'] != null && _isMaklon == false)
                     CustomCard(
                         child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,13 +177,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                         Row(
                                           children: [
                                             Switch(
-                                              value: widget.data['maklon'],
+                                              value: _isMaklon,
                                               onChanged: widget
                                                       .data['can_update']
                                                   ? (value) {
                                                       setState(() {
-                                                        widget.data['maklon'] =
-                                                            value;
+                                                        _isMaklon = value;
                                                         widget.form['maklon'] =
                                                             value;
                                                       });
@@ -184,7 +199,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                         ),
                                       ],
                                     ),
-                                  if (widget.data['maklon'] == true)
+                                  if (_isMaklon == true)
                                     TextForm(
                                       label: 'Nama Maklon',
                                       req: false,
@@ -205,7 +220,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                       ),
                     ),
                   DetailWorkOrder(
-                    data: widget.data,
+                    data: widget.data['work_orders'],
                     form: widget.form,
                     withQtyAndWeight: widget.withQtyAndWeight,
                     label: widget.label,

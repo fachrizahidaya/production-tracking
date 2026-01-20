@@ -1077,29 +1077,41 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       case 0:
         return Padding(
           padding: CustomTheme().padding('card-detail'),
-          child: CustomCard(
-            child: widget.data['notes'] != null
-                ? Text(
-                    htmlToPlainText(widget.data['notes']),
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('lg'),
-                    ),
-                  )
-                : NoData(),
+          child: Row(
+            children: [
+              Expanded(
+                child: CustomCard(
+                  child: widget.data['notes'] != null
+                      ? Text(
+                          htmlToPlainText(widget.data['notes']),
+                          style: TextStyle(
+                            fontSize: CustomTheme().fontSize('lg'),
+                          ),
+                        )
+                      : NoData(),
+                ),
+              ),
+            ],
           ),
         );
 
       case 1:
         return Padding(
           padding: CustomTheme().padding('card-detail'),
-          child: CustomCard(
-            child: widget.existingAttachment.isEmpty
-                ? NoData()
-                : Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: widget.handleBuildAttachment(context),
-                  ),
+          child: Row(
+            children: [
+              Expanded(
+                child: CustomCard(
+                  child: widget.existingAttachment.isEmpty
+                      ? NoData()
+                      : Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: widget.handleBuildAttachment(context),
+                        ),
+                ),
+              ),
+            ],
           ),
         );
 

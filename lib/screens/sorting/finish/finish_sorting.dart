@@ -93,7 +93,6 @@ class _FinishSortingState extends State<FinishSorting> {
           attachments: form['attachments'],
           grades: form['grades'],
         );
-        print(form['grades']);
 
         final message =
             await Provider.of<SortingService>(context, listen: false)

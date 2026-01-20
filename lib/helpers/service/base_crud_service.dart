@@ -179,50 +179,8 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       String? token = prefs.getString('access_token');
 
       final data = toJson(updatedItem);
-      final attachments = data['attachments'];
 
-      if (attachments != null &&
-          attachments is List &&
-          attachments.isNotEmpty) {
-        var uri = Uri.parse('$baseUrl/$endpoint/$id');
-        var request = http.MultipartRequest('POST', uri)
-          ..headers['Authorization'] = 'Bearer $token';
-
-        data.forEach((key, value) {
-          if (key != 'attachments' && value != null) {
-            request.fields[key] = value.toString();
-          }
-        });
-
-        request.fields['_method'] = 'PATCH';
-
-        for (int i = 0; i < attachments.length; i++) {
-          var file = attachments[i];
-          if (file is File) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file.path,
-            ));
-          } else if (file is Map && file['path'] != null) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file['path'],
-              filename: file['name'] ?? 'file_$i',
-            ));
-          }
-        }
-
-        final response = await request.send();
-        final body = await response.stream.bytesToString();
-
-        if (response.statusCode == 200) {
-          await refetchItems();
-          return jsonDecode(body)['message'] ?? 'Proses telah diubah';
-        } else {
-          throw Exception(
-              jsonDecode(body)['message'] ?? 'Gagal mengubah proses');
-        }
-      } else {
+      {
         final body = {
           ...data,
           '_method': 'PATCH',
@@ -269,30 +227,58 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
           attachments is List &&
           attachments.isNotEmpty) {
         var uri = Uri.parse('$baseUrl/$endpoint/$id/complete');
-        var request = http.MultipartRequest('POST', uri)
-          ..headers['Authorization'] = 'Bearer $token';
+        var request = http.MultipartRequest('POST', uri);
+
+        request.headers.addAll({
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        });
 
         data.forEach((key, value) {
-          if (key != 'attachments' && value != null) {
-            request.fields[key] = value.toString();
-          }
+          if (value == null) return;
+
+          if (key == 'attachments' || key == 'grades') return;
+
+          request.fields[key] = value.toString();
         });
+
+        final grades = data['grades'];
+
+        if (grades is List) {
+          for (int i = 0; i < grades.length; i++) {
+            final grade = grades[i];
+
+            if (grade is Map) {
+              grade.forEach((key, value) {
+                if (value == null) return;
+
+                // skip nested objects like "unit"
+                if (value is Map || value is List) return;
+
+                request.fields['grades[$i][$key]'] = value.toString();
+              });
+            }
+          }
+        }
 
         request.fields['_method'] = 'PATCH';
 
-        for (int i = 0; i < attachments.length; i++) {
-          var file = attachments[i];
+        for (var file in attachments) {
           if (file is File) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file.path,
-            ));
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+              ),
+            );
           } else if (file is Map && file['path'] != null) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file['path'],
-              filename: file['name'] ?? 'file_$i',
-            ));
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file['path'],
+                filename: file['name'] ?? 'file',
+              ),
+            );
           }
         }
 
@@ -344,63 +330,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('access_token');
 
-      var uri = Uri.parse('$baseUrl/$endpoint/$id/rework');
-
-      bool hasAttachments = reworkedItem.attachments != null &&
-          reworkedItem.attachments is List &&
-          (reworkedItem.attachments as List).isNotEmpty;
-
-      if (hasAttachments) {
-        var request = http.MultipartRequest('POST', uri);
-        request.headers['Authorization'] = 'Bearer $token';
-
-        request.fields['wo_id'] = reworkedItem.wo_id?.toString() ?? '';
-        request.fields['machine_id'] =
-            reworkedItem.machine_id?.toString() ?? '';
-        request.fields['unit_id'] = reworkedItem.unit_id?.toString() ?? '';
-        request.fields['rework_reference_id'] =
-            reworkedItem.rework_reference_id?.toString() ?? '';
-        request.fields['start_by_id'] =
-            reworkedItem.start_by_id?.toString() ?? '';
-        request.fields['end_by_id'] = reworkedItem.end_by_id?.toString() ?? '';
-        request.fields['qty'] = reworkedItem.qty ?? '';
-        request.fields['width'] = reworkedItem.width ?? '';
-        request.fields['length'] = reworkedItem.length ?? '';
-        request.fields['notes'] = reworkedItem.notes ?? '';
-        request.fields['rework'] = (reworkedItem.rework == true ? '1' : '0');
-        request.fields['status'] = reworkedItem.status ?? '';
-        request.fields['start_time'] = reworkedItem.start_time ?? '';
-        request.fields['end_time'] = reworkedItem.end_time ?? '';
-
-        for (int i = 0; i < reworkedItem.attachments.length; i++) {
-          var file = reworkedItem.attachments[i];
-          if (file is File) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file.path,
-            ));
-          } else if (file is Map && file['path'] != null) {
-            request.files.add(await http.MultipartFile.fromPath(
-              'attachments[$i]',
-              file['path'],
-              filename: file['name'] ?? 'file_$i',
-            ));
-          }
-        }
-
-        var response = await request.send();
-        var responseBody = await response.stream.bytesToString();
-        if (response.statusCode == 201) {
-          final jsonResponse = jsonDecode(responseBody);
-          await refetchItems();
-          notifyListeners();
-          return jsonResponse['message'] ?? 'Proses telah Rework';
-        } else {
-          var responseData = await response.stream.bytesToString();
-          throw Exception(
-              jsonDecode(responseData)['message'] ?? 'Gagal Rework proses');
-        }
-      } else {
+      {
         final body = {
           ...reworkedItem.toJson(),
         };

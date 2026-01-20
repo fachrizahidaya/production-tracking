@@ -1,6 +1,7 @@
 // import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
+import 'package:textile_tracking/components/master/form/static_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/text/thousand_separator_input_formatter.dart';
 import 'package:textile_tracking/helpers/util/attachment_picker.dart';
@@ -194,29 +195,6 @@ class _FormItemsState extends State<FormItems> {
                       widget.handleUpdateGrade(i, 'qty', val),
                 ),
               ),
-              CustomTheme().hGap('xl'),
-              Expanded(
-                flex: 1,
-                child: TextForm(
-                  label: 'Max Qty (Pcs)',
-                  isDisabled: true,
-                  controller: TextEditingController(
-                    text: maxQty.toStringAsFixed(2),
-                  ),
-                ),
-              ),
-              CustomTheme().hGap('xl'),
-              Expanded(
-                flex: 1,
-                child: TextForm(
-                  label: 'Persentase (%)',
-                  isDisabled: true,
-                  controller: TextEditingController(
-                    text: percentage.toStringAsFixed(2),
-                  ),
-                ),
-              ),
-              CustomTheme().hGap('xl'),
               Expanded(
                 flex: 1,
                 child: SelectForm(
@@ -229,15 +207,34 @@ class _FormItemsState extends State<FormItems> {
                   required: true,
                 ),
               ),
-            ],
+              Expanded(
+                flex: 1,
+                child: TextForm(
+                  label: 'Max Qty (Pcs)',
+                  isDisabled: true,
+                  controller: TextEditingController(
+                    text: maxQty.toStringAsFixed(2),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: TextForm(
+                  label: 'Persentase (%)',
+                  isDisabled: true,
+                  controller: TextEditingController(
+                    text: percentage.toStringAsFixed(2),
+                  ),
+                ),
+              ),
+            ].separatedBy(CustomTheme().hGap('xl')),
           ),
-          CustomTheme().vGap('lg'),
           TextForm(
             label: 'Catatan',
             req: false,
             handleChange: (val) => widget.handleUpdateGrade(i, 'notes', val),
           ),
-        ],
+        ].separatedBy(CustomTheme().vGap('lg')),
       ),
     );
   }
@@ -278,6 +275,13 @@ class _FormItemsState extends State<FormItems> {
 
         widget.gsm.text = gsm.toStringAsFixed(2);
         widget.totalWeight.text = totalBerat.toStringAsFixed(2);
+
+        // ✅ FIX: save as String
+        widget.handleChangeInput('gsm', gsm.toStringAsFixed(2));
+        widget.handleChangeInput(
+          'total_weight',
+          totalBerat.toStringAsFixed(2),
+        );
       });
     }
 
@@ -366,7 +370,7 @@ class _FormItemsState extends State<FormItems> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Expanded(
-                                flex: 2,
+                                flex: row['staticUnit'] != null ? 4 : 3,
                                 child: Column(
                                   children: [
                                     TextForm(
@@ -433,24 +437,13 @@ class _FormItemsState extends State<FormItems> {
                                   ),
                                 ),
                               if (row['staticUnit'] != null) ...[
-                                Container(
-                                  padding: EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade400,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    row['staticUnit'],
-                                    style: TextStyle(
-                                      fontSize: CustomTheme().fontSize('md'),
-                                      fontWeight:
-                                          CustomTheme().fontWeight('semibold'),
-                                    ),
-                                  ),
-                                ),
+                                Expanded(
+                                    flex: 1,
+                                    child: StaticFormField(
+                                        value: row['staticUnit']))
                               ],
                             ].separatedBy(CustomTheme()
-                                .hGap(row['staticUnit'] != null ? 'xs' : 'xl')),
+                                .hGap(row['staticUnit'] != null ? 'md' : 'xl')),
                           ),
                           Row(
                             children: [

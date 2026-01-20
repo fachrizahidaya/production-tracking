@@ -52,7 +52,7 @@ class ItemProcessCard extends StatelessWidget {
 
               Row(
                 children: [
-                  if (item['machine_id'] != null)
+                  if (item['machine'] != null)
                     _buildMachineAndMaklonSection(isTablet),
                   if (item['maklon_name'] != null)
                     _buildMaklonSection(isTablet),

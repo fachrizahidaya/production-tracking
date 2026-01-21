@@ -377,10 +377,16 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             icon: Icons.settings_outlined,
             child: _buildProcessInfo(true),
           ),
+        if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
+          _buildInfoCard(
+            title: 'Informasi Grade',
+            icon: Icons.grade_outlined,
+            child: _buildGradeInfo(true),
+          ),
         if (widget.label == 'Packing')
           _buildInfoCard(
             title: 'Informasi Berat',
-            icon: Icons.layers_outlined,
+            icon: Icons.scale_outlined,
             child: _buildWeightInfo(true),
           ),
         _buildInfoCard(
@@ -388,12 +394,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           icon: Icons.timeline_outlined,
           child: _buildTimelineInfo(true),
         ),
-        if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
-          _buildInfoCard(
-            title: 'Informasi Grade',
-            icon: Icons.layers_outlined,
-            child: _buildGradeInfo(true),
-          ),
         _buildProcessFilter(),
         _buildSwipeContent(),
         _buildProcessWoFilter(),
@@ -418,6 +418,12 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             icon: Icons.settings_outlined,
             child: _buildProcessInfo(false),
           ),
+        if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
+          _buildInfoCard(
+            title: 'Informasi Grade',
+            icon: Icons.layers_outlined,
+            child: _buildGradeInfo(false),
+          ),
         if (widget.label == 'Packing')
           _buildInfoCard(
             title: 'Informasi Berat',
@@ -429,13 +435,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           icon: Icons.timeline_outlined,
           child: _buildTimelineInfo(false),
         ),
-        if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
-          if (widget.withItemGrade == true)
-            _buildInfoCard(
-              title: 'Informasi Grade',
-              icon: Icons.layers_outlined,
-              child: _buildGradeInfo(false),
-            ),
         _buildProcessFilter(),
         _buildSwipeContent(),
         _buildProcessWoFilter(),
@@ -554,16 +553,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         'navigate': null,
         'right-icon': null,
       },
-      {
-        'label': 'Tanggal',
-        'value': widget.data['work_orders']['wo_date'] != null
-            ? DateFormat("dd MMM yyyy")
-                .format(DateTime.parse(widget.data['work_orders']['wo_date']))
-            : '-',
-        'icon': Icons.calendar_today_outlined,
-        'navigate': null,
-        'right-icon': null,
-      },
     ];
 
     return _buildInfoGrid(items, isTablet);
@@ -587,12 +576,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     final items = [
       for (int i = 0; i < widget.existingGrades.length; i++)
         {
-          'label':
-              'Grade ${widget.existingGrades[i]['item_grade']['code']}: ${widget.existingGrades[i]['item_grade']['description']?.split('-').first.trim()}',
+          'label': ' Grade ${widget.existingGrades[i]['item_grade']['code']}'
+          // ${widget.existingGrades[i]['item_grade']['description']?.split('-').first.trim()}
+          ,
           'value': widget.existingGrades[i]['qty'] != null
               ? '${widget.existingGrades[i]['qty']} ${widget.existingGrades[i]['unit']['code']}'
               : '-',
-          'icon': Icons.texture,
+          'icon': Icons.grade_outlined,
         },
       if (widget.existingGrades.isNotEmpty)
         {
@@ -600,7 +590,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           'value': totalQty != null
               ? '${formatNumber(totalQty)} ${widget.existingGrades[0]['unit']['code'] ?? ''}'
               : '-',
-          'icon': Icons.straighten,
+          'icon': Icons.layers_outlined,
         },
     ];
 
@@ -677,7 +667,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         'label': 'Berat 1 Lusin',
         'value':
             '${widget.data['weight_per_dozen'] != null ? formatNumber(widget.data['weight_per_dozen']) : '0'} ${'KG'}',
-        'icon': Icons.numbers_outlined,
+        'icon': Icons.twelve_mp_outlined,
       },
       {
         'label': 'Gramasi',

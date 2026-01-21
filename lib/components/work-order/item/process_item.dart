@@ -282,7 +282,6 @@ class _ProcessItemState extends State<ProcessItem> {
         children: [
           // Time Section
           if (data['start_time'] != null || data['end_time'] != null) ...[
-            // SizedBox(height: isTablet ? 14 : 12),
             _buildTimeSection(data, isTablet),
           ],
 
@@ -297,7 +296,6 @@ class _ProcessItemState extends State<ProcessItem> {
               title: 'Grades',
               isTablet: isTablet,
             ),
-            SizedBox(height: isTablet ? 14 : 12),
             _buildGradesSection(data['grades'], isTablet),
           ],
         ].separatedBy(CustomTheme().vGap('xl')),
@@ -367,16 +365,15 @@ class _ProcessItemState extends State<ProcessItem> {
                     isTablet: isTablet,
                   ),
                 if (data['start_time'] != null && data['end_time'] != null)
-                  const SizedBox(height: 12),
-                if (data['end_time'] != null)
-                  _buildTimeItem(
-                    icon: Icons.check_circle_outline,
-                    label: 'Waktu Selesai',
-                    value: _formatTime(data['end_time']),
-                    color: Colors.red,
-                    isTablet: isTablet,
-                  ),
-              ],
+                  if (data['end_time'] != null)
+                    _buildTimeItem(
+                      icon: Icons.check_circle_outline,
+                      label: 'Waktu Selesai',
+                      value: _formatTime(data['end_time']),
+                      color: Colors.red,
+                      isTablet: isTablet,
+                    ),
+              ].separatedBy(CustomTheme().vGap('xl')),
             )
           : Row(
               children: [
@@ -481,8 +478,6 @@ class _ProcessItemState extends State<ProcessItem> {
     );
   }
 
-  /// Resource Section
-
   /// Info Card Widget
   Widget _buildInfoCard({
     required IconData icon,
@@ -543,16 +538,15 @@ class _ProcessItemState extends State<ProcessItem> {
                 ),
               ),
               if (unit != null) ...[
-                const SizedBox(width: 4),
                 Text(
                   unit,
                   style: TextStyle(
-                    fontSize: isTablet ? 12 : 11,
+                    fontSize: CustomTheme().fontSize('sm'),
                     color: color.withOpacity(0.7),
                   ),
                 ),
               ],
-            ].separatedBy(CustomTheme().hGap('xs')),
+            ].separatedBy(CustomTheme().hGap('sm')),
           ),
         ].separatedBy(CustomTheme().vGap('lg')),
       ),
@@ -566,10 +560,7 @@ class _ProcessItemState extends State<ProcessItem> {
       runSpacing: isTablet ? 10 : 8,
       children: grades.map((grade) {
         return Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: isTablet ? 12 : 10,
-            vertical: isTablet ? 8 : 6,
-          ),
+          padding: CustomTheme().padding('process-content'),
           decoration: BoxDecoration(
             color: Colors.purple.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
@@ -585,37 +576,32 @@ class _ProcessItemState extends State<ProcessItem> {
                 size: isTablet ? 14 : 12,
                 color: Colors.purple,
               ),
-              const SizedBox(width: 6),
               Text(
-                grade['name']?.toString() ?? grade.toString(),
+                grade['grade']?.toString() ?? grade.toString(),
                 style: TextStyle(
-                  fontSize: isTablet ? 12 : 11,
-                  fontWeight: FontWeight.w600,
+                  fontSize: CustomTheme().fontSize(isTablet ? 'sm' : 'xs'),
+                  fontWeight: CustomTheme().fontWeight('semibold'),
                   color: Colors.purple[700],
                 ),
               ),
               if (grade['qty'] != null) ...[
-                const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 2,
-                  ),
+                  padding: CustomTheme().padding('badge-rework'),
                   decoration: BoxDecoration(
                     color: Colors.purple.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    formatNumber(grade['qty']),
+                    '${formatNumber(grade['qty'])} ${grade['unit_code']}',
                     style: TextStyle(
-                      fontSize: isTablet ? 11 : 10,
-                      fontWeight: FontWeight.bold,
+                      fontSize: CustomTheme().fontSize('xs'),
+                      fontWeight: CustomTheme().fontWeight('bold'),
                       color: Colors.purple,
                     ),
                   ),
                 ),
               ],
-            ],
+            ].separatedBy(CustomTheme().hGap('lg')),
           ),
         );
       }).toList(),

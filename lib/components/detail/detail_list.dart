@@ -803,6 +803,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                       fontSize: isTablet ? 12 : 11,
                       color: Colors.grey[600],
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     value,

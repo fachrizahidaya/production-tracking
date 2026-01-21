@@ -29,6 +29,8 @@ class _ActiveMachineState extends State<ActiveMachine>
     with TickerProviderStateMixin {
   String selectedProcess = 'All';
   TabController? _tabController;
+  List<String> processFilters = ['All'];
+  int selectedIndex = 0;
 
   @override
   void initState() {
@@ -38,7 +40,6 @@ class _ActiveMachineState extends State<ActiveMachine>
 
   Future<void> _loadProcessFilters() async {
     final menus = await Storage.instance.getMenus();
-
     final productionProcesses = getProductionProcesses(menus);
 
     final allowedProcesses = [
@@ -84,10 +85,6 @@ class _ActiveMachineState extends State<ActiveMachine>
     }
     return [];
   }
-
-  List<String> processFilters = ['All'];
-
-  int selectedIndex = 0;
 
   @override
   void dispose() {
@@ -162,7 +159,7 @@ class _ActiveMachineState extends State<ActiveMachine>
           final filteredUnavailable = filterByProcess(unavailable, process);
 
           return widget.isFetching
-              ? const Center(child: CircularProgressIndicator())
+              ? Center(child: CircularProgressIndicator())
               : Padding(
                   padding: CustomTheme().padding('content'),
                   child: Row(
@@ -198,7 +195,7 @@ class _ActiveMachineState extends State<ActiveMachine>
   @override
   Widget build(BuildContext context) {
     if (_tabController == null) {
-      return const SizedBox(); // atau loader
+      return SizedBox();
     }
 
     final isPortrait =

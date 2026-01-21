@@ -102,19 +102,20 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 
   @override
   Widget build(BuildContext context) {
-    final length = widget.data?.length ?? 0;
-
-    if (length == 0) return const SizedBox();
+    if (widget.data?.length == 0) return SizedBox();
 
     return widget.isFetching == true
         ? Center(
-            child: CircularProgressIndicator(),
+            child: Padding(
+              padding: CustomTheme().padding('content'),
+              child: CircularProgressIndicator(),
+            ),
           )
         : Wrap(
             spacing: 16,
             runSpacing: 8,
             children: [
-              for (int i = 0; i < length; i++)
+              for (int i = 0; i < widget.data?.length; i++)
                 SizedBox(
                   width: (MediaQuery.of(context).size.width - 48) / 2,
                   child: buildStatsCard(i),

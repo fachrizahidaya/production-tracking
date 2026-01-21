@@ -30,6 +30,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     with TickerProviderStateMixin {
   String selectedProcess = 'All';
   late TabController _tabController;
+  int selectedIndex = 0;
 
   @override
   void initState() {
@@ -81,8 +82,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     'Diproses',
     'Menunggu Diproses',
   ];
-
-  int selectedIndex = 0;
 
   void _openFilter() {
     if (widget.filterWidget != null) {

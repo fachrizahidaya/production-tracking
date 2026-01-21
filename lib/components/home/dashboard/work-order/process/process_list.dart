@@ -9,8 +9,6 @@ import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 class ProcessList<T> extends StatefulWidget {
   final BaseCrudService<T> service;
   final String searchQuery;
-  final bool? canCreate;
-  final bool? canDelete;
   final Future<void> Function(BuildContext context, T? currentItem)? onForm;
   final void Function(BuildContext context, T item)? onItemTap;
   final Future<List<T>> Function(Map<String, String> params) fetchData;
@@ -22,8 +20,6 @@ class ProcessList<T> extends StatefulWidget {
   final firstLoading;
   final hasMore;
   final isFiltered;
-  final canRead;
-  final showActions;
   final isFetching;
   final isLoadMore;
 
@@ -31,7 +27,6 @@ class ProcessList<T> extends StatefulWidget {
       {super.key,
       required this.service,
       required this.searchQuery,
-      this.canCreate = false,
       this.onForm,
       this.onItemTap,
       required this.fetchData,
@@ -43,9 +38,6 @@ class ProcessList<T> extends StatefulWidget {
       this.firstLoading,
       this.hasMore,
       this.isFiltered,
-      this.canRead,
-      this.canDelete,
-      this.showActions,
       this.isFetching,
       this.isLoadMore});
 

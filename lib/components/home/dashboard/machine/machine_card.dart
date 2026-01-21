@@ -173,8 +173,6 @@ class MachineCard extends StatelessWidget {
     );
   }
 
-  /// Status Badge
-
   /// Machine Info Section
   Widget _buildMachineInfo(bool isTablet) {
     return Row(
@@ -253,13 +251,6 @@ class MachineCard extends StatelessWidget {
     );
   }
 
-  /// Stats Section
-
-  /// Stat Item Widget
-
-  /// Efficiency Bar
-
-  /// Current Job Section
   Widget _buildCurrentJob(bool isTablet) {
     final currentJob = data['used_by'] != null && data['used_by'].isNotEmpty
         ? data['used_by'][0]

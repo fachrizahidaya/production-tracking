@@ -50,7 +50,7 @@ class _SummaryCardState extends State<SummaryCard>
       case 'Menunggu Diproses':
         return summary['waiting'] ?? 0;
       default:
-        return _getTotalCount(summary); // Semua
+        return _getTotalCount(summary);
     }
   }
 

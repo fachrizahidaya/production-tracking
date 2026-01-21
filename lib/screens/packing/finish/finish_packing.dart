@@ -76,6 +76,10 @@ class _FinishPackingState extends State<FinishPacking> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: false,
+        forPacking: true,
+        withItemGrade: true,
+        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final packing = Packing(

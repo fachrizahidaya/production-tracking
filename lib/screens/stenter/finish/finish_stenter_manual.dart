@@ -9,6 +9,10 @@ class FinishStenterManual extends StatefulWidget {
   final handleSubmit;
   final handleChangeInput;
   final processId;
+  final forPacking;
+  final withItemGrade;
+  final withQtyAndWeight;
+  final forDyeing;
 
   const FinishStenterManual(
       {super.key,
@@ -17,7 +21,11 @@ class FinishStenterManual extends StatefulWidget {
       this.form,
       this.handleSubmit,
       this.handleChangeInput,
-      this.processId});
+      this.processId,
+      this.forDyeing,
+      this.forPacking,
+      this.withItemGrade,
+      this.withQtyAndWeight});
 
   @override
   State<FinishStenterManual> createState() => _FinishStenterManualState();
@@ -54,10 +62,11 @@ class _FinishStenterManualState extends State<FinishStenterManual> {
       processService: _stenterService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'stenter_id',
-      withItemGrade: false,
       processId: widget.processId,
-      withQtyAndWeight: false,
-      forDyeing: false,
+      forDyeing: widget.forDyeing,
+      withItemGrade: widget.withItemGrade,
+      withQtyAndWeight: widget.withQtyAndWeight,
+      forPacking: widget.forPacking,
     );
   }
 }

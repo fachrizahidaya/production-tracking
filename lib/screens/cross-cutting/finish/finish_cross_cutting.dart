@@ -78,6 +78,9 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: false,
+        withItemGrade: false,
+        withQtyAndWeight: true,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final crossCutting = CrossCutting(

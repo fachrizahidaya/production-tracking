@@ -74,6 +74,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: true,
+        withItemGrade: false,
+        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final dyeing = Dyeing(

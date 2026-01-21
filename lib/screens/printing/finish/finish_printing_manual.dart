@@ -9,6 +9,10 @@ class FinishPrintingManual extends StatefulWidget {
   final handleSubmit;
   final handleChangeInput;
   final processId;
+  final forPacking;
+  final withItemGrade;
+  final withQtyAndWeight;
+  final forDyeing;
 
   const FinishPrintingManual(
       {super.key,
@@ -17,7 +21,11 @@ class FinishPrintingManual extends StatefulWidget {
       this.form,
       this.handleSubmit,
       this.handleChangeInput,
-      this.processId});
+      this.processId,
+      this.forDyeing,
+      this.forPacking,
+      this.withItemGrade,
+      this.withQtyAndWeight});
 
   @override
   State<FinishPrintingManual> createState() => _FinishPrintingManualState();
@@ -55,9 +63,10 @@ class _FinishPrintingManualState extends State<FinishPrintingManual> {
       processService: _printingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'printing_id',
-      withItemGrade: false,
-      withQtyAndWeight: true,
-      forDyeing: false,
+      forDyeing: widget.forDyeing,
+      withItemGrade: widget.withItemGrade,
+      withQtyAndWeight: widget.withQtyAndWeight,
+      forPacking: widget.forPacking,
       processId: widget.processId,
     );
   }

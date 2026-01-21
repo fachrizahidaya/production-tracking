@@ -61,6 +61,7 @@ class CreatePrinting extends StatelessWidget {
             processId: processId,
             handleSubmit: handleSubmit,
             fetchWorkOrder: (service) => service.fetchPrintingOptions(id),
+            withOnlyMaklon: true,
           );
         },
         fetchWorkOrder: (service) => service.fetchPrintingOptions(),

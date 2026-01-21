@@ -9,6 +9,7 @@ class CreateSortingManual extends StatelessWidget {
   final handleSubmit;
   final fetchWorkOrder;
   final processId;
+  final withNoMaklonOrMachine;
 
   const CreateSortingManual(
       {super.key,
@@ -17,7 +18,8 @@ class CreateSortingManual extends StatelessWidget {
       this.form,
       this.handleSubmit,
       this.fetchWorkOrder,
-      this.processId});
+      this.processId,
+      this.withNoMaklonOrMachine});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class CreateSortingManual extends StatelessWidget {
       handleSubmit: handleSubmit,
       fetchWorkOrder: (service) => service.fetchSortingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
-      withNoMaklonOrMachine: true,
+      withNoMaklonOrMachine: withNoMaklonOrMachine,
     );
   }
 }

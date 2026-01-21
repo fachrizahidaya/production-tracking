@@ -59,6 +59,7 @@ class CreatePacking extends StatelessWidget {
           form: form,
           handleSubmit: handleSubmit,
           fetchWorkOrder: (service) => service.fetchPackingOptions(id),
+          withNoMaklonOrMachine: true,
         );
       },
       fetchWorkOrder: (service) => service.fetchPackingOptions(),

@@ -77,6 +77,9 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: false,
+        withItemGrade: false,
+        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final press = PressTumbler(

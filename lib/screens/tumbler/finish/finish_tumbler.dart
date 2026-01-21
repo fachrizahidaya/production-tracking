@@ -77,6 +77,9 @@ class _FinishTumblerState extends State<FinishTumbler> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: false,
+        withItemGrade: false,
+        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final stenter = Tumbler(

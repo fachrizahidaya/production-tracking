@@ -9,6 +9,10 @@ class FinishSewingManual extends StatefulWidget {
   final handleSubmit;
   final handleChangeInput;
   final processId;
+  final forPacking;
+  final withItemGrade;
+  final withQtyAndWeight;
+  final forDyeing;
 
   const FinishSewingManual(
       {super.key,
@@ -17,7 +21,11 @@ class FinishSewingManual extends StatefulWidget {
       this.form,
       this.handleSubmit,
       this.handleChangeInput,
-      this.processId});
+      this.processId,
+      this.forDyeing,
+      this.forPacking,
+      this.withItemGrade,
+      this.withQtyAndWeight});
 
   @override
   State<FinishSewingManual> createState() => _FinishSewingManualState();
@@ -55,9 +63,10 @@ class _FinishSewingManualState extends State<FinishSewingManual> {
       processService: _sewingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'sewing_id',
-      withItemGrade: false,
-      withQtyAndWeight: true,
-      forDyeing: false,
+      forDyeing: widget.forDyeing,
+      withItemGrade: widget.withItemGrade,
+      withQtyAndWeight: widget.withQtyAndWeight,
+      forPacking: widget.forPacking,
       processId: widget.processId,
     );
   }

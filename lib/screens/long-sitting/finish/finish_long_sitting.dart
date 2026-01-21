@@ -77,6 +77,9 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: false,
+        withItemGrade: false,
+        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final longSitting = LongSitting(

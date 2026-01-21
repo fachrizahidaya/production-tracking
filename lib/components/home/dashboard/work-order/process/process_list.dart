@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/custom_search_bar.dart';
 import 'package:textile_tracking/components/master/card/custom_card.dart';
+import 'package:textile_tracking/components/master/card/item_process.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
@@ -10,7 +11,6 @@ class ProcessList<T> extends StatefulWidget {
   final String searchQuery;
   final bool? canCreate;
   final bool? canDelete;
-  final Widget Function(T item) itemBuilder;
   final Future<void> Function(BuildContext context, T? currentItem)? onForm;
   final void Function(BuildContext context, T item)? onItemTap;
   final Future<List<T>> Function(Map<String, String> params) fetchData;
@@ -31,7 +31,6 @@ class ProcessList<T> extends StatefulWidget {
       {super.key,
       required this.service,
       required this.searchQuery,
-      required this.itemBuilder,
       this.canCreate = false,
       this.onForm,
       this.onItemTap,
@@ -56,6 +55,12 @@ class ProcessList<T> extends StatefulWidget {
 
 class _ProcessListState<T> extends State<ProcessList<T>> {
   final ScrollController _scrollController = ScrollController();
+  double minHeight = 640;
+  double maxHeight = 1820;
+  bool hasExpandedItem = false;
+  int? _expandedIndex;
+
+  double get _currentHeight => _expandedIndex != null ? maxHeight : minHeight;
 
   @override
   void initState() {
@@ -104,43 +109,51 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
               ? NoData()
               : widget.firstLoading
                   ? Center(child: CircularProgressIndicator())
-                  : SizedBox(
-                      height: 500,
-                      child: CustomScrollView(
-                        controller: _scrollController,
-                        slivers: [
-                          SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                if (index >= widget.dataList.length) {
-                                  if (!widget.isLoadMore) {
-                                    Future.delayed(Duration.zero, () {
-                                      widget.handleLoadMore();
-                                    });
-                                  }
+                  : AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      height: _currentHeight,
+                      child: NotificationListener<ScrollNotification>(
+                        onNotification: (notification) {
+                          if (notification is OverscrollNotification) {
+                            if (notification.metrics.axis == Axis.horizontal) {
+                              return true;
+                            }
+                            return false;
+                          }
+                          return true;
+                        },
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          separatorBuilder: (context, index) =>
+                              CustomTheme().hGap('xl'),
+                          itemCount: widget.hasMore
+                              ? widget.dataList.length + 1
+                              : widget.dataList.length,
+                          itemBuilder: (context, index) {
+                            if (index >= widget.dataList.length) {
+                              if (!widget.isLoadMore) {
+                                Future.microtask(widget.handleLoadMore);
+                              }
+                              return const SizedBox(width: 80);
+                            }
 
-                                  return const SizedBox.shrink();
-                                }
-
-                                final item = widget.dataList[index];
-                                return Padding(
-                                  padding:
-                                      CustomTheme().padding('process-content'),
-                                  child: GestureDetector(
-                                    onTap: () =>
-                                        widget.onItemTap?.call(context, item),
-                                    child: widget.itemBuilder(item),
-                                  ),
-                                );
+                            final item = widget.dataList[index];
+                            return ItemProcess(
+                              item: item,
+                              showTimeline: true,
+                              isExpanded: _expandedIndex == index,
+                              onExpandChanged: (expanded) {
+                                setState(() {
+                                  _expandedIndex = expanded ? index : null;
+                                });
                               },
-                              childCount: widget.hasMore
-                                  ? widget.dataList.length + 1
-                                  : widget.dataList.length,
-                            ),
-                          ),
-                        ],
+                            );
+                          },
+                        ),
                       ),
-                    ),
+                    )
         ],
       ),
     );

@@ -12,13 +12,16 @@ class ItemProcess extends StatefulWidget {
   final dynamic item;
   final VoidCallback? onTap;
   final bool showTimeline;
+  final ValueChanged<bool>? onExpandChanged;
+  final bool isExpanded;
 
-  const ItemProcess({
-    super.key,
-    required this.item,
-    this.onTap,
-    this.showTimeline = true,
-  });
+  const ItemProcess(
+      {super.key,
+      required this.item,
+      this.onTap,
+      this.showTimeline = true,
+      this.onExpandChanged,
+      this.isExpanded = false});
 
   @override
   State<ItemProcess> createState() => _ItemProcessState();
@@ -29,42 +32,59 @@ class _ItemProcessState extends State<ItemProcess> {
   static const int _collapsedTimelineCount = 3;
 
   @override
+  void initState() {
+    super.initState();
+    _showAllTimeline = widget.isExpanded;
+  }
+
+  @override
+  void didUpdateWidget(covariant ItemProcess oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.isExpanded != widget.isExpanded) {
+      _showAllTimeline = widget.isExpanded;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isTablet = constraints.maxWidth > 600;
-        final processes =
-            widget.item['processes'] as Map<String, dynamic>? ?? {};
+    return SizedBox(
+      width: 500,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isTablet = constraints.maxWidth > 600;
+          final processes =
+              widget.item['processes'] as Map<String, dynamic>? ?? {};
 
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Section
-              _buildHeader(isTablet),
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header Section
+                _buildHeader(isTablet),
 
-              // Process Timeline / Grid
-              Padding(
-                padding: EdgeInsets.all(isTablet ? 20 : 16),
-                child: widget.showTimeline
-                    ? _buildProcessTimeline(processes, isTablet)
-                    : _buildProcessGrid(processes, isTablet),
-              ),
-            ],
-          ),
-        );
-      },
+                // Process Timeline / Grid
+                Padding(
+                  padding: EdgeInsets.all(isTablet ? 20 : 16),
+                  child: widget.showTimeline
+                      ? _buildProcessTimeline(processes, isTablet)
+                      : _buildProcessGrid(processes, isTablet),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -243,9 +263,11 @@ class _ItemProcessState extends State<ItemProcess> {
           Center(
             child: InkWell(
               onTap: () {
+                final next = !_showAllTimeline;
                 setState(() {
-                  _showAllTimeline = !_showAllTimeline;
+                  _showAllTimeline = next;
                 });
+                widget.onExpandChanged?.call(next);
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -470,7 +492,7 @@ class _ItemProcessState extends State<ItemProcess> {
         icon: Icons.inventory_2_outlined,
         label: 'Qty',
         value:
-            '${formatNumber(process['qty'])} ${process['unit']['code'] ?? 'pcs'}',
+            '${formatNumber(process['qty'])} ${process['unit']['code'] ?? 'PCS'}',
         isTablet: isTablet,
       ));
     }
@@ -480,7 +502,8 @@ class _ItemProcessState extends State<ItemProcess> {
       details.add(_buildDetailItem(
         icon: Icons.scale_outlined,
         label: 'Berat',
-        value: '${formatNumber(process['weight'])} kg',
+        value:
+            '${formatNumber(process['weight'])} ${process['weight_unit']['code'] ?? 'KG'}',
         isTablet: isTablet,
       ));
     }
@@ -490,7 +513,8 @@ class _ItemProcessState extends State<ItemProcess> {
       details.add(_buildDetailItem(
         icon: Icons.format_list_numbered,
         label: 'Qty',
-        value: formatNumber(process['item_qty']),
+        value:
+            '${formatNumber(process['item_qty'])} ${process['item_unit']['code'] ?? 'PCS'} ',
         isTablet: isTablet,
       ));
     }
@@ -626,7 +650,8 @@ class _ItemProcessState extends State<ItemProcess> {
 
   /// Grade Chip
   Widget _buildGradeChip(dynamic grade, bool isTablet) {
-    final gradeName = grade['name']?.toString() ?? grade.toString();
+    final gradeName =
+        grade['item_grade']['code']?.toString() ?? grade.toString();
     final gradeQty = grade['qty'];
 
     return Container(
@@ -662,7 +687,7 @@ class _ItemProcessState extends State<ItemProcess> {
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
-                formatNumber(gradeQty),
+                '${formatNumber(gradeQty)} ${grade['unit']['code'] ?? 'PCS'}',
                 style: TextStyle(
                   fontSize: isTablet ? 11 : 10,
                   fontWeight: FontWeight.bold,
@@ -917,19 +942,19 @@ class _ItemProcessState extends State<ItemProcess> {
           'icon': Icons.air_outlined,
           'color': Colors.indigo,
         };
-      case 'long-sitting':
+      case 'long_sitting':
         return {
           'title': 'Long Sitting',
           'icon': Icons.content_paste_outlined,
           'color': Colors.indigo,
         };
-      case 'long-hemming':
+      case 'long_hemming':
         return {
           'title': 'Long Hemming',
           'icon': Icons.cut_outlined,
           'color': Colors.indigo,
         };
-      case 'cross-cutting':
+      case 'cross_cutting':
         return {
           'title': 'Cross Cutting',
           'icon': Icons.cut_outlined,
@@ -980,9 +1005,9 @@ class _ItemProcessState extends State<ItemProcess> {
       'press',
       'tumbler',
       'stenter',
-      'long-sitting',
-      'long-hemming',
-      'cross-cutting',
+      'long_sitting',
+      'long_hemming',
+      'cross_cutting',
       'sewing',
       'embroidery',
       'printing',

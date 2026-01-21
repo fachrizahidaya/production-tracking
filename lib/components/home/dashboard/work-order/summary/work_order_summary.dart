@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/summary/summary_card.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -10,15 +11,16 @@ class WorkOrderSummary extends StatefulWidget {
   final dariTanggal;
   final sampaiTanggal;
   final filterWidget;
+  final isFetching;
 
-  const WorkOrderSummary({
-    super.key,
-    this.data,
-    this.handleRefetch,
-    this.dariTanggal,
-    this.filterWidget,
-    this.sampaiTanggal,
-  });
+  const WorkOrderSummary(
+      {super.key,
+      this.data,
+      this.handleRefetch,
+      this.dariTanggal,
+      this.filterWidget,
+      this.sampaiTanggal,
+      this.isFetching});
 
   @override
   State<WorkOrderSummary> createState() => _WorkOrderSummaryState();
@@ -156,38 +158,45 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
   }
 
   Widget _buildSwipeContent() {
-    return SizedBox(
-        height: 500,
-        child:
-            // TabBarView(
-            //   controller: _tabController,
-            //   children:
-            //   processFilters.map((filter) {
-            //     return
-            CustomScrollView(
-          slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final item = widget.data![index];
+    if (widget.isFetching == true) {
+      return Center(
+        child: Padding(
+          padding: CustomTheme().padding('content'),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
-                  return Padding(
-                    padding: CustomTheme().padding('badge'),
-                    child: SummaryCard(
-                      data: item,
-                      showProgress: _showProgress,
-                      filter: processFilters[selectedIndex],
-                    ),
-                  );
-                },
-                childCount: widget.data!.length,
+    if (widget.data == null || widget.data!.isEmpty) {
+      return NoData();
+    }
+
+    return
+        // TabBarView(
+        //   controller: _tabController,
+        //   children:
+        //   processFilters.map((filter) {
+        //     return
+        SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: widget.data!.map<Widget>((item) {
+          return Padding(
+            padding: CustomTheme().padding('card'),
+            child: SizedBox(
+              width: 500,
+              child: SummaryCard(
+                data: item,
+                showProgress: _showProgress,
+                filter: processFilters[selectedIndex],
               ),
             ),
-          ],
-        )
-        //   }).toList(),
-        // ),
-        );
+          );
+        }).toList(),
+      ),
+    );
+    //   }).toList(),
+    // ),
   }
 
   @override

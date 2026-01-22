@@ -249,7 +249,9 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
       form: widget.form,
       label: widget.label,
       formKey: _formKey,
-      woData: woData,
+      woData: widget.data != null && widget.data!.isNotEmpty
+          ? widget.data!
+          : woData,
       processData: data,
       withMaklonOrMachine: widget.withMaklonOrMachine,
       withNoMaklonOrMachine: widget.withNoMaklonOrMachine,

@@ -66,7 +66,7 @@ class _FinishTumblerState extends State<FinishTumbler> {
     return FinishProcess(
       title: 'Selesai Tumbler',
       fetchWorkOrder: (service) async =>
-          await service.fetchStenterFinishOptions(),
+          await service.fetchTumblerFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput) =>

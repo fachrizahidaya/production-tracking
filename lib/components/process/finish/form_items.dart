@@ -9,7 +9,6 @@ import 'package:textile_tracking/components/master/card/custom_card.dart';
 import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/note_editor.dart';
-import 'package:textile_tracking/helpers/util/qty_range_formatter.dart';
 import 'package:textile_tracking/helpers/util/range_formatter.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -50,6 +49,8 @@ class FormItems extends StatefulWidget {
   final label;
   final data;
   final greigeQty;
+  final handleTotalItemQty;
+  final handleRemainingQtyForGrade;
 
   const FormItems(
       {super.key,
@@ -88,7 +89,9 @@ class FormItems extends StatefulWidget {
       this.greigeQty,
       this.gsm,
       this.totalWeight,
-      this.weightDozen});
+      this.weightDozen,
+      this.handleRemainingQtyForGrade,
+      this.handleTotalItemQty});
 
   @override
   State<FormItems> createState() => _FormItemsState();
@@ -104,17 +107,6 @@ class _FormItemsState extends State<FormItems> {
     super.initState();
   }
 
-  double getTotalItemQty() {
-    final items = widget.data?['items'] as List<dynamic>?;
-
-    if (items == null || items.isEmpty) return 0;
-
-    return items.fold<double>(0, (sum, item) {
-      final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
-      return sum + qty;
-    });
-  }
-
   String getGradeLabel(int i) {
     return widget.itemGradeOption.firstWhere(
           (e) =>
@@ -126,7 +118,7 @@ class _FormItemsState extends State<FormItems> {
   }
 
   double getGradePercentage(int index) {
-    final totalQty = getTotalItemQty();
+    final totalQty = widget.handleTotalItemQty();
     if (totalQty == 0) return 0;
 
     final gradeQty = double.tryParse(
@@ -137,36 +129,10 @@ class _FormItemsState extends State<FormItems> {
     return (gradeQty / totalQty) * 100;
   }
 
-  double getRemainingQtyForGrade(int index) {
-    final totalQty = getTotalItemQty();
-    if (totalQty == 0) return 0;
-
-    final grades = widget.form['grades'] as List<dynamic>?;
-
-    if (grades == null) return totalQty;
-
-    double usedQty = 0;
-
-    for (int i = 0; i < grades.length; i++) {
-      if (i == index) continue;
-
-      final qty = double.tryParse(
-            grades[i]?['qty']?.toString() ?? '0',
-          ) ??
-          0;
-
-      usedQty += qty;
-    }
-
-    final remaining = totalQty - usedQty;
-
-    return remaining < 0 ? 0 : remaining;
-  }
-
   Widget buildGradeCard(int i) {
     final gradeLabel = getGradeLabel(i);
     final percentage = getGradePercentage(i);
-    final maxQty = getRemainingQtyForGrade(i);
+    final maxQty = widget.handleRemainingQtyForGrade(i);
 
     return CustomCard(
       child: Column(
@@ -186,9 +152,6 @@ class _FormItemsState extends State<FormItems> {
                   req: true,
                   isNumber: true,
                   inputFormatters: [
-                    QtyRangeFormatter(
-                      getBaseQty: getTotalItemQty,
-                    ),
                     ThousandsSeparatorInputFormatter(),
                   ],
                   handleChange: (val) =>
@@ -319,8 +282,8 @@ class _FormItemsState extends State<FormItems> {
           'selectedValue': widget.form['weight_unit_id']?.toString() ?? '',
           'unitLabel': 'Satuan Berat',
           'value': 'weight',
-          'req': widget.withQtyAndWeight == true ? false : true,
-          'withSelectUnit': false,
+          'req': true,
+          'withSelectUnit': true,
           'staticUnit': 'KG'
         },
     ];
@@ -378,6 +341,13 @@ class _FormItemsState extends State<FormItems> {
                                       req: row['req'],
                                       isNumber: true,
                                       controller: row['controller'],
+                                      inputFormatters: [
+                                        if (minWeight != null &&
+                                            maxWeight != null)
+                                          RangeFormatter(
+                                              min: minWeight, max: maxWeight),
+                                        ThousandsSeparatorInputFormatter()
+                                      ],
                                       handleChange: (value) {
                                         final safeValue = (value == null ||
                                                 value.toString().trim().isEmpty)
@@ -406,6 +376,10 @@ class _FormItemsState extends State<FormItems> {
                                               row['value'] == 'weight') {
                                             widget.validateWeight(value);
                                           }
+                                          if (widget.withQtyAndWeight == true &&
+                                              row['value'] == 'weight') {
+                                            widget.validateWeight(value);
+                                          }
                                         });
                                       },
                                       // validator: (value) {
@@ -422,7 +396,7 @@ class _FormItemsState extends State<FormItems> {
                                 Expanded(
                                   flex: 1,
                                   child: SelectForm(
-                                    isDisabled: true,
+                                    isDisabled: false,
                                     label: row['unitLabel'],
                                     onTap: row['onSelect'],
                                     selectedLabel: row['selectedLabel'],
@@ -436,14 +410,14 @@ class _FormItemsState extends State<FormItems> {
                                     },
                                   ),
                                 ),
-                              if (row['staticUnit'] != null) ...[
+                              if (row['staticUnit'] != null &&
+                                  row['withSelectUnit'] == false) ...[
                                 Expanded(
                                     flex: 1,
                                     child: StaticFormField(
                                         value: row['staticUnit']))
                               ],
-                            ].separatedBy(CustomTheme()
-                                .hGap(row['staticUnit'] != null ? 'md' : 'xl')),
+                            ].separatedBy(CustomTheme().hGap('xl')),
                           ),
                           Row(
                             children: [
@@ -496,11 +470,16 @@ class _FormItemsState extends State<FormItems> {
                                       isNumber: true,
                                       controller: widget.qty,
                                       handleChange: (value) {
+                                        final safeValue = (value == null ||
+                                                value.toString().trim().isEmpty)
+                                            ? '0'
+                                            : value.toString();
+
                                         setState(() {
-                                          widget.qty.text = value.toString();
+                                          widget.qty.text = safeValue;
                                           widget.handleChangeInput(
-                                              'item_qty', value);
-                                          widget.validateQty(value);
+                                              'item_qty', safeValue);
+                                          widget.validateQty(safeValue);
                                         });
                                       },
                                       // validator: (value) {
@@ -582,16 +561,23 @@ class _FormItemsState extends State<FormItems> {
                                       isNumber: true,
                                       controller: widget.qty,
                                       inputFormatters: [
-                                        RangeFormatter(
-                                            min: minWeight, max: maxWeight),
+                                        if (minWeight != null &&
+                                            maxWeight != null)
+                                          RangeFormatter(
+                                              min: minWeight, max: maxWeight),
                                         ThousandsSeparatorInputFormatter()
                                       ],
                                       handleChange: (value) {
+                                        final safeValue = (value == null ||
+                                                value.toString().trim().isEmpty)
+                                            ? '0'
+                                            : value.toString();
+
                                         setState(() {
-                                          widget.qty.text = value.toString();
+                                          widget.qty.text = safeValue;
                                           widget.handleChangeInput(
-                                              'qty', value);
-                                          widget.validateWeight(value);
+                                              'qty', safeValue);
+                                          widget.validateWeight(safeValue);
                                         });
                                       },
                                       // validator: (value) {
@@ -672,7 +658,13 @@ class _FormItemsState extends State<FormItems> {
                           controller: widget.weightDozen,
                           inputFormatters: [ThousandsSeparatorInputFormatter()],
                           handleChange: (val) {
-                            widget.handleChangeInput('weight_per_dozen', val);
+                            final safeValue =
+                                (val == null || val.toString().trim().isEmpty)
+                                    ? '0'
+                                    : val.toString();
+                            widget.weightDozen.text = safeValue;
+                            widget.handleChangeInput(
+                                'weight_per_dozen', safeValue);
 
                             final cleanValue =
                                 val.replaceAll('.', '').replaceAll(',', '');

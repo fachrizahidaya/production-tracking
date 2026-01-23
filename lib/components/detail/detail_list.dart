@@ -217,7 +217,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                             Text(
                               widget.data['work_orders']?['wo_no'] ?? '-',
                               style: TextStyle(
-                                fontSize: CustomTheme().fontSize('md'),
+                                fontSize: CustomTheme().fontSize('lg'),
                                 color: Colors.white.withOpacity(0.8),
                                 fontWeight:
                                     CustomTheme().fontWeight('semibold'),
@@ -394,10 +394,32 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           icon: Icons.timeline_outlined,
           child: _buildTimelineInfo(true),
         ),
-        _buildProcessFilter(),
-        _buildSwipeContent(),
-        _buildProcessWoFilter(),
-        _buildSwipeWoContent()
+        _buildInfoCard(
+          title: 'Catatan Proses',
+          icon: Icons.note_outlined,
+          child: _buildNote(true),
+        ),
+        _buildInfoCard(
+          title: 'Lampiran Proses',
+          icon: Icons.attachment_outlined,
+          child: _buildAttachment(true),
+        ),
+        _buildInfoCard(
+          title: 'Catatan Work Order',
+          icon: Icons.note_outlined,
+          child: _buildNoteWo(true),
+        ),
+        _buildInfoCard(
+          title: 'Material Work Order',
+          icon: Icons.inventory_2_outlined,
+          child: _buildMaterial(
+            true,
+          ),
+        ),
+        // _buildProcessFilter(),
+        // _buildSwipeContent(),
+        // _buildProcessWoFilter(),
+        // _buildSwipeWoContent()
       ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
@@ -435,10 +457,32 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           icon: Icons.timeline_outlined,
           child: _buildTimelineInfo(false),
         ),
-        _buildProcessFilter(),
-        _buildSwipeContent(),
-        _buildProcessWoFilter(),
-        _buildSwipeWoContent()
+        _buildInfoCard(
+          title: 'Catatan Proses',
+          icon: Icons.note_outlined,
+          child: _buildNote(true),
+        ),
+        _buildInfoCard(
+          title: 'Lampiran Proses',
+          icon: Icons.attachment_outlined,
+          child: _buildAttachment(true),
+        ),
+        _buildInfoCard(
+          title: 'Catatan Work Order',
+          icon: Icons.note_outlined,
+          child: _buildNoteWo(true),
+        ),
+        _buildInfoCard(
+          title: 'Material Work Order',
+          icon: Icons.inventory_2_outlined,
+          child: _buildMaterial(
+            true,
+          ),
+        ),
+        // _buildProcessFilter(),
+        // _buildSwipeContent(),
+        // _buildProcessWoFilter(),
+        // _buildSwipeWoContent()
       ],
     );
   }
@@ -737,17 +781,77 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
 
     return Column(
       children: items
-          .map((item) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: _buildInfoItem(
-                  label: item['label'],
-                  value: item['value'],
-                  id: item['id'].toString(),
-                  icon: item['icon'],
-                  isTablet: isTablet,
-                ),
+          .map((item) => _buildInfoItem(
+                label: item['label'],
+                value: item['value'],
+                id: item['id'].toString(),
+                icon: item['icon'],
+                isTablet: isTablet,
               ))
           .toList(),
+    );
+  }
+
+  Widget _buildNote(bool isTablet) {
+    return Row(
+      children: [
+        Expanded(
+          child: widget.data['notes'] != null
+              ? Text(
+                  htmlToPlainText(widget.data['notes']),
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('lg'),
+                  ),
+                )
+              : NoData(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNoteWo(bool isTablet) {
+    return widget.data['work_orders']['notes'] != null
+        ? Text(
+            htmlToPlainText(widget.data['work_orders']['notes']),
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('lg'),
+            ),
+          )
+        : NoData();
+  }
+
+  Widget _buildAttachment(bool isTablet) {
+    return Row(
+      children: [
+        Expanded(
+          child: widget.existingAttachment.isEmpty
+              ? NoData()
+              : Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: widget.handleBuildAttachment(context),
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMaterial(bool isTablet) {
+    final items = (widget.data['work_orders']['items'] ?? [])
+        .cast<Map<String, dynamic>>();
+    if (items.isEmpty) {
+      return const Center(child: Text('No Data'));
+    }
+
+    return Column(
+      children: List.generate(items.length, (index) {
+        return Column(
+          children: [
+            ListItem(item: items[index]),
+            if (index != items.length - 1) const SizedBox(height: 12),
+          ].separatedBy(CustomTheme().vGap('xl')),
+        );
+      }),
     );
   }
 
@@ -761,7 +865,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       navigateTo,
       rightIcon}) {
     return GestureDetector(
-      onTap: navigateTo,
+      // onTap: navigateTo,
       child: Container(
         padding: CustomTheme().padding('card'),
         decoration: BoxDecoration(
@@ -928,187 +1032,187 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildProcessWoFilter() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
-        padding: CustomTheme().padding('card-detail'),
-        child: Row(
-          children: List.generate(itemWoFilters.length, (index) {
-            final isSelected = selectedItemWoIndex == index;
+  // Widget _buildProcessWoFilter() {
+  //   return SingleChildScrollView(
+  //     scrollDirection: Axis.horizontal,
+  //     child: Padding(
+  //       padding: CustomTheme().padding('card-detail'),
+  //       child: Row(
+  //         children: List.generate(itemWoFilters.length, (index) {
+  //           final isSelected = selectedItemWoIndex == index;
 
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedItemWoIndex = index;
-                });
+  //           return GestureDetector(
+  //             onTap: () {
+  //               setState(() {
+  //                 selectedItemWoIndex = index;
+  //               });
 
-                _tabWoController.animateTo(index);
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: isSelected
-                        ? CustomTheme().buttonColor('primary')
-                        : Colors.grey.shade400,
-                  ),
-                  color: isSelected
-                      ? CustomTheme().buttonColor('primary')
-                      : Colors.white,
-                  boxShadow: [CustomTheme().boxShadowTheme()],
-                ),
-                padding: CustomTheme().padding('badge'),
-                child: Text(
-                  itemWoFilters[index],
-                  style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black,
-                  ),
-                ),
-              ),
-            );
-          }).separatedBy(CustomTheme().hGap('lg')),
-        ),
-      ),
-    );
-  }
+  //               _tabWoController.animateTo(index);
+  //             },
+  //             child: Container(
+  //               decoration: BoxDecoration(
+  //                 borderRadius: BorderRadius.circular(8),
+  //                 border: Border.all(
+  //                   color: isSelected
+  //                       ? CustomTheme().buttonColor('primary')
+  //                       : Colors.grey.shade400,
+  //                 ),
+  //                 color: isSelected
+  //                     ? CustomTheme().buttonColor('primary')
+  //                     : Colors.white,
+  //                 boxShadow: [CustomTheme().boxShadowTheme()],
+  //               ),
+  //               padding: CustomTheme().padding('badge'),
+  //               child: Text(
+  //                 itemWoFilters[index],
+  //                 style: TextStyle(
+  //                   color: isSelected ? Colors.white : Colors.black,
+  //                 ),
+  //               ),
+  //             ),
+  //           );
+  //         }).separatedBy(CustomTheme().hGap('lg')),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildProcessFilter() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
-        padding: CustomTheme().padding('card-detail'),
-        child: Row(
-          children: List.generate(itemFilters.length, (index) {
-            final isSelected = selectedIndex == index;
+  // Widget _buildProcessFilter() {
+  //   return SingleChildScrollView(
+  //     scrollDirection: Axis.horizontal,
+  //     child: Padding(
+  //       padding: CustomTheme().padding('card-detail'),
+  //       child: Row(
+  //         children: List.generate(itemFilters.length, (index) {
+  //           final isSelected = selectedIndex == index;
 
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedIndex = index;
-                });
+  //           return GestureDetector(
+  //             onTap: () {
+  //               setState(() {
+  //                 selectedIndex = index;
+  //               });
 
-                _tabController.animateTo(index);
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: isSelected
-                        ? CustomTheme().buttonColor('primary')
-                        : Colors.grey.shade400,
-                  ),
-                  color: isSelected
-                      ? CustomTheme().buttonColor('primary')
-                      : Colors.white,
-                  boxShadow: [CustomTheme().boxShadowTheme()],
-                ),
-                padding: CustomTheme().padding('badge'),
-                child: Text(
-                  itemFilters[index],
-                  style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black,
-                  ),
-                ),
-              ),
-            );
-          }).separatedBy(CustomTheme().hGap('lg')),
-        ),
-      ),
-    );
-  }
+  //               _tabController.animateTo(index);
+  //             },
+  //             child: Container(
+  //               decoration: BoxDecoration(
+  //                 borderRadius: BorderRadius.circular(8),
+  //                 border: Border.all(
+  //                   color: isSelected
+  //                       ? CustomTheme().buttonColor('primary')
+  //                       : Colors.grey.shade400,
+  //                 ),
+  //                 color: isSelected
+  //                     ? CustomTheme().buttonColor('primary')
+  //                     : Colors.white,
+  //                 boxShadow: [CustomTheme().boxShadowTheme()],
+  //               ),
+  //               padding: CustomTheme().padding('badge'),
+  //               child: Text(
+  //                 itemFilters[index],
+  //                 style: TextStyle(
+  //                   color: isSelected ? Colors.white : Colors.black,
+  //                 ),
+  //               ),
+  //             ),
+  //           );
+  //         }).separatedBy(CustomTheme().hGap('lg')),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildSwipeWoContent() {
-    final items = (widget.data['work_orders']['items'] ?? [])
-        .cast<Map<String, dynamic>>();
+  // Widget _buildSwipeWoContent() {
+  //   final items = (widget.data['work_orders']['items'] ?? [])
+  //       .cast<Map<String, dynamic>>();
 
-    switch (selectedItemWoIndex) {
-      case 0:
-        return Padding(
-          padding: CustomTheme().padding('card-detail'),
-          child: CustomCard(
-            child: widget.data['work_orders']['notes'] != null
-                ? Text(
-                    htmlToPlainText(widget.data['work_orders']['notes']),
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('lg'),
-                    ),
-                  )
-                : NoData(),
-          ),
-        );
+  //   switch (selectedItemWoIndex) {
+  //     case 0:
+  //       return Padding(
+  //         padding: CustomTheme().padding('card-detail'),
+  //         child: CustomCard(
+  //           child: widget.data['work_orders']['notes'] != null
+  //               ? Text(
+  //                   htmlToPlainText(widget.data['work_orders']['notes']),
+  //                   style: TextStyle(
+  //                     fontSize: CustomTheme().fontSize('lg'),
+  //                   ),
+  //                 )
+  //               : NoData(),
+  //         ),
+  //       );
 
-      case 1:
-        if (items.isEmpty) {
-          return const Center(child: Text('No Data'));
-        }
+  //     case 1:
+  //       if (items.isEmpty) {
+  //         return const Center(child: Text('No Data'));
+  //       }
 
-        return Padding(
-          padding: CustomTheme().padding('card-detail'),
-          child: Column(
-            children: [
-              ...items.map(
-                (item) => Column(
-                  children: [
-                    ListItem(item: item),
-                    CustomTheme().vGap('xl'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
+  //       return Padding(
+  //         padding: CustomTheme().padding('card-detail'),
+  //         child: Column(
+  //           children: [
+  //             ...items.map(
+  //               (item) => Column(
+  //                 children: [
+  //                   ListItem(item: item),
+  //                   CustomTheme().vGap('xl'),
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
 
-      default:
-        return const SizedBox.shrink();
-    }
-  }
+  //     default:
+  //       return const SizedBox.shrink();
+  //   }
+  // }
 
-  Widget _buildSwipeContent() {
-    switch (selectedIndex) {
-      case 0:
-        return Padding(
-          padding: CustomTheme().padding('card-detail'),
-          child: Row(
-            children: [
-              Expanded(
-                child: CustomCard(
-                  child: widget.data['notes'] != null
-                      ? Text(
-                          htmlToPlainText(widget.data['notes']),
-                          style: TextStyle(
-                            fontSize: CustomTheme().fontSize('lg'),
-                          ),
-                        )
-                      : NoData(),
-                ),
-              ),
-            ],
-          ),
-        );
+  // Widget _buildSwipeContent() {
+  //   switch (selectedIndex) {
+  //     case 0:
+  //       return Padding(
+  //         padding: CustomTheme().padding('card-detail'),
+  //         child: Row(
+  //           children: [
+  //             Expanded(
+  //               child: CustomCard(
+  //                 child: widget.data['notes'] != null
+  //                     ? Text(
+  //                         htmlToPlainText(widget.data['notes']),
+  //                         style: TextStyle(
+  //                           fontSize: CustomTheme().fontSize('lg'),
+  //                         ),
+  //                       )
+  //                     : NoData(),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
 
-      case 1:
-        return Padding(
-          padding: CustomTheme().padding('card-detail'),
-          child: Row(
-            children: [
-              Expanded(
-                child: CustomCard(
-                  child: widget.existingAttachment.isEmpty
-                      ? NoData()
-                      : Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: widget.handleBuildAttachment(context),
-                        ),
-                ),
-              ),
-            ],
-          ),
-        );
+  //     case 1:
+  //       return Padding(
+  //         padding: CustomTheme().padding('card-detail'),
+  //         child: Row(
+  //           children: [
+  //             Expanded(
+  //               child: CustomCard(
+  //                 child: widget.existingAttachment.isEmpty
+  //                     ? NoData()
+  //                     : Wrap(
+  //                         spacing: 8,
+  //                         runSpacing: 8,
+  //                         children: widget.handleBuildAttachment(context),
+  //                       ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
 
-      default:
-        return const SizedBox.shrink();
-    }
-  }
+  //     default:
+  //       return const SizedBox.shrink();
+  //   }
+  // }
 }

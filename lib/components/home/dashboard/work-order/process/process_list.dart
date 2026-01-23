@@ -47,12 +47,8 @@ class ProcessList<T> extends StatefulWidget {
 
 class _ProcessListState<T> extends State<ProcessList<T>> {
   final ScrollController _scrollController = ScrollController();
-  double minHeight = 640;
-  double maxHeight = 1820;
-  bool hasExpandedItem = false;
-  int? _expandedIndex;
 
-  double get _currentHeight => _expandedIndex != null ? maxHeight : minHeight;
+  int? _expandedIndex;
 
   @override
   void initState() {
@@ -82,6 +78,22 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
     }
   }
 
+  double? get _adaptiveHeight {
+    final count = widget.dataList.length;
+
+    // Case: only 1 item → adaptive height
+    if (count == 1) {
+      return 100;
+    }
+
+    // Case: multiple items
+    if (_expandedIndex != null) {
+      return 2160;
+    }
+
+    return 640;
+  }
+
   @override
   Widget build(BuildContext context) {
     MediaQuery.of(context).orientation == Orientation.portrait;
@@ -104,22 +116,20 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                   : AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
-                      height: _currentHeight,
+                      height:
+                          widget.dataList.length == 1 ? null : _adaptiveHeight,
                       child: NotificationListener<ScrollNotification>(
                         onNotification: (notification) {
-                          if (notification is OverscrollNotification) {
-                            if (notification.metrics.axis == Axis.horizontal) {
-                              return true;
-                            }
-                            return false;
+                          if (notification is OverscrollNotification &&
+                              notification.metrics.axis == Axis.horizontal) {
+                            return true;
                           }
-                          return true;
+                          return false;
                         },
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           physics: const BouncingScrollPhysics(),
-                          separatorBuilder: (context, index) =>
-                              CustomTheme().hGap('xl'),
+                          separatorBuilder: (_, __) => CustomTheme().hGap('xl'),
                           itemCount: widget.hasMore
                               ? widget.dataList.length + 1
                               : widget.dataList.length,
@@ -145,7 +155,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                           },
                         ),
                       ),
-                    )
+                    ),
         ],
       ),
     );

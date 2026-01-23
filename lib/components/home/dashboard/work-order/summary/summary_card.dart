@@ -263,42 +263,46 @@ class _SummaryCardState extends State<SummaryCard>
           ],
         ),
         // Progress Bar
-        Stack(
-          children: [
-            Container(
-              height: isTablet ? 10 : 8,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(6),
-              ),
-            ),
-            AnimatedContainer(
-              duration: Duration(milliseconds: 500),
-              curve: Curves.easeOutCubic,
-              height: isTablet ? 10 : 8,
-              width: (MediaQuery.of(context).size.width - 100) * progress,
-              constraints: BoxConstraints(
-                maxWidth: double.infinity,
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    _getProgressColor(progress),
-                    _getProgressColor(progress).withOpacity(0.7),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(6),
-                boxShadow: [
-                  BoxShadow(
-                    color: _getProgressColor(progress).withOpacity(0.3),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final barWidth = constraints.maxWidth * progress.clamp(0.0, 1.0);
+
+            return Stack(
+              children: [
+                Container(
+                  height: isTablet ? 10 : 8,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(6),
                   ),
-                ],
-              ),
-            ),
-          ],
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeOutCubic,
+                  height: isTablet ? 10 : 8,
+                  width: barWidth,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        _getProgressColor(progress),
+                        _getProgressColor(progress).withOpacity(0.7),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(6),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _getProgressColor(progress).withOpacity(0.3),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
         ),
+
         Text(
           '$completed dari $total selesai',
           style: TextStyle(

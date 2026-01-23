@@ -200,55 +200,59 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
 
   @override
   Widget build(BuildContext context) {
-    return DashboardCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: CustomTheme().padding('card'),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      children: [
+        DashboardCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: CustomTheme().padding('card'),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Perkembangan Proses Produksi'),
-                    Text(
-                      'Status setiap tahapan Work Order',
-                      style: TextStyle(
-                          fontSize: CustomTheme().fontSize('sm'),
-                          color: CustomTheme().colors('text-secondary')),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Perkembangan Proses Produksi'),
+                        Text(
+                          'Status setiap tahapan Work Order',
+                          style: TextStyle(
+                              fontSize: CustomTheme().fontSize('sm'),
+                              color: CustomTheme().colors('text-secondary')),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.refresh_outlined,
+                          ),
+                          onPressed: () {
+                            widget.handleRefetch();
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.tune,
+                          ),
+                          onPressed: () {
+                            _openFilter();
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.refresh_outlined,
-                      ),
-                      onPressed: () {
-                        widget.handleRefetch();
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.tune,
-                      ),
-                      onPressed: () {
-                        _openFilter();
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+              _buildProcessFilter(),
+              Divider(),
+              _buildSwipeContent()
+            ],
           ),
-          _buildProcessFilter(),
-          Divider(),
-          _buildSwipeContent()
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

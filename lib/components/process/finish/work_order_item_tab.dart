@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/card/list_item.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -74,14 +75,19 @@ class _WorkOrderItemTabState extends State<WorkOrderItemTab> {
           ),
           Padding(
             padding: CustomTheme().padding('item-detail'),
-            child: Column(
-              children: items
-                  .map((item) => Column(
-                        children: [ListItem(item: item)]
-                            .separatedBy(CustomTheme().vGap('xl')),
-                      ))
-                  .toList(),
-            ),
+            child: widget.data.isEmpty
+                ? NoData()
+                : Column(
+                    children: List.generate(items.length, (index) {
+                      return Column(
+                        children: [
+                          ListItem(item: items[index]),
+                          if (index != items.length - 1)
+                            const SizedBox(height: 12),
+                        ].separatedBy(CustomTheme().vGap('xl')),
+                      );
+                    }),
+                  ),
           ),
         ],
       ),

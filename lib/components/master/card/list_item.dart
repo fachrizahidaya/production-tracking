@@ -144,9 +144,9 @@ class ListItem extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        if (item['variants'][0] != null) ...[
+        if (item['spk_no'] != null) ...[
           Text(
-            item['variants'][0]['value'].toString(),
+            item['spk_no'].toString(),
             style: TextStyle(
               fontSize: isTablet ? 13 : 11,
               color: Colors.grey[500],
@@ -162,21 +162,39 @@ class ListItem extends StatelessWidget {
   /// Additional Info (Category, Supplier, etc.)
   Widget _buildAdditionalInfo(bool isTablet) {
     if (isTablet) {
-      return Row(
+      return Wrap(
+        spacing: 8,
+        runSpacing: 8,
         children: [
-          if (item['variants'][3] != null)
+          if (item['variants'][2] != null)
             Expanded(
               child: _buildInfoChip(
                 icon: Icons.design_services_outlined,
-                label: item['variants'][3]['value']?.toString() ?? '-',
+                label: item['variants'][2]['value']?.toString() ?? '-',
                 isTablet: isTablet,
               ),
             ),
-          if (item['variants'][2] != null) ...[
+          if (item['variants'][0] != null)
+            Expanded(
+              child: _buildInfoChip(
+                icon: Icons.cut_outlined,
+                label: item['variants'][0]['value']?.toString() ?? '-',
+                isTablet: isTablet,
+              ),
+            ),
+          if (item['variants'][1] != null)
+            Expanded(
+              child: _buildInfoChip(
+                icon: Icons.numbers_outlined,
+                label: item['variants'][1]['value']?.toString() ?? '-',
+                isTablet: isTablet,
+              ),
+            ),
+          if (item['variants'][4] != null) ...[
             Expanded(
               child: _buildInfoChip(
                 icon: Icons.color_lens_outlined,
-                label: item['variants'][2]['value']?.toString() ?? '-',
+                label: item['variants'][4]['value']?.toString() ?? '-',
                 isTablet: isTablet,
               ),
             ),
@@ -188,16 +206,28 @@ class ListItem extends StatelessWidget {
     // Mobile: Horizontal scroll chips
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Row(
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
         children: [
           _buildInfoChip(
             icon: Icons.design_services_outlined,
-            label: item['variants'][3]['value']?.toString() ?? '-',
+            label: item['variants'][2]['value']?.toString() ?? '-',
             isTablet: isTablet,
           ),
           _buildInfoChip(
             icon: Icons.color_lens_outlined,
-            label: item['variants'][2]['value']?.toString() ?? '-',
+            label: item['variants'][0]['value']?.toString() ?? '-',
+            isTablet: isTablet,
+          ),
+          _buildInfoChip(
+            icon: Icons.color_lens_outlined,
+            label: item['variants'][1]['value']?.toString() ?? '-',
+            isTablet: isTablet,
+          ),
+          _buildInfoChip(
+            icon: Icons.color_lens_outlined,
+            label: item['variants'][4]['value']?.toString() ?? '-',
             isTablet: isTablet,
           ),
         ],

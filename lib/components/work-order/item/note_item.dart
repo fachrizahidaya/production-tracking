@@ -103,7 +103,7 @@ class _NoteItemState extends State<NoteItem>
 
   /// Header Section
   Widget _buildHeader(bool isTablet, bool showExpandButton) {
-    final label = widget.item['label']?.toString() ?? 'Catatan';
+    final label = widget.item['label']?.toString() ?? '-';
     final noteType = _getNoteType(label);
 
     return InkWell(
@@ -203,20 +203,6 @@ class _NoteItemState extends State<NoteItem>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Quote Icon
-                  Container(
-                    padding: CustomTheme().padding('process-content'),
-                    decoration: BoxDecoration(
-                      color:
-                          CustomTheme().buttonColor('primary').withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Icon(
-                      Icons.format_quote_outlined,
-                      size: isTablet ? 18 : 16,
-                      color: CustomTheme().buttonColor('primary'),
-                    ),
-                  ),
-                  // Text Content
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,8 +281,95 @@ class _NoteItemState extends State<NoteItem>
   }
 
   Map<String, dynamic> _getNoteType(String label) {
+    final lowerLabel = label.toLowerCase();
+
+    if (lowerLabel.contains('dyeing')) {
+      return {
+        'label': 'Dyeing',
+        'icon': Icons.invert_colors_on_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('press')) {
+      return {
+        'label': 'Press',
+        'icon': Icons.layers_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('tumbler')) {
+      return {
+        'label': 'Tumbler',
+        'icon': Icons.dry_cleaning_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('stenter')) {
+      return {
+        'label': 'Stenter',
+        'icon': Icons.air_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('long sitting')) {
+      return {
+        'label': 'Long Sitting',
+        'icon': Icons.content_paste_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('long hemming')) {
+      return {
+        'label': 'Long Hemming',
+        'icon': Icons.cut_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('cross cutting')) {
+      return {
+        'label': 'Cross Cutting',
+        'icon': Icons.cut_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('sewing')) {
+      return {
+        'label': ' Sewing',
+        'icon': Icons.link_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('embroidery')) {
+      return {
+        'label': 'Embroidery',
+        'icon': Icons.color_lens_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('printing')) {
+      return {
+        'label': 'Printing',
+        'icon': Icons.print_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('sorting')) {
+      return {
+        'label': 'Sorting',
+        'icon': Icons.sort_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('packing')) {
+      return {
+        'label': 'Packing',
+        'icon': Icons.inventory_2_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+
     return {
-      'label': 'Catatan',
+      'label': '',
       'icon': Icons.note_outlined,
       'color': Colors.blueGrey,
     };
@@ -468,30 +541,93 @@ class CompactNoteItem extends StatelessWidget {
   Map<String, dynamic> _getNoteType(String label) {
     final lowerLabel = label.toLowerCase();
 
-    if (lowerLabel.contains('penting') || lowerLabel.contains('important')) {
+    if (lowerLabel.contains('dyeing')) {
       return {
-        'label': 'Penting',
-        'icon': Icons.priority_high_outlined,
-        'color': Colors.red,
+        'label': 'Dyeing',
+        'icon': Icons.invert_colors_on_outlined,
+        'color': Colors.blueGrey,
       };
     }
-    if (lowerLabel.contains('warning') || lowerLabel.contains('peringatan')) {
+    if (lowerLabel.contains('press')) {
       return {
-        'label': 'Peringatan',
-        'icon': Icons.warning_outlined,
-        'color': Colors.orange,
+        'label': 'Press',
+        'icon': Icons.layers_outlined,
+        'color': Colors.blueGrey,
       };
     }
-    if (lowerLabel.contains('info') || lowerLabel.contains('informasi')) {
+    if (lowerLabel.contains('tumbler')) {
       return {
-        'label': 'Info',
-        'icon': Icons.info_outlined,
-        'color': Colors.blue,
+        'label': 'Tumbler',
+        'icon': Icons.dry_cleaning_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('stenter')) {
+      return {
+        'label': 'Stenter',
+        'icon': Icons.air_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('long sitting')) {
+      return {
+        'label': 'Long Sitting',
+        'icon': Icons.content_paste_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('long hemming')) {
+      return {
+        'label': 'Long Hemming',
+        'icon': Icons.cut_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('cross cutting')) {
+      return {
+        'label': 'Cross Cutting',
+        'icon': Icons.cut_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('sewing')) {
+      return {
+        'label': ' Sewing',
+        'icon': Icons.link_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('embroidery')) {
+      return {
+        'label': 'Embroidery',
+        'icon': Icons.color_lens_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('printing')) {
+      return {
+        'label': 'Printing',
+        'icon': Icons.print_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('sorting')) {
+      return {
+        'label': 'Sorting',
+        'icon': Icons.sort_outlined,
+        'color': Colors.blueGrey,
+      };
+    }
+    if (lowerLabel.contains('packing')) {
+      return {
+        'label': 'Packing',
+        'icon': Icons.inventory_2_outlined,
+        'color': Colors.blueGrey,
       };
     }
 
     return {
-      'label': 'Catatan',
+      'label': '',
       'icon': Icons.note_outlined,
       'color': Colors.blueGrey,
     };

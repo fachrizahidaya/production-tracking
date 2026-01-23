@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
 
 class RangeFormatter extends TextInputFormatter {
-  final min;
-  final max;
+  final double min;
+  final double max;
 
   RangeFormatter({
     required this.min,
@@ -14,13 +14,20 @@ class RangeFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    if (newValue.text.isEmpty) return newValue;
+    // Allow clearing the field
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
 
     final value = double.tryParse(newValue.text);
-    if (value == null) return oldValue;
 
+    // Block non-numeric input
+    if (value == null) {
+      return oldValue;
+    }
+
+    // 🚫 Block immediately if out of range
     if (value < min || value > max) {
-      // ❌ TOLAK INPUT → KEMBALIKAN VALUE LAMA
       return oldValue;
     }
 

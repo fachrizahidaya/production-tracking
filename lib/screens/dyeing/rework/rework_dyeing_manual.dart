@@ -147,11 +147,13 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
               await Future.delayed(const Duration(milliseconds: 200));
               Navigator.pop(context);
               Navigator.pop(context);
+              Navigator.pop(context);
             },
             title: 'Batal Rework Proses Dyeing',
             message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
             buttonBackground: CustomTheme().buttonColor('danger'));
       } else {
+        Navigator.pop(context);
         Navigator.pop(context);
       }
     }

@@ -9,12 +9,11 @@ class StaticFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InputDecorator(
-      decoration: CustomTheme().inputDecoration(),
+      decoration: CustomTheme().inputDisableDecoration(),
       child: Text(
         value,
         style: TextStyle(
           fontSize: CustomTheme().fontSize('md'),
-          fontWeight: CustomTheme().fontWeight('semibold'),
         ),
       ),
     );

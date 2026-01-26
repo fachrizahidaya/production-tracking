@@ -264,6 +264,8 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
               onSubmitFilter: () {
                 _submitFilter();
               },
+              fetchMachine: (service) => service.fetchOptionsCrossCutting(),
+              getMachineOptions: (service) => service.dataListOption,
               dariTanggal: dariTanggal,
               sampaiTanggal: sampaiTanggal,
             ),
@@ -276,56 +278,46 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
             dataList: _dataList,
           ),
         ),
-        floatingActionButton: AnimatedSlide(
-          duration: Duration(milliseconds: 200),
-          offset: _showFab ? Offset.zero : Offset(0, 1),
-          child: AnimatedOpacity(
-            duration: Duration(milliseconds: 200),
-            opacity: _showFab ? 1 : 0,
-            child: CustomFloatingButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      final actions = [
-                        DialogActionItem(
-                          icon: Icons.add,
-                          iconColor: CustomTheme().buttonColor('primary'),
-                          title: 'Mulai Cross Cutting',
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const CreateCrossCutting(),
-                              ),
-                            );
-                          },
-                        ),
-                        DialogActionItem(
-                          icon: Icons.check_circle,
-                          iconColor: CustomTheme().buttonColor('warning'),
-                          title: 'Selesai Cross Cutting',
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const FinishCrossCutting(),
-                              ),
-                            );
-                          },
-                        ),
-                      ];
-                      return ActionDialog(actions: actions);
-                    },
-                  );
+        floatingActionButton: CustomFloatingButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  final actions = [
+                    DialogActionItem(
+                      icon: Icons.add,
+                      iconColor: CustomTheme().buttonColor('primary'),
+                      title: 'Mulai Cross Cutting',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const CreateCrossCutting(),
+                          ),
+                        );
+                      },
+                    ),
+                    DialogActionItem(
+                      icon: Icons.check_circle,
+                      iconColor: CustomTheme().buttonColor('warning'),
+                      title: 'Selesai Cross Cutting',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const FinishCrossCutting(),
+                          ),
+                        );
+                      },
+                    ),
+                  ];
+                  return ActionDialog(actions: actions);
                 },
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 72,
-                )),
-          ),
-        ),
+              );
+            },
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 48,
+            )),
       ),
     );
   }

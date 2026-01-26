@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class MachineCard extends StatelessWidget {
   final dynamic data;
@@ -20,6 +21,7 @@ class MachineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('data machine card: $data');
     return LayoutBuilder(
       builder: (context, constraints) {
         final isTablet = constraints.maxWidth > 400;
@@ -68,7 +70,7 @@ class MachineCard extends StatelessWidget {
 
                         // Current Job (if any)
                         if (_hasCurrentJob()) ...[
-                          _buildCurrentJob(isTablet),
+                          _buildCurrentJob(context, isTablet),
                         ],
                       ].separatedBy(CustomTheme().vGap('lg')),
                     ),
@@ -251,10 +253,11 @@ class MachineCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCurrentJob(bool isTablet) {
+  Widget _buildCurrentJob(BuildContext context, bool isTablet) {
     final currentJob = data['used_by'] != null && data['used_by'].isNotEmpty
         ? data['used_by'][0]
         : null;
+
     if (currentJob == null) return const SizedBox.shrink();
 
     return Container(
@@ -292,48 +295,60 @@ class MachineCard extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              // Live indicator
             ].separatedBy(CustomTheme().hGap('lg')),
           ),
-
-          // Job Details
-          Container(
-            padding: CustomTheme().padding('card'),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.grey[200]!),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'WO No.',
-                            style: TextStyle(
-                              fontSize: CustomTheme().fontSize('xs'),
-                              color: Colors.grey[500],
-                            ),
-                          ),
-                          Text(
-                            currentJob['wo_no']?.toString() ?? '-',
-                            style: TextStyle(
-                              fontSize: CustomTheme().fontSize('md'),
-                              fontWeight: CustomTheme().fontWeight('bold'),
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                        ].separatedBy(CustomTheme().vGap('xs')),
-                      ),
-                    ),
-                  ],
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WorkOrderDetail(
+                    id: currentJob['wo_id'].toString(),
+                  ),
                 ),
-              ],
+              );
+            },
+            child: Container(
+              padding: CustomTheme().padding('card'),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: Colors.grey[200]!),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'WO No.',
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('xs'),
+                      color: Colors.grey[500],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          currentJob['wo_no']?.toString() ?? '-',
+                          style: TextStyle(
+                            fontSize:
+                                CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
+                            fontWeight: CustomTheme().fontWeight('bold'),
+                            color: Colors.grey[800],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Icon(
+                        Icons.chevron_right,
+                        size: isTablet ? 24 : 20,
+                        color: Colors.grey[500],
+                      ),
+                    ].separatedBy(CustomTheme().hGap('xs')),
+                  ),
+                ].separatedBy(CustomTheme().vGap('xs')),
+              ),
             ),
           ),
         ].separatedBy(CustomTheme().vGap('lg')),

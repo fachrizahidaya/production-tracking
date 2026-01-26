@@ -6,9 +6,8 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderStats extends StatefulWidget {
   final data;
-  final isFetching;
 
-  const WorkOrderStats({super.key, this.data, this.isFetching});
+  const WorkOrderStats({super.key, this.data});
 
   @override
   State<WorkOrderStats> createState() => _WorkOrderStatsState();
@@ -102,25 +101,20 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.data?.length == 0) return SizedBox();
+    final length = widget.data?.length ?? 0;
 
-    return widget.isFetching == true
-        ? Center(
-            child: Padding(
-              padding: CustomTheme().padding('content'),
-              child: CircularProgressIndicator(),
-            ),
-          )
-        : Wrap(
-            spacing: 16,
-            runSpacing: 8,
-            children: [
-              for (int i = 0; i < widget.data?.length; i++)
-                SizedBox(
-                  width: (MediaQuery.of(context).size.width - 48) / 2,
-                  child: buildStatsCard(i),
-                ),
-            ],
-          );
+    if (length == 0) return const SizedBox();
+
+    return Wrap(
+      spacing: 16,
+      runSpacing: 8,
+      children: [
+        for (int i = 0; i < length; i++)
+          SizedBox(
+            width: (MediaQuery.of(context).size.width - 48) / 2,
+            child: buildStatsCard(i),
+          ),
+      ],
+    );
   }
 }

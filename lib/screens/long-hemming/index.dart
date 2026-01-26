@@ -264,6 +264,8 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
               onSubmitFilter: () {
                 _submitFilter();
               },
+              fetchMachine: (service) => service.fetchOptionsLongHemming(),
+              getMachineOptions: (service) => service.dataListOption,
               dariTanggal: dariTanggal,
               sampaiTanggal: sampaiTanggal,
             ),
@@ -276,54 +278,46 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
             dataList: _dataList,
           ),
         ),
-        floatingActionButton: AnimatedSlide(
-          duration: Duration(milliseconds: 200),
-          offset: _showFab ? Offset.zero : Offset(0, 1),
-          child: AnimatedOpacity(
-            duration: Duration(milliseconds: 200),
-            opacity: _showFab ? 1 : 0,
-            child: CustomFloatingButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      final actions = [
-                        DialogActionItem(
-                          icon: Icons.add,
-                          iconColor: CustomTheme().buttonColor('primary'),
-                          title: 'Mulai Long Hemming',
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const CreateLongHemming(),
-                              ),
-                            );
-                          },
-                        ),
-                        DialogActionItem(
-                          icon: Icons.check_circle,
-                          iconColor: CustomTheme().buttonColor('warning'),
-                          title: 'Selesai Long Hemming',
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const FinishLongHemming(),
-                              ),
-                            );
-                          },
-                        ),
-                      ];
-                      return ActionDialog(actions: actions);
-                    },
-                  );
+        floatingActionButton: CustomFloatingButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  final actions = [
+                    DialogActionItem(
+                      icon: Icons.add,
+                      iconColor: CustomTheme().buttonColor('primary'),
+                      title: 'Mulai Long Hemming',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const CreateLongHemming(),
+                          ),
+                        );
+                      },
+                    ),
+                    DialogActionItem(
+                      icon: Icons.check_circle,
+                      iconColor: CustomTheme().buttonColor('warning'),
+                      title: 'Selesai Long Hemming',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const FinishLongHemming(),
+                          ),
+                        );
+                      },
+                    ),
+                  ];
+                  return ActionDialog(actions: actions);
                 },
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 72,
-                )),
-          ),
-        ),
+              );
+            },
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 48,
+            )),
       ),
     );
   }

@@ -32,7 +32,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
   final UserMenu _userMenu = UserMenu();
 
   bool _isFiltered = false;
-
   bool _firstLoading = true;
   bool _hasMore = true;
   bool _canRead = false;
@@ -99,7 +98,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
   Future<void> _handleSearch(String value) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(Duration(milliseconds: 500), () {
+    _debounce = Timer(const Duration(milliseconds: 500), () {
       setState(() {
         _search = value;
         params['search'] = value;
@@ -195,7 +194,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: Color(0xFFf9fafc),
+        backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: 'Dyeing',
           onReturn: () {
@@ -210,10 +209,12 @@ class _DyeingScreenState extends State<DyeingScreen> {
           onNotification: (notification) {
             if (notification is UserScrollNotification) {
               if (notification.direction == ScrollDirection.reverse) {
+                // scrolling down
                 if (_showFab) {
                   setState(() => _showFab = false);
                 }
               } else if (notification.direction == ScrollDirection.forward) {
+                // scrolling up
                 if (!_showFab) {
                   setState(() => _showFab = true);
                 }
@@ -264,6 +265,8 @@ class _DyeingScreenState extends State<DyeingScreen> {
               onSubmitFilter: () {
                 _submitFilter();
               },
+              fetchMachine: (service) => service.fetchOptionsDyeing(),
+              getMachineOptions: (service) => service.dataListOption,
               dariTanggal: dariTanggal,
               sampaiTanggal: sampaiTanggal,
             ),
@@ -277,10 +280,10 @@ class _DyeingScreenState extends State<DyeingScreen> {
           ),
         ),
         floatingActionButton: AnimatedSlide(
-          duration: Duration(milliseconds: 200),
-          offset: _showFab ? Offset.zero : Offset(0, 1),
+          duration: const Duration(milliseconds: 200),
+          offset: _showFab ? Offset.zero : const Offset(0, 1),
           child: AnimatedOpacity(
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             opacity: _showFab ? 1 : 0,
             child: CustomFloatingButton(
               onPressed: () {
@@ -295,7 +298,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => CreateDyeing(),
+                              builder: (context) => const CreateDyeing(),
                             ),
                           );
                         },
@@ -307,7 +310,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => FinishDyeing(),
+                              builder: (context) => const FinishDyeing(),
                             ),
                           );
                         },
@@ -319,7 +322,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => ReworkDyeing(),
+                              builder: (context) => const ReworkDyeing(),
                             ),
                           );
                         },
@@ -329,10 +332,10 @@ class _DyeingScreenState extends State<DyeingScreen> {
                   },
                 );
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.add,
                 color: Colors.white,
-                size: 72,
+                size: 48,
               ),
             ),
           ),

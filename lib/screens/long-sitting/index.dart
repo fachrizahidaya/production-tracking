@@ -267,6 +267,8 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
               onSubmitFilter: () {
                 _submitFilter();
               },
+              fetchMachine: (service) => service.fetchOptionsLongSitting(),
+              getMachineOptions: (service) => service.dataListOption,
               dariTanggal: dariTanggal,
               sampaiTanggal: sampaiTanggal,
             ),
@@ -279,68 +281,58 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
             dataList: _dataList,
           ),
         ),
-        floatingActionButton: AnimatedSlide(
-          duration: Duration(milliseconds: 200),
-          offset: _showFab ? Offset.zero : Offset(0, 1),
-          child: AnimatedOpacity(
-            duration: Duration(milliseconds: 200),
-            opacity: _showFab ? 1 : 0,
-            child: CustomFloatingButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                leading: Icon(Icons.add,
-                                    color:
-                                        CustomTheme().buttonColor('primary')),
-                                title: Text("Mulai Long Sitting"),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => CreateLongSitting(),
-                                    ),
-                                  );
-                                },
-                              ),
-                              ListTile(
-                                leading: Icon(Icons.check_circle,
-                                    color:
-                                        CustomTheme().buttonColor('warning')),
-                                title: Text("Selesai Long Sitting"),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => FinishLongSitting(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
+        floatingActionButton: CustomFloatingButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListTile(
+                            leading: Icon(Icons.add,
+                                color: CustomTheme().buttonColor('primary')),
+                            title: Text("Mulai Long Sitting"),
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => CreateLongSitting(),
+                                ),
+                              );
+                            },
                           ),
-                        ),
-                      );
-                    },
+                          ListTile(
+                            leading: Icon(Icons.check_circle,
+                                color: CustomTheme().buttonColor('warning')),
+                            title: Text("Selesai Long Sitting"),
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => FinishLongSitting(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 },
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 72,
-                )),
-          ),
-        ),
+              );
+            },
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 48,
+            )),
       ),
     );
   }

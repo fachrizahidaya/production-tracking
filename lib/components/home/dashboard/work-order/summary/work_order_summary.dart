@@ -67,6 +67,8 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
         return '';
       case 'Selesai':
         return 'completed';
+      case 'Dilewati':
+        return 'skipped';
       case 'Diproses':
         return 'in_progress';
       case 'Menunggu Diproses':
@@ -79,6 +81,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
   final List<String> processFilters = [
     'Semua',
     'Selesai',
+    'Dilewati',
     'Diproses',
     'Menunggu Diproses',
   ];
@@ -246,7 +249,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                   ],
                 ),
               ),
-              _buildProcessFilter(),
+              // _buildProcessFilter(),
               Divider(),
               _buildSwipeContent()
             ],

@@ -18,7 +18,7 @@ void showBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
           borderRadius:
-              BorderRadiusDirectional.vertical(top: Radius.circular(8))),
+              BorderRadiusDirectional.vertical(top: Radius.circular(12))),
       isScrollControlled: true,
       isDismissible: true,
       builder: (context) => Padding(

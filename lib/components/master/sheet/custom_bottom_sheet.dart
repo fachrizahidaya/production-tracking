@@ -186,7 +186,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                   hintText: field.hint,
                   border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(
-                      Radius.circular(8),
+                      Radius.circular(12),
                     ),
                   ),
                 ),
@@ -407,7 +407,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       children: [

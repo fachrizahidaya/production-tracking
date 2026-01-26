@@ -3,6 +3,7 @@ import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.d
 import 'package:textile_tracking/components/home/dashboard/machine/machine_section.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/auth/storage.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ActiveMachine extends StatefulWidget {
@@ -27,42 +28,67 @@ class ActiveMachine extends StatefulWidget {
 class _ActiveMachineState extends State<ActiveMachine>
     with TickerProviderStateMixin {
   String selectedProcess = 'All';
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    _tabController = TabController(
-      length: processFilters.length,
-      vsync: this,
-    );
-
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging) return;
-
-      setState(() {
-        selectedIndex = _tabController.index;
-      });
-    });
-    super.initState();
-  }
-
-  final List<String> processFilters = [
-    'All',
-    'Dyeing',
-    'Press',
-    'Tumbler',
-    'Stenter',
-    'Long Sitting',
-    'Long Hemming',
-    'Cross Cutting',
-    'Sewing'
-  ];
-
+  TabController? _tabController;
+  List<String> processFilters = ['All'];
   int selectedIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _loadProcessFilters();
+  }
+
+  Future<void> _loadProcessFilters() async {
+    final menus = await Storage.instance.getMenus();
+    final productionProcesses = getProductionProcesses(menus);
+
+    final allowedProcesses = [
+      'Dyeing',
+      'Press',
+      'Tumbler',
+      'Stenter',
+      'Long Sitting',
+      'Long Hemming',
+      'Cross Cutting',
+      'Sewing',
+    ];
+
+    final filtered =
+        allowedProcesses.where((p) => productionProcesses.contains(p)).toList();
+
+    _tabController?.dispose(); // safety
+
+    setState(() {
+      processFilters = ['All', ...filtered];
+
+      _tabController = TabController(
+        length: processFilters.length,
+        vsync: this,
+      );
+
+      _tabController!.addListener(() {
+        if (_tabController!.indexIsChanging) return;
+
+        setState(() {
+          selectedIndex = _tabController!.index;
+        });
+      });
+    });
+  }
+
+  List<String> getProductionProcesses(List<dynamic> menus) {
+    for (final menu in menus) {
+      if (menu['name'] == 'Produksi') {
+        final children = menu['children'] as List<dynamic>? ?? [];
+        return children.map((e) => e['name'].toString()).toList();
+      }
+    }
+    return [];
+  }
+
+  @override
   void dispose() {
-    _tabController.dispose();
+    _tabController?.dispose();
     super.dispose();
   }
 
@@ -77,7 +103,7 @@ class _ActiveMachineState extends State<ActiveMachine>
 
             return GestureDetector(
               onTap: () {
-                _tabController.animateTo(index);
+                _tabController!.animateTo(index);
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -133,7 +159,7 @@ class _ActiveMachineState extends State<ActiveMachine>
           final filteredUnavailable = filterByProcess(unavailable, process);
 
           return widget.isFetching
-              ? const Center(child: CircularProgressIndicator())
+              ? Center(child: CircularProgressIndicator())
               : Padding(
                   padding: CustomTheme().padding('content'),
                   child: Row(
@@ -168,6 +194,10 @@ class _ActiveMachineState extends State<ActiveMachine>
 
   @override
   Widget build(BuildContext context) {
+    if (_tabController == null) {
+      return SizedBox();
+    }
+
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 

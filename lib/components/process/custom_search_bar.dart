@@ -33,7 +33,15 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   Widget build(BuildContext context) {
     return Container(
         padding: CustomTheme().padding('badge'),
-        color: Colors.white,
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+          ),
+          color: Colors.white,
+        ),
         child: Row(
           children: [
             Expanded(

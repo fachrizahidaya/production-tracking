@@ -62,6 +62,7 @@ class CreateEmbroidery extends StatelessWidget {
             processId: processId,
             handleSubmit: handleSubmit,
             fetchWorkOrder: (service) => service.fetchEmbroideryOptions(id),
+            withOnlyMaklon: true,
           );
         },
         fetchWorkOrder: (service) => service.fetchEmbroideryOptions(),

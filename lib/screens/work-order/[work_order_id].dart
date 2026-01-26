@@ -2,9 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
-import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
-import 'package:textile_tracking/components/work-order/tab/info_tab.dart';
-import 'package:textile_tracking/components/work-order/tab/item_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/wo_info_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/note_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/process_tab.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
@@ -52,7 +50,7 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 5,
+      length: 3,
       child: Scaffold(
           backgroundColor: const Color(0xFFf9fafc),
           appBar: CustomAppBar(
@@ -70,27 +68,18 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
                     text: 'Informasi',
                   ),
                   Tab(
-                    text: 'Material',
-                  ),
-                  Tab(
                     text: 'Proses Produksi',
                   ),
                   Tab(
                     text: 'Catatan',
                   ),
-                  Tab(
-                    text: 'Lampiran',
-                  )
                 ]),
               ),
               Expanded(
                 child: TabBarView(children: [
-                  InfoTab(
+                  WoInfoTab(
                     data: data,
                     isLoading: _firstLoading,
-                  ),
-                  ItemTab(
-                    data: data,
                   ),
                   ProcessTab(
                     data: data,
@@ -98,9 +87,6 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
                   NoteTab(
                     data: data,
                   ),
-                  AttachmentTab(
-                    existingAttachment: data['attachments'] ?? [],
-                  )
                 ]),
               ),
             ],

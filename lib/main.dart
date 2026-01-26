@@ -104,12 +104,12 @@ class MyApp extends StatelessWidget {
         cardTheme: const CardThemeData(
           color: Colors.white,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4))),
+              borderRadius: BorderRadius.all(Radius.circular(12))),
           margin: EdgeInsets.all(0),
           elevation: 0,
         ),
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-        // useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/',

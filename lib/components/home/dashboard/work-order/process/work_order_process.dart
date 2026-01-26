@@ -13,7 +13,6 @@ class WorkOrderProcessScreen extends StatefulWidget {
   final handleRefetch;
   final handleLoadMore;
   final handleFetchData;
-  final handleBuildItem;
   final service;
   final isFiltered;
   final isLoadMore;
@@ -29,7 +28,6 @@ class WorkOrderProcessScreen extends StatefulWidget {
       this.firstLoading,
       this.hasMore,
       this.handleFetchData,
-      this.handleBuildItem,
       this.service,
       this.isFiltered,
       this.isLoadMore});
@@ -60,7 +58,6 @@ class _WorkOrderProcessScreenState extends State<WorkOrderProcessScreen> {
       fetchData: widget.handleFetchData,
       service: widget.service,
       searchQuery: widget.search,
-      itemBuilder: widget.handleBuildItem,
       filterWidget: widget.filterWidget,
       handleRefetch: widget.handleRefetch,
       handleLoadMore: widget.handleLoadMore,

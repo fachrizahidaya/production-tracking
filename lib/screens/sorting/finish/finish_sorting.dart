@@ -27,9 +27,6 @@ class _FinishSortingState extends State<FinishSorting> {
     'rework_reference_id': null,
     'start_by_id': null,
     'end_by_id': null,
-    'weight': null,
-    'width': null,
-    'length': null,
     'notes': '',
     'rework': null,
     'status': null,
@@ -78,6 +75,9 @@ class _FinishSortingState extends State<FinishSorting> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: false,
+        withItemGrade: true,
+        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final sorting = Sorting(
@@ -88,9 +88,6 @@ class _FinishSortingState extends State<FinishSorting> {
           width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
           length_unit_id:
               int.tryParse(form['length_unit_id']?.toString() ?? ''),
-          weight: form['weight'],
-          width: form['width'],
-          length: form['length'],
           notes: form['notes'],
           start_time: form['start_time'],
           end_time: form['end_time'],

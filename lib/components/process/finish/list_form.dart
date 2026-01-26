@@ -11,6 +11,9 @@ class ListForm extends StatefulWidget {
   final length;
   final width;
   final weight;
+  final weightDozen;
+  final gsm;
+  final totalWeight;
   final note;
   final qty;
   final qtyItem;
@@ -22,15 +25,11 @@ class ListForm extends StatefulWidget {
   final handleSelectWidthUnit;
   final handleSelectQtyUnitItem;
   final handleSelectQtyUnitDyeing;
+  final data;
 
   final handleSelectMachine;
   final isFormIncomplete;
   final isChanged;
-  final initialQty;
-  final initialWeight;
-  final initialLength;
-  final initialWidth;
-  final initialNotes;
   final allAttachments;
   final handlePickAttachments;
   final handleDeleteAttachment;
@@ -41,6 +40,14 @@ class ListForm extends StatefulWidget {
   final showImageDialog;
   final label;
   final forDyeing;
+  final forPacking;
+  final validateWeight;
+  final weightWarning;
+  final validateQty;
+  final qtyWarning;
+  final handleTotalItemQty;
+  final handleRemainingQtyForGrade;
+  final onGradeChanged;
 
   const ListForm(
       {super.key,
@@ -60,10 +67,6 @@ class ListForm extends StatefulWidget {
       this.isFormIncomplete,
       this.processId,
       this.isChanged,
-      this.initialWeight,
-      this.initialLength,
-      this.initialWidth,
-      this.initialNotes,
       this.allAttachments,
       this.handlePickAttachments,
       this.processData,
@@ -73,13 +76,24 @@ class ListForm extends StatefulWidget {
       this.qty,
       this.withQtyAndWeight = false,
       this.handleSelectQtyUnitItem,
-      this.initialQty,
       this.qtyItem,
       this.showImageDialog,
       this.handleDeleteAttachment,
       this.label,
       this.forDyeing,
-      this.handleSelectQtyUnitDyeing});
+      this.handleSelectQtyUnitDyeing,
+      this.data,
+      this.forPacking,
+      this.gsm,
+      this.totalWeight,
+      this.weightDozen,
+      this.validateWeight,
+      this.weightWarning,
+      this.qtyWarning,
+      this.validateQty,
+      this.handleRemainingQtyForGrade,
+      this.handleTotalItemQty,
+      this.onGradeChanged});
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -87,8 +101,6 @@ class ListForm extends StatefulWidget {
 
 class _ListFormState extends State<ListForm> {
   late List<Map<String, dynamic>> _grades;
-  String? _itemWarningValidationMessage;
-  String? _weightWarningValidationMessage;
 
   @override
   void initState() {
@@ -99,79 +111,10 @@ class _ListFormState extends State<ListForm> {
     super.initState();
   }
 
-  double _getTotalItemQty() {
-    final workOrders = widget.processData['work_orders'];
-    if (workOrders == null) return 0;
-
-    final List<dynamic>? items = workOrders['items'];
-
-    if (items == null || items.isEmpty) return 0;
-
-    return items.fold<double>(0, (sum, item) {
-      final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
-      return sum + qty;
-    });
-  }
-
-  void _validateWeight(String weight) {
-    final greigeQty =
-        double.tryParse(widget.processData['work_orders']['greige_qty']);
-    final berat = double.tryParse(weight);
-
-    if (greigeQty == null || berat == null || greigeQty <= 0) {
-      setState(() {
-        _weightWarningValidationMessage = null;
-      });
-      return;
-    }
-
-    final lowerLimit = greigeQty * 0.9;
-    final upperLimit = greigeQty * 1.1;
-
-    if (berat < lowerLimit || berat > upperLimit) {
-      final diffPercent = ((berat - greigeQty) / greigeQty) * 100;
-
-      setState(() {
-        _weightWarningValidationMessage =
-            'Qty ${berat < greigeQty ? 'kurang' : 'lebih'} '
-            '${diffPercent.abs().toStringAsFixed(2)}% '
-            '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
-      });
-    } else {
-      setState(() {
-        _weightWarningValidationMessage = null;
-      });
-    }
-  }
-
-  void _validateQty(String woQty) {
-    final qty = _getTotalItemQty();
-    final berat = double.tryParse(woQty);
-
-    if (qty <= 0 || berat == null) {
-      setState(() {
-        _itemWarningValidationMessage = null;
-      });
-      return;
-    }
-
-    final lowerLimit = qty * 0.9;
-    final upperLimit = qty * 1.1;
-
-    if (berat < lowerLimit || berat > upperLimit) {
-      final diffPercent = ((berat - qty) / qty) * 100;
-
-      setState(() {
-        _itemWarningValidationMessage =
-            'Qty ${berat < qty ? 'kurang' : 'lebih'} '
-            '${diffPercent.abs().toStringAsFixed(2)}% '
-            '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
-      });
-    } else {
-      setState(() {
-        _itemWarningValidationMessage = null;
-      });
-    }
+  double? get greigeQty {
+    return double.tryParse(
+      widget.processData['work_orders']?['greige_qty']?.toString() ?? '',
+    );
   }
 
   @override
@@ -193,9 +136,9 @@ class _ListFormState extends State<ListForm> {
 
       updated.add({
         'item_grade_id': grade['value'],
-        'unit_id': existing['unit_id'] ?? '',
+        'unit_id': existing['unit_id'] ?? 5,
         'notes': existing['notes'] ?? '',
-        'qty': existing['qty'] ?? '',
+        'qty': existing['qty'] ?? '0',
       });
     }
 
@@ -215,6 +158,7 @@ class _ListFormState extends State<ListForm> {
     });
 
     widget.handleChangeInput('grades', _grades);
+    widget.onGradeChanged(_grades);
   }
 
   @override
@@ -246,12 +190,20 @@ class _ListFormState extends State<ListForm> {
         handleSelectQtyUnitDyeing: widget.handleSelectQtyUnitDyeing,
         showImageDialog: widget.showImageDialog,
         handleDeleteAttachment: widget.handleDeleteAttachment,
-        validateWeight: _validateWeight,
-        validateQty: _validateQty,
-        weightWarning: _weightWarningValidationMessage,
-        qtyWarning: _itemWarningValidationMessage,
+        validateWeight: widget.validateWeight,
+        validateQty: widget.validateQty,
+        weightWarning: widget.weightWarning,
+        qtyWarning: widget.qtyWarning,
         label: widget.label,
         forDyeing: widget.forDyeing,
+        data: widget.data,
+        forPacking: widget.forPacking,
+        greigeQty: greigeQty,
+        gsm: widget.gsm,
+        weightDozen: widget.weightDozen,
+        totalWeight: widget.totalWeight,
+        handleRemainingQtyForGrade: widget.handleRemainingQtyForGrade,
+        handleTotalItemQty: widget.handleTotalItemQty,
       ),
     );
   }

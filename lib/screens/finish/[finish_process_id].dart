@@ -6,7 +6,6 @@ import 'package:textile_tracking/components/master/button/process_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/process/finish/work_order_info_tab.dart';
 import 'package:textile_tracking/components/process/finish/finish_form_tab.dart';
-import 'package:textile_tracking/components/process/finish/work_order_item_tab.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -34,6 +33,7 @@ class FinishProcessManual extends StatefulWidget {
   final fetchItemGrade;
   final getItemGradeOptions;
   final processId;
+  final forPacking;
 
   const FinishProcessManual(
       {super.key,
@@ -54,7 +54,8 @@ class FinishProcessManual extends StatefulWidget {
       this.getItemGradeOptions,
       this.withQtyAndWeight,
       this.processId,
-      this.forDyeing});
+      this.forDyeing,
+      this.forPacking});
 
   @override
   State<FinishProcessManual> createState() => _FinishProcessManualState();
@@ -76,6 +77,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   final TextEditingController _lengthController = TextEditingController();
   final TextEditingController _widthController = TextEditingController();
   final TextEditingController _qtyController = TextEditingController();
+  final TextEditingController _weightDozenController = TextEditingController();
+  final TextEditingController _gsmController = TextEditingController();
+  final TextEditingController _totalWeightController = TextEditingController();
   final TextEditingController _qtyItemController = TextEditingController();
   final List<TextEditingController> _qtyControllers = [];
   final List<TextEditingController> _notesControllers = [];
@@ -88,6 +92,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   Map<String, dynamic> woData = {};
   Map<String, dynamic> data = {};
 
+  String? _weightWarningValidationMessage;
+  String? _itemWarningValidationMessage;
+
   var processId = '';
 
   @override
@@ -98,6 +105,11 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     _lengthController.text = widget.form?['length']?.toString() ?? '';
     _widthController.text = widget.form?['width']?.toString() ?? '';
     _noteController.text = widget.form?['notes']?.toString() ?? '';
+    _weightDozenController.text =
+        widget.form?['weight_per_dozen']?.toString() ?? '';
+    _gsmController.text = widget.form?['gsm']?.toString() ?? '';
+    _totalWeightController.text =
+        widget.form?['total_weight']?.toString() ?? '';
 
     if (widget.processId != null) {
       _getProcessView(widget.processId);
@@ -230,6 +242,18 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         _weightController.text = data['weight'].toString();
         widget.form?['weight'] = data['weight'];
       }
+      if (data['weight_per_dozen'] != null) {
+        _weightDozenController.text = data['weight_per_dozen'].toString();
+        widget.form?['weight_per_dozen'] = data['weight_per_dozen'];
+      }
+      if (data['gsm'] != null) {
+        _gsmController.text = data['gsm'].toString();
+        widget.form?['gsm'] = data['gsm'];
+      }
+      if (data['total_weight'] != null) {
+        _totalWeightController.text = data['total_weight'].toString();
+        widget.form?['total_weight'] = data['total_weight'];
+      }
       if (data['item_qty'] != null) {
         _qtyItemController.text = data['item_qty'].toString();
         widget.form?['item_qty'] = data['item_qty'];
@@ -297,10 +321,38 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
               await Future.delayed(const Duration(milliseconds: 200));
               Navigator.pop(context);
               Navigator.pop(context);
+              Navigator.pop(context);
             },
             title: 'Batal',
             message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
             buttonBackground: CustomTheme().buttonColor('danger'));
+      } else {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      }
+    }
+  }
+
+  Future<void> _handleSubmit(BuildContext context) async {
+    if (context.mounted) {
+      if (widget.form?['wo_id'] != null) {
+        showConfirmationDialog(
+            context: context,
+            isLoading: _isSubmitting,
+            onConfirm: () async {
+              await Future.delayed(const Duration(milliseconds: 200));
+              _isSubmitting.value = true;
+              try {
+                await widget.handleSubmit(
+                  data['id']?.toString() ?? processId,
+                );
+              } finally {
+                _isSubmitting.value = false;
+              }
+            },
+            title: 'Selesai Proses ${widget.label}',
+            message: 'Anda yakin ingin menyelesaikan proses?',
+            buttonBackground: CustomTheme().buttonColor('primary'));
       } else {
         Navigator.pop(context);
       }
@@ -470,9 +522,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             while (widget.form!['grades'].length <= index) {
               widget.form!['grades'].add({
                 'item_grade_id': '',
-                'unit_id': '',
+                'unit_id': 5,
                 'unit': {},
-                'qty': '',
+                'qty': '0',
                 'notes': '',
               });
             }
@@ -546,6 +598,136 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     );
   }
 
+  double _getTotalItemQty() {
+    final workOrders = data['work_orders'];
+    if (workOrders == null) return 0;
+
+    final List<dynamic>? items = workOrders['items'];
+
+    if (items == null || items.isEmpty) return 0;
+
+    return items.fold<double>(0, (sum, item) {
+      final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
+      return sum + qty;
+    });
+  }
+
+  void _validateWeight(String weight) {
+    final greigeQty = double.tryParse(data['work_orders']['greige_qty']);
+    final berat = double.tryParse(weight);
+
+    if (greigeQty == null || berat == null || greigeQty <= 0) {
+      setState(() {
+        _weightWarningValidationMessage = null;
+      });
+      return;
+    }
+
+    final lowerLimit = greigeQty * 0.9;
+    final upperLimit = greigeQty * 1.1;
+
+    if (berat < lowerLimit || berat > upperLimit) {
+      final diffPercent = ((berat - greigeQty) / greigeQty) * 100;
+
+      setState(() {
+        _weightWarningValidationMessage =
+            'Qty ${berat < greigeQty ? 'kurang' : 'lebih'} '
+            '${diffPercent.abs().toStringAsFixed(2)}% '
+            '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
+      });
+    } else {
+      setState(() {
+        _weightWarningValidationMessage = null;
+      });
+    }
+  }
+
+  void _validateQty(String woQty) {
+    final qty = _getTotalItemQty();
+    final berat = double.tryParse(woQty);
+
+    if (qty <= 0 || berat == null) {
+      setState(() {
+        _itemWarningValidationMessage = null;
+      });
+      return;
+    }
+
+    final lowerLimit = qty * 0.9;
+    final upperLimit = qty * 1.1;
+
+    if (berat < lowerLimit || berat > upperLimit) {
+      final diffPercent = ((berat - qty) / qty) * 100;
+
+      setState(() {
+        _itemWarningValidationMessage =
+            'Qty ${berat < qty ? 'kurang' : 'lebih'} '
+            '${diffPercent.abs().toStringAsFixed(2)}% '
+            '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
+      });
+    } else {
+      setState(() {
+        _itemWarningValidationMessage = null;
+      });
+    }
+  }
+
+  double getTotalItemQty() {
+    final items = data['work_orders']?['items'] as List<dynamic>?;
+
+    if (items == null || items.isEmpty) return 0;
+
+    return items.fold<double>(0, (sum, item) {
+      final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
+      return sum + qty;
+    });
+  }
+
+  double getRemainingQtyForGrade(int index) {
+    final totalQty = getTotalItemQty();
+    if (totalQty == 0) return 0;
+
+    final grades = widget.form?['grades'] as List<dynamic>?;
+
+    if (grades == null) return totalQty;
+
+    double usedQty = 0;
+
+    for (int i = 0; i < grades.length; i++) {
+      if (i == index) continue;
+
+      final qty = double.tryParse(
+            grades[i]?['qty']?.toString() ?? '0',
+          ) ??
+          0;
+
+      usedQty += qty;
+    }
+
+    final remaining = totalQty - usedQty;
+
+    return remaining < 0 ? 0 : remaining;
+  }
+
+  bool isQtyFullyDistributed() {
+    final totalQty = getTotalItemQty();
+    if (totalQty <= 0) return false;
+
+    final grades = widget.form?['grades'] as List<dynamic>?;
+    if (grades == null || grades.isEmpty) return false;
+
+    return grades.any((g) {
+      final qty = double.tryParse(g['qty']?.toString() ?? '0') ?? 0;
+      return qty > 0;
+    });
+  }
+
+  void _onGradeChanged(List<dynamic> grades) {
+    setState(() {
+      widget.form!['grades'] = grades;
+    });
+  }
+
   @override
   void dispose() {
     if (widget.form != null) {
@@ -563,7 +745,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
+      // 3,
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
@@ -588,9 +771,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                   Tab(
                     text: 'Informasi',
                   ),
-                  Tab(
-                    text: 'Material',
-                  ),
                 ]),
               ),
               Expanded(
@@ -612,6 +792,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                     note: _noteController,
                     qtyItem: _qtyControllers,
                     weight: _weightController,
+                    gsm: _gsmController,
+                    weightDozen: _weightDozenController,
+                    totalWeight: _totalWeightController,
                     handleSelectWo: _selectWorkOrder,
                     handleSelectQtyUnitItem: _selectQtyItemUnit,
                     handleSelectQtyUnitDyeing: _selectQtyDyeingUnit,
@@ -623,13 +806,19 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                     withQtyAndWeight: widget.withQtyAndWeight,
                     label: widget.label,
                     forDyeing: widget.forDyeing,
+                    data: data['work_orders'],
+                    forPacking: widget.forPacking,
+                    validateWeight: _validateWeight,
+                    weightWarning: _weightWarningValidationMessage,
+                    validateQty: _validateQty,
+                    qtyWarning: _itemWarningValidationMessage,
+                    handleRemainingQtyForGrade: getRemainingQtyForGrade,
+                    handleTotalItemQty: getTotalItemQty,
+                    onGradeChanged: _onGradeChanged,
                   ),
                   WorkOrderInfoTab(
                     data: data['work_orders'],
                     label: widget.label,
-                  ),
-                  WorkOrderItemTab(
-                    data: woData,
                   ),
                 ]),
               )
@@ -642,8 +831,14 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             labelProcess: 'Selesai',
             processId: processId,
             formKey: _formKey,
-            handleSubmit: widget.handleSubmit,
+            handleSubmit: _handleSubmit,
             handleCancel: _handleCancel,
+            weightWarning: _weightWarningValidationMessage,
+            qtyWarning: _itemWarningValidationMessage,
+            qty: _qtyController.text,
+            weight: _weightController.text,
+            isQtyFullyDistributed: isQtyFullyDistributed,
+            withItemGrade: widget.withItemGrade,
           ),
         ),
       ),

@@ -1,9 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/card/custom_card.dart';
-import 'package:textile_tracking/components/master/card/custom_badge.dart';
-import 'package:textile_tracking/components/master/text/view_text.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/components/process/finish/work_order_item_tab.dart';
+import 'package:textile_tracking/components/process/info_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:html/parser.dart' as html_parser;
 
@@ -35,42 +35,32 @@ class _WorkOrderInfoTabState extends State<WorkOrderInfoTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: CustomTheme().padding('content'),
-      child: widget.data.isEmpty
-          ? Center(child: Text('No Data'))
-          : CustomCard(
-              child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isTablet = constraints.maxWidth > 600;
+        return SingleChildScrollView(
+          padding: CustomTheme().padding('content'),
+          child: widget.data == null
+              ? NoData()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.data['wo_no']?.toString() ?? '-',
-                      style: TextStyle(
-                          fontSize: CustomTheme().fontSize('2xl'),
-                          fontWeight: CustomTheme().fontWeight('bold')),
+                    InfoTab(
+                      data: widget.data,
+                      isTablet: isTablet,
+                      label: widget.label,
+                      withNote: true,
                     ),
-                    CustomBadge(
-                      title: widget.data['status'] ?? '-',
-                      withStatus: true,
-                      status: widget.data['status'],
+                    WorkOrderItemTab(
+                      data: widget.data,
                     ),
-                  ].separatedBy(CustomTheme().hGap('xl')),
+                    AttachmentTab(
+                      existingAttachment: widget.data['attachments'] ?? [],
+                    ),
+                  ].separatedBy(CustomTheme().vGap('2xl')),
                 ),
-                ViewText(
-                    viewLabel: 'Jumlah Greige',
-                    viewValue: widget.data['greige_qty'] != null &&
-                            widget.data['greige_qty'].toString().isNotEmpty
-                        ? '${NumberFormat("#,###.#").format(double.tryParse(widget.data['greige_qty'].toString()) ?? 0)} ${widget.data['greige_unit']?['code'] ?? ''}'
-                        : 'No Data'),
-                ViewText(
-                    viewLabel: 'Catatan ${widget.label}',
-                    viewValue: widget.data['notes'] != null
-                        ? htmlToPlainText(widget.data['notes'])
-                        : 'No Data'),
-              ].separatedBy(CustomTheme().vGap('xl')),
-            )),
+        );
+      },
     );
   }
 }

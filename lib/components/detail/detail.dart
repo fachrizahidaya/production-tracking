@@ -20,7 +20,6 @@ class Detail extends StatefulWidget {
   final handleSelectLengthUnit;
   final handleSelectWidthUnit;
   final handleSelectMachine;
-  final handleUpdate;
   final refetch;
   final hasMore;
   final fieldControllers;
@@ -45,7 +44,9 @@ class Detail extends StatefulWidget {
   final canDelete;
   final canUpdate;
   final handleDelete;
+  final handleRefetch;
   final handleNavigateToUpdate;
+  final handleNavigateToFinish;
 
   const Detail(
       {super.key,
@@ -57,7 +58,6 @@ class Detail extends StatefulWidget {
       this.isSubmitting,
       this.handleChangeInput,
       this.handleSelectMachine,
-      this.handleUpdate,
       this.refetch,
       this.hasMore,
       this.length,
@@ -82,7 +82,9 @@ class Detail extends StatefulWidget {
       this.canDelete,
       this.canUpdate,
       this.handleNavigateToUpdate,
-      this.handleDelete});
+      this.handleDelete,
+      this.handleRefetch,
+      this.handleNavigateToFinish});
 
   @override
   State<Detail> createState() => _DetailState();
@@ -301,12 +303,13 @@ class _DetailState extends State<Detail> {
       child: Scaffold(
         backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
-          title: '${widget.label} Detail',
+          title: 'Detail Proses ${widget.label}',
           onReturn: () => Navigator.pop(context),
           canDelete: widget.canDelete,
           canUpdate: widget.canUpdate,
           handleDelete: widget.handleDelete,
           handleUpdate: widget.handleNavigateToUpdate,
+          handleFinish: widget.handleNavigateToFinish,
           id: widget.data['id'],
           status: widget.data['can_delete'],
         ),
@@ -318,18 +321,16 @@ class _DetailState extends State<Detail> {
                 ? NoData()
                 : DetailList(
                     data: widget.data,
-                    form: widget.form,
                     existingAttachment: existingAttachments,
+                    existingGrades: existingGrades,
+                    handleBuildAttachment: _buildAttachmentList,
                     no: widget.no,
                     withItemGrade: widget.withItemGrade,
-                    qty: widget.qty,
-                    handleSelectQtyUnit: widget.handleSelectQtyUnit,
-                    existingGrades: existingGrades,
-                    notes: widget.notes,
                     withQtyAndWeight: widget.withQtyAndWeight,
-                    handleBuildAttachment: _buildAttachmentList,
                     label: widget.label,
                     forDyeing: widget.forDyeing,
+                    maklon: widget.maklon,
+                    onRefresh: widget.handleRefetch,
                   ),
       ),
     );

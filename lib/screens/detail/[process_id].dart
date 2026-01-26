@@ -41,25 +41,26 @@ class ProcessDetail<T> extends StatefulWidget {
   final onlySewing;
   final forDyeing;
 
-  const ProcessDetail(
-      {super.key,
-      required this.id,
-      required this.no,
-      required this.service,
-      required this.handleUpdateService,
-      required this.handleDeleteService,
-      required this.modelBuilder,
-      this.canDelete = false,
-      this.canUpdate = false,
-      this.label,
-      this.route,
-      this.fetchMachine,
-      this.getMachineOptions,
-      this.withItemGrade,
-      this.withQtyAndWeight,
-      this.withMaklon,
-      this.onlySewing,
-      this.forDyeing});
+  const ProcessDetail({
+    super.key,
+    required this.id,
+    required this.no,
+    required this.service,
+    required this.handleUpdateService,
+    required this.handleDeleteService,
+    required this.modelBuilder,
+    this.canDelete = false,
+    this.canUpdate = false,
+    this.label,
+    this.route,
+    this.fetchMachine,
+    this.getMachineOptions,
+    this.withItemGrade,
+    this.withQtyAndWeight,
+    this.withMaklon,
+    this.onlySewing,
+    this.forDyeing,
+  });
 
   @override
   State<ProcessDetail<T>> createState() => _ProcessDetailState<T>();
@@ -201,9 +202,15 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       final message =
           await widget.handleUpdateService(context, id, item, _isLoading);
 
-      showAlertDialog(
-          context: context, title: 'Dyeing Updated', message: message);
-      Navigator.pushNamedAndRemoveUntil(context, widget.route, (_) => false);
+      Navigator.pop(context, true);
+      Navigator.pop(context, true);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showAlertDialog(
+            context: context,
+            title: '${widget.label} Diubah',
+            message: message);
+      });
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
@@ -211,7 +218,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   Future<void> _handleNavigateToUpdate() async {
-    Navigator.push(
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => UpdateProcess(
@@ -238,7 +245,13 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         ),
       ),
     );
+
+    if (result == true) {
+      _getDataView();
+    }
   }
+
+  Future<void> _handleNavigateToFinish() async {}
 
   Future<void> _handleDelete(String id) async {
     showConfirmationDialog(
@@ -510,7 +523,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       handleSelectWidthUnit: _selectWidthUnit,
       handleSelectQtyItemUnit: _selectQtyItemUnit,
       handleSelectMachine: _selectMachine,
-      handleUpdate: _handleUpdate,
       refetch: _getDataView,
       fieldConfigs: fieldConfigs,
       fieldControllers: {
@@ -535,6 +547,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       canUpdate: widget.canUpdate,
       handleDelete: _handleDelete,
       handleNavigateToUpdate: _handleNavigateToUpdate,
+      handleRefetch: _getDataView,
+      handleNavigateToFinish: _handleNavigateToFinish,
     );
   }
 }

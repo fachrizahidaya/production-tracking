@@ -29,6 +29,10 @@ class FinishFormTab extends StatefulWidget {
   final handleSelectQtyUnit;
   final handleSelectQtyUnitItem;
   final handleSelectQtyUnitDyeing;
+  final data;
+  final weightDozen;
+  final gsm;
+  final totalWeight;
 
   final isSubmitting;
   final isFormIncomplete;
@@ -46,6 +50,14 @@ class FinishFormTab extends StatefulWidget {
   final withQtyAndWeight;
   final label;
   final forDyeing;
+  final forPacking;
+  final validateWeight;
+  final weightWarning;
+  final validateQty;
+  final qtyWarning;
+  final handleTotalItemQty;
+  final handleRemainingQtyForGrade;
+  final onGradeChanged;
 
   const FinishFormTab(
       {super.key,
@@ -90,7 +102,19 @@ class FinishFormTab extends StatefulWidget {
       this.withItemGrade,
       this.withQtyAndWeight,
       this.label,
-      this.forDyeing});
+      this.forDyeing,
+      this.data,
+      this.forPacking,
+      this.weightDozen,
+      this.gsm,
+      this.totalWeight,
+      this.validateWeight,
+      this.weightWarning,
+      this.qtyWarning,
+      this.validateQty,
+      this.handleRemainingQtyForGrade,
+      this.handleTotalItemQty,
+      this.onGradeChanged});
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();
@@ -104,48 +128,65 @@ class _FinishFormTabState extends State<FinishFormTab>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
     if (widget.isLoading) {
       return Center(
         child: CircularProgressIndicator(),
       );
     }
 
-    return SingleChildScrollView(
-      child: Container(
-        padding: CustomTheme().padding('content'),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FinishSection(
-              formKey: widget.formKey,
-              form: widget.form,
-              note: widget.note,
-              weight: widget.weight,
-              width: widget.width,
-              length: widget.length,
-              handleSelectWo: widget.handleSelectWo,
-              handleSelectUnit: widget.handleSelectUnit,
-              handleChangeInput: widget.handleChangeInput,
-              handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
-              handleSelectQtyUnitDyeing: widget.handleSelectQtyUnitDyeing,
-              id: widget.id,
-              processId: widget.processId,
-              processData: widget.processData,
-              isLoading: widget.isLoading,
-              handleSelectLengthUnit: widget.handleSelectLengthUnit,
-              handleSelectWidthUnit: widget.handleSelectWidthUnit,
-              withItemGrade: widget.withItemGrade,
-              itemGradeOption: widget.itemGradeOption,
-              handleSelectQtyUnit: widget.handleSelectQtyUnit,
-              qty: widget.qty,
-              withQtyAndWeight: widget.withQtyAndWeight,
-              qtyItem: widget.qtyItem,
-              label: widget.label,
-              forDyeing: widget.forDyeing,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: Container(
+            padding: CustomTheme().padding('content'),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FinishSection(
+                  formKey: widget.formKey,
+                  form: widget.form,
+                  note: widget.note,
+                  weight: widget.weight,
+                  width: widget.width,
+                  length: widget.length,
+                  handleSelectWo: widget.handleSelectWo,
+                  handleSelectUnit: widget.handleSelectUnit,
+                  handleChangeInput: widget.handleChangeInput,
+                  handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
+                  handleSelectQtyUnitDyeing: widget.handleSelectQtyUnitDyeing,
+                  id: widget.id,
+                  processId: widget.processId,
+                  processData: widget.processData,
+                  isLoading: widget.isLoading,
+                  handleSelectLengthUnit: widget.handleSelectLengthUnit,
+                  handleSelectWidthUnit: widget.handleSelectWidthUnit,
+                  withItemGrade: widget.withItemGrade,
+                  itemGradeOption: widget.itemGradeOption,
+                  handleSelectQtyUnit: widget.handleSelectQtyUnit,
+                  qty: widget.qty,
+                  withQtyAndWeight: widget.withQtyAndWeight,
+                  qtyItem: widget.qtyItem,
+                  label: widget.label,
+                  forDyeing: widget.forDyeing,
+                  data: widget.data,
+                  forPacking: widget.forPacking,
+                  gsm: widget.gsm,
+                  weightDozen: widget.weightDozen,
+                  totalWeight: widget.totalWeight,
+                  validateWeight: widget.validateWeight,
+                  weightWarning: widget.weightWarning,
+                  validateQty: widget.validateQty,
+                  qtyWarning: widget.qtyWarning,
+                  handleRemainingQtyForGrade: widget.handleRemainingQtyForGrade,
+                  handleTotalItemQty: widget.handleTotalItemQty,
+                  onGradeChanged: widget.onGradeChanged,
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

@@ -14,9 +14,6 @@ class ProcessTab extends StatefulWidget {
 class _ProcessTabState extends State<ProcessTab> {
   @override
   Widget build(BuildContext context) {
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-
     final List<Map<String, dynamic>> items =
         (widget.data?['processes'] ?? []).cast<Map<String, dynamic>>();
 
@@ -25,16 +22,14 @@ class _ProcessTabState extends State<ProcessTab> {
           ? Center(child: Text('No Data'))
           : GridView.builder(
               padding: CustomTheme().padding('content'),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 520, // adjust
                 mainAxisSpacing: 16,
-                childAspectRatio: isPortrait ? 3 / 2 : 3 / 1.2,
+                crossAxisSpacing: 16,
               ),
               itemCount: items.length,
               itemBuilder: (context, index) {
-                final item = items[index];
-                return ProcessItem(item: item);
+                return ProcessItem(item: items[index]);
               },
             ),
     );

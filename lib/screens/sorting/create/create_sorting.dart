@@ -59,6 +59,7 @@ class CreateSorting extends StatelessWidget {
           processId: processId,
           handleSubmit: handleSubmit,
           fetchWorkOrder: (service) => service.fetchSortingOptions(id),
+          withNoMaklonOrMachine: true,
         );
       },
       fetchWorkOrder: (service) => service.fetchSortingOptions(),

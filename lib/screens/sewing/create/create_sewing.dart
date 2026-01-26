@@ -61,6 +61,7 @@ class CreateSewing extends StatelessWidget {
           processId: processId,
           handleSubmit: handleSubmit,
           fetchWorkOrder: (service) => service.fetchSewingOptions(id),
+          withMaklonOrMachine: true,
         );
       },
       fetchWorkOrder: (service) => service.fetchSewingOptions(),

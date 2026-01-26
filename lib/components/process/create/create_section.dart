@@ -10,7 +10,7 @@ class CreateSection extends StatefulWidget {
   final selectMachine;
   final id;
   final isLoading;
-  final maklon;
+  final maklonName;
   final isMaklon;
   final withMaklonOrMachine;
   final withOnlyMaklon;
@@ -24,7 +24,7 @@ class CreateSection extends StatefulWidget {
       this.selectMachine,
       this.id,
       this.isLoading,
-      this.maklon,
+      this.maklonName,
       this.isMaklon,
       this.withMaklonOrMachine,
       this.withOnlyMaklon,
@@ -37,21 +37,12 @@ class CreateSection extends StatefulWidget {
 class _CreateSectionState extends State<CreateSection> {
   @override
   Widget build(BuildContext context) {
-    if (widget.isLoading) {
-      return Container(
-        color: const Color(0xFFEBEBEB),
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
     return ListForm(
       formKey: widget.formKey,
       isMaklon: widget.isMaklon,
       id: widget.id,
       form: widget.form,
-      maklon: widget.maklon,
+      maklonName: widget.maklonName,
       selectWorkOrder: widget.selectWorkOrder,
       selectMachine: widget.selectMachine,
       withMaklonOrMachine: widget.withMaklonOrMachine,

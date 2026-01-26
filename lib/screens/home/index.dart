@@ -25,6 +25,7 @@ class _HomeState extends State<Home> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   String user = '';
+  String name = '';
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _HomeState extends State<Home> {
 
     setState(() {
       user = loggedInUser?.username ?? '';
+      name = loggedInUser?.name ?? '';
     });
   }
 
@@ -147,6 +149,7 @@ class _HomeState extends State<Home> {
               handleLogout: () => _handleLogout(context),
               isWithAccount: true,
               user: user,
+              name: name,
             ),
             drawer: AppDrawer(
               handleLogout: () => _handleLogout(context),

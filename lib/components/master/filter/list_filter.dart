@@ -28,38 +28,20 @@ class DropdownConfig<T> {
 
 class ListFilter<T> extends StatefulWidget {
   final String title;
-  final List<DropdownConfig<T>>? dropdownConfigs;
   final bool useDateFilter;
-  final DateTime? initialStartDate;
-  final DateTime? initialEndDate;
-  final ValueChanged<DateTime?>? onStartDateChanged;
-  final ValueChanged<DateTime?>? onEndDateChanged;
   final params;
   final onHandleFilter;
   final onSubmitFilter;
-  final fetchMachine;
-  final getMachineOptions;
-  final fetchOperators;
-  final getOperatorOptions;
   final dariTanggal;
   final sampaiTanggal;
 
   const ListFilter(
       {super.key,
       required this.title,
-      this.dropdownConfigs,
       this.useDateFilter = false,
-      this.initialStartDate,
-      this.initialEndDate,
-      this.onStartDateChanged,
-      this.onEndDateChanged,
       this.params,
       this.onHandleFilter,
       this.onSubmitFilter,
-      this.fetchMachine,
-      this.getMachineOptions,
-      this.fetchOperators,
-      this.getOperatorOptions,
       this.dariTanggal,
       this.sampaiTanggal});
 
@@ -133,7 +115,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
 
     return Container(
       padding: CustomTheme().padding('card'),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -226,14 +208,14 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
 
                   return Dialog(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.85,
                       height: MediaQuery.of(context).size.height * 0.6,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: StatefulBuilder(
                         builder: (context, setState) {
@@ -284,7 +266,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                                   horizontal: 12),
                                           border: OutlineInputBorder(
                                             borderRadius:
-                                                BorderRadius.circular(4),
+                                                BorderRadius.circular(12),
                                           ),
                                         ),
                                         onChanged: runSearch,

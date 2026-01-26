@@ -37,8 +37,8 @@ class _FinishDyeingState extends State<FinishDyeing> {
     'start_by_id': null,
     'end_by_id': null,
     'qty': null,
-    'width': '0',
-    'length': '0',
+    'width': null,
+    'length': null,
     'notes': '',
     'rework': null,
     'status': null,
@@ -74,6 +74,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: true,
+        withItemGrade: false,
+        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final dyeing = Dyeing(

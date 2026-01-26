@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use, duplicate_ignore
+
 import 'package:flutter/material.dart';
 
 class CustomTheme {
@@ -152,9 +154,9 @@ class CustomTheme {
       ),
       border: Border.all(
         width: 0.5,
-        color: colors('text-primary'),
+        color: colors('text-primary').withOpacity(0.5),
       ),
-      color: Colors.grey.shade400,
+      color: Colors.grey.shade200.withOpacity(0.5),
     );
   }
 
@@ -717,6 +719,8 @@ class CustomTheme {
         return EdgeInsets.symmetric(horizontal: 16);
       case 'badge':
         return EdgeInsets.symmetric(vertical: 6, horizontal: 12);
+      case 'item-detail':
+        return EdgeInsets.symmetric(vertical: 16, horizontal: 12);
       case 'dialog':
         return EdgeInsets.symmetric(vertical: 8, horizontal: 16);
       case 'badge-rework':
@@ -736,7 +740,7 @@ class CustomTheme {
     switch (type) {
       case 'Menunggu Diproses':
         return Icon(
-          Icons.warning_outlined,
+          Icons.error_outline,
           size: 16,
           color: Color.fromRGBO(113, 113, 123, 1),
         );

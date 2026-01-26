@@ -80,6 +80,9 @@ class _FinishSewingState extends State<FinishSewing> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: false,
+        withItemGrade: false,
+        withQtyAndWeight: true,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final sewing = Sewing(

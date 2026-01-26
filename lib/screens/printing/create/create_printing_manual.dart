@@ -9,6 +9,7 @@ class CreatePrintingManual extends StatelessWidget {
   final handleSubmit;
   final fetchWorkOrder;
   final processId;
+  final withOnlyMaklon;
 
   const CreatePrintingManual(
       {super.key,
@@ -17,7 +18,8 @@ class CreatePrintingManual extends StatelessWidget {
       this.form,
       this.handleSubmit,
       this.fetchWorkOrder,
-      this.processId});
+      this.processId,
+      this.withOnlyMaklon});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class CreatePrintingManual extends StatelessWidget {
       handleSubmit: handleSubmit,
       fetchWorkOrder: (service) => service.fetchPrintingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
-      withOnlyMaklon: true,
+      withOnlyMaklon: withOnlyMaklon,
     );
   }
 }

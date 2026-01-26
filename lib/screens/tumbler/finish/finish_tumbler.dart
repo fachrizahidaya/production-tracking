@@ -38,8 +38,8 @@ class _FinishTumblerState extends State<FinishTumbler> {
     'start_by_id': null,
     'end_by_id': null,
     'weight': null,
-    'width': '0',
-    'length': '0',
+    'width': null,
+    'length': null,
     'notes': '',
     'rework': null,
     'status': null,
@@ -66,7 +66,7 @@ class _FinishTumblerState extends State<FinishTumbler> {
     return FinishProcess(
       title: 'Selesai Tumbler',
       fetchWorkOrder: (service) async =>
-          await service.fetchStenterFinishOptions(),
+          await service.fetchTumblerFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput) =>
@@ -77,6 +77,9 @@ class _FinishTumblerState extends State<FinishTumbler> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: false,
+        withItemGrade: false,
+        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final stenter = Tumbler(

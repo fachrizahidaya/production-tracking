@@ -13,6 +13,12 @@ class ProcessButton extends StatefulWidget {
   final formKey;
   final handleSubmit;
   final handleCancel;
+  final qtyWarning;
+  final weightWarning;
+  final weight;
+  final qty;
+  final bool Function() isQtyFullyDistributed;
+  final withItemGrade;
 
   const ProcessButton(
       {super.key,
@@ -23,15 +29,37 @@ class ProcessButton extends StatefulWidget {
       this.isSubmitting,
       this.handleSubmit,
       this.formKey,
-      this.handleCancel});
+      this.handleCancel,
+      this.weightWarning,
+      this.qtyWarning,
+      this.weight,
+      this.qty,
+      required this.isQtyFullyDistributed,
+      this.withItemGrade});
 
   @override
   State<ProcessButton> createState() => _ProcessButtonState();
 }
 
 class _ProcessButtonState extends State<ProcessButton> {
+  double _parseNum(String? value) {
+    return double.tryParse(value?.trim() ?? '') ?? 0;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final qty = _parseNum(widget.qty);
+    final weight = _parseNum(widget.weight);
+
+    final bool hasBasicError = widget.weightWarning != null ||
+        widget.qtyWarning != null ||
+        qty <= 0 ||
+        weight <= 0;
+
+    final bool isDisabled = widget.withItemGrade == true
+        ? !widget.isQtyFullyDistributed()
+        : hasBasicError;
+
     return SafeArea(
       child: Container(
         color: Colors.white,
@@ -44,14 +72,15 @@ class _ProcessButtonState extends State<ProcessButton> {
                 Expanded(
                   child: CancelButton(
                     label: 'Batal',
+                    customHeight: 48.0,
                     onPressed: () => widget.handleCancel(context),
                   ),
                 ),
                 Expanded(
                     child: FormButton(
                   label: widget.labelProcess,
-                  isLoading: isSubmitting,
-                  isDisabled: widget.form?['wo_id'] == null ? true : false,
+                  isDisabled: isDisabled,
+                  customHeight: 48.0,
                   onPressed: () async {
                     widget.isSubmitting.value = true;
                     try {
@@ -59,11 +88,7 @@ class _ProcessButtonState extends State<ProcessButton> {
                         return;
                       }
                       if (widget.processId != null) {
-                        await widget.handleSubmit(
-                          widget.data['id']?.toString() ?? widget.processId,
-                        );
-                      } else {
-                        await widget.handleSubmit();
+                        await widget.handleSubmit(context);
                       }
                     } finally {
                       widget.isSubmitting.value = false;

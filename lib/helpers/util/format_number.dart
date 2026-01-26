@@ -5,6 +5,12 @@ String formatNumber(dynamic value) {
 
   final number = value is num ? value : num.tryParse(value.toString()) ?? 0;
 
-  final formatter = NumberFormat('#,##0', 'en_US');
+  final hasDecimal = number % 1 != 0;
+
+  final formatter = NumberFormat(
+    hasDecimal ? '#,##0.##' : '#,##0',
+    'en_US',
+  );
+
   return formatter.format(number);
 }

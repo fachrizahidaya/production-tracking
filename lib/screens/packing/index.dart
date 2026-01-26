@@ -276,46 +276,54 @@ class _PackingScreenState extends State<PackingScreen> {
             dataList: _dataList,
           ),
         ),
-        floatingActionButton: CustomFloatingButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  final actions = [
-                    DialogActionItem(
-                      icon: Icons.add,
-                      iconColor: CustomTheme().buttonColor('primary'),
-                      title: 'Mulai Packing',
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const CreatePacking(),
-                          ),
-                        );
-                      },
-                    ),
-                    DialogActionItem(
-                      icon: Icons.check_circle,
-                      iconColor: CustomTheme().buttonColor('warning'),
-                      title: 'Selesai Packing',
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const FinishPacking(),
-                          ),
-                        );
-                      },
-                    ),
-                  ];
-                  return ActionDialog(actions: actions);
+        floatingActionButton: AnimatedSlide(
+          duration: Duration(milliseconds: 200),
+          offset: _showFab ? Offset.zero : Offset(0, 1),
+          child: AnimatedOpacity(
+            duration: Duration(milliseconds: 200),
+            opacity: _showFab ? 1 : 0,
+            child: CustomFloatingButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      final actions = [
+                        DialogActionItem(
+                          icon: Icons.add,
+                          iconColor: CustomTheme().buttonColor('primary'),
+                          title: 'Mulai Packing',
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const CreatePacking(),
+                              ),
+                            );
+                          },
+                        ),
+                        DialogActionItem(
+                          icon: Icons.check_circle,
+                          iconColor: CustomTheme().buttonColor('warning'),
+                          title: 'Selesai Packing',
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const FinishPacking(),
+                              ),
+                            );
+                          },
+                        ),
+                      ];
+                      return ActionDialog(actions: actions);
+                    },
+                  );
                 },
-              );
-            },
-            icon: Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 48,
-            )),
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 72,
+                )),
+          ),
+        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/custom_search_bar.dart';
 import 'package:textile_tracking/components/master/card/custom_card.dart';
+import 'package:textile_tracking/components/master/card/item_process.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
@@ -8,9 +9,6 @@ import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 class ProcessList<T> extends StatefulWidget {
   final BaseCrudService<T> service;
   final String searchQuery;
-  final bool? canCreate;
-  final bool? canDelete;
-  final Widget Function(T item) itemBuilder;
   final Future<void> Function(BuildContext context, T? currentItem)? onForm;
   final void Function(BuildContext context, T item)? onItemTap;
   final Future<List<T>> Function(Map<String, String> params) fetchData;
@@ -22,8 +20,6 @@ class ProcessList<T> extends StatefulWidget {
   final firstLoading;
   final hasMore;
   final isFiltered;
-  final canRead;
-  final showActions;
   final isFetching;
   final isLoadMore;
 
@@ -31,8 +27,6 @@ class ProcessList<T> extends StatefulWidget {
       {super.key,
       required this.service,
       required this.searchQuery,
-      required this.itemBuilder,
-      this.canCreate = false,
       this.onForm,
       this.onItemTap,
       required this.fetchData,
@@ -44,9 +38,6 @@ class ProcessList<T> extends StatefulWidget {
       this.firstLoading,
       this.hasMore,
       this.isFiltered,
-      this.canRead,
-      this.canDelete,
-      this.showActions,
       this.isFetching,
       this.isLoadMore});
 
@@ -56,6 +47,8 @@ class ProcessList<T> extends StatefulWidget {
 
 class _ProcessListState<T> extends State<ProcessList<T>> {
   final ScrollController _scrollController = ScrollController();
+
+  int? _expandedIndex;
 
   @override
   void initState() {
@@ -73,7 +66,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
       showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(12),
         ),
         enableDrag: true,
         isDismissible: true,
@@ -83,6 +76,22 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
         },
       );
     }
+  }
+
+  double? get _adaptiveHeight {
+    final count = widget.dataList.length;
+
+    // Case: only 1 item → adaptive height
+    if (count == 1) {
+      return 100;
+    }
+
+    // Case: multiple items
+    if (_expandedIndex != null) {
+      return 2160;
+    }
+
+    return 640;
   }
 
   @override
@@ -104,41 +113,47 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
               ? NoData()
               : widget.firstLoading
                   ? Center(child: CircularProgressIndicator())
-                  : SizedBox(
-                      height: 500,
-                      child: CustomScrollView(
-                        controller: _scrollController,
-                        slivers: [
-                          SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                if (index >= widget.dataList.length) {
-                                  if (!widget.isLoadMore) {
-                                    Future.delayed(Duration.zero, () {
-                                      widget.handleLoadMore();
-                                    });
-                                  }
+                  : AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      height:
+                          widget.dataList.length == 1 ? null : _adaptiveHeight,
+                      child: NotificationListener<ScrollNotification>(
+                        onNotification: (notification) {
+                          if (notification is OverscrollNotification &&
+                              notification.metrics.axis == Axis.horizontal) {
+                            return true;
+                          }
+                          return false;
+                        },
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          separatorBuilder: (_, __) => CustomTheme().hGap('xl'),
+                          itemCount: widget.hasMore
+                              ? widget.dataList.length + 1
+                              : widget.dataList.length,
+                          itemBuilder: (context, index) {
+                            if (index >= widget.dataList.length) {
+                              if (!widget.isLoadMore) {
+                                Future.microtask(widget.handleLoadMore);
+                              }
+                              return const SizedBox(width: 80);
+                            }
 
-                                  return const SizedBox.shrink();
-                                }
-
-                                final item = widget.dataList[index];
-                                return Padding(
-                                  padding:
-                                      CustomTheme().padding('process-content'),
-                                  child: GestureDetector(
-                                    onTap: () =>
-                                        widget.onItemTap?.call(context, item),
-                                    child: widget.itemBuilder(item),
-                                  ),
-                                );
+                            final item = widget.dataList[index];
+                            return ItemProcess(
+                              item: item,
+                              showTimeline: true,
+                              isExpanded: _expandedIndex == index,
+                              onExpandChanged: (expanded) {
+                                setState(() {
+                                  _expandedIndex = expanded ? index : null;
+                                });
                               },
-                              childCount: widget.hasMore
-                                  ? widget.dataList.length + 1
-                                  : widget.dataList.length,
-                            ),
-                          ),
-                        ],
+                            );
+                          },
+                        ),
                       ),
                     ),
         ],

@@ -9,10 +9,8 @@ import 'package:textile_tracking/components/home/dashboard/filter/process_filter
 import 'package:textile_tracking/components/home/dashboard/filter/summary_filter.dart';
 import 'package:textile_tracking/components/home/dashboard/machine/active_machine.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/process/work_order_process.dart';
-import 'package:textile_tracking/components/home/dashboard/work-order/work_order_pie.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_stats.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/summary/work_order_summary.dart';
-import 'package:textile_tracking/components/master/card/item_process.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/dashboard/machine.dart';
@@ -53,6 +51,7 @@ class _DashboardState extends State<Dashboard> {
   Map<String, String> params = {'search': '', 'page': '0'};
   bool _hasMore = true;
   bool _firstLoading = true;
+  bool isStatsLoading = false;
   bool isChartLoading = false;
   bool isMachineLoading = false;
   bool isSummaryLoading = false;
@@ -154,12 +153,15 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _handleFetchStats() async {
+    setState(() => isStatsLoading = true);
+
     await Provider.of<WorkOrderStatsService>(context, listen: false)
         .getDataList();
 
     setState(() {
       statsList =
           Provider.of<WorkOrderStatsService>(context, listen: false).dataList;
+      isStatsLoading = false;
     });
   }
 
@@ -301,10 +303,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return Center(child: CircularProgressIndicator());
-    }
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -317,10 +315,11 @@ class _DashboardState extends State<Dashboard> {
               padding: CustomTheme().padding('content'),
               sliver: SliverList(
                   delegate: SliverChildListDelegate([
-                WorkOrderStats(data: statsList),
+                WorkOrderStats(data: statsList, isFetching: isStatsLoading),
                 WorkOrderSummary(
                   data: summaryList,
                   handleRefetch: _handleFetchSummary,
+                  isFetching: isSummaryLoading,
                   filterWidget: SummaryFilter(
                     dariTanggal: dariTanggalSummary,
                     sampaiTanggal: sampaiTanggalSummary,
@@ -334,10 +333,6 @@ class _DashboardState extends State<Dashboard> {
                   unavailable: machineList['unavailable'],
                   handleRefetch: _handleFetchMachine,
                   isFetching: isMachineLoading,
-                ),
-                WorkOrderPie(
-                  data: pieList,
-                  process: chartList,
                 ),
                 WorkOrderProcessScreen(
                   data: _dataList,
@@ -361,7 +356,6 @@ class _DashboardState extends State<Dashboard> {
                     await service.getDataList(params);
                     return service.items;
                   },
-                  handleBuildItem: (item) => ItemProcess(item: item),
                   service: WorkOrderProcessService(),
                   isFiltered: _isFiltered,
                 ),

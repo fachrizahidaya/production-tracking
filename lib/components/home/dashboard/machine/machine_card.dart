@@ -21,7 +21,6 @@ class MachineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('data machine card: $data');
     return LayoutBuilder(
       builder: (context, constraints) {
         final isTablet = constraints.maxWidth > 400;

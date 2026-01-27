@@ -3,7 +3,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
-import 'package:textile_tracking/components/master/card/custom_card.dart';
 import 'package:textile_tracking/components/master/card/list_item.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
@@ -48,36 +47,8 @@ class DetailList extends StatefulWidget {
 }
 
 class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
-  late TabController _tabWoController;
-  late TabController _tabController;
-
   @override
   void initState() {
-    _tabWoController = TabController(
-      length: itemWoFilters.length,
-      vsync: this,
-    );
-
-    _tabController = TabController(
-      length: itemFilters.length,
-      vsync: this,
-    );
-
-    _tabWoController.addListener(() {
-      if (_tabWoController.indexIsChanging) return;
-
-      setState(() {
-        selectedItemWoIndex = _tabWoController.index;
-      });
-    });
-
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging) return;
-
-      setState(() {
-        selectedIndex = _tabController.index;
-      });
-    });
     super.initState();
   }
 
@@ -96,8 +67,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _tabWoController.dispose();
-    _tabController.dispose();
     super.dispose();
   }
 
@@ -282,14 +251,18 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               isTablet: isTablet,
             ),
           ),
-          if (widget.data['maklon'] == false ||
-              widget.data['maklon_name'] == null)
-            _buildVerticalDivider(),
-          if (widget.data['maklon'] == true ||
-              widget.data['maklon_name'] != null)
-            Container(),
-          if (widget.data['maklon'] == false ||
-              widget.data['maklon_name'] == null)
+          _buildVerticalDivider(),
+          if (widget.data['maklon'] == true)
+            Expanded(
+              child: _buildQuickInfoItem(
+                icon: Icons.business_outlined,
+                label: 'Maklon',
+                value: widget.data['maklon_name'] ?? '-',
+                isTablet: isTablet,
+              ),
+            ),
+          if (widget.data['machine_id'] != null ||
+              widget.data['machine']?['name'] != null)
             Expanded(
               child: _buildQuickInfoItem(
                 icon: Icons.local_laundry_service_outlined,
@@ -298,18 +271,16 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 isTablet: isTablet,
               ),
             ),
-          if (widget.data['maklon'] == true ||
-              widget.data['maklon_name'] != null)
-            Container(),
-          _buildVerticalDivider(),
-          Expanded(
-            child: _buildQuickInfoItem(
-              icon: Icons.location_on_outlined,
-              label: 'Lokasi',
-              value: widget.data['machine']?['location'] ?? '-',
-              isTablet: isTablet,
+          if (widget.data['maklon'] == false) _buildVerticalDivider(),
+          if (widget.data['maklon'] == false)
+            Expanded(
+              child: _buildQuickInfoItem(
+                icon: Icons.location_on_outlined,
+                label: 'Lokasi',
+                value: widget.data['machine']?['location'] ?? '-',
+                isTablet: isTablet,
+              ),
             ),
-          ),
         ],
       ),
     );
@@ -329,13 +300,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           size: isTablet ? 20 : 18,
           color: Colors.white.withOpacity(0.9),
         ),
-        // Text(
-        //   label,
-        //   style: TextStyle(
-        //     fontSize: isTablet ? 11 : 10,
-        //     color: Colors.white.withOpacity(0.7),
-        //   ),
-        // ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: isTablet ? 11 : 10,
+            color: Colors.white.withOpacity(0.7),
+          ),
+        ),
         Text(
           value,
           style: TextStyle(
@@ -416,10 +387,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             true,
           ),
         ),
-        // _buildProcessFilter(),
-        // _buildSwipeContent(),
-        // _buildProcessWoFilter(),
-        // _buildSwipeWoContent()
       ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
@@ -479,10 +446,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             true,
           ),
         ),
-        // _buildProcessFilter(),
-        // _buildSwipeContent(),
-        // _buildProcessWoFilter(),
-        // _buildSwipeWoContent()
       ],
     );
   }
@@ -1031,188 +994,4 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       ),
     );
   }
-
-  // Widget _buildProcessWoFilter() {
-  //   return SingleChildScrollView(
-  //     scrollDirection: Axis.horizontal,
-  //     child: Padding(
-  //       padding: CustomTheme().padding('card-detail'),
-  //       child: Row(
-  //         children: List.generate(itemWoFilters.length, (index) {
-  //           final isSelected = selectedItemWoIndex == index;
-
-  //           return GestureDetector(
-  //             onTap: () {
-  //               setState(() {
-  //                 selectedItemWoIndex = index;
-  //               });
-
-  //               _tabWoController.animateTo(index);
-  //             },
-  //             child: Container(
-  //               decoration: BoxDecoration(
-  //                 borderRadius: BorderRadius.circular(8),
-  //                 border: Border.all(
-  //                   color: isSelected
-  //                       ? CustomTheme().buttonColor('primary')
-  //                       : Colors.grey.shade400,
-  //                 ),
-  //                 color: isSelected
-  //                     ? CustomTheme().buttonColor('primary')
-  //                     : Colors.white,
-  //                 boxShadow: [CustomTheme().boxShadowTheme()],
-  //               ),
-  //               padding: CustomTheme().padding('badge'),
-  //               child: Text(
-  //                 itemWoFilters[index],
-  //                 style: TextStyle(
-  //                   color: isSelected ? Colors.white : Colors.black,
-  //                 ),
-  //               ),
-  //             ),
-  //           );
-  //         }).separatedBy(CustomTheme().hGap('lg')),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildProcessFilter() {
-  //   return SingleChildScrollView(
-  //     scrollDirection: Axis.horizontal,
-  //     child: Padding(
-  //       padding: CustomTheme().padding('card-detail'),
-  //       child: Row(
-  //         children: List.generate(itemFilters.length, (index) {
-  //           final isSelected = selectedIndex == index;
-
-  //           return GestureDetector(
-  //             onTap: () {
-  //               setState(() {
-  //                 selectedIndex = index;
-  //               });
-
-  //               _tabController.animateTo(index);
-  //             },
-  //             child: Container(
-  //               decoration: BoxDecoration(
-  //                 borderRadius: BorderRadius.circular(8),
-  //                 border: Border.all(
-  //                   color: isSelected
-  //                       ? CustomTheme().buttonColor('primary')
-  //                       : Colors.grey.shade400,
-  //                 ),
-  //                 color: isSelected
-  //                     ? CustomTheme().buttonColor('primary')
-  //                     : Colors.white,
-  //                 boxShadow: [CustomTheme().boxShadowTheme()],
-  //               ),
-  //               padding: CustomTheme().padding('badge'),
-  //               child: Text(
-  //                 itemFilters[index],
-  //                 style: TextStyle(
-  //                   color: isSelected ? Colors.white : Colors.black,
-  //                 ),
-  //               ),
-  //             ),
-  //           );
-  //         }).separatedBy(CustomTheme().hGap('lg')),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildSwipeWoContent() {
-  //   final items = (widget.data['work_orders']['items'] ?? [])
-  //       .cast<Map<String, dynamic>>();
-
-  //   switch (selectedItemWoIndex) {
-  //     case 0:
-  //       return Padding(
-  //         padding: CustomTheme().padding('card-detail'),
-  //         child: CustomCard(
-  //           child: widget.data['work_orders']['notes'] != null
-  //               ? Text(
-  //                   htmlToPlainText(widget.data['work_orders']['notes']),
-  //                   style: TextStyle(
-  //                     fontSize: CustomTheme().fontSize('lg'),
-  //                   ),
-  //                 )
-  //               : NoData(),
-  //         ),
-  //       );
-
-  //     case 1:
-  //       if (items.isEmpty) {
-  //         return const Center(child: Text('No Data'));
-  //       }
-
-  //       return Padding(
-  //         padding: CustomTheme().padding('card-detail'),
-  //         child: Column(
-  //           children: [
-  //             ...items.map(
-  //               (item) => Column(
-  //                 children: [
-  //                   ListItem(item: item),
-  //                   CustomTheme().vGap('xl'),
-  //                 ],
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       );
-
-  //     default:
-  //       return const SizedBox.shrink();
-  //   }
-  // }
-
-  // Widget _buildSwipeContent() {
-  //   switch (selectedIndex) {
-  //     case 0:
-  //       return Padding(
-  //         padding: CustomTheme().padding('card-detail'),
-  //         child: Row(
-  //           children: [
-  //             Expanded(
-  //               child: CustomCard(
-  //                 child: widget.data['notes'] != null
-  //                     ? Text(
-  //                         htmlToPlainText(widget.data['notes']),
-  //                         style: TextStyle(
-  //                           fontSize: CustomTheme().fontSize('lg'),
-  //                         ),
-  //                       )
-  //                     : NoData(),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       );
-
-  //     case 1:
-  //       return Padding(
-  //         padding: CustomTheme().padding('card-detail'),
-  //         child: Row(
-  //           children: [
-  //             Expanded(
-  //               child: CustomCard(
-  //                 child: widget.existingAttachment.isEmpty
-  //                     ? NoData()
-  //                     : Wrap(
-  //                         spacing: 8,
-  //                         runSpacing: 8,
-  //                         children: widget.handleBuildAttachment(context),
-  //                       ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       );
-
-  //     default:
-  //       return const SizedBox.shrink();
-  //   }
-  // }
 }

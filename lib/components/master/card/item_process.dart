@@ -1063,3 +1063,126 @@ class _ItemProcessState extends State<ItemProcess> {
 }
 
 /// Compact Item Process Card
+class CompactItemProcess extends StatelessWidget {
+  final dynamic item;
+  final VoidCallback? onTap;
+
+  const CompactItemProcess({
+    super.key,
+    required this.item,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isTablet = constraints.maxWidth > 400;
+        final processes = item['processes'] as Map<String, dynamic>? ?? {};
+
+        return GestureDetector(
+          onTap: onTap,
+          child: Container(
+            margin: EdgeInsets.only(bottom: isTablet ? 12 : 8),
+            padding: EdgeInsets.all(isTablet ? 16 : 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey[200]!),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                // Item Info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item['name']?.toString() ?? 'Item',
+                        style: TextStyle(
+                          fontSize: isTablet ? 15 : 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[800],
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 6),
+                      // Process Status Dots
+                      Row(
+                        children: _buildProcessDots(processes, isTablet),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Arrow
+                Icon(
+                  Icons.chevron_right,
+                  size: isTablet ? 24 : 20,
+                  color: Colors.grey[400],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  List<Widget> _buildProcessDots(
+      Map<String, dynamic> processes, bool isTablet) {
+    return processes.entries.take(5).map((entry) {
+      final status =
+          entry.value['status']?.toString().toLowerCase() ?? 'pending';
+      final color = _getStatusColor(status);
+
+      return Container(
+        margin: const EdgeInsets.only(right: 6),
+        child: Tooltip(
+          message:
+              '${_capitalizeFirst(entry.key)}: ${_capitalizeFirst(status)}',
+          child: Container(
+            width: isTablet ? 12 : 10,
+            height: isTablet ? 12 : 10,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: color.withOpacity(0.3),
+                width: 2,
+              ),
+            ),
+          ),
+        ),
+      );
+    }).toList();
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'completed':
+      case 'selesai':
+        return Colors.green;
+      case 'in_progress':
+      case 'proses':
+        return Colors.blue;
+      case 'rework':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  String _capitalizeFirst(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1);
+  }
+}

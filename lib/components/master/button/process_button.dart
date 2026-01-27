@@ -51,10 +51,12 @@ class _ProcessButtonState extends State<ProcessButton> {
     final qty = _parseNum(widget.qty);
     final weight = _parseNum(widget.weight);
 
-    final bool hasBasicError = widget.weightWarning != null ||
-        widget.qtyWarning != null ||
-        qty <= 0 ||
-        weight <= 0;
+    final bool hasBasicError =
+        widget.weightWarning != null || widget.qtyWarning != null
+        // ||
+        // qty <= 0 ||
+        // weight <= 0
+        ;
 
     final bool isDisabled = widget.withItemGrade == true
         ? !widget.isQtyFullyDistributed()

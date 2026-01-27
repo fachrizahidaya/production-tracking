@@ -169,6 +169,7 @@ class ListItem extends StatelessWidget {
           if (item['variants'][2] != null)
             Expanded(
               child: _buildInfoChip(
+                title: 'Desain',
                 icon: Icons.design_services_outlined,
                 label: item['variants'][2]['value']?.toString() ?? '-',
                 isTablet: isTablet,
@@ -177,6 +178,7 @@ class ListItem extends StatelessWidget {
           if (item['variants'][0] != null)
             Expanded(
               child: _buildInfoChip(
+                title: 'Bahan',
                 icon: Icons.cut_outlined,
                 label: item['variants'][0]['value']?.toString() ?? '-',
                 isTablet: isTablet,
@@ -185,21 +187,33 @@ class ListItem extends StatelessWidget {
           if (item['variants'][1] != null)
             Expanded(
               child: _buildInfoChip(
+                title: 'Ukuran',
                 icon: Icons.numbers_outlined,
                 label: item['variants'][1]['value']?.toString() ?? '-',
                 isTablet: isTablet,
               ),
             ),
+          if (item['variants'][3] != null) ...[
+            Expanded(
+              child: _buildInfoChip(
+                title: 'GSM',
+                icon: Icons.numbers_outlined,
+                label: item['variants'][3]['value']?.toString() ?? '-',
+                isTablet: isTablet,
+              ),
+            ),
+          ],
           if (item['variants'][4] != null) ...[
             Expanded(
               child: _buildInfoChip(
+                title: 'Warna',
                 icon: Icons.color_lens_outlined,
                 label: item['variants'][4]['value']?.toString() ?? '-',
                 isTablet: isTablet,
               ),
             ),
           ],
-        ].separatedBy(CustomTheme().hGap('lg')),
+        ],
       );
     }
 
@@ -210,26 +224,53 @@ class ListItem extends StatelessWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
-          _buildInfoChip(
-            icon: Icons.design_services_outlined,
-            label: item['variants'][2]['value']?.toString() ?? '-',
-            isTablet: isTablet,
-          ),
-          _buildInfoChip(
-            icon: Icons.color_lens_outlined,
-            label: item['variants'][0]['value']?.toString() ?? '-',
-            isTablet: isTablet,
-          ),
-          _buildInfoChip(
-            icon: Icons.color_lens_outlined,
-            label: item['variants'][1]['value']?.toString() ?? '-',
-            isTablet: isTablet,
-          ),
-          _buildInfoChip(
-            icon: Icons.color_lens_outlined,
-            label: item['variants'][4]['value']?.toString() ?? '-',
-            isTablet: isTablet,
-          ),
+          if (item['variants'][2] != null)
+            Expanded(
+              child: _buildInfoChip(
+                title: 'Desain',
+                icon: Icons.design_services_outlined,
+                label: item['variants'][2]['value']?.toString() ?? '-',
+                isTablet: isTablet,
+              ),
+            ),
+          if (item['variants'][0] != null)
+            Expanded(
+              child: _buildInfoChip(
+                title: 'Bahan',
+                icon: Icons.cut_outlined,
+                label: item['variants'][0]['value']?.toString() ?? '-',
+                isTablet: isTablet,
+              ),
+            ),
+          if (item['variants'][1] != null)
+            Expanded(
+              child: _buildInfoChip(
+                title: 'Ukuran',
+                icon: Icons.numbers_outlined,
+                label: item['variants'][1]['value']?.toString() ?? '-',
+                isTablet: isTablet,
+              ),
+            ),
+          if (item['variants'][3] != null) ...[
+            Expanded(
+              child: _buildInfoChip(
+                title: 'GSM',
+                icon: Icons.numbers_outlined,
+                label: item['variants'][3]['value']?.toString() ?? '-',
+                isTablet: isTablet,
+              ),
+            ),
+          ],
+          if (item['variants'][4] != null) ...[
+            Expanded(
+              child: _buildInfoChip(
+                title: 'Warna',
+                icon: Icons.color_lens_outlined,
+                label: item['variants'][4]['value']?.toString() ?? '-',
+                isTablet: isTablet,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -238,6 +279,7 @@ class ListItem extends StatelessWidget {
   /// Info Chip Widget
   Widget _buildInfoChip({
     required IconData icon,
+    required String title,
     required String label,
     required bool isTablet,
   }) {
@@ -250,6 +292,7 @@ class ListItem extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(
             icon,
@@ -257,15 +300,31 @@ class ListItem extends StatelessWidget {
             color: Colors.grey[600],
           ),
           Flexible(
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('sm'),
-                color: Colors.grey[700],
-                fontWeight: CustomTheme().fontWeight('semibold'),
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('xs'),
+                    color: Colors.grey[500],
+                    fontWeight: CustomTheme().fontWeight('medium'),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('sm'),
+                    color: Colors.grey[700],
+                    fontWeight: CustomTheme().fontWeight('semibold'),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
           ),
         ].separatedBy(CustomTheme().hGap('md')),

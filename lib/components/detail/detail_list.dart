@@ -271,8 +271,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 isTablet: isTablet,
               ),
             ),
-          if (widget.data['maklon'] == false) _buildVerticalDivider(),
-          if (widget.data['maklon'] == false)
+          if (widget.data['machine_id'] != null) _buildVerticalDivider(),
+          if (widget.data['machine_id'] != null)
             Expanded(
               child: _buildQuickInfoItem(
                 icon: Icons.location_on_outlined,

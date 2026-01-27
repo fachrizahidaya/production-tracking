@@ -73,7 +73,9 @@ class _SummaryCardState extends State<SummaryCard>
           onTapUp: (_) => _animationController.reverse(),
           onTapCancel: () => _animationController.reverse(),
           onTap: widget.onTap,
-          child: ScaleTransition(
+          child:
+              // Placeholder()
+              ScaleTransition(
             scale: _scaleAnimation,
             child: _buildCard(isTablet),
           ),
@@ -83,7 +85,15 @@ class _SummaryCardState extends State<SummaryCard>
   }
 
   Widget _buildCard(bool isTablet) {
-    final summary = widget.data['summary'] ?? {};
+    final Map<String, dynamic> summary =
+        (widget.data['summary'] as Map<String, dynamic>?) ??
+            {
+              'completed': 0,
+              'in_progress': 0,
+              'waiting': 0,
+              'skipped': 0,
+            };
+
     final statusColor = _getSummaryColor(summary);
     final progress = _getProgress(summary);
     final waitingList = widget.data['waiting'] as List? ?? [];
@@ -142,7 +152,15 @@ class _SummaryCardState extends State<SummaryCard>
 
   /// Header Section dengan nama dan total
   Widget _buildHeader(Color statusColor, bool isTablet) {
-    final summary = widget.data['summary'] ?? {};
+    final Map<String, dynamic> summary =
+        (widget.data['summary'] as Map<String, dynamic>?) ??
+            {
+              'completed': 0,
+              'in_progress': 0,
+              'waiting': 0,
+              'skipped': 0,
+            };
+
     final total = _getFilteredTotal(summary);
 
     return InkWell(
@@ -691,7 +709,15 @@ class CompactSummaryCard extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isTablet = constraints.maxWidth > 400;
-        final summary = data['summary'] ?? {};
+        final Map<String, dynamic> summary =
+            (data['summary'] as Map<String, dynamic>?) ??
+                {
+                  'completed': 0,
+                  'in_progress': 0,
+                  'waiting': 0,
+                  'skipped': 0,
+                };
+
         final statusColor = _getSummaryColor(summary);
 
         return GestureDetector(

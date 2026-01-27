@@ -114,6 +114,19 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     return filter == 'Semua';
   }
 
+  Map<String, dynamic> _mapApiToSummaryCard(Map<String, dynamic> item) {
+    return {
+      'name': item['process_name'],
+      'summary': {
+        'completed': (item['completed'] as List?)?.length ?? 0,
+        'in_progress': (item['in_progress'] as List?)?.length ?? 0,
+        'waiting': (item['waiting'] as List?)?.length ?? 0,
+        'skipped': (item['skipped'] as List?)?.length ?? 0,
+      },
+      'waiting': item['waiting'] ?? [],
+    };
+  }
+
   Widget _buildProcessFilter() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -183,12 +196,14 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       scrollDirection: Axis.horizontal,
       child: Row(
         children: widget.data!.map<Widget>((item) {
+          final mappedItem = _mapApiToSummaryCard(item);
+
           return Padding(
             padding: CustomTheme().padding('card'),
             child: SizedBox(
               width: 500,
               child: SummaryCard(
-                data: item,
+                data: mappedItem,
                 showProgress: _showProgress,
                 filter: processFilters[selectedIndex],
               ),

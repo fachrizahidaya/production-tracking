@@ -20,24 +20,18 @@ class _WoItemTabState extends State<WoItemTab> {
     final List<Map<String, dynamic>> items =
         (widget.data?['items'] ?? []).cast<Map<String, dynamic>>();
 
-    return Placeholder();
-    // SizedBox(
-    //   height: 500,
-    //   child:
-    //       // items.isEmpty
-    //       //     ? const Center(child: Text('No Data'))
-    //       //     :
-    //       ListView.separated(
-    //     // padding: CustomTheme().padding('content'),
-    //     itemCount: items.length,
-    //     separatorBuilder: (context, index) => CustomTheme().vGap('2xl'),
-    //     itemBuilder: (context, index) {
-    //       final item = items[index];
-    //       return ListItem(
-    //         item: item,
-    //       );
-    //     },
-    //   ),
-    // );
+    return SizedBox(
+      height: 500,
+      child: ListView.separated(
+        itemCount: items.length,
+        separatorBuilder: (context, index) => CustomTheme().vGap('2xl'),
+        itemBuilder: (context, index) {
+          final item = items[index];
+          return ListItem(
+            item: item,
+          );
+        },
+      ),
+    );
   }
 }

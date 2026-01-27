@@ -134,63 +134,63 @@ class ItemProcessCard extends StatelessWidget {
   }
 
   /// Section untuk informasi item (label, field, nested)
-  // Widget _buildInfoSection(bool isTablet) {
-  //   final items = <Widget>[];
+  Widget _buildInfoSection(bool isTablet) {
+    final items = <Widget>[];
 
-  //   if (label != null && label is List) {
-  //     for (var l in label) {
-  //       if (item[l['field']] != null) {
-  //         items.add(_buildInfoItem(
-  //           label: l['label'] ?? '',
-  //           value: item[l['field']].toString(),
-  //           isTablet: isTablet,
-  //         ));
-  //       }
-  //     }
-  //   }
+    if (label != null && label is List) {
+      for (var l in label) {
+        if (item[l['field']] != null) {
+          items.add(_buildInfoItem(
+            label: l['label'] ?? '',
+            value: item[l['field']].toString(),
+            isTablet: isTablet,
+          ));
+        }
+      }
+    }
 
-  //   if (itemField != null && itemField is List) {
-  //     for (var field in itemField) {
-  //       if (item[field['field']] != null) {
-  //         items.add(_buildInfoItem(
-  //           label: field['label'] ?? '',
-  //           value: item[field['field']].toString(),
-  //           isTablet: isTablet,
-  //         ));
-  //       }
-  //     }
-  //   }
+    if (itemField != null && itemField is List) {
+      for (var field in itemField) {
+        if (item[field['field']] != null) {
+          items.add(_buildInfoItem(
+            label: field['label'] ?? '',
+            value: item[field['field']].toString(),
+            isTablet: isTablet,
+          ));
+        }
+      }
+    }
 
-  //   if (nestedField != null && nestedField is List) {
-  //     for (var nested in nestedField) {
-  //       final parentKey = nested['parent'];
-  //       final childKey = nested['child'];
-  //       if (item[parentKey] != null && item[parentKey][childKey] != null) {
-  //         items.add(_buildInfoItem(
-  //           label: nested['label'] ?? '',
-  //           value: item[parentKey][childKey].toString(),
-  //           isTablet: isTablet,
-  //         ));
-  //       }
-  //     }
-  //   }
+    if (nestedField != null && nestedField is List) {
+      for (var nested in nestedField) {
+        final parentKey = nested['parent'];
+        final childKey = nested['child'];
+        if (item[parentKey] != null && item[parentKey][childKey] != null) {
+          items.add(_buildInfoItem(
+            label: nested['label'] ?? '',
+            value: item[parentKey][childKey].toString(),
+            isTablet: isTablet,
+          ));
+        }
+      }
+    }
 
-  //   if (items.isEmpty) return const SizedBox.shrink();
+    if (items.isEmpty) return const SizedBox.shrink();
 
-  //   // Layout grid untuk tablet, column untuk mobile
-  //   if (isTablet) {
-  //     return Wrap(
-  //       spacing: 24,
-  //       runSpacing: 12,
-  //       children: items,
-  //     );
-  //   }
+    // Layout grid untuk tablet, column untuk mobile
+    if (isTablet) {
+      return Wrap(
+        spacing: 24,
+        runSpacing: 12,
+        children: items,
+      );
+    }
 
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: items.separatedBy(const SizedBox(height: 8)),
-  //   );
-  // }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: items.separatedBy(const SizedBox(height: 8)),
+    );
+  }
 
   /// Section untuk Mesin dan Maklon
   Widget _buildMachineAndMaklonSection(bool isTablet) {
@@ -475,124 +475,124 @@ class ItemProcessCard extends StatelessWidget {
   }
 
   /// Section untuk timestamp (created, updated)
-  // Widget _buildTimestampSection(bool isTablet) {
-  //   return Container(
-  //     padding: EdgeInsets.symmetric(
-  //       vertical: isTablet ? 12 : 8,
-  //       horizontal: isTablet ? 12 : 8,
-  //     ),
-  //     decoration: BoxDecoration(
-  //       color: Colors.grey[100],
-  //       borderRadius: BorderRadius.circular(6),
-  //     ),
-  //     child: isTablet
-  //         ? Row(
-  //             children: [
-  //               if (item['start_time'] != null)
-  //                 Expanded(
-  //                     child: _buildTimestampItem(
-  //                   icon: Icons.play_circle_outline,
-  //                   label: 'Mulai',
-  //                   time: item['start_time'],
-  //                   user: item['start_by']?['name'],
-  //                   isTablet: isTablet,
-  //                 )),
-  //               if (item['end_time'] != null) ...[
-  //                 const SizedBox(width: 16),
-  //                 Expanded(
-  //                     child: _buildTimestampItem(
-  //                   icon: Icons.check_circle_outline,
-  //                   label: 'Selesai',
-  //                   time: item['end_time'],
-  //                   user: item['end_by']?['name'],
-  //                   isTablet: isTablet,
-  //                 )),
-  //               ],
-  //             ],
-  //           )
-  //         : Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               if (item['start_time'] != null)
-  //                 _buildTimestampItem(
-  //                   icon: Icons.play_circle_outline,
-  //                   label: 'Mulai',
-  //                   time: item['start_time'],
-  //                   user: item['start_by']?['name'],
-  //                   isTablet: isTablet,
-  //                 ),
-  //               if (item['end_time'] != null) ...[
-  //                 const SizedBox(height: 8),
-  //                 _buildTimestampItem(
-  //                   icon: Icons.check_circle_outline,
-  //                   label: 'Selesai',
-  //                   time: item['end_time'],
-  //                   user: item['end_by']?['name'],
-  //                   isTablet: isTablet,
-  //                 ),
-  //               ],
-  //             ],
-  //           ),
-  //   );
-  // }
+  Widget _buildTimestampSection(bool isTablet) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        vertical: isTablet ? 12 : 8,
+        horizontal: isTablet ? 12 : 8,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: isTablet
+          ? Row(
+              children: [
+                if (item['start_time'] != null)
+                  Expanded(
+                      child: _buildTimestampItem(
+                    icon: Icons.play_circle_outline,
+                    label: 'Mulai',
+                    time: item['start_time'],
+                    user: item['start_by']?['name'],
+                    isTablet: isTablet,
+                  )),
+                if (item['end_time'] != null) ...[
+                  const SizedBox(width: 16),
+                  Expanded(
+                      child: _buildTimestampItem(
+                    icon: Icons.check_circle_outline,
+                    label: 'Selesai',
+                    time: item['end_time'],
+                    user: item['end_by']?['name'],
+                    isTablet: isTablet,
+                  )),
+                ],
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (item['start_time'] != null)
+                  _buildTimestampItem(
+                    icon: Icons.play_circle_outline,
+                    label: 'Mulai',
+                    time: item['start_time'],
+                    user: item['start_by']?['name'],
+                    isTablet: isTablet,
+                  ),
+                if (item['end_time'] != null) ...[
+                  const SizedBox(height: 8),
+                  _buildTimestampItem(
+                    icon: Icons.check_circle_outline,
+                    label: 'Selesai',
+                    time: item['end_time'],
+                    user: item['end_by']?['name'],
+                    isTablet: isTablet,
+                  ),
+                ],
+              ],
+            ),
+    );
+  }
 
   /// Widget untuk single timestamp item
-  // Widget _buildTimestampItem({
-  //   required IconData icon,
-  //   required String label,
-  //   required dynamic time,
-  //   String? user,
-  //   required bool isTablet,
-  // }) {
-  //   return Row(
-  //     mainAxisSize: MainAxisSize.min,
-  //     children: [
-  //       Icon(
-  //         icon,
-  //         size: isTablet ? 16 : 14,
-  //         color: Colors.grey[600],
-  //       ),
-  //       const SizedBox(width: 6),
-  //       Flexible(
-  //         child: Text(
-  //           '$label: ${formatDateSafe(time)}${user != null && user.isNotEmpty ? " • $user" : ""}',
-  //           style: TextStyle(
-  //             fontSize: isTablet ? 12 : 11,
-  //             color: Colors.grey[700],
-  //           ),
-  //           overflow: TextOverflow.ellipsis,
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
+  Widget _buildTimestampItem({
+    required IconData icon,
+    required String label,
+    required dynamic time,
+    String? user,
+    required bool isTablet,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          icon,
+          size: isTablet ? 16 : 14,
+          color: Colors.grey[600],
+        ),
+        const SizedBox(width: 6),
+        Flexible(
+          child: Text(
+            '$label: ${formatDateSafe(time)}${user != null && user.isNotEmpty ? " • $user" : ""}',
+            style: TextStyle(
+              fontSize: isTablet ? 12 : 11,
+              color: Colors.grey[700],
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
 
   /// Widget untuk single info item
-  // Widget _buildInfoItem({
-  //   required String label,
-  //   required String value,
-  //   required bool isTablet,
-  // }) {
-  //   return Row(
-  //     mainAxisSize: MainAxisSize.min,
-  //     children: [
-  //       Text(
-  //         '$label: ',
-  //         style: TextStyle(
-  //           fontSize: isTablet ? 13 : 12,
-  //           color: Colors.grey[600],
-  //         ),
-  //       ),
-  //       Text(
-  //         value,
-  //         style: TextStyle(
-  //           fontSize: isTablet ? 13 : 12,
-  //           fontWeight: FontWeight.w500,
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
+  Widget _buildInfoItem({
+    required String label,
+    required String value,
+    required bool isTablet,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '$label: ',
+          style: TextStyle(
+            fontSize: isTablet ? 13 : 12,
+            color: Colors.grey[600],
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: isTablet ? 13 : 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
 
   /// Helper untuk mengecek apakah ada machine atau maklon
 

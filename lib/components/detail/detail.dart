@@ -10,6 +10,7 @@ import 'package:textile_tracking/components/detail/detail_list.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/format_bytes.dart';
 
 class Detail extends StatefulWidget {
   final data;
@@ -253,19 +254,40 @@ class _DetailState extends State<Detail> {
           : (item['file_name'] ?? filePath?.split('/').last ?? '');
       final String extension = fileName.split('.').last.toLowerCase();
 
+      /// ---- File Size Logic ----
+      String fileSizeText = '';
+
+      if (isNew && filePath != null) {
+        final file = File(filePath);
+        if (file.existsSync()) {
+          final bytes = file.lengthSync();
+          fileSizeText = formatBytes(bytes);
+        }
+      } else {
+        // from API (recommended: send file_size from backend)
+        if (item['file_size'] != null) {
+          fileSizeText = formatBytes(item['file_size']);
+        } else {
+          fileSizeText = 'Unknown size';
+        }
+      }
+
+      /// ---- Preview Logic ----
       Widget preview;
       if (extension == 'pdf') {
-        preview = const Icon(Icons.picture_as_pdf, color: Colors.red, size: 60);
+        preview = const Icon(Icons.picture_as_pdf, color: Colors.red, size: 50);
       } else if (isNew && filePath != null) {
         preview = Image.file(File(filePath), fit: BoxFit.cover);
       } else if (filePath != null &&
           ['png', 'jpg', 'jpeg', 'gif'].contains(extension)) {
-        preview = Image.network('$baseUrl$filePath',
-            fit: BoxFit.cover,
-            errorBuilder: (context, _, __) =>
-                const Icon(Icons.broken_image, size: 60));
+        preview = Image.network(
+          '$baseUrl$filePath',
+          fit: BoxFit.cover,
+          errorBuilder: (context, _, __) =>
+              const Icon(Icons.broken_image, size: 50),
+        );
       } else {
-        preview = const Icon(Icons.insert_drive_file, size: 60);
+        preview = const Icon(Icons.insert_drive_file, size: 50);
       }
 
       return GestureDetector(
@@ -279,10 +301,58 @@ class _DetailState extends State<Detail> {
               }
             : null,
         child: Container(
-          width: 100,
-          height: 100,
-          color: Colors.white,
-          child: preview,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          margin: const EdgeInsets.only(bottom: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              /// Preview
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  color: Colors.grey.shade100,
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: preview,
+              ),
+
+              const SizedBox(width: 12),
+
+              /// File name + size (COLUMN)
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      fileName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      fileSizeText,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }).toList();

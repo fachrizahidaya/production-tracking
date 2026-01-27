@@ -84,7 +84,6 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
 
     setState(() {
       workOrderOption = service.dataListOption;
-      ;
     });
   }
 

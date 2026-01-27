@@ -3,7 +3,7 @@ import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.d
 import 'package:textile_tracking/components/home/dashboard/work-order/summary/summary_card.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
+// import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderSummary extends StatefulWidget {
   final data;
@@ -127,50 +127,50 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     };
   }
 
-  Widget _buildProcessFilter() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
-        padding: CustomTheme().padding('badge'),
-        child: Row(
-          children: List.generate(processFilters.length, (index) {
-            final isSelected = selectedIndex == index;
+  // Widget _buildProcessFilter() {
+  //   return SingleChildScrollView(
+  //     scrollDirection: Axis.horizontal,
+  //     child: Padding(
+  //       padding: CustomTheme().padding('badge'),
+  //       child: Row(
+  //         children: List.generate(processFilters.length, (index) {
+  //           final isSelected = selectedIndex == index;
 
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedIndex = index;
-                });
+  //           return GestureDetector(
+  //             onTap: () {
+  //               setState(() {
+  //                 selectedIndex = index;
+  //               });
 
-                // _tabController.animateTo(index);
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: isSelected
-                        ? CustomTheme().buttonColor('primary')
-                        : Colors.grey.shade400,
-                  ),
-                  color: isSelected
-                      ? CustomTheme().buttonColor('primary')
-                      : Colors.white,
-                  boxShadow: [CustomTheme().boxShadowTheme()],
-                ),
-                padding: CustomTheme().padding('badge'),
-                child: Text(
-                  processFilters[index],
-                  style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black,
-                  ),
-                ),
-              ),
-            );
-          }).separatedBy(CustomTheme().hGap('lg')),
-        ),
-      ),
-    );
-  }
+  //               // _tabController.animateTo(index);
+  //             },
+  //             child: Container(
+  //               decoration: BoxDecoration(
+  //                 borderRadius: BorderRadius.circular(8),
+  //                 border: Border.all(
+  //                   color: isSelected
+  //                       ? CustomTheme().buttonColor('primary')
+  //                       : Colors.grey.shade400,
+  //                 ),
+  //                 color: isSelected
+  //                     ? CustomTheme().buttonColor('primary')
+  //                     : Colors.white,
+  //                 boxShadow: [CustomTheme().boxShadowTheme()],
+  //               ),
+  //               padding: CustomTheme().padding('badge'),
+  //               child: Text(
+  //                 processFilters[index],
+  //                 style: TextStyle(
+  //                   color: isSelected ? Colors.white : Colors.black,
+  //                 ),
+  //               ),
+  //             ),
+  //           );
+  //         }).separatedBy(CustomTheme().hGap('lg')),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildSwipeContent() {
     if (widget.isFetching == true) {

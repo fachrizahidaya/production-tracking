@@ -42,14 +42,14 @@ class ProcessButton extends StatefulWidget {
 }
 
 class _ProcessButtonState extends State<ProcessButton> {
-  double _parseNum(String? value) {
-    return double.tryParse(value?.trim() ?? '') ?? 0;
-  }
+  // double _parseNum(String? value) {
+  //   return double.tryParse(value?.trim() ?? '') ?? 0;
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final qty = _parseNum(widget.qty);
-    final weight = _parseNum(widget.weight);
+    // final qty = _parseNum(widget.qty);
+    // final weight = _parseNum(widget.weight);
 
     final bool hasBasicError =
         widget.weightWarning != null || widget.qtyWarning != null

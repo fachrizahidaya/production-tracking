@@ -142,109 +142,109 @@ class _InfoTabState extends State<InfoTab> {
     );
   }
 
-  Widget _buildQuickInfoRow(bool isTablet) {
-    return Container(
-      padding: EdgeInsets.all(isTablet ? 16 : 12),
-      decoration: BoxDecoration(
-        color: CustomTheme().buttonColor('primary').withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: CustomTheme().buttonColor('primary').withOpacity(0.1),
-        ),
-      ),
-      child: isTablet
-          ? Row(
-              children: [
-                Expanded(
-                  child: _buildQuickInfoItem(
-                    icon: Icons.inventory_2_outlined,
-                    label: 'Qty Greige',
-                    value: _formatGreigeQty(),
-                    isTablet: isTablet,
-                  ),
-                ),
-                _buildVerticalDivider(),
-              ],
-            )
-          : Column(
-              children: [
-                _buildQuickInfoItem(
-                  icon: Icons.inventory_2_outlined,
-                  label: 'Qty Greige',
-                  value: _formatGreigeQty(),
-                  isTablet: isTablet,
-                  isFullWidth: true,
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [],
-                ),
-              ],
-            ),
-    );
-  }
+  // Widget _buildQuickInfoRow(bool isTablet) {
+  //   return Container(
+  //     padding: EdgeInsets.all(isTablet ? 16 : 12),
+  //     decoration: BoxDecoration(
+  //       color: CustomTheme().buttonColor('primary').withOpacity(0.05),
+  //       borderRadius: BorderRadius.circular(12),
+  //       border: Border.all(
+  //         color: CustomTheme().buttonColor('primary').withOpacity(0.1),
+  //       ),
+  //     ),
+  //     child: isTablet
+  //         ? Row(
+  //             children: [
+  //               Expanded(
+  //                 child: _buildQuickInfoItem(
+  //                   icon: Icons.inventory_2_outlined,
+  //                   label: 'Qty Greige',
+  //                   value: _formatGreigeQty(),
+  //                   isTablet: isTablet,
+  //                 ),
+  //               ),
+  //               _buildVerticalDivider(),
+  //             ],
+  //           )
+  //         : Column(
+  //             children: [
+  //               _buildQuickInfoItem(
+  //                 icon: Icons.inventory_2_outlined,
+  //                 label: 'Qty Greige',
+  //                 value: _formatGreigeQty(),
+  //                 isTablet: isTablet,
+  //                 isFullWidth: true,
+  //               ),
+  //               const SizedBox(height: 12),
+  //               Row(
+  //                 children: [],
+  //               ),
+  //             ],
+  //           ),
+  //   );
+  // }
 
-  Widget _buildQuickInfoItem({
-    required IconData icon,
-    required String label,
-    required String value,
-    required bool isTablet,
-    bool isFullWidth = false,
-  }) {
-    return Row(
-      mainAxisAlignment:
-          isFullWidth ? MainAxisAlignment.start : MainAxisAlignment.center,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: CustomTheme().buttonColor('primary').withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            icon,
-            size: isTablet ? 20 : 18,
-            color: CustomTheme().buttonColor('primary'),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Flexible(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: isTablet ? 11 : 10,
-                  color: Colors.grey[600],
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: isTablet ? 14 : 13,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey[800],
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildQuickInfoItem({
+  //   required IconData icon,
+  //   required String label,
+  //   required String value,
+  //   required bool isTablet,
+  //   bool isFullWidth = false,
+  // }) {
+  //   return Row(
+  //     mainAxisAlignment:
+  //         isFullWidth ? MainAxisAlignment.start : MainAxisAlignment.center,
+  //     children: [
+  //       Container(
+  //         padding: const EdgeInsets.all(8),
+  //         decoration: BoxDecoration(
+  //           color: CustomTheme().buttonColor('primary').withOpacity(0.1),
+  //           borderRadius: BorderRadius.circular(8),
+  //         ),
+  //         child: Icon(
+  //           icon,
+  //           size: isTablet ? 20 : 18,
+  //           color: CustomTheme().buttonColor('primary'),
+  //         ),
+  //       ),
+  //       const SizedBox(width: 12),
+  //       Flexible(
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Text(
+  //               label,
+  //               style: TextStyle(
+  //                 fontSize: isTablet ? 11 : 10,
+  //                 color: Colors.grey[600],
+  //               ),
+  //             ),
+  //             const SizedBox(height: 2),
+  //             Text(
+  //               value,
+  //               style: TextStyle(
+  //                 fontSize: isTablet ? 14 : 13,
+  //                 fontWeight: FontWeight.w600,
+  //                 color: Colors.grey[800],
+  //               ),
+  //               maxLines: 1,
+  //               overflow: TextOverflow.ellipsis,
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
-  Widget _buildVerticalDivider() {
-    return Container(
-      width: 1,
-      height: 40,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      color: Colors.grey[300],
-    );
-  }
+  // Widget _buildVerticalDivider() {
+  //   return Container(
+  //     width: 1,
+  //     height: 40,
+  //     margin: const EdgeInsets.symmetric(horizontal: 16),
+  //     color: Colors.grey[300],
+  //   );
+  // }
 
   Widget _buildTabletInfoLayout() {
     return Row(
@@ -435,18 +435,18 @@ class _InfoTabState extends State<InfoTab> {
     );
   }
 
-  String _formatGreigeQty() {
-    if (widget.data['greige_qty'] == null ||
-        widget.data['greige_qty'].toString().isEmpty) {
-      return '-';
-    }
+  // String _formatGreigeQty() {
+  //   if (widget.data['greige_qty'] == null ||
+  //       widget.data['greige_qty'].toString().isEmpty) {
+  //     return '-';
+  //   }
 
-    final qty = widget.data['greige_qty'];
-    final unit = widget.data['greige_unit']?['code'] ?? '';
+  //   final qty = widget.data['greige_qty'];
+  //   final unit = widget.data['greige_unit']?['code'] ?? '';
 
-    if (qty is num) {
-      return '${NumberFormat("#,###.#").format(qty)} $unit'.trim();
-    }
-    return '$qty $unit'.trim();
-  }
+  //   if (qty is num) {
+  //     return '${NumberFormat("#,###.#").format(qty)} $unit'.trim();
+  //   }
+  //   return '$qty $unit'.trim();
+  // }
 }

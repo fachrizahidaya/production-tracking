@@ -66,11 +66,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
   int selectedItemWoIndex = 0;
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {

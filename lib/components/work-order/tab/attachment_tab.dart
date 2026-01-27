@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/format_bytes.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class AttachmentTab extends StatefulWidget {
@@ -72,6 +73,24 @@ class _AttachmentTabState extends State<AttachmentTab> {
           : (item['file_name'] ?? filePath?.split('/').last ?? '');
       final String extension = fileName.split('.').last.toLowerCase();
 
+      /// ---- File Size Logic ----
+      String fileSizeText = '';
+
+      if (isNew && filePath != null) {
+        final file = File(filePath);
+        if (file.existsSync()) {
+          final bytes = file.lengthSync();
+          fileSizeText = formatBytes(bytes);
+        }
+      } else {
+        // from API (recommended: send file_size from backend)
+        if (item['file_size'] != null) {
+          fileSizeText = formatBytes(item['file_size']);
+        } else {
+          fileSizeText = 'Unknown size';
+        }
+      }
+
       Widget preview;
       if (extension == 'pdf') {
         preview = const Icon(Icons.picture_as_pdf, color: Colors.red, size: 60);
@@ -98,10 +117,58 @@ class _AttachmentTabState extends State<AttachmentTab> {
               }
             : null,
         child: Container(
-          width: 100,
-          height: 100,
-          color: Colors.white,
-          child: preview,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          margin: const EdgeInsets.only(bottom: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              /// Preview
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  color: Colors.grey.shade100,
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: preview,
+              ),
+
+              const SizedBox(width: 12),
+
+              /// File name + size (COLUMN)
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      fileName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      fileSizeText,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }).toList();

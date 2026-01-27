@@ -375,13 +375,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           icon: Icons.note_outlined,
           child: _buildNoteWo(true),
         ),
-        _buildInfoCard(
-          title: 'Material Work Order',
-          icon: Icons.inventory_2_outlined,
-          child: _buildMaterial(
-            true,
-          ),
-        ),
+        // _buildInfoCard(
+        //   title: 'Material Work Order',
+        //   icon: Icons.inventory_2_outlined,
+        //   child: _buildMaterial(
+        //     true,
+        //   ),
+        // ),
       ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
@@ -434,13 +434,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           icon: Icons.note_outlined,
           child: _buildNoteWo(true),
         ),
-        _buildInfoCard(
-          title: 'Material Work Order',
-          icon: Icons.inventory_2_outlined,
-          child: _buildMaterial(
-            true,
-          ),
-        ),
+        // _buildInfoCard(
+        //   title: 'Material Work Order',
+        //   icon: Icons.inventory_2_outlined,
+        //   child: _buildMaterial(
+        //     true,
+        //   ),
+        // ),
       ],
     );
   }

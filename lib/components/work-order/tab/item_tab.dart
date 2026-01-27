@@ -77,21 +77,21 @@ class _ItemTabState extends State<ItemTab> {
               ].separatedBy(CustomTheme().hGap('xl')),
             ),
           ),
-          Padding(
-              padding: CustomTheme().padding('item-detail'),
-              child: widget.data.isEmpty
-                  ? NoData()
-                  : Column(
-                      children: List.generate(items.length, (index) {
-                        return Column(
-                          children: [
-                            ListItem(item: items[index]),
-                            if (index != items.length - 1)
-                              const SizedBox(height: 12),
-                          ].separatedBy(CustomTheme().vGap('xl')),
-                        );
-                      }),
-                    )),
+          // Padding(
+          //     padding: CustomTheme().padding('item-detail'),
+          //     child: widget.data.isEmpty
+          //         ? NoData()
+          //         : Column(
+          //             children: List.generate(items.length, (index) {
+          //               return Column(
+          //                 children: [
+          //                   ListItem(item: items[index]),
+          //                   if (index != items.length - 1)
+          //                     const SizedBox(height: 12),
+          //                 ].separatedBy(CustomTheme().vGap('xl')),
+          //               );
+          //             }),
+          //           )),
         ],
       ),
     );

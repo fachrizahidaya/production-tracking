@@ -73,12 +73,15 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   @override
   void initState() {
     super.initState();
-    _fetchWorkOrder();
-    _fetchMachine();
 
-    if (widget.processId != null) {
-      _getProcessView(widget.processId);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchWorkOrder();
+      _fetchMachine();
+
+      if (widget.processId != null) {
+        _getProcessView(widget.processId);
+      }
+    });
   }
 
   Future<void> _fetchWorkOrder() async {
@@ -145,7 +148,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
     }
   }
 
-  Future<void> _getDataView(String id) async {
+  Future<void> _getDataView(id) async {
     setState(() {
       _firstLoading = true;
     });

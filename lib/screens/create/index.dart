@@ -69,9 +69,13 @@ class _CreateProcessState extends State<CreateProcess> {
   @override
   void initState() {
     super.initState();
-    _handleFetchWorkOrder();
+
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
     _form['start_by_id'] = loggedInUser?.id;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleFetchWorkOrder();
+    });
   }
 
   Future<void> _handleFetchWorkOrder() async {

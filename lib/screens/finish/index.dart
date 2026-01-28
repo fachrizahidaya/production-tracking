@@ -101,7 +101,10 @@ class _FinishProcessState extends State<FinishProcess> {
   @override
   void initState() {
     super.initState();
-    _initialize();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initialize();
+    });
   }
 
   Future<void> _initialize() async {

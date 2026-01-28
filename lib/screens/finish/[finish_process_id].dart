@@ -99,6 +99,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   @override
   void initState() {
+    super.initState();
+
+    // SAFE: synchronous controller initialization
     _qtyController.text = widget.form?['qty']?.toString() ?? '';
     _qtyItemController.text = widget.form?['item_qty']?.toString() ?? '';
     _weightController.text = widget.form?['weight']?.toString() ?? '';
@@ -111,15 +114,20 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     _totalWeightController.text =
         widget.form?['total_weight']?.toString() ?? '';
 
+    // 🚨 EVERYTHING async + Provider goes here
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _postInit();
+    });
+  }
+
+  Future<void> _postInit() async {
     if (widget.processId != null) {
-      _getProcessView(widget.processId);
+      await _getProcessView(widget.processId);
     }
 
-    _handleFetchWorkOrder();
-    _handleFetchItemGrade();
-    _handleFetchUnit();
-
-    super.initState();
+    await _handleFetchWorkOrder();
+    await _handleFetchItemGrade();
+    await _handleFetchUnit();
   }
 
   Future<void> _handleFetchWorkOrder() async {

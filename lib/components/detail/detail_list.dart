@@ -96,6 +96,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
 
   /// Header Section dengan Work Order Info
   Widget _buildHeaderSection(bool isTablet) {
+    final bool isUrgent = widget.data['work_orders']['urgent'] == true;
+
     return Padding(
       padding: CustomTheme().padding('content'),
       child: Container(
@@ -187,6 +189,12 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                                     CustomTheme().fontWeight('semibold'),
                               ),
                             ),
+                            if (isUrgent)
+                              Icon(
+                                Icons.warning_amber_rounded,
+                                color: Colors.yellowAccent,
+                                size: 14,
+                              ),
                             Container(
                               decoration: BoxDecoration(
                                 color: CustomTheme()
@@ -199,7 +207,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                                 color: Colors.white,
                               ),
                             ),
-                          ],
+                          ].separatedBy(CustomTheme().hGap('sm')),
                         ),
                       ),
                     ].separatedBy(CustomTheme().vGap('sm')),
@@ -533,7 +541,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             ),
           );
         },
-        'right-icon': Icons.chevron_right_outlined,
+        'right-icon': Icons.warning_amber_outlined,
       },
       {
         'label': 'Tanggal Work Order',
@@ -740,12 +748,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     return Column(
       children: items
           .map((item) => _buildInfoItem(
-                label: item['label'],
-                value: item['value'],
-                id: item['id'].toString(),
-                icon: item['icon'],
-                isTablet: isTablet,
-              ))
+              label: item['label'],
+              value: item['value'],
+              id: item['id'].toString(),
+              icon: item['icon'],
+              isTablet: isTablet,
+              navigateTo: item['navigate'],
+              rightIcon: item['right-icon']))
           .toList(),
     );
   }
@@ -858,15 +867,27 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: isTablet ? 14 : 13,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[800],
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        value,
+                        style: TextStyle(
+                          fontSize: isTablet ? 14 : 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[800],
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      if (label == 'No. Work Order' &&
+                          widget.data['work_orders']['urgent'] == true)
+                        Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.red,
+                          size: 14,
+                        ),
+                    ].separatedBy(CustomTheme().hGap('sm')),
                   ),
                 ].separatedBy(CustomTheme().vGap('sm')),
               ),

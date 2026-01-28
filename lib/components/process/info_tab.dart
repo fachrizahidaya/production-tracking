@@ -100,14 +100,30 @@ class _InfoTabState extends State<InfoTab> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.data['wo_no']?.toString() ?? '-',
-                        style: TextStyle(
-                          fontSize:
-                              CustomTheme().fontSize(isTablet ? '2xl' : 'xl'),
-                          fontWeight: CustomTheme().fontWeight('bold'),
-                          color: Colors.white,
-                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              widget.data['wo_no']?.toString() ?? '-',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: CustomTheme()
+                                    .fontSize(isTablet ? '2xl' : 'xl'),
+                                fontWeight: CustomTheme().fontWeight('bold'),
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          if (widget.data['urgent'] == true) ...[
+                            const SizedBox(width: 6),
+                            Icon(
+                              Icons.warning_amber_rounded,
+                              color: Colors.yellowAccent,
+                              size: isTablet ? 22 : 18,
+                            ),
+                          ],
+                        ],
                       ),
                       Text(
                         widget.data['created_at'] != null

@@ -59,115 +59,111 @@ class _ProcessItemState extends State<ProcessItem> {
               ),
             ],
           ),
-          child: Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (hasData)
-                    // Header Section
-                    _buildHeader(hasData, data, isTablet)
-                  else
-                    Container(
-                      padding: CustomTheme().padding('card'),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Colors.orange.withOpacity(0.08),
-                            Colors.orange.withOpacity(0.02),
-                          ],
-                        ),
-                        border: hasData && widget.showDetails
-                            ? Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey[200]!,
-                                  width: 1,
-                                ),
-                              )
-                            : null,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (hasData)
+                  // Header Section
+                  _buildHeader(hasData, data, isTablet)
+                else
+                  Container(
+                    padding: CustomTheme().padding('card'),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.orange.withOpacity(0.08),
+                          Colors.orange.withOpacity(0.02),
+                        ],
                       ),
-                      child: Row(
-                        children: [
-                          // Process Icon
-                          Container(
-                            padding: CustomTheme().padding('process-content'),
-                            decoration: BoxDecoration(
-                              color: Colors.orange.withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Icon(
-                              _getProcessIcon(widget.item['label']),
-                              size: isTablet ? 24 : 20,
-                              color: Colors.orange,
-                            ),
-                          ),
-
-                          // Process Label & Info
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.item['label']?.toString() ?? '-',
-                                  style: TextStyle(
-                                    fontSize: CustomTheme()
-                                        .fontSize(isTablet ? 'lg' : 'md'),
-                                    fontWeight:
-                                        CustomTheme().fontWeight('bold'),
-                                    color: Colors.grey[800],
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    // Status Indicator
-                                    Container(
-                                      width: isTablet ? 8 : 6,
-                                      height: isTablet ? 8 : 6,
-                                      decoration: BoxDecoration(
-                                        color: Colors.orange,
-                                        shape: BoxShape.circle,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.orange.withOpacity(0.5),
-                                            blurRadius: 4,
-                                            spreadRadius: 1,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Text(
-                                      // statusConfig['label'],
-                                      'Menunggu Diproses',
-                                      style: TextStyle(
-                                        fontSize: CustomTheme().fontSize('sm'),
-                                        // color: statusConfig['color'],
-                                        fontWeight:
-                                            CustomTheme().fontWeight('bold'),
-                                      ),
-                                    ),
-                                    // Additional Info
-                                  ].separatedBy(CustomTheme().hGap('md')),
-                                ),
-                              ].separatedBy(CustomTheme().vGap('xs')),
-                            ),
-                          ),
-
-                          // Expand/Action Button
-                        ].separatedBy(CustomTheme().hGap('xl')),
-                      ),
+                      border: hasData && widget.showDetails
+                          ? Border(
+                              bottom: BorderSide(
+                                color: Colors.grey[200]!,
+                                width: 1,
+                              ),
+                            )
+                          : null,
                     ),
+                    child: Row(
+                      children: [
+                        // Process Icon
+                        Container(
+                          padding: CustomTheme().padding('process-content'),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            _getProcessIcon(widget.item['label']),
+                            size: isTablet ? 24 : 20,
+                            color: Colors.orange,
+                          ),
+                        ),
 
-                  // Expandable Details
-                  if (hasData)
-                    _buildExpandableDetails(true, data.first, isTablet)
-                  else
-                    NoData(),
-                ],
-              ),
+                        // Process Label & Info
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.item['label']?.toString() ?? '-',
+                                style: TextStyle(
+                                  fontSize: CustomTheme()
+                                      .fontSize(isTablet ? 'lg' : 'md'),
+                                  fontWeight: CustomTheme().fontWeight('bold'),
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  // Status Indicator
+                                  Container(
+                                    width: isTablet ? 8 : 6,
+                                    height: isTablet ? 8 : 6,
+                                    decoration: BoxDecoration(
+                                      color: Colors.orange,
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.orange.withOpacity(0.5),
+                                          blurRadius: 4,
+                                          spreadRadius: 1,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Text(
+                                    // statusConfig['label'],
+                                    'Menunggu Diproses',
+                                    style: TextStyle(
+                                      fontSize: CustomTheme().fontSize('sm'),
+                                      // color: statusConfig['color'],
+                                      fontWeight:
+                                          CustomTheme().fontWeight('bold'),
+                                    ),
+                                  ),
+                                  // Additional Info
+                                ].separatedBy(CustomTheme().hGap('md')),
+                              ),
+                            ].separatedBy(CustomTheme().vGap('xs')),
+                          ),
+                        ),
+
+                        // Expand/Action Button
+                      ].separatedBy(CustomTheme().hGap('xl')),
+                    ),
+                  ),
+
+                // Expandable Details
+                if (hasData)
+                  _buildExpandableDetails(true, data.first, isTablet)
+                else
+                  NoData(),
+              ],
             ),
           ),
         );

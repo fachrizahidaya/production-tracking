@@ -1,9 +1,13 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/button/pulse_icon.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/format_date_safe.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class SummaryCard extends StatefulWidget {
   final dynamic data;
@@ -54,6 +58,102 @@ class _SummaryCardState extends State<SummaryCard>
       default:
         return _getTotalCount(summary);
     }
+  }
+
+  void _showAllWorkOrdersDialog(
+    BuildContext context,
+    List<dynamic> allList,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 400),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header
+                  Row(
+                    children: [
+                      const Icon(Icons.error_outline, size: 20),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Menunggu Diproses',
+                        style: TextStyle(
+                          fontSize: CustomTheme().fontSize('md'),
+                          fontWeight: CustomTheme().fontWeight('semibold'),
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+
+                  // List
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: allList.length,
+                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      itemBuilder: (context, index) {
+                        final wo = allList[index];
+                        final woNo = wo['wo_no'] ?? '-';
+                        final createdAt = wo['created_at'];
+
+                        return ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            woNo,
+                            style: TextStyle(
+                              fontWeight: CustomTheme().fontWeight('semibold'),
+                            ),
+                          ),
+                          subtitle: Text(
+                            createdAt != null
+                                ? DateFormat("dd MMM yyyy")
+                                    .format(DateTime.parse(createdAt))
+                                : '-',
+                            style: TextStyle(
+                              fontSize: CustomTheme().fontSize('xs'),
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          trailing: const Icon(
+                            Icons.chevron_right,
+                            size: 18,
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => WorkOrderDetail(
+                                  id: wo['wo_id'].toString(),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -165,7 +265,13 @@ class _SummaryCardState extends State<SummaryCard>
 
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/dyeings');
+        final String name = widget.data['name']?.toString() ?? '';
+
+        final String slug = name.toLowerCase().replaceAll(' ', '-');
+
+        final String routeName = slug == 'press' ? '/press' : '/${slug}s';
+
+        Navigator.pushNamed(context, routeName);
       },
       child: Container(
         padding: CustomTheme().padding('card'),
@@ -348,6 +454,7 @@ class _SummaryCardState extends State<SummaryCard>
 
   /// Status Grid
   Widget _buildStatusGrid(Map<String, dynamic> summary, bool isTablet) {
+    final bool hasOverdueWaiting = widget.data['hasOverdueWaiting'] == true;
     final allItems = [
       _StatusItem(
         label: 'Selesai',
@@ -376,6 +483,7 @@ class _SummaryCardState extends State<SummaryCard>
         icon: Icons.error_outline,
         color: const Color(0xFFf1f5f9),
         iconColor: const Color.fromRGBO(113, 113, 123, 1),
+        showPulse: hasOverdueWaiting, // 👈
       ),
     ];
 
@@ -426,13 +534,23 @@ class _SummaryCardState extends State<SummaryCard>
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                formatNumber(item.value),
-                style: TextStyle(
-                  fontSize: CustomTheme().fontSize('md'),
-                  fontWeight: CustomTheme().fontWeight('bold'),
-                  color: item.iconColor,
-                ),
+              Row(
+                children: [
+                  Text(
+                    formatNumber(item.value),
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('md'),
+                      fontWeight: CustomTheme().fontWeight('bold'),
+                      color: item.iconColor,
+                    ),
+                  ),
+                  if (item.showPulse)
+                    PulseIcon(
+                      icon: Icons.circle,
+                      color: Colors.red,
+                      size: 14,
+                    ),
+                ].separatedBy(CustomTheme().hGap('md')),
               ),
               Text(
                 item.label,
@@ -449,8 +567,8 @@ class _SummaryCardState extends State<SummaryCard>
   }
 
   Widget _buildWaitingWONumber(List waitingList, bool isTablet) {
-    const maxVisible = 5;
-    const double fixedHeight = 72; // ⬅️ adjust sesuai design
+    const maxVisible = 3;
+    const double fixedHeight = 110; // ⬅️ adjust sesuai design
 
     final visibleList = waitingList.take(maxVisible).toList();
     final remainingCount = waitingList.length - visibleList.length;
@@ -487,48 +605,83 @@ class _SummaryCardState extends State<SummaryCard>
                     children: [
                       ...visibleList.map((wo) {
                         final woNumber = wo['wo_no'] ?? '-';
+                        final bool isUrgent = wo['urgent'] == true;
 
-                        return Container(
-                          padding: CustomTheme().padding('badge'),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFf1f5f9),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: Colors.grey.withOpacity(0.3),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                woNumber,
-                                style: TextStyle(
-                                  fontSize: CustomTheme().fontSize('sm'),
-                                  fontWeight:
-                                      CustomTheme().fontWeight('semibold'),
-                                  color: const Color.fromRGBO(113, 113, 123, 1),
+                        return InkWell(
+                          borderRadius: BorderRadius.circular(4),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WorkOrderDetail(
+                                  id: wo['wo_id'].toString(),
                                 ),
                               ),
-                            ].separatedBy(CustomTheme().hGap('sm')),
+                            );
+                          },
+                          child: Container(
+                            padding: CustomTheme().padding('badge'),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFf1f5f9),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Colors.grey.withOpacity(0.3),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (isUrgent)
+                                  Icon(
+                                    Icons.warning_amber_rounded,
+                                    size: 16,
+                                    color: Colors.redAccent,
+                                  ),
+                                Text(
+                                  woNumber,
+                                  style: TextStyle(
+                                    fontSize: CustomTheme().fontSize('sm'),
+                                    fontWeight:
+                                        CustomTheme().fontWeight('semibold'),
+                                    color:
+                                        const Color.fromRGBO(113, 113, 123, 1),
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.chevron_right,
+                                  size: 18,
+                                  color: Colors.grey[500],
+                                ),
+                              ].separatedBy(CustomTheme().hGap('sm')),
+                            ),
                           ),
                         );
                       }),
                       if (remainingCount > 0)
-                        Container(
-                          padding: CustomTheme().padding('badge'),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFe5e7eb),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: Colors.grey.withOpacity(0.4),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(8),
+                          onTap: () {
+                            _showAllWorkOrdersDialog(
+                                context, waitingList.toList());
+                            // 👆 fullList = ALL WO list (not visibleList)
+                          },
+                          child: Container(
+                            padding: CustomTheme().padding('badge'),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFe5e7eb),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Colors.grey.withOpacity(0.4),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            '+$remainingCount lainnya',
-                            style: TextStyle(
-                              fontSize: CustomTheme().fontSize('sm'),
-                              fontWeight: CustomTheme().fontWeight('semibold'),
-                              color: Colors.grey[700],
+                            child: Text(
+                              '+$remainingCount',
+                              style: TextStyle(
+                                fontSize: CustomTheme().fontSize('sm'),
+                                fontWeight:
+                                    CustomTheme().fontWeight('semibold'),
+                                color: Colors.grey[700],
+                              ),
                             ),
                           ),
                         ),
@@ -642,13 +795,16 @@ class _StatusItem {
   final IconData icon;
   final Color color;
   final Color iconColor;
+  final bool showPulse; // 👈 NEW
 
-  _StatusItem(
-      {required this.label,
-      required this.value,
-      required this.icon,
-      required this.color,
-      required this.iconColor});
+  _StatusItem({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+    required this.iconColor,
+    this.showPulse = false,
+  });
 }
 
 class SummaryCardGrid extends StatelessWidget {

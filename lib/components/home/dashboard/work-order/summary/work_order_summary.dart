@@ -115,16 +115,27 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
   }
 
   Map<String, dynamic> _mapApiToSummaryCard(Map<String, dynamic> item) {
+    final waitingList = item['waiting'] as List? ?? [];
+
     return {
       'name': item['process_name'],
       'summary': {
         'completed': (item['completed'] as List?)?.length ?? 0,
         'in_progress': (item['in_progress'] as List?)?.length ?? 0,
-        'waiting': (item['waiting'] as List?)?.length ?? 0,
+        'waiting': waitingList.length,
         'skipped': (item['skipped'] as List?)?.length ?? 0,
       },
-      'waiting': item['waiting'] ?? [],
+
+      // 👇 keep original waiting list
+      'waiting': waitingList,
+
+      // 👇 NUMBER 1: overdue detector
+      'hasOverdueWaiting': _hasOverdueWaiting(waitingList),
     };
+  }
+
+  bool _hasOverdueWaiting(List waiting) {
+    return waiting.any((wo) => wo['overdue'] == true);
   }
 
   Widget _buildProcessFilter() {

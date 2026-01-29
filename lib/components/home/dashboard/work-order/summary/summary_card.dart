@@ -146,51 +146,84 @@ class _SummaryCardState extends State<SummaryCard>
                         final bool isOverdue = wo['overdue'] == true;
                         final String overdueDays =
                             wo['overdue_days']?.toString() ?? '0';
-                        final createdAt = wo['created_at'];
+                        final createdAt = wo['reference_date'];
 
                         return ListTile(
                           contentPadding: EdgeInsets.zero,
-                          title: Row(
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (isOverdue)
-                                PulseIcon(
-                                  icon: Icons.circle,
-                                  color: Colors.redAccent,
-                                  size: 12,
-                                ),
-                              Text(
-                                woNo,
-                                style: TextStyle(
-                                  fontWeight:
-                                      CustomTheme().fontWeight('semibold'),
-                                  color: isOverdue
-                                      ? Colors.redAccent
-                                      : Colors.grey[800],
-                                ),
+                              // ROW 1: WO NO + URGENT ICON + DATE
+                              Row(
+                                children: [
+                                  if (isOverdue)
+                                    PulseIcon(
+                                      icon: Icons.circle,
+                                      color: Colors.redAccent,
+                                      size: 12,
+                                    ),
+
+                                  Text(
+                                    woNo,
+                                    style: TextStyle(
+                                      fontWeight:
+                                          CustomTheme().fontWeight('semibold'),
+                                      color: isOverdue
+                                          ? Colors.redAccent
+                                          : Colors.grey[800],
+                                    ),
+                                  ),
+
+                                  // ⚠️ still show if urgent
+                                  if (isUrgent)
+                                    const Icon(
+                                      Icons.warning_amber_rounded,
+                                      size: 16,
+                                      color: Colors.red,
+                                    ),
+
+                                  const Spacer(),
+
+                                  Text(
+                                    createdAt != null
+                                        ? DateFormat("dd MMM yyyy")
+                                            .format(DateTime.parse(createdAt))
+                                        : '-',
+                                    style: TextStyle(
+                                      fontSize: CustomTheme().fontSize('sm'),
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ].separatedBy(CustomTheme().hGap('sm')),
                               ),
-                              if (isUrgent)
-                                const Icon(
-                                  Icons.warning_amber_rounded,
-                                  size: 16,
-                                  color: Colors.red,
+
+                              const SizedBox(height: 4),
+
+                              // ROW 2: OVERDUE INFO
+                              if (isOverdue)
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Terlambat $overdueDays hari',
+                                      style: TextStyle(
+                                        fontSize: CustomTheme().fontSize('sm'),
+                                        color: Colors.redAccent,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'Harus segera diproses',
+                                      style: TextStyle(
+                                        fontSize: CustomTheme().fontSize('sm'),
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                            ].separatedBy(CustomTheme().hGap('sm')),
+                            ],
                           ),
-                          subtitle: Text(
-                            isOverdue
-                                ? 'Terlambat $overdueDays hari'
-                                : createdAt != null
-                                    ? DateFormat("dd MMM yyyy")
-                                        .format(DateTime.parse(createdAt))
-                                    : '-',
-                            style: TextStyle(
-                              fontSize: CustomTheme().fontSize('sm'),
-                              color: isOverdue
-                                  ? Colors.redAccent
-                                  : Colors.grey[600],
-                            ),
-                          ),
-                          trailing: const Icon(Icons.chevron_right, size: 18),
                           onTap: () {
                             Navigator.pop(context);
                             Navigator.push(

@@ -112,12 +112,24 @@ class ItemProcessCard extends StatelessWidget {
                 ].separatedBy(CustomTheme().hGap('xl')),
               ),
               if (item[subtitleKey] != null) ...[
-                Text(
-                  '${item[subtitleKey][subtitleField] ?? '-'}',
-                  style: TextStyle(
-                    fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
-                    color: Colors.grey[600],
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${item[subtitleKey][subtitleField] ?? '-'}',
+                      style: TextStyle(
+                        fontSize:
+                            CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    if (item['work_orders']['urgent'] == true)
+                      Icon(
+                        Icons.warning_amber,
+                        color: Colors.red,
+                        size: 18,
+                      )
+                  ].separatedBy(CustomTheme().hGap('md')),
                 ),
               ],
             ].separatedBy(CustomTheme().vGap('sm')),

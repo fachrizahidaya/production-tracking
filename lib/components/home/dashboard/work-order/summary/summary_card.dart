@@ -45,6 +45,17 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
+  int _getOverdueDays(String? dueDate) {
+    if (dueDate == null) return 0;
+
+    final due = DateTime.parse(dueDate);
+    final now = DateTime.now();
+
+    if (now.isBefore(due)) return 0;
+
+    return now.difference(due).inDays;
+  }
+
   int _getFilteredTotal(Map<String, dynamic> summary) {
     switch (widget.filter) {
       case 'Selesai':
@@ -72,7 +83,10 @@ class _SummaryCardState extends State<SummaryCard>
             borderRadius: BorderRadius.circular(12),
           ),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 400),
+            constraints: const BoxConstraints(
+              maxWidth: 360, // 👈 SHRINK WIDTH HERE
+              maxHeight: 400,
+            ),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -91,11 +105,6 @@ class _SummaryCardState extends State<SummaryCard>
                           fontWeight: CustomTheme().fontWeight('semibold'),
                         ),
                       ),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () => Navigator.pop(context),
-                      ),
                     ],
                   ),
                   const Divider(),
@@ -107,31 +116,73 @@ class _SummaryCardState extends State<SummaryCard>
                       separatorBuilder: (_, __) => const Divider(height: 1),
                       itemBuilder: (context, index) {
                         final wo = allList[index];
+
                         final woNo = wo['wo_no'] ?? '-';
                         final createdAt = wo['created_at'];
 
+                        final bool isUrgent = wo['urgent'] == true;
+                        final bool isOverdue = wo['overdue'] == true;
+
+                        // overdue_days already STRING from API
+                        final String overdueDays =
+                            wo['overdue_days']?.toString() ?? '0';
+
                         return ListTile(
                           contentPadding: EdgeInsets.zero,
-                          title: Text(
-                            woNo,
-                            style: TextStyle(
-                              fontWeight: CustomTheme().fontWeight('semibold'),
-                            ),
+
+                          // 🔹 TITLE (WO NO + STATUS)
+                          title: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              if (isOverdue)
+                                PulseIcon(
+                                  icon: Icons.circle,
+                                  color: Colors.redAccent,
+                                  size: 12,
+                                ),
+                              Text(
+                                woNo,
+                                style: TextStyle(
+                                  fontWeight:
+                                      CustomTheme().fontWeight('semibold'),
+                                  color: isOverdue
+                                      ? Colors.redAccent
+                                      : Colors.grey[800],
+                                ),
+                              ),
+                              if (isUrgent)
+                                Icon(
+                                  Icons.warning_amber_rounded,
+                                  size: 16,
+                                  color: Colors.red,
+                                ),
+                            ].separatedBy(CustomTheme().hGap('sm')),
                           ),
+
+                          // 🔹 SUBTITLE
                           subtitle: Text(
-                            createdAt != null
-                                ? DateFormat("dd MMM yyyy")
-                                    .format(DateTime.parse(createdAt))
-                                : '-',
+                            isOverdue
+                                ? 'Terlambat $overdueDays hari'
+                                : createdAt != null
+                                    ? DateFormat("dd MMM yyyy")
+                                        .format(DateTime.parse(createdAt))
+                                    : '-',
                             style: TextStyle(
                               fontSize: CustomTheme().fontSize('sm'),
-                              color: Colors.grey[600],
+                              color: isOverdue
+                                  ? Colors.redAccent
+                                  : Colors.grey[600],
+                              fontWeight: isOverdue
+                                  ? CustomTheme().fontWeight('semibold')
+                                  : null,
                             ),
                           ),
+
                           trailing: const Icon(
                             Icons.chevron_right,
                             size: 18,
                           ),
+
                           onTap: () {
                             Navigator.pop(context);
                             Navigator.push(
@@ -314,7 +365,7 @@ class _SummaryCardState extends State<SummaryCard>
                   Text(
                     widget.data['name'] ?? '-',
                     style: TextStyle(
-                      fontSize: CustomTheme().fontSize(isTablet ? 'md' : 'sm'),
+                      fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
                       fontWeight: CustomTheme().fontWeight('bold'),
                       color: Colors.grey[800],
                     ),
@@ -385,7 +436,7 @@ class _SummaryCardState extends State<SummaryCard>
             Text(
               'Progres Penyelesaian',
               style: TextStyle(
-                fontSize: CustomTheme().fontSize('lg'),
+                fontSize: CustomTheme().fontSize('md'),
                 fontWeight: CustomTheme().fontWeight('semibold'),
                 color: Colors.grey[700],
               ),
@@ -539,7 +590,7 @@ class _SummaryCardState extends State<SummaryCard>
                   Text(
                     formatNumber(item.value),
                     style: TextStyle(
-                      fontSize: CustomTheme().fontSize('lg'),
+                      fontSize: CustomTheme().fontSize('md'),
                       fontWeight: CustomTheme().fontWeight('bold'),
                       color: item.iconColor,
                     ),
@@ -581,7 +632,7 @@ class _SummaryCardState extends State<SummaryCard>
           Text(
             'WO Menunggu Diproses',
             style: TextStyle(
-              fontSize: CustomTheme().fontSize('lg'),
+              fontSize: CustomTheme().fontSize('md'),
               fontWeight: CustomTheme().fontWeight('semibold'),
               color: Colors.grey[700],
             ),
@@ -606,6 +657,7 @@ class _SummaryCardState extends State<SummaryCard>
                       ...visibleList.map((wo) {
                         final woNumber = wo['wo_no'] ?? '-';
                         final bool isUrgent = wo['urgent'] == true;
+                        final bool isOverdue = wo['overdue'] == true;
 
                         return InkWell(
                           borderRadius: BorderRadius.circular(4),
@@ -631,11 +683,11 @@ class _SummaryCardState extends State<SummaryCard>
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                if (isUrgent)
-                                  Icon(
-                                    Icons.warning_amber_rounded,
-                                    size: 16,
+                                if (isOverdue)
+                                  PulseIcon(
+                                    icon: Icons.circle,
                                     color: Colors.redAccent,
+                                    size: 12,
                                   ),
                                 Text(
                                   woNumber,
@@ -647,6 +699,12 @@ class _SummaryCardState extends State<SummaryCard>
                                         const Color.fromRGBO(113, 113, 123, 1),
                                   ),
                                 ),
+                                if (isUrgent)
+                                  Icon(
+                                    Icons.warning_amber_rounded,
+                                    size: 16,
+                                    color: Colors.redAccent,
+                                  ),
                                 Icon(
                                   Icons.chevron_right,
                                   size: 18,

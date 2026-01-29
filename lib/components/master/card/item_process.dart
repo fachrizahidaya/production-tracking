@@ -37,6 +37,11 @@ class _ItemProcessState extends State<ItemProcess> {
     _showAllTimeline = widget.isExpanded;
   }
 
+  String capitalizeFirst(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1);
+  }
+
   @override
   void didUpdateWidget(covariant ItemProcess oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -980,7 +985,7 @@ class _ItemProcessState extends State<ItemProcess> {
         border: Border.all(color: Colors.grey[300]!),
       ),
       child: Text(
-        '${variant['type']}: ${variant['value']}',
+        '${capitalizeFirst(variant['type'])}: ${variant['value']}',
         style: TextStyle(
           fontSize: CustomTheme().fontSize('sm'),
           color: Colors.grey[700],

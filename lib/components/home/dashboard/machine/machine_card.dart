@@ -237,7 +237,7 @@ class MachineCard extends StatelessWidget {
                 Text(
                   value,
                   style: TextStyle(
-                    fontSize: CustomTheme().fontSize('sm'),
+                    fontSize: CustomTheme().fontSize('md'),
                     fontWeight: CustomTheme().fontWeight('semibold'),
                     color: Colors.grey[800],
                   ),

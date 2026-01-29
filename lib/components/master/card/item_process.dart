@@ -76,9 +76,14 @@ class _ItemProcessState extends State<ItemProcess> {
                 // Process Timeline / Grid
                 Padding(
                   padding: EdgeInsets.all(isTablet ? 20 : 16),
-                  child: widget.showTimeline
-                      ? _buildProcessTimeline(processes, isTablet)
-                      : _buildProcessGrid(processes, isTablet),
+                  child: Column(
+                    children: [
+                      _buildMaterialSection(isTablet),
+                      widget.showTimeline
+                          ? _buildProcessTimeline(processes, isTablet)
+                          : _buildProcessGrid(processes, isTablet),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -847,6 +852,140 @@ class _ItemProcessState extends State<ItemProcess> {
           ),
         ),
       ].separatedBy(CustomTheme().hGap('xl')),
+    );
+  }
+
+  Widget _buildMaterialSection(bool isTablet) {
+    final List items = widget.item['items'] ?? [];
+
+    if (items.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle(
+          icon: Icons.inventory_2_outlined,
+          title: 'Material',
+          isTablet: isTablet,
+        ),
+        SizedBox(height: isTablet ? 16 : 12),
+        Column(
+          children: items.map<Widget>((item) {
+            return _buildMaterialCard(item, isTablet);
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMaterialCard(dynamic item, bool isTablet) {
+    final qty = item['qty'];
+    final unit = item['unit'];
+    final code = item['item_code'];
+    final name = item['item_name'];
+    final variants = item['variants'] ?? [];
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: CustomTheme().padding('card'),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey[300]!),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// Header
+          Row(
+            children: [
+              Container(
+                padding: CustomTheme().padding('process-content'),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Icon(
+                  Icons.layers_outlined,
+                  size: isTablet ? 20 : 18,
+                  color: Colors.blue,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(
+                        fontSize:
+                            CustomTheme().fontSize(isTablet ? 'md' : 'sm'),
+                        fontWeight: CustomTheme().fontWeight('bold'),
+                        color: Colors.grey[800],
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      code,
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('xs'),
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                '${formatNumber(qty)} $unit',
+                style: TextStyle(
+                  fontSize: CustomTheme().fontSize('sm'),
+                  fontWeight: CustomTheme().fontWeight('semibold'),
+                  color: Colors.grey[700],
+                ),
+              ),
+            ].separatedBy(CustomTheme().hGap('md')),
+          ),
+
+          /// Variants
+          if (variants.isNotEmpty) ...[
+            SizedBox(height: isTablet ? 12 : 10),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: variants.map<Widget>((v) {
+                return _buildVariantChip(v);
+              }).toList(),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVariantChip(dynamic variant) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Text(
+        '${variant['type']}: ${variant['value']}',
+        style: TextStyle(
+          fontSize: CustomTheme().fontSize('xs'),
+          color: Colors.grey[700],
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     );
   }
 

@@ -292,20 +292,74 @@ class _FormItemsState extends State<FormItems> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         if (widget.id == null)
-          CustomCard(
-              child: SelectForm(
-            label: 'Work Order',
-            onTap: () => widget.handleSelectWo(),
-            selectedLabel: widget.form['no_wo'] ?? '',
-            selectedValue: widget.form['wo_id']?.toString() ?? '',
-            required: true,
-            validator: (value) {
-              if ((value == null || value.isEmpty)) {
-                return 'Work Order wajib dipilih';
-              }
-              return null;
-            },
-          )),
+          Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: CustomTheme().padding('card'),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[50],
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: CustomTheme().padding('process-content'),
+                          decoration: BoxDecoration(
+                            color: CustomTheme()
+                                .buttonColor('primary')
+                                .withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.paste_outlined,
+                            size: 18,
+                            color: CustomTheme().buttonColor('primary'),
+                          ),
+                        ),
+                        Text(
+                          'Work Order',
+                          style: TextStyle(
+                            fontSize: CustomTheme().fontSize('md'),
+                            fontWeight: CustomTheme().fontWeight('semibold'),
+                            color: Colors.grey[800],
+                          ),
+                        ),
+                      ].separatedBy(CustomTheme().hGap('xl')),
+                    ),
+                  ),
+                  Padding(
+                    padding: CustomTheme().padding('item-detail'),
+                    child: SelectForm(
+                      label: 'Work Order',
+                      onTap: () => widget.handleSelectWo(),
+                      selectedLabel: widget.form['no_wo'] ?? '',
+                      selectedValue: widget.form['wo_id']?.toString() ?? '',
+                      required: true,
+                      validator: (value) {
+                        if ((value == null || value.isEmpty)) {
+                          return 'Work Order wajib dipilih';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              )),
         if (widget.form?['wo_id'] != null)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,329 +376,417 @@ class _FormItemsState extends State<FormItems> {
                   ].separatedBy(CustomTheme().vGap('xl')),
                 ),
               if (widget.withItemGrade == false)
-                CustomCard(
-                    child: Column(
-                  children: [
-                    ...formRows.map((row) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Expanded(
-                                flex: row['staticUnit'] != null ? 4 : 3,
-                                child: Column(
-                                  children: [
-                                    TextForm(
-                                      label: row['label'],
-                                      req: row['req'],
-                                      isNumber: true,
-                                      controller: row['controller'],
-                                      inputFormatters: [
-                                        if (minWeight != null &&
-                                            maxWeight != null)
-                                          RangeFormatter(
-                                              min: minWeight, max: maxWeight),
-                                        ThousandsSeparatorInputFormatter()
-                                      ],
-                                      handleChange: (value) {
-                                        final safeValue = (value == null ||
-                                                value.toString().trim().isEmpty)
-                                            ? '0'
-                                            : value.toString();
-
-                                        setState(() {
-                                          row['controller'].text = safeValue;
-                                          widget.handleChangeInput(
-                                            row['value'],
-                                            safeValue,
-                                          );
-
-                                          if (row['value'] == 'length') {
-                                            widget.handleChangeInput(
-                                                'length_unit_id', 4);
-                                          }
-
-                                          if (row['value'] == 'width') {
-                                            widget.handleChangeInput(
-                                                'width_unit_id', 4);
-                                          }
-
-                                          if (widget.withQtyAndWeight ==
-                                                  false &&
-                                              row['value'] == 'weight') {
-                                            widget.validateWeight(value);
-                                          }
-                                          if (widget.withQtyAndWeight == true &&
-                                              row['value'] == 'weight') {
-                                            widget.validateWeight(value);
-                                          }
-                                        });
-                                      },
-                                      // validator: (value) {
-                                      //   if (value == null || value.trim().isEmpty) {
-                                      //     return '${row['label']} wajib diisi';
-                                      //   }
-
-                                      // },
-                                    ),
-                                  ],
-                                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: CustomTheme().padding('card'),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(12),
+                            topRight: Radius.circular(12),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: CustomTheme().padding('process-content'),
+                              decoration: BoxDecoration(
+                                color: CustomTheme()
+                                    .buttonColor('primary')
+                                    .withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              if (row['withSelectUnit'] == true)
-                                Expanded(
-                                  flex: 1,
-                                  child: SelectForm(
-                                    isDisabled: false,
-                                    label: row['unitLabel'],
-                                    onTap: row['onSelect'],
-                                    selectedLabel: row['selectedLabel'],
-                                    selectedValue: row['selectedValue'],
-                                    required: row['req'],
-                                    validator: (value) {
-                                      if ((value == null || value.isEmpty)) {
-                                        return '${row['unitLabel']} wajib dipilih';
-                                      }
-                                      return null;
-                                    },
+                              child: Icon(
+                                Icons.settings_outlined,
+                                size: 18,
+                                color: CustomTheme().buttonColor('primary'),
+                              ),
+                            ),
+                            Text(
+                              'Informasi Proses',
+                              style: TextStyle(
+                                fontSize: CustomTheme().fontSize('md'),
+                                fontWeight:
+                                    CustomTheme().fontWeight('semibold'),
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                          ].separatedBy(CustomTheme().hGap('xl')),
+                        ),
+                      ),
+                      Padding(
+                        padding: CustomTheme().padding('item-detail'),
+                        child: Column(
+                          children: [
+                            ...formRows.map((row) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Expanded(
+                                        flex: row['staticUnit'] != null ? 4 : 3,
+                                        child: Column(
+                                          children: [
+                                            TextForm(
+                                              label: row['label'],
+                                              req: row['req'],
+                                              isNumber: true,
+                                              controller: row['controller'],
+                                              inputFormatters: [
+                                                if (minWeight != null &&
+                                                    maxWeight != null)
+                                                  RangeFormatter(
+                                                      min: minWeight,
+                                                      max: maxWeight),
+                                                ThousandsSeparatorInputFormatter()
+                                              ],
+                                              handleChange: (value) {
+                                                final safeValue =
+                                                    (value == null ||
+                                                            value
+                                                                .toString()
+                                                                .trim()
+                                                                .isEmpty)
+                                                        ? '0'
+                                                        : value.toString();
+
+                                                setState(() {
+                                                  row['controller'].text =
+                                                      safeValue;
+                                                  widget.handleChangeInput(
+                                                    row['value'],
+                                                    safeValue,
+                                                  );
+
+                                                  if (row['value'] ==
+                                                      'length') {
+                                                    widget.handleChangeInput(
+                                                        'length_unit_id', 4);
+                                                  }
+
+                                                  if (row['value'] == 'width') {
+                                                    widget.handleChangeInput(
+                                                        'width_unit_id', 4);
+                                                  }
+
+                                                  if (widget.withQtyAndWeight ==
+                                                          false &&
+                                                      row['value'] ==
+                                                          'weight') {
+                                                    widget
+                                                        .validateWeight(value);
+                                                  }
+                                                  if (widget.withQtyAndWeight ==
+                                                          true &&
+                                                      row['value'] ==
+                                                          'weight') {
+                                                    widget
+                                                        .validateWeight(value);
+                                                  }
+                                                });
+                                              },
+                                              validator: (value) {
+                                                if (value == null ||
+                                                    value.trim().isEmpty) {
+                                                  return '${row['label']} wajib diisi';
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      if (row['withSelectUnit'] == true)
+                                        Expanded(
+                                          flex: 1,
+                                          child: SelectForm(
+                                            isDisabled: false,
+                                            label: row['unitLabel'],
+                                            onTap: row['onSelect'],
+                                            selectedLabel: row['selectedLabel'],
+                                            selectedValue: row['selectedValue'],
+                                            required: row['req'],
+                                            validator: (value) {
+                                              if ((value == null ||
+                                                  value.isEmpty)) {
+                                                return '${row['unitLabel']} wajib dipilih';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                        ),
+                                      if (row['staticUnit'] != null &&
+                                          row['withSelectUnit'] == false) ...[
+                                        Expanded(
+                                            flex: 1,
+                                            child: StaticFormField(
+                                                value: row['staticUnit']))
+                                      ],
+                                    ].separatedBy(CustomTheme().hGap('xl')),
                                   ),
-                                ),
-                              if (row['staticUnit'] != null &&
-                                  row['withSelectUnit'] == false) ...[
-                                Expanded(
-                                    flex: 1,
-                                    child: StaticFormField(
-                                        value: row['staticUnit']))
-                              ],
-                            ].separatedBy(CustomTheme().hGap('xl')),
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  children: [
-                                    if (row['value'] == 'weight' &&
-                                        widget.weightWarning != null)
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Text(
-                                              widget.weightWarning ?? '-',
-                                              style: TextStyle(
-                                                color: CustomTheme()
-                                                    .colors('warning'),
-                                                fontSize: CustomTheme()
-                                                    .fontSize('sm'),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Column(
+                                          children: [
+                                            if (row['value'] == 'weight' &&
+                                                widget.weightWarning != null)
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const SizedBox(width: 8),
+                                                  Expanded(
+                                                    child: Text(
+                                                      widget.weightWarning ??
+                                                          '-',
+                                                      style: TextStyle(
+                                                        color: CustomTheme()
+                                                            .colors('warning'),
+                                                        fontSize: CustomTheme()
+                                                            .fontSize('sm'),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(flex: 1, child: Container())
-                            ].separatedBy(CustomTheme().hGap('xl')),
-                          ),
-                        ],
-                      );
-                    }),
-                    if (widget.withQtyAndWeight == true)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  children: [
-                                    TextForm(
-                                      label: 'Qty Hasil ${widget.label}',
-                                      req: true,
-                                      isNumber: true,
-                                      controller: widget.qty,
-                                      handleChange: (value) {
-                                        final safeValue = (value == null ||
-                                                value.toString().trim().isEmpty)
-                                            ? '0'
-                                            : value.toString();
+                                      Expanded(flex: 1, child: Container())
+                                    ].separatedBy(CustomTheme().hGap('xl')),
+                                  ),
+                                ],
+                              );
+                            }),
+                            if (widget.withQtyAndWeight == true)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Column(
+                                          children: [
+                                            TextForm(
+                                              label:
+                                                  'Qty Hasil ${widget.label}',
+                                              req: true,
+                                              isNumber: true,
+                                              controller: widget.qty,
+                                              handleChange: (value) {
+                                                final safeValue =
+                                                    (value == null ||
+                                                            value
+                                                                .toString()
+                                                                .trim()
+                                                                .isEmpty)
+                                                        ? '0'
+                                                        : value.toString();
 
-                                        setState(() {
-                                          widget.qty.text = safeValue;
-                                          widget.handleChangeInput(
-                                              'item_qty', safeValue);
-                                          widget.validateQty(safeValue);
-                                        });
-                                      },
-                                      // validator: (value) {
-                                      //   if (value == null || value.trim().isEmpty) {
-                                      //     return 'Qty wajib diisi';
-                                      //   }
-                                      // },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: SelectForm(
-                                  label: 'Satuan',
-                                  onTap: widget.handleSelectQtyUnitItem,
-                                  selectedLabel:
-                                      widget.form['nama_satuan'] ?? '',
-                                  selectedValue:
-                                      widget.form['item_unit_id']?.toString() ??
-                                          '',
-                                  required: true,
-                                  validator: (value) {
-                                    if ((value == null || value.isEmpty)) {
-                                      return 'Satuan wajib dipilih';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              )
-                            ].separatedBy(CustomTheme().hGap('xl')),
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  children: [
-                                    if (widget.qtyWarning != null)
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Text(
-                                              widget.qtyWarning ?? '-',
-                                              style: TextStyle(
-                                                color: CustomTheme()
-                                                    .colors('warning'),
-                                                fontSize: CustomTheme()
-                                                    .fontSize('sm'),
-                                              ),
+                                                setState(() {
+                                                  widget.qty.text = safeValue;
+                                                  widget.handleChangeInput(
+                                                      'item_qty', safeValue);
+                                                  widget.validateQty(safeValue);
+                                                });
+                                              },
+                                              // validator: (value) {
+                                              //   if (value == null || value.trim().isEmpty) {
+                                              //     return 'Qty wajib diisi';
+                                              //   }
+                                              // },
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                  ],
-                                ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: SelectForm(
+                                          label: 'Satuan',
+                                          onTap: widget.handleSelectQtyUnitItem,
+                                          selectedLabel:
+                                              widget.form['nama_satuan'] ?? '',
+                                          selectedValue: widget
+                                                  .form['item_unit_id']
+                                                  ?.toString() ??
+                                              '',
+                                          required: true,
+                                          validator: (value) {
+                                            if ((value == null ||
+                                                value.isEmpty)) {
+                                              return 'Satuan wajib dipilih';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      )
+                                    ].separatedBy(CustomTheme().hGap('xl')),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Column(
+                                          children: [
+                                            if (widget.qtyWarning != null)
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const SizedBox(width: 8),
+                                                  Expanded(
+                                                    child: Text(
+                                                      widget.qtyWarning ?? '-',
+                                                      style: TextStyle(
+                                                        color: CustomTheme()
+                                                            .colors('warning'),
+                                                        fontSize: CustomTheme()
+                                                            .fontSize('sm'),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(flex: 1, child: Container())
+                                    ].separatedBy(CustomTheme().hGap('xl')),
+                                  ),
+                                ],
                               ),
-                              Expanded(flex: 1, child: Container())
-                            ].separatedBy(CustomTheme().hGap('xl')),
-                          ),
-                        ],
-                      ),
-                    if (widget.forDyeing == true)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  children: [
-                                    TextForm(
-                                      label: 'Qty Hasil ${widget.label}',
-                                      req: true,
-                                      isNumber: true,
-                                      controller: widget.qty,
-                                      inputFormatters: [
-                                        if (minWeight != null &&
-                                            maxWeight != null)
-                                          RangeFormatter(
-                                              min: minWeight, max: maxWeight),
-                                        ThousandsSeparatorInputFormatter()
-                                      ],
-                                      handleChange: (value) {
-                                        final safeValue = (value == null ||
-                                                value.toString().trim().isEmpty)
-                                            ? '0'
-                                            : value.toString();
+                            if (widget.forDyeing == true)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Column(
+                                          children: [
+                                            TextForm(
+                                              label:
+                                                  'Qty Hasil ${widget.label}',
+                                              req: true,
+                                              isNumber: true,
+                                              controller: widget.qty,
+                                              inputFormatters: [
+                                                if (minWeight != null &&
+                                                    maxWeight != null)
+                                                  RangeFormatter(
+                                                      min: minWeight,
+                                                      max: maxWeight),
+                                                ThousandsSeparatorInputFormatter()
+                                              ],
+                                              handleChange: (value) {
+                                                final safeValue =
+                                                    (value == null ||
+                                                            value
+                                                                .toString()
+                                                                .trim()
+                                                                .isEmpty)
+                                                        ? '0'
+                                                        : value.toString();
 
-                                        setState(() {
-                                          widget.qty.text = safeValue;
-                                          widget.handleChangeInput(
-                                              'qty', safeValue);
-                                          widget.validateWeight(safeValue);
-                                        });
-                                      },
-                                      // validator: (value) {
-                                      //   if (value == null ||
-                                      //       value.trim().isEmpty) {
-                                      //     return 'Qty wajib diisi';
-                                      //   }
-                                      // },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: SelectForm(
-                                  label: 'Satuan',
-                                  onTap: widget.handleSelectQtyUnitDyeing,
-                                  selectedLabel:
-                                      widget.form['nama_satuan'] ?? '',
-                                  selectedValue:
-                                      widget.form['unit_id']?.toString() ?? '',
-                                  required: true,
-                                  validator: (value) {
-                                    if ((value == null || value.isEmpty)) {
-                                      return 'Satuan wajib dipilih';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              )
-                            ].separatedBy(CustomTheme().hGap('xl')),
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  children: [
-                                    if (widget.weightWarning != null)
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Text(
-                                              widget.weightWarning ?? '-',
-                                              style: TextStyle(
-                                                color: CustomTheme()
-                                                    .colors('warning'),
-                                                fontSize: CustomTheme()
-                                                    .fontSize('sm'),
-                                              ),
+                                                setState(() {
+                                                  widget.qty.text = safeValue;
+                                                  widget.handleChangeInput(
+                                                      'qty', safeValue);
+                                                  widget.validateWeight(
+                                                      safeValue);
+                                                });
+                                              },
+                                              validator: (value) {
+                                                if (value == null ||
+                                                    value.trim().isEmpty) {
+                                                  return 'Qty wajib diisi';
+                                                }
+                                              },
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                  ],
-                                ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: SelectForm(
+                                          label: 'Satuan',
+                                          onTap:
+                                              widget.handleSelectQtyUnitDyeing,
+                                          selectedLabel:
+                                              widget.form['nama_satuan'] ?? '',
+                                          selectedValue: widget.form['unit_id']
+                                                  ?.toString() ??
+                                              '',
+                                          required: true,
+                                          validator: (value) {
+                                            if ((value == null ||
+                                                value.isEmpty)) {
+                                              return 'Satuan wajib dipilih';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      )
+                                    ].separatedBy(CustomTheme().hGap('xl')),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Column(
+                                          children: [
+                                            if (widget.weightWarning != null)
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const SizedBox(width: 8),
+                                                  Expanded(
+                                                    child: Text(
+                                                      widget.weightWarning ??
+                                                          '-',
+                                                      style: TextStyle(
+                                                        color: CustomTheme()
+                                                            .colors('warning'),
+                                                        fontSize: CustomTheme()
+                                                            .fontSize('sm'),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(flex: 1, child: Container())
+                                    ].separatedBy(CustomTheme().hGap('xl')),
+                                  ),
+                                ],
                               ),
-                              Expanded(flex: 1, child: Container())
-                            ].separatedBy(CustomTheme().hGap('xl')),
-                          ),
-                        ],
+                          ].separatedBy(CustomTheme().vGap('lg')),
+                        ),
                       ),
-                  ].separatedBy(CustomTheme().vGap('lg')),
-                )),
+                    ],
+                  ),
+                ),
               if (widget.forPacking == true)
                 CustomCard(
                   child: Row(

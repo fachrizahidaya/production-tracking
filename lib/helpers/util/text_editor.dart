@@ -3,6 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:quill_html_editor_v3/quill_html_editor_v3.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/button/cancel_button.dart';
+import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class TextEditor extends StatefulWidget {
   final initialHtml;
@@ -15,6 +20,8 @@ class TextEditor extends StatefulWidget {
 
 class _TextEditorState extends State<TextEditor> {
   final QuillEditorController controller = QuillEditorController();
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+  final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
   @override
   void initState() {
@@ -28,18 +35,29 @@ class _TextEditorState extends State<TextEditor> {
     });
   }
 
+  Future<void> _handleCancel(BuildContext context) async {
+    if (context.mounted) {
+      showConfirmationDialog(
+          context: context,
+          isLoading: _isLoading,
+          onConfirm: () async {
+            await Future.delayed(const Duration(milliseconds: 200));
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          title: 'Batal Membuat Catatan',
+          message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
+          buttonBackground: CustomTheme().buttonColor('danger'));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Catatan',
         onReturn: () {
-          Navigator.pop(context);
-        },
-        isTextEditor: true,
-        handleSave: () async {
-          final html = await controller.getText();
-          Navigator.pop(context, html);
+          _handleCancel(context);
         },
       ),
       body: Column(
@@ -65,6 +83,37 @@ class _TextEditorState extends State<TextEditor> {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          padding: CustomTheme().padding('card'),
+          color: Colors.white,
+          child: ValueListenableBuilder<bool>(
+            valueListenable: _isSubmitting,
+            builder: (context, isSubmitting, _) {
+              return Row(
+                children: [
+                  Expanded(
+                    child: CancelButton(
+                      label: 'Batal',
+                      onPressed: () => _handleCancel(context),
+                      customHeight: 48.0,
+                    ),
+                  ),
+                  Expanded(
+                      child: FormButton(
+                    label: 'Mulai',
+                    onPressed: () async {
+                      final html = await controller.getText();
+                      Navigator.pop(context, html);
+                    },
+                    customHeight: 48.0,
+                  ))
+                ].separatedBy(CustomTheme().hGap('xl')),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

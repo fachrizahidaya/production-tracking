@@ -29,7 +29,7 @@ class TextForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FormField(
-      validator: validator,
+      validator: req == true ? validator : null,
       builder: (FormFieldState<String> field) {
         return GroupForm(
           label: label,
@@ -48,10 +48,12 @@ class TextForm extends StatelessWidget {
             inputFormatters:
                 isNumber == true ? [ThousandsSeparatorInputFormatter()] : [],
             onChanged: (value) {
-              String rawValue = value.replaceAll(',', '');
+              final rawValue = value.replaceAll(',', '');
+
+              field.didChange(rawValue); // ✅ WAJIB: clear error saat valid
+
               handleChange(rawValue);
             },
-            // validator: req ? validator : null,
           ),
         );
       },

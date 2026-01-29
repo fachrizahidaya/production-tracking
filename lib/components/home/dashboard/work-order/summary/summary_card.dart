@@ -45,6 +45,21 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
+  List<dynamic> _getWOListByStatus(String label) {
+    switch (label) {
+      case 'Menunggu Diproses':
+        return widget.data['waiting'] as List? ?? [];
+      case 'Selesai':
+        return widget.data['completed'] as List? ?? [];
+      case 'Diproses':
+        return widget.data['in_progress'] as List? ?? [];
+      case 'Dilewati':
+        return widget.data['skipped'] as List? ?? [];
+      default:
+        return [];
+    }
+  }
+
   int _getOverdueDays(String? dueDate) {
     if (dueDate == null) return 0;
 
@@ -69,6 +84,135 @@ class _SummaryCardState extends State<SummaryCard>
       default:
         return _getTotalCount(summary);
     }
+  }
+
+  void _showWorkOrdersByStatusDialog(
+    BuildContext context, {
+    required String title,
+    required List<dynamic> woList,
+  }) {
+    if (woList.isEmpty) return;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 360,
+              maxHeight: 420,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header
+                  Row(
+                    children: [
+                      Icon(
+                          title == 'Selesai'
+                              ? Icons.task_alt_outlined
+                              : title == 'Diproses'
+                                  ? Icons.access_time_outlined
+                                  : title == 'Dilewati'
+                                      ? Icons.fast_forward_outlined
+                                      : Icons.error_outline,
+                          size: 20),
+                      const SizedBox(width: 8),
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: CustomTheme().fontSize('md'),
+                          fontWeight: CustomTheme().fontWeight('semibold'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+
+                  // List
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: woList.length,
+                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      itemBuilder: (context, index) {
+                        final wo = woList[index];
+                        final woNo = wo['wo_no'] ?? '-';
+                        final bool isUrgent = wo['urgent'] == true;
+                        final bool isOverdue = wo['overdue'] == true;
+                        final String overdueDays =
+                            wo['overdue_days']?.toString() ?? '0';
+                        final createdAt = wo['created_at'];
+
+                        return ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Row(
+                            children: [
+                              if (isOverdue)
+                                PulseIcon(
+                                  icon: Icons.circle,
+                                  color: Colors.redAccent,
+                                  size: 12,
+                                ),
+                              Text(
+                                woNo,
+                                style: TextStyle(
+                                  fontWeight:
+                                      CustomTheme().fontWeight('semibold'),
+                                  color: isOverdue
+                                      ? Colors.redAccent
+                                      : Colors.grey[800],
+                                ),
+                              ),
+                              if (isUrgent)
+                                const Icon(
+                                  Icons.warning_amber_rounded,
+                                  size: 16,
+                                  color: Colors.red,
+                                ),
+                            ].separatedBy(CustomTheme().hGap('sm')),
+                          ),
+                          subtitle: Text(
+                            isOverdue
+                                ? 'Terlambat $overdueDays hari'
+                                : createdAt != null
+                                    ? DateFormat("dd MMM yyyy")
+                                        .format(DateTime.parse(createdAt))
+                                    : '-',
+                            style: TextStyle(
+                              fontSize: CustomTheme().fontSize('sm'),
+                              color: isOverdue
+                                  ? Colors.redAccent
+                                  : Colors.grey[600],
+                            ),
+                          ),
+                          trailing: const Icon(Icons.chevron_right, size: 18),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => WorkOrderDetail(
+                                  id: wo['wo_id'].toString(),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _showAllWorkOrdersDialog(
@@ -291,7 +435,7 @@ class _SummaryCardState extends State<SummaryCard>
                   // Status Grid
                   _buildStatusGrid(summary, isTablet),
 
-                  _buildWaitingWONumber(waitingList, isTablet),
+                  // _buildWaitingWONumber(waitingList, isTablet),
                 ].separatedBy(CustomTheme().vGap('lg')),
               ),
             ),
@@ -565,54 +709,73 @@ class _SummaryCardState extends State<SummaryCard>
 
   /// Status Item Widget
   Widget _buildStatusItem(_StatusItem item, bool isTablet) {
-    return Container(
-      padding: CustomTheme().padding('badge'),
-      decoration: BoxDecoration(
-        color: item.color,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Colors.grey.withOpacity(0.3),
+    final woList = _getWOListByStatus(item.label);
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: woList.isEmpty
+          ? null
+          : () {
+              _showWorkOrdersByStatusDialog(
+                context,
+                title: item.label,
+                woList: woList,
+              );
+            },
+      child: Container(
+        padding: CustomTheme().padding('badge'),
+        decoration: BoxDecoration(
+          color: item.color,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Colors.grey.withOpacity(0.3),
+          ),
         ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            item.icon,
-            size: isTablet ? 18 : 16,
-            color: item.iconColor,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    formatNumber(item.value),
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('md'),
-                      fontWeight: CustomTheme().fontWeight('bold'),
-                      color: item.iconColor,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              item.icon,
+              size: isTablet ? 18 : 16,
+              color: item.iconColor,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      formatNumber(item.value),
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('md'),
+                        fontWeight: CustomTheme().fontWeight('bold'),
+                        color: item.iconColor,
+                      ),
                     ),
-                  ),
-                  if (item.showPulse)
-                    PulseIcon(
-                      icon: Icons.circle,
-                      color: Colors.red,
-                      size: 14,
-                    ),
-                ].separatedBy(CustomTheme().hGap('md')),
-              ),
-              Text(
-                item.label,
-                style: TextStyle(
-                  fontSize: CustomTheme().fontSize('md'),
-                  color: Colors.grey[600],
+                    if (item.showPulse)
+                      PulseIcon(
+                        icon: Icons.circle,
+                        color: Colors.red,
+                        size: 14,
+                      ),
+                  ].separatedBy(CustomTheme().hGap('md')),
                 ),
-              ),
-            ],
-          ),
-        ].separatedBy(CustomTheme().hGap('lg')),
+                Text(
+                  item.label,
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('md'),
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+            Icon(
+              Icons.chevron_right_outlined,
+              size: isTablet ? 18 : 16,
+              color: Colors.grey,
+            ),
+          ].separatedBy(CustomTheme().hGap('lg')),
+        ),
       ),
     );
   }

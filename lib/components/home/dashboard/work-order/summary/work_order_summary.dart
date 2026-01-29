@@ -116,20 +116,27 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
 
   Map<String, dynamic> _mapApiToSummaryCard(Map<String, dynamic> item) {
     final waitingList = item['waiting'] as List? ?? [];
+    final completedList = item['completed'] as List? ?? [];
+    final inProgressList = item['in_progress'] as List? ?? [];
+    final skippedList = item['skipped'] as List? ?? [];
 
     return {
       'name': item['process_name'],
+
       'summary': {
-        'completed': (item['completed'] as List?)?.length ?? 0,
-        'in_progress': (item['in_progress'] as List?)?.length ?? 0,
+        'completed': completedList.length,
+        'in_progress': inProgressList.length,
         'waiting': waitingList.length,
-        'skipped': (item['skipped'] as List?)?.length ?? 0,
+        'skipped': skippedList.length,
       },
 
-      // 👇 keep original waiting list
+      // 👇 SIMPAN SEMUA LIST (INI KUNCI)
       'waiting': waitingList,
+      'completed': completedList,
+      'in_progress': inProgressList,
+      'skipped': skippedList,
 
-      // 👇 NUMBER 1: overdue detector
+      // overdue detector tetap valid
       'hasOverdueWaiting': _hasOverdueWaiting(waitingList),
     };
   }

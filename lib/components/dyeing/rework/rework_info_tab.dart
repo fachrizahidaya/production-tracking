@@ -66,9 +66,10 @@ class _ReworkInfoTabState extends State<ReworkInfoTab> {
                   isTablet: isTablet,
                   withNote: true,
                 ),
-              WoItemTab(
-                data: widget.data,
-              )
+              if (widget.form?['wo_id'] != null)
+                WoItemTab(
+                  data: widget.data,
+                )
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
         );

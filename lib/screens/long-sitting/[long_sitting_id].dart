@@ -28,7 +28,7 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
     return ProcessDetail<LongSitting>(
       id: widget.id,
       no: widget.no,
-      label: 'Long Sitting',
+      label: 'Long Slitting',
       service: Provider.of<LongSittingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<LongSittingService>(context, listen: false)

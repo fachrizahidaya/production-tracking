@@ -4,6 +4,7 @@ import 'package:textile_tracking/components/work-order/item/note_item.dart';
 
 class NoteTab extends StatefulWidget {
   final data;
+
   const NoteTab({super.key, this.data});
 
   @override

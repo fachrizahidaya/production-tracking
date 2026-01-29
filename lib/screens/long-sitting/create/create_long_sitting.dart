@@ -44,14 +44,14 @@ class CreateLongSitting extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
-          context: context, title: 'Long Sitting Dimulai', message: message);
+          context: context, title: 'Long Slitting Dimulai', message: message);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return CreateProcess(
-      title: 'Mulai Long Sitting',
+      title: 'Mulai Long Slitting',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
         return CreateLongSittingManual(

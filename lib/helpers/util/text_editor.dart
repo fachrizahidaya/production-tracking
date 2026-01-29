@@ -95,14 +95,14 @@ class _TextEditorState extends State<TextEditor> {
                 children: [
                   Expanded(
                     child: CancelButton(
-                      label: 'Batal',
+                      label: 'Kembali',
                       onPressed: () => _handleCancel(context),
                       customHeight: 48.0,
                     ),
                   ),
                   Expanded(
                       child: FormButton(
-                    label: 'Mulai',
+                    label: 'Simpan',
                     onPressed: () async {
                       final html = await controller.getText();
                       Navigator.pop(context, html);

@@ -45,8 +45,7 @@ class TextForm extends StatelessWidget {
                 ),
             keyboardType:
                 isNumber == true ? TextInputType.number : TextInputType.text,
-            inputFormatters:
-                isNumber == true ? [ThousandsSeparatorInputFormatter()] : [],
+            inputFormatters: inputFormatters,
             onChanged: (value) {
               final rawValue = value.replaceAll(',', '');
 

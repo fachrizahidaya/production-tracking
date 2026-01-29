@@ -1095,7 +1095,7 @@ class _ItemProcessState extends State<ItemProcess> {
         };
       case 'long_sitting':
         return {
-          'title': 'Long Sitting',
+          'title': 'Long Slitting',
           'icon': Icons.content_paste_outlined,
           'color': Colors.indigo,
         };

@@ -144,11 +144,12 @@ class _FormItemsState extends State<FormItems> {
           ),
           CustomTheme().vGap('lg'),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(
                 flex: 2,
                 child: TextForm(
-                  label: 'Jumlah',
+                  label: 'Qty',
                   req: true,
                   isNumber: true,
                   inputFormatters: [
@@ -156,20 +157,32 @@ class _FormItemsState extends State<FormItems> {
                   ],
                   handleChange: (val) =>
                       widget.handleUpdateGrade(i, 'qty', val),
+                  // validator: (value) {
+                  //   if (value == null || value.trim().isEmpty) {
+                  //     return 'Qty wajib diisi';
+                  //   }
+                  // },
                 ),
               ),
-              Expanded(
-                flex: 1,
-                child: SelectForm(
-                  label: 'Satuan',
-                  onTap: () => widget.handleSelectQtyUnit(i),
-                  selectedLabel:
-                      widget.form['grades']?[i]?['unit']?['name'] ?? '',
-                  selectedValue:
-                      widget.form['grades']?[i]?['unit_id']?.toString() ?? '',
-                  required: true,
-                ),
-              ),
+              Expanded(flex: 1, child: StaticFormField(value: 'PCS')),
+              // Expanded(
+              //   flex: 1,
+              //   child: SelectForm(
+              //     label: 'Satuan',
+              //     onTap: () => widget.handleSelectQtyUnit(i),
+              //     selectedLabel:
+              //         widget.form['grades']?[i]?['unit']?['name'] ?? '',
+              //     selectedValue:
+              //         widget.form['grades']?[i]?['unit_id']?.toString() ?? '',
+              //     required: true,
+              //     validator: (value) {
+              //       if ((value == null || value.isEmpty)) {
+              //         return 'Satuan Grade wajib dipilih';
+              //       }
+              //       return null;
+              //     },
+              //   ),
+              // ),
               Expanded(
                 flex: 1,
                 child: TextForm(
@@ -366,15 +379,75 @@ class _FormItemsState extends State<FormItems> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               if (widget.withItemGrade == true)
-                Column(
-                  children: [
-                    if ((widget.itemGradeOption ?? []).isNotEmpty &&
-                        widget.grades.isNotEmpty &&
-                        widget.grades.length >= widget.itemGradeOption.length)
-                      for (int i = 0; i < widget.itemGradeOption.length; i++)
-                        buildGradeCard(i),
-                  ].separatedBy(CustomTheme().vGap('xl')),
-                ),
+                Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: CustomTheme().padding('card'),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(12),
+                              topRight: Radius.circular(12),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding:
+                                    CustomTheme().padding('process-content'),
+                                decoration: BoxDecoration(
+                                  color: CustomTheme()
+                                      .buttonColor('primary')
+                                      .withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Icon(
+                                  Icons.paste_outlined,
+                                  size: 18,
+                                  color: CustomTheme().buttonColor('primary'),
+                                ),
+                              ),
+                              Text(
+                                'Grade ${widget.label}',
+                                style: TextStyle(
+                                  fontSize: CustomTheme().fontSize('md'),
+                                  fontWeight:
+                                      CustomTheme().fontWeight('semibold'),
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                            ].separatedBy(CustomTheme().hGap('xl')),
+                          ),
+                        ),
+                        Padding(
+                          padding: CustomTheme().padding('item-detail'),
+                          child: Column(
+                            children: [
+                              if ((widget.itemGradeOption ?? []).isNotEmpty &&
+                                  widget.grades.isNotEmpty &&
+                                  widget.grades.length >=
+                                      widget.itemGradeOption.length)
+                                for (int i = 0;
+                                    i < widget.itemGradeOption.length;
+                                    i++)
+                                  buildGradeCard(i),
+                            ].separatedBy(CustomTheme().vGap('xl')),
+                          ),
+                        ),
+                      ],
+                    )),
               if (widget.withItemGrade == false)
                 Container(
                   decoration: BoxDecoration(
@@ -607,11 +680,12 @@ class _FormItemsState extends State<FormItems> {
                                                   widget.validateQty(safeValue);
                                                 });
                                               },
-                                              // validator: (value) {
-                                              //   if (value == null || value.trim().isEmpty) {
-                                              //     return 'Qty wajib diisi';
-                                              //   }
-                                              // },
+                                              validator: (value) {
+                                                if (value == null ||
+                                                    value.trim().isEmpty) {
+                                                  return 'Qty wajib diisi';
+                                                }
+                                              },
                                             ),
                                           ],
                                         ),
@@ -794,27 +868,33 @@ class _FormItemsState extends State<FormItems> {
                       Expanded(
                         flex: 2,
                         child: TextForm(
-                          label: 'Berat 1 Lusin (KG)',
-                          req: true,
-                          isNumber: true,
-                          controller: widget.weightDozen,
-                          inputFormatters: [ThousandsSeparatorInputFormatter()],
-                          handleChange: (val) {
-                            final safeValue =
-                                (val == null || val.toString().trim().isEmpty)
-                                    ? '0'
-                                    : val.toString();
-                            widget.weightDozen.text = safeValue;
-                            widget.handleChangeInput(
-                                'weight_per_dozen', safeValue);
+                            label: 'Berat 1 Lusin (KG)',
+                            req: true,
+                            isNumber: true,
+                            controller: widget.weightDozen,
+                            inputFormatters: [
+                              ThousandsSeparatorInputFormatter()
+                            ],
+                            handleChange: (val) {
+                              final safeValue =
+                                  (val == null || val.toString().trim().isEmpty)
+                                      ? '0'
+                                      : val.toString();
+                              widget.weightDozen.text = safeValue;
+                              widget.handleChangeInput(
+                                  'weight_per_dozen', safeValue);
 
-                            final cleanValue =
-                                val.replaceAll('.', '').replaceAll(',', '');
-                            final input = double.tryParse(cleanValue) ?? 0;
+                              final cleanValue =
+                                  val.replaceAll('.', '').replaceAll(',', '');
+                              final input = double.tryParse(cleanValue) ?? 0;
 
-                            calculateFromBeratLusin(input);
-                          },
-                        ),
+                              calculateFromBeratLusin(input);
+                            },
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Berat wajib diisi';
+                              }
+                            }),
                       ),
                       CustomTheme().hGap('xl'),
                       Expanded(

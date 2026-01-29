@@ -754,7 +754,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      // 3,
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
@@ -847,6 +846,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             weight: _weightController.text,
             isQtyFullyDistributed: isQtyFullyDistributed,
             withItemGrade: widget.withItemGrade,
+            withItemQtyAndWeight: widget.withQtyAndWeight,
           ),
         ),
       ),

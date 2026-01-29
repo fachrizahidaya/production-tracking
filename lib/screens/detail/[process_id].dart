@@ -124,9 +124,16 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   @override
   void initState() {
     super.initState();
-    _getDataView();
-    _handleFetchUnit();
-    _handleFetchMachine();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _postInit();
+    });
+  }
+
+  Future<void> _postInit() async {
+    await _getDataView();
+    await _handleFetchUnit();
+    await _handleFetchMachine();
   }
 
   void _handleChangeInput(String fieldName, dynamic value) {

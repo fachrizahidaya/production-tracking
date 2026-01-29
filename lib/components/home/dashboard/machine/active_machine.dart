@@ -92,6 +92,12 @@ class _ActiveMachineState extends State<ActiveMachine>
     super.dispose();
   }
 
+  bool get _shouldShowProcessFilter {
+    // processFilters = ['All', ...filtered]
+    // show only if more than 1 actual process exists
+    return processFilters.length > 2;
+  }
+
   Widget _buildProcessFilter() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -266,7 +272,9 @@ class _ActiveMachineState extends State<ActiveMachine>
             ],
           ),
         ),
-        _buildProcessFilter(),
+        if (_shouldShowProcessFilter) ...[
+          _buildProcessFilter(),
+        ],
         Divider(),
         _buildSwipeContent(filteredAvailable, filteredUnavailable, isPortrait)
       ],

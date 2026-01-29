@@ -198,7 +198,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
       child: Scaffold(
         backgroundColor: Color(0xFFf9fafc),
         appBar: CustomAppBar(
-          title: 'Long Sitting',
+          title: 'Long Slitting',
           onReturn: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
@@ -234,7 +234,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
             isLoadMore: _isLoadMore,
             canRead: _canRead,
             itemBuilder: (item) => ItemProcessCard(
-              label: 'No. Long Sitting',
+              label: 'No. Long Slitting',
               item: item,
               titleKey: 'ls_no',
               subtitleKey: 'work_orders',
@@ -303,7 +303,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                                 leading: Icon(Icons.add,
                                     color:
                                         CustomTheme().buttonColor('primary')),
-                                title: Text("Mulai Long Sitting"),
+                                title: Text("Mulai Long Slitting"),
                                 onTap: () {
                                   Navigator.pop(context);
                                   Navigator.of(context).push(
@@ -317,7 +317,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                                 leading: Icon(Icons.check_circle,
                                     color:
                                         CustomTheme().buttonColor('warning')),
-                                title: Text("Selesai Long Sitting"),
+                                title: Text("Selesai Long Slitting"),
                                 onTap: () {
                                   Navigator.pop(context);
                                   Navigator.of(context).push(

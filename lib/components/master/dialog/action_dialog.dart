@@ -28,18 +28,24 @@ class ActionDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: actions.map((item) {
-          return ListTile(
-            leading: Icon(item.icon, color: item.iconColor),
-            title: Text(item.title),
-            onTap: () {
-              Navigator.pop(context);
-              item.onTap();
-            },
-          );
-        }).toList(),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.75,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: actions.map((item) {
+            return ListTile(
+              leading: Icon(item.icon, color: item.iconColor),
+              title: Text(item.title),
+              onTap: () {
+                Navigator.pop(context);
+                item.onTap();
+              },
+            );
+          }).toList(),
+        ),
       ),
     );
   }

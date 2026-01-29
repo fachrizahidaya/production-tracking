@@ -66,134 +66,195 @@ class _ListFormState extends State<ListForm> {
     }
 
     return Form(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          if (widget.id == null)
-            Expanded(
-              child: CustomCard(
-                  child: SelectForm(
-                label: 'Work Order',
-                onTap: () => widget.selectWorkOrder(),
-                selectedLabel: widget.form?['no_wo'] ?? '',
-                selectedValue: widget.form?['wo_id']?.toString() ?? '',
-                required: true,
-              )),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
             ),
-          if (widget.withOnlyMaklon == true && widget.form?['wo_id'] != null)
-            Expanded(
-              child: CustomCard(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          ],
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: CustomTheme().padding('card'),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
+              ),
+              child: Row(
                 children: [
+                  Container(
+                    padding: CustomTheme().padding('process-content'),
+                    decoration: BoxDecoration(
+                      color:
+                          CustomTheme().buttonColor('primary').withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.paste_outlined,
+                      size: 18,
+                      color: CustomTheme().buttonColor('primary'),
+                    ),
+                  ),
                   Text(
-                    'Maklon',
-                    style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
+                    'Work Order & Mesin',
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('md'),
+                      fontWeight: CustomTheme().fontWeight('semibold'),
+                      color: Colors.grey[800],
+                    ),
                   ),
-                  Row(
-                    children: [
-                      Opacity(
-                        opacity: widget.form?['wo_id'] != null ? 1.0 : 0.5,
-                        child: Switch(
-                          value: _isMaklon,
-                          onChanged: widget.form?['wo_id'] != null
-                              ? (value) {
-                                  setState(() {
-                                    _isMaklon = value;
-                                    widget.form['maklon'] = value;
-                                  });
-                                }
-                              : null,
-                          activeColor: Colors.green,
-                          inactiveThumbColor: Colors.redAccent,
-                        ),
-                      ),
-                      Text(_isMaklon ? 'Ya' : 'Tidak'),
-                    ].separatedBy(CustomTheme().hGap('lg')),
-                  ),
-                  if (_isMaklon)
-                    TextForm(
-                      label: 'Nama Maklon',
-                      req: false,
-                      controller: widget.maklonName,
-                      handleChange: (value) {
-                        setState(() {
-                          widget.maklonName.text = value.toString();
-                          widget.form['maklon_name'] = value.toString();
-                        });
-                      },
+                ].separatedBy(CustomTheme().hGap('xl')),
+              ),
+            ),
+            Padding(
+              padding: CustomTheme().padding('item-detail'),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (widget.id == null)
+                    Expanded(
+                      child: CustomCard(
+                          child: SelectForm(
+                        label: 'Work Order',
+                        onTap: () => widget.selectWorkOrder(),
+                        selectedLabel: widget.form?['no_wo'] ?? '',
+                        selectedValue: widget.form?['wo_id']?.toString() ?? '',
+                        required: true,
+                      )),
+                    ),
+                  if (widget.withOnlyMaklon == true &&
+                      widget.form?['wo_id'] != null)
+                    Expanded(
+                      child: CustomCard(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Maklon',
+                            style: TextStyle(
+                                fontSize: CustomTheme().fontSize('lg')),
+                          ),
+                          Row(
+                            children: [
+                              Opacity(
+                                opacity:
+                                    widget.form?['wo_id'] != null ? 1.0 : 0.5,
+                                child: Switch(
+                                  value: _isMaklon,
+                                  onChanged: widget.form?['wo_id'] != null
+                                      ? (value) {
+                                          setState(() {
+                                            _isMaklon = value;
+                                            widget.form['maklon'] = value;
+                                          });
+                                        }
+                                      : null,
+                                  activeColor: Colors.green,
+                                  inactiveThumbColor: Colors.redAccent,
+                                ),
+                              ),
+                              Text(_isMaklon ? 'Ya' : 'Tidak'),
+                            ].separatedBy(CustomTheme().hGap('lg')),
+                          ),
+                          if (_isMaklon)
+                            TextForm(
+                              label: 'Nama Maklon',
+                              req: false,
+                              controller: widget.maklonName,
+                              handleChange: (value) {
+                                setState(() {
+                                  widget.maklonName.text = value.toString();
+                                  widget.form['maklon_name'] = value.toString();
+                                });
+                              },
+                            )
+                        ],
+                      )),
                     )
-                ],
-              )),
-            )
-          else if (widget.withMaklonOrMachine == true &&
-              widget.form?['wo_id'] != null)
-            Expanded(
-              child: CustomCard(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Maklon',
-                    style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
-                  ),
-                  Row(
-                    children: [
-                      Opacity(
-                        opacity: widget.form?['wo_id'] != null ? 1.0 : 0.5,
-                        child: Switch(
-                          value: _isMaklon,
-                          onChanged: widget.form?['wo_id'] != null
-                              ? (value) {
-                                  setState(() {
-                                    _isMaklon = value;
-                                    widget.form['maklon'] = value;
-                                  });
-                                }
-                              : null,
-                          activeColor: Colors.green,
-                          inactiveThumbColor: Colors.redAccent,
-                        ),
-                      ),
-                      Text(_isMaklon ? 'Ya' : 'Tidak'),
-                    ].separatedBy(CustomTheme().hGap('lg')),
-                  ),
-                  if (_isMaklon)
-                    TextForm(
-                      label: 'Nama Maklon',
-                      req: false,
-                      controller: widget.maklonName,
-                      handleChange: (value) {
-                        setState(() {
-                          widget.maklonName.text = value.toString();
-                          widget.form['maklon_name'] = value.toString();
-                        });
-                      },
+                  else if (widget.withMaklonOrMachine == true &&
+                      widget.form?['wo_id'] != null)
+                    Expanded(
+                      child: CustomCard(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Maklon',
+                            style: TextStyle(
+                                fontSize: CustomTheme().fontSize('lg')),
+                          ),
+                          Row(
+                            children: [
+                              Opacity(
+                                opacity:
+                                    widget.form?['wo_id'] != null ? 1.0 : 0.5,
+                                child: Switch(
+                                  value: _isMaklon,
+                                  onChanged: widget.form?['wo_id'] != null
+                                      ? (value) {
+                                          setState(() {
+                                            _isMaklon = value;
+                                            widget.form['maklon'] = value;
+                                          });
+                                        }
+                                      : null,
+                                  activeColor: Colors.green,
+                                  inactiveThumbColor: Colors.redAccent,
+                                ),
+                              ),
+                              Text(_isMaklon ? 'Ya' : 'Tidak'),
+                            ].separatedBy(CustomTheme().hGap('lg')),
+                          ),
+                          if (_isMaklon)
+                            TextForm(
+                              label: 'Nama Maklon',
+                              req: false,
+                              controller: widget.maklonName,
+                              handleChange: (value) {
+                                setState(() {
+                                  widget.maklonName.text = value.toString();
+                                  widget.form['maklon_name'] = value.toString();
+                                });
+                              },
+                            )
+                          else if (widget.form?['wo_id'] != null)
+                            SelectForm(
+                              label: 'Mesin',
+                              onTap: () => widget.selectMachine(),
+                              selectedLabel: widget.form['nama_mesin'] ?? '',
+                              selectedValue:
+                                  widget.form['machine_id'].toString(),
+                              required: true,
+                            ),
+                        ],
+                      )),
                     )
                   else if (widget.form?['wo_id'] != null)
-                    SelectForm(
-                      label: 'Mesin',
-                      onTap: () => widget.selectMachine(),
-                      selectedLabel: widget.form['nama_mesin'] ?? '',
-                      selectedValue: widget.form['machine_id'].toString(),
-                      required: true,
+                    Expanded(
+                      child: CustomCard(
+                          child: SelectForm(
+                        label: 'Mesin',
+                        onTap: () => widget.selectMachine(),
+                        selectedLabel: widget.form['nama_mesin'] ?? '',
+                        selectedValue: widget.form['machine_id'].toString(),
+                        required: true,
+                      )),
                     ),
-                ],
-              )),
+                ].separatedBy(CustomTheme().hGap('xl')),
+              ),
             )
-          else if (widget.form?['wo_id'] != null)
-            Expanded(
-              child: CustomCard(
-                  child: SelectForm(
-                label: 'Mesin',
-                onTap: () => widget.selectMachine(),
-                selectedLabel: widget.form['nama_mesin'] ?? '',
-                selectedValue: widget.form['machine_id'].toString(),
-                required: true,
-              )),
-            ),
-        ].separatedBy(CustomTheme().hGap('xl')),
+          ],
+        ),
       ),
     );
   }

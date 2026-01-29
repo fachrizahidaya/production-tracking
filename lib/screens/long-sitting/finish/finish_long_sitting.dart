@@ -64,7 +64,7 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
   @override
   Widget build(BuildContext context) {
     return FinishProcess(
-      title: 'Selesai Long Sitting',
+      title: 'Selesai Long Slitting',
       fetchWorkOrder: (service) async =>
           await service.fetchSittingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
@@ -111,7 +111,7 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showAlertDialog(
               context: context,
-              title: 'Long Sitting Selesai',
+              title: 'Long Slitting Selesai',
               message: message);
         });
       },

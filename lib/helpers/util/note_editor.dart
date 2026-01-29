@@ -27,6 +27,18 @@ class _NoteEditorState extends State<NoteEditor> {
   String? initialHtmlState;
 
   @override
+  void initState() {
+    super.initState();
+
+    // ✅ Load existing form data into controller
+    if (widget.form != null &&
+        widget.form![widget.formKey] != null &&
+        widget.controller.text.isEmpty) {
+      widget.controller.text = widget.form![widget.formKey];
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +56,7 @@ class _NoteEditorState extends State<NoteEditor> {
             setState(() {
               initialHtmlState = widget.controller.text.trim().isEmpty
                   ? "<p></p>"
-                  : "<p>${widget.controller.text}</p>";
+                  : widget.controller.text;
             });
 
             // Open the TextEditor
@@ -82,11 +94,11 @@ class _NoteEditorState extends State<NoteEditor> {
               border: Border.all(color: Colors.grey.shade300),
             ),
             child: Html(
-              data: widget.controller.text,
+              data: widget.controller.text.isNotEmpty
+                  ? widget.controller.text
+                  : "<p style='color:#999'>Tap to add notes</p>",
               style: {
-                "*": Style(
-                  margin: Margins.zero,
-                ),
+                "*": Style(margin: Margins.zero),
               },
             ),
           ),

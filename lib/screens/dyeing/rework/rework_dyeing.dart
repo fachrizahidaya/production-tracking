@@ -32,12 +32,12 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
 
   @override
   void initState() {
-    final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
-    _handleFetchWorkOrder();
     super.initState();
+    final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
 
-    setState(() {
-      _form['end_by_id'] = loggedInUser?.id;
+    _form['end_by_id'] = loggedInUser?.id;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleFetchWorkOrder();
     });
   }
 
@@ -84,7 +84,6 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
 
     setState(() {
       workOrderOption = service.dataListOption;
-      ;
     });
   }
 

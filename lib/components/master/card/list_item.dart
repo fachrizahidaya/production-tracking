@@ -167,50 +167,40 @@ class ListItem extends StatelessWidget {
         runSpacing: 8,
         children: [
           if (item['variants'][2] != null)
-            Expanded(
-              child: _buildInfoChip(
-                title: 'Desain',
-                icon: Icons.design_services_outlined,
-                label: item['variants'][2]['value']?.toString() ?? '-',
-                isTablet: isTablet,
-              ),
+            _buildInfoChip(
+              title: 'Desain',
+              icon: Icons.design_services_outlined,
+              label: item['variants'][2]['value']?.toString() ?? '-',
+              isTablet: isTablet,
             ),
           if (item['variants'][0] != null)
-            Expanded(
-              child: _buildInfoChip(
-                title: 'Bahan',
-                icon: Icons.cut_outlined,
-                label: item['variants'][0]['value']?.toString() ?? '-',
-                isTablet: isTablet,
-              ),
+            _buildInfoChip(
+              title: 'Bahan',
+              icon: Icons.cut_outlined,
+              label: item['variants'][0]['value']?.toString() ?? '-',
+              isTablet: isTablet,
             ),
           if (item['variants'][1] != null)
-            Expanded(
-              child: _buildInfoChip(
-                title: 'Ukuran',
-                icon: Icons.numbers_outlined,
-                label: item['variants'][1]['value']?.toString() ?? '-',
-                isTablet: isTablet,
-              ),
+            _buildInfoChip(
+              title: 'Ukuran',
+              icon: Icons.numbers_outlined,
+              label: item['variants'][1]['value']?.toString() ?? '-',
+              isTablet: isTablet,
             ),
           if (item['variants'][3] != null) ...[
-            Expanded(
-              child: _buildInfoChip(
-                title: 'GSM',
-                icon: Icons.numbers_outlined,
-                label: item['variants'][3]['value']?.toString() ?? '-',
-                isTablet: isTablet,
-              ),
+            _buildInfoChip(
+              title: 'GSM',
+              icon: Icons.numbers_outlined,
+              label: item['variants'][3]['value']?.toString() ?? '-',
+              isTablet: isTablet,
             ),
           ],
           if (item['variants'][4] != null) ...[
-            Expanded(
-              child: _buildInfoChip(
-                title: 'Warna',
-                icon: Icons.color_lens_outlined,
-                label: item['variants'][4]['value']?.toString() ?? '-',
-                isTablet: isTablet,
-              ),
+            _buildInfoChip(
+              title: 'Warna',
+              icon: Icons.color_lens_outlined,
+              label: item['variants'][4]['value']?.toString() ?? '-',
+              isTablet: isTablet,
             ),
           ],
         ],
@@ -225,50 +215,40 @@ class ListItem extends StatelessWidget {
         runSpacing: 8,
         children: [
           if (item['variants'][2] != null)
-            Expanded(
-              child: _buildInfoChip(
-                title: 'Desain',
-                icon: Icons.design_services_outlined,
-                label: item['variants'][2]['value']?.toString() ?? '-',
-                isTablet: isTablet,
-              ),
+            _buildInfoChip(
+              title: 'Desain',
+              icon: Icons.design_services_outlined,
+              label: item['variants'][2]['value']?.toString() ?? '-',
+              isTablet: isTablet,
             ),
           if (item['variants'][0] != null)
-            Expanded(
-              child: _buildInfoChip(
-                title: 'Bahan',
-                icon: Icons.cut_outlined,
-                label: item['variants'][0]['value']?.toString() ?? '-',
-                isTablet: isTablet,
-              ),
+            _buildInfoChip(
+              title: 'Bahan',
+              icon: Icons.cut_outlined,
+              label: item['variants'][0]['value']?.toString() ?? '-',
+              isTablet: isTablet,
             ),
           if (item['variants'][1] != null)
-            Expanded(
-              child: _buildInfoChip(
-                title: 'Ukuran',
-                icon: Icons.numbers_outlined,
-                label: item['variants'][1]['value']?.toString() ?? '-',
-                isTablet: isTablet,
-              ),
+            _buildInfoChip(
+              title: 'Ukuran',
+              icon: Icons.numbers_outlined,
+              label: item['variants'][1]['value']?.toString() ?? '-',
+              isTablet: isTablet,
             ),
           if (item['variants'][3] != null) ...[
-            Expanded(
-              child: _buildInfoChip(
-                title: 'GSM',
-                icon: Icons.numbers_outlined,
-                label: item['variants'][3]['value']?.toString() ?? '-',
-                isTablet: isTablet,
-              ),
+            _buildInfoChip(
+              title: 'GSM',
+              icon: Icons.numbers_outlined,
+              label: item['variants'][3]['value']?.toString() ?? '-',
+              isTablet: isTablet,
             ),
           ],
           if (item['variants'][4] != null) ...[
-            Expanded(
-              child: _buildInfoChip(
-                title: 'Warna',
-                icon: Icons.color_lens_outlined,
-                label: item['variants'][4]['value']?.toString() ?? '-',
-                isTablet: isTablet,
-              ),
+            _buildInfoChip(
+              title: 'Warna',
+              icon: Icons.color_lens_outlined,
+              label: item['variants'][4]['value']?.toString() ?? '-',
+              isTablet: isTablet,
             ),
           ],
         ],

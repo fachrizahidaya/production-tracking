@@ -19,6 +19,7 @@ class ProcessButton extends StatefulWidget {
   final qty;
   final bool Function() isQtyFullyDistributed;
   final withItemGrade;
+  final withItemQtyAndWeight;
 
   const ProcessButton(
       {super.key,
@@ -35,7 +36,8 @@ class ProcessButton extends StatefulWidget {
       this.weight,
       this.qty,
       required this.isQtyFullyDistributed,
-      this.withItemGrade});
+      this.withItemGrade,
+      this.withItemQtyAndWeight});
 
   @override
   State<ProcessButton> createState() => _ProcessButtonState();
@@ -52,15 +54,16 @@ class _ProcessButtonState extends State<ProcessButton> {
     final weight = _parseNum(widget.weight);
 
     final bool hasBasicError =
-        widget.weightWarning != null || widget.qtyWarning != null
-        // ||
-        // qty <= 0 ||
-        // weight <= 0
-        ;
+        widget.weightWarning != null || widget.qtyWarning != null;
+
+    final bool hasBasicErrorWeightAndQty =
+        widget.weightWarning != null && widget.qtyWarning != null;
 
     final bool isDisabled = widget.withItemGrade == true
         ? !widget.isQtyFullyDistributed()
-        : hasBasicError;
+        : widget.withItemQtyAndWeight
+            ? hasBasicErrorWeightAndQty
+            : hasBasicError;
 
     return SafeArea(
       child: Container(

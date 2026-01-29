@@ -61,9 +61,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
 
   @override
   void initState() {
-    _handleFetchWorkOrder();
-    _handleFetchUnit();
-    _handleFetchMachine();
+    super.initState();
 
     _qtyController.text = widget.form?['qty']?.toString() ?? '';
     _lengthController.text = widget.form?['length']?.toString() ?? '';
@@ -73,7 +71,11 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
     if (widget.data != null) {
       woData = widget.data!;
     }
-    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleFetchWorkOrder();
+      _handleFetchUnit();
+      _handleFetchMachine();
+    });
   }
 
   Future<void> _handleFetchWorkOrder() async {
@@ -309,12 +311,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
 
   @override
   Widget build(BuildContext context) {
-    return
-        // DefaultTabController(
-        //   length: 1,
-        // 2,
-        // child:
-        GestureDetector(
+    return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -329,21 +326,8 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
         ),
         body: Column(
           children: [
-            // Container(
-            //   color: Colors.white,
-            //   child: TabBar(tabs: [
-            //     Tab(
-            //       text: 'Form',
-            //     ),
-            //     Tab(
-            //       text: 'Material',
-            //     ),
-            //   ]),
-            // ),
             Expanded(
-              child:
-                  // TabBarView(children: [
-                  ReworkInfoTab(
+              child: ReworkInfoTab(
                 data: woData,
                 id: widget.id,
                 label: 'Dyeing',
@@ -354,10 +338,6 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                 handleSelectMachine: _selectMachine,
                 handleSelectWorkOrder: _selectWorkOrder,
               ),
-              // WoItemTab(
-              //   data: woData,
-              // ),
-              // ]),
             ),
           ],
         ),
@@ -390,6 +370,5 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
         ),
       ),
     );
-    // );
   }
 }

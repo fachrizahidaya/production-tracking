@@ -147,7 +147,7 @@ class MachineCard extends StatelessWidget {
                       child: Text(
                         data['code']?.toString() ?? '-',
                         style: TextStyle(
-                          fontSize: CustomTheme().fontSize('xs'),
+                          fontSize: CustomTheme().fontSize('sm'),
                           fontWeight: CustomTheme().fontWeight('semibold'),
                           color: Colors.grey[700],
                         ),
@@ -230,7 +230,7 @@ class MachineCard extends StatelessWidget {
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: CustomTheme().fontSize('xs'),
+                    fontSize: CustomTheme().fontSize('sm'),
                     color: Colors.grey[500],
                   ),
                 ),
@@ -320,7 +320,7 @@ class MachineCard extends StatelessWidget {
                   Text(
                     'WO No.',
                     style: TextStyle(
-                      fontSize: CustomTheme().fontSize('xs'),
+                      fontSize: CustomTheme().fontSize('sm'),
                       color: Colors.grey[500],
                     ),
                   ),

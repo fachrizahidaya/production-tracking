@@ -124,7 +124,7 @@ class _SummaryCardState extends State<SummaryCard>
                                     .format(DateTime.parse(createdAt))
                                 : '-',
                             style: TextStyle(
-                              fontSize: CustomTheme().fontSize('xs'),
+                              fontSize: CustomTheme().fontSize('sm'),
                               color: Colors.grey[600],
                             ),
                           ),
@@ -314,7 +314,7 @@ class _SummaryCardState extends State<SummaryCard>
                   Text(
                     widget.data['name'] ?? '-',
                     style: TextStyle(
-                      fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
+                      fontSize: CustomTheme().fontSize(isTablet ? 'md' : 'sm'),
                       fontWeight: CustomTheme().fontWeight('bold'),
                       color: Colors.grey[800],
                     ),
@@ -383,9 +383,9 @@ class _SummaryCardState extends State<SummaryCard>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Progress Penyelesaian',
+              'Progres Penyelesaian',
               style: TextStyle(
-                fontSize: CustomTheme().fontSize('sm'),
+                fontSize: CustomTheme().fontSize('lg'),
                 fontWeight: CustomTheme().fontWeight('semibold'),
                 color: Colors.grey[700],
               ),
@@ -444,7 +444,7 @@ class _SummaryCardState extends State<SummaryCard>
         Text(
           '$completed dari $total selesai',
           style: TextStyle(
-            fontSize: CustomTheme().fontSize('sm'),
+            fontSize: CustomTheme().fontSize('md'),
             color: Colors.grey[500],
           ),
         ),
@@ -539,7 +539,7 @@ class _SummaryCardState extends State<SummaryCard>
                   Text(
                     formatNumber(item.value),
                     style: TextStyle(
-                      fontSize: CustomTheme().fontSize('md'),
+                      fontSize: CustomTheme().fontSize('lg'),
                       fontWeight: CustomTheme().fontWeight('bold'),
                       color: item.iconColor,
                     ),
@@ -555,7 +555,7 @@ class _SummaryCardState extends State<SummaryCard>
               Text(
                 item.label,
                 style: TextStyle(
-                  fontSize: CustomTheme().fontSize('xs'),
+                  fontSize: CustomTheme().fontSize('md'),
                   color: Colors.grey[600],
                 ),
               ),
@@ -581,7 +581,7 @@ class _SummaryCardState extends State<SummaryCard>
           Text(
             'WO Menunggu Diproses',
             style: TextStyle(
-              fontSize: CustomTheme().fontSize('sm'),
+              fontSize: CustomTheme().fontSize('lg'),
               fontWeight: CustomTheme().fontWeight('semibold'),
               color: Colors.grey[700],
             ),
@@ -640,7 +640,7 @@ class _SummaryCardState extends State<SummaryCard>
                                 Text(
                                   woNumber,
                                   style: TextStyle(
-                                    fontSize: CustomTheme().fontSize('sm'),
+                                    fontSize: CustomTheme().fontSize('md'),
                                     fontWeight:
                                         CustomTheme().fontWeight('semibold'),
                                     color:

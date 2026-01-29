@@ -48,7 +48,7 @@ class _ItemProcessState extends State<ItemProcess> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 500,
+      width: 600,
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isTablet = constraints.maxWidth > 600;
@@ -223,7 +223,7 @@ class _ItemProcessState extends State<ItemProcess> {
       child: Text(
         code,
         style: TextStyle(
-          fontSize: CustomTheme().fontSize('xs'),
+          fontSize: CustomTheme().fontSize('sm'),
           fontWeight: CustomTheme().fontWeight('semibold'),
           color: Colors.grey[700],
         ),
@@ -455,7 +455,7 @@ class _ItemProcessState extends State<ItemProcess> {
                       Text(
                         _formatDateTime(process['updated_at']),
                         style: TextStyle(
-                          fontSize: CustomTheme().fontSize('xs'),
+                          fontSize: CustomTheme().fontSize('sm'),
                           color: Colors.grey[500],
                         ),
                       ),
@@ -591,7 +591,7 @@ class _ItemProcessState extends State<ItemProcess> {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: CustomTheme().fontSize('xs'),
+                  fontSize: CustomTheme().fontSize('sm'),
                   color: Colors.grey[500],
                 ),
               ),
@@ -905,6 +905,7 @@ class _ItemProcessState extends State<ItemProcess> {
         children: [
           /// Header
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 padding: CustomTheme().padding('process-content'),
@@ -936,7 +937,7 @@ class _ItemProcessState extends State<ItemProcess> {
                     Text(
                       code,
                       style: TextStyle(
-                        fontSize: CustomTheme().fontSize('xs'),
+                        fontSize: CustomTheme().fontSize('sm'),
                         color: Colors.grey[500],
                       ),
                     ),
@@ -981,7 +982,7 @@ class _ItemProcessState extends State<ItemProcess> {
       child: Text(
         '${variant['type']}: ${variant['value']}',
         style: TextStyle(
-          fontSize: CustomTheme().fontSize('xs'),
+          fontSize: CustomTheme().fontSize('sm'),
           color: Colors.grey[700],
           fontWeight: FontWeight.w500,
         ),

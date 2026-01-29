@@ -351,6 +351,12 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             icon: Icons.settings_outlined,
             child: _buildProcessInfo(true),
           ),
+        if (widget.data['rework'] == true)
+          _buildInfoCard(
+            title: 'Informasi Rework',
+            icon: Icons.replay_outlined,
+            child: _buildReworkInfo(true),
+          ),
         if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
           _buildInfoCard(
             title: 'Informasi Grade',
@@ -409,6 +415,12 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             title: 'Informasi Proses',
             icon: Icons.settings_outlined,
             child: _buildProcessInfo(false),
+          ),
+        if (widget.data['rework'] == true)
+          _buildInfoCard(
+            title: 'Informasi Rework',
+            icon: Icons.replay_outlined,
+            child: _buildReworkInfo(true),
           ),
         if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
           _buildInfoCard(
@@ -656,16 +668,44 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         {
           'label': 'Rework',
           'value': widget.data['rework'] == true ? 'Ya' : 'Tidak',
-          'icon': Icons.business_outlined,
+          'icon': Icons.replay_outlined,
         },
-      if (widget.data['rework'] == true)
-        {
-          'label': 'Referensi Rework',
-          'value': widget.data['rework_reference'] != null
-              ? widget.data['rework_reference']['dyeing_no']
-              : '-',
-          'icon': Icons.business_outlined,
-        },
+      // if (widget.data['rework'] == true)
+      //   {
+      //     'label': 'Referensi Rework',
+      //     'value': widget.data['rework_reference'] != null
+      //         ? widget.data['rework_reference']['dyeing_no']
+      //         : '-',
+      //     'icon': Icons.paste_outlined,
+      //   },
+    ];
+
+    return _buildInfoGrid(items, isTablet);
+  }
+
+  Widget _buildReworkInfo(bool isTablet) {
+    final items = [
+      {
+        'label': 'Referensi Rework',
+        'value': widget.data['rework_reference'] != null
+            ? widget.data['rework_reference']['dyeing_no']
+            : '-',
+        'icon': Icons.paste_outlined,
+      },
+      {
+        'label': 'Qty Referensi',
+        'value': widget.data['rework_reference']['qty'] != null
+            ? '${formatNumber(widget.data['rework_reference']['qty'])} ${widget.data['rework_reference']['unit']['code']}'
+            : '0 ${widget.data['unit'] != null ? widget.data['rework_reference']['unit']['code'] : ''}',
+        'icon': Icons.layers_outlined,
+      },
+      {
+        'label': 'Mesin',
+        'value': widget.data['rework_reference']['machine'] != null
+            ? widget.data['rework_reference']['machine']['name']
+            : '-',
+        'icon': Icons.paste_outlined,
+      },
     ];
 
     return _buildInfoGrid(items, isTablet);

@@ -238,11 +238,12 @@ class _ActiveMachineState extends State<ActiveMachine>
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Status Mesin'),
+                  Text('Status Mesin',
+                      style: TextStyle(fontSize: CustomTheme().fontSize('lg'))),
                   Text(
                     'Pemantauan ketersediaan mesin secara real-time',
                     style: TextStyle(
-                        fontSize: CustomTheme().fontSize('sm'),
+                        fontSize: CustomTheme().fontSize('md'),
                         color: CustomTheme().colors('text-secondary')),
                   ),
                 ],

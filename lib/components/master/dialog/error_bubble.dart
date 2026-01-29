@@ -1,10 +1,12 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/arrow_painter.dart';
 
 class ErrorBubble extends StatelessWidget {
   final String message;
 
-  const ErrorBubble({required this.message});
+  const ErrorBubble({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {

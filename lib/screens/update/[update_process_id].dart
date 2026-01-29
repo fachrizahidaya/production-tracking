@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, use_build_context_synchronously
+// ignore_for_file: file_names, use_build_context_synchronously, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';

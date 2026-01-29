@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/card/list_item.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';

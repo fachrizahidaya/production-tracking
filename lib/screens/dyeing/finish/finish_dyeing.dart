@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/screens/master/finish_process.dart';
+import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/dyeing/finish/finish_dyeing_manual.dart';
@@ -37,8 +37,8 @@ class _FinishDyeingState extends State<FinishDyeing> {
     'start_by_id': null,
     'end_by_id': null,
     'qty': null,
-    'width': '0',
-    'length': '0',
+    'width': null,
+    'length': null,
     'notes': '',
     'rework': null,
     'status': null,
@@ -74,6 +74,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: true,
+        withItemGrade: false,
+        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final dyeing = Dyeing(

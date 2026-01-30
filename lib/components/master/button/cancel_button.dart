@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
@@ -9,6 +11,7 @@ class CancelButton extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final double borderRadius;
   final double? width;
+  final customHeight;
 
   const CancelButton(
       {super.key,
@@ -19,13 +22,18 @@ class CancelButton extends StatelessWidget {
       this.padding =
           const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       this.borderRadius = 8.0,
-      this.width});
+      this.width,
+      this.customHeight});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
-      style: CustomTheme().secondaryButton(),
+      style: CustomTheme().secondaryButton().copyWith(
+            minimumSize: customHeight != null
+                ? MaterialStateProperty.all(Size(double.infinity, customHeight))
+                : null,
+          ),
       child: Text(
         label,
         style: TextStyle(color: CustomTheme().colors('danger')),

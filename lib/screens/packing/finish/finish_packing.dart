@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/screens/master/finish_process.dart';
+import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/models/process/packing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/packing/finish/finish_packing_manual.dart';
@@ -26,9 +26,9 @@ class _FinishPackingState extends State<FinishPacking> {
     'rework_reference_id': null,
     'start_by_id': null,
     'end_by_id': null,
-    'weight': null,
-    'width': null,
-    'length': null,
+    'weight_per_dozen': null,
+    'gsm': null,
+    'total_weight': null,
     'notes': '',
     'rework': null,
     'status': null,
@@ -76,6 +76,10 @@ class _FinishPackingState extends State<FinishPacking> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: false,
+        forPacking: true,
+        withItemGrade: true,
+        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final packing = Packing(
@@ -87,10 +91,10 @@ class _FinishPackingState extends State<FinishPacking> {
                 int.tryParse(form['width_unit_id']?.toString() ?? ''),
             length_unit_id:
                 int.tryParse(form['length_unit_id']?.toString() ?? ''),
-            weight: form['weight'],
-            width: form['width'],
-            length: form['length'],
             notes: form['notes'],
+            weight_per_dozen: form['weight_per_dozen'],
+            gsm: form['gsm'],
+            total_weight: form['total_weight'],
             start_time: form['start_time'],
             end_time: form['end_time'],
             start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),

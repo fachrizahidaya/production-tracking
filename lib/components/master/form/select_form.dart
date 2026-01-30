@@ -28,21 +28,18 @@ class SelectForm extends StatefulWidget {
 class _SelectFormState extends State<SelectForm> {
   @override
   Widget build(BuildContext context) {
-    return GroupForm(
-      label: widget.label,
-      formControl: Stack(
-        children: [
-          TextFormField(
-            controller: TextEditingController(text: widget.selectedValue),
-            validator: widget.required ? widget.validator : null,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            decoration: CustomTheme().inputDecoration(),
-          ),
-          GestureDetector(
+    return FormField<String>(
+      validator: widget.validator,
+      initialValue: widget.selectedValue,
+      builder: (FormFieldState<String> field) {
+        return GroupForm(
+          label: widget.label,
+          req: widget.required,
+          errorText: field.errorText,
+          formControl: GestureDetector(
             onTap: widget.isDisabled == true ? null : widget.onTap,
             child: Container(
               padding: CustomTheme().padding('card'),
-              height: 52,
               width: double.infinity,
               decoration: widget.isDisabled
                   ? CustomTheme().inputStaticDecorationDisabled()
@@ -68,9 +65,8 @@ class _SelectFormState extends State<SelectForm> {
               ),
             ),
           ),
-        ],
-      ),
-      req: widget.required,
+        );
+      },
     );
   }
 }

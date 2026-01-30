@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/models/process/sewing.dart';
-import 'package:textile_tracking/screens/master/create_process_manual.dart';
+import 'package:textile_tracking/screens/create/create_process_manual.dart';
 
 class CreateSewingManual extends StatelessWidget {
   final dynamic id;
@@ -11,6 +11,7 @@ class CreateSewingManual extends StatelessWidget {
   final handleSubmit;
   final fetchWorkOrder;
   final processId;
+  final withMaklonOrMachine;
 
   const CreateSewingManual(
       {super.key,
@@ -19,7 +20,8 @@ class CreateSewingManual extends StatelessWidget {
       this.form,
       this.handleSubmit,
       this.fetchWorkOrder,
-      this.processId});
+      this.processId,
+      this.withMaklonOrMachine});
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +38,13 @@ class CreateSewingManual extends StatelessWidget {
       processId: processId,
       idProcess: 'sewing_id',
       processService: sewingService,
-      maklon: _maklonController,
-      isMaklon: true,
+      maklonName: _maklonController,
       handleSubmit: handleSubmit,
       fetchWorkOrder: (service) => service.fetchSewingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsSewing(),
       getMachineOptions: (service) => service.dataListOption,
-      withMaklonOrMachine: true,
+      withMaklonOrMachine: withMaklonOrMachine,
     );
   }
 }

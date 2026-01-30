@@ -9,7 +9,7 @@ import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
-import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/screens/dyeing/rework/rework_dyeing_manual.dart';
 
@@ -32,12 +32,12 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
 
   @override
   void initState() {
-    final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
-    _handleFetchWorkOrder();
     super.initState();
+    final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
 
-    setState(() {
-      _form['end_by_id'] = loggedInUser?.id;
+    _form['end_by_id'] = loggedInUser?.id;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleFetchWorkOrder();
     });
   }
 
@@ -70,13 +70,20 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
   }
 
   Future<void> _handleFetchWorkOrder() async {
-    await Provider.of<OptionWorkOrderService>(context, listen: false)
-        .fetchReworkOptions();
-    final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-        .dataListOption;
+    // await Provider.of<OptionWorkOrderService>(context, listen: false)
+    //     .fetchReworkOptions();
+    // final result = Provider.of<OptionWorkOrderService>(context, listen: false)
+    //     .dataListOption;
+
+    // setState(() {
+    //   workOrderOption = result;
+    // });
+    final service = Provider.of<OptionWorkOrderService>(context, listen: false);
+
+    await service.fetchReworkOptions();
 
     setState(() {
-      workOrderOption = result;
+      workOrderOption = service.dataListOption;
     });
   }
 
@@ -84,40 +91,57 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
     setState(() {
       _isLoading = true;
     });
-
     try {
-      final scannedId = code.toString();
+      final String woNo = code.toString();
 
-      final workOrderExists =
-          workOrderOption.any((item) => item['value'].toString() == scannedId);
-
-      if (!workOrderExists) {
-        setState(() {
-          _isLoading = false;
-        });
-
+      if (woNo.isEmpty) {
         showAlertDialog(
-            context: context, title: 'Error', message: "Work Order not found");
-
+            context: context, title: 'Error', message: "Invalid QR Code");
+        setState(() => _isLoading = false);
         return;
       }
 
-      await _workOrderService.getDataView(scannedId);
+      final woForm = {'wo_no': woNo};
+      final ValueNotifier<bool> isSubmitting = ValueNotifier(false);
 
+      final processResponse =
+          await _workOrderService.getProcessData(woForm, isSubmitting);
+
+      if (processResponse == null) {
+        showAlertDialog(
+            context: context,
+            title: 'Error',
+            message: "No process data found for this Work Order");
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      final String woId = processResponse['wo_id'].toString();
+      final String processId = processResponse['process_id'].toString();
+
+      final bool workOrderExists =
+          workOrderOption.any((item) => item['value'].toString() == woId);
+
+      if (!workOrderExists) {
+        showAlertDialog(
+            context: context, title: 'Error', message: "Work Order not found");
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      await _workOrderService.getDataView(woId);
       final data = _workOrderService.dataView;
 
-      _form['wo_id'] = data['id']?.toString();
-      _form['no_wo'] = data['wo_no']?.toString() ?? '';
+      _form['wo_id'] = data['id']?.toString() ?? woId;
+      _form['no_wo'] = data['wo_no']?.toString() ?? woNo;
+      _form['process_id'] = processId;
 
-      setState(() {
-        _isLoading = false;
-      });
-
+      setState(() => _isLoading = false);
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ReworkDyeingManual(
-            id: scannedId,
+            id: woId,
             data: data,
             form: _form,
             handleSubmit: _handleSubmit,
@@ -133,6 +157,54 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
         SnackBar(content: Text("Error: ${e.toString()}")),
       );
     }
+    // try {
+    //   final scannedId = code.toString();
+
+    //   final workOrderExists =
+    //       workOrderOption.any((item) => item['value'].toString() == scannedId);
+
+    //   if (!workOrderExists) {
+    //     setState(() {
+    //       _isLoading = false;
+    //     });
+
+    //     showAlertDialog(
+    //         context: context, title: 'Error', message: "Work Order not found");
+
+    //     return;
+    //   }
+
+    //   await _workOrderService.getDataView(scannedId);
+
+    //   final data = _workOrderService.dataView;
+
+    //   _form['wo_id'] = data['id']?.toString();
+    //   _form['no_wo'] = data['wo_no']?.toString() ?? '';
+
+    //   setState(() {
+    //     _isLoading = false;
+    //   });
+
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => ReworkDyeingManual(
+    //         id: scannedId,
+    //         data: data,
+    //         form: _form,
+    //         handleSubmit: _handleSubmit,
+    //         handleChangeInput: _handleChangeInput,
+    //       ),
+    //     ),
+    //   );
+    // } catch (e) {
+    //   setState(() {
+    //     _isLoading = false;
+    //   });
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text("Error: ${e.toString()}")),
+    //   );
+    // }
   }
 
   Future<void> _handleSubmit(id) async {

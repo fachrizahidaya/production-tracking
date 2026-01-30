@@ -14,6 +14,8 @@ class CustomFloatingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      height: 128,
+      width: 128,
       child: FloatingActionButton(
         onPressed: onPressed,
         backgroundColor:

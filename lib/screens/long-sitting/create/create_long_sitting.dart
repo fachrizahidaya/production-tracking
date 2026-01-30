@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/screens/master/create_process.dart';
+import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
 import 'package:textile_tracking/screens/long-sitting/create/create_long_sitting_manual.dart';
 
@@ -44,14 +44,14 @@ class CreateLongSitting extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
-          context: context, title: 'Long Sitting Dimulai', message: message);
+          context: context, title: 'Long Slitting Dimulai', message: message);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return CreateProcess(
-      title: 'Mulai Long Sitting',
+      title: 'Mulai Long Slitting',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
         return CreateLongSittingManual(

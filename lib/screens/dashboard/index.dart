@@ -8,11 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/home/dashboard/filter/process_filter.dart';
 import 'package:textile_tracking/components/home/dashboard/filter/summary_filter.dart';
 import 'package:textile_tracking/components/home/dashboard/machine/active_machine.dart';
-import 'package:textile_tracking/components/home/dashboard/work-order/work_order_process.dart';
-import 'package:textile_tracking/components/home/dashboard/work-order/work_order_pie.dart';
+import 'package:textile_tracking/components/home/dashboard/work-order/process/work_order_process.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/work_order_stats.dart';
-import 'package:textile_tracking/components/home/dashboard/work-order/work_order_summary.dart';
-import 'package:textile_tracking/components/master/layout/card/item_process.dart';
+import 'package:textile_tracking/components/home/dashboard/work-order/summary/work_order_summary.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/dashboard/machine.dart';
@@ -53,6 +51,7 @@ class _DashboardState extends State<Dashboard> {
   Map<String, String> params = {'search': '', 'page': '0'};
   bool _hasMore = true;
   bool _firstLoading = true;
+  bool isStatsLoading = false;
   bool isChartLoading = false;
   bool isMachineLoading = false;
   bool isSummaryLoading = false;
@@ -154,12 +153,15 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _handleFetchStats() async {
+    setState(() => isStatsLoading = true);
+
     await Provider.of<WorkOrderStatsService>(context, listen: false)
         .getDataList();
 
     setState(() {
       statsList =
           Provider.of<WorkOrderStatsService>(context, listen: false).dataList;
+      isStatsLoading = false;
     });
   }
 
@@ -202,18 +204,6 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  void _handleFilter(String key, String value) {
-    setState(() {
-      if (value.isEmpty) {
-        chartParams.remove(key);
-      } else {
-        chartParams[key] = value;
-      }
-    });
-
-    _handleFetchCharts();
-  }
-
   void _handleSummaryFilter(String key, String value) {
     setState(() {
       if (value.isEmpty) {
@@ -239,49 +229,6 @@ class _DashboardState extends State<Dashboard> {
     _isFiltered = _checkIsFiltered();
 
     _loadMore();
-  }
-
-  Future<void> _submitFilter() async {
-    Navigator.pop(context);
-    setState(() {
-      _isFiltered = _checkIsFiltered();
-    });
-    _loadMore();
-  }
-
-  Future<void> _pickDate({
-    required TextEditingController controller,
-    required String type,
-    handleProcess,
-  }) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: controller.text.isNotEmpty
-          ? DateTime.tryParse(controller.text) ?? DateTime.now()
-          : DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2101),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: CustomTheme().colors('base'),
-              onPrimary: Colors.white,
-              onSurface: Colors.black87,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (pickedDate != null) {
-      final formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-      setState(() {
-        controller.text = formattedDate;
-      });
-      handleProcess(type, formattedDate);
-    }
   }
 
   Future<void> _handleSearch(String value) async {
@@ -356,10 +303,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return Center(child: CircularProgressIndicator());
-    }
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -372,7 +315,7 @@ class _DashboardState extends State<Dashboard> {
               padding: CustomTheme().padding('content'),
               sliver: SliverList(
                   delegate: SliverChildListDelegate([
-                WorkOrderStats(data: statsList),
+                WorkOrderStats(data: statsList, isFetching: isStatsLoading),
                 WorkOrderSummary(
                   data: summaryList,
                   handleRefetch: _handleFetchSummary,
@@ -381,7 +324,6 @@ class _DashboardState extends State<Dashboard> {
                     dariTanggal: dariTanggalSummary,
                     sampaiTanggal: sampaiTanggalSummary,
                     onHandleFilter: _handleSummaryFilter,
-                    pickDate: _pickDate,
                     params: summaryParams,
                   ),
                 ),
@@ -391,10 +333,6 @@ class _DashboardState extends State<Dashboard> {
                   unavailable: machineList['unavailable'],
                   handleRefetch: _handleFetchMachine,
                   isFetching: isMachineLoading,
-                ),
-                WorkOrderPie(
-                  data: pieList,
-                  process: chartList,
                 ),
                 WorkOrderProcessScreen(
                   data: _dataList,
@@ -406,13 +344,10 @@ class _DashboardState extends State<Dashboard> {
                   handleRefetch: _refetch,
                   isLoadMore: _isLoadMore,
                   filterWidget: ProcessFilter(
-                    title: 'Filter',
                     params: params,
                     onHandleFilter: _handleProcessFilter,
-                    onSubmitFilter: _submitFilter,
                     dariTanggal: dariTanggalProses,
                     sampaiTanggal: sampaiTanggalProses,
-                    pickDate: _pickDate,
                   ),
                   handleFetchData: (params) async {
                     final service = Provider.of<WorkOrderProcessService>(
@@ -421,8 +356,6 @@ class _DashboardState extends State<Dashboard> {
                     await service.getDataList(params);
                     return service.items;
                   },
-                  handleBuildItem: (item) => ItemProcess(item: item),
-                  onHandleFilter: _handleFilter,
                   service: WorkOrderProcessService(),
                   isFiltered: _isFiltered,
                 ),

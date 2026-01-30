@@ -11,20 +11,15 @@ class ProcessFilter<T> extends StatefulWidget {
   final dariTanggal;
   final sampaiTanggal;
   final onHandleFilter;
-  final onSubmitFilter;
-  final pickDate;
   final params;
-  final String title;
 
-  const ProcessFilter(
-      {super.key,
-      this.dariTanggal,
-      this.sampaiTanggal,
-      this.onHandleFilter,
-      this.pickDate,
-      this.params,
-      required this.title,
-      this.onSubmitFilter});
+  const ProcessFilter({
+    super.key,
+    this.dariTanggal,
+    this.sampaiTanggal,
+    this.onHandleFilter,
+    this.params,
+  });
 
   @override
   State<ProcessFilter<T>> createState() => _ProcessFilterState<T>();
@@ -85,7 +80,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
 
     return Container(
       padding: CustomTheme().padding('card'),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -193,14 +188,14 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
 
                   return Dialog(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.85,
                       height: MediaQuery.of(context).size.height * 0.6,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: StatefulBuilder(
                         builder: (context, setState) {
@@ -251,7 +246,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                                                   horizontal: 12),
                                           border: OutlineInputBorder(
                                             borderRadius:
-                                                BorderRadius.circular(4),
+                                                BorderRadius.circular(12),
                                           ),
                                         ),
                                         onChanged: runSearch,

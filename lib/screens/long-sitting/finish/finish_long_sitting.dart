@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/screens/master/finish_process.dart';
+import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/long-sitting/finish/finish_long_sitting_manual.dart';
@@ -64,7 +64,7 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
   @override
   Widget build(BuildContext context) {
     return FinishProcess(
-      title: 'Selesai Long Sitting',
+      title: 'Selesai Long Slitting',
       fetchWorkOrder: (service) async =>
           await service.fetchSittingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
@@ -77,6 +77,9 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: false,
+        withItemGrade: false,
+        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final longSitting = LongSitting(
@@ -108,7 +111,7 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showAlertDialog(
               context: context,
-              title: 'Long Sitting Selesai',
+              title: 'Long Slitting Selesai',
               message: message);
         });
       },

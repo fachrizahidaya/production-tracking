@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:textile_tracking/components/master/layout/drawer/app_drawer.dart';
-import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/drawer/app_drawer.dart';
+import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -25,6 +25,7 @@ class _HomeState extends State<Home> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   String user = '';
+  String name = '';
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _HomeState extends State<Home> {
 
     setState(() {
       user = loggedInUser?.username ?? '';
+      name = loggedInUser?.name ?? '';
     });
   }
 
@@ -147,6 +149,7 @@ class _HomeState extends State<Home> {
               handleLogout: () => _handleLogout(context),
               isWithAccount: true,
               user: user,
+              name: name,
             ),
             drawer: AppDrawer(
               handleLogout: () => _handleLogout(context),

@@ -19,17 +19,17 @@ class WorkOrderPieState extends State<WorkOrderPie> {
 
   static const List<IconData> processIcons = [
     Icons.invert_colors_on_outlined,
-    Icons.dry_outlined,
+    Icons.layers_outlined,
     Icons.dry_cleaning_outlined,
     Icons.air,
+    Icons.content_paste_outlined,
+    Icons.cut_outlined,
     Icons.cut_outlined,
     Icons.link_outlined,
-    Icons.cut,
-    Icons.link_outlined,
-    Icons.numbers_outlined,
+    Icons.color_lens_outlined,
     Icons.print_outlined,
     Icons.sort,
-    Icons.stacked_bar_chart_outlined,
+    Icons.inventory_2_outlined,
     Icons.dangerous,
   ];
 

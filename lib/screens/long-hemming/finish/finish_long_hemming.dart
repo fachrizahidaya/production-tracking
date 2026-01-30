@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/screens/master/finish_process.dart';
+import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/models/process/long_hemming.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/long-hemming/finish/finish_long_hemming_manual.dart';
@@ -76,6 +76,9 @@ class _FinishLongHemmingState extends State<FinishLongHemming> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: false,
+        withItemGrade: false,
+        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final longHemming = LongHemming(

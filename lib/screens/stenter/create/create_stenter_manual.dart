@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
-import 'package:textile_tracking/screens/master/create_process_manual.dart';
+import 'package:textile_tracking/screens/create/create_process_manual.dart';
 
 class CreateStenterManual extends StatelessWidget {
   final dynamic id;

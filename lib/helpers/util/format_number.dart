@@ -1,0 +1,16 @@
+import 'package:easy_localization/easy_localization.dart';
+
+String formatNumber(dynamic value) {
+  if (value == null) return '0';
+
+  final number = value is num ? value : num.tryParse(value.toString()) ?? 0;
+
+  final hasDecimal = number % 1 != 0;
+
+  final formatter = NumberFormat(
+    hasDecimal ? '#,##0.##' : '#,##0',
+    'en_US',
+  );
+
+  return formatter.format(number);
+}

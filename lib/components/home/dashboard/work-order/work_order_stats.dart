@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/stats_card.dart';
-import 'package:textile_tracking/components/master/layout/card/custom_badge.dart';
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderStats extends StatefulWidget {
   final data;
+  final isFetching;
 
-  const WorkOrderStats({super.key, this.data});
+  const WorkOrderStats({super.key, this.data, this.isFetching});
 
   @override
   State<WorkOrderStats> createState() => _WorkOrderStatsState();
@@ -61,7 +62,6 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
     final item = widget.data[i];
 
     return StatsCard(
-      withBottomBorder: true,
       bottomBorderColor: getBorderColor(i),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,8 +92,6 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
           ),
           CustomBadge(
             title: item['label'],
-            withDifferentColor: true,
-            color: getBadgeColor(i),
             withStatus: i == 0 ? false : true,
             status: item['label'],
           )
@@ -104,26 +102,25 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 
   @override
   Widget build(BuildContext context) {
-    final length = widget.data?.length ?? 0;
+    if (widget.data?.length == 0) return SizedBox();
 
-    if (length == 0) return const SizedBox();
-
-    return Column(
-      children: [
-        Row(
-          children: [
-            for (int i = 0; i < length && i < 2; i++)
-              Expanded(child: buildStatsCard(i))
-          ].separatedBy(CustomTheme().hGap('lg')),
-        ),
-        if (length > 2)
-          Row(
+    return widget.isFetching == true
+        ? Center(
+            child: Padding(
+              padding: CustomTheme().padding('content'),
+              child: CircularProgressIndicator(),
+            ),
+          )
+        : Wrap(
+            spacing: 16,
+            runSpacing: 8,
             children: [
-              for (int i = 2; i < length; i++)
-                Expanded(child: buildStatsCard(i))
-            ].separatedBy(CustomTheme().hGap('lg')),
-          ),
-      ].separatedBy(CustomTheme().vGap('lg')),
-    );
+              for (int i = 0; i < widget.data?.length; i++)
+                SizedBox(
+                  width: (MediaQuery.of(context).size.width - 48) / 2,
+                  child: buildStatsCard(i),
+                ),
+            ],
+          );
   }
 }

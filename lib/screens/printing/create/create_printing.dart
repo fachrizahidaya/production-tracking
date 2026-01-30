@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/screens/master/create_process.dart';
+import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/models/process/printing.dart';
 import 'package:textile_tracking/screens/printing/create/create_printing_manual.dart';
 
@@ -61,6 +61,7 @@ class CreatePrinting extends StatelessWidget {
             processId: processId,
             handleSubmit: handleSubmit,
             fetchWorkOrder: (service) => service.fetchPrintingOptions(id),
+            withOnlyMaklon: true,
           );
         },
         fetchWorkOrder: (service) => service.fetchPrintingOptions(),

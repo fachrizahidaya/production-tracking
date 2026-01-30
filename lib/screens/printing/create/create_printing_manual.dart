@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/models/process/printing.dart';
-import 'package:textile_tracking/screens/master/create_process_manual.dart';
+import 'package:textile_tracking/screens/create/create_process_manual.dart';
 
 class CreatePrintingManual extends StatelessWidget {
   final dynamic id;
@@ -9,6 +9,7 @@ class CreatePrintingManual extends StatelessWidget {
   final handleSubmit;
   final fetchWorkOrder;
   final processId;
+  final withOnlyMaklon;
 
   const CreatePrintingManual(
       {super.key,
@@ -17,7 +18,8 @@ class CreatePrintingManual extends StatelessWidget {
       this.form,
       this.handleSubmit,
       this.fetchWorkOrder,
-      this.processId});
+      this.processId,
+      this.withOnlyMaklon});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class CreatePrintingManual extends StatelessWidget {
       handleSubmit: handleSubmit,
       fetchWorkOrder: (service) => service.fetchPrintingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
-      withOnlyMaklon: true,
+      withOnlyMaklon: withOnlyMaklon,
     );
   }
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/components/home/dashboard/machine/machine_section.dart';
-import 'package:textile_tracking/components/master/layout/card/custom_badge.dart';
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/auth/storage.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ActiveMachine extends StatefulWidget {
@@ -24,23 +25,185 @@ class ActiveMachine extends StatefulWidget {
   State<ActiveMachine> createState() => _ActiveMachineState();
 }
 
-class _ActiveMachineState extends State<ActiveMachine> {
+class _ActiveMachineState extends State<ActiveMachine>
+    with TickerProviderStateMixin {
   String selectedProcess = 'All';
+  TabController? _tabController;
+  List<String> processFilters = ['All'];
+  int selectedIndex = 0;
 
-  final List<String> processFilters = [
-    'All',
-    'Dyeing',
-    'Press',
-    'Tumbler',
-    'Stenter',
-    'Long Sitting',
-    'Long Hemming',
-    'Cross Cutting',
-    'Sewing'
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadProcessFilters();
+  }
+
+  Future<void> _loadProcessFilters() async {
+    final menus = await Storage.instance.getMenus();
+    final productionProcesses = getProductionProcesses(menus);
+
+    final allowedProcesses = [
+      'Dyeing',
+      'Press',
+      'Tumbler',
+      'Stenter',
+      'Long Sitting',
+      'Long Hemming',
+      'Cross Cutting',
+      'Sewing',
+    ];
+
+    final filtered =
+        allowedProcesses.where((p) => productionProcesses.contains(p)).toList();
+
+    _tabController?.dispose(); // safety
+
+    setState(() {
+      processFilters = ['All', ...filtered];
+
+      _tabController = TabController(
+        length: processFilters.length,
+        vsync: this,
+      );
+
+      _tabController!.addListener(() {
+        if (_tabController!.indexIsChanging) return;
+
+        setState(() {
+          selectedIndex = _tabController!.index;
+        });
+      });
+    });
+  }
+
+  List<String> getProductionProcesses(List<dynamic> menus) {
+    for (final menu in menus) {
+      if (menu['name'] == 'Produksi') {
+        final children = menu['children'] as List<dynamic>? ?? [];
+        return children.map((e) => e['name'].toString()).toList();
+      }
+    }
+    return [];
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
+  }
+
+  bool get _shouldShowProcessFilter {
+    // processFilters = ['All', ...filtered]
+    // show only if more than 1 actual process exists
+    return processFilters.length > 2;
+  }
+
+  Widget _buildProcessFilter() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Padding(
+        padding: CustomTheme().padding('badge'),
+        child: Row(
+          children: List.generate(processFilters.length, (index) {
+            final isSelected = selectedIndex == index;
+
+            return GestureDetector(
+              onTap: () {
+                _tabController!.animateTo(index);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isSelected
+                        ? CustomTheme().buttonColor('primary')
+                        : Colors.grey.shade400,
+                  ),
+                  color: isSelected
+                      ? CustomTheme().buttonColor('primary')
+                      : Colors.white,
+                ),
+                padding: CustomTheme().padding('badge'),
+                child: Text(
+                  processFilters[index],
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+            );
+          }).separatedBy(CustomTheme().hGap('lg')),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSwipeContent(
+    List<dynamic>? available,
+    List<dynamic>? unavailable,
+    bool isPortrait,
+  ) {
+    List<dynamic> filterByProcess(
+      List<dynamic>? source,
+      String process,
+    ) {
+      if (source == null) return [];
+      if (process == 'All') return source;
+
+      return source.where((m) {
+        final p = m is Map ? (m['process_type'] ?? '') : '';
+        return p == process;
+      }).toList();
+    }
+
+    return SizedBox(
+      height: 600,
+      child: TabBarView(
+        controller: _tabController,
+        children: processFilters.map((process) {
+          final filteredAvailable = filterByProcess(available, process);
+          final filteredUnavailable = filterByProcess(unavailable, process);
+
+          return widget.isFetching
+              ? Center(child: CircularProgressIndicator())
+              : Padding(
+                  padding: CustomTheme().padding('content'),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: MachineSection(
+                          title: 'Mesin Tersedia',
+                          icon: Icons.check_circle_outline,
+                          status: const Color(0xFF10b981),
+                          headerColor: 'Selesai',
+                          data: filteredAvailable,
+                          isPortrait: isPortrait,
+                        ),
+                      ),
+                      Expanded(
+                        child: MachineSection(
+                          title: 'Mesin Sedang Digunakan',
+                          icon: Icons.warning_outlined,
+                          status: const Color(0xfff18800),
+                          headerColor: 'Diproses',
+                          data: filteredUnavailable,
+                          isPortrait: isPortrait,
+                        ),
+                      ),
+                    ].separatedBy(CustomTheme().hGap('2xl')),
+                  ),
+                );
+        }).toList(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_tabController == null) {
+      return SizedBox();
+    }
+
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
@@ -75,11 +238,12 @@ class _ActiveMachineState extends State<ActiveMachine> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Status Mesin'),
+                  Text('Status Mesin',
+                      style: TextStyle(fontSize: CustomTheme().fontSize('lg'))),
                   Text(
                     'Pemantauan ketersediaan mesin secara real-time',
                     style: TextStyle(
-                        fontSize: CustomTheme().fontSize('sm'),
+                        fontSize: CustomTheme().fontSize('md'),
                         color: CustomTheme().colors('text-secondary')),
                   ),
                 ],
@@ -109,78 +273,11 @@ class _ActiveMachineState extends State<ActiveMachine> {
             ],
           ),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Padding(
-            padding: CustomTheme().padding('badge'),
-            child: Row(
-              children: processFilters
-                  .map((type) {
-                    bool isSelected = selectedProcess == type;
-
-                    return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedProcess = type;
-                          });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            border: Border.all(
-                                color: isSelected
-                                    ? CustomTheme().buttonColor('primary')
-                                    : Colors.grey.shade400,
-                                width: 1),
-                            color: isSelected
-                                ? CustomTheme().buttonColor('primary')
-                                : Colors.white,
-                            boxShadow: [CustomTheme().boxShadowTheme()],
-                          ),
-                          padding: CustomTheme().padding('badge'),
-                          child: Text(
-                            type,
-                            style: TextStyle(
-                                color: isSelected ? Colors.white : null),
-                          ),
-                        ));
-                  })
-                  .toList()
-                  .separatedBy(CustomTheme().hGap('lg')),
-            ),
-          ),
-        ),
+        if (_shouldShowProcessFilter) ...[
+          _buildProcessFilter(),
+        ],
         Divider(),
-        if (widget.isFetching)
-          Center(child: CircularProgressIndicator())
-        else
-          Padding(
-            padding: CustomTheme().padding('content'),
-            child: Row(
-              children: [
-                Expanded(
-                  child: MachineSection(
-                    title: 'Mesin Tersedia',
-                    icon: Icons.check_circle_outline,
-                    status: Color(0xFF10b981),
-                    headerColor: 'Selesai',
-                    data: filteredAvailable,
-                    isPortrait: isPortrait,
-                  ),
-                ),
-                Expanded(
-                  child: MachineSection(
-                    title: 'Mesin Sedang Digunakan',
-                    icon: Icons.warning_outlined,
-                    status: Color(0xfff18800),
-                    headerColor: 'Diproses',
-                    data: filteredUnavailable,
-                    isPortrait: isPortrait,
-                  ),
-                ),
-              ].separatedBy(CustomTheme().hGap('2xl')),
-            ),
-          )
+        _buildSwipeContent(filteredAvailable, filteredUnavailable, isPortrait)
       ],
     ));
   }

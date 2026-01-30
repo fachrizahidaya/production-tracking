@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/screens/master/finish_process_manual.dart';
+import 'package:textile_tracking/screens/finish/%5Bfinish_process_id%5D.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
 
 class FinishSortingManual extends StatefulWidget {
@@ -9,6 +9,10 @@ class FinishSortingManual extends StatefulWidget {
   final handleSubmit;
   final handleChangeInput;
   final processId;
+  final forPacking;
+  final withItemGrade;
+  final withQtyAndWeight;
+  final forDyeing;
 
   const FinishSortingManual(
       {super.key,
@@ -17,7 +21,11 @@ class FinishSortingManual extends StatefulWidget {
       this.form,
       this.handleSubmit,
       this.handleChangeInput,
-      this.processId});
+      this.processId,
+      this.forDyeing,
+      this.forPacking,
+      this.withItemGrade,
+      this.withQtyAndWeight});
 
   @override
   State<FinishSortingManual> createState() => _FinishSortingManualState();
@@ -28,9 +36,6 @@ class _FinishSortingManualState extends State<FinishSortingManual> {
 
   @override
   void initState() {
-    widget.form?['length'] ??= '0';
-    widget.form?['width'] ??= '0';
-
     super.initState();
   }
 
@@ -53,9 +58,9 @@ class _FinishSortingManualState extends State<FinishSortingManual> {
       processService: _sortingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'sorting_id',
-      withItemGrade: true,
-      withQtyAndWeight: false,
-      forDyeing: false,
+      withItemGrade: widget.withItemGrade,
+      withQtyAndWeight: widget.withQtyAndWeight,
+      forDyeing: widget.forDyeing,
       fetchItemGrade: (service) => service.fetchOptions(),
       getItemGradeOptions: (service) => service.dataListOption,
       processId: widget.processId,

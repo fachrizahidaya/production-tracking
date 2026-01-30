@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/screens/master/finish_process_manual.dart';
+import 'package:textile_tracking/screens/finish/%5Bfinish_process_id%5D.dart';
 import 'package:textile_tracking/models/process/press_tumbler.dart';
 
 class FinishPressTumblerManual extends StatefulWidget {
@@ -11,6 +11,10 @@ class FinishPressTumblerManual extends StatefulWidget {
   final handleSubmit;
   final handleChangeInput;
   final processId;
+  final forPacking;
+  final withItemGrade;
+  final withQtyAndWeight;
+  final forDyeing;
 
   const FinishPressTumblerManual(
       {super.key,
@@ -19,7 +23,11 @@ class FinishPressTumblerManual extends StatefulWidget {
       this.form,
       this.handleSubmit,
       this.handleChangeInput,
-      this.processId});
+      this.processId,
+      this.forDyeing,
+      this.forPacking,
+      this.withItemGrade,
+      this.withQtyAndWeight});
 
   @override
   State<FinishPressTumblerManual> createState() =>
@@ -60,10 +68,11 @@ class _FinishPressTumblerManualState extends State<FinishPressTumblerManual> {
       processService: _pressTumblerService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'press_id',
-      withItemGrade: false,
       processId: widget.processId,
-      withQtyAndWeight: false,
-      forDyeing: false,
+      forDyeing: widget.forDyeing,
+      withItemGrade: widget.withItemGrade,
+      withQtyAndWeight: widget.withQtyAndWeight,
+      forPacking: widget.forPacking,
     );
   }
 }

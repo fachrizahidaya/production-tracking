@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/models/process/embroidery.dart';
-import 'package:textile_tracking/screens/master/create_process_manual.dart';
+import 'package:textile_tracking/screens/create/create_process_manual.dart';
 
 class CreateEmborideryManual extends StatelessWidget {
   final dynamic id;
@@ -9,6 +9,7 @@ class CreateEmborideryManual extends StatelessWidget {
   final handleSubmit;
   final fetchWorkOrder;
   final processId;
+  final withOnlyMaklon;
 
   const CreateEmborideryManual(
       {super.key,
@@ -17,7 +18,8 @@ class CreateEmborideryManual extends StatelessWidget {
       this.form,
       this.handleSubmit,
       this.fetchWorkOrder,
-      this.processId});
+      this.processId,
+      this.withOnlyMaklon});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class CreateEmborideryManual extends StatelessWidget {
       handleSubmit: handleSubmit,
       fetchWorkOrder: (service) => service.fetchEmbroideryOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
-      withOnlyMaklon: true,
+      withOnlyMaklon: withOnlyMaklon,
     );
   }
 }

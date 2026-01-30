@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/screens/master/finish_process_manual.dart';
+import 'package:textile_tracking/screens/finish/%5Bfinish_process_id%5D.dart';
 import 'package:textile_tracking/models/process/sewing.dart';
 
 class FinishSewingManual extends StatefulWidget {
@@ -9,6 +9,10 @@ class FinishSewingManual extends StatefulWidget {
   final handleSubmit;
   final handleChangeInput;
   final processId;
+  final forPacking;
+  final withItemGrade;
+  final withQtyAndWeight;
+  final forDyeing;
 
   const FinishSewingManual(
       {super.key,
@@ -17,7 +21,11 @@ class FinishSewingManual extends StatefulWidget {
       this.form,
       this.handleSubmit,
       this.handleChangeInput,
-      this.processId});
+      this.processId,
+      this.forDyeing,
+      this.forPacking,
+      this.withItemGrade,
+      this.withQtyAndWeight});
 
   @override
   State<FinishSewingManual> createState() => _FinishSewingManualState();
@@ -30,6 +38,8 @@ class _FinishSewingManualState extends State<FinishSewingManual> {
   void initState() {
     widget.form?['length'] ??= '0';
     widget.form?['width'] ??= '0';
+    widget.form?['weight'] ??= '0';
+    widget.form?['item_qty'] ??= '0';
 
     super.initState();
   }
@@ -53,9 +63,10 @@ class _FinishSewingManualState extends State<FinishSewingManual> {
       processService: _sewingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'sewing_id',
-      withItemGrade: false,
-      withQtyAndWeight: true,
-      forDyeing: false,
+      forDyeing: widget.forDyeing,
+      withItemGrade: widget.withItemGrade,
+      withQtyAndWeight: widget.withQtyAndWeight,
+      forPacking: widget.forPacking,
       processId: widget.processId,
     );
   }

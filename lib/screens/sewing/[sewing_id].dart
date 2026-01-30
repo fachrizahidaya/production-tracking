@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/models/process/sewing.dart';
-import 'package:textile_tracking/screens/master/process_detail.dart';
+import 'package:textile_tracking/screens/detail/%5Bprocess_id%5D.dart';
 
 class SewingDetail extends StatefulWidget {
   final String id;
@@ -71,6 +71,7 @@ class _SewingDetailState extends State<SewingDetail> {
       withQtyAndWeight: true,
       withMaklon: true,
       onlySewing: true,
+      forDyeing: false,
     );
   }
 }

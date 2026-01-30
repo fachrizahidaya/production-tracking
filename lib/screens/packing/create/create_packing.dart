@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/screens/master/create_process.dart';
+import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/models/process/packing.dart';
 import 'package:textile_tracking/screens/packing/create/create_packing_manual.dart';
 
@@ -59,6 +59,7 @@ class CreatePacking extends StatelessWidget {
           form: form,
           handleSubmit: handleSubmit,
           fetchWorkOrder: (service) => service.fetchPackingOptions(id),
+          withNoMaklonOrMachine: true,
         );
       },
       fetchWorkOrder: (service) => service.fetchPackingOptions(),

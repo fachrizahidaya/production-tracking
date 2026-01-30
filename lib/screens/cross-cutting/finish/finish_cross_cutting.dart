@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/screens/master/finish_process.dart';
+import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/models/process/cross_cutting.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/cross-cutting/finish/finish_cross_cutting_manual.dart';
@@ -78,6 +78,9 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: false,
+        withItemGrade: false,
+        withQtyAndWeight: true,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final crossCutting = CrossCutting(

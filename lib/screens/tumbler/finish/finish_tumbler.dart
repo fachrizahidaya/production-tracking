@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/screens/master/finish_process.dart';
+import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/models/process/tumbler.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/tumbler/finish/finish_tumbler_manual.dart';
@@ -38,8 +38,8 @@ class _FinishTumblerState extends State<FinishTumbler> {
     'start_by_id': null,
     'end_by_id': null,
     'weight': null,
-    'width': '0',
-    'length': '0',
+    'width': null,
+    'length': null,
     'notes': '',
     'rework': null,
     'status': null,
@@ -66,7 +66,7 @@ class _FinishTumblerState extends State<FinishTumbler> {
     return FinishProcess(
       title: 'Selesai Tumbler',
       fetchWorkOrder: (service) async =>
-          await service.fetchStenterFinishOptions(),
+          await service.fetchTumblerFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput) =>
@@ -77,6 +77,9 @@ class _FinishTumblerState extends State<FinishTumbler> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+        forDyeing: false,
+        withItemGrade: false,
+        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final stenter = Tumbler(

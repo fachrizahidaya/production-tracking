@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/screens/master/finish_process_manual.dart';
+import 'package:textile_tracking/screens/finish/%5Bfinish_process_id%5D.dart';
 import 'package:textile_tracking/models/process/long_hemming.dart';
 
 class FinishLongHemmingManual extends StatefulWidget {
@@ -9,6 +9,10 @@ class FinishLongHemmingManual extends StatefulWidget {
   final handleSubmit;
   final handleChangeInput;
   final processId;
+  final forPacking;
+  final withItemGrade;
+  final withQtyAndWeight;
+  final forDyeing;
 
   const FinishLongHemmingManual(
       {super.key,
@@ -17,7 +21,11 @@ class FinishLongHemmingManual extends StatefulWidget {
       this.form,
       this.handleSubmit,
       this.handleChangeInput,
-      this.processId});
+      this.processId,
+      this.forDyeing,
+      this.forPacking,
+      this.withItemGrade,
+      this.withQtyAndWeight});
 
   @override
   State<FinishLongHemmingManual> createState() =>
@@ -55,10 +63,11 @@ class _FinishLongHemmingManualState extends State<FinishLongHemmingManual> {
       processService: _longHemmingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'long_hemming_id',
-      withItemGrade: false,
       processId: widget.processId,
-      withQtyAndWeight: false,
-      forDyeing: false,
+      forDyeing: widget.forDyeing,
+      withItemGrade: widget.withItemGrade,
+      withQtyAndWeight: widget.withQtyAndWeight,
+      forPacking: widget.forPacking,
     );
   }
 }

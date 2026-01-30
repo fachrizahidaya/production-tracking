@@ -3,16 +3,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
 import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
-import 'package:textile_tracking/components/master/layout/card/item_process_card.dart';
-import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/layout/card/custom_badge.dart';
-import 'package:textile_tracking/components/master/layout/list/process_list.dart';
+import 'package:textile_tracking/components/master/card/item_process_card.dart';
+import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/format_date_safe.dart';
 import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/tumbler.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
@@ -35,10 +34,10 @@ class _TumblerScreenState extends State<TumblerScreen> {
   bool _firstLoading = true;
   bool _hasMore = true;
   bool _canRead = false;
-  bool _canCreate = false;
   bool _canDelete = false;
   bool _canUpdate = false;
   bool _isLoadMore = false;
+  bool _showFab = true;
 
   final List<dynamic> _dataList = [];
   String _search = '';
@@ -91,7 +90,6 @@ class _TumblerScreenState extends State<TumblerScreen> {
 
       setState(() {
         _canRead = _userMenu.checkMenu('Tumbler', 'read');
-        _canCreate = _userMenu.checkMenu('Tumbler', 'create');
         _canDelete = _userMenu.checkMenu('Tumbler', 'delete');
         _canUpdate = _userMenu.checkMenu('Tumbler', 'update');
       });
@@ -210,120 +208,126 @@ class _TumblerScreenState extends State<TumblerScreen> {
             }
           },
         ),
-        body: Column(
-          children: [
-            Expanded(
-                child: ProcessList(
-              fetchData: (params) async {
-                final service =
-                    Provider.of<TumblerService>(context, listen: false);
-                await service.getDataList(params);
-                return service.items;
-              },
-              isLoadMore: _isLoadMore,
-              service: TumblerService(),
-              searchQuery: _search,
-              canCreate: _canCreate,
-              canRead: _canRead,
-              itemBuilder: (item) => ItemProcessCard(
-                useCustomSize: true,
-                customWidth: 930.0,
-                customHeight: null,
-                label: 'No. Tumbler',
-                item: item,
-                titleKey: 'tumbler_no',
-                subtitleKey: 'work_orders',
-                subtitleField: 'wo_no',
-                isRework: (item) => item['rework'] == false,
-                getStartTime: (item) => formatDateSafe(item['start_time']),
-                getEndTime: (item) => formatDateSafe(item['end_time']),
-                getStartBy: (item) => item['start_by']?['name'] ?? '',
-                getEndBy: (item) => item['end_by']?['name'] ?? '',
-                getStatus: (item) => item['status'] ?? '-',
-                customBadgeBuilder: (status) => CustomBadge(
-                    withStatus: true, status: status, title: item['status']!),
-                itemField: ItemField.get,
-                nestedField: ItemField.nested,
-              ),
-              onItemTap: (context, item) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TumblerDetail(
-                        id: item['id'].toString(),
-                        no: item['tumbler_no'].toString(),
-                        canDelete: _canDelete,
-                        canUpdate: _canUpdate,
-                      ),
-                    )).then((value) {
-                  if (value == true) {
-                    _refetch();
-                  } else {
-                    return null;
-                  }
-                });
-              },
-              filterWidget: ListFilter(
-                title: 'Filter',
-                params: params,
-                onHandleFilter: _handleFilter,
-                onSubmitFilter: () {
-                  _submitFilter();
-                },
-                fetchMachine: (service) => service.fetchOptionsTumbler(),
-                getMachineOptions: (service) => service.dataListOption,
-                dariTanggal: dariTanggal,
-                sampaiTanggal: sampaiTanggal,
-              ),
-              firstLoading: _firstLoading,
-              isFiltered: _isFiltered,
-              hasMore: _hasMore,
-              handleLoadMore: _loadMore,
-              handleRefetch: _refetch,
-              handleSearch: _handleSearch,
-              dataList: _dataList,
-            ))
-          ],
-        ),
-        floatingActionButton: CustomFloatingButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  final actions = [
-                    DialogActionItem(
-                      icon: Icons.add,
-                      iconColor: CustomTheme().buttonColor('primary'),
-                      title: 'Mulai Tumbler',
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const CreateTumbler(),
-                          ),
-                        );
-                      },
-                    ),
-                    DialogActionItem(
-                      icon: Icons.check_circle,
-                      iconColor: CustomTheme().buttonColor('warning'),
-                      title: 'Selesai Tumbler',
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const FinishTumbler(),
-                          ),
-                        );
-                      },
-                    ),
-                  ];
-                  return ActionDialog(actions: actions);
-                },
-              );
+        body: NotificationListener(
+          onNotification: (notification) {
+            if (notification is UserScrollNotification) {
+              if (notification.direction == ScrollDirection.reverse) {
+                // scrolling down
+                if (_showFab) {
+                  setState(() => _showFab = false);
+                }
+              } else if (notification.direction == ScrollDirection.forward) {
+                // scrolling up
+                if (!_showFab) {
+                  setState(() => _showFab = true);
+                }
+              }
+            }
+            return false;
+          },
+          child: ProcessList(
+            fetchData: (params) async {
+              final service =
+                  Provider.of<TumblerService>(context, listen: false);
+              await service.getDataList(params);
+              return service.items;
             },
-            icon: Icon(
-              Icons.add,
-              color: Colors.white,
-            )),
+            isLoadMore: _isLoadMore,
+            canRead: _canRead,
+            itemBuilder: (item) => ItemProcessCard(
+              label: 'No. Tumbler',
+              item: item,
+              titleKey: 'tumbler_no',
+              subtitleKey: 'work_orders',
+              subtitleField: 'wo_no',
+              itemField: ItemField.get,
+              nestedField: ItemField.nested,
+            ),
+            onItemTap: (context, item) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TumblerDetail(
+                      id: item['id'].toString(),
+                      no: item['tumbler_no'].toString(),
+                      canDelete: _canDelete,
+                      canUpdate: _canUpdate,
+                    ),
+                  )).then((value) {
+                if (value == true) {
+                  _refetch();
+                } else {
+                  return null;
+                }
+              });
+            },
+            filterWidget: ListFilter(
+              title: 'Filter',
+              params: params,
+              onHandleFilter: _handleFilter,
+              onSubmitFilter: () {
+                _submitFilter();
+              },
+              dariTanggal: dariTanggal,
+              sampaiTanggal: sampaiTanggal,
+            ),
+            firstLoading: _firstLoading,
+            isFiltered: _isFiltered,
+            hasMore: _hasMore,
+            handleLoadMore: _loadMore,
+            handleRefetch: _refetch,
+            handleSearch: _handleSearch,
+            dataList: _dataList,
+          ),
+        ),
+        floatingActionButton: AnimatedSlide(
+          duration: Duration(milliseconds: 200),
+          offset: _showFab ? Offset.zero : Offset(0, 1),
+          child: AnimatedOpacity(
+            duration: Duration(milliseconds: 200),
+            opacity: _showFab ? 1 : 0,
+            child: CustomFloatingButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      final actions = [
+                        DialogActionItem(
+                          icon: Icons.add,
+                          iconColor: CustomTheme().buttonColor('primary'),
+                          title: 'Mulai Tumbler',
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const CreateTumbler(),
+                              ),
+                            );
+                          },
+                        ),
+                        DialogActionItem(
+                          icon: Icons.check_circle,
+                          iconColor: CustomTheme().buttonColor('warning'),
+                          title: 'Selesai Tumbler',
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const FinishTumbler(),
+                              ),
+                            );
+                          },
+                        ),
+                      ];
+                      return ActionDialog(actions: actions);
+                    },
+                  );
+                },
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 72,
+                )),
+          ),
+        ),
       ),
     );
   }

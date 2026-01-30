@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/layout/card/custom_card.dart';
-import 'package:textile_tracking/components/master/layout/list/option_list.dart';
+import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/card/custom_card.dart';
+import 'package:textile_tracking/components/home/profile/option_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
 class Account extends StatefulWidget {

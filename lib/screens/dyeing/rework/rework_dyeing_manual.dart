@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/dyeing/rework/info_tab.dart';
-import 'package:textile_tracking/components/dyeing/rework/item_tab.dart';
+import 'package:textile_tracking/components/dyeing/rework/rework_info_tab.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
-import 'package:textile_tracking/components/master/layout/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
@@ -43,6 +43,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   bool _isFetchingMachine = false;
   bool _isFetchingWorkOrder = false;
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _qtyController = TextEditingController();
@@ -60,9 +61,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
 
   @override
   void initState() {
-    _handleFetchWorkOrder();
-    _handleFetchUnit();
-    _handleFetchMachine();
+    super.initState();
 
     _qtyController.text = widget.form?['qty']?.toString() ?? '';
     _lengthController.text = widget.form?['length']?.toString() ?? '';
@@ -72,7 +71,11 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
     if (widget.data != null) {
       woData = widget.data!;
     }
-    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleFetchWorkOrder();
+      _handleFetchUnit();
+      _handleFetchMachine();
+    });
   }
 
   Future<void> _handleFetchWorkOrder() async {
@@ -133,6 +136,51 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
       setState(() {
         _isFetchingWorkOrder = false;
       });
+    }
+  }
+
+  Future<void> _handleCancel(BuildContext context) async {
+    if (context.mounted) {
+      if (widget.form?['wo_id'] != null) {
+        showConfirmationDialog(
+            context: context,
+            isLoading: _isLoading,
+            onConfirm: () async {
+              await Future.delayed(const Duration(milliseconds: 200));
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            title: 'Batal Rework Proses Dyeing',
+            message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
+            buttonBackground: CustomTheme().buttonColor('danger'));
+      } else {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      }
+    }
+  }
+
+  Future<void> _handleSubmit(BuildContext context) async {
+    if (context.mounted) {
+      if (widget.form?['wo_id'] != null) {
+        showConfirmationDialog(
+            context: context,
+            isLoading: _isSubmitting,
+            onConfirm: () async {
+              _isSubmitting.value = true;
+              try {
+                await widget.handleSubmit(dyeingData['id'].toString());
+              } finally {
+                _isSubmitting.value = false;
+              }
+            },
+            title: 'Rework Proses Dyeing',
+            message: 'Anda yakin ingin rework proses?',
+            buttonBackground: CustomTheme().buttonColor('primary'));
+      } else {
+        Navigator.pop(context);
+      }
     }
   }
 
@@ -263,87 +311,60 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Scaffold(
-          backgroundColor: const Color(0xFFf9fafc),
-          appBar: CustomAppBar(
-            title: 'Rework Dyeing',
-            onReturn: () {
-              Navigator.pop(context);
-            },
-          ),
-          body: Column(
-            children: [
-              Container(
-                color: Colors.white,
-                child: TabBar(tabs: [
-                  Tab(
-                    text: 'Form',
-                  ),
-                  Tab(
-                    text: 'Barang',
-                  ),
-                ]),
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFf9fafc),
+        appBar: CustomAppBar(
+          title: 'Rework Dyeing',
+          onReturn: () {
+            _handleCancel(context);
+          },
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: ReworkInfoTab(
+                data: woData,
+                id: widget.id,
+                label: 'Dyeing',
+                isLoading: _firstLoading,
+                form: widget.form,
+                formKey: _formKey,
+                handleSubmit: widget.handleSubmit,
+                handleSelectMachine: _selectMachine,
+                handleSelectWorkOrder: _selectWorkOrder,
               ),
-              Expanded(
-                child: TabBarView(children: [
-                  InfoTab(
-                    data: woData,
-                    id: widget.id,
-                    label: 'Dyeing',
-                    isLoading: _firstLoading,
-                    form: widget.form,
-                    formKey: _formKey,
-                    handleSubmit: widget.handleSubmit,
-                    handleSelectMachine: _selectMachine,
-                    handleSelectWorkOrder: _selectWorkOrder,
-                  ),
-                  ItemTab(
-                    data: woData,
-                  ),
-                ]),
-              ),
-            ],
-          ),
-          bottomNavigationBar: SafeArea(
-            child: Container(
-              padding: CustomTheme().padding('card'),
-              color: Colors.white,
-              child: ValueListenableBuilder<bool>(
-                valueListenable: _isSubmitting,
-                builder: (context, isSubmitting, _) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: CancelButton(
-                          label: 'Batal',
-                          onPressed: () => Navigator.pop(context),
-                        ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Container(
+            padding: CustomTheme().padding('card'),
+            color: Colors.white,
+            child: ValueListenableBuilder<bool>(
+              valueListenable: _isSubmitting,
+              builder: (context, isSubmitting, _) {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: CancelButton(
+                        label: 'Batal',
+                        onPressed: () => _handleCancel(context),
+                        customHeight: 48.0,
                       ),
-                      Expanded(
-                          child: FormButton(
-                        label: 'Simpan',
-                        isLoading: isSubmitting,
-                        onPressed: () async {
-                          _isSubmitting.value = true;
-                          try {
-                            await widget
-                                .handleSubmit(dyeingData['id'].toString());
-                          } finally {
-                            _isSubmitting.value = false;
-                          }
-                        },
-                      ))
-                    ].separatedBy(CustomTheme().hGap('xl')),
-                  );
-                },
-              ),
+                    ),
+                    Expanded(
+                        child: FormButton(
+                      label: 'Simpan',
+                      onPressed: () => _handleSubmit(context),
+                    ))
+                  ].separatedBy(CustomTheme().hGap('xl')),
+                );
+              },
             ),
           ),
         ),

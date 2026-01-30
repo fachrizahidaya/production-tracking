@@ -639,7 +639,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
       setState(() {
         _weightWarningValidationMessage =
-            'Qty ${berat < greigeQty ? 'kurang' : 'lebih'} '
+            'Berat ${berat < greigeQty ? 'kurang' : 'lebih'} '
             '${diffPercent.abs().toStringAsFixed(2)}% '
             '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
       });

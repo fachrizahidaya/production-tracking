@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/finish/list_form.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 
 class FinishSection extends StatefulWidget {
   final formKey;
@@ -92,6 +94,7 @@ class FinishSection extends StatefulWidget {
 class _FinishSectionState extends State<FinishSection> {
   bool _isChanged = false;
   late List<Map<String, dynamic>> allAttachments;
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   @override
   void initState() {
@@ -221,36 +224,37 @@ class _FinishSectionState extends State<FinishSection> {
   }
 
   Future<bool?> _handleDeleteAttachment(Map item) async {
-    final confirm = await showDialog<bool>(
+    if (!context.mounted) return false;
+
+    final completer = Completer<bool?>();
+
+    showConfirmationDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Hapus Lampiran'),
-        content: const Text('Apakah Anda yakin ingin menghapus lampiran ini?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Batal'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Hapus', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+      isLoading: _isLoading,
+      title: 'Hapus Lampiran',
+      message: 'Apakah Anda yakin ingin menghapus lampiran ini?',
+      buttonBackground: CustomTheme().buttonColor('danger'),
+      onConfirm: () async {
+        await Future.delayed(const Duration(milliseconds: 200));
+
+        if (!mounted) {
+          completer.complete(false);
+          return;
+        }
+
+        setState(() {
+          allAttachments.remove(item);
+
+          widget.form['attachments'] =
+              allAttachments.where((e) => e['is_add_button'] != true).toList();
+        });
+
+        Navigator.pop(context); // close dialog
+        completer.complete(true);
+      },
     );
 
-    if (confirm == true) {
-      setState(() {
-        allAttachments.remove(item);
-
-        widget.form['attachments'] =
-            allAttachments.where((e) => e['is_add_button'] != true).toList();
-      });
-
-      return true;
-    }
-
-    return false;
+    return completer.future;
   }
 
   @override

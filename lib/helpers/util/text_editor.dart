@@ -11,8 +11,9 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class TextEditor extends StatefulWidget {
   final initialHtml;
+  final label;
 
-  const TextEditor({super.key, required this.initialHtml});
+  const TextEditor({super.key, required this.initialHtml, this.label});
 
   @override
   State<TextEditor> createState() => _TextEditorState();
@@ -24,13 +25,15 @@ class _TextEditorState extends State<TextEditor> {
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
   @override
+  @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (widget.initialHtml != null && widget.initialHtml!.trim().isNotEmpty) {
-        await Future.delayed(const Duration(milliseconds: 150));
-        await controller.setText(widget.initialHtml);
+      final html = widget.initialHtml?.trim();
+
+      if (html != null && html.isNotEmpty) {
+        await controller.setText(html);
       }
     });
   }
@@ -55,7 +58,7 @@ class _TextEditorState extends State<TextEditor> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Catatan',
+        title: widget.label,
         onReturn: () {
           _handleCancel(context);
         },
@@ -85,33 +88,40 @@ class _TextEditorState extends State<TextEditor> {
         ],
       ),
       bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: CustomTheme().padding('card'),
-          color: Colors.white,
-          child: ValueListenableBuilder<bool>(
-            valueListenable: _isSubmitting,
-            builder: (context, isSubmitting, _) {
-              return Row(
-                children: [
-                  Expanded(
-                    child: CancelButton(
-                      label: 'Kembali',
-                      onPressed: () => _handleCancel(context),
-                      customHeight: 48.0,
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Container(
+            padding: CustomTheme().padding('card'),
+            color: Colors.white,
+            child: ValueListenableBuilder<bool>(
+              valueListenable: _isSubmitting,
+              builder: (context, isSubmitting, _) {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: CancelButton(
+                        label: 'Kembali',
+                        onPressed: () => _handleCancel(context),
+                        customHeight: 48.0,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                      child: FormButton(
-                    label: 'Simpan',
-                    onPressed: () async {
-                      final html = await controller.getText();
-                      Navigator.pop(context, html);
-                    },
-                    customHeight: 48.0,
-                  ))
-                ].separatedBy(CustomTheme().hGap('xl')),
-              );
-            },
+                    Expanded(
+                        child: FormButton(
+                      label: 'Simpan',
+                      onPressed: () async {
+                        final html = await controller.getText();
+                        if (context.mounted) {
+                          Navigator.pop(context, html);
+                        }
+                      },
+                      customHeight: 48.0,
+                    ))
+                  ].separatedBy(CustomTheme().hGap('xl')),
+                );
+              },
+            ),
           ),
         ),
       ),

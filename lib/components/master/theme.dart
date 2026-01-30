@@ -164,73 +164,38 @@ class CustomTheme {
     hintTextString,
     prefIcon,
     suffIcon,
+    bool isDisabled = false,
   ]) {
     return InputDecoration(
       filled: true,
       fillColor: Colors.white,
-      contentPadding: EdgeInsets.all(12),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(
-            8.0,
-          ),
-        ),
+      contentPadding: const EdgeInsets.all(12),
+      border: _defaultBorder(colors('base')),
+      enabledBorder: _defaultBorder(colors('base')),
+      focusedBorder: _defaultBorder(colors('base')),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
         borderSide: BorderSide(
           width: 0.5,
-          color: colors('base'),
+          color: colors('base').withOpacity(0.4),
         ),
       ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(
-            8.0,
-          ),
-        ),
-        borderSide: BorderSide(
-          width: 0.5,
-          color: colors('base'),
-        ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(
-            8.0,
-          ),
-        ),
-        borderSide: BorderSide(
-          width: 0.5,
-          color: colors('base'),
-        ),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(
-            8.0,
-          ),
-        ),
-        borderSide: BorderSide(
-          width: 0.5,
-          color: Colors.red.shade500,
-        ),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(
-            8.0,
-          ),
-        ),
-        borderSide: BorderSide(
-          width: 0.5,
-          color: Colors.red.shade500,
-        ),
-      ),
+      errorBorder: _defaultBorder(Colors.red.shade500),
+      focusedErrorBorder: _defaultBorder(Colors.red.shade500),
       hintText: hintTextString,
       hintStyle: TextStyle(
-        color: Colors.black38,
+        color: isDisabled ? Colors.black.withOpacity(0.6) : Colors.black38,
         fontWeight: FontWeight.w400,
       ),
       prefixIcon: prefIcon,
       suffixIcon: suffIcon,
+    );
+  }
+
+  OutlineInputBorder _defaultBorder(Color color) {
+    return OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      borderSide: BorderSide(width: 0.5, color: color),
     );
   }
 

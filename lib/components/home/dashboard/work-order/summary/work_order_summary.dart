@@ -3,7 +3,6 @@ import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.d
 import 'package:textile_tracking/components/home/dashboard/work-order/summary/summary_card.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderSummary extends StatefulWidget {
   final data;
@@ -116,78 +115,26 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
 
   Map<String, dynamic> _mapApiToSummaryCard(Map<String, dynamic> item) {
     final waitingList = item['waiting'] as List? ?? [];
-    final completedList = item['completed'] as List? ?? [];
-    final inProgressList = item['in_progress'] as List? ?? [];
-    final skippedList = item['skipped'] as List? ?? [];
 
     return {
       'name': item['process_name'],
-
       'summary': {
-        'completed': completedList.length,
-        'in_progress': inProgressList.length,
+        'completed': (item['completed'] as List?)?.length ?? 0,
+        'in_progress': (item['in_progress'] as List?)?.length ?? 0,
         'waiting': waitingList.length,
-        'skipped': skippedList.length,
+        'skipped': (item['skipped'] as List?)?.length ?? 0,
       },
 
-      // 👇 SIMPAN SEMUA LIST (INI KUNCI)
+      // 👇 keep original waiting list
       'waiting': waitingList,
-      'completed': completedList,
-      'in_progress': inProgressList,
-      'skipped': skippedList,
 
-      // overdue detector tetap valid
+      // 👇 NUMBER 1: overdue detector
       'hasOverdueWaiting': _hasOverdueWaiting(waitingList),
     };
   }
 
   bool _hasOverdueWaiting(List waiting) {
     return waiting.any((wo) => wo['overdue'] == true);
-  }
-
-  Widget _buildProcessFilter() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
-        padding: CustomTheme().padding('badge'),
-        child: Row(
-          children: List.generate(processFilters.length, (index) {
-            final isSelected = selectedIndex == index;
-
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedIndex = index;
-                });
-
-                // _tabController.animateTo(index);
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: isSelected
-                        ? CustomTheme().buttonColor('primary')
-                        : Colors.grey.shade400,
-                  ),
-                  color: isSelected
-                      ? CustomTheme().buttonColor('primary')
-                      : Colors.white,
-                  boxShadow: [CustomTheme().boxShadowTheme()],
-                ),
-                padding: CustomTheme().padding('badge'),
-                child: Text(
-                  processFilters[index],
-                  style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black,
-                  ),
-                ),
-              ),
-            );
-          }).separatedBy(CustomTheme().hGap('lg')),
-        ),
-      ),
-    );
   }
 
   Widget _buildSwipeContent() {
@@ -204,13 +151,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       return NoData();
     }
 
-    return
-        // TabBarView(
-        //   controller: _tabController,
-        //   children:
-        //   processFilters.map((filter) {
-        //     return
-        SingleChildScrollView(
+    return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: widget.data!.map<Widget>((item) {
@@ -230,8 +171,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
         }).toList(),
       ),
     );
-    //   }).toList(),
-    // ),
   }
 
   @override
@@ -286,7 +225,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                   ],
                 ),
               ),
-              // _buildProcessFilter(),
               Divider(),
               _buildSwipeContent()
             ],

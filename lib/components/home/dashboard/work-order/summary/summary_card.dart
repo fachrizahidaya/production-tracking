@@ -4,7 +4,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/pulse_icon.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/format_date_safe.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
@@ -58,17 +57,6 @@ class _SummaryCardState extends State<SummaryCard>
       default:
         return [];
     }
-  }
-
-  int _getOverdueDays(String? dueDate) {
-    if (dueDate == null) return 0;
-
-    final due = DateTime.parse(dueDate);
-    final now = DateTime.now();
-
-    if (now.isBefore(due)) return 0;
-
-    return now.difference(due).inDays;
   }
 
   int _getFilteredTotal(Map<String, dynamic> summary) {
@@ -248,142 +236,6 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
-  void _showAllWorkOrdersDialog(
-    BuildContext context,
-    List<dynamic> allList,
-  ) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 360, // 👈 SHRINK WIDTH HERE
-              maxHeight: 400,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header
-                  Row(
-                    children: [
-                      const Icon(Icons.error_outline, size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Menunggu Diproses',
-                        style: TextStyle(
-                          fontSize: CustomTheme().fontSize('md'),
-                          fontWeight: CustomTheme().fontWeight('semibold'),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Divider(),
-
-                  // List
-                  Expanded(
-                    child: ListView.separated(
-                      itemCount: allList.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1),
-                      itemBuilder: (context, index) {
-                        final wo = allList[index];
-
-                        final woNo = wo['wo_no'] ?? '-';
-                        final createdAt = wo['created_at'];
-
-                        final bool isUrgent = wo['urgent'] == true;
-                        final bool isOverdue = wo['overdue'] == true;
-
-                        // overdue_days already STRING from API
-                        final String overdueDays =
-                            wo['overdue_days']?.toString() ?? '0';
-
-                        return ListTile(
-                          contentPadding: EdgeInsets.zero,
-
-                          // 🔹 TITLE (WO NO + STATUS)
-                          title: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              if (isOverdue)
-                                PulseIcon(
-                                  icon: Icons.circle,
-                                  color: Colors.redAccent,
-                                  size: 12,
-                                ),
-                              Text(
-                                woNo,
-                                style: TextStyle(
-                                  fontWeight:
-                                      CustomTheme().fontWeight('semibold'),
-                                  color: isOverdue
-                                      ? Colors.redAccent
-                                      : Colors.grey[800],
-                                ),
-                              ),
-                              if (isUrgent)
-                                Icon(
-                                  Icons.warning_amber_rounded,
-                                  size: 16,
-                                  color: Colors.red,
-                                ),
-                            ].separatedBy(CustomTheme().hGap('sm')),
-                          ),
-
-                          // 🔹 SUBTITLE
-                          subtitle: Text(
-                            isOverdue
-                                ? 'Terlambat $overdueDays hari'
-                                : createdAt != null
-                                    ? DateFormat("dd MMM yyyy")
-                                        .format(DateTime.parse(createdAt))
-                                    : '-',
-                            style: TextStyle(
-                              fontSize: CustomTheme().fontSize('sm'),
-                              color: isOverdue
-                                  ? Colors.redAccent
-                                  : Colors.grey[600],
-                              fontWeight: isOverdue
-                                  ? CustomTheme().fontWeight('semibold')
-                                  : null,
-                            ),
-                          ),
-
-                          trailing: const Icon(
-                            Icons.chevron_right,
-                            size: 18,
-                          ),
-
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => WorkOrderDetail(
-                                  id: wo['wo_id'].toString(),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   void dispose() {
     _animationController.dispose();
@@ -401,9 +253,7 @@ class _SummaryCardState extends State<SummaryCard>
           onTapUp: (_) => _animationController.reverse(),
           onTapCancel: () => _animationController.reverse(),
           onTap: widget.onTap,
-          child:
-              // Placeholder()
-              ScaleTransition(
+          child: ScaleTransition(
             scale: _scaleAnimation,
             child: _buildCard(isTablet),
           ),
@@ -424,7 +274,6 @@ class _SummaryCardState extends State<SummaryCard>
 
     final statusColor = _getSummaryColor(summary);
     final progress = _getProgress(summary);
-    final waitingList = widget.data['waiting'] as List? ?? [];
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -813,140 +662,6 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
-  Widget _buildWaitingWONumber(List waitingList, bool isTablet) {
-    const maxVisible = 3;
-    const double fixedHeight = 110; // ⬅️ adjust sesuai design
-
-    final visibleList = waitingList.take(maxVisible).toList();
-    final remainingCount = waitingList.length - visibleList.length;
-
-    return SizedBox(
-      height: fixedHeight,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'WO Menunggu Diproses',
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('md'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: Colors.grey[700],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: waitingList.isEmpty
-                ? Center(
-                    child: Text(
-                      '-',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('sm'),
-                        color: Colors.grey[400],
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
-                    ),
-                  )
-                : Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      ...visibleList.map((wo) {
-                        final woNumber = wo['wo_no'] ?? '-';
-                        final bool isUrgent = wo['urgent'] == true;
-                        final bool isOverdue = wo['overdue'] == true;
-
-                        return InkWell(
-                          borderRadius: BorderRadius.circular(4),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => WorkOrderDetail(
-                                  id: wo['wo_id'].toString(),
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: CustomTheme().padding('badge'),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFf1f5f9),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: Colors.grey.withOpacity(0.3),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (isOverdue)
-                                  PulseIcon(
-                                    icon: Icons.circle,
-                                    color: Colors.redAccent,
-                                    size: 12,
-                                  ),
-                                Text(
-                                  woNumber,
-                                  style: TextStyle(
-                                    fontSize: CustomTheme().fontSize('md'),
-                                    fontWeight:
-                                        CustomTheme().fontWeight('semibold'),
-                                    color:
-                                        const Color.fromRGBO(113, 113, 123, 1),
-                                  ),
-                                ),
-                                if (isUrgent)
-                                  Icon(
-                                    Icons.warning_amber_rounded,
-                                    size: 16,
-                                    color: Colors.redAccent,
-                                  ),
-                                Icon(
-                                  Icons.chevron_right,
-                                  size: 18,
-                                  color: Colors.grey[500],
-                                ),
-                              ].separatedBy(CustomTheme().hGap('sm')),
-                            ),
-                          ),
-                        );
-                      }),
-                      if (remainingCount > 0)
-                        InkWell(
-                          borderRadius: BorderRadius.circular(8),
-                          onTap: () {
-                            _showAllWorkOrdersDialog(
-                                context, waitingList.toList());
-                            // 👆 fullList = ALL WO list (not visibleList)
-                          },
-                          child: Container(
-                            padding: CustomTheme().padding('badge'),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFe5e7eb),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: Colors.grey.withOpacity(0.4),
-                              ),
-                            ),
-                            child: Text(
-                              '+$remainingCount',
-                              style: TextStyle(
-                                fontSize: CustomTheme().fontSize('sm'),
-                                fontWeight:
-                                    CustomTheme().fontWeight('semibold'),
-                                color: Colors.grey[700],
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-
   /// Get Summary Color based on status
   Color _getSummaryColor(Map<String, dynamic> summary) {
     final completed = summary['completed'] ?? 0;
@@ -1038,8 +753,6 @@ class _SummaryCardState extends State<SummaryCard>
 
     return Icons.settings_outlined;
   }
-
-  /// Get Process Subtitle
 }
 
 /// Status Item Model

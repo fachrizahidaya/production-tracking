@@ -113,7 +113,7 @@ class ListItem extends StatelessWidget {
   Widget _buildItemInfo(bool isTablet) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         // Item Code Badge
         Container(

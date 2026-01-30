@@ -28,7 +28,7 @@ class TextForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FormField(
+    return FormField<String>(
       validator: req == true ? validator : null,
       builder: (FormFieldState<String> field) {
         return GroupForm(
@@ -37,20 +37,28 @@ class TextForm extends StatelessWidget {
           errorText: field.errorText,
           disabled: isDisabled,
           formControl: TextFormField(
-            enabled: isDisabled == true ? false : true,
+            enabled: !isDisabled,
             controller: controller,
-            style: TextStyle(fontSize: CustomTheme().fontSize('md')),
-            decoration: CustomTheme().inputDecoration().copyWith(
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('md'),
+              color: isDisabled
+                  ? Colors.black.withOpacity(0.85) // 👈 strong black
+                  : Colors.black,
+            ),
+            decoration: CustomTheme()
+                .inputDecoration('Isi $label', null, null, isDisabled)
+                .copyWith(
                   hintText: 'Isi $label',
                 ),
-            keyboardType:
-                isNumber == true ? TextInputType.number : TextInputType.text,
+            keyboardType: isNumber == true
+                ? const TextInputType.numberWithOptions(decimal: true)
+                : TextInputType.text,
             inputFormatters:
                 isNumber == true ? [ThousandsSeparatorInputFormatter()] : [],
             onChanged: (value) {
               final rawValue = value.replaceAll(',', '');
 
-              field.didChange(rawValue); // ✅ WAJIB: clear error saat valid
+              field.didChange(rawValue);
 
               handleChange(rawValue);
             },

@@ -68,7 +68,7 @@ class _NoteEditorState extends State<NoteEditor> {
 
                 widget.onChanged?.call(result);
 
-                setState(() {}); // refresh Html preview
+                setState(() {});
               }
             },
             child: Container(

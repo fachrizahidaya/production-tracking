@@ -76,7 +76,7 @@ class CustomTheme {
       color: Colors.grey.withOpacity(0.3),
       spreadRadius: 0,
       blurRadius: 1,
-      offset: Offset(0, 1), // changes position of shadow
+      offset: Offset(0, 1),
     );
   }
 
@@ -277,7 +277,9 @@ class CustomTheme {
               onPressed: onPressClear,
             )
           : IconButton(
-              icon: hasValue ? Icon(Icons.close) : Icon(null),
+              icon: hasValue
+                  ? Icon(Icons.close)
+                  : Icon(Icons.calendar_month_outlined),
               onPressed: hasValue ? onPressClear : null,
             ),
     );
@@ -494,6 +496,11 @@ class CustomTheme {
         return Color(0xFF71717b);
       case 'text-tertiary':
         return Colors.black38;
+      case 'Selesai':
+        return Color(0xFF10b981);
+      case 'Diproses':
+        return Color(0xfff18800);
+
       default:
         return Color.fromRGBO(148, 163, 184, 1);
     }

@@ -489,9 +489,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     final items = [
       for (int i = 0; i < widget.existingGrades.length; i++)
         {
-          'label': ' Grade ${widget.existingGrades[i]['item_grade']['code']}'
-          // ${widget.existingGrades[i]['item_grade']['description']?.split('-').first.trim()}
-          ,
+          'label': ' Grade ${widget.existingGrades[i]['item_grade']['code']}',
           'value': widget.existingGrades[i]['qty'] != null
               ? '${widget.existingGrades[i]['qty']} ${widget.existingGrades[i]['unit']['code']}'
               : '-',

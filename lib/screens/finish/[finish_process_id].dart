@@ -101,7 +101,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   void initState() {
     super.initState();
 
-    // SAFE: synchronous controller initialization
     _qtyController.text = widget.form?['qty']?.toString() ?? '';
     _qtyItemController.text = widget.form?['item_qty']?.toString() ?? '';
     _weightController.text = widget.form?['weight']?.toString() ?? '';
@@ -114,7 +113,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     _totalWeightController.text =
         widget.form?['total_weight']?.toString() ?? '';
 
-    // 🚨 EVERYTHING async + Provider goes here
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _postInit();
     });
@@ -511,7 +509,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       return;
     }
 
-    // Fetch current selected unit label (if any)
     final currentUnitName =
         widget.form?['grades']?[index]?['unit']?['name']?.toString() ?? '';
 
@@ -523,10 +520,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         selected: currentUnitName,
         handleChangeValue: (selected) {
           setState(() {
-            // Ensure grades list exists
             widget.form?['grades'] ??= [];
 
-            // Ensure index exists (avoid out-of-range)
             while (widget.form!['grades'].length <= index) {
               widget.form!['grades'].add({
                 'item_grade_id': '',
@@ -537,11 +532,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
               });
             }
 
-            // Update the selected grade row
             widget.form!['grades'][index]['unit_id'] =
                 selected['value'].toString();
 
-            // Store the label for display
             widget.form!['grades'][index]
                 ['unit'] = {'name': selected['label'].toString()};
           });

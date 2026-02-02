@@ -45,8 +45,6 @@ class ListItem extends StatelessWidget {
               child: IntrinsicHeight(
                 child: Row(
                   children: [
-                    // Left Accent Bar
-
                     // Main Content
                     Expanded(
                       child: Padding(
@@ -73,7 +71,6 @@ class ListItem extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Item Icon
         // Item Info
         Expanded(
           flex: 2,
@@ -106,8 +103,6 @@ class ListItem extends StatelessWidget {
       ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
-
-  /// Item Icon
 
   /// Item Info (Code + Name)
   Widget _buildItemInfo(bool isTablet) {
@@ -311,8 +306,6 @@ class ListItem extends StatelessWidget {
       ),
     );
   }
-
-  /// Status Section dengan Badge
 
   /// Quantity Section
   Widget _buildQuantitySection(bool isTablet) {

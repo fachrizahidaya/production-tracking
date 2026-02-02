@@ -73,7 +73,6 @@ class _AttachmentTabState extends State<AttachmentTab> {
           : (item['file_name'] ?? filePath?.split('/').last ?? '');
       final String extension = fileName.split('.').last.toLowerCase();
 
-      /// ---- File Size Logic ----
       String fileSizeText = '';
 
       if (isNew && filePath != null) {
@@ -83,7 +82,6 @@ class _AttachmentTabState extends State<AttachmentTab> {
           fileSizeText = formatBytes(bytes);
         }
       } else {
-        // from API (recommended: send file_size from backend)
         if (item['file_size'] != null) {
           fileSizeText = formatBytes(item['file_size']);
         } else {

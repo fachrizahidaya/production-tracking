@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/text/thousand_separator_input_formatter.dart';
@@ -41,9 +43,7 @@ class TextForm extends StatelessWidget {
             controller: controller,
             style: TextStyle(
               fontSize: CustomTheme().fontSize('md'),
-              color: isDisabled
-                  ? Colors.black.withOpacity(0.85) // 👈 strong black
-                  : Colors.black,
+              color: isDisabled ? Colors.black.withOpacity(0.85) : Colors.black,
             ),
             decoration: CustomTheme()
                 .inputDecoration('Isi $label', null, null, isDisabled)

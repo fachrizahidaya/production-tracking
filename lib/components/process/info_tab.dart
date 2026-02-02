@@ -251,7 +251,6 @@ class _InfoTabState extends State<InfoTab> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Left icon (same as buildInfoItem)
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(

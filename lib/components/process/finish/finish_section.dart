@@ -249,7 +249,7 @@ class _FinishSectionState extends State<FinishSection> {
               allAttachments.where((e) => e['is_add_button'] != true).toList();
         });
 
-        Navigator.pop(context); // close dialog
+        Navigator.pop(context);
         completer.complete(true);
       },
     );

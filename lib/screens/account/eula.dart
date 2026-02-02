@@ -43,6 +43,7 @@ class _EulaState extends State<Eula> {
             }
           }),
       body: ListView(
+        padding: CustomTheme().padding('content'),
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

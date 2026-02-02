@@ -252,17 +252,11 @@ class _NoteItemState extends State<NoteItem>
                 ].separatedBy(CustomTheme().hGap('lg')),
               ),
             ),
-
-            // Action Buttons (optional)
           ],
         ),
       ),
     );
   }
-
-  /// Action Buttons
-
-  /// Action Button Widget
 
   /// Helper Methods
   String _htmlToPlainText(dynamic htmlString) {
@@ -632,8 +626,6 @@ class CompactNoteItem extends StatelessWidget {
       'color': Colors.blueGrey,
     };
   }
-
-  /// Note List Grid for Tablet
 }
 
 class NoteListGrid extends StatelessWidget {

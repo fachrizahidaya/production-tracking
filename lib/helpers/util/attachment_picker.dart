@@ -82,7 +82,6 @@ class AttachmentPicker extends StatelessWidget {
 
             final extension = fileName.split('.').last.toLowerCase();
 
-            // PREVIEW
             Widget preview;
             if (extension == 'pdf') {
               preview =

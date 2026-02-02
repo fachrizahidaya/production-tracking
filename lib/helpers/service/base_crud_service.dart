@@ -252,7 +252,6 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
               grade.forEach((key, value) {
                 if (value == null) return;
 
-                // skip nested objects like "unit"
                 if (value is Map || value is List) return;
 
                 request.fields['grades[$i][$key]'] = value.toString();

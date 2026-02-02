@@ -4,37 +4,54 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 
 class ThousandsSeparatorInputFormatter extends TextInputFormatter {
-  final NumberFormat _formatter = NumberFormat.decimalPattern('en_US');
+  final NumberFormat _intFormatter = NumberFormat.decimalPattern('en_US');
 
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    String digitsOnly = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+    final text = newValue.text;
 
-    if (digitsOnly.isEmpty) {
-      return TextEditingValue(
-        text: '',
-        selection: TextSelection.collapsed(offset: 0),
-      );
+    if (text.isEmpty) {
+      return newValue;
     }
 
-    // Format with comma
-    String newFormatted = _formatter.format(int.parse(digitsOnly));
+    String sanitized = text.replaceAll(RegExp(r'[^0-9.]'), '');
 
-    // Calculate cursor position
-    int selectionIndex =
-        newFormatted.length - (oldValue.text.length - oldValue.selection.end);
-
-    if (selectionIndex < 0) selectionIndex = 0;
-    if (selectionIndex > newFormatted.length) {
-      selectionIndex = newFormatted.length;
+    if ('.'.allMatches(sanitized).length > 1) {
+      return oldValue;
     }
+
+    if (sanitized.endsWith('.') &&
+        double.tryParse(sanitized.substring(0, sanitized.length - 1)) != null) {
+      return newValue;
+    }
+
+    if (double.tryParse(sanitized) == null) {
+      return oldValue;
+    }
+
+    final parts = sanitized.split('.');
+    final integerPart = parts[0];
+    final decimalPart = parts.length > 1 ? parts[1] : '';
+
+    String formattedInt = integerPart.isEmpty
+        ? '0'
+        : _intFormatter.format(int.parse(integerPart));
+
+    final formattedText =
+        decimalPart.isNotEmpty ? '$formattedInt.$decimalPart' : formattedInt;
+
+    int offset =
+        formattedText.length - (oldValue.text.length - oldValue.selection.end);
+
+    if (offset < 0) offset = 0;
+    if (offset > formattedText.length) offset = formattedText.length;
 
     return TextEditingValue(
-      text: newFormatted,
-      selection: TextSelection.collapsed(offset: selectionIndex),
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: offset),
     );
   }
 }

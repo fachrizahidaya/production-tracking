@@ -23,7 +23,7 @@ class _ProcessTabState extends State<ProcessTab> {
           : GridView.builder(
               padding: CustomTheme().padding('content'),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 520, // adjust
+                maxCrossAxisExtent: 520,
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
               ),

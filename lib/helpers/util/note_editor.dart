@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/text_editor.dart';
 
@@ -24,13 +25,10 @@ class NoteEditor extends StatefulWidget {
 }
 
 class _NoteEditorState extends State<NoteEditor> {
-  String? initialHtmlState;
-
   @override
   void initState() {
     super.initState();
 
-    // ✅ Load existing form data into controller
     if (widget.form != null &&
         widget.form![widget.formKey] != null &&
         widget.controller.text.isEmpty) {
@@ -40,70 +38,60 @@ class _NoteEditorState extends State<NoteEditor> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          widget.label,
-          style: TextStyle(
-            fontSize: CustomTheme().fontSize('lg'),
-          ),
-        ),
-        const SizedBox(height: 8),
-        InkWell(
-          onTap: () async {
-            // Save current html
-            setState(() {
-              initialHtmlState = widget.controller.text.trim().isEmpty
-                  ? "<p></p>"
-                  : widget.controller.text;
-            });
-
-            // Open the TextEditor
-            final result = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => TextEditor(
-                  initialHtml: initialHtmlState,
+    return TemplateCard(
+      title: 'Catatan',
+      icon: Icons.note_outlined,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 8),
+          InkWell(
+            onTap: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => TextEditor(
+                    initialHtml: widget.controller.text.isEmpty
+                        ? "<p></p>"
+                        : widget.controller.text,
+                    label: widget.label,
+                  ),
                 ),
-              ),
-            );
+              );
 
-            // When user finishes editing
-            if (result != null) {
-              setState(() {
+              if (result != null) {
                 widget.controller.text = result;
-              });
 
-              if (widget.form != null) {
-                widget.form![widget.formKey] = result;
-              }
+                if (widget.form != null) {
+                  widget.form![widget.formKey] = result;
+                }
 
-              if (widget.onChanged != null) {
-                widget.onChanged!(result);
+                widget.onChanged?.call(result);
+
+                setState(() {});
               }
-            }
-          },
-          child: Container(
-            width: double.infinity,
-            padding: CustomTheme().padding('card'),
-            constraints: BoxConstraints(minHeight: 150),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade300),
-            ),
-            child: Html(
-              data: widget.controller.text.isNotEmpty
-                  ? widget.controller.text
-                  : "<p style='color:#999'>Tap to add notes</p>",
-              style: {
-                "*": Style(margin: Margins.zero),
-              },
+            },
+            child: Container(
+              width: double.infinity,
+              padding: CustomTheme().padding('card'),
+              constraints: BoxConstraints(minHeight: 150),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Html(
+                data: widget.controller.text.isNotEmpty
+                    ? widget.controller.text
+                    : "<p style='color:#999'>Tambah catatan</p>",
+                style: {
+                  "*": Style(margin: Margins.zero),
+                },
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

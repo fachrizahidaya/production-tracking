@@ -51,7 +51,9 @@ class _InfoTabState extends State<InfoTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                isTablet ? _buildTabletInfoLayout() : _buildMobileInfoLayout(),
+                isTablet
+                    ? _buildTabletInfoLayout(isTablet)
+                    : _buildMobileInfoLayout(),
               ],
             ),
           ),
@@ -158,111 +160,7 @@ class _InfoTabState extends State<InfoTab> {
     );
   }
 
-  // Widget _buildQuickInfoRow(bool isTablet) {
-  //   return Container(
-  //     padding: EdgeInsets.all(isTablet ? 16 : 12),
-  //     decoration: BoxDecoration(
-  //       color: CustomTheme().buttonColor('primary').withOpacity(0.05),
-  //       borderRadius: BorderRadius.circular(12),
-  //       border: Border.all(
-  //         color: CustomTheme().buttonColor('primary').withOpacity(0.1),
-  //       ),
-  //     ),
-  //     child: isTablet
-  //         ? Row(
-  //             children: [
-  //               Expanded(
-  //                 child: _buildQuickInfoItem(
-  //                   icon: Icons.inventory_2_outlined,
-  //                   label: 'Qty Greige',
-  //                   value: _formatGreigeQty(),
-  //                   isTablet: isTablet,
-  //                 ),
-  //               ),
-  //               _buildVerticalDivider(),
-  //             ],
-  //           )
-  //         : Column(
-  //             children: [
-  //               _buildQuickInfoItem(
-  //                 icon: Icons.inventory_2_outlined,
-  //                 label: 'Qty Greige',
-  //                 value: _formatGreigeQty(),
-  //                 isTablet: isTablet,
-  //                 isFullWidth: true,
-  //               ),
-  //               const SizedBox(height: 12),
-  //               Row(
-  //                 children: [],
-  //               ),
-  //             ],
-  //           ),
-  //   );
-  // }
-
-  // Widget _buildQuickInfoItem({
-  //   required IconData icon,
-  //   required String label,
-  //   required String value,
-  //   required bool isTablet,
-  //   bool isFullWidth = false,
-  // }) {
-  //   return Row(
-  //     mainAxisAlignment:
-  //         isFullWidth ? MainAxisAlignment.start : MainAxisAlignment.center,
-  //     children: [
-  //       Container(
-  //         padding: const EdgeInsets.all(8),
-  //         decoration: BoxDecoration(
-  //           color: CustomTheme().buttonColor('primary').withOpacity(0.1),
-  //           borderRadius: BorderRadius.circular(8),
-  //         ),
-  //         child: Icon(
-  //           icon,
-  //           size: isTablet ? 20 : 18,
-  //           color: CustomTheme().buttonColor('primary'),
-  //         ),
-  //       ),
-  //       const SizedBox(width: 12),
-  //       Flexible(
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             Text(
-  //               label,
-  //               style: TextStyle(
-  //                 fontSize: isTablet ? 11 : 10,
-  //                 color: Colors.grey[600],
-  //               ),
-  //             ),
-  //             const SizedBox(height: 2),
-  //             Text(
-  //               value,
-  //               style: TextStyle(
-  //                 fontSize: isTablet ? 14 : 13,
-  //                 fontWeight: FontWeight.w600,
-  //                 color: Colors.grey[800],
-  //               ),
-  //               maxLines: 1,
-  //               overflow: TextOverflow.ellipsis,
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // Widget _buildVerticalDivider() {
-  //   return Container(
-  //     width: 1,
-  //     height: 40,
-  //     margin: const EdgeInsets.symmetric(horizontal: 16),
-  //     color: Colors.grey[300],
-  //   );
-  // }
-
-  Widget _buildTabletInfoLayout() {
+  Widget _buildTabletInfoLayout(isTablet) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -270,11 +168,11 @@ class _InfoTabState extends State<InfoTab> {
           child: Column(
             children: [
               _buildInfoSection(
-                title: 'Informasi Greige',
+                title: 'Qty Greige',
                 icon: Icons.layers_outlined,
+                isTablet: isTablet,
                 children: [
                   _buildInfoRow(
-                    label: 'Qty Greige',
                     value:
                         '${formatNumber(widget.data['greige_qty'])} ${widget.data['greige_unit']?['code']}',
                   ),
@@ -288,8 +186,9 @@ class _InfoTabState extends State<InfoTab> {
             child: Column(
               children: [
                 _buildInfoSection(
-                  title: 'Catatan Work Order',
+                  title: 'Catatan dari Work Order',
                   icon: Icons.description_outlined,
+                  isTablet: isTablet,
                   children: [
                     _buildInfo(
                       value: _getNoteContentByLabel(
@@ -310,11 +209,11 @@ class _InfoTabState extends State<InfoTab> {
     return Column(
       children: [
         _buildInfoSection(
-          title: 'Informasi Greige',
+          title: 'Qty Greige',
           icon: Icons.layers_outlined,
+          isTablet: false,
           children: [
             _buildInfoRow(
-              label: 'Qty Greige',
               value:
                   '${formatNumber(widget.data['greige_qty'])} ${widget.data['greige_unit']?['code']}',
             ),
@@ -322,8 +221,9 @@ class _InfoTabState extends State<InfoTab> {
         ),
         if (widget.withNote == true)
           _buildInfoSection(
-            title: 'Catatan Work Order',
+            title: 'Catatan dari Work Order',
             icon: Icons.description_outlined,
+            isTablet: false,
             children: [
               _buildInfo(
                   value: widget.data['notes'] is Map
@@ -339,66 +239,64 @@ class _InfoTabState extends State<InfoTab> {
     required String title,
     required IconData icon,
     required List<Widget> children,
+    required bool isTablet,
   }) {
     return Container(
-        padding: CustomTheme().padding('card'),
-        decoration: BoxDecoration(
-          color: Colors.grey[50],
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey[200]!),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      padding: CustomTheme().padding('card'),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              size: isTablet ? 18 : 16,
+              color: CustomTheme().buttonColor('primary'),
+            ),
+          ),
+
+          // Content
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  icon,
-                  size: 18,
-                  color: CustomTheme().buttonColor('primary'),
-                ),
+                // Title like label
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[800],
+                    fontSize: isTablet ? 12 : 11,
+                    color: Colors.grey[600],
                   ),
                 ),
-              ].separatedBy(CustomTheme().hGap('lg')),
+
+                // Section content (like value area)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: children,
+                ),
+              ].separatedBy(CustomTheme().vGap('sm')),
             ),
-            const Divider(height: 1),
-            ...children,
-          ].separatedBy(
-            CustomTheme().vGap('xl'),
           ),
-        ));
+        ].separatedBy(CustomTheme().hGap('md')),
+      ),
+    );
   }
 
   Widget _buildInfoRow({
-    required String label,
     required String value,
   }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: 120,
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('md'),
-              color: Colors.grey[600],
-            ),
-          ),
-        ),
-        Text(
-          ':',
-          style: TextStyle(
-            fontSize: CustomTheme().fontSize('md'),
-            color: Colors.grey[600],
-          ),
-        ),
         Expanded(
           child: Text(
             value,
@@ -450,19 +348,4 @@ class _InfoTabState extends State<InfoTab> {
       ],
     );
   }
-
-  // String _formatGreigeQty() {
-  //   if (widget.data['greige_qty'] == null ||
-  //       widget.data['greige_qty'].toString().isEmpty) {
-  //     return '-';
-  //   }
-
-  //   final qty = widget.data['greige_qty'];
-  //   final unit = widget.data['greige_unit']?['code'] ?? '';
-
-  //   if (qty is num) {
-  //     return '${NumberFormat("#,###.#").format(qty)} $unit'.trim();
-  //   }
-  //   return '$qty $unit'.trim();
-  // }
 }

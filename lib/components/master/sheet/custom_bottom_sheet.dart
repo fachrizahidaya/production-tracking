@@ -120,9 +120,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                           label: widget.submitLabel,
                           onPressed: widget.onSubmit,
                           isLoading: widget.isLoading,
-                          isDisabled: widget
-                              .isDisabled // Disable if form is invalid or loading
-                          ),
+                          isDisabled: widget.isDisabled),
                     ),
                   ],
                 ),
@@ -198,7 +196,6 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                   return null;
                 },
                 onChanged: (value) {
-                  // Trigger a rebuild to show/hide the required message
                   setState(() {});
                 },
               ),
@@ -237,8 +234,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                         child: DecoratedBox(
                           decoration: BoxDecoration(color: Colors.white),
                           child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                                maxWidth: 250), // Adjust as needed
+                            constraints: const BoxConstraints(maxWidth: 250),
                             child: Text(
                               option,
                               overflow: TextOverflow.ellipsis,
@@ -250,7 +246,6 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                 isDense: true,
                 dropdownColor: Colors.white,
                 decoration: InputDecoration(
-                  // labelText: field.hint,
                   hintText: field.hint,
                   border: const OutlineInputBorder(),
                   filled: true,
@@ -370,8 +365,8 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                                           margin:
                                               const EdgeInsets.only(top: 12),
                                           child: Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .end, // Aligns to the right
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
                                             children: [
                                               ElevatedButton(
                                                 onPressed: () {
@@ -411,7 +406,6 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                     ),
                     child: Row(
                       children: [
-                        // ✅ Chips take flexible space
                         Expanded(
                           child: Wrap(
                             spacing: 6,
@@ -465,7 +459,6 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                             ],
                           ),
                         ),
-                        // ✅ Arrow Icon fixed at end
                         const Icon(Icons.arrow_drop_down),
                       ],
                     ),
@@ -616,7 +609,6 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
   }
 
   Widget _buildPasswordField(FormFieldData field) {
-    // Use a ValueNotifier to persist the state of isObscured
     final ValueNotifier<bool> isObscured = ValueNotifier<bool>(true);
 
     return StatefulBuilder(builder: (context, setState) {

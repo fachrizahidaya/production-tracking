@@ -183,10 +183,8 @@ class _DetailState extends State<Detail> {
       final savePath = '${dir.path}/$fileName';
 
       if (isNew) {
-        // Local image → copy
         await File(imagePath).copy(savePath);
       } else {
-        // Network image → download
         await Dio().download(imagePath, savePath);
       }
 
@@ -254,7 +252,6 @@ class _DetailState extends State<Detail> {
           : (item['file_name'] ?? filePath?.split('/').last ?? '');
       final String extension = fileName.split('.').last.toLowerCase();
 
-      /// ---- File Size Logic ----
       String fileSizeText = '';
 
       if (isNew && filePath != null) {
@@ -264,7 +261,6 @@ class _DetailState extends State<Detail> {
           fileSizeText = formatBytes(bytes);
         }
       } else {
-        // from API (recommended: send file_size from backend)
         if (item['file_size'] != null) {
           fileSizeText = formatBytes(item['file_size']);
         } else {
@@ -272,7 +268,6 @@ class _DetailState extends State<Detail> {
         }
       }
 
-      /// ---- Preview Logic ----
       Widget preview;
       if (extension == 'pdf') {
         preview = const Icon(Icons.picture_as_pdf, color: Colors.red, size: 50);

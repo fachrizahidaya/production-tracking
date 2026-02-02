@@ -251,8 +251,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                       "Pilih Status",
                                       style: TextStyle(
                                         fontSize: CustomTheme().fontSize('xl'),
-                                        fontWeight:
-                                            CustomTheme().fontWeight('bold'),
+                                        fontWeight: CustomTheme()
+                                            .fontWeight('semibold'),
                                       ),
                                     ),
                                     const SizedBox(height: 8),

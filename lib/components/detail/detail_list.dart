@@ -4,11 +4,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/card/list_item.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_html.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/screens/dyeing/%5Bdyeing_id%5D.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class DetailList extends StatefulWidget {
@@ -52,19 +54,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     super.initState();
   }
 
-  final List<String> itemWoFilters = [
-    'Catatan Work Order',
-    'Material Work Order',
-  ];
-
-  final List<String> itemFilters = [
-    'Catatan Proses',
-    'Lampiran Proses',
-  ];
-
-  int selectedIndex = 0;
-  int selectedItemWoIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -96,8 +85,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
 
   /// Header Section dengan Work Order Info
   Widget _buildHeaderSection(bool isTablet) {
-    final bool isUrgent = widget.data['work_orders']['urgent'] == true;
-
     return Padding(
       padding: CustomTheme().padding('content'),
       child: Container(
@@ -164,51 +151,20 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                             ),
                         ].separatedBy(CustomTheme().hGap('xl')),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WorkOrderDetail(
-                                id: widget.data['work_orders']?['id']
-                                        .toString() ??
-                                    '-',
-                              ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.data['created_at'] != null
+                                ? 'Dibuat pada ${DateFormat("dd MMM yyyy, HH.mm").format(DateTime.parse(widget.data['created_at']))}'
+                                : '-',
+                            style: TextStyle(
+                              fontSize: CustomTheme().fontSize('lg'),
+                              color: Colors.white.withOpacity(0.8),
+                              fontWeight: CustomTheme().fontWeight('semibold'),
                             ),
-                          );
-                        },
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              widget.data['work_orders']?['wo_no'] ?? '-',
-                              style: TextStyle(
-                                fontSize: CustomTheme().fontSize('lg'),
-                                color: Colors.white.withOpacity(0.8),
-                                fontWeight:
-                                    CustomTheme().fontWeight('semibold'),
-                              ),
-                            ),
-                            if (isUrgent)
-                              Icon(
-                                Icons.warning_amber_rounded,
-                                color: Colors.yellowAccent,
-                                size: 14,
-                              ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: CustomTheme()
-                                    .buttonColor('primary')
-                                    .withOpacity(0.1),
-                              ),
-                              child: Icon(
-                                Icons.chevron_right_outlined,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ].separatedBy(CustomTheme().hGap('sm')),
-                        ),
+                          ),
+                        ].separatedBy(CustomTheme().hGap('sm')),
                       ),
                     ].separatedBy(CustomTheme().vGap('sm')),
                   ),
@@ -217,7 +173,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               ],
             ),
             // Quick Info Row
-            _buildQuickInfoRow(isTablet),
+            if (widget.label != 'Sorting' || widget.label != 'Packing')
+              _buildQuickInfoRow(isTablet),
           ].separatedBy(CustomTheme().vGap('xl')),
         ),
       ),
@@ -243,18 +200,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       ),
       child: Row(
         children: [
-          Expanded(
-            child: _buildQuickInfoItem(
-              icon: Icons.calendar_today_outlined,
-              label: 'Tanggal Dibuat',
-              value: widget.data['created_at'] != null
-                  ? DateFormat("dd MMM yyyy")
-                      .format(DateTime.parse(widget.data['created_at']))
-                  : '-',
-              isTablet: isTablet,
-            ),
-          ),
-          _buildVerticalDivider(),
           if (widget.data['maklon'] == true)
             Expanded(
               child: _buildQuickInfoItem(
@@ -385,7 +330,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           child: _buildAttachment(true),
         ),
         _buildInfoCard(
-          title: 'Catatan Work Order',
+          title: 'Catatan dari Work Order',
           icon: Icons.note_outlined,
           child: _buildNoteWo(true),
         ),
@@ -450,7 +395,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           child: _buildAttachment(true),
         ),
         _buildInfoCard(
-          title: 'Catatan Work Order',
+          title: 'Catatan dari Work Order',
           icon: Icons.note_outlined,
           child: _buildNoteWo(true),
         ),
@@ -473,64 +418,10 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
   }) {
     return Padding(
       padding: CustomTheme().padding('card-detail'),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Card Header
-            Container(
-              padding: CustomTheme().padding('card'),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: CustomTheme().padding('process-content'),
-                    decoration: BoxDecoration(
-                      color:
-                          CustomTheme().buttonColor('primary').withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      icon,
-                      size: 18,
-                      color: CustomTheme().buttonColor('primary'),
-                    ),
-                  ),
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('md'),
-                      fontWeight: CustomTheme().fontWeight('semibold'),
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                ].separatedBy(CustomTheme().hGap('xl')),
-              ),
-            ),
-            // Card Content
-            Padding(
-              padding: CustomTheme().padding('content'),
-              child: child,
-            ),
-          ],
-        ),
+      child: TemplateCard(
+        title: title,
+        icon: icon,
+        child: child,
       ),
     );
   }
@@ -598,9 +489,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     final items = [
       for (int i = 0; i < widget.existingGrades.length; i++)
         {
-          'label': ' Grade ${widget.existingGrades[i]['item_grade']['code']}'
-          // ${widget.existingGrades[i]['item_grade']['description']?.split('-').first.trim()}
-          ,
+          'label': ' Grade ${widget.existingGrades[i]['item_grade']['code']}',
           'value': widget.existingGrades[i]['qty'] != null
               ? '${widget.existingGrades[i]['qty']} ${widget.existingGrades[i]['unit']['code']}'
               : '-',
@@ -664,20 +553,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           'value': widget.data['maklon_name'] ?? '-',
           'icon': Icons.business_outlined,
         },
-      if (widget.data['rework'] == true)
-        {
-          'label': 'Rework',
-          'value': widget.data['rework'] == true ? 'Ya' : 'Tidak',
-          'icon': Icons.replay_outlined,
-        },
-      // if (widget.data['rework'] == true)
-      //   {
-      //     'label': 'Referensi Rework',
-      //     'value': widget.data['rework_reference'] != null
-      //         ? widget.data['rework_reference']['dyeing_no']
-      //         : '-',
-      //     'icon': Icons.paste_outlined,
-      //   },
     ];
 
     return _buildInfoGrid(items, isTablet);
@@ -691,6 +566,18 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             ? widget.data['rework_reference']['dyeing_no']
             : '-',
         'icon': Icons.paste_outlined,
+        'navigate': () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DyeingDetail(
+                  id: widget.data['rework_reference_id'].toString(),
+                  no: widget.data['rework_reference']['dyeing_no'].toString(),
+                  canDelete: false,
+                  canUpdate: false,
+                ),
+              ));
+        }
       },
       {
         'label': 'Qty Referensi',
@@ -766,23 +653,40 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
   /// Info Grid Builder
   Widget _buildInfoGrid(List<Map<String, dynamic>> items, bool isTablet) {
     if (isTablet) {
-      return Wrap(
-        spacing: 8,
-        runSpacing: 16,
-        children: items.map((item) {
-          return SizedBox(
-            width: (MediaQuery.of(context).size.width - 100) / 4,
-            child: _buildInfoItem(
-                label: item['label'],
-                value: item['value'],
-                icon: item['icon'],
-                id: item['id'].toString(),
-                isTablet: isTablet,
-                navigateTo: item['navigate'],
-                rightIcon: item['right-icon']),
-          );
-        }).toList(),
-      );
+      return items.length > 3
+          ? Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 8,
+              runSpacing: 16,
+              children: items.map((item) {
+                return SizedBox(
+                  width: (MediaQuery.of(context).size.width - 100) / 4,
+                  child: _buildInfoItem(
+                      label: item['label'],
+                      value: item['value'],
+                      icon: item['icon'],
+                      id: item['id'].toString(),
+                      isTablet: isTablet,
+                      navigateTo: item['navigate'],
+                      rightIcon: item['right-icon']),
+                );
+              }).toList(),
+            )
+          : Row(
+              spacing: 16,
+              children: items.map((item) {
+                return SizedBox(
+                  width: (MediaQuery.of(context).size.width - 100) / 4,
+                  child: _buildInfoItem(
+                      label: item['label'],
+                      value: item['value'],
+                      icon: item['icon'],
+                      id: item['id'].toString(),
+                      isTablet: isTablet,
+                      navigateTo: item['navigate'],
+                      rightIcon: item['right-icon']),
+                );
+              }).toList());
     }
 
     return Column(
@@ -872,7 +776,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       navigateTo,
       rightIcon}) {
     return GestureDetector(
-      // onTap: navigateTo,
+      onTap: navigateTo,
       child: Container(
         padding: CustomTheme().padding('card'),
         decoration: BoxDecoration(

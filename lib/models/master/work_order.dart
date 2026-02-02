@@ -105,7 +105,6 @@ class WorkOrderService extends BaseService<WorkOrder> {
             items.add(newItem);
           }
         }
-        // items.addAll(newItems);
 
         if (newItems.isNotEmpty) {
           _currentPage++;

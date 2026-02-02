@@ -33,13 +33,11 @@ class OptionMachine {
 class OptionMachineService extends BaseService<OptionMachine> {
   bool _isLoading = false;
   bool _hasMoreData = true;
-  // final List<OptionMachine> _machines = [];
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
 
   bool get isLoading => _isLoading;
   bool get hasMoreData => _hasMoreData;
-  // List<OptionMachine> get options => _machines;
   List<dynamic> get listOption => _listOption;
   List<dynamic> get dataListOption => _dataListOption;
 

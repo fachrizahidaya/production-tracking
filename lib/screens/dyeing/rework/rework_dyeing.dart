@@ -70,14 +70,6 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
   }
 
   Future<void> _handleFetchWorkOrder() async {
-    // await Provider.of<OptionWorkOrderService>(context, listen: false)
-    //     .fetchReworkOptions();
-    // final result = Provider.of<OptionWorkOrderService>(context, listen: false)
-    //     .dataListOption;
-
-    // setState(() {
-    //   workOrderOption = result;
-    // });
     final service = Provider.of<OptionWorkOrderService>(context, listen: false);
 
     await service.fetchReworkOptions();
@@ -157,54 +149,6 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
         SnackBar(content: Text("Error: ${e.toString()}")),
       );
     }
-    // try {
-    //   final scannedId = code.toString();
-
-    //   final workOrderExists =
-    //       workOrderOption.any((item) => item['value'].toString() == scannedId);
-
-    //   if (!workOrderExists) {
-    //     setState(() {
-    //       _isLoading = false;
-    //     });
-
-    //     showAlertDialog(
-    //         context: context, title: 'Error', message: "Work Order not found");
-
-    //     return;
-    //   }
-
-    //   await _workOrderService.getDataView(scannedId);
-
-    //   final data = _workOrderService.dataView;
-
-    //   _form['wo_id'] = data['id']?.toString();
-    //   _form['no_wo'] = data['wo_no']?.toString() ?? '';
-
-    //   setState(() {
-    //     _isLoading = false;
-    //   });
-
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => ReworkDyeingManual(
-    //         id: scannedId,
-    //         data: data,
-    //         form: _form,
-    //         handleSubmit: _handleSubmit,
-    //         handleChangeInput: _handleChangeInput,
-    //       ),
-    //     ),
-    //   );
-    // } catch (e) {
-    //   setState(() {
-    //     _isLoading = false;
-    //   });
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text("Error: ${e.toString()}")),
-    //   );
-    // }
   }
 
   Future<void> _handleSubmit(id) async {

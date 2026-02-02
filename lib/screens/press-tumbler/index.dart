@@ -212,12 +212,10 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
           onNotification: (notification) {
             if (notification is UserScrollNotification) {
               if (notification.direction == ScrollDirection.reverse) {
-                // scrolling down
                 if (_showFab) {
                   setState(() => _showFab = false);
                 }
               } else if (notification.direction == ScrollDirection.forward) {
-                // scrolling up
                 if (!_showFab) {
                   setState(() => _showFab = true);
                 }

@@ -14,7 +14,7 @@ import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/packing.dart';
-import 'package:textile_tracking/screens/auth/user_menu.dart';
+import 'package:textile_tracking/screens/account/user_menu.dart';
 import 'package:textile_tracking/screens/packing/%5Bpacking_id%5D.dart';
 import 'package:textile_tracking/screens/packing/create/create_packing.dart';
 import 'package:textile_tracking/screens/packing/finish/finish_packing.dart';
@@ -208,12 +208,10 @@ class _PackingScreenState extends State<PackingScreen> {
           onNotification: (notification) {
             if (notification is UserScrollNotification) {
               if (notification.direction == ScrollDirection.reverse) {
-                // scrolling down
                 if (_showFab) {
                   setState(() => _showFab = false);
                 }
               } else if (notification.direction == ScrollDirection.forward) {
-                // scrolling up
                 if (!_showFab) {
                   setState(() => _showFab = true);
                 }

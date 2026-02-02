@@ -8,7 +8,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
-import 'package:textile_tracking/screens/auth/user_menu.dart';
+import 'package:textile_tracking/screens/account/user_menu.dart';
 import 'package:textile_tracking/screens/dashboard/index.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -176,7 +176,7 @@ class MenuItem {
     final children = json['children'] as List<dynamic>? ?? [];
     return MenuItem(
       title: json['name'] ?? '',
-      route: json['url'], // can be null
+      route: json['url'],
       subMenuItems:
           children.map((child) => SubMenuItem.fromJson(child)).toList(),
     );
@@ -195,7 +195,7 @@ class SubMenuItem {
   factory SubMenuItem.fromJson(Map<String, dynamic> json) {
     return SubMenuItem(
       title: json['name'] ?? '',
-      route: json['url'], // can be null
+      route: json['url'],
     );
   }
 }

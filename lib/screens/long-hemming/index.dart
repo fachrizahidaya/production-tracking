@@ -14,7 +14,7 @@ import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/long_hemming.dart';
-import 'package:textile_tracking/screens/auth/user_menu.dart';
+import 'package:textile_tracking/screens/account/user_menu.dart';
 import 'package:textile_tracking/screens/long-hemming/%5Blong_hemming_id%5D.dart';
 import 'package:textile_tracking/screens/long-hemming/create/create_long_hemming.dart';
 import 'package:textile_tracking/screens/long-hemming/finish/finish_long_hemming.dart';
@@ -208,12 +208,10 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
           onNotification: (notification) {
             if (notification is UserScrollNotification) {
               if (notification.direction == ScrollDirection.reverse) {
-                // scrolling down
                 if (_showFab) {
                   setState(() => _showFab = false);
                 }
               } else if (notification.direction == ScrollDirection.forward) {
-                // scrolling up
                 if (!_showFab) {
                   setState(() => _showFab = true);
                 }

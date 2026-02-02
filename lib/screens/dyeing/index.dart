@@ -13,7 +13,7 @@ import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
-import 'package:textile_tracking/screens/auth/user_menu.dart';
+import 'package:textile_tracking/screens/account/user_menu.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/screens/dyeing/%5Bdyeing_id%5D.dart';
 import 'package:textile_tracking/screens/dyeing/create/create_dyeing.dart';

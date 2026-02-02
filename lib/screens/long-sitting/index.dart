@@ -13,7 +13,7 @@ import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
-import 'package:textile_tracking/screens/auth/user_menu.dart';
+import 'package:textile_tracking/screens/account/user_menu.dart';
 import 'package:textile_tracking/screens/long-sitting/%5Blong_sitting_id%5D.dart';
 import 'package:textile_tracking/screens/long-sitting/create/create_long_sitting.dart';
 import 'package:textile_tracking/screens/long-sitting/finish/finish_long_sitting.dart';
@@ -211,12 +211,10 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
           onNotification: (notification) {
             if (notification is UserScrollNotification) {
               if (notification.direction == ScrollDirection.reverse) {
-                // scrolling down
                 if (_showFab) {
                   setState(() => _showFab = false);
                 }
               } else if (notification.direction == ScrollDirection.forward) {
-                // scrolling up
                 if (!_showFab) {
                   setState(() => _showFab = true);
                 }

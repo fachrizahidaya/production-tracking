@@ -148,7 +148,7 @@ class _ItemProcessState extends State<ItemProcess> {
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Icon(
-                Icons.inventory_2_outlined,
+                Icons.paste_outlined,
                 size: isTablet ? 28 : 24,
                 color: statusConfig['color'],
               ),
@@ -180,26 +180,49 @@ class _ItemProcessState extends State<ItemProcess> {
                       ),
                     ].separatedBy(CustomTheme().hGap('xs')),
                   ),
-
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSpkBadge(itemCode, isTablet),
-                      if (widget.item['wo_no'] != null) ...[
-                        Icon(
-                          Icons.calendar_month_outlined,
-                          size: isTablet ? 14 : 12,
-                          color: Colors.grey[500],
-                        ),
-                        Text(
-                          DateFormat("dd MMM yyyy")
-                              .format(DateTime.parse(widget.item['wo_date'])),
-                          style: TextStyle(
-                            fontSize: isTablet ? 12 : 11,
-                            color: Colors.grey[600],
+                      // SPK + Date
+                      Row(
+                        children: [
+                          _buildSpkBadge(itemCode, isTablet),
+                          if (widget.item['wo_date'] != null) ...[
+                            Icon(
+                              Icons.calendar_month_outlined,
+                              size: isTablet ? 14 : 12,
+                              color: Colors.grey[500],
+                            ),
+                            Text(
+                              DateFormat("dd MMM yyyy").format(
+                                  DateTime.parse(widget.item['wo_date'])),
+                              style: TextStyle(
+                                fontSize: isTablet ? 12 : 11,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ].separatedBy(CustomTheme().hGap('sm')),
+                      ),
+
+                      // Qty Material + Qty Greige
+                      Row(
+                        children: [
+                          _buildQtyInfo(
+                            label: 'MAT',
+                            value: widget.item['wo_qty'],
+                            isTablet: isTablet,
+                            unit: widget.item['wo_unit'],
                           ),
-                        ),
-                      ],
-                    ].separatedBy(CustomTheme().hGap('sm')),
+                          _buildQtyInfo(
+                            label: 'GREIGE',
+                            value: widget.item['greige_qty'],
+                            isTablet: isTablet,
+                            unit: widget.item['greige_unit'],
+                          ),
+                        ].separatedBy(CustomTheme().hGap('md')),
+                      ),
+                    ].separatedBy(CustomTheme().vGap('xs')),
                   ),
                 ].separatedBy(CustomTheme().vGap('sm')),
               ),
@@ -214,6 +237,34 @@ class _ItemProcessState extends State<ItemProcess> {
           ].separatedBy(CustomTheme().hGap('xl')),
         ),
       ),
+    );
+  }
+
+  Widget _buildQtyInfo(
+      {required String label,
+      required dynamic value,
+      required bool isTablet,
+      unit}) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '$label:',
+          style: TextStyle(
+            fontSize: isTablet ? 11 : 10,
+            color: Colors.grey[500],
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          '${value?.toString()} ${unit.toString()}' ?? '-',
+          style: TextStyle(
+            fontSize: isTablet ? 12 : 11,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey[700],
+          ),
+        ),
+      ],
     );
   }
 
@@ -235,8 +286,6 @@ class _ItemProcessState extends State<ItemProcess> {
       ),
     );
   }
-
-  /// Status Badge
 
   /// Process Timeline
   Widget _buildProcessTimeline(Map<String, dynamic> processes, bool isTablet) {
@@ -540,12 +589,6 @@ class _ItemProcessState extends State<ItemProcess> {
         isTablet: isTablet,
       ));
     }
-
-    // Machine
-
-    // Operator
-
-    // Remarks
 
     if (details.isEmpty) return const SizedBox.shrink();
 
@@ -884,8 +927,6 @@ class _ItemProcessState extends State<ItemProcess> {
   }
 
   Widget _buildMaterialCard(dynamic item, bool isTablet) {
-    final qty = item['qty'];
-    final unit = item['unit'];
     final code = item['item_code'];
     final name = item['item_name'];
     final variants = item['variants'] ?? [];
@@ -947,14 +988,6 @@ class _ItemProcessState extends State<ItemProcess> {
                       ),
                     ),
                   ],
-                ),
-              ),
-              Text(
-                '${formatNumber(qty)} $unit',
-                style: TextStyle(
-                  fontSize: CustomTheme().fontSize('sm'),
-                  fontWeight: CustomTheme().fontWeight('semibold'),
-                  color: Colors.grey[700],
                 ),
               ),
             ].separatedBy(CustomTheme().hGap('md')),

@@ -65,8 +65,6 @@ class MachineCard extends StatelessWidget {
                         // Machine Info Row
                         _buildMachineInfo(isTablet),
 
-                        // Stats Section
-
                         // Current Job (if any)
                         if (_hasCurrentJob()) ...[
                           _buildCurrentJob(context, isTablet),
@@ -188,9 +186,6 @@ class MachineCard extends StatelessWidget {
               isTablet: isTablet,
             ),
           ),
-        // Capacity
-
-        // Last Maintenance
       ],
     );
   }
@@ -280,13 +275,13 @@ class MachineCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Icon(
-                  Icons.play_circle_outline,
+                  Icons.access_time_outlined,
                   size: isTablet ? 18 : 16,
                   color: Colors.blue,
                 ),
               ),
               Text(
-                'Sedang Dikerjakan',
+                'Diproses',
                 style: TextStyle(
                   fontSize: isTablet ? 13 : 12,
                   fontWeight: FontWeight.w600,
@@ -459,8 +454,6 @@ class CompactMachineCard extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isTablet = constraints.maxWidth > 400;
-        final status = data['status']?.toString().toLowerCase() ?? 'idle';
-        final statusColor = _getStatusColor(status);
 
         return GestureDetector(
           onTap: onTap,
@@ -486,7 +479,6 @@ class CompactMachineCard extends StatelessWidget {
                   width: 4,
                   height: isTablet ? 50 : 45,
                   decoration: BoxDecoration(
-                    color: statusColor,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -496,13 +488,11 @@ class CompactMachineCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     Icons.precision_manufacturing_outlined,
                     size: isTablet ? 24 : 20,
-                    color: statusColor,
                   ),
                 ),
                 SizedBox(width: isTablet ? 14 : 12),
@@ -573,7 +563,6 @@ class CompactMachineCard extends StatelessWidget {
                     vertical: isTablet ? 6 : 4,
                   ),
                   decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
@@ -583,17 +572,7 @@ class CompactMachineCard extends StatelessWidget {
                         width: 6,
                         height: 6,
                         decoration: BoxDecoration(
-                          color: statusColor,
                           shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        _getStatusLabel(status),
-                        style: TextStyle(
-                          fontSize: isTablet ? 11 : 10,
-                          fontWeight: FontWeight.w600,
-                          color: statusColor,
                         ),
                       ),
                     ],
@@ -613,41 +592,5 @@ class CompactMachineCard extends StatelessWidget {
         );
       },
     );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'running':
-      case 'active':
-        return Colors.green;
-      case 'idle':
-      case 'standby':
-        return Colors.blue;
-      case 'maintenance':
-        return Colors.orange;
-      case 'offline':
-      case 'error':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  String _getStatusLabel(String status) {
-    switch (status.toLowerCase()) {
-      case 'running':
-      case 'active':
-        return 'Running';
-      case 'idle':
-      case 'standby':
-        return 'Idle';
-      case 'maintenance':
-        return 'Maintenance';
-      case 'offline':
-      case 'error':
-        return 'Offline';
-      default:
-        return 'Unknown';
-    }
   }
 }

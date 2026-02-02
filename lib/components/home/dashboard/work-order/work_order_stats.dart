@@ -20,9 +20,9 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
       case 0:
         return CustomTheme().colors('primary');
       case 1:
-        return Color(0xFF10b981);
+        return CustomTheme().colors('Selesai');
       case 2:
-        return Color(0xfff18800);
+        return CustomTheme().colors('Diproses');
       default:
         return CustomTheme().colors('secondary');
     }
@@ -48,14 +48,38 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
   Color getBadgeColor(int i) {
     switch (i) {
       case 0:
-        return const Color(0xffdbeaff);
+        return CustomTheme().statusColor('Total Work Orders');
       case 1:
-        return const Color(0xffd1fae4);
+        return CustomTheme().statusColor('Selesai');
       case 2:
-        return const Color(0xFFfff3c6);
+        return CustomTheme().statusColor('Diproses');
       default:
-        return const Color(0xFFf1f5f9);
+        return CustomTheme().statusColor('Menunggu Diproses');
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.data?.length == 0) return SizedBox();
+
+    return widget.isFetching == true
+        ? Center(
+            child: Padding(
+              padding: CustomTheme().padding('content'),
+              child: CircularProgressIndicator(),
+            ),
+          )
+        : Wrap(
+            spacing: 16,
+            runSpacing: 8,
+            children: [
+              for (int i = 0; i < widget.data?.length; i++)
+                SizedBox(
+                  width: (MediaQuery.of(context).size.width - 48) / 2,
+                  child: buildStatsCard(i),
+                ),
+            ],
+          );
   }
 
   Widget buildStatsCard(int i) {
@@ -98,29 +122,5 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
         ],
       ),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.data?.length == 0) return SizedBox();
-
-    return widget.isFetching == true
-        ? Center(
-            child: Padding(
-              padding: CustomTheme().padding('content'),
-              child: CircularProgressIndicator(),
-            ),
-          )
-        : Wrap(
-            spacing: 16,
-            runSpacing: 8,
-            children: [
-              for (int i = 0; i < widget.data?.length; i++)
-                SizedBox(
-                  width: (MediaQuery.of(context).size.width - 48) / 2,
-                  child: buildStatsCard(i),
-                ),
-            ],
-          );
   }
 }

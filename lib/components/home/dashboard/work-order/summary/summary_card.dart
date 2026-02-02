@@ -141,7 +141,6 @@ class _SummaryCardState extends State<SummaryCard>
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // ROW 1: WO NO + URGENT ICON + DATE
                               Row(
                                 children: [
                                   if (isOverdue)
@@ -150,7 +149,6 @@ class _SummaryCardState extends State<SummaryCard>
                                       color: Colors.redAccent,
                                       size: 12,
                                     ),
-
                                   Text(
                                     woNo,
                                     style: TextStyle(
@@ -161,17 +159,13 @@ class _SummaryCardState extends State<SummaryCard>
                                           : Colors.grey[800],
                                     ),
                                   ),
-
-                                  // ⚠️ still show if urgent
                                   if (isUrgent)
                                     const Icon(
                                       Icons.warning_amber_rounded,
                                       size: 16,
                                       color: Colors.red,
                                     ),
-
                                   const Spacer(),
-
                                   Text(
                                     createdAt != null
                                         ? DateFormat("dd MMM yyyy")
@@ -184,10 +178,7 @@ class _SummaryCardState extends State<SummaryCard>
                                   ),
                                 ].separatedBy(CustomTheme().hGap('sm')),
                               ),
-
                               const SizedBox(height: 4),
-
-                              // ROW 2: OVERDUE INFO
                               if (isOverdue)
                                 Row(
                                   children: [
@@ -316,8 +307,6 @@ class _SummaryCardState extends State<SummaryCard>
 
                   // Status Grid
                   _buildStatusGrid(summary, isTablet),
-
-                  // _buildWaitingWONumber(waitingList, isTablet),
                 ].separatedBy(CustomTheme().vGap('lg')),
               ),
             ),
@@ -560,11 +549,10 @@ class _SummaryCardState extends State<SummaryCard>
         icon: Icons.error_outline,
         color: const Color(0xFFf1f5f9),
         iconColor: const Color.fromRGBO(113, 113, 123, 1),
-        showPulse: hasOverdueWaiting, // 👈
+        showPulse: hasOverdueWaiting,
       ),
     ];
 
-    // 👇 FILTER BASED ON ACTIVE TAB
     final filteredItems = allItems.where((item) {
       switch (widget.filter) {
         case 'Selesai':
@@ -576,7 +564,7 @@ class _SummaryCardState extends State<SummaryCard>
         case 'Menunggu Diproses':
           return item.label == 'Menunggu Diproses';
         default:
-          return true; // Semua
+          return true;
       }
     }).toList();
 
@@ -762,7 +750,7 @@ class _StatusItem {
   final IconData icon;
   final Color color;
   final Color iconColor;
-  final bool showPulse; // 👈 NEW
+  final bool showPulse;
 
   _StatusItem({
     required this.label,
@@ -841,8 +829,6 @@ class CompactSummaryCard extends StatelessWidget {
                   'skipped': 0,
                 };
 
-        final statusColor = _getSummaryColor(summary);
-
         return GestureDetector(
           onTap: onTap,
           child: Container(
@@ -862,18 +848,7 @@ class CompactSummaryCard extends StatelessWidget {
             child: Row(
               children: [
                 // Left: Icon + Name
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(
-                    _getProcessIcon(data['name']),
-                    size: isTablet ? 24 : 20,
-                    color: statusColor,
-                  ),
-                ),
+                Container(),
                 SizedBox(width: isTablet ? 14 : 12),
                 Expanded(
                   child: Column(
@@ -960,28 +935,5 @@ class CompactSummaryCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color _getSummaryColor(Map<String, dynamic> summary) {
-    final inProgress = summary['in_progress'] ?? 0;
-    final waiting = summary['waiting'] ?? 0;
-    final completed = summary['completed'] ?? 0;
-
-    if (inProgress > 0) return Colors.blue;
-    if (waiting > 0) return Colors.orange;
-    if (completed > 0) return Colors.green;
-    return Colors.grey;
-  }
-
-  IconData _getProcessIcon(String? name) {
-    if (name == null) return Icons.category_outlined;
-
-    final lowerName = name.toLowerCase();
-    if (lowerName.contains('dyeing')) return Icons.color_lens_outlined;
-    if (lowerName.contains('finishing')) return Icons.auto_fix_high_outlined;
-    if (lowerName.contains('qc')) return Icons.verified_outlined;
-    if (lowerName.contains('packing')) return Icons.inventory_2_outlined;
-
-    return Icons.settings_outlined;
   }
 }

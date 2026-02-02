@@ -1,22 +1,16 @@
 import 'dart:async';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/filter/filter_select_form.dart';
-import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ProcessFilter<T> extends StatefulWidget {
-  final dariTanggal;
-  final sampaiTanggal;
   final onHandleFilter;
   final params;
 
   const ProcessFilter({
     super.key,
-    this.dariTanggal,
-    this.sampaiTanggal,
     this.onHandleFilter,
     this.params,
   });
@@ -26,9 +20,6 @@ class ProcessFilter<T> extends StatefulWidget {
 }
 
 class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
-  TextEditingController dariTanggalInput = TextEditingController();
-  TextEditingController sampaiTanggalInput = TextEditingController();
-
   List<dynamic> statusOption = [
     {'label': 'Menunggu Diproses', 'value': 'Menunggu Diproses'},
     {'label': 'Diproses', 'value': 'Diproses'},
@@ -48,36 +39,20 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
           .map((s) => Map<String, dynamic>.from(s))
           .toList();
     }
-
-    dariTanggalInput.text = widget.dariTanggal;
-    sampaiTanggalInput.text = widget.sampaiTanggal;
   }
 
   @override
   void didUpdateWidget(covariant oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.dariTanggal != dariTanggalInput.text) {
-      dariTanggalInput.text = widget.dariTanggal;
-    }
-    if (widget.sampaiTanggal != sampaiTanggalInput.text) {
-      sampaiTanggalInput.text = widget.sampaiTanggal;
-    }
   }
 
   @override
   void dispose() {
-    dariTanggalInput.dispose();
-    sampaiTanggalInput.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      dariTanggalInput.text = widget.params['start_date'] ?? '';
-      sampaiTanggalInput.text = widget.params['end_date'] ?? '';
-    });
-
     return Container(
       padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
@@ -86,97 +61,6 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: GroupForm(
-                  label: 'Dari Tanggal',
-                  formControl: TextFormField(
-                    controller: dariTanggalInput,
-                    style: TextStyle(fontSize: CustomTheme().fontSize('md')),
-                    decoration: CustomTheme().inputDateDecoration(
-                        hintTextString: 'Pilih tanggal',
-                        hasValue: dariTanggalInput.text.isNotEmpty),
-                    keyboardType: TextInputType.datetime,
-                    readOnly: true,
-                    onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2101),
-                        builder: (context, child) {
-                          return Theme(
-                            data: ThemeData.light().copyWith(
-                              colorScheme: ColorScheme.light(
-                                primary: CustomTheme().colors('base'),
-                                onPrimary: Colors.white,
-                                onSurface: Colors.black87,
-                              ),
-                            ),
-                            child: child!,
-                          );
-                        },
-                      );
-
-                      if (pickedDate != null) {
-                        String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(pickedDate);
-                        setState(() {
-                          dariTanggalInput.text = formattedDate;
-                          widget.onHandleFilter('start_date', formattedDate);
-                        });
-                      }
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: GroupForm(
-                  label: 'Sampai Tanggal',
-                  formControl: TextFormField(
-                    controller: sampaiTanggalInput,
-                    style: TextStyle(fontSize: CustomTheme().fontSize('md')),
-                    decoration: CustomTheme().inputDateDecoration(
-                        hintTextString: 'Pilih tanggal',
-                        hasValue: dariTanggalInput.text.isNotEmpty),
-                    keyboardType: TextInputType.datetime,
-                    readOnly: true,
-                    onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2101),
-                        builder: (context, child) {
-                          return Theme(
-                            data: ThemeData.light().copyWith(
-                              colorScheme: ColorScheme.light(
-                                primary: CustomTheme().colors('base'),
-                                onPrimary: Colors.white,
-                                onSurface: Colors.black87,
-                              ),
-                            ),
-                            child: child!,
-                          );
-                        },
-                      );
-
-                      if (pickedDate != null) {
-                        String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(pickedDate);
-                        setState(() {
-                          sampaiTanggalInput.text = formattedDate;
-                          widget.onHandleFilter('end_date', formattedDate);
-                        });
-                      }
-                    },
-                  ),
-                ),
-              ),
-            ].separatedBy(CustomTheme().hGap('xl')),
-          ),
           FilterSelectForm(
             label: "Status",
             onTap: () async {

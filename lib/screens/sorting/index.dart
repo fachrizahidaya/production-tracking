@@ -14,7 +14,7 @@ import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
-import 'package:textile_tracking/screens/account/user_menu.dart';
+import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/sorting/%5Bsorting_id%5D.dart';
 import 'package:textile_tracking/screens/sorting/create/create_sorting.dart';
 import 'package:textile_tracking/screens/sorting/finish/finish_sorting.dart';

@@ -14,7 +14,7 @@ import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/sewing.dart';
-import 'package:textile_tracking/screens/account/user_menu.dart';
+import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/sewing/%5Bsewing_id%5D.dart';
 import 'package:textile_tracking/screens/sewing/create/create_sewing.dart';
 import 'package:textile_tracking/screens/sewing/finish/finish_sewing.dart';

@@ -49,7 +49,6 @@ class _FilterSelectFormState extends State<FilterSelectForm> {
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: CustomTheme().fontSize('lg'),
-                          fontWeight: CustomTheme().fontWeight('semibold'),
                         ),
                       ),
                     ),

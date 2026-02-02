@@ -32,6 +32,8 @@ class _ActiveMachineState extends State<ActiveMachine>
   List<String> processFilters = ['All'];
   int selectedIndex = 0;
 
+  VoidCallback? _tabListener;
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +42,8 @@ class _ActiveMachineState extends State<ActiveMachine>
 
   Future<void> _loadProcessFilters() async {
     final menus = await Storage.instance.getMenus();
+    if (!mounted) return;
+
     final productionProcesses = getProductionProcesses(menus);
 
     final allowedProcesses = [
@@ -56,7 +60,17 @@ class _ActiveMachineState extends State<ActiveMachine>
     final filtered =
         allowedProcesses.where((p) => productionProcesses.contains(p)).toList();
 
-    _tabController?.dispose(); // safety
+    _tabController?.removeListener(_tabListener ?? () {});
+    _tabController?.dispose();
+
+    _tabListener = () {
+      if (!mounted) return;
+      if (_tabController!.indexIsChanging) return;
+
+      setState(() {
+        selectedIndex = _tabController!.index;
+      });
+    };
 
     setState(() {
       processFilters = ['All', ...filtered];
@@ -64,15 +78,7 @@ class _ActiveMachineState extends State<ActiveMachine>
       _tabController = TabController(
         length: processFilters.length,
         vsync: this,
-      );
-
-      _tabController!.addListener(() {
-        if (_tabController!.indexIsChanging) return;
-
-        setState(() {
-          selectedIndex = _tabController!.index;
-        });
-      });
+      )..addListener(_tabListener!);
     });
   }
 
@@ -88,13 +94,12 @@ class _ActiveMachineState extends State<ActiveMachine>
 
   @override
   void dispose() {
+    _tabController?.removeListener(_tabListener ?? () {});
     _tabController?.dispose();
     super.dispose();
   }
 
   bool get _shouldShowProcessFilter {
-    // processFilters = ['All', ...filtered]
-    // show only if more than 1 actual process exists
     return processFilters.length > 2;
   }
 
@@ -182,8 +187,8 @@ class _ActiveMachineState extends State<ActiveMachine>
                       ),
                       Expanded(
                         child: MachineSection(
-                          title: 'Mesin Sedang Digunakan',
-                          icon: Icons.warning_outlined,
+                          title: 'Mesin Digunakan',
+                          icon: Icons.error_outline,
                           status: const Color(0xfff18800),
                           headerColor: 'Diproses',
                           data: filteredUnavailable,

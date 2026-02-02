@@ -10,24 +10,20 @@ class QtyRangeFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    // allow empty (backspace)
     if (newValue.text.isEmpty) return newValue;
 
     final value = double.tryParse(newValue.text.replaceAll(',', ''));
 
-    // allow non-number while typing
     if (value == null) return newValue;
 
     final baseQty = getBaseQty();
 
-    // 🔑 KEY FIX: do NOT restrict if base not ready
     if (baseQty <= 0) return newValue;
 
     final min = baseQty * 0.9;
     final max = baseQty * 1.1;
 
     if (value < min || value > max) {
-      // reject change
       return oldValue;
     }
 

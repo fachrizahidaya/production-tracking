@@ -44,65 +44,58 @@ class ProcessButton extends StatefulWidget {
 }
 
 class _ProcessButtonState extends State<ProcessButton> {
-  double _parseNum(String? value) {
-    return double.tryParse(value?.trim() ?? '') ?? 0;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final qty = _parseNum(widget.qty);
-    final weight = _parseNum(widget.weight);
-
     final bool hasBasicError =
         widget.weightWarning != null || widget.qtyWarning != null;
 
-    final bool hasBasicErrorWeightAndQty =
-        widget.weightWarning != null && widget.qtyWarning != null;
-
     final bool isDisabled = widget.withItemGrade == true
         ? !widget.isQtyFullyDistributed()
-        : widget.withItemQtyAndWeight
-            ? hasBasicErrorWeightAndQty
-            : hasBasicError;
+        : hasBasicError;
 
     return SafeArea(
-      child: Container(
-        color: Colors.white,
-        padding: CustomTheme().padding('card'),
-        child: ValueListenableBuilder<bool>(
-          valueListenable: widget.isSubmitting,
-          builder: (context, isSubmitting, _) {
-            return Row(
-              children: [
-                Expanded(
-                  child: CancelButton(
-                    label: 'Batal',
-                    customHeight: 48.0,
-                    onPressed: () => widget.handleCancel(context),
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Container(
+          color: Colors.white,
+          padding: CustomTheme().padding('card'),
+          child: ValueListenableBuilder<bool>(
+            valueListenable: widget.isSubmitting,
+            builder: (context, isSubmitting, _) {
+              return Row(
+                children: [
+                  Expanded(
+                    child: CancelButton(
+                      label: 'Batal',
+                      customHeight: 48.0,
+                      onPressed: () => widget.handleCancel(context),
+                    ),
                   ),
-                ),
-                Expanded(
-                    child: FormButton(
-                  label: widget.labelProcess,
-                  isDisabled: isDisabled,
-                  customHeight: 48.0,
-                  onPressed: () async {
-                    widget.isSubmitting.value = true;
-                    try {
-                      if (!widget.formKey.currentState!.validate()) {
-                        return;
+                  Expanded(
+                      child: FormButton(
+                    label: widget.labelProcess,
+                    isDisabled: isDisabled,
+                    customHeight: 48.0,
+                    onPressed: () async {
+                      widget.isSubmitting.value = true;
+                      try {
+                        if (!widget.formKey.currentState!.validate()) {
+                          return;
+                        }
+                        if (widget.processId != null) {
+                          await widget.handleSubmit(context);
+                        }
+                      } finally {
+                        widget.isSubmitting.value = false;
                       }
-                      if (widget.processId != null) {
-                        await widget.handleSubmit(context);
-                      }
-                    } finally {
-                      widget.isSubmitting.value = false;
-                    }
-                  },
-                ))
-              ].separatedBy(CustomTheme().hGap('xl')),
-            );
-          },
+                    },
+                  ))
+                ].separatedBy(CustomTheme().hGap('xl')),
+              );
+            },
+          ),
         ),
       ),
     );

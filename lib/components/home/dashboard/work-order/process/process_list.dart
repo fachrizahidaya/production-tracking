@@ -81,12 +81,10 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
   double? get _adaptiveHeight {
     final count = widget.dataList.length;
 
-    // Case: only 1 item → adaptive height
     if (count == 1) {
       return 100;
     }
 
-    // Case: multiple items
     if (_expandedIndex != null) {
       return 2600;
     }
@@ -109,10 +107,14 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
             handleRefetch: widget.handleRefetch,
           ),
           Divider(),
-          widget.dataList.isEmpty
-              ? NoData()
-              : widget.firstLoading
-                  ? Center(child: CircularProgressIndicator())
+          widget.firstLoading
+              ? Center(
+                  child: Padding(
+                  padding: CustomTheme().padding('content'),
+                  child: CircularProgressIndicator(),
+                ))
+              : widget.dataList.isEmpty
+                  ? NoData()
                   : AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,

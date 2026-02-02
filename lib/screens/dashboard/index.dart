@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, prefer_final_fields
+// ignore_for_file: use_build_context_synchronously, prefer_final_fields, control_flow_in_finally
 
 import 'dart:async';
 
@@ -34,10 +34,6 @@ class _DashboardState extends State<Dashboard> {
   Map<String, dynamic> machineList = {};
   final List<dynamic> _dataList = [];
 
-  String dariTanggal = '';
-  String sampaiTanggal = '';
-  String dariTanggalProses = '';
-  String sampaiTanggalProses = '';
   String dariTanggalSummary = '';
   String sampaiTanggalSummary = '';
   String _search = '';
@@ -63,10 +59,6 @@ class _DashboardState extends State<Dashboard> {
     final now = DateTime.now();
     final firstDayOfMonth = DateTime(now.year, now.month, 1);
 
-    dariTanggal = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
-    sampaiTanggal = DateFormat('yyyy-MM-dd').format(now);
-    dariTanggalProses = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
-    sampaiTanggalProses = DateFormat('yyyy-MM-dd').format(now);
     dariTanggalSummary = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
     sampaiTanggalSummary = DateFormat('yyyy-MM-dd').format(now);
 
@@ -74,20 +66,13 @@ class _DashboardState extends State<Dashboard> {
       params = {
         'search': _search,
         'page': '0',
-        'start_date': dariTanggalProses,
-        'end_date': sampaiTanggalProses,
       };
     });
-    setState(() {
-      chartParams = {
-        'process_start_date': dariTanggal,
-        'process_end_date': sampaiTanggal,
-      };
-    });
+
     setState(() {
       summaryParams = {
-        'start_date': dariTanggalProses,
-        'end_date': sampaiTanggalProses,
+        'start_date': dariTanggalSummary,
+        'end_date': sampaiTanggalSummary,
       };
     });
     Future.delayed(Duration.zero, () {
@@ -117,47 +102,37 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _loadDashboardData() async {
+    if (!mounted) return;
     setState(() => isLoading = true);
 
     try {
       await Future.wait([
         _handleFetchStats(),
         _handleFetchPie(),
-        _handleFetchCharts(
-          fromDate: dariTanggal,
-          toDate: sampaiTanggal,
-        ),
         _handleFetchMachine(),
         _handleFetchSummary(
             fromDate: dariTanggalSummary, toDate: sampaiTanggalSummary),
         _loadMore(),
       ]);
     } catch (e) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
     } finally {
+      if (!mounted) return;
+
       setState(() => isLoading = false);
     }
   }
 
-  Future<void> _handleFetchCharts({String? fromDate, String? toDate}) async {
-    setState(() => isChartLoading = true);
-
-    await Provider.of<WorkOrderChartService>(context, listen: false)
-        .getDataList(chartParams);
-
-    setState(() {
-      chartList =
-          Provider.of<WorkOrderChartService>(context, listen: false).dataList;
-      isChartLoading = false;
-    });
-  }
-
   Future<void> _handleFetchStats() async {
+    if (!mounted) return;
     setState(() => isStatsLoading = true);
 
     await Provider.of<WorkOrderStatsService>(context, listen: false)
         .getDataList();
 
+    if (!mounted) return;
     setState(() {
       statsList =
           Provider.of<WorkOrderStatsService>(context, listen: false).dataList;
@@ -166,10 +141,12 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _handleFetchMachine() async {
+    if (!mounted) return;
     setState(() => isMachineLoading = true);
 
     await Provider.of<MachineService>(context, listen: false).getDataList();
 
+    if (!mounted) return;
     setState(() {
       machineList =
           Provider.of<MachineService>(context, listen: false).dataList;
@@ -181,6 +158,7 @@ class _DashboardState extends State<Dashboard> {
     await Provider.of<WorkOrderChartService>(context, listen: false)
         .getDataPie();
 
+    if (!mounted) return;
     setState(() {
       pieList =
           Provider.of<WorkOrderChartService>(context, listen: false).dataPie;
@@ -192,11 +170,13 @@ class _DashboardState extends State<Dashboard> {
     String? toDate,
     String? status,
   }) async {
+    if (!mounted) return;
     setState(() => isSummaryLoading = true);
 
     await Provider.of<WorkOrderSummaryService>(context, listen: false)
         .getDataList(summaryParams);
 
+    if (!mounted) return;
     setState(() {
       summaryList =
           Provider.of<WorkOrderSummaryService>(context, listen: false).dataList;
@@ -235,6 +215,7 @@ class _DashboardState extends State<Dashboard> {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
     _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (!mounted) return;
       setState(() {
         _search = value;
         params['search'] = value;
@@ -245,6 +226,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _loadMore() async {
+    if (!mounted) return;
     _isLoadMore = true;
 
     if (params['page'] == '0') {
@@ -262,6 +244,8 @@ class _DashboardState extends State<Dashboard> {
 
     await Provider.of<WorkOrderProcessService>(context, listen: false)
         .getDataList(params);
+
+    if (!mounted) return;
 
     List<dynamic> loadData =
         Provider.of<WorkOrderProcessService>(context, listen: false).items;
@@ -283,12 +267,11 @@ class _DashboardState extends State<Dashboard> {
 
   _refetch() {
     Future.delayed(Duration.zero, () {
+      if (!mounted) return;
       setState(() {
         params = {
           'search': _search,
           'page': '0',
-          'start_date': dariTanggalProses,
-          'end_date': sampaiTanggalProses,
         };
       });
       _loadMore();
@@ -346,8 +329,6 @@ class _DashboardState extends State<Dashboard> {
                   filterWidget: ProcessFilter(
                     params: params,
                     onHandleFilter: _handleProcessFilter,
-                    dariTanggal: dariTanggalProses,
-                    sampaiTanggal: sampaiTanggalProses,
                   ),
                   handleFetchData: (params) async {
                     final service = Provider.of<WorkOrderProcessService>(

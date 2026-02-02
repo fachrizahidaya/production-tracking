@@ -258,13 +258,6 @@ class UnitService extends BaseService<Unit> {
         _units.clear();
         _units.addAll(newUnits);
         _hasMoreData = false;
-
-        // if (newUnits.length < _itemsPerPage) {
-        //   _hasMoreData = false;
-        // }
-
-        // _units.addAll(newUnits);
-        // _currentPage++;
       } else {
         throw Exception('Failed to load units');
       }

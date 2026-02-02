@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 
 class SelectFunctions {
-  /// ===============================
-  /// GENERIC LOADING GUARD
-  /// ===============================
   static bool showLoadingIfNeeded(
     BuildContext context,
     bool isLoading,
@@ -21,9 +18,6 @@ class SelectFunctions {
     return true;
   }
 
-  /// ===============================
-  /// SELECT WORK ORDER
-  /// ===============================
   static void selectWorkOrder({
     required BuildContext context,
     required bool isFetching,
@@ -46,9 +40,6 @@ class SelectFunctions {
     );
   }
 
-  /// ===============================
-  /// SELECT UNIT (GENERIC)
-  /// ===============================
   static void selectUnit({
     required BuildContext context,
     required bool isFetching,
@@ -71,9 +62,6 @@ class SelectFunctions {
     );
   }
 
-  /// ===============================
-  /// SELECT GRADE UNIT (BY INDEX)
-  /// ===============================
   static Future<void> selectGradeUnit({
     required BuildContext context,
     required bool isFetching,

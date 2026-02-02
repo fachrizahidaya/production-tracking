@@ -176,7 +176,7 @@ class MenuItem {
     final children = json['children'] as List<dynamic>? ?? [];
     return MenuItem(
       title: json['name'] ?? '',
-      route: json['url'], // can be null
+      route: json['url'],
       subMenuItems:
           children.map((child) => SubMenuItem.fromJson(child)).toList(),
     );
@@ -195,7 +195,7 @@ class SubMenuItem {
   factory SubMenuItem.fromJson(Map<String, dynamic> json) {
     return SubMenuItem(
       title: json['name'] ?? '',
-      route: json['url'], // can be null
+      route: json['url'],
     );
   }
 }

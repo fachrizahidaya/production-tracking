@@ -56,10 +56,8 @@ class Storage {
     await db.insert(
         'user',
         {
-          // 'user_id': userData['user_id'].toString(),
           'access_token': userData['access_token'].toString(),
           'username': userData['username'] ?? '',
-          // 'name': userData['name'] ?? '',
         },
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
@@ -92,7 +90,7 @@ class Storage {
     final db = await instance.database;
 
     await db.transaction((txn) async {
-      await txn.delete('menus'); // Clear old data
+      await txn.delete('menus');
 
       for (var menu in menus) {
         await txn.insert('menus', {
@@ -107,7 +105,6 @@ class Storage {
     final result = await db.query('menus', columns: ['menu_data']);
     if (result.isEmpty) return [];
 
-    // Decode each stored JSON menu
     return result.map((row) => jsonDecode(row['menu_data'] as String)).toList();
   }
 

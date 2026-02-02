@@ -46,9 +46,8 @@ class _SelectDialogState extends State<SelectDialog> {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.85, // 85% of screen width
-        height:
-            MediaQuery.of(context).size.height * 0.6, // 60% of screen height
+        width: MediaQuery.of(context).size.width * 0.85,
+        height: MediaQuery.of(context).size.height * 0.6,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(4),
@@ -102,15 +101,12 @@ class _SelectDialogState extends State<SelectDialog> {
 
                           return GestureDetector(
                             onTap: () {
-                              // If same item tapped again -> unselect
                               if (isSelected) {
-                                widget
-                                    .handleChangeValue(null); // clear selection
+                                widget.handleChangeValue(null);
                               } else {
-                                widget.handleChangeValue(
-                                    _dataList[index]); // select item
+                                widget.handleChangeValue(_dataList[index]);
                               }
-                              Navigator.pop(context); // close dialog
+                              Navigator.pop(context);
                             },
                             child: Container(
                               padding: CustomTheme().padding('card'),

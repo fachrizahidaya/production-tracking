@@ -50,9 +50,10 @@ class _AccountState extends State<Account> {
               Navigator.pushNamed(context, item['route']!);
             },
           )),
-          Expanded(
+          Padding(
+            padding: CustomTheme().padding('content'),
             child: Text(
-              'v.${dotenv.env['APP_VERSION']!}',
+              'Version ${dotenv.env['APP_VERSION']!}',
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: CustomTheme().fontSize('lg'),

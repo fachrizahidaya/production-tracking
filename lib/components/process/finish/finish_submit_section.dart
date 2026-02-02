@@ -66,12 +66,10 @@ class _FinishSubmitSectionState extends State<FinishSubmitSection> {
                               MediaQuery.of(context).orientation ==
                                   Orientation.landscape;
                           double scanWidth = isLandscape
-                              ? constraints
-                                  .maxHeight // full height in landscape
-                              : constraints.maxWidth *
-                                  0.9; // proportional in portrait
+                              ? constraints.maxHeight
+                              : constraints.maxWidth * 0.9;
                           double scanHeight = isLandscape
-                              ? constraints.maxWidth // full width in landscape
+                              ? constraints.maxWidth
                               : constraints.maxWidth * 0.9;
                           return ClipRRect(
                               child: SizedBox(

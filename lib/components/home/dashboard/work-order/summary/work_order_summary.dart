@@ -124,11 +124,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
         'waiting': waitingList.length,
         'skipped': (item['skipped'] as List?)?.length ?? 0,
       },
-
-      // 👇 keep original waiting list
       'waiting': waitingList,
-
-      // 👇 NUMBER 1: overdue detector
       'hasOverdueWaiting': _hasOverdueWaiting(waitingList),
     };
   }
@@ -139,10 +135,13 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
 
   Widget _buildSwipeContent() {
     if (widget.isFetching == true) {
-      return Center(
-        child: Padding(
-          padding: CustomTheme().padding('content'),
-          child: CircularProgressIndicator(),
+      return SizedBox(
+        height: 300,
+        child: Center(
+          child: Padding(
+            padding: CustomTheme().padding('content'),
+            child: CircularProgressIndicator(),
+          ),
         ),
       );
     }

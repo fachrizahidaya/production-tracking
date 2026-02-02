@@ -86,7 +86,6 @@ class MachineService extends BaseService {
           if (responseData['data'] != null) {
             final data = responseData['data'];
 
-            // simpan available dan unavailable ke dalam map
             _dataList = {
               "available": data['available']['data'],
               "unavailable": data['unavailable']['data']

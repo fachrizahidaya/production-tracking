@@ -4,10 +4,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_bytes.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class AttachmentTab extends StatefulWidget {
   final Map<String, dynamic>? data;
@@ -73,7 +73,6 @@ class _AttachmentTabState extends State<AttachmentTab> {
           : (item['file_name'] ?? filePath?.split('/').last ?? '');
       final String extension = fileName.split('.').last.toLowerCase();
 
-      /// ---- File Size Logic ----
       String fileSizeText = '';
 
       if (isNew && filePath != null) {
@@ -83,7 +82,6 @@ class _AttachmentTabState extends State<AttachmentTab> {
           fileSizeText = formatBytes(bytes);
         }
       } else {
-        // from API (recommended: send file_size from backend)
         if (item['file_size'] != null) {
           fileSizeText = formatBytes(item['file_size']);
         } else {
@@ -179,69 +177,16 @@ class _AttachmentTabState extends State<AttachmentTab> {
     return Row(
       children: [
         Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: CustomTheme().padding('card'),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[50],
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12),
-                    ),
+          child: TemplateCard(
+            title: 'Lampiran',
+            icon: Icons.attachment_outlined,
+            child: widget.existingAttachment.isEmpty
+                ? NoData()
+                : Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: _buildAttachmentList(context),
                   ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: CustomTheme().padding('process-content'),
-                        decoration: BoxDecoration(
-                          color: CustomTheme()
-                              .buttonColor('primary')
-                              .withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.attachment_outlined,
-                          size: 18,
-                          color: CustomTheme().buttonColor('primary'),
-                        ),
-                      ),
-                      Text(
-                        'Lampiran',
-                        style: TextStyle(
-                          fontSize: CustomTheme().fontSize('md'),
-                          fontWeight: CustomTheme().fontWeight('semibold'),
-                          color: Colors.grey[800],
-                        ),
-                      ),
-                    ].separatedBy(CustomTheme().hGap('xl')),
-                  ),
-                ),
-                Padding(
-                  padding: CustomTheme().padding('item-detail'),
-                  child: widget.existingAttachment.isEmpty
-                      ? NoData()
-                      : Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: _buildAttachmentList(context),
-                        ),
-                ),
-              ].separatedBy(CustomTheme().vGap('lg')),
-            ),
           ),
         ),
       ],

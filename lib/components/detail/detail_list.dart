@@ -151,35 +151,20 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                             ),
                         ].separatedBy(CustomTheme().hGap('xl')),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WorkOrderDetail(
-                                id: widget.data['work_orders']?['id']
-                                        .toString() ??
-                                    '-',
-                              ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.data['created_at'] != null
+                                ? 'Dibuat pada ${DateFormat("dd MMM yyyy, HH.mm").format(DateTime.parse(widget.data['created_at']))}'
+                                : '-',
+                            style: TextStyle(
+                              fontSize: CustomTheme().fontSize('lg'),
+                              color: Colors.white.withOpacity(0.8),
+                              fontWeight: CustomTheme().fontWeight('semibold'),
                             ),
-                          );
-                        },
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              widget.data['created_at'] != null
-                                  ? 'Dibuat pada ${DateFormat("dd MMM yyyy, HH.mm").format(DateTime.parse(widget.data['created_at']))}'
-                                  : '-',
-                              style: TextStyle(
-                                fontSize: CustomTheme().fontSize('lg'),
-                                color: Colors.white.withOpacity(0.8),
-                                fontWeight:
-                                    CustomTheme().fontWeight('semibold'),
-                              ),
-                            ),
-                          ].separatedBy(CustomTheme().hGap('sm')),
-                        ),
+                          ),
+                        ].separatedBy(CustomTheme().hGap('sm')),
                       ),
                     ].separatedBy(CustomTheme().vGap('sm')),
                   ),
@@ -188,7 +173,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               ],
             ),
             // Quick Info Row
-            _buildQuickInfoRow(isTablet),
+            if (widget.label != 'Sorting' || widget.label != 'Packing')
+              _buildQuickInfoRow(isTablet),
           ].separatedBy(CustomTheme().vGap('xl')),
         ),
       ),

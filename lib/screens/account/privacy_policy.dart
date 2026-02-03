@@ -28,7 +28,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
     if (privacyPolicy == null) {
       return Scaffold(
         appBar: CustomAppBar(title: 'Privacy Policy'),
-        body: Center(child: CircularProgressIndicator()),
+        body: SafeArea(child: Center(child: CircularProgressIndicator())),
       );
     }
 
@@ -42,38 +42,40 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
               Navigator.pushReplacementNamed(context, '/dashboard');
             }
           }),
-      body: ListView(
-        padding: CustomTheme().padding('content'),
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                privacyPolicy!.title,
-                style: TextStyle(
-                    fontSize: CustomTheme().fontSize('lg'),
-                    fontWeight: CustomTheme().fontWeight('bold')),
-              ),
-              Text(
-                privacyPolicy!.date,
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
-          ),
-          Text(privacyPolicy!.description),
-          ...privacyPolicy!.data.map((section) {
-            return Column(
+      body: SafeArea(
+        child: ListView(
+          padding: CustomTheme().padding('content'),
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(section.name,
-                    style: TextStyle(
-                        fontSize: CustomTheme().fontSize('xl'),
-                        fontWeight: CustomTheme().fontWeight('bold'))),
-                Text(section.description),
-              ].separatedBy(CustomTheme().vGap('lg')),
-            );
-          }),
-        ].separatedBy(CustomTheme().vGap('xl')),
+                Text(
+                  privacyPolicy!.title,
+                  style: TextStyle(
+                      fontSize: CustomTheme().fontSize('lg'),
+                      fontWeight: CustomTheme().fontWeight('bold')),
+                ),
+                Text(
+                  privacyPolicy!.date,
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+            Text(privacyPolicy!.description),
+            ...privacyPolicy!.data.map((section) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(section.name,
+                      style: TextStyle(
+                          fontSize: CustomTheme().fontSize('xl'),
+                          fontWeight: CustomTheme().fontWeight('bold'))),
+                  Text(section.description),
+                ].separatedBy(CustomTheme().vGap('lg')),
+              );
+            }),
+          ].separatedBy(CustomTheme().vGap('xl')),
+        ),
       ),
     );
   }

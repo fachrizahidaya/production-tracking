@@ -63,29 +63,31 @@ class _TextEditorState extends State<TextEditor> {
           _handleCancel(context);
         },
       ),
-      body: Column(
-        children: [
-          ToolBar(
-            controller: controller,
-            toolBarConfig: const [
-              ToolBarStyle.bold,
-              ToolBarStyle.italic,
-              ToolBarStyle.underline,
-              ToolBarStyle.link,
-              ToolBarStyle.listBullet,
-              ToolBarStyle.listOrdered,
-              ToolBarStyle.align,
-              ToolBarStyle.color,
-            ],
-          ),
-          Expanded(
-            child: QuillHtmlEditor(
-              minHeight: 100,
-              hintText: "Tulis catatan...",
+      body: SafeArea(
+        child: Column(
+          children: [
+            ToolBar(
               controller: controller,
+              toolBarConfig: const [
+                ToolBarStyle.bold,
+                ToolBarStyle.italic,
+                ToolBarStyle.underline,
+                ToolBarStyle.link,
+                ToolBarStyle.listBullet,
+                ToolBarStyle.listOrdered,
+                ToolBarStyle.align,
+                ToolBarStyle.color,
+              ],
             ),
-          ),
-        ],
+            Expanded(
+              child: QuillHtmlEditor(
+                minHeight: 100,
+                hintText: "Tulis catatan...",
+                controller: controller,
+              ),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(

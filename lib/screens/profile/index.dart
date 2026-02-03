@@ -18,29 +18,31 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: const Color(0xFFEBEBEB),
-        child: Column(
-          children: [
-            Padding(
-                padding: const EdgeInsets.all(8),
-                child: ProfleList<Map<String, String>>(
-                  onTapItem: (item) {
-                    if (item != null) {
-                      if (item['title'] == 'Change Password') {
-                      } else if (item['route'] != null) {
-                        Navigator.pushNamed(context, item['route']!);
+      body: SafeArea(
+        child: Container(
+          color: const Color(0xFFEBEBEB),
+          child: Column(
+            children: [
+              Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: ProfleList<Map<String, String>>(
+                    onTapItem: (item) {
+                      if (item != null) {
+                        if (item['title'] == 'Change Password') {
+                        } else if (item['route'] != null) {
+                          Navigator.pushNamed(context, item['route']!);
+                        }
                       }
-                    }
-                  },
-                  itemBuilder: (item) {
-                    return ListTile(
-                      title: Text(item['title']!),
-                    );
-                  },
-                  initialItems: menuList,
-                ))
-          ],
+                    },
+                    itemBuilder: (item) {
+                      return ListTile(
+                        title: Text(item['title']!),
+                      );
+                    },
+                    initialItems: menuList,
+                  ))
+            ],
+          ),
         ),
       ),
     );

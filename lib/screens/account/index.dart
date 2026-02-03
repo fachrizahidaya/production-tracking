@@ -33,34 +33,36 @@ class _AccountState extends State<Account> {
           }
         },
       ),
-      body: Column(
-        children: [
-          Expanded(
-              child: OptionList(
-            dataList: menuOptions,
-            itemBuilder: (item) {
-              return CustomCard(
-                child: Text(
-                  item['label'] ?? '',
-                  style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
-                ),
-              );
-            },
-            onItemTap: (context, item) {
-              Navigator.pushNamed(context, item['route']!);
-            },
-          )),
-          Padding(
-            padding: CustomTheme().padding('content'),
-            child: Text(
-              'Version ${dotenv.env['APP_VERSION']!}',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: CustomTheme().fontSize('lg'),
-                  color: CustomTheme().colors('text-secondary')),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+                child: OptionList(
+              dataList: menuOptions,
+              itemBuilder: (item) {
+                return CustomCard(
+                  child: Text(
+                    item['label'] ?? '',
+                    style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
+                  ),
+                );
+              },
+              onItemTap: (context, item) {
+                Navigator.pushNamed(context, item['route']!);
+              },
+            )),
+            Padding(
+              padding: CustomTheme().padding('content'),
+              child: Text(
+                'Version ${dotenv.env['APP_VERSION']!}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: CustomTheme().fontSize('lg'),
+                    color: CustomTheme().colors('text-secondary')),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

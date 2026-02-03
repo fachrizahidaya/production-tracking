@@ -144,27 +144,29 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: const Color(0xFFEBEBEB),
-        body: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: Center(
-            child: SingleChildScrollView(
-              child: LoginForm(
-                key: _key,
-                username: _username,
-                password: _password,
-                isDisabled: !_isFormValid,
-                isLoading: _isLoading,
-                handlePress: () {
-                  _handleSubmit(context);
-                },
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+          backgroundColor: const Color(0xFFEBEBEB),
+          body: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                child: LoginForm(
+                  key: _key,
+                  username: _username,
+                  password: _password,
+                  isDisabled: !_isFormValid,
+                  isLoading: _isLoading,
+                  handlePress: () {
+                    _handleSubmit(context);
+                  },
+                ),
               ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 }

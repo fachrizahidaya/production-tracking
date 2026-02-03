@@ -263,17 +263,19 @@ class _FinishProcessState extends State<FinishProcess> {
           title: widget.title,
           onReturn: () => Navigator.pop(context),
         ),
-        body: FinishSubmitSection(
-          isScannerStopped: _isScannerStopped,
-          form: _form,
-          controller: _controller,
-          handleScan: _handleScan,
-          handleSubmit: _handleSubmit,
-          handleRoute: (form, handleSubmit, handleChangeInput) => _createRoute(
-              widget.formPageBuilder(context, null, null, {}, form,
-                  handleSubmit, handleChangeInput)),
-          isLoading: _isLoading,
-          handleChangeInput: _handleChangeInput,
+        body: SafeArea(
+          child: FinishSubmitSection(
+            isScannerStopped: _isScannerStopped,
+            form: _form,
+            controller: _controller,
+            handleScan: _handleScan,
+            handleSubmit: _handleSubmit,
+            handleRoute: (form, handleSubmit, handleChangeInput) =>
+                _createRoute(widget.formPageBuilder(context, null, null, {},
+                    form, handleSubmit, handleChangeInput)),
+            isLoading: _isLoading,
+            handleChangeInput: _handleChangeInput,
+          ),
         ),
       ),
     );

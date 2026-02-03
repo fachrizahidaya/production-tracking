@@ -72,7 +72,7 @@ class _LoginState extends State<Login> {
     final String username = _username.text;
     final String password = _password.text;
 
-    String url = '${dotenv.env['API_URL']}/login';
+    String url = '${dotenv.env['API_URL_DEV']}/login';
 
     try {
       setState(() {

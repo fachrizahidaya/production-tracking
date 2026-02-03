@@ -204,79 +204,81 @@ class _StenterScreenState extends State<StenterScreen> {
             }
           },
         ),
-        body: NotificationListener(
-          onNotification: (notification) {
-            if (notification is UserScrollNotification) {
-              if (notification.direction == ScrollDirection.reverse) {
-                if (_showFab) {
-                  setState(() => _showFab = false);
-                }
-              } else if (notification.direction == ScrollDirection.forward) {
-                if (!_showFab) {
-                  setState(() => _showFab = true);
+        body: SafeArea(
+          child: NotificationListener(
+            onNotification: (notification) {
+              if (notification is UserScrollNotification) {
+                if (notification.direction == ScrollDirection.reverse) {
+                  if (_showFab) {
+                    setState(() => _showFab = false);
+                  }
+                } else if (notification.direction == ScrollDirection.forward) {
+                  if (!_showFab) {
+                    setState(() => _showFab = true);
+                  }
                 }
               }
-            }
-            return false;
-          },
-          child: Column(
-            children: [
-              Expanded(
-                  child: ProcessList(
-                fetchData: (params) async {
-                  final service =
-                      Provider.of<StenterService>(context, listen: false);
-                  await service.getDataList(params);
-                  return service.items;
-                },
-                canRead: _canRead,
-                isLoadMore: _isLoadMore,
-                itemBuilder: (item) => ItemProcessCard(
-                  label: 'No. Stenter',
-                  item: item,
-                  titleKey: 'stenter_no',
-                  subtitleKey: 'work_orders',
-                  subtitleField: 'wo_no',
-                  itemField: ItemField.get,
-                  nestedField: ItemField.nested,
-                ),
-                onItemTap: (context, item) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => StenterDetail(
-                          id: item['id'].toString(),
-                          no: item['stenter_no'].toString(),
-                          canDelete: _canDelete,
-                          canUpdate: _canUpdate,
-                        ),
-                      )).then((value) {
-                    if (value == true) {
-                      _refetch();
-                    } else {
-                      return null;
-                    }
-                  });
-                },
-                filterWidget: ListFilter(
-                  title: 'Filter',
-                  params: params,
-                  onHandleFilter: _handleFilter,
-                  onSubmitFilter: () {
-                    _submitFilter();
+              return false;
+            },
+            child: Column(
+              children: [
+                Expanded(
+                    child: ProcessList(
+                  fetchData: (params) async {
+                    final service =
+                        Provider.of<StenterService>(context, listen: false);
+                    await service.getDataList(params);
+                    return service.items;
                   },
-                  dariTanggal: dariTanggal,
-                  sampaiTanggal: sampaiTanggal,
-                ),
-                firstLoading: _firstLoading,
-                isFiltered: _isFiltered,
-                hasMore: _hasMore,
-                handleLoadMore: _loadMore,
-                handleRefetch: _refetch,
-                handleSearch: _handleSearch,
-                dataList: _dataList,
-              ))
-            ],
+                  canRead: _canRead,
+                  isLoadMore: _isLoadMore,
+                  itemBuilder: (item) => ItemProcessCard(
+                    label: 'No. Stenter',
+                    item: item,
+                    titleKey: 'stenter_no',
+                    subtitleKey: 'work_orders',
+                    subtitleField: 'wo_no',
+                    itemField: ItemField.get,
+                    nestedField: ItemField.nested,
+                  ),
+                  onItemTap: (context, item) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StenterDetail(
+                            id: item['id'].toString(),
+                            no: item['stenter_no'].toString(),
+                            canDelete: _canDelete,
+                            canUpdate: _canUpdate,
+                          ),
+                        )).then((value) {
+                      if (value == true) {
+                        _refetch();
+                      } else {
+                        return null;
+                      }
+                    });
+                  },
+                  filterWidget: ListFilter(
+                    title: 'Filter',
+                    params: params,
+                    onHandleFilter: _handleFilter,
+                    onSubmitFilter: () {
+                      _submitFilter();
+                    },
+                    dariTanggal: dariTanggal,
+                    sampaiTanggal: sampaiTanggal,
+                  ),
+                  firstLoading: _firstLoading,
+                  isFiltered: _isFiltered,
+                  hasMore: _hasMore,
+                  handleLoadMore: _loadMore,
+                  handleRefetch: _refetch,
+                  handleSearch: _handleSearch,
+                  dataList: _dataList,
+                ))
+              ],
+            ),
           ),
         ),
         floatingActionButton: AnimatedSlide(

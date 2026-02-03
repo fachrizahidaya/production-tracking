@@ -378,25 +378,27 @@ class _DetailState extends State<Detail> {
           id: widget.data['id'],
           status: widget.data['can_delete'],
         ),
-        body: widget.isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : widget.data.isEmpty
-                ? NoData()
-                : DetailList(
-                    data: widget.data,
-                    existingAttachment: existingAttachments,
-                    existingGrades: existingGrades,
-                    handleBuildAttachment: _buildAttachmentList,
-                    no: widget.no,
-                    withItemGrade: widget.withItemGrade,
-                    withQtyAndWeight: widget.withQtyAndWeight,
-                    label: widget.label,
-                    forDyeing: widget.forDyeing,
-                    maklon: widget.maklon,
-                    onRefresh: widget.handleRefetch,
-                  ),
+        body: SafeArea(
+          child: widget.isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : widget.data.isEmpty
+                  ? NoData()
+                  : DetailList(
+                      data: widget.data,
+                      existingAttachment: existingAttachments,
+                      existingGrades: existingGrades,
+                      handleBuildAttachment: _buildAttachmentList,
+                      no: widget.no,
+                      withItemGrade: widget.withItemGrade,
+                      withQtyAndWeight: widget.withQtyAndWeight,
+                      label: widget.label,
+                      forDyeing: widget.forDyeing,
+                      maklon: widget.maklon,
+                      onRefresh: widget.handleRefetch,
+                    ),
+        ),
       ),
     );
   }

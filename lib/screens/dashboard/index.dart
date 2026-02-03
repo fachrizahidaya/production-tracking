@@ -291,58 +291,60 @@ class _DashboardState extends State<Dashboard> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: const Color(0xFFf9fafc),
-        body: CustomScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          slivers: [
-            SliverPadding(
-              padding: CustomTheme().padding('content'),
-              sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                WorkOrderStats(data: statsList, isFetching: isStatsLoading),
-                WorkOrderSummary(
-                  data: summaryList,
-                  handleRefetch: _handleFetchSummary,
-                  isFetching: isSummaryLoading,
-                  filterWidget: SummaryFilter(
-                    dariTanggal: dariTanggalSummary,
-                    sampaiTanggal: sampaiTanggalSummary,
-                    onHandleFilter: _handleSummaryFilter,
-                    params: summaryParams,
+        body: SafeArea(
+          child: CustomScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            slivers: [
+              SliverPadding(
+                padding: CustomTheme().padding('content'),
+                sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                  WorkOrderStats(data: statsList, isFetching: isStatsLoading),
+                  WorkOrderSummary(
+                    data: summaryList,
+                    handleRefetch: _handleFetchSummary,
+                    isFetching: isSummaryLoading,
+                    filterWidget: SummaryFilter(
+                      dariTanggal: dariTanggalSummary,
+                      sampaiTanggal: sampaiTanggalSummary,
+                      onHandleFilter: _handleSummaryFilter,
+                      params: summaryParams,
+                    ),
                   ),
-                ),
-                ActiveMachine(
-                  data: machineList,
-                  available: machineList['available'],
-                  unavailable: machineList['unavailable'],
-                  handleRefetch: _handleFetchMachine,
-                  isFetching: isMachineLoading,
-                ),
-                WorkOrderProcessScreen(
-                  data: _dataList,
-                  search: _search,
-                  handleSearch: _handleSearch,
-                  firstLoading: _firstLoading,
-                  hasMore: _hasMore,
-                  handleLoadMore: _loadMore,
-                  handleRefetch: _refetch,
-                  isLoadMore: _isLoadMore,
-                  filterWidget: ProcessFilter(
-                    params: params,
-                    onHandleFilter: _handleProcessFilter,
+                  ActiveMachine(
+                    data: machineList,
+                    available: machineList['available'],
+                    unavailable: machineList['unavailable'],
+                    handleRefetch: _handleFetchMachine,
+                    isFetching: isMachineLoading,
                   ),
-                  handleFetchData: (params) async {
-                    final service = Provider.of<WorkOrderProcessService>(
-                        context,
-                        listen: false);
-                    await service.getDataList(params);
-                    return service.items;
-                  },
-                  service: WorkOrderProcessService(),
-                  isFiltered: _isFiltered,
-                ),
-              ].separatedBy(CustomTheme().vGap('2xl')))),
-            ),
-          ],
+                  WorkOrderProcessScreen(
+                    data: _dataList,
+                    search: _search,
+                    handleSearch: _handleSearch,
+                    firstLoading: _firstLoading,
+                    hasMore: _hasMore,
+                    handleLoadMore: _loadMore,
+                    handleRefetch: _refetch,
+                    isLoadMore: _isLoadMore,
+                    filterWidget: ProcessFilter(
+                      params: params,
+                      onHandleFilter: _handleProcessFilter,
+                    ),
+                    handleFetchData: (params) async {
+                      final service = Provider.of<WorkOrderProcessService>(
+                          context,
+                          listen: false);
+                      await service.getDataList(params);
+                      return service.items;
+                    },
+                    service: WorkOrderProcessService(),
+                    isFiltered: _isFiltered,
+                  ),
+                ].separatedBy(CustomTheme().vGap('2xl')))),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -28,7 +28,7 @@ class _EulaState extends State<Eula> {
     if (eula == null) {
       return Scaffold(
         appBar: CustomAppBar(title: 'EULA'),
-        body: Center(child: CircularProgressIndicator()),
+        body: SafeArea(child: Center(child: CircularProgressIndicator())),
       );
     }
 
@@ -42,38 +42,40 @@ class _EulaState extends State<Eula> {
               Navigator.pushReplacementNamed(context, '/dashboard');
             }
           }),
-      body: ListView(
-        padding: CustomTheme().padding('content'),
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                eula!.title,
-                style: TextStyle(
-                    fontSize: CustomTheme().fontSize('lg'),
-                    fontWeight: CustomTheme().fontWeight('bold')),
-              ),
-              Text(
-                eula!.date,
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
-          ),
-          Text(eula!.description),
-          ...eula!.data.map((section) {
-            return Column(
+      body: SafeArea(
+        child: ListView(
+          padding: CustomTheme().padding('content'),
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(section.name,
-                    style: TextStyle(
-                        fontSize: CustomTheme().fontSize('xl'),
-                        fontWeight: CustomTheme().fontWeight('bold'))),
-                Text(section.description),
-              ].separatedBy(CustomTheme().vGap('lg')),
-            );
-          }),
-        ].separatedBy(CustomTheme().vGap('xl')),
+                Text(
+                  eula!.title,
+                  style: TextStyle(
+                      fontSize: CustomTheme().fontSize('lg'),
+                      fontWeight: CustomTheme().fontWeight('bold')),
+                ),
+                Text(
+                  eula!.date,
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+            Text(eula!.description),
+            ...eula!.data.map((section) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(section.name,
+                      style: TextStyle(
+                          fontSize: CustomTheme().fontSize('xl'),
+                          fontWeight: CustomTheme().fontWeight('bold'))),
+                  Text(section.description),
+                ].separatedBy(CustomTheme().vGap('lg')),
+              );
+            }),
+          ].separatedBy(CustomTheme().vGap('xl')),
+        ),
       ),
     );
   }

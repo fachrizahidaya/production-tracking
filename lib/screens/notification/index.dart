@@ -19,9 +19,11 @@ class _NotificationListState extends State<NotificationList> {
           Navigator.pop(context);
         },
       ),
-      body: Container(
-        padding: CustomTheme().padding('content'),
-        color: Color(0xFFEBEBEB),
+      body: SafeArea(
+        child: Container(
+          padding: CustomTheme().padding('content'),
+          color: Color(0xFFEBEBEB),
+        ),
       ),
     );
   }

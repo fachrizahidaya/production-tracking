@@ -210,16 +210,19 @@ class _CreateProcessState extends State<CreateProcess> {
           title: widget.title,
           onReturn: () => Navigator.pop(context),
         ),
-        body: CreateSubmitSection(
-          isScannerStopped: _isScannerStopped,
-          form: _form,
-          controller: _controller,
-          handleScan: _handleScan,
-          handleSubmit: _handleSubmit,
-          handleRoute: (form, handleSubmit) => _createRoute(
-            widget.formPageBuilder(context, null, null, {}, form, handleSubmit),
+        body: SafeArea(
+          child: CreateSubmitSection(
+            isScannerStopped: _isScannerStopped,
+            form: _form,
+            controller: _controller,
+            handleScan: _handleScan,
+            handleSubmit: _handleSubmit,
+            handleRoute: (form, handleSubmit) => _createRoute(
+              widget.formPageBuilder(
+                  context, null, null, {}, form, handleSubmit),
+            ),
+            isLoading: _isLoading,
           ),
-          isLoading: _isLoading,
         ),
       ),
     );

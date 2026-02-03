@@ -66,18 +66,8 @@ class _InfoTabState extends State<InfoTab> {
     return Container(
       padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            CustomTheme().buttonColor('primary'),
-            CustomTheme().buttonColor('primary').withOpacity(0.85),
-          ],
-        ),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
-        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -86,18 +76,6 @@ class _InfoTabState extends State<InfoTab> {
           Expanded(
             child: Row(
               children: [
-                Container(
-                  padding: CustomTheme().padding('card'),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.assignment_outlined,
-                    size: isTablet ? 28 : 24,
-                    color: Colors.white,
-                  ),
-                ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +91,7 @@ class _InfoTabState extends State<InfoTab> {
                                 fontSize: CustomTheme()
                                     .fontSize(isTablet ? '2xl' : 'xl'),
                                 fontWeight: CustomTheme().fontWeight('bold'),
-                                color: Colors.white,
+                                color: Colors.grey[800],
                               ),
                             ),
                           ),
@@ -121,7 +99,7 @@ class _InfoTabState extends State<InfoTab> {
                             const SizedBox(width: 6),
                             Icon(
                               Icons.warning_amber_rounded,
-                              color: Colors.yellowAccent,
+                              color: Colors.redAccent,
                               size: isTablet ? 22 : 18,
                             ),
                           ],
@@ -134,9 +112,8 @@ class _InfoTabState extends State<InfoTab> {
                             : DateFormat("dd MMM yyyy")
                                 .format(DateTime.parse(widget.data['wo_date'])),
                         style: TextStyle(
-                          fontSize:
-                              CustomTheme().fontSize(isTablet ? 'md' : 'sm'),
-                          color: Colors.white.withOpacity(0.8),
+                          fontSize: CustomTheme().fontSize('lg'),
+                          color: Colors.black.withOpacity(0.8),
                           fontWeight: CustomTheme().fontWeight('semibold'),
                         ),
                       ),

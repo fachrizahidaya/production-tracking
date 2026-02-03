@@ -68,6 +68,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header Section
+
                 _buildHeaderSection(isTablet),
 
                 // Main Content
@@ -90,20 +91,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       child: Container(
         padding: CustomTheme().padding('card'),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              CustomTheme().buttonColor('primary'),
-              CustomTheme().buttonColor('primary').withOpacity(0.8),
-            ],
-          ),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: CustomTheme().buttonColor('primary').withOpacity(0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -125,8 +119,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                             widget.no ?? '-',
                             style: TextStyle(
                               fontSize: isTablet ? 24 : 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              fontWeight: CustomTheme().fontWeight('bold'),
+                              color: Colors.grey[800],
                             ),
                           ),
                           if (widget.data['rework'] == true)
@@ -160,7 +154,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                                 : '-',
                             style: TextStyle(
                               fontSize: CustomTheme().fontSize('lg'),
-                              color: Colors.white.withOpacity(0.8),
+                              color: Colors.black.withOpacity(0.8),
                               fontWeight: CustomTheme().fontWeight('semibold'),
                             ),
                           ),
@@ -173,7 +167,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               ],
             ),
             // Quick Info Row
-            if (widget.label != 'Sorting' || widget.label != 'Packing')
+            if (widget.data['machine_id'] != null ||
+                widget.data['maklon_name'] != null)
               _buildQuickInfoRow(isTablet),
           ].separatedBy(CustomTheme().vGap('xl')),
         ),
@@ -195,8 +190,9 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     return Container(
       padding: EdgeInsets.all(isTablet ? 16 : 12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey[200]!),
       ),
       child: Row(
         children: [
@@ -246,13 +242,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         Icon(
           icon,
           size: isTablet ? 20 : 18,
-          color: Colors.white.withOpacity(0.9),
+          color: CustomTheme().buttonColor('primary'),
         ),
         Text(
           label,
           style: TextStyle(
-            fontSize: isTablet ? 11 : 10,
-            color: Colors.white.withOpacity(0.7),
+            fontSize: CustomTheme().fontSize('sm'),
+            color: Colors.grey[800],
           ),
         ),
         Text(
@@ -260,7 +256,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           style: TextStyle(
             fontSize: isTablet ? 13 : 12,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
           ),
           textAlign: TextAlign.center,
           maxLines: 1,
@@ -276,7 +271,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       width: 1,
       height: 40,
       margin: const EdgeInsets.symmetric(horizontal: 8),
-      color: Colors.white.withOpacity(0.2),
+      color: Colors.black.withOpacity(0.2),
     );
   }
 
@@ -444,7 +439,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             ),
           );
         },
-        'right-icon': Icons.warning_amber_outlined,
+        'right-icon': Icons.chevron_right_outlined,
       },
       {
         'label': 'Tanggal Work Order',
@@ -547,12 +542,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               : '0 ${widget.data['weight_unit'] != null ? widget.data['weight_unit']['code'] : ''}',
           'icon': Icons.layers_outlined,
         },
-      if (widget.data['maklon'] == true)
-        {
-          'label': 'Maklon',
-          'value': widget.data['maklon_name'] ?? '-',
-          'icon': Icons.business_outlined,
-        },
     ];
 
     return _buildInfoGrid(items, isTablet);
@@ -577,7 +566,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                   canUpdate: false,
                 ),
               ));
-        }
+        },
+        'right-icon': Icons.chevron_right_outlined,
       },
       {
         'label': 'Qty Referensi',
@@ -836,6 +826,11 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 ].separatedBy(CustomTheme().vGap('sm')),
               ),
             ),
+            if (navigateTo != null)
+              Icon(
+                rightIcon,
+                size: isTablet ? 18 : 16,
+              ),
           ].separatedBy(CustomTheme().hGap('md')),
         ),
       ),

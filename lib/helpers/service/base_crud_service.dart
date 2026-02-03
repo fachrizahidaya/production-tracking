@@ -17,7 +17,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     required this.toJson,
   });
 
-  final String baseUrl = dotenv.env['API_URL'] ?? '';
+  final String baseUrl = dotenv.env['API_URL_DEV'] ?? '';
   bool _isLoading = false;
   bool _hasMoreData = true;
   int _currentPage = 1;

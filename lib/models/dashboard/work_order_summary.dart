@@ -9,7 +9,7 @@ import 'package:textile_tracking/helpers/service/base_service.dart';
 import 'package:http/http.dart' as http;
 
 class WorkOrderSummaryService extends BaseService {
-  final String baseUrl = '${dotenv.env['API_URL']}/dashboard/wo-summary';
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/dashboard/wo-summary';
 
   bool _isLoading = false;
   List<dynamic> _dataList = [];

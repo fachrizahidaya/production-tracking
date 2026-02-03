@@ -324,22 +324,24 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
             _handleCancel(context);
           },
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ReworkInfoTab(
-                data: woData,
-                id: widget.id,
-                label: 'Dyeing',
-                isLoading: _firstLoading,
-                form: widget.form,
-                formKey: _formKey,
-                handleSubmit: widget.handleSubmit,
-                handleSelectMachine: _selectMachine,
-                handleSelectWorkOrder: _selectWorkOrder,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: ReworkInfoTab(
+                  data: woData,
+                  id: widget.id,
+                  label: 'Dyeing',
+                  isLoading: _firstLoading,
+                  form: widget.form,
+                  formKey: _formKey,
+                  handleSubmit: widget.handleSubmit,
+                  handleSelectMachine: _selectMachine,
+                  handleSelectWorkOrder: _selectWorkOrder,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         bottomNavigationBar: SafeArea(
           child: Container(

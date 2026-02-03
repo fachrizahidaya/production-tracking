@@ -222,15 +222,17 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
               Navigator.pop(context);
             },
           ),
-          body: SubmitSection(
-            isScannerStopped: _isScannerStopped,
-            form: _form,
-            controller: _controller,
-            handleScan: _handleScan,
-            handleSubmit: _handleSubmit,
-            handleRoute: _createRoute,
-            isLoading: _isLoading,
-            handleChangeInput: _handleChangeInput,
+          body: SafeArea(
+            child: SubmitSection(
+              isScannerStopped: _isScannerStopped,
+              form: _form,
+              controller: _controller,
+              handleScan: _handleScan,
+              handleSubmit: _handleSubmit,
+              handleRoute: _createRoute,
+              isLoading: _isLoading,
+              handleChangeInput: _handleChangeInput,
+            ),
           )),
     );
   }

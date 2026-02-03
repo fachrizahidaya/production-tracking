@@ -59,37 +59,39 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
               Navigator.pop(context);
             },
           ),
-          body: Column(
-            children: [
-              Container(
-                color: Colors.white,
-                child: TabBar(isScrollable: true, tabs: [
-                  Tab(
-                    text: 'Informasi',
-                  ),
-                  Tab(
-                    text: 'Proses Produksi',
-                  ),
-                  Tab(
-                    text: 'Catatan',
-                  ),
-                ]),
-              ),
-              Expanded(
-                child: TabBarView(children: [
-                  WoInfoTab(
-                    data: data,
-                    isLoading: _firstLoading,
-                  ),
-                  ProcessTab(
-                    data: data,
-                  ),
-                  NoteTab(
-                    data: data,
-                  ),
-                ]),
-              ),
-            ],
+          body: SafeArea(
+            child: Column(
+              children: [
+                Container(
+                  color: Colors.white,
+                  child: TabBar(isScrollable: true, tabs: [
+                    Tab(
+                      text: 'Informasi',
+                    ),
+                    Tab(
+                      text: 'Proses Produksi',
+                    ),
+                    Tab(
+                      text: 'Catatan',
+                    ),
+                  ]),
+                ),
+                Expanded(
+                  child: TabBarView(children: [
+                    WoInfoTab(
+                      data: data,
+                      isLoading: _firstLoading,
+                    ),
+                    ProcessTab(
+                      data: data,
+                    ),
+                    NoteTab(
+                      data: data,
+                    ),
+                  ]),
+                ),
+              ],
+            ),
           )),
     );
   }

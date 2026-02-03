@@ -132,103 +132,106 @@ class _UpdateProcessState extends State<UpdateProcess> {
             onReturn: () => _handleCancel(context),
             id: widget.id,
           ),
-          body: SingleChildScrollView(
-              child: Container(
-            padding: CustomTheme().padding('content'),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (widget.data['machine_id'] != null && _isMaklon == false)
-                    CustomCard(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SelectForm(
-                          label: 'Mesin',
-                          onTap: () => widget.handleSelectMachine(),
-                          selectedLabel: widget.form['nama_mesin'] ?? '',
-                          selectedValue: widget.form['machine_id'].toString(),
-                          required: false,
-                        )
-                      ].separatedBy(CustomTheme().vGap('lg')),
-                    )),
-                  if (widget.data['maklon'] != null)
-                    CustomCard(
-                      child: Column(
+          body: SafeArea(
+            child: SingleChildScrollView(
+                child: Container(
+              padding: CustomTheme().padding('content'),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (widget.data['machine_id'] != null && _isMaklon == false)
+                      CustomCard(
+                          child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (widget.withMaklon == true)
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Maklon',
-                                          style: TextStyle(
-                                              fontSize:
-                                                  CustomTheme().fontSize('lg')),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Switch(
-                                              value: _isMaklon,
-                                              onChanged: widget
-                                                      .data['can_update']
-                                                  ? (value) {
-                                                      setState(() {
-                                                        _isMaklon = value;
-                                                        widget.form['maklon'] =
-                                                            value;
-                                                      });
-                                                    }
-                                                  : null,
-                                              activeColor: Colors.green,
-                                              inactiveThumbColor:
-                                                  Colors.redAccent,
-                                            ),
-                                            Text(widget.data['maklon']
-                                                ? 'Ya'
-                                                : 'Tidak'),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  if (_isMaklon == true)
-                                    TextForm(
-                                      label: 'Nama Maklon',
-                                      req: false,
-                                      controller: widget.maklon,
-                                      handleChange: (value) {
-                                        setState(() {
-                                          widget.maklon.text = value.toString();
-                                          widget.form['maklon_name'] =
-                                              value.toString();
-                                        });
-                                      },
-                                    ),
-                                ].separatedBy(CustomTheme().vGap('lg')),
-                              ),
-                            ].separatedBy(CustomTheme().vGap('lg')),
-                          ),
+                          SelectForm(
+                            label: 'Mesin',
+                            onTap: () => widget.handleSelectMachine(),
+                            selectedLabel: widget.form['nama_mesin'] ?? '',
+                            selectedValue: widget.form['machine_id'].toString(),
+                            required: false,
+                          )
                         ].separatedBy(CustomTheme().vGap('lg')),
+                      )),
+                    if (widget.data['maklon'] != null)
+                      CustomCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (widget.withMaklon == true)
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Maklon',
+                                            style: TextStyle(
+                                                fontSize: CustomTheme()
+                                                    .fontSize('lg')),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Switch(
+                                                value: _isMaklon,
+                                                onChanged: widget
+                                                        .data['can_update']
+                                                    ? (value) {
+                                                        setState(() {
+                                                          _isMaklon = value;
+                                                          widget.form[
+                                                              'maklon'] = value;
+                                                        });
+                                                      }
+                                                    : null,
+                                                activeColor: Colors.green,
+                                                inactiveThumbColor:
+                                                    Colors.redAccent,
+                                              ),
+                                              Text(widget.data['maklon']
+                                                  ? 'Ya'
+                                                  : 'Tidak'),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    if (_isMaklon == true)
+                                      TextForm(
+                                        label: 'Nama Maklon',
+                                        req: false,
+                                        controller: widget.maklon,
+                                        handleChange: (value) {
+                                          setState(() {
+                                            widget.maklon.text =
+                                                value.toString();
+                                            widget.form['maklon_name'] =
+                                                value.toString();
+                                          });
+                                        },
+                                      ),
+                                  ].separatedBy(CustomTheme().vGap('lg')),
+                                ),
+                              ].separatedBy(CustomTheme().vGap('lg')),
+                            ),
+                          ].separatedBy(CustomTheme().vGap('lg')),
+                        ),
                       ),
-                    ),
-                  DetailWorkOrder(
-                    data: widget.data['work_orders'],
-                    form: widget.form,
-                    withQtyAndWeight: widget.withQtyAndWeight,
-                    label: widget.label,
-                    forDyeing: widget.forDyeing,
-                    withNote: true,
-                  )
-                ].separatedBy(CustomTheme().vGap('xl'))),
-          )),
+                    DetailWorkOrder(
+                      data: widget.data['work_orders'],
+                      form: widget.form,
+                      withQtyAndWeight: widget.withQtyAndWeight,
+                      label: widget.label,
+                      forDyeing: widget.forDyeing,
+                      withNote: true,
+                    )
+                  ].separatedBy(CustomTheme().vGap('xl'))),
+            )),
+          ),
           bottomNavigationBar: SafeArea(
             child: Container(
               color: Colors.white,

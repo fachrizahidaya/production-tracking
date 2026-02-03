@@ -207,74 +207,76 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
             }
           },
         ),
-        body: NotificationListener(
-          onNotification: (notification) {
-            if (notification is UserScrollNotification) {
-              if (notification.direction == ScrollDirection.reverse) {
-                if (_showFab) {
-                  setState(() => _showFab = false);
-                }
-              } else if (notification.direction == ScrollDirection.forward) {
-                if (!_showFab) {
-                  setState(() => _showFab = true);
+        body: SafeArea(
+          child: NotificationListener(
+            onNotification: (notification) {
+              if (notification is UserScrollNotification) {
+                if (notification.direction == ScrollDirection.reverse) {
+                  if (_showFab) {
+                    setState(() => _showFab = false);
+                  }
+                } else if (notification.direction == ScrollDirection.forward) {
+                  if (!_showFab) {
+                    setState(() => _showFab = true);
+                  }
                 }
               }
-            }
-            return false;
-          },
-          child: ProcessList(
-            fetchData: (params) async {
-              final service =
-                  Provider.of<LongSittingService>(context, listen: false);
-              await service.getDataList(params);
-              return service.items;
+              return false;
             },
-            isLoadMore: _isLoadMore,
-            canRead: _canRead,
-            itemBuilder: (item) => ItemProcessCard(
-              label: 'No. Long Slitting',
-              item: item,
-              titleKey: 'ls_no',
-              subtitleKey: 'work_orders',
-              subtitleField: 'wo_no',
-              itemField: ItemField.get,
-              nestedField: ItemField.nested,
-            ),
-            onItemTap: (context, item) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LongSittingDetail(
-                      id: item['id'].toString(),
-                      no: item['ls_no'].toString(),
-                      canDelete: _canDelete,
-                      canUpdate: _canUpdate,
-                    ),
-                  )).then((value) {
-                if (value == true) {
-                  _refetch();
-                } else {
-                  return null;
-                }
-              });
-            },
-            filterWidget: ListFilter(
-              title: 'Filter',
-              params: params,
-              onHandleFilter: _handleFilter,
-              onSubmitFilter: () {
-                _submitFilter();
+            child: ProcessList(
+              fetchData: (params) async {
+                final service =
+                    Provider.of<LongSittingService>(context, listen: false);
+                await service.getDataList(params);
+                return service.items;
               },
-              dariTanggal: dariTanggal,
-              sampaiTanggal: sampaiTanggal,
+              isLoadMore: _isLoadMore,
+              canRead: _canRead,
+              itemBuilder: (item) => ItemProcessCard(
+                label: 'No. Long Slitting',
+                item: item,
+                titleKey: 'ls_no',
+                subtitleKey: 'work_orders',
+                subtitleField: 'wo_no',
+                itemField: ItemField.get,
+                nestedField: ItemField.nested,
+              ),
+              onItemTap: (context, item) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LongSittingDetail(
+                        id: item['id'].toString(),
+                        no: item['ls_no'].toString(),
+                        canDelete: _canDelete,
+                        canUpdate: _canUpdate,
+                      ),
+                    )).then((value) {
+                  if (value == true) {
+                    _refetch();
+                  } else {
+                    return null;
+                  }
+                });
+              },
+              filterWidget: ListFilter(
+                title: 'Filter',
+                params: params,
+                onHandleFilter: _handleFilter,
+                onSubmitFilter: () {
+                  _submitFilter();
+                },
+                dariTanggal: dariTanggal,
+                sampaiTanggal: sampaiTanggal,
+              ),
+              firstLoading: _firstLoading,
+              isFiltered: _isFiltered,
+              hasMore: _hasMore,
+              handleLoadMore: _loadMore,
+              handleRefetch: _refetch,
+              handleSearch: _handleSearch,
+              dataList: _dataList,
             ),
-            firstLoading: _firstLoading,
-            isFiltered: _isFiltered,
-            hasMore: _hasMore,
-            handleLoadMore: _loadMore,
-            handleRefetch: _refetch,
-            handleSearch: _handleSearch,
-            dataList: _dataList,
           ),
         ),
         floatingActionButton: AnimatedSlide(

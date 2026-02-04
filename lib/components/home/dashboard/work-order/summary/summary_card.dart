@@ -658,18 +658,18 @@ class _SummaryCardState extends State<SummaryCard>
     final waiting = summary['waiting'] ?? 0;
 
     if (inProgress > 0) {
-      return Color(0xfff18800);
+      return CustomTheme().colors('Diproses');
     }
 
     if (skipped > 0) {
-      return Color.fromRGBO(113, 113, 123, 1);
+      return CustomTheme().colors('primary');
     }
     if (waiting > 0) {
-      return Color.fromRGBO(113, 113, 123, 1);
+      return CustomTheme().colors('secondary');
     }
 
     if (completed > 0) {
-      return Color(0xFF10b981);
+      return CustomTheme().colors('Selesai');
     }
 
     return Colors.grey;

@@ -66,8 +66,18 @@ class _InfoTabState extends State<InfoTab> {
     return Container(
       padding: CustomTheme().padding('card'),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            CustomTheme().buttonColor('primary'),
+            CustomTheme().buttonColor('primary').withOpacity(0.85),
+          ],
+        ),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -91,7 +101,7 @@ class _InfoTabState extends State<InfoTab> {
                                 fontSize: CustomTheme()
                                     .fontSize(isTablet ? '2xl' : 'xl'),
                                 fontWeight: CustomTheme().fontWeight('bold'),
-                                color: Colors.grey[800],
+                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -99,7 +109,7 @@ class _InfoTabState extends State<InfoTab> {
                             const SizedBox(width: 6),
                             Icon(
                               Icons.warning_amber_rounded,
-                              color: Colors.redAccent,
+                              color: Colors.redAccent[100],
                               size: isTablet ? 22 : 18,
                             ),
                           ],
@@ -113,7 +123,7 @@ class _InfoTabState extends State<InfoTab> {
                                 .format(DateTime.parse(widget.data['wo_date'])),
                         style: TextStyle(
                           fontSize: CustomTheme().fontSize('lg'),
-                          color: Colors.black.withOpacity(0.8),
+                          color: Colors.white.withOpacity(0.8),
                           fontWeight: CustomTheme().fontWeight('semibold'),
                         ),
                       ),

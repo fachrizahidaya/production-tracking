@@ -120,22 +120,6 @@ class _ProcessItemState extends State<ProcessItem> {
                               ),
                               Row(
                                 children: [
-                                  // Status Indicator
-                                  Container(
-                                    width: isTablet ? 8 : 6,
-                                    height: isTablet ? 8 : 6,
-                                    decoration: BoxDecoration(
-                                      color: Colors.orange,
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.orange.withOpacity(0.5),
-                                          blurRadius: 4,
-                                          spreadRadius: 1,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
                                   Text(
                                     // statusConfig['label'],
                                     'Menunggu Diproses',
@@ -354,7 +338,7 @@ class _ProcessItemState extends State<ProcessItem> {
               children: [
                 if (data['start_time'] != null)
                   _buildTimeItem(
-                    icon: Icons.play_circle_outline,
+                    icon: Icons.access_time_outlined,
                     label: 'Waktu Mulai',
                     value: _formatTime(data['start_time']),
                     color: Colors.green,
@@ -581,19 +565,12 @@ class _ProcessItemState extends State<ProcessItem> {
                 ),
               ),
               if (grade['qty'] != null) ...[
-                Container(
-                  padding: CustomTheme().padding('badge-rework'),
-                  decoration: BoxDecoration(
-                    color: Colors.purple.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    '${formatNumber(grade['qty'])} ${grade['unit_code']}',
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('xs'),
-                      fontWeight: CustomTheme().fontWeight('bold'),
-                      color: Colors.purple,
-                    ),
+                Text(
+                  '${formatNumber(grade['qty'])} ${grade['unit_code']}',
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('xs'),
+                    fontWeight: CustomTheme().fontWeight('bold'),
+                    color: Colors.purple,
                   ),
                 ),
               ],
@@ -611,17 +588,22 @@ class _ProcessItemState extends State<ProcessItem> {
     if (status.contains('Selesai')) {
       return {
         'label': 'Selesai',
-        'color': Colors.green,
+        'color': CustomTheme().colors('Selesai'),
+      };
+    } else if (status.contains('Dilewati')) {
+      return {
+        'label': 'Dilewati',
+        'color': CustomTheme().colors('primary'),
       };
     } else if (status.contains('Diproses')) {
       return {
         'label': 'Diproses',
-        'color': Colors.blue,
+        'color': CustomTheme().colors('Diproses'),
       };
     } else {
       return {
         'label': 'Menunggu Diproses',
-        'color': Colors.orange,
+        'color': CustomTheme().colors('secondary'),
       };
     }
   }

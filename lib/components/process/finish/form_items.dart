@@ -207,7 +207,7 @@ class _FormItemsState extends State<FormItems> {
                 label: 'Max Qty (PCS)',
                 isDisabled: true,
                 controller: TextEditingController(
-                  text: maxQty.toStringAsFixed(2),
+                  text: maxQty.toInt().toString(),
                 ),
               ),
             ),
@@ -217,7 +217,7 @@ class _FormItemsState extends State<FormItems> {
                 label: 'Persentase (%)',
                 isDisabled: true,
                 controller: TextEditingController(
-                  text: percentage.toStringAsFixed(2),
+                  text: percentage.round().toString(),
                 ),
               ),
             ),

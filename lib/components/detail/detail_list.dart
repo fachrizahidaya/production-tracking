@@ -68,7 +68,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header Section
-
                 _buildHeaderSection(isTablet),
 
                 // Main Content
@@ -91,16 +90,22 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       child: Container(
         padding: CustomTheme().padding('card'),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                CustomTheme().buttonColor('primary'),
+                CustomTheme().buttonColor('primary').withOpacity(0.8),
+              ],
             ),
-          ],
-        ),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: CustomTheme().buttonColor('primary').withOpacity(0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ]),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -120,7 +125,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                             style: TextStyle(
                               fontSize: isTablet ? 24 : 20,
                               fontWeight: CustomTheme().fontWeight('bold'),
-                              color: Colors.grey[800],
+                              color: Colors.white,
                             ),
                           ),
                           if (widget.data['rework'] == true)
@@ -154,7 +159,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                                 : '-',
                             style: TextStyle(
                               fontSize: CustomTheme().fontSize('lg'),
-                              color: Colors.black.withOpacity(0.8),
+                              color: Colors.white.withOpacity(0.8),
                               fontWeight: CustomTheme().fontWeight('semibold'),
                             ),
                           ),
@@ -190,9 +195,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     return Container(
       padding: EdgeInsets.all(isTablet ? 16 : 12),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: Colors.white.withOpacity(0.15),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[200]!),
       ),
       child: Row(
         children: [
@@ -242,21 +246,21 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         Icon(
           icon,
           size: isTablet ? 20 : 18,
-          color: CustomTheme().buttonColor('primary'),
+          color: Colors.white,
         ),
         Text(
           label,
           style: TextStyle(
             fontSize: CustomTheme().fontSize('sm'),
-            color: Colors.grey[800],
+            color: Colors.white.withOpacity(0.7),
           ),
         ),
         Text(
           value,
           style: TextStyle(
-            fontSize: isTablet ? 13 : 12,
-            fontWeight: FontWeight.w600,
-          ),
+              fontSize: isTablet ? 13 : 12,
+              fontWeight: FontWeight.w600,
+              color: Colors.white),
           textAlign: TextAlign.center,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -271,7 +275,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       width: 1,
       height: 40,
       margin: const EdgeInsets.symmetric(horizontal: 8),
-      color: Colors.black.withOpacity(0.2),
+      color: Colors.white.withOpacity(0.2),
     );
   }
 
@@ -618,7 +622,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     return Column(
       children: [
         _buildTimelineItem(
-          icon: Icons.play_circle_outline,
+          icon: Icons.access_time_outlined,
           iconColor: Colors.blue,
           title: 'Mulai Proses',
           time: widget.data['start_time'],

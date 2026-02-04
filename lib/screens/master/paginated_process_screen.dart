@@ -22,6 +22,8 @@ class PaginatedProcessScreen extends StatefulWidget {
   final Widget Function(dynamic item) itemBuilder;
   final ItemTapCallback onItemTap;
   final Widget filterWidget;
+  final void Function(Map<String, String> params)? onParamsChanged;
+  final Map<String, String> initialParams;
 
   final bool canRead;
   final bool canUpdate;
@@ -29,18 +31,19 @@ class PaginatedProcessScreen extends StatefulWidget {
 
   final List<DialogActionItem> fabActions;
 
-  const PaginatedProcessScreen({
-    super.key,
-    required this.title,
-    required this.fetchData,
-    required this.itemBuilder,
-    required this.onItemTap,
-    required this.filterWidget,
-    required this.canRead,
-    required this.canUpdate,
-    required this.canDelete,
-    required this.fabActions,
-  });
+  const PaginatedProcessScreen(
+      {super.key,
+      required this.title,
+      required this.fetchData,
+      required this.itemBuilder,
+      required this.onItemTap,
+      required this.filterWidget,
+      required this.canRead,
+      required this.canUpdate,
+      required this.canDelete,
+      required this.fabActions,
+      this.onParamsChanged,
+      required this.initialParams});
 
   @override
   State<PaginatedProcessScreen> createState() => _PaginatedProcessScreenState();
@@ -48,7 +51,7 @@ class PaginatedProcessScreen extends StatefulWidget {
 
 class _PaginatedProcessScreenState extends State<PaginatedProcessScreen> {
   final List<dynamic> _dataList = [];
-  Map<String, String> params = {'search': '', 'page': '0'};
+  late Map<String, String> params;
 
   bool _firstLoading = true;
   bool _hasMore = true;
@@ -61,6 +64,7 @@ class _PaginatedProcessScreenState extends State<PaginatedProcessScreen> {
   @override
   void initState() {
     super.initState();
+    params = Map.of(widget.initialParams);
     _loadMore();
   }
 
@@ -116,6 +120,28 @@ class _PaginatedProcessScreenState extends State<PaginatedProcessScreen> {
       params['page'] = '0';
       _isFiltered = _checkIsFiltered();
     });
+    _loadMore();
+  }
+
+  void updateParam(String key, String value) {
+    setState(() {
+      params['page'] = '0';
+
+      if (value.isEmpty) {
+        params.remove(key);
+      } else {
+        params[key] = value;
+      }
+
+      _isFiltered = _checkIsFiltered();
+    });
+
+    widget.onParamsChanged?.call(params);
+    _loadMore();
+  }
+
+  void submitFilter() {
+    Navigator.pop(context);
     _loadMore();
   }
 

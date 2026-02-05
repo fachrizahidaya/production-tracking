@@ -140,20 +140,6 @@ class _ItemProcessState extends State<ItemProcess> {
         ),
         child: Row(
           children: [
-            // Icon Container
-            Container(
-              padding: CustomTheme().padding('process-content'),
-              decoration: BoxDecoration(
-                color: statusConfig['color'].withOpacity(0.15),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Icon(
-                Icons.paste_outlined,
-                size: isTablet ? 28 : 24,
-                color: statusConfig['color'],
-              ),
-            ),
-
             // Item Info + Chevron
             Expanded(
               child: Column(
@@ -209,13 +195,13 @@ class _ItemProcessState extends State<ItemProcess> {
                       Row(
                         children: [
                           _buildQtyInfo(
-                            label: 'MAT',
+                            label: 'Qty Material',
                             value: widget.item['wo_qty'],
                             isTablet: isTablet,
                             unit: widget.item['wo_unit'],
                           ),
                           _buildQtyInfo(
-                            label: 'GREIGE',
+                            label: 'Qty Greige',
                             value: widget.item['greige_qty'],
                             isTablet: isTablet,
                             unit: widget.item['greige_unit'],
@@ -240,31 +226,39 @@ class _ItemProcessState extends State<ItemProcess> {
     );
   }
 
-  Widget _buildQtyInfo(
-      {required String label,
-      required dynamic value,
-      required bool isTablet,
-      unit}) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          '$label:',
-          style: TextStyle(
-            fontSize: isTablet ? 11 : 10,
-            color: Colors.grey[500],
+  Widget _buildQtyInfo({
+    required String label,
+    required dynamic value,
+    required bool isTablet,
+    unit,
+  }) {
+    return Container(
+      padding: CustomTheme().padding('badge-rework'),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '$label:',
+            style: TextStyle(
+              fontSize: isTablet ? 11 : 10,
+              color: Colors.grey[500],
+            ),
           ),
-        ),
-        const SizedBox(width: 4),
-        Text(
-          '${value?.toString()} ${unit.toString()}' ?? '-',
-          style: TextStyle(
-            fontSize: isTablet ? 12 : 11,
-            fontWeight: FontWeight.w600,
-            color: Colors.grey[700],
+          const SizedBox(width: 4),
+          Text(
+            '${value?.toString() ?? '-'} ${unit ?? ''}',
+            style: TextStyle(
+              fontSize: isTablet ? 12 : 11,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[700],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -953,18 +947,6 @@ class _ItemProcessState extends State<ItemProcess> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: CustomTheme().padding('process-content'),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Icon(
-                  Icons.layers_outlined,
-                  size: isTablet ? 20 : 18,
-                  color: Colors.blue,
-                ),
-              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1034,7 +1016,7 @@ class _ItemProcessState extends State<ItemProcess> {
     if (processes.isEmpty) return 'Menunggu Diproses';
 
     final statuses = processes.values
-        .map((p) => (p['status']?.toString().toLowerCase() ?? 'pending'))
+        .map((p) => (p['status']?.toString().toLowerCase() ?? 'waiting'))
         .toList();
 
     if (statuses.every((s) => s == 'completed' || s == 'Selesai')) {
@@ -1053,29 +1035,29 @@ class _ItemProcessState extends State<ItemProcess> {
       case 'Selesai':
         return {
           'label': 'Selesai',
-          'color': Colors.green,
-          'icon': Icons.check_circle_outline,
+          'color': CustomTheme().colors('Selesai'),
+          'icon': Icons.task_alt_outlined,
         };
       case 'in_progress':
       case 'Diproses':
         return {
           'label': 'Diproses',
-          'color': Colors.blue,
-          'icon': Icons.hourglass_top_outlined,
+          'color': CustomTheme().colors('Diproses'),
+          'icon': Icons.access_time_outlined,
         };
-      case 'waiting':
-      case 'Menunggu Diproses':
+      case 'skipped':
+      case 'Dilewati':
         return {
-          'label': 'Menunggu Diproses',
-          'color': Colors.grey,
-          'icon': Icons.hourglass_top_outlined,
+          'label': 'Dilewati',
+          'color': CustomTheme().colors('primary'),
+          'icon': Icons.fast_forward_outlined,
         };
 
       default:
         return {
           'label': 'Menunggu Diproses',
-          'color': Colors.orange,
-          'icon': Icons.schedule_outlined,
+          'color': CustomTheme().colors('secondary'),
+          'icon': Icons.error_outline,
         };
     }
   }
@@ -1086,22 +1068,22 @@ class _ItemProcessState extends State<ItemProcess> {
       case 'selesai':
         return {
           'label': 'Selesai',
-          'color': Colors.green,
-          'icon': Icons.check,
+          'color': CustomTheme().colors('Selesai'),
+          'icon': Icons.task_alt_outlined,
         };
       case 'in_progress':
       case 'Diproses':
         return {
           'label': 'Diproses',
-          'color': Colors.blue,
-          'icon': Icons.sync,
+          'color': CustomTheme().colors('Diproses'),
+          'icon': Icons.access_time_outlined,
         };
 
       default:
         return {
           'label': 'Menunggu Diproses',
-          'color': Colors.grey,
-          'icon': Icons.schedule,
+          'color': CustomTheme().colors('secondary'),
+          'icon': Icons.error_outline,
         };
     }
   }

@@ -150,8 +150,14 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       return NoData();
     }
 
+    final isSingleItem = widget.data!.length == 1;
+    final screenWidth = MediaQuery.of(context).size.width * 0.9;
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
+      physics: isSingleItem
+          ? NeverScrollableScrollPhysics()
+          : BouncingScrollPhysics(),
       child: Row(
         children: widget.data!.map<Widget>((item) {
           final mappedItem = _mapApiToSummaryCard(item);
@@ -159,7 +165,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
           return Padding(
             padding: CustomTheme().padding('card'),
             child: SizedBox(
-              width: 500,
+              width: isSingleItem ? screenWidth : 500,
               child: SummaryCard(
                 data: mappedItem,
                 showProgress: _showProgress,

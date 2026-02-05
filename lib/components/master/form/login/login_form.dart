@@ -77,7 +77,7 @@ class _LoginFormState extends State<LoginForm> {
             ].separatedBy(CustomTheme().vGap('2xl')),
           ),
           Text(
-            'v.${dotenv.env['APP_VERSION']!}',
+            'Version ${dotenv.env['APP_VERSION']!}',
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: CustomTheme().fontSize('lg'),

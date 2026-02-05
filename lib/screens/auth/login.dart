@@ -149,24 +149,38 @@ class _LoginState extends State<Login> {
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      child: Scaffold(
-          backgroundColor: const Color(0xFFEBEBEB),
-          body: SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                child: LoginForm(
-                  key: _key,
-                  username: _username,
-                  password: _password,
-                  isDisabled: !_isFormValid,
-                  isLoading: _isLoading,
-                  handlePress: () {
-                    _handleSubmit(context);
-                  },
+      child: Stack(
+        children: [
+          // 🔹 Background Image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/login-bg.jpg',
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          // 🔹 Your existing UI
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            body: SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  child: LoginForm(
+                    key: _key,
+                    username: _username,
+                    password: _password,
+                    isDisabled: !_isFormValid,
+                    isLoading: _isLoading,
+                    handlePress: () {
+                      _handleSubmit(context);
+                    },
+                  ),
                 ),
               ),
             ),
-          )),
+          ),
+        ],
+      ),
     );
   }
 }

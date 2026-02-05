@@ -632,9 +632,33 @@ class _ProcessItemState extends State<ProcessItem> {
 
   String _formatTime(dynamic time) {
     if (time == null) return '-';
+
     try {
       final dateTime = DateTime.parse(time.toString());
-      return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+
+      const months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
+
+      final day = dateTime.day.toString().padLeft(2, '0');
+      final month = months[dateTime.month - 1];
+      final year = dateTime.year;
+
+      final hour = dateTime.hour.toString().padLeft(2, '0');
+      final minute = dateTime.minute.toString().padLeft(2, '0');
+
+      return '$day $month $year, $hour.$minute';
     } catch (e) {
       return time.toString();
     }

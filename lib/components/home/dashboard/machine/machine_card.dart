@@ -382,7 +382,7 @@ class MachineCard extends StatelessWidget {
     if (type.contains('press')) return Icons.layers_outlined;
     if (type.contains('tumbler')) return Icons.dry_cleaning_outlined;
     if (type.contains('stenter')) return Icons.air;
-    if (type.contains('long sitting')) return Icons.content_paste_outlined;
+    if (type.contains('long slitting')) return Icons.content_paste_outlined;
     if (type.contains('long hemming')) return Icons.cut_outlined;
     if (type.contains('cross cutting')) return Icons.cut_outlined;
     if (type.contains('sewing')) return Icons.link_outlined;

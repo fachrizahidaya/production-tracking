@@ -1114,7 +1114,7 @@ class _ItemProcessState extends State<ItemProcess> {
           'icon': Icons.air_outlined,
           'color': Colors.indigo,
         };
-      case 'long_sitting':
+      case 'long_slitting':
         return {
           'title': 'Long Slitting',
           'icon': Icons.content_paste_outlined,
@@ -1177,7 +1177,7 @@ class _ItemProcessState extends State<ItemProcess> {
       'press',
       'tumbler',
       'stenter',
-      'long_sitting',
+      'long_slitting',
       'long_hemming',
       'cross_cutting',
       'sewing',

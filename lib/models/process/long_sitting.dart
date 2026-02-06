@@ -115,7 +115,7 @@ class LongSitting {
 class LongSittingService extends BaseCrudService<LongSitting> {
   LongSittingService()
       : super(
-          endpoint: 'long-sittings',
+          endpoint: 'long-slittings',
           fromJson: (json) => LongSitting.fromJson(json),
           toJson: (item) => item.toJson(),
         );

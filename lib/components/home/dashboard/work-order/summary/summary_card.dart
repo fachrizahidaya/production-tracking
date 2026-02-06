@@ -714,7 +714,7 @@ class _SummaryCardState extends State<SummaryCard>
     if (lowerName.contains('stenter')) {
       return Icons.air_outlined;
     }
-    if (lowerName.contains('long sitting')) {
+    if (lowerName.contains('long slitting')) {
       return Icons.content_paste_outlined;
     }
     if (lowerName.contains('long hemming')) {

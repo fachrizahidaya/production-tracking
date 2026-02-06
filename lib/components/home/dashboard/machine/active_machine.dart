@@ -51,7 +51,7 @@ class _ActiveMachineState extends State<ActiveMachine>
       'Press',
       'Tumbler',
       'Stenter',
-      'Long Sitting',
+      'Long Slitting',
       'Long Hemming',
       'Cross Cutting',
       'Sewing',

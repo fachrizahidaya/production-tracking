@@ -126,7 +126,7 @@ class MyApp extends StatelessWidget {
         '/press': (context) => const PressTumblerScreen(),
         '/tumblers': (context) => const TumblerScreen(),
         '/stenters': (context) => const StenterScreen(),
-        '/long-sittings': (context) => const LongSittingScreen(),
+        '/long-slittings': (context) => const LongSittingScreen(),
         '/long-hemmings': (context) => const LongHemmingScreen(),
         '/cross-cuttings': (context) => const CrossCuttingScreen(),
         '/sewings': (context) => const SewingScreen(),

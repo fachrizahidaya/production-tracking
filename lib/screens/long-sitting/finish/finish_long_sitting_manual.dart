@@ -39,8 +39,8 @@ class _FinishLongSittingManualState extends State<FinishLongSittingManual> {
   void initState() {
     widget.form?['length'] ??= '0';
     widget.form?['width'] ??= '0';
-    widget.form?['length_unit_id'] ??= 4;
-    widget.form?['width_unit_id'] ??= 4;
+    widget.form?['length_unit_id'] ??= 3;
+    widget.form?['width_unit_id'] ??= 3;
 
     super.initState();
   }
@@ -63,7 +63,7 @@ class _FinishLongSittingManualState extends State<FinishLongSittingManual> {
       getWorkOrderOptions: (service) => service.dataListOption,
       processService: _longSittingService,
       handleChangeInput: widget.handleChangeInput,
-      idProcess: 'long_sitting_id',
+      idProcess: 'long_slitting_id',
       processId: widget.processId,
       forDyeing: widget.forDyeing,
       withItemGrade: widget.withItemGrade,

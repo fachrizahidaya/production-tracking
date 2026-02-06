@@ -59,7 +59,7 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
-      route: '/long-sittings',
+      route: '/long-slittings',
       fetchMachine: (service) => service.fetchOptionsLongSitting(),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,

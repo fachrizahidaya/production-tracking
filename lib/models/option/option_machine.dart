@@ -131,7 +131,7 @@ class OptionMachineService extends BaseService<OptionMachine> {
   }
 
   Future<void> fetchOptionsLongSitting() async {
-    await _fetchOptionsGeneric(process: 'long_sitting');
+    await _fetchOptionsGeneric(process: 'long_slitting');
   }
 
   Future<void> fetchOptionsLongHemming() async {

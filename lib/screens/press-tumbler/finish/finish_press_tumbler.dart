@@ -34,7 +34,6 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
     'weight_unit_id': null,
     'width_unit_id': null,
     'length_unit_id': null,
-    'rework_reference_id': null,
     'start_by_id': null,
     'end_by_id': null,
     'weight': null,

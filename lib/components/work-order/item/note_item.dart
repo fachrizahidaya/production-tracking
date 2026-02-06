@@ -305,7 +305,7 @@ class _NoteItemState extends State<NoteItem>
         'color': Colors.blueGrey,
       };
     }
-    if (lowerLabel.contains('long sitting')) {
+    if (lowerLabel.contains('long slitting')) {
       return {
         'label': 'Long Slitting',
         'icon': Icons.content_paste_outlined,
@@ -563,7 +563,7 @@ class CompactNoteItem extends StatelessWidget {
         'color': Colors.blueGrey,
       };
     }
-    if (lowerLabel.contains('long sitting')) {
+    if (lowerLabel.contains('long slitting')) {
       return {
         'label': 'Long Slitting',
         'icon': Icons.content_paste_outlined,

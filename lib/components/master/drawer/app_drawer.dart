@@ -22,7 +22,7 @@ class _AppDrawerState extends State<AppDrawer> {
     'Press',
     'Tumbler',
     'Stenter',
-    'Long Sitting',
+    'Long Slitting',
     'Long Hemming',
     'Cross Cutting',
     'Sewing',
@@ -127,7 +127,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   ? Icons.dry_outlined
                                   : item.title == 'Stenter'
                                       ? Icons.air
-                                      : item.title == 'Long Sitting'
+                                      : item.title == 'Long Slitting'
                                           ? Icons.cut_outlined
                                           : item.title == 'Long Hemming'
                                               ? Icons.link_outlined

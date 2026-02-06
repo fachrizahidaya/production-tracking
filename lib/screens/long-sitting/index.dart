@@ -88,9 +88,9 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
       await _userMenu.handleLoadMenu();
 
       setState(() {
-        _canRead = _userMenu.checkMenu('Long Sitting', 'read');
-        _canDelete = _userMenu.checkMenu('Long Sitting', 'delete');
-        _canUpdate = _userMenu.checkMenu('Long Sitting', 'update');
+        _canRead = _userMenu.checkMenu('Long Slitting', 'read');
+        _canDelete = _userMenu.checkMenu('Long Slitting', 'delete');
+        _canUpdate = _userMenu.checkMenu('Long Slitting', 'update');
       });
     } catch (e) {
       throw Exception('Error initializing menus: $e');

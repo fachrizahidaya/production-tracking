@@ -616,7 +616,7 @@ class _ProcessItemState extends State<ProcessItem> {
     if (lowerLabel.contains('press')) return Icons.layers_outlined;
     if (lowerLabel.contains('tumbler')) return Icons.dry_cleaning_outlined;
     if (lowerLabel.contains('stenter')) return Icons.air;
-    if (lowerLabel.contains('long sitting')) {
+    if (lowerLabel.contains('long slitting')) {
       return Icons.content_paste_outlined;
     }
     if (lowerLabel.contains('long hemming')) return Icons.cut_outlined;

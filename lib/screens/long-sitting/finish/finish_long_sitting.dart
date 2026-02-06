@@ -106,7 +106,7 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
                 .finishItem(id, longSitting, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(
-            context, '/long-sittings', (_) => false);
+            context, '/long-slittings', (_) => false);
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showAlertDialog(

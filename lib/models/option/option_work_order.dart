@@ -223,7 +223,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
   }) async {
     await _fetchOptionsGeneric(
       isInitialLoad: isInitialLoad,
-      type: 'long_sitting',
+      type: 'long_slitting',
       searchQuery: searchQuery,
     );
   }
@@ -234,7 +234,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
   }) async {
     await _fetchOptionsGeneric(
       isInitialLoad: isInitialLoad,
-      type: 'long_sitting_finish',
+      type: 'long_slitting_finish',
       searchQuery: searchQuery,
     );
   }

@@ -30,7 +30,7 @@ class CreateLongSittingManual extends StatelessWidget {
       data: data,
       form: form,
       processId: processId,
-      idProcess: 'long_sitting_id',
+      idProcess: 'long_slitting_id',
       processService: longSittingService,
       handleSubmit: handleSubmit,
       fetchWorkOrder: (service) => service.fetchLongSittingOptions(),

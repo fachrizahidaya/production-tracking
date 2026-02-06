@@ -40,7 +40,7 @@ class CreateLongSitting extends StatelessWidget {
             .addItem(longSitting, isLoading);
 
     Navigator.pushNamedAndRemoveUntil(
-        context, '/long-sittings', (route) => false);
+        context, '/long-slittings', (route) => false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(

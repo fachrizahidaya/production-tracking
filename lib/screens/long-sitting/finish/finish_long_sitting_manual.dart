@@ -63,7 +63,7 @@ class _FinishLongSittingManualState extends State<FinishLongSittingManual> {
       getWorkOrderOptions: (service) => service.dataListOption,
       processService: _longSittingService,
       handleChangeInput: widget.handleChangeInput,
-      idProcess: 'long_sitting_id',
+      idProcess: 'long_slitting_id',
       processId: widget.processId,
       forDyeing: widget.forDyeing,
       withItemGrade: widget.withItemGrade,

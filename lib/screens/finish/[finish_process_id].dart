@@ -119,6 +119,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   Future<void> _postInit() async {
+    setState(() {
+      _firstLoading = true;
+    });
+
     if (widget.processId != null) {
       await _getProcessView(widget.processId);
     }
@@ -126,6 +130,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     await _handleFetchWorkOrder();
     await _handleFetchItemGrade();
     await _handleFetchUnit();
+
+    setState(() {
+      _firstLoading = false;
+    });
   }
 
   Future<void> _handleFetchWorkOrder() async {
@@ -775,53 +783,58 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                   ]),
                 ),
                 Expanded(
-                  child: TabBarView(children: [
-                    FinishFormTab(
-                      id: widget.id,
-                      isLoading: _firstLoading,
-                      form: widget.form,
-                      formKey: _formKey,
-                      handleSelectMachine: null,
-                      handleSelectWorkOrder: _selectWorkOrder,
-                      handleSelectLengthUnit: _selectLengthUnit,
-                      handleChangeInput: widget.handleChangeInput,
-                      handleSelectUnit: _selectUnit,
-                      handleSelectWidthUnit: _selectWidthUnit,
-                      qty: _qtyItemController,
-                      length: _lengthController,
-                      width: _widthController,
-                      note: _noteController,
-                      qtyItem: _qtyControllers,
-                      weight: _weightController,
-                      gsm: _gsmController,
-                      weightDozen: _weightDozenController,
-                      totalWeight: _totalWeightController,
-                      handleSelectWo: _selectWorkOrder,
-                      handleSelectQtyUnitItem: _selectQtyItemUnit,
-                      handleSelectQtyUnitDyeing: _selectQtyDyeingUnit,
-                      processId: processId,
-                      processData: data,
-                      withItemGrade: widget.withItemGrade,
-                      itemGradeOption: itemGradeOption,
-                      handleSelectQtyUnit: _selectQtyUnit,
-                      withQtyAndWeight: widget.withQtyAndWeight,
-                      label: widget.label,
-                      forDyeing: widget.forDyeing,
-                      data: data['work_orders'],
-                      forPacking: widget.forPacking,
-                      validateWeight: _validateWeight,
-                      weightWarning: _weightWarningValidationMessage,
-                      validateQty: _validateQty,
-                      qtyWarning: _itemWarningValidationMessage,
-                      handleRemainingQtyForGrade: getRemainingQtyForGrade,
-                      handleTotalItemQty: getTotalItemQty,
-                      onGradeChanged: _onGradeChanged,
-                    ),
-                    WorkOrderInfoTab(
-                      data: data['work_orders'],
-                      label: widget.label,
-                    ),
-                  ]),
+                  child: TabBarView(
+                    children: [
+                      _firstLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : FinishFormTab(
+                              id: widget.id,
+                              isLoading: _firstLoading,
+                              form: widget.form,
+                              formKey: _formKey,
+                              handleSelectMachine: null,
+                              handleSelectWorkOrder: _selectWorkOrder,
+                              handleSelectLengthUnit: _selectLengthUnit,
+                              handleChangeInput: widget.handleChangeInput,
+                              handleSelectUnit: _selectUnit,
+                              handleSelectWidthUnit: _selectWidthUnit,
+                              qty: _qtyItemController,
+                              length: _lengthController,
+                              width: _widthController,
+                              note: _noteController,
+                              qtyItem: _qtyControllers,
+                              weight: _weightController,
+                              gsm: _gsmController,
+                              weightDozen: _weightDozenController,
+                              totalWeight: _totalWeightController,
+                              handleSelectWo: _selectWorkOrder,
+                              handleSelectQtyUnitItem: _selectQtyItemUnit,
+                              handleSelectQtyUnitDyeing: _selectQtyDyeingUnit,
+                              processId: processId,
+                              processData: data,
+                              withItemGrade: widget.withItemGrade,
+                              itemGradeOption: itemGradeOption,
+                              handleSelectQtyUnit: _selectQtyUnit,
+                              withQtyAndWeight: widget.withQtyAndWeight,
+                              label: widget.label,
+                              forDyeing: widget.forDyeing,
+                              data: data['work_orders'],
+                              forPacking: widget.forPacking,
+                              validateWeight: _validateWeight,
+                              weightWarning: _weightWarningValidationMessage,
+                              validateQty: _validateQty,
+                              qtyWarning: _itemWarningValidationMessage,
+                              handleRemainingQtyForGrade:
+                                  getRemainingQtyForGrade,
+                              handleTotalItemQty: getTotalItemQty,
+                              onGradeChanged: _onGradeChanged,
+                            ),
+                      WorkOrderInfoTab(
+                        data: data['work_orders'],
+                        label: widget.label,
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),

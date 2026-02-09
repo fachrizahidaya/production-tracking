@@ -81,25 +81,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               }
             },
             itemBuilder: (context) => [
-              // if (canUpdate == true )
-              //   PopupMenuItem(
-              //     value: 'finish',
-              //     child: Text('Selesai Proses'),
-              //   ),
-              if (canUpdate == true &&
-                  (label != 'Sorting' || label != 'Packing'))
-                PopupMenuItem(
-                  value: 'update',
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.edit_outlined,
-                        size: 14,
-                      ),
-                      Text('Edit'),
-                    ].separatedBy(CustomTheme().hGap('sm')),
+              if (canUpdate == true)
+                //   PopupMenuItem(
+                //     value: 'finish',
+                //     child: Text('Selesai Proses'),
+                //   ),
+                if (canUpdate == true &&
+                    (label != 'Sorting' || label != 'Packing'))
+                  PopupMenuItem(
+                    value: 'update',
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.edit_outlined,
+                          size: 14,
+                        ),
+                        Text('Edit'),
+                      ].separatedBy(CustomTheme().hGap('sm')),
+                    ),
                   ),
-                ),
               if (canDelete == true)
                 PopupMenuItem(
                   value: 'delete',
@@ -113,74 +113,74 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ],
           ),
         if (isTextEditor)
-          IconButton(
-            icon: const Icon(Icons.check),
-            onPressed: () {
-              handleSave();
-            },
-          ),
-        if (isWithNotification)
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {
-              Navigator.pushNamed(context, '/notification');
-            },
-          ),
-        if (isWithAccount)
-          PopupMenuButton<String>(
-            icon: CircleAvatar(
-              radius: 16,
-              backgroundColor: CustomTheme().colors('primary'),
-              child: Text(
-                getInitial(name),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: CustomTheme().fontSize('sm'),
-                ),
-              ),
-            ),
-            color: Colors.white,
-            offset: const Offset(0, 40),
-            onSelected: (value) {
-              if (value == 'logout') {
-                handleLogout();
-              }
-              if (value == 'account') {
-                Navigator.pushNamed(context, '/account');
-              }
-              if (value == 'user') {}
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'user',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
+          //   IconButton(
+          //     icon: const Icon(Icons.check),
+          //     onPressed: () {
+          //       handleSave();
+          //     },
+          //   ),
+          if (isWithNotification)
+            //   IconButton(
+            //     icon: const Icon(Icons.notifications_outlined),
+            //     onPressed: () {
+            //       Navigator.pushNamed(context, '/notification');
+            //     },
+            //   ),
+            if (isWithAccount)
+              PopupMenuButton<String>(
+                icon: CircleAvatar(
+                  radius: 16,
+                  backgroundColor: CustomTheme().colors('primary'),
+                  child: Text(
+                    getInitial(name),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: CustomTheme().fontSize('sm'),
                     ),
-                    Text(
-                      '@$user',
-                      style: TextStyle(
-                          fontSize: CustomTheme().fontSize('sm'),
-                          color: CustomTheme().colors('secondary')),
+                  ),
+                ),
+                color: Colors.white,
+                offset: const Offset(0, 40),
+                onSelected: (value) {
+                  if (value == 'logout') {
+                    handleLogout();
+                  }
+                  if (value == 'account') {
+                    Navigator.pushNamed(context, '/account');
+                  }
+                  if (value == 'user') {}
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 'user',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          name,
+                        ),
+                        Text(
+                          '@$user',
+                          style: TextStyle(
+                              fontSize: CustomTheme().fontSize('sm'),
+                              color: CustomTheme().colors('secondary')),
+                        ),
+                      ].separatedBy(CustomTheme().vGap('sm')),
                     ),
-                  ].separatedBy(CustomTheme().vGap('sm')),
-                ),
+                  ),
+                  PopupMenuItem(
+                    value: 'account',
+                    child: Text('Account'),
+                  ),
+                  PopupMenuItem(
+                    value: 'logout',
+                    child: Text(
+                      'Log Out',
+                    ),
+                  ),
+                ],
               ),
-              PopupMenuItem(
-                value: 'account',
-                child: Text('Account'),
-              ),
-              PopupMenuItem(
-                value: 'logout',
-                child: Text(
-                  'Log Out',
-                ),
-              ),
-            ],
-          ),
         ...?actions
       ],
       bottom: PreferredSize(

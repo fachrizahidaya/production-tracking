@@ -11,6 +11,7 @@ import 'package:textile_tracking/helpers/util/format_html.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/dyeing/%5Bdyeing_id%5D.dart';
+import 'package:textile_tracking/screens/dyeing/finish/finish_dyeing_manual.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class DetailList extends StatefulWidget {
@@ -27,6 +28,8 @@ class DetailList extends StatefulWidget {
   final label;
   final forDyeing;
   final maklon;
+  final handleUpdate;
+  final handleDelete;
 
   const DetailList(
       {super.key,
@@ -42,7 +45,9 @@ class DetailList extends StatefulWidget {
       this.withItemGrade = false,
       this.withQtyAndWeight = false,
       this.maklon,
-      this.withMaklon});
+      this.withMaklon,
+      this.handleUpdate,
+      this.handleDelete});
 
   @override
   State<DetailList> createState() => _DetailListState();
@@ -67,6 +72,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (widget.data['can_update'] == true ||
+                    widget.data['can_delete'] == true)
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: _buildActionButtons(isTablet),
+                  ),
+
                 // Header Section
                 _buildHeaderSection(isTablet),
 
@@ -83,7 +95,97 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     );
   }
 
-  /// Header Section dengan Work Order Info
+  Widget _buildActionButtons(bool isTablet) {
+    return Padding(
+      padding: CustomTheme().padding('card-detail'),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          if (widget.data['can_update'] == true)
+            // ElevatedButton.icon(
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => FinishDyeingManual(
+            //           id: widget.data['wo_id'], // id proses / wo
+            //           data: widget.data['work_orders'], // data work order
+            //           form: {}, // form awal (kosong atau prefill)
+            //           processId: widget.data['id'], // kalau ada
+            //           forDyeing: true, // flag sesuai kebutuhan
+            //           withItemGrade: true,
+            //           withQtyAndWeight: true,
+            //           forPacking: false,
+            //           handleSubmit: (form) async {
+            //             // optional: submit logic
+            //           },
+            //           handleChangeInput: (key, value) {
+            //             // optional: handle perubahan input
+            //           },
+            //         ),
+            //       ),
+            //     );
+            //   },
+            //   icon: Icon(
+            //     Icons.check_circle_outline,
+            //     color: Colors.white,
+            //   ),
+            //   label: Text('Selesai ${widget.label}'),
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: Colors.green,
+            //     foregroundColor: Colors.white,
+            //     padding: EdgeInsets.symmetric(
+            //       horizontal: isTablet ? 20 : 16,
+            //       vertical: 12,
+            //     ),
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(8),
+            //     ),
+            //   ),
+            // ),
+            if (widget.data['can_update'] == true)
+              ElevatedButton.icon(
+                onPressed: () {
+                  widget.handleUpdate();
+                },
+                icon: Icon(Icons.edit_outlined, color: Colors.white),
+                label: Text('Edit ${widget.label}'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isTablet ? 20 : 16,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+          if (widget.data['can_delete'] == true)
+            ElevatedButton.icon(
+              onPressed: () {
+                widget.handleDelete(widget.data['id'].toString());
+              },
+              icon: Icon(Icons.delete_outline, color: Colors.white),
+              label: Text('Hapus ${widget.label}'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(
+                  horizontal: isTablet ? 20 : 16,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+        ].separatedBy(CustomTheme().hGap('md')),
+      ),
+    );
+  }
+
   Widget _buildHeaderSection(bool isTablet) {
     return Padding(
       padding: CustomTheme().padding('content'),

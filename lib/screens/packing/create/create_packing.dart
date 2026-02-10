@@ -36,7 +36,7 @@ class CreatePacking extends StatelessWidget {
     );
 
     final message = await Provider.of<PackingService>(context, listen: false)
-        .addItem(packing, isLoading);
+        .addItem(context, packing, isLoading);
 
     Navigator.pushNamedAndRemoveUntil(context, '/packings', (route) => false);
 

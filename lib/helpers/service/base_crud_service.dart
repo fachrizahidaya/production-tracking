@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
+import 'package:textile_tracking/providers/api_client.dart';
 
 abstract class BaseCrudService<T> extends ChangeNotifier {
   final String endpoint;
@@ -30,6 +32,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
   Map<String, dynamic> get dataView => _dataView;
 
   Future<void> fetchItems({
+    required BuildContext context,
     bool isInitialLoad = false,
     String searchQuery = '',
   }) async {
@@ -52,10 +55,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       final url = Uri.parse(
           '$baseUrl/$endpoint?page=$_currentPage&search=$searchQuery');
 
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      });
+      final response = await ApiClient.instance.get(
+        context,
+        url,
+      );
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
@@ -82,12 +85,15 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
-  Future<void> refetchItems() async {
+  Future<void> refetchItems(BuildContext context) async {
     _hasMoreData = true;
-    await fetchItems(isInitialLoad: true);
+    await fetchItems(
+      context: context,
+      isInitialLoad: true,
+    );
   }
 
-  Future<void> getDataView(dynamic id) async {
+  Future<void> getDataView(BuildContext context, dynamic id) async {
     final url = Uri.parse('$baseUrl/$endpoint/$id');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('access_token');
@@ -96,9 +102,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       _dataView = {};
       notifyListeners();
 
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await ApiClient.instance.get(
+        context,
+        url,
+      );
 
       if (response.statusCode == 200) {
         _dataView = jsonDecode(response.body);
@@ -111,7 +118,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
-  Future<void> getDataList(Map<String, String> params) async {
+  Future<void> getDataList(
+    BuildContext context,
+    Map<String, String> params,
+  ) async {
     final url =
         Uri.parse('$baseUrl/$endpoint').replace(queryParameters: params);
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -121,9 +131,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       items.clear();
       notifyListeners();
 
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await ApiClient.instance.get(
+        context,
+        url,
+      );
 
       final responseData = jsonDecode(response.body);
       switch (response.statusCode) {
@@ -141,7 +152,8 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
-  Future<String> addItem(T newItem, ValueNotifier<bool> isSubmitting) async {
+  Future<String> addItem(
+      BuildContext context, T newItem, ValueNotifier<bool> isSubmitting) async {
     isSubmitting.value = true;
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -149,16 +161,15 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       final uri = Uri.parse('$baseUrl/$endpoint');
 
-      final response = await http.post(uri,
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode(toJson(newItem)));
+      final response = await ApiClient.instance.post(
+        context,
+        uri,
+        body: jsonEncode(toJson(newItem)),
+      );
 
       if (response.statusCode == 201) {
         final res = jsonDecode(response.body);
-        await refetchItems();
+        await refetchItems(context);
         return res['message'] ?? 'Proses telah ditambahkan';
       } else {
         final error = jsonDecode(response.body);
@@ -171,8 +182,8 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
-  Future<String> updateItem(
-      String id, T updatedItem, ValueNotifier<bool> isSubmitting) async {
+  Future<String> updateItem(BuildContext context, String id, T updatedItem,
+      ValueNotifier<bool> isSubmitting) async {
     isSubmitting.value = true;
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -196,7 +207,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         );
 
         if (response.statusCode == 200) {
-          await refetchItems();
+          await refetchItems(context);
           return jsonDecode(response.body)['message'];
         } else {
           final error = jsonDecode(response.body);
@@ -211,6 +222,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
   }
 
   Future<String> finishItem(
+    BuildContext context,
     String id,
     T finishedItem,
     ValueNotifier<bool> isSubmitting,
@@ -285,7 +297,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         final body = await response.stream.bytesToString();
 
         if (response.statusCode == 200) {
-          await refetchItems();
+          await refetchItems(context);
           return jsonDecode(body)['message'] ?? 'Proses telah selesai';
         } else {
           throw Exception(
@@ -307,7 +319,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         );
 
         if (response.statusCode == 200) {
-          await refetchItems();
+          await refetchItems(context);
           return jsonDecode(response.body)['message'];
         } else {
           final error = jsonDecode(response.body);
@@ -321,8 +333,8 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
-  Future<String> reworkItem(
-      String id, Dyeing reworkedItem, ValueNotifier<bool> isSubmitting) async {
+  Future<String> reworkItem(BuildContext context, String id,
+      Dyeing reworkedItem, ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -344,7 +356,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         );
 
         if (response.statusCode == 201) {
-          await refetchItems();
+          await refetchItems(context);
           return jsonDecode(response.body)['message'];
         } else {
           final error = jsonDecode(response.body);
@@ -358,22 +370,20 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
-  Future<String> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {
+  Future<String> deleteItem(
+      BuildContext context, String id, ValueNotifier<bool> isSubmitting) async {
     isSubmitting.value = true;
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('access_token');
 
-      final response = await http.delete(
+      final response = await ApiClient.instance.delete(
+        context,
         Uri.parse('$baseUrl/$endpoint/$id'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
       );
 
       if (response.statusCode == 200) {
-        await refetchItems();
+        await refetchItems(context);
         final res = jsonDecode(response.body);
         return res['message'];
       } else {

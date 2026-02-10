@@ -84,7 +84,7 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
   }
 
   Future<void> _intializeMenus() async {
-    await _menuService.handleFetchMenu();
+    await _menuService.handleFetchMenu(context);
     await _userMenu.handleLoadMenu();
 
     setState(() {
@@ -147,7 +147,7 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
     });
 
     await Provider.of<EmbroideryService>(context, listen: false)
-        .getDataList(params);
+        .getDataList(context, params);
 
     List<dynamic> loadData =
         Provider.of<EmbroideryService>(context, listen: false).items;
@@ -224,7 +224,7 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
               fetchData: (params) async {
                 final service =
                     Provider.of<EmbroideryService>(context, listen: false);
-                await service.getDataList(params);
+                await service.getDataList(context, params);
                 return service.items;
               },
               canRead: _canRead,
@@ -307,7 +307,7 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const FinishEmbroidery(),
+                                builder: (context) => FinishEmbroidery(),
                               ),
                             );
                           },

@@ -32,10 +32,10 @@ class _PressTumblerDetailState extends State<PressTumblerDetail> {
       service: Provider.of<PressTumblerService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<PressTumblerService>(context, listen: false)
-              .updateItem(id, item, isLoading),
+              .updateItem(context, id, item, isLoading),
       handleDeleteService: (context, id, isLoading) =>
           Provider.of<PressTumblerService>(context, listen: false)
-              .deleteItem(id, isLoading),
+              .deleteItem(context, id, isLoading),
       modelBuilder: (form, data) => PressTumbler(
         wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
         weight_unit_id: form['weight_unit_id'] != null

@@ -99,7 +99,7 @@ class _FinishSortingState extends State<FinishSorting> {
 
         final message =
             await Provider.of<SortingService>(context, listen: false)
-                .finishItem(id, sorting, isLoading);
+                .finishItem(context, id, sorting, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(context, '/sortings', (_) => false);
 

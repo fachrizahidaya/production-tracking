@@ -37,7 +37,7 @@ class CreateLongSitting extends StatelessWidget {
 
     final message =
         await Provider.of<LongSittingService>(context, listen: false)
-            .addItem(longSitting, isLoading);
+            .addItem(context, longSitting, isLoading);
 
     Navigator.pushNamedAndRemoveUntil(
         context, '/long-slittings', (route) => false);

@@ -108,7 +108,7 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
 
         final message =
             await Provider.of<PressTumblerService>(context, listen: false)
-                .finishItem(id, press, isLoading);
+                .finishItem(context, id, press, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(context, '/press', (_) => false);
 

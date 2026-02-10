@@ -32,10 +32,10 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       service: Provider.of<LongSittingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<LongSittingService>(context, listen: false)
-              .updateItem(id, item, isLoading),
+              .updateItem(context, id, item, isLoading),
       handleDeleteService: (context, id, isLoading) =>
           Provider.of<LongSittingService>(context, listen: false)
-              .deleteItem(id, isLoading),
+              .deleteItem(context, id, isLoading),
       modelBuilder: (form, data) => LongSitting(
         wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
         weight_unit_id: form['weight_unit_id'] != null

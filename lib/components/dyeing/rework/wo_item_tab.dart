@@ -32,7 +32,7 @@ class _WoItemTabState extends State<WoItemTab> {
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -42,7 +42,7 @@ class _WoItemTabState extends State<WoItemTab> {
             padding: CustomTheme().padding('card'),
             decoration: BoxDecoration(
               color: Colors.grey[50],
-              borderRadius: const BorderRadius.only(
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),
               ),
@@ -82,8 +82,7 @@ class _WoItemTabState extends State<WoItemTab> {
                         return Column(
                           children: [
                             ListItem(item: items[index]),
-                            if (index != items.length - 1)
-                              const SizedBox(height: 12),
+                            if (index != items.length - 1) SizedBox(height: 12),
                           ].separatedBy(CustomTheme().vGap('xl')),
                         );
                       }),

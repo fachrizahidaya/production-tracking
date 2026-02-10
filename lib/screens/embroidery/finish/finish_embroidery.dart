@@ -110,7 +110,7 @@ class _FinishEmbroideryState extends State<FinishEmbroidery> {
 
         final message =
             await Provider.of<EmbroideryService>(context, listen: false)
-                .finishItem(id, embroidery, isLoading);
+                .finishItem(context, id, embroidery, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(
             context, '/embroideries', (_) => false);

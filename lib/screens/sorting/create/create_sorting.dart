@@ -36,7 +36,7 @@ class CreateSorting extends StatelessWidget {
     );
 
     final message = await Provider.of<SortingService>(context, listen: false)
-        .addItem(sorting, isLoading);
+        .addItem(context, sorting, isLoading);
 
     Navigator.pushNamedAndRemoveUntil(context, '/sortings', (route) => false);
 

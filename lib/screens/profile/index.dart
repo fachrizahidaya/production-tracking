@@ -20,11 +20,11 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: const Color(0xFFEBEBEB),
+          color: Color(0xFFEBEBEB),
           child: Column(
             children: [
               Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: EdgeInsets.all(8),
                   child: ProfleList<Map<String, String>>(
                     onTapItem: (item) {
                       if (item != null) {

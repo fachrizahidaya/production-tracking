@@ -57,7 +57,7 @@ class _HomeState extends State<Home> {
           if (context.mounted) {
             Provider.of<UserProvider>(context, listen: false).handleLogout();
 
-            await Future.delayed(const Duration(milliseconds: 200));
+            await Future.delayed(Duration(milliseconds: 200));
             Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
           } else {
             if (context.mounted) {
@@ -132,12 +132,12 @@ class _HomeState extends State<Home> {
             .then((prefs) => prefs.getString('access_token')),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
+            return Center(
               child: CircularProgressIndicator(),
             );
           }
           if (snapshot.hasError || !snapshot.hasData) {
-            return const Center(
+            return Center(
               child: Text('Error fetch token'),
             );
           }

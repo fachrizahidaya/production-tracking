@@ -84,7 +84,7 @@ class _PrintingScreenState extends State<PrintingScreen> {
   }
 
   Future<void> _intializeMenus() async {
-    await _menuService.handleFetchMenu();
+    await _menuService.handleFetchMenu(context);
     await _userMenu.handleLoadMenu();
 
     setState(() {
@@ -97,7 +97,7 @@ class _PrintingScreenState extends State<PrintingScreen> {
   Future<void> _handleSearch(String value) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(Duration(milliseconds: 500), () {
       setState(() {
         _search = value;
         params['search'] = value;
@@ -147,7 +147,7 @@ class _PrintingScreenState extends State<PrintingScreen> {
     });
 
     await Provider.of<PrintingService>(context, listen: false)
-        .getDataList(params);
+        .getDataList(context, params);
 
     List<dynamic> loadData =
         Provider.of<PrintingService>(context, listen: false).items;
@@ -224,7 +224,7 @@ class _PrintingScreenState extends State<PrintingScreen> {
               fetchData: (params) async {
                 final service =
                     Provider.of<PrintingService>(context, listen: false);
-                await service.getDataList(params);
+                await service.getDataList(context, params);
                 return service.items;
               },
               canRead: _canRead,
@@ -295,7 +295,7 @@ class _PrintingScreenState extends State<PrintingScreen> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const CreatePrinting(),
+                                builder: (context) => CreatePrinting(),
                               ),
                             );
                           },
@@ -307,7 +307,7 @@ class _PrintingScreenState extends State<PrintingScreen> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const FinishPrinting(),
+                                builder: (context) => FinishPrinting(),
                               ),
                             );
                           },

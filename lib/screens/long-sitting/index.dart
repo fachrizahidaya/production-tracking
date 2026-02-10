@@ -84,7 +84,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
 
   Future<void> _intializeMenus() async {
     try {
-      await _menuService.handleFetchMenu();
+      await _menuService.handleFetchMenu(context);
       await _userMenu.handleLoadMenu();
 
       setState(() {
@@ -100,7 +100,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
   Future<void> _handleSearch(String value) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(Duration(milliseconds: 500), () {
       setState(() {
         _search = value;
         params['search'] = value;
@@ -150,7 +150,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
     });
 
     await Provider.of<LongSittingService>(context, listen: false)
-        .getDataList(params);
+        .getDataList(context, params);
 
     List<dynamic> loadData =
         Provider.of<LongSittingService>(context, listen: false).items;
@@ -227,7 +227,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
               fetchData: (params) async {
                 final service =
                     Provider.of<LongSittingService>(context, listen: false);
-                await service.getDataList(params);
+                await service.getDataList(context, params);
                 return service.items;
               },
               isLoadMore: _isLoadMore,

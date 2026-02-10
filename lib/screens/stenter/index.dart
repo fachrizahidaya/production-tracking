@@ -84,7 +84,7 @@ class _StenterScreenState extends State<StenterScreen> {
   }
 
   Future<void> _intializeMenus() async {
-    await _menuService.handleFetchMenu();
+    await _menuService.handleFetchMenu(context);
     await _userMenu.handleLoadMenu();
 
     setState(() {
@@ -97,7 +97,7 @@ class _StenterScreenState extends State<StenterScreen> {
   Future<void> _handleSearch(String value) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(Duration(milliseconds: 500), () {
       setState(() {
         _search = value;
         params['search'] = value;
@@ -147,7 +147,7 @@ class _StenterScreenState extends State<StenterScreen> {
     });
 
     await Provider.of<StenterService>(context, listen: false)
-        .getDataList(params);
+        .getDataList(context, params);
 
     List<dynamic> loadData =
         Provider.of<StenterService>(context, listen: false).items;
@@ -227,7 +227,7 @@ class _StenterScreenState extends State<StenterScreen> {
                   fetchData: (params) async {
                     final service =
                         Provider.of<StenterService>(context, listen: false);
-                    await service.getDataList(params);
+                    await service.getDataList(context, params);
                     return service.items;
                   },
                   canRead: _canRead,
@@ -300,7 +300,7 @@ class _StenterScreenState extends State<StenterScreen> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const CreateStenter(),
+                                builder: (context) => CreateStenter(),
                               ),
                             );
                           },
@@ -312,7 +312,7 @@ class _StenterScreenState extends State<StenterScreen> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const FinishStenter(),
+                                builder: (context) => FinishStenter(),
                               ),
                             );
                           },

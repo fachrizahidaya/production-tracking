@@ -37,10 +37,10 @@ class _DyeingDetailState extends State<DyeingDetail> {
       service: Provider.of<DyeingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<DyeingService>(context, listen: false)
-              .updateItem(id, item, isLoading),
+              .updateItem(context, id, item, isLoading),
       handleDeleteService: (context, id, isLoading) =>
           Provider.of<DyeingService>(context, listen: false)
-              .deleteItem(id, isLoading),
+              .deleteItem(context, id, isLoading),
       modelBuilder: (form, data) => Dyeing(
         wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
         unit_id: form['unit_id'] != null

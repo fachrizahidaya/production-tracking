@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/helpers/service/base_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:textile_tracking/providers/api_client.dart';
 
 class WorkOrderSummaryService extends BaseService {
   final String baseUrl = '${dotenv.env['API_URL_DEV']}/dashboard/wo-summary';
@@ -47,7 +48,8 @@ class WorkOrderSummaryService extends BaseService {
     await fetchWorkOrderSummary(isInitialLoad: true);
   }
 
-  Future<void> getDataList(Map<String, String> params) async {
+  Future<void> getDataList(
+      BuildContext context, Map<String, String> params) async {
     final url = Uri.parse(baseUrl).replace(queryParameters: params);
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -61,11 +63,9 @@ class WorkOrderSummaryService extends BaseService {
       _dataList.clear();
       notifyListeners();
 
-      final response = await http.get(
+      final response = await ApiClient.instance.get(
+        context,
         url,
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
       );
 
       final responseData = jsonDecode(response.body);

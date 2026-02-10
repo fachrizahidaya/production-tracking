@@ -106,7 +106,7 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
 
         final message =
             await Provider.of<CrossCuttingService>(context, listen: false)
-                .finishItem(id, crossCutting, isLoading);
+                .finishItem(context, id, crossCutting, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(
             context, '/cross-cuttings', (_) => false);

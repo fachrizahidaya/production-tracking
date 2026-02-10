@@ -258,7 +258,7 @@ class _FinishProcessState extends State<FinishProcess> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
+        backgroundColor: Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: widget.title,
           onReturn: () => Navigator.pop(context),

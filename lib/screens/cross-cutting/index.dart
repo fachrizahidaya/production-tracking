@@ -84,7 +84,7 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
   }
 
   Future<void> _intializeMenus() async {
-    await _menuService.handleFetchMenu();
+    await _menuService.handleFetchMenu(context);
     await _userMenu.handleLoadMenu();
 
     setState(() {
@@ -147,7 +147,7 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
     });
 
     await Provider.of<CrossCuttingService>(context, listen: false)
-        .getDataList(params);
+        .getDataList(context, params);
 
     List<dynamic> loadData =
         Provider.of<CrossCuttingService>(context, listen: false).items;
@@ -224,7 +224,7 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
               fetchData: (params) async {
                 final service =
                     Provider.of<CrossCuttingService>(context, listen: false);
-                await service.getDataList(params);
+                await service.getDataList(context, params);
                 return service.items;
               },
               canRead: _canRead,

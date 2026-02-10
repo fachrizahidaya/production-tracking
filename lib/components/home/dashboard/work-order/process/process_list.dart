@@ -113,7 +113,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                   padding: CustomTheme().padding('content'),
                   child: CircularProgressIndicator(),
                 ))
-              : widget.dataList.isEmpty
+              : (widget.dataList == null || widget.dataList.isEmpty)
                   ? NoData()
                   : AnimatedContainer(
                       duration: const Duration(milliseconds: 300),

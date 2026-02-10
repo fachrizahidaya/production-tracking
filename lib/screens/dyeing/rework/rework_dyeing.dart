@@ -182,7 +182,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
               : null,
           attachments: _form['attachments']);
       final message = await Provider.of<DyeingService>(context, listen: false)
-          .reworkItem(id, dyeing, _firstLoading);
+          .reworkItem(context, id, dyeing, _firstLoading);
 
       Navigator.pushNamedAndRemoveUntil(
         context,

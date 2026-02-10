@@ -32,10 +32,10 @@ class _TumblerDetailState extends State<TumblerDetail> {
       service: Provider.of<TumblerService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<TumblerService>(context, listen: false)
-              .updateItem(id, item, isLoading),
+              .updateItem(context, id, item, isLoading),
       handleDeleteService: (context, id, isLoading) =>
           Provider.of<TumblerService>(context, listen: false)
-              .deleteItem(id, isLoading),
+              .deleteItem(context, id, isLoading),
       modelBuilder: (form, data) => Tumbler(
         wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
         weight_unit_id: form['weight_unit_id'] != null

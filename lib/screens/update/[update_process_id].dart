@@ -79,7 +79,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
           context: context,
           isLoading: _isLoading,
           onConfirm: () async {
-            await Future.delayed(const Duration(milliseconds: 200));
+            await Future.delayed(Duration(milliseconds: 200));
             Navigator.pop(context);
             Navigator.pop(context);
           },
@@ -95,7 +95,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
           context: context,
           isLoading: widget.isSubmitting,
           onConfirm: () async {
-            await Future.delayed(const Duration(milliseconds: 200));
+            await Future.delayed(Duration(milliseconds: 200));
             widget.isSubmitting.value = true;
             try {
               if (_isMaklon == true) {
@@ -126,7 +126,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
           FocusScope.of(context).unfocus();
         },
         child: Scaffold(
-          backgroundColor: const Color(0xFFf9fafc),
+          backgroundColor: Color(0xFFf9fafc),
           appBar: CustomAppBar(
             title: 'Edit ${widget.label}',
             onReturn: () => _handleCancel(context),

@@ -57,6 +57,7 @@ class _ItemProcessState extends State<ItemProcess> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isTablet = constraints.maxWidth > 600;
+
           final processes =
               widget.item['processes'] as Map<String, dynamic>? ?? {};
 

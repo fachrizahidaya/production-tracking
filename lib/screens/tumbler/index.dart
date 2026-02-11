@@ -85,7 +85,7 @@ class _TumblerScreenState extends State<TumblerScreen> {
 
   Future<void> _intializeMenus() async {
     try {
-      await _menuService.handleFetchMenu();
+      await _menuService.handleFetchMenu(context);
       await _userMenu.handleLoadMenu();
 
       setState(() {
@@ -101,7 +101,7 @@ class _TumblerScreenState extends State<TumblerScreen> {
   Future<void> _handleSearch(String value) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(Duration(milliseconds: 500), () {
       setState(() {
         _search = value;
         params['search'] = value;
@@ -151,7 +151,7 @@ class _TumblerScreenState extends State<TumblerScreen> {
     });
 
     await Provider.of<TumblerService>(context, listen: false)
-        .getDataList(params);
+        .getDataList(context, params);
 
     List<dynamic> loadData =
         Provider.of<TumblerService>(context, listen: false).items;
@@ -228,7 +228,7 @@ class _TumblerScreenState extends State<TumblerScreen> {
               fetchData: (params) async {
                 final service =
                     Provider.of<TumblerService>(context, listen: false);
-                await service.getDataList(params);
+                await service.getDataList(context, params);
                 return service.items;
               },
               isLoadMore: _isLoadMore,
@@ -299,7 +299,7 @@ class _TumblerScreenState extends State<TumblerScreen> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const CreateTumbler(),
+                                builder: (context) => CreateTumbler(),
                               ),
                             );
                           },
@@ -311,7 +311,7 @@ class _TumblerScreenState extends State<TumblerScreen> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const FinishTumbler(),
+                                builder: (context) => FinishTumbler(),
                               ),
                             );
                           },

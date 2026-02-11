@@ -32,10 +32,10 @@ class _PackingDetailState extends State<PackingDetail> {
       service: Provider.of<PackingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<PackingService>(context, listen: false)
-              .updateItem(id, item, isLoading),
+              .updateItem(context, id, item, isLoading),
       handleDeleteService: (context, id, isLoading) =>
           Provider.of<PackingService>(context, listen: false)
-              .deleteItem(id, isLoading),
+              .deleteItem(context, id, isLoading),
       modelBuilder: (form, data) => Packing(
           wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
           weight_unit_id:

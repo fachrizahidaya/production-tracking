@@ -13,7 +13,6 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
-  late Future<List<MenuItem>> menuItems;
   late Future<List<MenuItem>> _menuFuture;
 
   List<String> menuOrder = [
@@ -61,11 +60,9 @@ class _AppDrawerState extends State<AppDrawer> {
     result.sort((a, b) {
       final aIndex = menuOrder.indexOf(a.title);
       final bIndex = menuOrder.indexOf(b.title);
-
       if (aIndex == -1 && bIndex == -1) return 0;
       if (aIndex == -1) return 1;
       if (bIndex == -1) return -1;
-
       return aIndex.compareTo(bIndex);
     });
 
@@ -74,9 +71,8 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   void initState() {
-    menuItems = widget.handleFetchMenu();
-    _menuFuture = widget.handleFetchMenu();
     super.initState();
+    _menuFuture = widget.handleFetchMenu();
   }
 
   @override
@@ -86,40 +82,37 @@ class _AppDrawerState extends State<AppDrawer> {
         child: Column(
           children: [
             DrawerHeader(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/icon_logo.png',
-                  height: 100,
-                  width: 100,
-                  fit: BoxFit.contain,
-                )
-              ],
-            )),
+              child: Image.asset(
+                'assets/images/icon_logo.png',
+                height: 100,
+              ),
+            ),
             Expanded(
               child: FutureBuilder<List<MenuItem>>(
                 future: _menuFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(child: Text(snapshot.error.toString()));
+                  }
+
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Center(child: Text('No menu found'));
                   }
 
-                  final rawMenus = snapshot.data!;
-                  final menus = flattenMenus(rawMenus)
-                      .where((item) => !hiddenMenus.contains(item.title))
+                  final menus = flattenMenus(snapshot.data!)
+                      .where((m) => !hiddenMenus.contains(m.title))
                       .toList();
 
                   return ListView.builder(
                     itemCount: menus.length,
                     itemBuilder: (context, index) {
                       final item = menus[index];
-
                       return ListTile(
+                        title: Text(item.title),
                         leading: Icon(
                           item.title == 'Dyeing'
                               ? Icons.invert_colors_on_outlined
@@ -158,12 +151,9 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                               ? Icons.dry_cleaning_outlined
                                                                               : Icons.menu,
                         ),
-                        title: Text(item.title),
-                        onTap: () {
-                          if (item.route != null && item.route!.isNotEmpty) {
-                            Navigator.pushNamed(context, item.route!);
-                          }
-                        },
+                        onTap: item.route == null
+                            ? null
+                            : () => Navigator.pushNamed(context, item.route!),
                       );
                     },
                   );

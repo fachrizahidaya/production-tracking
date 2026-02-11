@@ -38,7 +38,7 @@ class CreateEmbroidery extends StatelessWidget {
     );
 
     final message = await Provider.of<EmbroideryService>(context, listen: false)
-        .addItem(embroidery, isLoading);
+        .addItem(context, embroidery, isLoading);
 
     Navigator.pushNamedAndRemoveUntil(
         context, '/embroideries', (route) => false);

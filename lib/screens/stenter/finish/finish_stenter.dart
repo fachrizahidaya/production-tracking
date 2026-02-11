@@ -109,7 +109,7 @@ class _FinishStenterState extends State<FinishStenter> {
 
         final message =
             await Provider.of<StenterService>(context, listen: false)
-                .finishItem(id, stenter, isLoading);
+                .finishItem(context, id, stenter, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(context, '/stenters', (_) => false);
 

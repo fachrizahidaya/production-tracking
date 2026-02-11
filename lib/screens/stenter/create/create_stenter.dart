@@ -36,7 +36,7 @@ class CreateStenter extends StatelessWidget {
     );
 
     final message = await Provider.of<StenterService>(context, listen: false)
-        .addItem(stenter, isLoading);
+        .addItem(context, stenter, isLoading);
 
     Navigator.pushNamedAndRemoveUntil(context, '/stenters', (route) => false);
 

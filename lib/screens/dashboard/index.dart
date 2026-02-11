@@ -174,7 +174,7 @@ class _DashboardState extends State<Dashboard> {
     setState(() => isSummaryLoading = true);
 
     await Provider.of<WorkOrderSummaryService>(context, listen: false)
-        .getDataList(summaryParams);
+        .getDataList(context, summaryParams);
 
     if (!mounted) return;
     setState(() {
@@ -243,7 +243,7 @@ class _DashboardState extends State<Dashboard> {
     });
 
     await Provider.of<WorkOrderProcessService>(context, listen: false)
-        .getDataList(params);
+        .getDataList(context, params);
 
     if (!mounted) return;
 
@@ -335,7 +335,7 @@ class _DashboardState extends State<Dashboard> {
                       final service = Provider.of<WorkOrderProcessService>(
                           context,
                           listen: false);
-                      await service.getDataList(params);
+                      await service.getDataList(context, params);
                       return service.items;
                     },
                     service: WorkOrderProcessService(),

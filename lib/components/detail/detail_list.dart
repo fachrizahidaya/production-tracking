@@ -205,7 +205,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               BoxShadow(
                 color: CustomTheme().buttonColor('primary').withOpacity(0.3),
                 blurRadius: 12,
-                offset: const Offset(0, 4),
+                offset: Offset(0, 4),
               ),
             ]),
         child: Column(
@@ -376,7 +376,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     return Container(
       width: 1,
       height: 40,
-      margin: const EdgeInsets.symmetric(horizontal: 8),
+      margin: EdgeInsets.symmetric(horizontal: 8),
       color: Colors.white.withOpacity(0.2),
     );
   }
@@ -847,7 +847,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     final items = (widget.data['work_orders']['items'] ?? [])
         .cast<Map<String, dynamic>>();
     if (items.isEmpty) {
-      return const Center(child: Text('No Data'));
+      return Center(child: Text('No Data'));
     }
 
     return Column(
@@ -855,7 +855,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         return Column(
           children: [
             ListItem(item: items[index]),
-            if (index != items.length - 1) const SizedBox(height: 12),
+            if (index != items.length - 1) SizedBox(height: 12),
           ].separatedBy(CustomTheme().vGap('xl')),
         );
       }),
@@ -883,7 +883,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
@@ -982,7 +982,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                   Expanded(
                     child: Container(
                       width: 2,
-                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      margin: EdgeInsets.symmetric(vertical: 4),
                       color: Colors.grey[300],
                     ),
                   ),

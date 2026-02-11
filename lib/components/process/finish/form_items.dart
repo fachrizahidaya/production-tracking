@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
+import 'package:textile_tracking/components/master/text/view_text.dart';
 import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/note_editor.dart';
@@ -45,6 +46,7 @@ class FormItems extends StatefulWidget {
   final qtyWarning;
   final label;
   final data;
+  final processData;
   final greigeQty;
   final handleTotalItemQty;
   final handleRemainingQtyForGrade;
@@ -88,7 +90,8 @@ class FormItems extends StatefulWidget {
       this.totalWeight,
       this.weightDozen,
       this.handleRemainingQtyForGrade,
-      this.handleTotalItemQty});
+      this.handleTotalItemQty,
+      this.processData});
 
   @override
   State<FormItems> createState() => _FormItemsState();
@@ -370,6 +373,25 @@ class _FormItemsState extends State<FormItems> {
               },
             ),
           ),
+        if (widget.processData['rework'] == true)
+          TemplateCard(
+              title: 'Referensi Rework',
+              icon: Icons.replay_outlined,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ViewText(
+                      viewLabel: 'No. Dyeing',
+                      viewValue: widget.processData['rework_reference']
+                              ['dyeing_no'] ??
+                          '-'),
+                  ViewText(
+                      viewLabel: 'Mesin',
+                      viewValue: widget.processData['rework_reference']
+                              ['machine']['name'] ??
+                          '-'),
+                ].separatedBy(CustomTheme().hGap('xl')),
+              )),
         if (widget.form?['wo_id'] != null)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

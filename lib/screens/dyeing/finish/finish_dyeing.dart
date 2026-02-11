@@ -104,7 +104,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
         );
 
         final message = await Provider.of<DyeingService>(context, listen: false)
-            .finishItem(id, dyeing, isLoading);
+            .finishItem(context, id, dyeing, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(context, '/dyeings', (_) => false);
 

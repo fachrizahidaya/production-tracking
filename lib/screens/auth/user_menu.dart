@@ -1,24 +1,26 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/helpers/auth/storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:textile_tracking/providers/api_client.dart';
 
 class MenuService {
   MenuService();
 
-  Future<List<dynamic>> handleFetchMenu() async {
+  Future<List<dynamic>> handleFetchMenu(BuildContext context) async {
     try {
-      String? token = await Storage.instance.getAccessToken();
-
       final url = Uri.parse('${dotenv.env['API_URL_DEV']}/menus');
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      });
+
+      final response = await ApiClient.instance.get(
+        context,
+        url,
+      );
+
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        List<dynamic> menus = data['data'] ?? [];
+        final data = jsonDecode(response.body);
+        final List<dynamic> menus = data['data'] ?? [];
 
         await Storage.instance.insertMenus(menus);
         return menus;

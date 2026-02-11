@@ -85,7 +85,7 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
 
   Future<void> _intializeMenus() async {
     try {
-      await _menuService.handleFetchMenu();
+      await _menuService.handleFetchMenu(context);
       await _userMenu.handleLoadMenu();
 
       setState(() {
@@ -101,7 +101,7 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
   Future<void> _handleSearch(String value) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(Duration(milliseconds: 500), () {
       setState(() {
         _search = value;
         params['search'] = value;
@@ -151,7 +151,7 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
     });
 
     await Provider.of<PressTumblerService>(context, listen: false)
-        .getDataList(params);
+        .getDataList(context, params);
 
     List<dynamic> loadData =
         Provider.of<PressTumblerService>(context, listen: false).items;
@@ -228,7 +228,7 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
               fetchData: (params) async {
                 final service =
                     Provider.of<PressTumblerService>(context, listen: false);
-                await service.getDataList(params);
+                await service.getDataList(context, params);
                 return service.items;
               },
               isLoadMore: _isLoadMore,
@@ -299,8 +299,7 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const CreatePressTumbler(),
+                                builder: (context) => CreatePressTumbler(),
                               ),
                             );
                           },
@@ -312,8 +311,7 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const FinishPressTumbler(),
+                                builder: (context) => FinishPressTumbler(),
                               ),
                             );
                           },

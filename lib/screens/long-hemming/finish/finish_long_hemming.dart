@@ -102,7 +102,7 @@ class _FinishLongHemmingState extends State<FinishLongHemming> {
 
         final message =
             await Provider.of<LongHemmingService>(context, listen: false)
-                .finishItem(id, longHemming, isLoading);
+                .finishItem(context, id, longHemming, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(
             context, '/long-hemmings', (_) => false);

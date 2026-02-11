@@ -40,7 +40,7 @@ class CreateDyeing extends StatelessWidget {
     );
 
     final message = await Provider.of<DyeingService>(context, listen: false)
-        .addItem(dyeing, isLoading);
+        .addItem(context, dyeing, isLoading);
 
     Navigator.pushNamedAndRemoveUntil(
       context,

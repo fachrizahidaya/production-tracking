@@ -109,7 +109,7 @@ class _FinishTumblerState extends State<FinishTumbler> {
 
         final message =
             await Provider.of<TumblerService>(context, listen: false)
-                .finishItem(id, stenter, isLoading);
+                .finishItem(context, id, stenter, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(context, '/tumblers', (_) => false);
 

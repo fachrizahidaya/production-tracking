@@ -103,7 +103,7 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
 
         final message =
             await Provider.of<LongSittingService>(context, listen: false)
-                .finishItem(id, longSitting, isLoading);
+                .finishItem(context, id, longSitting, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(
             context, '/long-slittings', (_) => false);

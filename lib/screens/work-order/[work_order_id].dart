@@ -52,7 +52,7 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-          backgroundColor: const Color(0xFFf9fafc),
+          backgroundColor: Color(0xFFf9fafc),
           appBar: CustomAppBar(
             title: 'Work Order Detail',
             onReturn: () {

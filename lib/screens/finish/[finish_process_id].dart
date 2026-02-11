@@ -239,7 +239,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   Future<void> _getProcessView(id) async {
-    await widget.processService.getDataView(id);
+    await widget.processService.getDataView(context, id);
 
     setState(() {
       data = widget.processService.dataView;
@@ -332,7 +332,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             context: context,
             isLoading: _isLoading,
             onConfirm: () async {
-              await Future.delayed(const Duration(milliseconds: 200));
+              await Future.delayed(Duration(milliseconds: 200));
               Navigator.pop(context);
               Navigator.pop(context);
               Navigator.pop(context);
@@ -354,7 +354,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             context: context,
             isLoading: _isSubmitting,
             onConfirm: () async {
-              await Future.delayed(const Duration(milliseconds: 200));
+              await Future.delayed(Duration(milliseconds: 200));
               _isSubmitting.value = true;
               try {
                 await widget.handleSubmit(
@@ -378,7 +378,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -414,7 +414,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -446,7 +446,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -478,7 +478,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -510,7 +510,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -556,7 +556,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -584,7 +584,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -761,7 +761,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
           FocusScope.of(context).unfocus();
         },
         child: Scaffold(
-          backgroundColor: const Color(0xFFf9fafc),
+          backgroundColor: Color(0xFFf9fafc),
           appBar: CustomAppBar(
             title: widget.title,
             onReturn: () {
@@ -786,7 +786,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                   child: TabBarView(
                     children: [
                       _firstLoading
-                          ? const Center(child: CircularProgressIndicator())
+                          ? Center(child: CircularProgressIndicator())
                           : FinishFormTab(
                               id: widget.id,
                               isLoading: _firstLoading,

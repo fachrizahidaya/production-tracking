@@ -37,7 +37,7 @@ class CreateCrossCutting extends StatelessWidget {
 
     final message =
         await Provider.of<CrossCuttingService>(context, listen: false)
-            .addItem(crossCutting, isLoading);
+            .addItem(context, crossCutting, isLoading);
 
     Navigator.pushNamedAndRemoveUntil(
         context, '/cross-cuttings', (route) => false);

@@ -32,10 +32,10 @@ class _PrintingDetailState extends State<PrintingDetail> {
       service: Provider.of<PrintingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<PrintingService>(context, listen: false)
-              .updateItem(id, item, isLoading),
+              .updateItem(context, id, item, isLoading),
       handleDeleteService: (context, id, isLoading) =>
           Provider.of<PrintingService>(context, listen: false)
-              .deleteItem(id, isLoading),
+              .deleteItem(context, id, isLoading),
       modelBuilder: (form, data) => Printing(
           wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
           unit_id: form['item_unit_id'] != null

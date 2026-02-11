@@ -109,7 +109,7 @@ class _FinishSewingState extends State<FinishSewing> {
             maklon_name: form['maklon_name']);
 
         final message = await Provider.of<SewingService>(context, listen: false)
-            .finishItem(id, sewing, isLoading);
+            .finishItem(context, id, sewing, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(context, '/sewings', (_) => false);
 

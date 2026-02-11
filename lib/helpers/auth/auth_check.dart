@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:textile_tracking/helpers/service/token_service.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/auth/login.dart';
 import 'package:provider/provider.dart';
@@ -24,23 +25,12 @@ class _AuthCheckState extends State<AuthCheck> {
   }
 
   Future<void> _handleCheckLogin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('access_token');
+    final token = await TokenService.instance.getValidToken(context);
 
-    if (token != null && !isTokenExpired(token)) {
-      if (mounted) {
-        Provider.of<UserProvider>(context, listen: false).setToken(token);
-        setState(() {
-          _isAuthenticated = true;
-        });
-      }
-    } else {
-      await Provider.of<UserProvider>(context, listen: false).handleLogout();
-      if (mounted) {
-        setState(() {
-          _isAuthenticated = false;
-        });
-      }
+    if (mounted) {
+      setState(() {
+        _isAuthenticated = token != null;
+      });
     }
   }
 

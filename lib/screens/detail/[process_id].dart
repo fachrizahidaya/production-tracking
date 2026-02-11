@@ -144,7 +144,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
   Future<void> _getDataView() async {
     setState(() => _firstLoading = true);
-    await widget.service.getDataView(widget.id);
+    await widget.service.getDataView(context, widget.id);
 
     final fetched = widget.service.dataView;
     setState(() {

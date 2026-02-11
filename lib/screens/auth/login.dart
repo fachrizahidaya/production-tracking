@@ -8,6 +8,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:textile_tracking/components/master/form/login/login_form.dart';
 import 'package:textile_tracking/helpers/auth/storage.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/providers/api_client.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:provider/provider.dart';
@@ -48,91 +49,94 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> _handleCheckLogin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token');
-    final username = prefs.getString('username');
-    final name = prefs.getString('name');
-    final id = prefs.getString('user_id');
+    final token = await ApiClient.instance.getValidToken(context);
 
-    if (token != null && !JwtDecoder.isExpired(token)) {
-      if (context.mounted) {
-        Provider.of<UserProvider>(context, listen: false)
-            .handleLogin(username ?? '', name ?? '', token, id ?? '');
-        Navigator.pushReplacementNamed(context, '/dashboard');
-      }
-    } else {
-      await prefs.remove('access_token');
-      await prefs.remove('username');
-      await prefs.remove('name');
-      await prefs.remove('user_id');
+    if (!context.mounted) return;
+
+    if (token != null) {
+      final prefs = await SharedPreferences.getInstance();
+
+      Provider.of<UserProvider>(context, listen: false).handleLogin(
+        prefs.getString('username') ?? '',
+        prefs.getString('name') ?? '',
+        token,
+        // prefs.getString('user_id') ?? '',
+      );
+
+      Navigator.pushReplacementNamed(context, '/dashboard');
     }
   }
 
   Future<void> _handleSubmit(BuildContext context) async {
-    final String username = _username.text;
-    final String password = _password.text;
+    final username = _username.text.trim();
+    final password = _password.text.trim();
 
-    String url = '${dotenv.env['API_URL_DEV']}/login';
+    final url = Uri.parse('${dotenv.env['API_URL_DEV']}/login');
 
     try {
-      setState(() {
-        _isLoading = true;
-      });
+      setState(() => _isLoading = true);
 
-      final res = await http.post(Uri.parse(url),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({'username': username, 'password': password}));
+      final res = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'username': username,
+          'password': password,
+        }),
+      );
 
-      if (res.statusCode == 200) {
-        final Map<String, dynamic> response = jsonDecode(res.body);
-
-        if (response['access_token'] != null) {
-          final String username = response['username'] ?? '';
-          final String name = response['name'] ?? '';
-          final String token = response['access_token'] ?? '';
-          final String id = response['user_id'].toString();
-
-          // final String userId = response['user_id'].toString();
-          // final String name = response['name'] ?? '';
-
-          // StoreProvider.of<AppState>(context)
-          //     .dispatch(LoginAction(username, token));
-
-          // final menus = await MenuService().handleFetchMenu();
-
-          await Storage.instance.insertUserData(response);
-          await MenuService().handleFetchMenu();
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('access_token', token);
-
-          if (context.mounted) {
-            Provider.of<UserProvider>(context, listen: false)
-                .handleLogin(username, name, token, id);
-            Navigator.pushReplacementNamed(context, '/dashboard');
-            _username.clear();
-            _password.clear();
-          }
-        } else {
-          if (context.mounted) {
-            showAlertDialog(
-                context: context, title: 'Error', message: 'Login error');
-          }
-        }
-      } else {
-        if (context.mounted) {
-          showAlertDialog(
-              context: context,
-              title: 'Error',
-              message: 'Invalid username or password');
-        }
+      if (res.statusCode != 200) {
+        _showError(context, 'Invalid username or password');
+        return;
       }
+
+      final response = jsonDecode(res.body);
+
+      final token = response['access_token'];
+      if (token == null) {
+        _showError(context, 'Login failed');
+        return;
+      }
+
+      final prefs = await SharedPreferences.getInstance();
+
+      await prefs.setString('access_token', token);
+      await prefs.setString('username', response['username'] ?? '');
+      await prefs.setString('name', response['name'] ?? '');
+      // await prefs.setString('user_id', response['user_id'].toString());
+
+      // save to SQLite (optional but fine)
+      await Storage.instance.insertUserData(response);
+
+      // preload menus (optional)
+      await MenuService().handleFetchMenu(context);
+
+      if (!context.mounted) return;
+
+      Provider.of<UserProvider>(context, listen: false).handleLogin(
+        response['username'] ?? '',
+        response['name'] ?? '',
+        token,
+        // response['user_id'].toString(),
+      );
+
+      Navigator.pushReplacementNamed(context, '/dashboard');
+      _username.clear();
+      _password.clear();
     } catch (e) {
-      throw Exception(e);
+      _showError(context, 'Something went wrong');
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  void _showError(BuildContext context, String message) {
+    if (!context.mounted) return;
+    showAlertDialog(
+      context: context,
+      title: 'Error',
+      message: message,
+    );
   }
 
   @override

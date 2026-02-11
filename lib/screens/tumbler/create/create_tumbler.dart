@@ -36,7 +36,7 @@ class CreateTumbler extends StatelessWidget {
     );
 
     final message = await Provider.of<TumblerService>(context, listen: false)
-        .addItem(tumbler, isLoading);
+        .addItem(context, tumbler, isLoading);
 
     Navigator.pushNamedAndRemoveUntil(context, '/tumblers', (route) => false);
 

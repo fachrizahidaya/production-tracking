@@ -22,6 +22,7 @@ class ReworkDyeingManual extends StatefulWidget {
   final Map<String, dynamic>? form;
   final handleSubmit;
   final handleChangeInput;
+  final dyeingId;
 
   const ReworkDyeingManual(
       {super.key,
@@ -29,7 +30,8 @@ class ReworkDyeingManual extends StatefulWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.dyeingId});
 
   @override
   State<ReworkDyeingManual> createState() => _ReworkDyeingManualState();
@@ -75,6 +77,10 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
       _handleFetchWorkOrder();
       _handleFetchUnit();
       _handleFetchMachine();
+
+      if (widget.dyeingId != null) {
+        _getDyeingView(widget.dyeingId);
+      }
     });
   }
 
@@ -161,29 +167,6 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
     }
   }
 
-  Future<void> _handleSubmit(BuildContext context) async {
-    if (context.mounted) {
-      if (widget.form?['wo_id'] != null) {
-        showConfirmationDialog(
-            context: context,
-            isLoading: _isSubmitting,
-            onConfirm: () async {
-              _isSubmitting.value = true;
-              try {
-                await widget.handleSubmit(dyeingData['id'].toString());
-              } finally {
-                _isSubmitting.value = false;
-              }
-            },
-            title: 'Rework Proses Dyeing',
-            message: 'Anda yakin ingin rework proses?',
-            buttonBackground: CustomTheme().buttonColor('primary'));
-      } else {
-        Navigator.pop(context);
-      }
-    }
-  }
-
   Future<void> _getDataView(id) async {
     setState(() {
       _firstLoading = true;
@@ -198,7 +181,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   }
 
   Future<void> _getDyeingView(id) async {
-    await _dyeingService.getDataView(id);
+    await _dyeingService.getDataView(context, id);
 
     setState(() {
       dyeingData = _dyeingService.dataView;
@@ -231,6 +214,29 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
         widget.form?['attachments'] = List.from(dyeingData['attachments']);
       }
     });
+  }
+
+  Future<void> _handleSubmit(BuildContext context) async {
+    if (context.mounted) {
+      if (widget.form?['wo_id'] != null) {
+        showConfirmationDialog(
+            context: context,
+            isLoading: _isSubmitting,
+            onConfirm: () async {
+              _isSubmitting.value = true;
+              try {
+                await widget.handleSubmit(dyeingData['id'].toString());
+              } finally {
+                _isSubmitting.value = false;
+              }
+            },
+            title: 'Rework Proses Dyeing',
+            message: 'Anda yakin ingin rework proses?',
+            buttonBackground: CustomTheme().buttonColor('primary'));
+      } else {
+        Navigator.pop(context);
+      }
+    }
   }
 
   _selectWorkOrder() {
@@ -361,8 +367,9 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                     ),
                     Expanded(
                         child: FormButton(
-                      label: 'Simpan',
+                      label: 'Mulai',
                       onPressed: () => _handleSubmit(context),
+                      customHeight: 48.0,
                     ))
                   ].separatedBy(CustomTheme().hGap('xl')),
                 );

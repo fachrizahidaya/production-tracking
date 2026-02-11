@@ -226,8 +226,8 @@ class _DetailState extends State<Detail> {
                 bottom: 8,
                 right: 8,
                 child: ElevatedButton.icon(
-                  icon: const Icon(Icons.download),
-                  label: const Text('Download'),
+                  icon: Icon(Icons.download),
+                  label: Text('Download'),
                   onPressed: () => _downloadImage(context, isNew, filePath),
                 ),
               ),
@@ -270,7 +270,7 @@ class _DetailState extends State<Detail> {
 
       Widget preview;
       if (extension == 'pdf') {
-        preview = const Icon(Icons.picture_as_pdf, color: Colors.red, size: 50);
+        preview = Icon(Icons.picture_as_pdf, color: Colors.red, size: 50);
       } else if (isNew && filePath != null) {
         preview = Image.file(File(filePath), fit: BoxFit.cover);
       } else if (filePath != null &&
@@ -278,11 +278,10 @@ class _DetailState extends State<Detail> {
         preview = Image.network(
           '$baseUrl$filePath',
           fit: BoxFit.cover,
-          errorBuilder: (context, _, __) =>
-              const Icon(Icons.broken_image, size: 50),
+          errorBuilder: (context, _, __) => Icon(Icons.broken_image, size: 50),
         );
       } else {
-        preview = const Icon(Icons.insert_drive_file, size: 50);
+        preview = Icon(Icons.insert_drive_file, size: 50);
       }
 
       return GestureDetector(
@@ -296,8 +295,8 @@ class _DetailState extends State<Detail> {
               }
             : null,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          margin: const EdgeInsets.only(bottom: 8),
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          margin: EdgeInsets.only(bottom: 8),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
@@ -318,7 +317,7 @@ class _DetailState extends State<Detail> {
                 child: preview,
               ),
 
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
 
               /// File name + size (COLUMN)
               Expanded(
@@ -330,12 +329,12 @@ class _DetailState extends State<Detail> {
                       fileName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       fileSizeText,
                       style: TextStyle(
@@ -366,7 +365,7 @@ class _DetailState extends State<Detail> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
+        backgroundColor: Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: 'Detail Proses ${widget.label}',
           onReturn: () => Navigator.pop(context),

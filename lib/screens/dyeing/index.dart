@@ -86,7 +86,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
   }
 
   Future<void> _intializeMenus() async {
-    await _menuService.handleFetchMenu();
+    await _menuService.handleFetchMenu(context);
     await _userMenu.handleLoadMenu();
 
     setState(() {
@@ -149,7 +149,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
     });
 
     await Provider.of<DyeingService>(context, listen: false)
-        .getDataList(params);
+        .getDataList(context, params);
 
     List<dynamic> loadData =
         Provider.of<DyeingService>(context, listen: false).items;
@@ -226,7 +226,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
               fetchData: (params) async {
                 final service =
                     Provider.of<DyeingService>(context, listen: false);
-                await service.getDataList(params);
+                await service.getDataList(context, params);
                 return service.items;
               },
               canRead: _canRead,

@@ -197,6 +197,7 @@ class _ListFormState extends State<ListForm> {
         label: widget.label,
         forDyeing: widget.forDyeing,
         data: widget.data,
+        processData: widget.processData,
         forPacking: widget.forPacking,
         greigeQty: greigeQty,
         gsm: widget.gsm,

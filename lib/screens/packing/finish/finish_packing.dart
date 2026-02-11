@@ -104,7 +104,7 @@ class _FinishPackingState extends State<FinishPacking> {
 
         final message =
             await Provider.of<PackingService>(context, listen: false)
-                .finishItem(id, packing, isLoading);
+                .finishItem(context, id, packing, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(context, '/packings', (_) => false);
 

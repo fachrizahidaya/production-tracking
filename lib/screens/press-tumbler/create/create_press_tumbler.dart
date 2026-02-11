@@ -37,7 +37,7 @@ class CreatePressTumbler extends StatelessWidget {
 
     final message =
         await Provider.of<PressTumblerService>(context, listen: false)
-            .addItem(press, isLoading);
+            .addItem(context, press, isLoading);
 
     Navigator.pushNamedAndRemoveUntil(context, '/press', (route) => false);
 

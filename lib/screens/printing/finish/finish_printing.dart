@@ -110,7 +110,7 @@ class _FinishPrintingState extends State<FinishPrinting> {
 
         final message =
             await Provider.of<PrintingService>(context, listen: false)
-                .finishItem(id, printing, isLoading);
+                .finishItem(context, id, printing, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(context, '/printings', (_) => false);
 

@@ -38,7 +38,7 @@ class CreateSewing extends StatelessWidget {
     );
 
     final message = await Provider.of<SewingService>(context, listen: false)
-        .addItem(sewing, isLoading);
+        .addItem(context, sewing, isLoading);
 
     Navigator.pushNamedAndRemoveUntil(context, '/sewings', (route) => false);
 

@@ -32,10 +32,10 @@ class _StenterDetailState extends State<StenterDetail> {
       service: Provider.of<StenterService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<StenterService>(context, listen: false)
-              .updateItem(id, item, isLoading),
+              .updateItem(context, id, item, isLoading),
       handleDeleteService: (context, id, isLoading) =>
           Provider.of<StenterService>(context, listen: false)
-              .deleteItem(id, isLoading),
+              .deleteItem(context, id, isLoading),
       modelBuilder: (form, data) => Stenter(
         wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
         weight_unit_id: form['weight_unit_id'] != null

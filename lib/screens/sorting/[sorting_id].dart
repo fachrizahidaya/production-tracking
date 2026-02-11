@@ -32,10 +32,10 @@ class _SortingDetailState extends State<SortingDetail> {
       service: Provider.of<SortingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<SortingService>(context, listen: false)
-              .updateItem(id, item, isLoading),
+              .updateItem(context, id, item, isLoading),
       handleDeleteService: (context, id, isLoading) =>
           Provider.of<SortingService>(context, listen: false)
-              .deleteItem(id, isLoading),
+              .deleteItem(context, id, isLoading),
       modelBuilder: (form, data) => Sorting(
           wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
           weight_unit_id:

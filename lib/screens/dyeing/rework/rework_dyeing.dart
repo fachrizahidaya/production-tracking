@@ -134,6 +134,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
         MaterialPageRoute(
           builder: (context) => ReworkDyeingManual(
             id: woId,
+            dyeingId: processId,
             data: data,
             form: _form,
             handleSubmit: _handleSubmit,
@@ -242,7 +243,8 @@ Route _createRoute(dynamic form, handleSubmit, handleChangeInput) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => ReworkDyeingManual(
       id: null,
-      data: null,
+      data: {},
+      dyeingId: null,
       form: form,
       handleSubmit: handleSubmit,
       handleChangeInput: handleChangeInput,

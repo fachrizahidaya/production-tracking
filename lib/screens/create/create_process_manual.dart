@@ -162,7 +162,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   }
 
   Future<void> _getProcessView(id) async {
-    await widget.processService.getDataView(id);
+    await widget.processService.getDataView(context, id);
 
     setState(() {
       data = widget.processService.dataView;

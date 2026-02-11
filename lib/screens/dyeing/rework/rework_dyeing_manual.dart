@@ -22,6 +22,7 @@ class ReworkDyeingManual extends StatefulWidget {
   final Map<String, dynamic>? form;
   final handleSubmit;
   final handleChangeInput;
+  final dyeingId;
 
   const ReworkDyeingManual(
       {super.key,
@@ -29,7 +30,8 @@ class ReworkDyeingManual extends StatefulWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.dyeingId});
 
   @override
   State<ReworkDyeingManual> createState() => _ReworkDyeingManualState();
@@ -75,6 +77,10 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
       _handleFetchWorkOrder();
       _handleFetchUnit();
       _handleFetchMachine();
+
+      if (widget.dyeingId != null) {
+        _getDyeingView(widget.dyeingId);
+      }
     });
   }
 
@@ -363,6 +369,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                         child: FormButton(
                       label: 'Mulai',
                       onPressed: () => _handleSubmit(context),
+                      customHeight: 48.0,
                     ))
                   ].separatedBy(CustomTheme().hGap('xl')),
                 );

@@ -369,13 +369,14 @@ class _DetailState extends State<Detail> {
         appBar: CustomAppBar(
           title: 'Detail Proses ${widget.label}',
           onReturn: () => Navigator.pop(context),
-          // canDelete: widget.canDelete,
-          // canUpdate: widget.canUpdate,
+          canDelete: widget.canDelete,
+          canUpdate: widget.canUpdate,
           handleDelete: widget.handleDelete,
           handleUpdate: widget.handleNavigateToUpdate,
           handleFinish: widget.handleNavigateToFinish,
           id: widget.data['id'],
-          status: widget.data['can_delete'],
+          updateStatus: widget.data['can_update'],
+          deleteStatus: widget.data['can_delete'],
         ),
         body: SafeArea(
           child: widget.isLoading

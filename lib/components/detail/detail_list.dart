@@ -74,13 +74,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               children: [
                 if (widget.data['can_update'] == true ||
                     widget.data['can_delete'] == true)
-                  Padding(
-                    padding: EdgeInsets.only(top: 16),
-                    child: _buildActionButtons(isTablet),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.only(top: 16),
+                  //   child: _buildActionButtons(isTablet),
+                  // ),
 
-                // Header Section
-                _buildHeaderSection(isTablet),
+                  // Header Section
+                  _buildHeaderSection(isTablet),
 
                 // Main Content
                 if (isTablet)
@@ -102,66 +102,24 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           if (widget.data['can_update'] == true)
-            // ElevatedButton.icon(
-            //   onPressed: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) => FinishDyeingManual(
-            //           id: widget.data['wo_id'], // id proses / wo
-            //           data: widget.data['work_orders'], // data work order
-            //           form: {}, // form awal (kosong atau prefill)
-            //           processId: widget.data['id'], // kalau ada
-            //           forDyeing: true, // flag sesuai kebutuhan
-            //           withItemGrade: true,
-            //           withQtyAndWeight: true,
-            //           forPacking: false,
-            //           handleSubmit: (form) async {
-            //             // optional: submit logic
-            //           },
-            //           handleChangeInput: (key, value) {
-            //             // optional: handle perubahan input
-            //           },
-            //         ),
-            //       ),
-            //     );
-            //   },
-            //   icon: Icon(
-            //     Icons.check_circle_outline,
-            //     color: Colors.white,
-            //   ),
-            //   label: Text('Selesai ${widget.label}'),
-            //   style: ElevatedButton.styleFrom(
-            //     backgroundColor: Colors.green,
-            //     foregroundColor: Colors.white,
-            //     padding: EdgeInsets.symmetric(
-            //       horizontal: isTablet ? 20 : 16,
-            //       vertical: 12,
-            //     ),
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(8),
-            //     ),
-            //   ),
-            // ),
-            if (widget.data['can_update'] == true)
-              ElevatedButton.icon(
-                onPressed: () {
-                  widget.handleUpdate();
-                },
-                icon: Icon(Icons.edit_outlined, color: Colors.white),
-                label: Text('Edit ${widget.label}'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isTablet ? 20 : 16,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+            ElevatedButton.icon(
+              onPressed: () {
+                widget.handleUpdate();
+              },
+              icon: Icon(Icons.edit_outlined, color: Colors.white),
+              label: Text('Edit ${widget.label}'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(
+                  horizontal: isTablet ? 20 : 16,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
+            ),
           if (widget.data['can_delete'] == true)
             ElevatedButton.icon(
               onPressed: () {

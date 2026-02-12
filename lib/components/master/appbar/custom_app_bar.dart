@@ -18,7 +18,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final id;
   final String? label;
   final user;
-  final status;
+  final deleteStatus;
+  final updateStatus;
   final isTextEditor;
   final handleSave;
   final name;
@@ -39,7 +40,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.label,
       this.handleLogout,
       this.user,
-      this.status,
+      this.deleteStatus,
+      this.updateStatus,
       this.isTextEditor = false,
       this.handleSave,
       this.name,
@@ -52,7 +54,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       return name.trim()[0].toUpperCase();
     }
 
-    final bool hasOptions = (canDelete == true || canUpdate == true);
+    final bool hasOptions = (deleteStatus == true || updateStatus == true);
     return AppBar(
       leading: onReturn != null
           ? IconButton(
@@ -63,62 +65,54 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(fontSize: CustomTheme().fontSize('xl')),
       ),
       actions: [
-        if (hasOptions && status == true)
-          PopupMenuButton<String>(
-            color: Colors.white,
-            offset: const Offset(0, 40),
-            onSelected: (value) {
-              final String stringId = id.toString();
+        // if (hasOptions)
+        //   PopupMenuButton<String>(
+        //     color: Colors.white,
+        //     offset: const Offset(0, 40),
+        //     onSelected: (value) {
+        //       final String stringId = id.toString();
 
-              if (value == 'finish' && canUpdate == true) {
-                handleFinish();
-              }
-              if (value == 'update' && canUpdate == true) {
-                handleUpdate();
-              }
-              if (value == 'delete' && canDelete == true) {
-                handleDelete(stringId);
-              }
-            },
-            itemBuilder: (context) => [
-              // if (canUpdate == true)
-              //   PopupMenuItem(
-              //     value: 'finish',
-              //     child: Text('Selesai Proses'),
-              //   ),
-              if (canUpdate == true &&
-                  (label != 'Sorting' || label != 'Packing'))
-                PopupMenuItem(
-                  value: 'update',
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.edit_outlined,
-                        size: 14,
-                      ),
-                      Text('Edit'),
-                    ].separatedBy(CustomTheme().hGap('sm')),
-                  ),
-                ),
-              if (canDelete == true)
-                PopupMenuItem(
-                  value: 'delete',
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete_outline, size: 14),
-                      Text('Hapus'),
-                    ].separatedBy(CustomTheme().hGap('sm')),
-                  ),
-                ),
-            ],
-          ),
-        if (isTextEditor)
-          IconButton(
-            icon: const Icon(Icons.check),
-            onPressed: () {
-              handleSave();
-            },
-          ),
+        //       if (value == 'update' && updateStatus == true) {
+        //         handleUpdate();
+        //       }
+        //       if (value == 'delete' && deleteStatus == true) {
+        //         handleDelete(stringId);
+        //       }
+        //     },
+        //     itemBuilder: (context) => [
+        //       if (updateStatus == true &&
+        //           (label != 'Sorting' || label != 'Packing'))
+        //         PopupMenuItem(
+        //           value: 'update',
+        //           child: Row(
+        //             children: [
+        //               Icon(
+        //                 Icons.edit_outlined,
+        //                 size: 14,
+        //               ),
+        //               Text('Edit'),
+        //             ].separatedBy(CustomTheme().hGap('sm')),
+        //           ),
+        //         ),
+        //       if (deleteStatus == true)
+        //         PopupMenuItem(
+        //           value: 'delete',
+        //           child: Row(
+        //             children: [
+        //               Icon(Icons.delete_outline, size: 14),
+        //               Text('Hapus'),
+        //             ].separatedBy(CustomTheme().hGap('sm')),
+        //           ),
+        //         ),
+        //     ],
+        //   ),
+        // if (isTextEditor)
+        //   IconButton(
+        //     icon: const Icon(Icons.check),
+        //     onPressed: () {
+        //       handleSave();
+        //     },
+        //   ),
         // if (isWithNotification)
         //   IconButton(
         //     icon: const Icon(Icons.notifications_outlined),
@@ -180,6 +174,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
             ],
+          ),
+        if (updateStatus == true && (label != 'Sorting' || label != 'Packing'))
+          IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            onPressed: () {
+              handleUpdate();
+            },
+          ),
+        if (deleteStatus == true)
+          IconButton(
+            icon: const Icon(Icons.delete_outlined),
+            onPressed: () {
+              handleDelete(id.toString());
+            },
           ),
         ...?actions
       ],

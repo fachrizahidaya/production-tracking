@@ -639,11 +639,12 @@ class _SummaryCardState extends State<SummaryCard>
                 ),
               ],
             ),
-            Icon(
-              Icons.chevron_right_outlined,
-              size: isTablet ? 18 : 16,
-              color: Colors.grey,
-            ),
+            if (item.label == 'Menunggu Diproses')
+              Icon(
+                Icons.chevron_right_outlined,
+                size: isTablet ? 18 : 16,
+                color: Colors.grey,
+              ),
           ].separatedBy(CustomTheme().hGap('lg')),
         ),
       ),

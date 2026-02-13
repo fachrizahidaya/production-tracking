@@ -72,15 +72,15 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.data['can_update'] == true ||
-                    widget.data['can_delete'] == true)
-                  // Padding(
-                  //   padding: EdgeInsets.only(top: 16),
-                  //   child: _buildActionButtons(isTablet),
-                  // ),
+                // if (widget.data['can_update'] == true ||
+                //     widget.data['can_delete'] == true)
+                //   Padding(
+                //     padding: EdgeInsets.only(top: 16),
+                //     child: _buildActionButtons(isTablet),
+                //   ),
 
-                  // Header Section
-                  _buildHeaderSection(isTablet),
+                // Header Section
+                _buildHeaderSection(isTablet),
 
                 // Main Content
                 if (isTablet)

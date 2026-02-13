@@ -243,7 +243,7 @@ class _FormItemsState extends State<FormItems> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
-              flex: row['staticUnit'] != null ? 4 : 3,
+              flex: row['staticUnit'] != null ? 3 : 2,
               child: TextForm(
                 label: row['label'],
                 req: row['req'],
@@ -260,11 +260,11 @@ class _FormItemsState extends State<FormItems> {
                     widget.handleChangeInput(row['value'], safeValue);
 
                     if (row['value'] == 'length') {
-                      widget.handleChangeInput('length_unit_id', 4);
+                      widget.handleChangeInput('length_unit_id', 3);
                     }
 
                     if (row['value'] == 'width') {
-                      widget.handleChangeInput('width_unit_id', 4);
+                      widget.handleChangeInput('width_unit_id', 3);
                     }
 
                     if (row['value'] == 'weight') {
@@ -366,7 +366,7 @@ class _FormItemsState extends State<FormItems> {
               selectedValue: widget.form['wo_id']?.toString() ?? '',
               required: true,
               validator: (value) {
-                if ((value == null || value.isEmpty)) {
+                if (value == null || value.trim().isEmpty) {
                   return 'Work Order wajib dipilih';
                 }
                 return null;
@@ -445,7 +445,7 @@ class _FormItemsState extends State<FormItems> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Expanded(
-                                  flex: row['staticUnit'] != null ? 4 : 3,
+                                  flex: row['staticUnit'] != null ? 3 : 2,
                                   child: Column(
                                     children: [
                                       TextForm(
@@ -471,12 +471,12 @@ class _FormItemsState extends State<FormItems> {
 
                                             if (row['value'] == 'length') {
                                               widget.handleChangeInput(
-                                                  'length_unit_id', 4);
+                                                  'length_unit_id', 3);
                                             }
 
                                             if (row['value'] == 'width') {
                                               widget.handleChangeInput(
-                                                  'width_unit_id', 4);
+                                                  'width_unit_id', 3);
                                             }
 
                                             if (widget.withQtyAndWeight ==
@@ -512,7 +512,8 @@ class _FormItemsState extends State<FormItems> {
                                       selectedValue: row['selectedValue'],
                                       required: row['req'],
                                       validator: (value) {
-                                        if ((value == null || value.isEmpty)) {
+                                        if (value == null ||
+                                            value.trim().isEmpty) {
                                           return '${row['unitLabel']} wajib dipilih';
                                         }
                                         return null;
@@ -609,7 +610,8 @@ class _FormItemsState extends State<FormItems> {
                                         '',
                                     required: true,
                                     validator: (value) {
-                                      if ((value == null || value.isEmpty)) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
                                         return 'Satuan wajib dipilih';
                                       }
                                       return null;
@@ -704,7 +706,8 @@ class _FormItemsState extends State<FormItems> {
                                             '',
                                     required: true,
                                     validator: (value) {
-                                      if ((value == null || value.isEmpty)) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
                                         return 'Satuan wajib dipilih';
                                       }
                                       return null;

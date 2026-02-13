@@ -32,12 +32,24 @@ class _SelectFormState extends State<SelectForm> {
       validator: widget.validator,
       initialValue: widget.selectedValue,
       builder: (FormFieldState<String> field) {
+        if (field.value != widget.selectedValue) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            field.didChange(widget.selectedValue);
+          });
+        }
         return GroupForm(
           label: widget.label,
           req: widget.required,
           errorText: field.errorText,
           formControl: GestureDetector(
-            onTap: widget.isDisabled == true ? null : widget.onTap,
+            onTap: widget.isDisabled == true
+                ? null
+                : () async {
+                    await widget.onTap();
+
+                    field.didChange(widget.selectedValue);
+                    field.validate();
+                  },
             child: Container(
               padding: CustomTheme().padding('card'),
               width: double.infinity,

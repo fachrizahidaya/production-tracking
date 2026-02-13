@@ -146,33 +146,38 @@ class _TabSectionState extends State<TabSection> {
           ),
         ),
         bottomNavigationBar: SafeArea(
-          child: Container(
-            padding: CustomTheme().padding('card'),
-            color: Colors.white,
-            child: ValueListenableBuilder<bool>(
-              valueListenable: widget.isSubmitting,
-              builder: (context, isSubmitting, _) {
-                return Row(
-                  children: [
-                    Expanded(
-                      child: CancelButton(
-                        label: 'Batal',
-                        onPressed: () => _handleCancel(context),
-                        customHeight: 48.0,
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Container(
+              padding: CustomTheme().padding('card'),
+              color: Colors.white,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: widget.isSubmitting,
+                builder: (context, isSubmitting, _) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: CancelButton(
+                          label: 'Batal',
+                          onPressed: () => _handleCancel(context),
+                          customHeight: 48.0,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                        child: FormButton(
-                      label: 'Mulai',
-                      isDisabled: isDisabled,
-                      onPressed: () {
-                        _handleSubmit(context);
-                      },
-                      customHeight: 48.0,
-                    ))
-                  ].separatedBy(CustomTheme().hGap('xl')),
-                );
-              },
+                      Expanded(
+                          child: FormButton(
+                        label: 'Mulai',
+                        isDisabled: isDisabled,
+                        onPressed: () {
+                          _handleSubmit(context);
+                        },
+                        customHeight: 48.0,
+                      ))
+                    ].separatedBy(CustomTheme().hGap('xl')),
+                  );
+                },
+              ),
             ),
           ),
         ),

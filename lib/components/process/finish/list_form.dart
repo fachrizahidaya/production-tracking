@@ -136,7 +136,7 @@ class _ListFormState extends State<ListForm> {
 
       updated.add({
         'item_grade_id': grade['value'],
-        'unit_id': existing['unit_id'] ?? 5,
+        'unit_id': existing['unit_id'] ?? 1,
         'notes': existing['notes'] ?? '',
         'qty': existing['qty'] ?? '0',
       });

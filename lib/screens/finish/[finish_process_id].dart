@@ -533,7 +533,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             while (widget.form!['grades'].length <= index) {
               widget.form!['grades'].add({
                 'item_grade_id': '',
-                'unit_id': 5,
+                'unit_id': 1,
                 'unit': {},
                 'qty': '0',
                 'notes': '',

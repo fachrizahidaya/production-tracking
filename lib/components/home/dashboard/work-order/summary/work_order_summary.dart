@@ -115,16 +115,22 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
 
   Map<String, dynamic> _mapApiToSummaryCard(Map<String, dynamic> item) {
     final waitingList = item['waiting'] as List? ?? [];
+    final onProgressList = item['in_progress'] as List? ?? [];
+    final finishedList = item['completed'] as List? ?? [];
+    final skippedList = item['skipped'] as List? ?? [];
 
     return {
       'name': item['process_name'],
       'summary': {
-        'completed': (item['completed'] as List?)?.length ?? 0,
-        'in_progress': (item['in_progress'] as List?)?.length ?? 0,
+        'completed': finishedList.length,
+        'in_progress': onProgressList.length,
         'waiting': waitingList.length,
-        'skipped': (item['skipped'] as List?)?.length ?? 0,
+        'skipped': skippedList.length,
       },
       'waiting': waitingList,
+      'in_progress': onProgressList,
+      'completed': finishedList,
+      'skipped': skippedList,
       'hasOverdueWaiting': _hasOverdueWaiting(waitingList),
     };
   }

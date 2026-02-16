@@ -79,8 +79,6 @@ class _SummaryCardState extends State<SummaryCard>
     required String title,
     required List<dynamic> woList,
   }) {
-    if (woList.isEmpty) return;
-
     showDialog(
       context: context,
       builder: (context) {
@@ -98,7 +96,6 @@ class _SummaryCardState extends State<SummaryCard>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header
                   Row(
                     children: [
                       Icon(
@@ -121,102 +118,115 @@ class _SummaryCardState extends State<SummaryCard>
                     ],
                   ),
                   const Divider(),
-
-                  // List
                   Expanded(
-                    child: ListView.separated(
-                      itemCount: woList.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1),
-                      itemBuilder: (context, index) {
-                        final wo = woList[index];
-                        final woNo = wo['wo_no'] ?? '-';
-                        final bool isUrgent = wo['urgent'] == true;
-                        final bool isOverdue = wo['overdue'] == true;
-                        final String overdueDays =
-                            wo['overdue_days']?.toString() ?? '0';
-                        final createdAt = wo['reference_date'];
-
-                        return ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  if (isOverdue)
-                                    PulseIcon(
-                                      icon: Icons.circle,
-                                      color: Colors.redAccent,
-                                      size: 12,
-                                    ),
-                                  Text(
-                                    woNo,
-                                    style: TextStyle(
-                                      fontWeight:
-                                          CustomTheme().fontWeight('semibold'),
-                                      color: isOverdue
-                                          ? Colors.redAccent
-                                          : Colors.grey[800],
-                                    ),
-                                  ),
-                                  if (isUrgent)
-                                    const Icon(
-                                      Icons.warning_amber_rounded,
-                                      size: 16,
-                                      color: Colors.red,
-                                    ),
-                                  const Spacer(),
-                                  Text(
-                                    createdAt != null
-                                        ? DateFormat("dd MMM yyyy")
-                                            .format(DateTime.parse(createdAt))
-                                        : '-',
-                                    style: TextStyle(
-                                      fontSize: CustomTheme().fontSize('sm'),
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                ].separatedBy(CustomTheme().hGap('sm')),
+                    child: woList.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Tidak ada Work Order',
+                              style: TextStyle(
+                                fontSize: CustomTheme().fontSize('md'),
+                                color: Colors.grey[500],
                               ),
-                              const SizedBox(height: 4),
-                              if (isOverdue)
-                                Row(
+                            ),
+                          )
+                        : ListView.separated(
+                            itemCount: woList.length,
+                            separatorBuilder: (_, __) =>
+                                const Divider(height: 1),
+                            itemBuilder: (context, index) {
+                              final wo = woList[index];
+                              final woNo = wo['wo_no'] ?? '-';
+                              final bool isUrgent = wo['urgent'] == true;
+                              final bool isOverdue = wo['overdue'] == true;
+                              final String overdueDays =
+                                  wo['overdue_days']?.toString() ?? '0';
+                              final createdAt = wo['reference_date'];
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'Terlambat $overdueDays hari',
-                                      style: TextStyle(
-                                        fontSize: CustomTheme().fontSize('sm'),
-                                        color: Colors.redAccent,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                    Row(
+                                      children: [
+                                        if (isOverdue)
+                                          PulseIcon(
+                                            icon: Icons.circle,
+                                            color: Colors.redAccent,
+                                            size: 12,
+                                          ),
+                                        Text(
+                                          woNo,
+                                          style: TextStyle(
+                                            fontWeight: CustomTheme()
+                                                .fontWeight('semibold'),
+                                            color: isOverdue
+                                                ? Colors.redAccent
+                                                : Colors.grey[800],
+                                          ),
+                                        ),
+                                        if (isUrgent)
+                                          const Icon(
+                                            Icons.warning_amber_rounded,
+                                            size: 16,
+                                            color: Colors.red,
+                                          ),
+                                        const Spacer(),
+                                        Text(
+                                          createdAt != null
+                                              ? DateFormat("dd MMM yyyy")
+                                                  .format(
+                                                      DateTime.parse(createdAt))
+                                              : '-',
+                                          style: TextStyle(
+                                            fontSize:
+                                                CustomTheme().fontSize('sm'),
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                      ].separatedBy(CustomTheme().hGap('sm')),
                                     ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'Harus segera diproses',
-                                      style: TextStyle(
-                                        fontSize: CustomTheme().fontSize('sm'),
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w600,
+                                    const SizedBox(height: 4),
+                                    if (isOverdue)
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'Terlambat $overdueDays hari',
+                                            style: TextStyle(
+                                              fontSize:
+                                                  CustomTheme().fontSize('sm'),
+                                              color: Colors.redAccent,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            'Harus segera diproses',
+                                            style: TextStyle(
+                                              fontSize:
+                                                  CustomTheme().fontSize('sm'),
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
                                   ],
                                 ),
-                            ],
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => WorkOrderDetail(
+                                        id: wo['wo_id'].toString(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                           ),
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => WorkOrderDetail(
-                                  id: wo['wo_id'].toString(),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
                   ),
                 ],
               ),
@@ -244,9 +254,12 @@ class _SummaryCardState extends State<SummaryCard>
           onTapUp: (_) => _animationController.reverse(),
           onTapCancel: () => _animationController.reverse(),
           onTap: widget.onTap,
-          child: ScaleTransition(
-            scale: _scaleAnimation,
-            child: _buildCard(isTablet),
+          child: SizedBox(
+            width: double.infinity,
+            child: ScaleTransition(
+              scale: _scaleAnimation,
+              child: _buildCard(isTablet),
+            ),
           ),
         );
       },
@@ -267,6 +280,7 @@ class _SummaryCardState extends State<SummaryCard>
     final progress = _getProgress(summary);
 
     return AnimatedContainer(
+      width: double.infinity,
       duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -292,20 +306,14 @@ class _SummaryCardState extends State<SummaryCard>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Header Section
             _buildHeader(statusColor, isTablet),
-
-            // Content Section
             Padding(
               padding: CustomTheme().padding('card'),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Progress Section
                   if (widget.showProgress)
                     _buildProgressSection(summary, progress, isTablet),
-
-                  // Status Grid
                   _buildStatusGrid(summary, isTablet),
                 ].separatedBy(CustomTheme().vGap('lg')),
               ),
@@ -316,7 +324,6 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
-  /// Header Section dengan nama dan total
   Widget _buildHeader(Color statusColor, bool isTablet) {
     final Map<String, dynamic> summary =
         (widget.data['summary'] as Map<String, dynamic>?) ??
@@ -359,7 +366,6 @@ class _SummaryCardState extends State<SummaryCard>
         ),
         child: Row(
           children: [
-            // Icon Container
             Container(
               padding: CustomTheme().padding('card'),
               decoration: BoxDecoration(
@@ -372,8 +378,6 @@ class _SummaryCardState extends State<SummaryCard>
                 color: statusColor,
               ),
             ),
-
-            // Name + Chevron
             Expanded(
               child: Row(
                 children: [
@@ -395,8 +399,6 @@ class _SummaryCardState extends State<SummaryCard>
                 ].separatedBy(CustomTheme().hGap('sm')),
               ),
             ),
-
-            // Total Badge
             _buildTotalBadge(total, statusColor, isTablet),
           ].separatedBy(CustomTheme().hGap('xl')),
         ),
@@ -404,7 +406,6 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
-  /// Total Badge
   Widget _buildTotalBadge(int total, Color color, bool isTablet) {
     return Container(
       padding: CustomTheme().padding('card'),
@@ -436,7 +437,6 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
-  /// Progress Section
   Widget _buildProgressSection(
       Map<String, dynamic> summary, double progress, bool isTablet) {
     final completed = summary['completed'] ?? 0;
@@ -466,7 +466,6 @@ class _SummaryCardState extends State<SummaryCard>
             ),
           ],
         ),
-        // Progress Bar
         LayoutBuilder(
           builder: (context, constraints) {
             final barWidth = constraints.maxWidth * progress.clamp(0.0, 1.0);
@@ -506,7 +505,6 @@ class _SummaryCardState extends State<SummaryCard>
             );
           },
         ),
-
         Text(
           '$completed dari $total selesai',
           style: TextStyle(
@@ -518,7 +516,6 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
-  /// Status Grid
   Widget _buildStatusGrid(Map<String, dynamic> summary, bool isTablet) {
     final bool hasOverdueWaiting = widget.data['hasOverdueWaiting'] == true;
     final allItems = [
@@ -569,6 +566,7 @@ class _SummaryCardState extends State<SummaryCard>
     }).toList();
 
     return Wrap(
+      spacing: 8,
       runSpacing: 8,
       children: filteredItems
           .map((item) => _buildStatusItem(item, isTablet))
@@ -577,21 +575,19 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
-  /// Status Item Widget
   Widget _buildStatusItem(_StatusItem item, bool isTablet) {
     final woList = _getWOListByStatus(item.label);
+    print('wo: $woList');
 
     return InkWell(
       borderRadius: BorderRadius.circular(8),
-      onTap: woList.isEmpty
-          ? null
-          : () {
-              _showWorkOrdersByStatusDialog(
-                context,
-                title: item.label,
-                woList: woList,
-              );
-            },
+      onTap: () {
+        _showWorkOrdersByStatusDialog(
+          context,
+          title: item.label,
+          woList: woList,
+        );
+      },
       child: Container(
         padding: CustomTheme().padding('badge'),
         decoration: BoxDecoration(
@@ -639,7 +635,7 @@ class _SummaryCardState extends State<SummaryCard>
                 ),
               ],
             ),
-            if (item.label == 'Menunggu Diproses')
+            if (item.value > 0)
               Icon(
                 Icons.chevron_right_outlined,
                 size: isTablet ? 18 : 16,
@@ -651,7 +647,6 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
-  /// Get Summary Color based on status
   Color _getSummaryColor(Map<String, dynamic> summary) {
     final completed = summary['completed'] ?? 0;
     final skipped = summary['skipped'] ?? 0;
@@ -676,7 +671,6 @@ class _SummaryCardState extends State<SummaryCard>
     return Colors.grey;
   }
 
-  /// Get Total Count
   int _getTotalCount(Map<String, dynamic> summary) {
     return (summary['completed'] ?? 0) +
         (summary['skipped'] ?? 0) +
@@ -684,7 +678,6 @@ class _SummaryCardState extends State<SummaryCard>
         (summary['waiting'] ?? 0);
   }
 
-  /// Get Progress (0.0 - 1.0)
   double _getProgress(Map<String, dynamic> summary) {
     final total = _getTotalCount(summary);
     if (total == 0) return 0.0;
@@ -693,12 +686,10 @@ class _SummaryCardState extends State<SummaryCard>
     return completed / total;
   }
 
-  /// Get Progress Color
   Color _getProgressColor(double progress) {
     return Colors.green;
   }
 
-  /// Get Process Icon
   IconData _getProcessIcon(String? name) {
     if (name == null) return Icons.category_outlined;
 
@@ -744,7 +735,6 @@ class _SummaryCardState extends State<SummaryCard>
   }
 }
 
-/// Status Item Model
 class _StatusItem {
   final String label;
   final int value;
@@ -805,7 +795,6 @@ class SummaryCardGrid extends StatelessWidget {
   }
 }
 
-/// Compact Summary Card untuk list view
 class CompactSummaryCard extends StatelessWidget {
   final dynamic data;
   final VoidCallback? onTap;
@@ -848,7 +837,6 @@ class CompactSummaryCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                // Left: Icon + Name
                 Container(),
                 SizedBox(width: isTablet ? 14 : 12),
                 Expanded(
@@ -871,7 +859,6 @@ class CompactSummaryCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Right: Arrow
                 Icon(
                   Icons.chevron_right,
                   size: isTablet ? 24 : 22,

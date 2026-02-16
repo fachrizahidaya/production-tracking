@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class DialogActionItem {
   final IconData icon;
@@ -30,21 +31,33 @@ class ActionDialog extends StatelessWidget {
       ),
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.75,
+          maxWidth: MediaQuery.of(context).size.width * 0.5,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: actions.map((item) {
-            return ListTile(
-              leading: Icon(item.icon, color: item.iconColor),
-              title: Text(item.title),
-              onTap: () {
-                Navigator.pop(context);
-                item.onTap();
-              },
-            );
-          }).toList(),
+        child: Padding(
+          padding: CustomTheme().padding('dialog'),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: List.generate(actions.length, (index) {
+              final item = actions[index];
+
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(item.icon, color: item.iconColor),
+                    title: Text(item.title),
+                    onTap: () {
+                      Navigator.pop(context);
+                      item.onTap();
+                    },
+                  ),
+                  if (index != actions.length - 1) const Divider(height: 1),
+                ],
+              );
+            }),
+          ),
         ),
       ),
     );

@@ -74,10 +74,10 @@ class _NoteEditorState extends State<NoteEditor> {
             child: Container(
               width: double.infinity,
               padding: CustomTheme().padding('card'),
-              constraints: BoxConstraints(minHeight: 150),
+              constraints: BoxConstraints(minHeight: 150.0),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.0),
                 border: Border.all(color: Colors.grey.shade300),
               ),
               child: Html(

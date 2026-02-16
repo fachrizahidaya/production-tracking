@@ -24,7 +24,8 @@ class _TextEditorState extends State<TextEditor> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
-  @override
+  bool _editorReady = false;
+
   @override
   void initState() {
     super.initState();
@@ -59,71 +60,76 @@ class _TextEditorState extends State<TextEditor> {
     return Scaffold(
       appBar: CustomAppBar(
         title: widget.label,
-        onReturn: () {
-          _handleCancel(context);
-        },
+        onReturn: () => _handleCancel(context),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            ToolBar(
-              controller: controller,
-              toolBarConfig: const [
-                ToolBarStyle.bold,
-                ToolBarStyle.italic,
-                ToolBarStyle.underline,
-                ToolBarStyle.link,
-                ToolBarStyle.listBullet,
-                ToolBarStyle.listOrdered,
-                ToolBarStyle.align,
-                ToolBarStyle.color,
-              ],
-            ),
-            Expanded(
-              child: QuillHtmlEditor(
-                minHeight: 100,
-                hintText: "Tulis catatan...",
+        child: Padding(
+          padding: CustomTheme().padding('process-content'),
+          child: Column(
+            children: [
+              ToolBar(
                 controller: controller,
+                toolBarConfig: const [
+                  ToolBarStyle.bold,
+                  ToolBarStyle.italic,
+                  ToolBarStyle.underline,
+                  ToolBarStyle.link,
+                  ToolBarStyle.listBullet,
+                  ToolBarStyle.listOrdered,
+                  ToolBarStyle.align,
+                  ToolBarStyle.color,
+                ],
               ),
-            ),
-          ],
+              Expanded(
+                child: Padding(
+                  padding: CustomTheme().padding('process-content'),
+                  child: QuillHtmlEditor(
+                    controller: controller,
+                    minHeight: 100.0,
+                    hintText: "Tulis catatan...",
+                    onEditorCreated: () async {
+                      _editorReady = true;
+
+                      final html = widget.initialHtml?.trim();
+                      if (html != null && html.isNotEmpty) {
+                        await controller.setText(html);
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Container(
-            padding: CustomTheme().padding('card'),
-            color: Colors.white,
-            child: ValueListenableBuilder<bool>(
-              valueListenable: _isSubmitting,
-              builder: (context, isSubmitting, _) {
-                return Row(
-                  children: [
-                    Expanded(
-                      child: CancelButton(
-                        label: 'Kembali',
-                        onPressed: () => _handleCancel(context),
-                        customHeight: 48.0,
-                      ),
-                    ),
-                    Expanded(
-                        child: FormButton(
-                      label: 'Simpan',
-                      onPressed: () async {
-                        final html = await controller.getText();
-                        if (context.mounted) {
-                          Navigator.pop(context, html);
-                        }
-                      },
-                      customHeight: 48.0,
-                    ))
-                  ].separatedBy(CustomTheme().hGap('xl')),
-                );
-              },
-            ),
+        child: Container(
+          padding: CustomTheme().padding('card'),
+          color: Colors.white,
+          child: Row(
+            children: [
+              Expanded(
+                child: CancelButton(
+                  label: 'Kembali',
+                  onPressed: () => _handleCancel(context),
+                  customHeight: 48.0,
+                ),
+              ),
+              Expanded(
+                child: FormButton(
+                  label: 'Simpan',
+                  onPressed: () async {
+                    if (!_editorReady) return;
+
+                    final html = await controller.getText();
+                    if (context.mounted) {
+                      Navigator.pop(context, html);
+                    }
+                  },
+                  customHeight: 48.0,
+                ),
+              ),
+            ].separatedBy(CustomTheme().hGap('xl')),
           ),
         ),
       ),

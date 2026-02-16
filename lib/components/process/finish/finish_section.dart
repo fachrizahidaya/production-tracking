@@ -164,6 +164,20 @@ class _FinishSectionState extends State<FinishSection> {
       final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
       if (image != null) {
+        // 🔹 validate total size
+        final isValid = await _validateTotalImageSize(image.path);
+
+        if (!isValid) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Lampiran melebihi 1 MB'),
+              ),
+            );
+          }
+          return;
+        }
+
         setState(() {
           allAttachments.removeWhere((e) => e['is_add_button'] == true);
 
@@ -175,7 +189,6 @@ class _FinishSectionState extends State<FinishSection> {
           };
 
           allAttachments.add(newFile);
-
           allAttachments.add({'is_add_button': true});
 
           widget.form['attachments'] =
@@ -189,6 +202,30 @@ class _FinishSectionState extends State<FinishSection> {
         );
       }
     }
+  }
+
+  Future<bool> _validateTotalImageSize(String newFilePath) async {
+    const int maxTotalSize = 1 * 1024 * 1024; // 1 MB
+
+    int totalSize = 0;
+
+    // existing attachments
+    for (final item in allAttachments) {
+      if (item['is_add_button'] == true) continue;
+
+      if (item['path'] != null) {
+        final file = File(item['path']);
+        if (await file.exists()) {
+          totalSize += await file.length();
+        }
+      }
+    }
+
+    // add new image size
+    final newFile = File(newFilePath);
+    totalSize += await newFile.length();
+
+    return totalSize <= maxTotalSize;
   }
 
   void showImageDialog(BuildContext context, bool isNew, String filePath) {

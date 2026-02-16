@@ -157,7 +157,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     }
 
     final isSingleItem = widget.data!.length == 1;
-    final screenWidth = MediaQuery.of(context).size.width * 0.9;
+    final screenWidth = MediaQuery.of(context).size.width * 0.95;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,

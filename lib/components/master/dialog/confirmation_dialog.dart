@@ -33,9 +33,9 @@ class ConfirmationDialog extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: ConstrainedBox(
           constraints: BoxConstraints(
-              maxWidth: maxDialogWidth,
-              maxHeight: maxDialogHeight,
-              minWidth: dialogWidth),
+            maxWidth: MediaQuery.of(context).size.width * 0.5,
+            maxHeight: MediaQuery.of(context).size.height * 0.5,
+          ),
           child: Padding(
             padding: CustomTheme().padding('dialog'),
             child: Column(

@@ -21,9 +21,9 @@ class CustomAlertDialog extends StatelessWidget {
         backgroundColor: Colors.white,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-              maxWidth: maxDialogWidth,
-              maxHeight: maxDialogHeight,
-              minWidth: dialogWidth),
+            maxWidth: MediaQuery.of(context).size.width * 0.5,
+            maxHeight: MediaQuery.of(context).size.height * 0.5,
+          ),
           child: Padding(
             padding: CustomTheme().padding('dialog'),
             child: Column(

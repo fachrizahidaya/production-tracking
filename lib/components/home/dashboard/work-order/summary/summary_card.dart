@@ -577,7 +577,6 @@ class _SummaryCardState extends State<SummaryCard>
 
   Widget _buildStatusItem(_StatusItem item, bool isTablet) {
     final woList = _getWOListByStatus(item.label);
-    print('wo: $woList');
 
     return InkWell(
       borderRadius: BorderRadius.circular(8),

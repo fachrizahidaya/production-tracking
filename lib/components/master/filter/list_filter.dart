@@ -211,8 +211,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.85,
-                      height: MediaQuery.of(context).size.height * 0.6,
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      height: MediaQuery.of(context).size.height * 0.5,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
@@ -243,7 +243,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Padding(
-                                padding: CustomTheme().padding('content'),
+                                padding: CustomTheme().padding('dialog'),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

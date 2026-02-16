@@ -268,6 +268,10 @@ class _FormItemsState extends State<FormItems> {
                     }
 
                     if (row['value'] == 'weight') {
+                      widget.handleChangeInput('weight_unit_id', 2);
+                    }
+
+                    if (row['value'] == 'weight') {
                       widget.validateWeight(value);
                     }
                   });
@@ -339,7 +343,7 @@ class _FormItemsState extends State<FormItems> {
       },
       if (widget.forDyeing == false)
         {
-          'label': 'Berat',
+          'label': 'Berat (KG)',
           'controller': widget.weight,
           'onSelect': widget.handleSelectUnit,
           'selectedLabel': widget.form['nama_satuan_berat'] ?? '',
@@ -347,7 +351,7 @@ class _FormItemsState extends State<FormItems> {
           'unitLabel': 'Satuan Berat',
           'value': 'weight',
           'req': true,
-          'withSelectUnit': true,
+          'withSelectUnit': false,
           'staticUnit': 'KG'
         },
     ];
@@ -477,6 +481,10 @@ class _FormItemsState extends State<FormItems> {
                                             if (row['value'] == 'width') {
                                               widget.handleChangeInput(
                                                   'width_unit_id', 3);
+                                            }
+                                            if (row['value'] == 'weight') {
+                                              widget.handleChangeInput(
+                                                  'weight_unit_id', 2);
                                             }
 
                                             if (widget.withQtyAndWeight ==
@@ -767,17 +775,13 @@ class _FormItemsState extends State<FormItems> {
                             isNumber: true,
                             controller: widget.weightDozen,
                             handleChange: (val) {
-                              final safeValue =
-                                  (val == null || val.toString().trim().isEmpty)
-                                      ? '0'
-                                      : val.toString();
-                              widget.weightDozen.text = safeValue;
-                              widget.handleChangeInput(
-                                  'weight_per_dozen', safeValue);
+                              final raw = val?.toString().trim() ?? '0';
 
-                              final cleanValue =
-                                  val.replaceAll('.', '').replaceAll(',', '');
-                              final input = double.tryParse(cleanValue) ?? 0;
+                              widget.weightDozen.text = raw;
+                              widget.handleChangeInput('weight_per_dozen', raw);
+
+                              final normalized = raw.replaceAll(',', '.');
+                              final input = double.tryParse(normalized) ?? 0;
 
                               calculateFromBeratLusin(input);
                             },

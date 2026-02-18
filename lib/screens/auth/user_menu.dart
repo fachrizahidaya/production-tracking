@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/helpers/auth/storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:textile_tracking/providers/api_client.dart';
 
 class MenuService {

@@ -28,7 +28,6 @@ class ListForm extends StatefulWidget {
   final data;
 
   final handleSelectMachine;
-  final isFormIncomplete;
   final isChanged;
   final allAttachments;
   final handlePickAttachments;
@@ -64,7 +63,6 @@ class ListForm extends StatefulWidget {
       this.handleSelectLengthUnit,
       this.handleSelectWidthUnit,
       this.handleSelectMachine,
-      this.isFormIncomplete,
       this.processId,
       this.isChanged,
       this.allAttachments,
@@ -199,7 +197,6 @@ class _ListFormState extends State<ListForm> {
         data: widget.data,
         processData: widget.processData,
         forPacking: widget.forPacking,
-        greigeQty: greigeQty,
         gsm: widget.gsm,
         weightDozen: widget.weightDozen,
         totalWeight: widget.totalWeight,

@@ -79,39 +79,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         //         handleDelete(stringId);
         //       }
         //     },
-        //     itemBuilder: (context) => [
-        //       if (updateStatus == true &&
-        //           (label != 'Sorting' || label != 'Packing'))
-        //         PopupMenuItem(
-        //           value: 'update',
-        //           child: Row(
-        //             children: [
-        //               Icon(
-        //                 Icons.edit_outlined,
-        //                 size: 14,
-        //               ),
-        //               Text('Edit'),
-        //             ].separatedBy(CustomTheme().hGap('sm')),
-        //           ),
-        //         ),
-        //       if (deleteStatus == true)
-        //         PopupMenuItem(
-        //           value: 'delete',
-        //           child: Row(
-        //             children: [
-        //               Icon(Icons.delete_outline, size: 14),
-        //               Text('Hapus'),
-        //             ].separatedBy(CustomTheme().hGap('sm')),
-        //           ),
-        //         ),
-        //     ],
-        //   ),
-        // if (isTextEditor)
-        //   IconButton(
-        //     icon: const Icon(Icons.check),
-        //     onPressed: () {
-        //       handleSave();
-        //     },
+        //     itemBuilder: (context) => [],
         //   ),
         // if (isWithNotification)
         //   IconButton(

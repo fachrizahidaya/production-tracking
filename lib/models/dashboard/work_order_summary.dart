@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, annotate_overrides
+// ignore_for_file: prefer_final_fields, annotate_overrides, use_build_context_synchronously
 
 import 'dart:convert';
 
@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/helpers/service/base_service.dart';
-import 'package:http/http.dart' as http;
 import 'package:textile_tracking/providers/api_client.dart';
 
 class WorkOrderSummaryService extends BaseService {

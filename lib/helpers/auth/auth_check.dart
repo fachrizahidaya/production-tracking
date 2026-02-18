@@ -3,10 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:textile_tracking/helpers/service/token_service.dart';
-import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/auth/login.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthCheck extends StatefulWidget {
   const AuthCheck({super.key});

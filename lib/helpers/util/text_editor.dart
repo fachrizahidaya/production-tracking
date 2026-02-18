@@ -22,7 +22,6 @@ class TextEditor extends StatefulWidget {
 class _TextEditorState extends State<TextEditor> {
   final QuillEditorController controller = QuillEditorController();
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
-  final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
   bool _editorReady = false;
 

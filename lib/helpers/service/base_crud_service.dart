@@ -1,6 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,9 +50,6 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     notifyListeners();
 
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
       final url = Uri.parse(
           '$baseUrl/$endpoint?page=$_currentPage&search=$searchQuery');
 
@@ -95,8 +93,6 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
   Future<void> getDataView(BuildContext context, dynamic id) async {
     final url = Uri.parse('$baseUrl/$endpoint/$id');
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('access_token');
 
     try {
       _dataView = {};
@@ -124,8 +120,6 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
   ) async {
     final url =
         Uri.parse('$baseUrl/$endpoint').replace(queryParameters: params);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('access_token');
 
     try {
       items.clear();
@@ -156,9 +150,6 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       BuildContext context, T newItem, ValueNotifier<bool> isSubmitting) async {
     isSubmitting.value = true;
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
       final uri = Uri.parse('$baseUrl/$endpoint');
 
       final response = await ApiClient.instance.post(
@@ -374,9 +365,6 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       BuildContext context, String id, ValueNotifier<bool> isSubmitting) async {
     isSubmitting.value = true;
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
       final response = await ApiClient.instance.delete(
         context,
         Uri.parse('$baseUrl/$endpoint/$id'),

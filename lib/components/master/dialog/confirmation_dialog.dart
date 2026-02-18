@@ -23,11 +23,6 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final double dialogWidth = 280;
-    final double maxDialogWidth = 400;
-    final double maxDialogHeight = size.height * 0.9;
-
     return Dialog(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

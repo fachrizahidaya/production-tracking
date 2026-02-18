@@ -75,9 +75,6 @@ class _DashboardState extends State<Dashboard> {
         'end_date': sampaiTanggalSummary,
       };
     });
-    Future.delayed(Duration.zero, () {
-      _loadMore();
-    });
 
     _loadDashboardData();
   }
@@ -103,6 +100,7 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> _loadDashboardData() async {
     if (!mounted) return;
+
     setState(() => isLoading = true);
 
     try {
@@ -111,16 +109,17 @@ class _DashboardState extends State<Dashboard> {
         _handleFetchPie(),
         _handleFetchMachine(),
         _handleFetchSummary(
-            fromDate: dariTanggalSummary, toDate: sampaiTanggalSummary),
-        _loadMore(),
+          fromDate: dariTanggalSummary,
+          toDate: sampaiTanggalSummary,
+        ),
       ]);
+
+      await _loadMore(); // pindahkan ke sini
     } catch (e) {
       if (!mounted) return;
-
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
     } finally {
       if (!mounted) return;
-
       setState(() => isLoading = false);
     }
   }

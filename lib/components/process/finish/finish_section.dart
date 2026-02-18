@@ -134,30 +134,6 @@ class _FinishSectionState extends State<FinishSection> {
     }
   }
 
-  bool get _isFormIncomplete {
-    final qty = widget.form?['qty'];
-    final qtyItem = widget.form?['item_qty'];
-    final weight = widget.form?['weight'];
-    final width = widget.form?['width'];
-    final length = widget.form?['length'];
-    final qtyItemUnitId = widget.form?['item_unit_id'];
-    final qtyUnitId = widget.form?['unit_id'];
-    final unitId = widget.form?['weight_unit_id'];
-    final lengthUnitId = widget.form?['length_unit_id'];
-    final widthUnitId = widget.form?['width_unit_id'];
-
-    return qty == null ||
-        qtyItem == null ||
-        weight == null ||
-        width == null ||
-        length == null ||
-        unitId == null ||
-        qtyItemUnitId == null ||
-        lengthUnitId == null ||
-        qtyUnitId == null ||
-        widthUnitId == null;
-  }
-
   Future<void> _pickAttachments() async {
     try {
       final picker = ImagePicker();
@@ -308,7 +284,6 @@ class _FinishSectionState extends State<FinishSection> {
       handleSelectWo: widget.handleSelectWo,
       handleChangeInput: widget.handleChangeInput,
       handleSelectUnit: widget.handleSelectUnit,
-      isFormIncomplete: _isFormIncomplete,
       isChanged: _isChanged,
       allAttachments: allAttachments,
       handlePickAttachments: _pickAttachments,

@@ -47,7 +47,6 @@ class FormItems extends StatefulWidget {
   final label;
   final data;
   final processData;
-  final greigeQty;
   final handleTotalItemQty;
   final handleRemainingQtyForGrade;
 
@@ -85,7 +84,6 @@ class FormItems extends StatefulWidget {
       this.handleSelectQtyUnitDyeing,
       this.data,
       this.forPacking = false,
-      this.greigeQty,
       this.gsm,
       this.totalWeight,
       this.weightDozen,
@@ -192,7 +190,12 @@ class _FormItemsState extends State<FormItems> {
                 req: true,
                 isNumber: true,
                 handleChange: (val) {
-                  widget.handleUpdateGrade(i, 'qty', val);
+                  final safeValue =
+                      (val == null || val.toString().trim().isEmpty)
+                          ? '0'
+                          : val.toString();
+
+                  widget.handleUpdateGrade(i, 'qty', safeValue);
                   setState(() {
                     final input =
                         double.tryParse(widget.weightDozen.text.toString()) ??
@@ -775,19 +778,24 @@ class _FormItemsState extends State<FormItems> {
                             isNumber: true,
                             controller: widget.weightDozen,
                             handleChange: (val) {
+                              final safeValue =
+                                  (val == null || val.toString().trim().isEmpty)
+                                      ? '0'
+                                      : val.toString();
                               final raw = val?.toString().trim() ?? '0';
 
-                              widget.weightDozen.text = raw;
-                              widget.handleChangeInput('weight_per_dozen', raw);
+                              widget.weightDozen.text = safeValue;
+                              widget.handleChangeInput(
+                                  'weight_per_dozen', safeValue);
 
-                              final normalized = raw.replaceAll(',', '.');
+                              final normalized = safeValue.replaceAll(',', '.');
                               final input = double.tryParse(normalized) ?? 0;
 
                               calculateFromBeratLusin(input);
                             },
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return 'Berat wajib diisi';
+                                return 'Berat 1 lusin wajib diisi';
                               }
                             }),
                       ),

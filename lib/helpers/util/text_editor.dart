@@ -102,33 +102,38 @@ class _TextEditorState extends State<TextEditor> {
         ),
       ),
       bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: CustomTheme().padding('card'),
-          color: Colors.white,
-          child: Row(
-            children: [
-              Expanded(
-                child: CancelButton(
-                  label: 'Kembali',
-                  onPressed: () => _handleCancel(context),
-                  customHeight: 48.0,
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Container(
+            color: Colors.white,
+            padding: CustomTheme().padding('card'),
+            child: Row(
+              children: [
+                Expanded(
+                  child: CancelButton(
+                    label: 'Kembali',
+                    onPressed: () => _handleCancel(context),
+                    customHeight: 48.0,
+                  ),
                 ),
-              ),
-              Expanded(
-                child: FormButton(
-                  label: 'Simpan',
-                  onPressed: () async {
-                    if (!_editorReady) return;
+                Expanded(
+                  child: FormButton(
+                    label: 'Simpan',
+                    onPressed: () async {
+                      if (!_editorReady) return;
 
-                    final html = await controller.getText();
-                    if (context.mounted) {
-                      Navigator.pop(context, html);
-                    }
-                  },
-                  customHeight: 48.0,
+                      final html = await controller.getText();
+                      if (context.mounted) {
+                        Navigator.pop(context, html);
+                      }
+                    },
+                    customHeight: 48.0,
+                  ),
                 ),
-              ),
-            ].separatedBy(CustomTheme().hGap('xl')),
+              ].separatedBy(CustomTheme().hGap('xl')),
+            ),
           ),
         ),
       ),

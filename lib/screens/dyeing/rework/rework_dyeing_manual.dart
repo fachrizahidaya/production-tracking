@@ -146,6 +146,33 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   }
 
   Future<void> _handleCancel(BuildContext context) async {
+    Widget buildBoldMessage(String woNo) {
+      return RichText(
+        text: TextSpan(
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('lg'),
+            color: Colors.black,
+          ),
+          children: [
+            TextSpan(
+              text: 'Anda yakin ingin kembali? ',
+              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
+            ),
+            TextSpan(
+              text: woNo,
+              style: TextStyle(
+                  fontWeight: CustomTheme().fontWeight('bold'),
+                  fontSize: CustomTheme().fontSize('lg')),
+            ),
+            TextSpan(
+              text: ' tidak dirework dan semua perubahan tidak disimpan!',
+              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
+            ),
+          ],
+        ),
+      );
+    }
+
     if (context.mounted) {
       if (widget.form?['wo_id'] != null) {
         showConfirmationDialog(
@@ -158,8 +185,9 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
               Navigator.pop(context);
             },
             title: 'Batal Rework Proses Dyeing',
-            message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
-            buttonBackground: CustomTheme().buttonColor('danger'));
+            // message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
+            buttonBackground: CustomTheme().buttonColor('danger'),
+            child: buildBoldMessage(widget.form?['no_wo']));
       } else {
         Navigator.pop(context);
         Navigator.pop(context);

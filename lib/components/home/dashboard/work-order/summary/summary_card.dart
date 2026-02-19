@@ -79,6 +79,9 @@ class _SummaryCardState extends State<SummaryCard>
     required String title,
     required List<dynamic> woList,
   }) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     showDialog(
       context: context,
       builder: (context) {
@@ -86,19 +89,23 @@ class _SummaryCardState extends State<SummaryCard>
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 360,
-              maxHeight: 420,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
+          child: SizedBox(
+            width: screenWidth * 0.5,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: 300,
+                maxHeight: screenHeight * 0.5,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    children: [
-                      Icon(
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
                           title == 'Selesai'
                               ? Icons.task_alt_outlined
                               : title == 'Diproses'
@@ -106,19 +113,18 @@ class _SummaryCardState extends State<SummaryCard>
                                   : title == 'Dilewati'
                                       ? Icons.fast_forward_outlined
                                       : Icons.error_outline,
-                          size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: CustomTheme().fontSize('md'),
-                          fontWeight: CustomTheme().fontWeight('semibold'),
                         ),
-                      ),
-                    ],
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontWeight: CustomTheme().fontWeight('semibold'),
+                          ),
+                        ),
+                      ].separatedBy(CustomTheme().hGap('md')),
+                    ),
                   ),
                   const Divider(),
-                  Expanded(
+                  Flexible(
                     child: woList.isEmpty
                         ? Center(
                             child: Text(
@@ -131,8 +137,7 @@ class _SummaryCardState extends State<SummaryCard>
                           )
                         : ListView.separated(
                             itemCount: woList.length,
-                            separatorBuilder: (_, __) =>
-                                const Divider(height: 1),
+                            separatorBuilder: (_, __) => Divider(),
                             itemBuilder: (context, index) {
                               final wo = woList[index];
                               final woNo = wo['wo_no'] ?? '-';
@@ -143,7 +148,8 @@ class _SummaryCardState extends State<SummaryCard>
                               final createdAt = wo['reference_date'];
 
                               return ListTile(
-                                contentPadding: EdgeInsets.zero,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 6, horizontal: 24),
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -566,13 +572,11 @@ class _SummaryCardState extends State<SummaryCard>
     }).toList();
 
     return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: filteredItems
-          .map((item) => _buildStatusItem(item, isTablet))
-          .toList()
-          .separatedBy(SizedBox(width: isTablet ? 12 : 8)),
-    );
+        spacing: 8,
+        runSpacing: 16,
+        children: filteredItems
+            .map((item) => _buildStatusItem(item, isTablet))
+            .toList());
   }
 
   Widget _buildStatusItem(_StatusItem item, bool isTablet) {

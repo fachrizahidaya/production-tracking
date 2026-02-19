@@ -243,7 +243,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Padding(
-                                padding: CustomTheme().padding('dialog'),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 24),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -255,15 +256,10 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                             .fontWeight('semibold'),
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
                                     SizedBox(
-                                      height: 40,
                                       child: TextFormField(
                                         decoration: InputDecoration(
                                           hintText: 'Pencarian...',
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 12),
                                           border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(12),
@@ -272,12 +268,11 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                         onChanged: runSearch,
                                       ),
                                     ),
-                                  ],
+                                  ].separatedBy(CustomTheme().vGap('lg')),
                                 ),
                               ),
                               Expanded(
                                 child: Scrollbar(
-                                  thickness: 4,
                                   child: ListView.separated(
                                     itemCount: filteredList.length,
                                     itemBuilder: (context, index) {
@@ -286,6 +281,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                           (s) => s['value'] == item['value']);
 
                                       return CheckboxListTile(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 24),
                                         value: isSelected,
                                         title: Text(item['label']),
                                         activeColor: Colors.green,
@@ -304,12 +301,13 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                       );
                                     },
                                     separatorBuilder: (context, index) =>
-                                        const Divider(height: 0.5),
+                                        Divider(),
                                   ),
                                 ),
                               ),
                               Padding(
-                                padding: CustomTheme().padding('card'),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 24),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -323,7 +321,6 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                       },
                                       child: const Text('Reset'),
                                     ),
-                                    const SizedBox(width: 8),
                                     ElevatedButton(
                                       onPressed: () {
                                         Navigator.pop(
@@ -331,7 +328,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                       },
                                       child: const Text('Simpan'),
                                     ),
-                                  ],
+                                  ].separatedBy(CustomTheme().hGap('xl')),
                                 ),
                               ),
                             ],

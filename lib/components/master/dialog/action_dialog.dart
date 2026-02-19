@@ -32,32 +32,30 @@ class ActionDialog extends StatelessWidget {
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.5,
+          maxHeight: MediaQuery.of(context).size.height * 0.5,
         ),
-        child: Padding(
-          padding: CustomTheme().padding('dialog'),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: List.generate(actions.length, (index) {
-              final item = actions[index];
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: List.generate(actions.length, (index) {
+            final item = actions[index];
 
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Icon(item.icon, color: item.iconColor),
-                    title: Text(item.title),
-                    onTap: () {
-                      Navigator.pop(context);
-                      item.onTap();
-                    },
-                  ),
-                  if (index != actions.length - 1) const Divider(height: 1),
-                ],
-              );
-            }),
-          ),
+            return Column(
+              children: [
+                ListTile(
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 6, horizontal: 24),
+                  leading: Icon(item.icon, color: item.iconColor),
+                  title: Text(item.title),
+                  onTap: () {
+                    Navigator.pop(context);
+                    item.onTap();
+                  },
+                ),
+                if (index != actions.length - 1) Divider(),
+              ],
+            );
+          }),
         ),
       ),
     );

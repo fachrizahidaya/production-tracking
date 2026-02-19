@@ -23,6 +23,8 @@ class DyeingDetail extends StatefulWidget {
 }
 
 class _DyeingDetailState extends State<DyeingDetail> {
+  final DyeingService _dyeingService = DyeingService();
+
   @override
   void initState() {
     super.initState();
@@ -71,6 +73,10 @@ class _DyeingDetailState extends State<DyeingDetail> {
       forDyeing: true,
       getMachineOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsDyeing(),
+      idProcess: 'dyeing_id',
+      processService: _dyeingService,
+      forPacking: false,
+      fetchFinish: (service) => service.fetchFinishOptions(),
     );
   }
 }

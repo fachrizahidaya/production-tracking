@@ -160,7 +160,11 @@ class _CreateProcessState extends State<CreateProcess> {
         ),
       );
     } catch (e) {
-      _showSnackBar("Error: ${e.toString()}");
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: e.toString(),
+      );
       setState(() => _isLoading = false);
     }
   }
@@ -171,7 +175,11 @@ class _CreateProcessState extends State<CreateProcess> {
         await widget.handleSubmitToService!(context, _form, _firstLoading);
       }
     } catch (e) {
-      _showSnackBar(e.toString());
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: e.toString(),
+      );
     }
   }
 
@@ -190,11 +198,6 @@ class _CreateProcessState extends State<CreateProcess> {
         return SlideTransition(position: offsetAnimation, child: child);
       },
     );
-  }
-
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override

@@ -56,6 +56,33 @@ class _TabSectionState extends State<TabSection> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   Future<void> _handleCancel(BuildContext context) async {
+    Widget buildBoldMessage(String woNo) {
+      return RichText(
+        text: TextSpan(
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('lg'),
+            color: Colors.black,
+          ),
+          children: [
+            TextSpan(
+              text: 'Anda yakin ingin kembali? ',
+              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
+            ),
+            TextSpan(
+              text: woNo,
+              style: TextStyle(
+                  fontWeight: CustomTheme().fontWeight('bold'),
+                  fontSize: CustomTheme().fontSize('lg')),
+            ),
+            TextSpan(
+              text: ' tidak dimulai dan semua perubahan tidak disimpan!',
+              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
+            ),
+          ],
+        ),
+      );
+    }
+
     if (context.mounted) {
       if (widget.form?['wo_id'] != null) {
         showConfirmationDialog(
@@ -67,9 +94,11 @@ class _TabSectionState extends State<TabSection> {
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            title: 'Batal Mulai Proses ${widget.label}',
-            message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
-            buttonBackground: CustomTheme().buttonColor('danger'));
+            title: 'Batal Mulai ${widget.label}',
+            // message:
+            //     'Anda yakin ingin kembali? ${widget.woData['wo_no']} tidak dimulai dan semua perubahan tidak disimpan!',
+            buttonBackground: CustomTheme().buttonColor('danger'),
+            child: buildBoldMessage(widget.woData['wo_no']));
       } else {
         Navigator.pop(context);
         Navigator.pop(context);
@@ -78,6 +107,33 @@ class _TabSectionState extends State<TabSection> {
   }
 
   Future<void> _handleSubmit(BuildContext context) async {
+    Widget buildBoldMessage(String woNo) {
+      return RichText(
+        text: TextSpan(
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('lg'),
+            color: Colors.black,
+          ),
+          children: [
+            TextSpan(
+              text: 'Anda yakin ingin memulai proses ${widget.label} untuk ',
+              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
+            ),
+            TextSpan(
+              text: '${woNo}',
+              style: TextStyle(
+                  fontWeight: CustomTheme().fontWeight('bold'),
+                  fontSize: CustomTheme().fontSize('lg')),
+            ),
+            TextSpan(
+              text: '? Pastikan semua data sudah benar!',
+              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
+            ),
+          ],
+        ),
+      );
+    }
+
     if (context.mounted) {
       if (widget.form?['wo_id'] != null) {
         showConfirmationDialog(
@@ -92,9 +148,11 @@ class _TabSectionState extends State<TabSection> {
                 widget.isSubmitting.value = false;
               }
             },
-            title: 'Mulai Proses ${widget.label}',
-            message: 'Anda yakin ingin memulai proses?',
-            buttonBackground: CustomTheme().buttonColor('primary'));
+            title: 'Mulai ${widget.label}',
+            // message:
+            //     'Anda yakin ingin memulai proses ${widget.label} untuk ${widget.woData['wo_no']}? Pastikan semua data sudah benar!',
+            buttonBackground: CustomTheme().buttonColor('primary'),
+            child: buildBoldMessage(widget.woData['wo_no']));
       } else {
         Navigator.pop(context);
       }

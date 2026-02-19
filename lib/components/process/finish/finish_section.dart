@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/finish/list_form.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 
 class FinishSection extends StatefulWidget {
@@ -140,15 +141,14 @@ class _FinishSectionState extends State<FinishSection> {
       final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
       if (image != null) {
-        // 🔹 validate total size
         final isValid = await _validateTotalImageSize(image.path);
 
         if (!isValid) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Lampiran melebihi 1 MB'),
-              ),
+            await showAlertDialog(
+              context: context,
+              title: 'Error',
+              message: 'Lampiran melebihi 1 MB',
             );
           }
           return;
@@ -173,8 +173,10 @@ class _FinishSectionState extends State<FinishSection> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error capturing image: $e")),
+        await showAlertDialog(
+          context: context,
+          title: 'Error',
+          message: e.toString(),
         );
       }
     }

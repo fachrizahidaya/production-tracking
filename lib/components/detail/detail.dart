@@ -48,6 +48,10 @@ class Detail extends StatefulWidget {
   final handleRefetch;
   final handleNavigateToUpdate;
   final handleNavigateToFinish;
+  final idProcess;
+  final processService;
+  final forPacking;
+  final fetchFinish;
 
   const Detail(
       {super.key,
@@ -85,7 +89,11 @@ class Detail extends StatefulWidget {
       this.handleNavigateToUpdate,
       this.handleDelete,
       this.handleRefetch,
-      this.handleNavigateToFinish});
+      this.handleNavigateToFinish,
+      this.idProcess,
+      this.processService,
+      this.forPacking,
+      this.fetchFinish});
 
   @override
   State<Detail> createState() => _DetailState();
@@ -399,6 +407,10 @@ class _DetailState extends State<Detail> {
                       onRefresh: widget.handleRefetch,
                       handleUpdate: widget.handleNavigateToUpdate,
                       handleDelete: widget.handleDelete,
+                      idProcess: widget.idProcess,
+                      processService: widget.processService,
+                      forPacking: widget.forPacking,
+                      fetchFinish: widget.fetchFinish,
                     ),
         ),
       ),

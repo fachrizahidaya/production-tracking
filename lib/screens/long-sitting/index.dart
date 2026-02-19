@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
+import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/card/item_process_card.dart';
@@ -290,47 +291,33 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                leading: Icon(Icons.add,
-                                    color:
-                                        CustomTheme().buttonColor('primary')),
-                                title: Text("Mulai Long Slitting"),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => CreateLongSitting(),
-                                    ),
-                                  );
-                                },
+                      final actions = [
+                        DialogActionItem(
+                          icon: Icons.add_outlined,
+                          iconColor: CustomTheme().buttonColor('primary'),
+                          title: 'Mulai Long Slitting',
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => CreateLongSitting(),
                               ),
-                              ListTile(
-                                leading: Icon(Icons.check_circle,
-                                    color:
-                                        CustomTheme().buttonColor('warning')),
-                                title: Text("Selesai Long Slitting"),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => FinishLongSitting(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
-                      );
+                        DialogActionItem(
+                          icon: Icons.check_circle_outline,
+                          iconColor: CustomTheme().buttonColor('warning'),
+                          title: 'Selesai Long Slitting',
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => FinishLongSitting(),
+                              ),
+                            );
+                          },
+                        ),
+                      ];
+                      return ActionDialog(actions: actions);
                     },
                   );
                 },

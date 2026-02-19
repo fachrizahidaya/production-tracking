@@ -40,27 +40,34 @@ class ProcessDetail<T> extends StatefulWidget {
   final withMaklon;
   final onlySewing;
   final forDyeing;
+  final idProcess;
+  final processService;
+  final forPacking;
+  final fetchFinish;
 
-  const ProcessDetail({
-    super.key,
-    required this.id,
-    required this.no,
-    required this.service,
-    required this.handleUpdateService,
-    required this.handleDeleteService,
-    required this.modelBuilder,
-    this.canDelete = false,
-    this.canUpdate = false,
-    this.label,
-    this.route,
-    this.fetchMachine,
-    this.getMachineOptions,
-    this.withItemGrade,
-    this.withQtyAndWeight,
-    this.withMaklon,
-    this.onlySewing,
-    this.forDyeing,
-  });
+  const ProcessDetail(
+      {super.key,
+      required this.id,
+      required this.no,
+      required this.service,
+      required this.handleUpdateService,
+      required this.handleDeleteService,
+      required this.modelBuilder,
+      this.canDelete = false,
+      this.canUpdate = false,
+      this.label,
+      this.route,
+      this.fetchMachine,
+      this.getMachineOptions,
+      this.withItemGrade,
+      this.withQtyAndWeight,
+      this.withMaklon,
+      this.onlySewing,
+      this.forDyeing,
+      this.idProcess,
+      this.processService,
+      this.forPacking,
+      this.fetchFinish});
 
   @override
   State<ProcessDetail<T>> createState() => _ProcessDetailState<T>();
@@ -219,8 +226,11 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
             message: message);
       });
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: e.toString(),
+      );
     }
   }
 
@@ -277,8 +287,11 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           Navigator.pushNamedAndRemoveUntil(
               context, widget.route, (_) => false);
         } catch (e) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+          await showAlertDialog(
+            context: context,
+            title: 'Error',
+            message: e.toString(),
+          );
         }
       },
     );
@@ -556,6 +569,10 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       handleNavigateToUpdate: _handleNavigateToUpdate,
       handleRefetch: _getDataView,
       handleNavigateToFinish: _handleNavigateToFinish,
+      idProcess: widget.idProcess,
+      processService: widget.processService,
+      forPacking: widget.forPacking,
+      fetchFinish: widget.fetchFinish,
     );
   }
 }

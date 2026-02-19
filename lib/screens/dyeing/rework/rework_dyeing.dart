@@ -146,8 +146,10 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
       setState(() {
         _isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: ${e.toString()}")),
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: e.toString(),
       );
     }
   }
@@ -196,8 +198,10 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
             context: context, title: 'Dyeing Dirework', message: message);
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: e.toString(),
       );
     }
   }

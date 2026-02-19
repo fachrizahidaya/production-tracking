@@ -6,67 +6,101 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ConfirmationDialog extends StatelessWidget {
   final String title;
-  final String message;
+  final message;
   final VoidCallback onConfirm;
   final VoidCallback onCancel;
   final bool isLoading;
   final buttonBackground;
+  final child;
 
   const ConfirmationDialog(
       {super.key,
       required this.title,
-      required this.message,
+      this.message,
       required this.onConfirm,
       required this.onCancel,
       required this.isLoading,
-      this.buttonBackground});
+      this.buttonBackground,
+      this.child});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.5,
-            maxHeight: MediaQuery.of(context).size.height * 0.5,
-          ),
-          child: Padding(
-            padding: CustomTheme().padding('dialog'),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.5,
+          maxHeight: MediaQuery.of(context).size.height * 0.5,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
                       style: TextStyle(
-                          fontSize: CustomTheme().fontSize('xl'),
-                          fontWeight: CustomTheme().fontWeight('bold')),
-                    ),
-                    Text(
-                      message,
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('md'),
+                        fontSize: CustomTheme().fontSize('2xl'),
+                        fontWeight: CustomTheme().fontWeight('bold'),
                       ),
                     ),
+                    SizedBox(height: 16),
+                    message != null
+                        ? Text(
+                            message,
+                            style: TextStyle(
+                              fontSize: CustomTheme().fontSize('lg'),
+                            ),
+                          )
+                        : child,
                   ],
                 ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CancelButton(label: 'Tidak', onPressed: onCancel),
-                      FormButton(
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border(
+                  top: BorderSide(color: Colors.grey.shade200),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 50,
+                      child: CancelButton(
+                        label: 'Tidak',
+                        onPressed: onCancel,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      height: 50,
+                      child: FormButton(
                         label: 'Ya',
                         onPressed: isLoading ? null : onConfirm,
                         isLoading: isLoading,
                       ),
-                    ].separatedBy(CustomTheme().hGap('lg')))
-              ].separatedBy(CustomTheme().vGap('lg')),
+                    ),
+                  ),
+                ].separatedBy(CustomTheme().hGap('lg')),
+              ),
             ),
-          ),
-        ));
+          ],
+        ),
+      ),
+    );
   }
 }

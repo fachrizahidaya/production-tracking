@@ -11,7 +11,8 @@ import 'package:textile_tracking/helpers/util/format_html.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/dyeing/%5Bdyeing_id%5D.dart';
-import 'package:textile_tracking/screens/dyeing/finish/finish_dyeing_manual.dart';
+import 'package:textile_tracking/screens/finish/%5Bfinish_process_id%5D.dart';
+import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class DetailList extends StatefulWidget {
@@ -30,6 +31,10 @@ class DetailList extends StatefulWidget {
   final maklon;
   final handleUpdate;
   final handleDelete;
+  final idProcess;
+  final processService;
+  final forPacking;
+  final fetchFinish;
 
   const DetailList(
       {super.key,
@@ -47,7 +52,11 @@ class DetailList extends StatefulWidget {
       this.maklon,
       this.withMaklon,
       this.handleUpdate,
-      this.handleDelete});
+      this.handleDelete,
+      this.idProcess,
+      this.processService,
+      this.forPacking,
+      this.fetchFinish});
 
   @override
   State<DetailList> createState() => _DetailListState();
@@ -104,39 +113,47 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           if (widget.data['can_update'] == true)
             ElevatedButton.icon(
               onPressed: () {
-                widget.handleUpdate();
+                final String woId = widget.data['wo_id'].toString();
+                final String processId = widget.data['id'].toString();
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => FinishProcess(
+                      title: "Finish Process",
+                      manualWoId: woId,
+                      manualProcessId: processId,
+                      formPageBuilder: (context, id, processId, data, form,
+                          handleSubmit, handleChangeInput) {
+                        return FinishProcessManual(
+                          id: woId,
+                          processId: processId,
+                          idProcess: widget.idProcess,
+                          data: data,
+                          form: form,
+                          handleSubmit: handleSubmit,
+                          handleChangeInput: handleChangeInput,
+                          title: 'Selesai ${widget.label}',
+                          label: widget.label,
+                          fetchWorkOrder: widget.fetchFinish,
+                          getWorkOrderOptions: (service) =>
+                              service.dataListOption,
+                          processService: widget.processService,
+                          forDyeing: widget.forDyeing,
+                          withItemGrade: widget.withItemGrade,
+                          withQtyAndWeight: widget.withQtyAndWeight,
+                          forPacking: widget.forPacking,
+                        );
+                      },
+                    ),
+                  ),
+                );
               },
-              icon: Icon(Icons.edit_outlined, color: Colors.white),
-              label: Text('Edit ${widget.label}'),
+              icon: Icon(Icons.task_alt_outlined, color: Colors.white),
+              label: Text('Selesai ${widget.label}'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(
-                  horizontal: isTablet ? 20 : 16,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-          if (widget.data['can_delete'] == true)
-            ElevatedButton.icon(
-              onPressed: () {
-                widget.handleDelete(widget.data['id'].toString());
-              },
-              icon: Icon(Icons.delete_outline, color: Colors.white),
-              label: Text('Hapus ${widget.label}'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(
-                  horizontal: isTablet ? 20 : 16,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
               ),
             ),
         ].separatedBy(CustomTheme().hGap('md')),

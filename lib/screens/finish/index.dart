@@ -37,6 +37,8 @@ class FinishProcess extends StatefulWidget {
 
   final fetchItemGrade;
   final getItemGradeOptions;
+  final String? manualWoId;
+  final String? manualProcessId;
 
   const FinishProcess(
       {super.key,
@@ -46,7 +48,9 @@ class FinishProcess extends StatefulWidget {
       this.fetchWorkOrder,
       this.getWorkOrderOptions,
       this.getItemGradeOptions,
-      this.fetchItemGrade});
+      this.fetchItemGrade,
+      this.manualProcessId,
+      this.manualWoId});
 
   @override
   State<FinishProcess> createState() => _FinishProcessState();
@@ -102,8 +106,15 @@ class _FinishProcessState extends State<FinishProcess> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initialize();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _initialize();
+
+      if (widget.manualWoId != null && widget.manualProcessId != null) {
+        await _handleManualProcess(
+          widget.manualWoId!,
+          widget.manualProcessId!,
+        );
+      }
     });
   }
 
@@ -217,7 +228,48 @@ class _FinishProcessState extends State<FinishProcess> {
             _handleChangeInput,
           )));
     } catch (e) {
-      _showSnackBar("Error: ${e.toString()}");
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: e.toString(),
+      );
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _handleManualProcess(String woId, String processId) async {
+    setState(() => _isLoading = true);
+
+    try {
+      await _workOrderService.getDataView(woId);
+      final data = _workOrderService.dataView;
+
+      _form['wo_id'] = data['id']?.toString() ?? woId;
+      _form['no_wo'] = data['wo_no'] ?? '';
+      _form['process_id'] = processId;
+
+      setState(() => _isLoading = false);
+
+      Navigator.push(
+        context,
+        _createRoute(
+          widget.formPageBuilder(
+            context,
+            woId,
+            processId,
+            data,
+            _form,
+            _handleSubmit,
+            _handleChangeInput,
+          ),
+        ),
+      );
+    } catch (e) {
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: e.toString(),
+      );
       setState(() => _isLoading = false);
     }
   }
@@ -228,7 +280,11 @@ class _FinishProcessState extends State<FinishProcess> {
         await widget.handleSubmitToService!(context, id, _form, _firstLoading);
       }
     } catch (e) {
-      _showSnackBar(e.toString());
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: e.toString(),
+      );
     }
   }
 
@@ -244,10 +300,6 @@ class _FinishProcessState extends State<FinishProcess> {
         return SlideTransition(position: animation.drive(tween), child: child);
       },
     );
-  }
-
-  void _showSnackBar(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override

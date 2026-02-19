@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class SelectDialog extends StatefulWidget {
   final String label;
@@ -56,7 +57,7 @@ class _SelectDialogState extends State<SelectDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: CustomTheme().padding('dialog'),
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -64,16 +65,11 @@ class _SelectDialogState extends State<SelectDialog> {
                     'Pilih ${widget.label.toString()}',
                     style: TextStyle(
                       fontSize: CustomTheme().fontSize('xl'),
-                      fontWeight: CustomTheme().fontWeight('bold'),
+                      fontWeight: CustomTheme().fontWeight('semibold'),
                     ),
                   ),
-                  const SizedBox(height: 8),
                   SizedBox(
-                    height: 40,
                     child: TextFormField(
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('md'),
-                      ),
                       decoration: CustomTheme().inputDecoration('Pencarian...'),
                       keyboardType: TextInputType.text,
                       onChanged: (value) {
@@ -81,7 +77,7 @@ class _SelectDialogState extends State<SelectDialog> {
                       },
                     ),
                   ),
-                ],
+                ].separatedBy(CustomTheme().vGap('lg')),
               ),
             ),
             Expanded(
@@ -90,7 +86,6 @@ class _SelectDialogState extends State<SelectDialog> {
                       child: NoData(),
                     )
                   : Scrollbar(
-                      thickness: 4,
                       child: ListView.separated(
                         physics: const AlwaysScrollableScrollPhysics(),
                         itemCount: _dataList.length,
@@ -109,7 +104,8 @@ class _SelectDialogState extends State<SelectDialog> {
                               Navigator.pop(context);
                             },
                             child: Container(
-                              padding: CustomTheme().padding('card'),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 24),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -122,9 +118,6 @@ class _SelectDialogState extends State<SelectDialog> {
                                         fontWeight: isSelected
                                             ? FontWeight.w800
                                             : FontWeight.w400,
-                                        color: CustomTheme()
-                                            .colors('text-primary'),
-                                        fontSize: CustomTheme().fontSize('md'),
                                       ),
                                     ),
                                   ),
@@ -140,12 +133,7 @@ class _SelectDialogState extends State<SelectDialog> {
                             ),
                           );
                         },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return const Divider(
-                            height: 0,
-                            thickness: 0.5,
-                          );
-                        },
+                        separatorBuilder: (context, index) => Divider(),
                       ),
                     ),
             ),

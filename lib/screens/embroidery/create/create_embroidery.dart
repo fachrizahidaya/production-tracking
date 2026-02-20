@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/models/process/embroidery.dart';
 import 'package:textile_tracking/screens/embroidery/create/create_emboridery_manual.dart';
@@ -45,7 +46,12 @@ class CreateEmbroidery extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
-          context: context, title: 'Emroidery Dimulai', message: message);
+          context: context,
+          title: 'Emroidery Dimulai',
+          child: buildBoldMessage(
+            message: message,
+            prefix: "EMB",
+          ));
     });
   }
 

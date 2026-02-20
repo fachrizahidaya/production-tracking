@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
@@ -112,7 +113,10 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
           showAlertDialog(
               context: context,
               title: 'Long Slitting Selesai',
-              message: message);
+              child: buildBoldMessage(
+                message: message,
+                prefix: "LST",
+              ));
         });
       },
     );

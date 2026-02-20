@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/models/process/sorting.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
@@ -105,7 +106,12 @@ class _FinishSortingState extends State<FinishSorting> {
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showAlertDialog(
-              context: context, title: 'Sorting Selesai', message: message);
+              context: context,
+              title: 'Sorting Selesai',
+              child: buildBoldMessage(
+                message: message,
+                prefix: "SRT",
+              ));
         });
       },
       fetchItemGrade: (service) async => await service.fetchOptions(),

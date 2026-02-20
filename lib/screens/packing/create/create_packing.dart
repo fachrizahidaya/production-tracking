@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/models/process/packing.dart';
 import 'package:textile_tracking/screens/packing/create/create_packing_manual.dart';
@@ -42,7 +43,12 @@ class CreatePacking extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
-          context: context, title: 'Packing Dimulai', message: message);
+          context: context,
+          title: 'Packing Dimulai',
+          child: buildBoldMessage(
+            message: message,
+            prefix: "PCK",
+          ));
     });
   }
 

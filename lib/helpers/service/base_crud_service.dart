@@ -161,8 +161,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       if (response.statusCode == 201) {
         final res = jsonDecode(response.body);
         await refetchItems(context);
-        return 'Proses telah dimulai, ${res['message']}' ??
-            'Proses telah ditambahkan';
+        return '${res['message']}.';
       } else {
         final error = jsonDecode(response.body);
         throw (error['message'] ?? 'Gagal menambahkan proses');
@@ -290,8 +289,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
         if (response.statusCode == 200) {
           await refetchItems(context);
-          return 'Proses telah selesai, ${jsonDecode(body)['message']}. Proses dapat dilanjutkan atau WO sudah selesai.' ??
-              'Proses telah selesai';
+          return '${jsonDecode(body)['message']}. Proses dapat dilanjutkan atau WO sudah selesai.';
         } else {
           throw Exception(
               jsonDecode(body)['message'] ?? 'Gagal menyelesaikan proses');
@@ -313,7 +311,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
         if (response.statusCode == 200) {
           await refetchItems(context);
-          return 'Proses telah selesai, ${jsonDecode(response.body)['message']}. Proses dapat dilanjutkan atau WO sudah selesai.';
+          return '${jsonDecode(response.body)['message']}. Proses dapat dilanjutkan atau WO sudah selesai.';
         } else {
           final error = jsonDecode(response.body);
           throw (error['message'] ?? 'Gagal menyelesaikan proses');

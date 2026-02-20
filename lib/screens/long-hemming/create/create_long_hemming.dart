@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/models/process/long_hemming.dart';
 import 'package:textile_tracking/screens/long-hemming/create/create_long_hemming_manual.dart';
@@ -44,7 +45,12 @@ class CreateLongHemming extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
-          context: context, title: 'Long Hemming Dimulai', message: message);
+          context: context,
+          title: 'Long Hemming Dimulai',
+          child: buildBoldMessage(
+            message: message,
+            prefix: "LHM",
+          ));
     });
   }
 

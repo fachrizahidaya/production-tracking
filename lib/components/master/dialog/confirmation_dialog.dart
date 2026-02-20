@@ -39,7 +39,7 @@ class ConfirmationDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
+            Flexible(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                 child: Column(
@@ -69,7 +69,9 @@ class ConfirmationDialog extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12)),
                 border: Border(
                   top: BorderSide(color: Colors.grey.shade200),
                 ),
@@ -78,7 +80,7 @@ class ConfirmationDialog extends StatelessWidget {
                 children: [
                   Expanded(
                     child: SizedBox(
-                      height: 50,
+                      height: 56,
                       child: CancelButton(
                         label: 'Tidak',
                         onPressed: onCancel,
@@ -87,7 +89,7 @@ class ConfirmationDialog extends StatelessWidget {
                   ),
                   Expanded(
                     child: SizedBox(
-                      height: 50,
+                      height: 56,
                       child: FormButton(
                         label: 'Ya',
                         onPressed: isLoading ? null : onConfirm,

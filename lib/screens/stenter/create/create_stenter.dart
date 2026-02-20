@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
@@ -37,12 +38,42 @@ class CreateStenter extends StatelessWidget {
 
     final message = await Provider.of<StenterService>(context, listen: false)
         .addItem(context, stenter, isLoading);
+    Widget buildBoldMessage() {
+      final String boldPrefix = "STN";
+      final bool startsWithWO = message.startsWith(boldPrefix);
+
+      return RichText(
+        text: TextSpan(
+          style: TextStyle(
+              fontSize: CustomTheme().fontSize('lg'),
+              color: Colors.black,
+              height: 1.5),
+          children: [
+            if (startsWithWO)
+              TextSpan(
+                text: boldPrefix,
+                style: TextStyle(
+                  fontWeight: CustomTheme().fontWeight('bold'),
+                  fontSize: CustomTheme().fontSize('lg'),
+                ),
+              ),
+            TextSpan(
+              text:
+                  startsWithWO ? message.substring(boldPrefix.length) : message,
+            ),
+          ],
+        ),
+      );
+    }
 
     Navigator.pushNamedAndRemoveUntil(context, '/stenters', (route) => false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
-          context: context, title: 'Stenter Dimulai', message: message);
+          context: context,
+          title: 'Stenter Dimulai',
+          //  message: message,
+          child: buildBoldMessage());
     });
   }
 

@@ -23,7 +23,7 @@ class CustomAlertDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
+              Flexible(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                   child: Column(
@@ -50,7 +50,9 @@ class CustomAlertDialog extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12)),
                   border: Border(
                     top: BorderSide(color: Colors.grey.shade200),
                   ),

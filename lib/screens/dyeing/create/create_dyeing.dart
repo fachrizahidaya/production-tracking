@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/screens/dyeing/create/create_dyeing_manual.dart';
@@ -50,7 +51,12 @@ class CreateDyeing extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
-          context: context, title: 'Dyeing Dimulai', message: message);
+          context: context,
+          title: 'Dyeing Dimulai',
+          child: buildBoldMessage(
+            message: message,
+            prefix: "DYE",
+          ));
     });
   }
 

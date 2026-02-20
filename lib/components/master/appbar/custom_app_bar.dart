@@ -54,7 +54,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       return name.trim()[0].toUpperCase();
     }
 
-    final bool hasOptions = (deleteStatus == true || updateStatus == true);
     return AppBar(
       leading: onReturn != null
           ? IconButton(
@@ -65,22 +64,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(fontSize: CustomTheme().fontSize('xl')),
       ),
       actions: [
-        // if (hasOptions)
-        //   PopupMenuButton<String>(
-        //     color: Colors.white,
-        //     offset: const Offset(0, 40),
-        //     onSelected: (value) {
-        //       final String stringId = id.toString();
-
-        //       if (value == 'update' && updateStatus == true) {
-        //         handleUpdate();
-        //       }
-        //       if (value == 'delete' && deleteStatus == true) {
-        //         handleDelete(stringId);
-        //       }
-        //     },
-        //     itemBuilder: (context) => [],
-        //   ),
         // if (isWithNotification)
         //   IconButton(
         //     icon: const Icon(Icons.notifications_outlined),

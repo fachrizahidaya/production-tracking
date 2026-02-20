@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
 import 'package:textile_tracking/screens/long-sitting/create/create_long_sitting_manual.dart';
@@ -44,7 +46,12 @@ class CreateLongSitting extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
-          context: context, title: 'Long Slitting Dimulai', message: message);
+          context: context,
+          title: 'Long Slitting Dimulai',
+          child: buildBoldMessage(
+            message: message,
+            prefix: "LST",
+          ));
     });
   }
 

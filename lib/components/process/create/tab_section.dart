@@ -60,9 +60,9 @@ class _TabSectionState extends State<TabSection> {
       return RichText(
         text: TextSpan(
           style: TextStyle(
-            fontSize: CustomTheme().fontSize('lg'),
-            color: Colors.black,
-          ),
+              fontSize: CustomTheme().fontSize('lg'),
+              color: Colors.black,
+              height: 1.5),
           children: [
             TextSpan(
               text: 'Anda yakin ingin kembali? ',
@@ -94,9 +94,7 @@ class _TabSectionState extends State<TabSection> {
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            title: 'Batal Mulai ${widget.label}',
-            // message:
-            //     'Anda yakin ingin kembali? ${widget.woData['wo_no']} tidak dimulai dan semua perubahan tidak disimpan!',
+            title: 'Batal ${widget.label}',
             buttonBackground: CustomTheme().buttonColor('danger'),
             child: buildBoldMessage(widget.woData['wo_no']));
       } else {
@@ -111,16 +109,16 @@ class _TabSectionState extends State<TabSection> {
       return RichText(
         text: TextSpan(
           style: TextStyle(
-            fontSize: CustomTheme().fontSize('lg'),
-            color: Colors.black,
-          ),
+              fontSize: CustomTheme().fontSize('lg'),
+              color: Colors.black,
+              height: 1.5),
           children: [
             TextSpan(
               text: 'Anda yakin ingin memulai proses ${widget.label} untuk ',
               style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
             TextSpan(
-              text: '${woNo}',
+              text: woNo,
               style: TextStyle(
                   fontWeight: CustomTheme().fontWeight('bold'),
                   fontSize: CustomTheme().fontSize('lg')),
@@ -149,8 +147,6 @@ class _TabSectionState extends State<TabSection> {
               }
             },
             title: 'Mulai ${widget.label}',
-            // message:
-            //     'Anda yakin ingin memulai proses ${widget.label} untuk ${widget.woData['wo_no']}? Pastikan semua data sudah benar!',
             buttonBackground: CustomTheme().buttonColor('primary'),
             child: buildBoldMessage(widget.woData['wo_no']));
       } else {

@@ -782,7 +782,6 @@ class _FormItemsState extends State<FormItems> {
                                   (val == null || val.toString().trim().isEmpty)
                                       ? '0'
                                       : val.toString();
-                              final raw = val?.toString().trim() ?? '0';
 
                               widget.weightDozen.text = safeValue;
                               widget.handleChangeInput(

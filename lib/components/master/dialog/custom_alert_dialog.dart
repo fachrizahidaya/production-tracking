@@ -60,7 +60,7 @@ class CustomAlertDialog extends StatelessWidget {
                 child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                   Expanded(
                     child: SizedBox(
-                      height: 50,
+                      height: 56,
                       child: ElevatedButton(
                         onPressed: () => Navigator.pop(context),
                         style: ElevatedButton.styleFrom(

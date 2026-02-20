@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/models/process/tumbler.dart';
 import 'package:textile_tracking/screens/tumbler/create/create_tumbler_manual.dart';
@@ -42,7 +43,13 @@ class CreateTumbler extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
-          context: context, title: 'Tumbler Dimulai', message: message);
+          context: context,
+          title: 'Tumbler Dimulai',
+          message: message,
+          child: buildBoldMessage(
+            message: message,
+            prefix: "TMB",
+          ));
     });
   }
 

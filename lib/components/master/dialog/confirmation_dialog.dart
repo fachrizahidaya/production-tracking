@@ -80,7 +80,7 @@ class ConfirmationDialog extends StatelessWidget {
                 children: [
                   Expanded(
                     child: SizedBox(
-                      height: 50,
+                      height: 56,
                       child: CancelButton(
                         label: 'Tidak',
                         onPressed: onCancel,
@@ -89,7 +89,7 @@ class ConfirmationDialog extends StatelessWidget {
                   ),
                   Expanded(
                     child: SizedBox(
-                      height: 50,
+                      height: 56,
                       child: FormButton(
                         label: 'Ya',
                         onPressed: isLoading ? null : onConfirm,

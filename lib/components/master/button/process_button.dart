@@ -60,7 +60,7 @@ class _ProcessButtonState extends State<ProcessButton> {
         ),
         child: Container(
           color: Colors.white,
-          padding: CustomTheme().padding('card'),
+          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
           child: ValueListenableBuilder<bool>(
             valueListenable: widget.isSubmitting,
             builder: (context, isSubmitting, _) {
@@ -69,7 +69,7 @@ class _ProcessButtonState extends State<ProcessButton> {
                   Expanded(
                     child: CancelButton(
                       label: 'Batal',
-                      customHeight: 48.0,
+                      customHeight: 56.0,
                       onPressed: () => widget.handleCancel(context),
                     ),
                   ),
@@ -77,7 +77,7 @@ class _ProcessButtonState extends State<ProcessButton> {
                       child: FormButton(
                     label: widget.labelProcess,
                     isDisabled: isDisabled,
-                    customHeight: 48.0,
+                    customHeight: 56.0,
                     onPressed: () async {
                       widget.isSubmitting.value = true;
                       try {

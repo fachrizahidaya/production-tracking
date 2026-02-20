@@ -116,7 +116,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
               message: message,
               child: buildBoldMessage(
                 message: message,
-                prefix: "STN",
+                prefix: "DYE",
               ));
         });
       },

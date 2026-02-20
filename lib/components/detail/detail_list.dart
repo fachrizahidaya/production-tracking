@@ -35,6 +35,9 @@ class DetailList extends StatefulWidget {
   final processService;
   final forPacking;
   final fetchFinish;
+  final handleChangeInput;
+  final form;
+  final handleSubmit;
 
   const DetailList(
       {super.key,
@@ -56,7 +59,10 @@ class DetailList extends StatefulWidget {
       this.idProcess,
       this.processService,
       this.forPacking,
-      this.fetchFinish});
+      this.fetchFinish,
+      this.handleChangeInput,
+      this.form,
+      this.handleSubmit});
 
   @override
   State<DetailList> createState() => _DetailListState();
@@ -131,8 +137,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                           idProcess: widget.idProcess,
                           data: data,
                           form: form,
-                          handleSubmit: handleSubmit,
-                          handleChangeInput: handleChangeInput,
+                          handleSubmit: widget.handleSubmit,
+                          handleChangeInput: widget.handleChangeInput,
                           title: 'Selesai ${widget.label}',
                           label: widget.label,
                           fetchWorkOrder: widget.fetchFinish,

@@ -52,6 +52,7 @@ class Detail extends StatefulWidget {
   final processService;
   final forPacking;
   final fetchFinish;
+  final handleSubmit;
 
   const Detail(
       {super.key,
@@ -93,7 +94,8 @@ class Detail extends StatefulWidget {
       this.idProcess,
       this.processService,
       this.forPacking,
-      this.fetchFinish});
+      this.fetchFinish,
+      this.handleSubmit});
 
   @override
   State<Detail> createState() => _DetailState();
@@ -411,6 +413,9 @@ class _DetailState extends State<Detail> {
                       processService: widget.processService,
                       forPacking: widget.forPacking,
                       fetchFinish: widget.fetchFinish,
+                      handleChangeInput: widget.handleChangeInput,
+                      handleSubmit: widget.handleSubmit,
+                      form: widget.form,
                     ),
         ),
       ),

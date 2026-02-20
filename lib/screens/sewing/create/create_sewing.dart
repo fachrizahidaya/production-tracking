@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/models/process/sewing.dart';
 import 'package:textile_tracking/screens/sewing/create/create_sewing_manual.dart';
@@ -44,7 +45,12 @@ class CreateSewing extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
-          context: context, title: 'Sewing Dimulai', message: message);
+          context: context,
+          title: 'Sewing Dimulai',
+          child: buildBoldMessage(
+            message: message,
+            prefix: "SEW",
+          ));
     });
   }
 

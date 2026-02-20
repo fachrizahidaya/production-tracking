@@ -23,6 +23,8 @@ class LongSittingDetail extends StatefulWidget {
 }
 
 class _LongSittingDetailState extends State<LongSittingDetail> {
+  final LongSittingService _longSittingService = LongSittingService();
+
   @override
   Widget build(BuildContext context) {
     return ProcessDetail<LongSitting>(
@@ -65,6 +67,10 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       withItemGrade: false,
       withMaklon: false,
       forDyeing: false,
+      idProcess: 'long_slitting_id',
+      processService: _longSittingService,
+      forPacking: false,
+      fetchFinish: (service) => service.fetchFinishOptions(),
     );
   }
 }

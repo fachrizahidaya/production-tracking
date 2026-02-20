@@ -100,7 +100,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   @override
   void initState() {
     super.initState();
-    print('dat: ${widget.data}');
 
     _qtyController.text = widget.form?['qty']?.toString() ?? '';
     _qtyItemController.text = widget.form?['item_qty']?.toString() ?? '';
@@ -331,9 +330,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       return RichText(
         text: TextSpan(
           style: TextStyle(
-            fontSize: CustomTheme().fontSize('lg'),
-            color: Colors.black,
-          ),
+              fontSize: CustomTheme().fontSize('lg'),
+              color: Colors.black,
+              height: 1.5),
           children: [
             TextSpan(
               text: 'Anda yakin ingin kembali? ',
@@ -366,7 +365,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
               Navigator.pop(context);
             },
             title: 'Batal',
-            // message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
             buttonBackground: CustomTheme().buttonColor('danger'),
             child: buildBoldMessage(widget.form?['no_wo']));
       } else {
@@ -381,9 +379,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       return RichText(
         text: TextSpan(
           style: TextStyle(
-            fontSize: CustomTheme().fontSize('lg'),
-            color: Colors.black,
-          ),
+              fontSize: CustomTheme().fontSize('lg'),
+              color: Colors.black,
+              height: 1.5),
           children: [
             TextSpan(
               text:
@@ -391,13 +389,13 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
               style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
             TextSpan(
-              text: '${woNo}',
+              text: woNo,
               style: TextStyle(
                   fontWeight: CustomTheme().fontWeight('bold'),
                   fontSize: CustomTheme().fontSize('lg')),
             ),
             TextSpan(
-              text: ' ? Pastikan semua data sudah benar!',
+              text: '? Pastikan semua data sudah benar!',
               style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
           ],
@@ -422,7 +420,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
               }
             },
             title: 'Selesai Proses ${widget.label}',
-            // message: 'Anda yakin ingin menyelesaikan proses?',
             buttonBackground: CustomTheme().buttonColor('primary'),
             child: buildBoldMessage(widget.form?['no_wo']));
       } else {

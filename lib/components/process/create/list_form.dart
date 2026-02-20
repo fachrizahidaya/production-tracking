@@ -70,130 +70,121 @@ class _ListFormState extends State<ListForm> {
       child: TemplateCard(
         title: 'Work Order & Mesin',
         icon: Icons.paste_outlined,
-        child: Row(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             if (widget.id == null)
-              Expanded(
-                child: SelectForm(
-                  label: 'Work Order',
-                  onTap: () => widget.selectWorkOrder(),
-                  selectedLabel: widget.form?['no_wo'] ?? '',
-                  selectedValue: widget.form?['wo_id']?.toString() ?? '',
-                  required: true,
-                ),
+              SelectForm(
+                label: 'Work Order',
+                onTap: () => widget.selectWorkOrder(),
+                selectedLabel: widget.form?['no_wo'] ?? '',
+                selectedValue: widget.form?['wo_id']?.toString() ?? '',
+                required: true,
               ),
             if (widget.withOnlyMaklon == true && widget.form?['wo_id'] != null)
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Maklon',
-                      style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
-                    ),
-                    Row(
-                      children: [
-                        Opacity(
-                          opacity: widget.form?['wo_id'] != null ? 1.0 : 0.5,
-                          child: Switch(
-                            value: _isMaklon,
-                            onChanged: widget.form?['wo_id'] != null
-                                ? (value) {
-                                    setState(() {
-                                      _isMaklon = value;
-                                      widget.form['maklon'] = value;
-                                    });
-                                  }
-                                : null,
-                            activeColor: Colors.green,
-                            inactiveThumbColor: Colors.redAccent,
-                          ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Maklon',
+                    style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
+                  ),
+                  Row(
+                    children: [
+                      Opacity(
+                        opacity: widget.form?['wo_id'] != null ? 1.0 : 0.5,
+                        child: Switch(
+                          value: _isMaklon,
+                          onChanged: widget.form?['wo_id'] != null
+                              ? (value) {
+                                  setState(() {
+                                    _isMaklon = value;
+                                    widget.form['maklon'] = value;
+                                  });
+                                }
+                              : null,
+                          activeColor: Colors.green,
+                          inactiveThumbColor: Colors.redAccent,
                         ),
-                        Text(_isMaklon ? 'Ya' : 'Tidak'),
-                      ].separatedBy(CustomTheme().hGap('lg')),
-                    ),
-                    if (_isMaklon)
-                      TextForm(
-                        label: 'Nama Maklon',
-                        req: false,
-                        controller: widget.maklonName,
-                        handleChange: (value) {
-                          setState(() {
-                            widget.maklonName.text = value.toString();
-                            widget.form['maklon_name'] = value.toString();
-                          });
-                        },
-                      )
-                  ],
-                ),
+                      ),
+                      Text(_isMaklon ? 'Ya' : 'Tidak'),
+                    ].separatedBy(CustomTheme().hGap('lg')),
+                  ),
+                  if (_isMaklon)
+                    TextForm(
+                      label: 'Nama Maklon',
+                      req: false,
+                      controller: widget.maklonName,
+                      handleChange: (value) {
+                        setState(() {
+                          widget.maklonName.text = value.toString();
+                          widget.form['maklon_name'] = value.toString();
+                        });
+                      },
+                    )
+                ].separatedBy(CustomTheme().hGap('xl')),
               )
             else if (widget.withMaklonOrMachine == true &&
                 widget.form?['wo_id'] != null)
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Maklon',
-                      style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
-                    ),
-                    Row(
-                      children: [
-                        Opacity(
-                          opacity: widget.form?['wo_id'] != null ? 1.0 : 0.5,
-                          child: Switch(
-                            value: _isMaklon,
-                            onChanged: widget.form?['wo_id'] != null
-                                ? (value) {
-                                    setState(() {
-                                      _isMaklon = value;
-                                      widget.form['maklon'] = value;
-                                    });
-                                  }
-                                : null,
-                            activeColor: Colors.green,
-                            inactiveThumbColor: Colors.redAccent,
-                          ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Maklon',
+                    style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
+                  ),
+                  Row(
+                    children: [
+                      Opacity(
+                        opacity: widget.form?['wo_id'] != null ? 1.0 : 0.5,
+                        child: Switch(
+                          value: _isMaklon,
+                          onChanged: widget.form?['wo_id'] != null
+                              ? (value) {
+                                  setState(() {
+                                    _isMaklon = value;
+                                    widget.form['maklon'] = value;
+                                  });
+                                }
+                              : null,
+                          activeColor: Colors.green,
+                          inactiveThumbColor: Colors.redAccent,
                         ),
-                        Text(_isMaklon ? 'Ya' : 'Tidak'),
-                      ].separatedBy(CustomTheme().hGap('lg')),
-                    ),
-                    if (_isMaklon)
-                      TextForm(
-                        label: 'Nama Maklon',
-                        req: false,
-                        controller: widget.maklonName,
-                        handleChange: (value) {
-                          setState(() {
-                            widget.maklonName.text = value.toString();
-                            widget.form['maklon_name'] = value.toString();
-                          });
-                        },
-                      )
-                    else if (widget.form?['wo_id'] != null)
-                      SelectForm(
-                        label: 'Mesin',
-                        onTap: () => widget.selectMachine(),
-                        selectedLabel: widget.form['nama_mesin'] ?? '',
-                        selectedValue: widget.form['machine_id'].toString(),
-                        required: true,
                       ),
-                  ],
-                ),
+                      Text(_isMaklon ? 'Ya' : 'Tidak'),
+                    ].separatedBy(CustomTheme().hGap('lg')),
+                  ),
+                  if (_isMaklon)
+                    TextForm(
+                      label: 'Nama Maklon',
+                      req: false,
+                      controller: widget.maklonName,
+                      handleChange: (value) {
+                        setState(() {
+                          widget.maklonName.text = value.toString();
+                          widget.form['maklon_name'] = value.toString();
+                        });
+                      },
+                    )
+                  else if (widget.form?['wo_id'] != null)
+                    SelectForm(
+                      label: 'Mesin',
+                      onTap: () => widget.selectMachine(),
+                      selectedLabel: widget.form['nama_mesin'] ?? '',
+                      selectedValue: widget.form['machine_id'].toString(),
+                      required: true,
+                    ),
+                ].separatedBy(CustomTheme().hGap('xl')),
               )
             else if (widget.form?['wo_id'] != null)
-              Expanded(
-                child: SelectForm(
-                  label: 'Mesin',
-                  onTap: () => widget.selectMachine(),
-                  selectedLabel: widget.form['nama_mesin'] ?? '',
-                  selectedValue: widget.form['machine_id'].toString(),
-                  required: true,
-                ),
+              SelectForm(
+                label: 'Mesin',
+                onTap: () => widget.selectMachine(),
+                selectedLabel: widget.form['nama_mesin'] ?? '',
+                selectedValue: widget.form['machine_id'].toString(),
+                required: true,
               ),
-          ].separatedBy(CustomTheme().hGap('xl')),
+          ].separatedBy(CustomTheme().vGap('xl')),
         ),
       ),
     );

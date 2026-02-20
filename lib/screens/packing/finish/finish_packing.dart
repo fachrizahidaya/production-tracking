@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/models/process/packing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
@@ -110,7 +111,12 @@ class _FinishPackingState extends State<FinishPacking> {
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showAlertDialog(
-              context: context, title: 'Packing Selesai', message: message);
+              context: context,
+              title: 'Packing Selesai',
+              child: buildBoldMessage(
+                message: message,
+                prefix: "PCK",
+              ));
         });
       },
       fetchItemGrade: (service) => service.fetchOptions(),

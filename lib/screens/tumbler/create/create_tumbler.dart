@@ -45,7 +45,6 @@ class CreateTumbler extends StatelessWidget {
       showAlertDialog(
           context: context,
           title: 'Tumbler Dimulai',
-          message: message,
           child: buildBoldMessage(
             message: message,
             prefix: "TMB",

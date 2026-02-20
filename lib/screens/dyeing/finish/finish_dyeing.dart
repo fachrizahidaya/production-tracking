@@ -113,7 +113,6 @@ class _FinishDyeingState extends State<FinishDyeing> {
           showAlertDialog(
               context: context,
               title: 'Dyeing Selesai',
-              message: message,
               child: buildBoldMessage(
                 message: message,
                 prefix: "DYE",

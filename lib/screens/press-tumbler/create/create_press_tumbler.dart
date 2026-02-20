@@ -46,7 +46,6 @@ class CreatePressTumbler extends StatelessWidget {
       showAlertDialog(
           context: context,
           title: 'Press Dimulai',
-          message: message,
           child: buildBoldMessage(
             message: message,
             prefix: "PRS",

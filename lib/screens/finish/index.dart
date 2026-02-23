@@ -23,6 +23,7 @@ class FinishProcess extends StatefulWidget {
     Future<void> Function(String id) handleSubmit,
     void Function(String fieldName, dynamic value) handleChangeInput,
   ) formPageBuilder;
+  final Map<String, dynamic>? initialData;
 
   final Future<void> Function(
       BuildContext context,
@@ -50,7 +51,8 @@ class FinishProcess extends StatefulWidget {
       this.getItemGradeOptions,
       this.fetchItemGrade,
       this.manualProcessId,
-      this.manualWoId});
+      this.manualWoId,
+      this.initialData});
 
   @override
   State<FinishProcess> createState() => _FinishProcessState();
@@ -116,6 +118,10 @@ class _FinishProcessState extends State<FinishProcess> {
         );
       }
     });
+
+    if (widget.initialData != null) {
+      _form.addAll(widget.initialData!);
+    }
   }
 
   Future<void> _initialize() async {

@@ -731,7 +731,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     if (isTablet) {
       return items.length > 3
           ? Wrap(
-              alignment: WrapAlignment.center,
               spacing: 8,
               runSpacing: 16,
               children: items.map((item) {
@@ -862,18 +861,18 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         ),
         child: Row(
           children: [
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                icon,
-                size: isTablet ? 18 : 16,
-                color: CustomTheme().buttonColor('primary'),
-              ),
-            ),
+            // Container(
+            //   padding: EdgeInsets.all(8),
+            //   decoration: BoxDecoration(
+            //     color: Colors.white,
+            //     borderRadius: BorderRadius.circular(8),
+            //   ),
+            //   child: Icon(
+            //     icon,
+            //     size: isTablet ? 18 : 16,
+            //     color: CustomTheme().buttonColor('primary'),
+            //   ),
+            // ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/models/process/packing.dart';
 import 'package:textile_tracking/screens/detail/%5Bprocess_id%5D.dart';
 
@@ -23,6 +25,8 @@ class PackingDetail extends StatefulWidget {
 }
 
 class _PackingDetailState extends State<PackingDetail> {
+  final PackingService _packingService = PackingService();
+
   @override
   Widget build(BuildContext context) {
     return ProcessDetail<Packing>(
@@ -62,6 +66,44 @@ class _PackingDetailState extends State<PackingDetail> {
       withItemGrade: true,
       withMaklon: false,
       forDyeing: false,
+      idProcess: 'packing_id',
+      processService: _packingService,
+      forPacking: false,
+      fetchFinish: (service) => service.fetchPackingFinishOptions(),
+      handleSubmitToService: (context, id, form, isLoading) async {
+        final packing = Packing(
+          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+          weight_unit_id:
+              int.tryParse(form['weight_unit_id']?.toString() ?? '2'),
+          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? '3'),
+          length_unit_id:
+              int.tryParse(form['length_unit_id']?.toString() ?? '3'),
+          notes: form['notes'],
+          start_time: form['start_time'],
+          end_time: form['end_time'],
+          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+          attachments: form['attachments'],
+          grades: form['grades'],
+        );
+
+        final message =
+            await Provider.of<PackingService>(context, listen: false)
+                .finishItem(context, id, packing, isLoading);
+
+        Navigator.pushNamedAndRemoveUntil(context, '/packings', (_) => false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showAlertDialog(
+              context: context,
+              title: 'Packing Selesai',
+              child: buildBoldMessage(
+                message: message,
+                prefix: "PCK",
+              ));
+        });
+      },
     );
   }
 }

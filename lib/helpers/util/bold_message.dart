@@ -55,7 +55,7 @@ Widget buildBoldMessage({
   return RichText(
     text: TextSpan(
       style: TextStyle(
-        fontSize: CustomTheme().fontSize('lg'),
+        fontSize: CustomTheme().fontSize('xl'),
         color: Colors.black,
         height: 1.5,
       ),

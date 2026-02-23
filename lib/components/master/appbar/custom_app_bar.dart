@@ -56,8 +56,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       leading: onReturn != null
-          ? IconButton(
-              onPressed: onReturn, icon: const Icon(Icons.chevron_left))
+          ? IconButton(onPressed: onReturn, icon: Icon(Icons.chevron_left))
           : null,
       title: Text(
         title,
@@ -86,7 +85,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             color: Colors.white,
-            offset: const Offset(0, 40),
+            offset: Offset(0, 40),
             onSelected: (value) {
               if (value == 'logout') {
                 handleLogout();
@@ -128,14 +127,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         if (updateStatus == true && (label != 'Sorting' || label != 'Packing'))
           IconButton(
-            icon: const Icon(Icons.edit_outlined),
+            icon: Icon(Icons.edit_outlined),
             onPressed: () {
               handleUpdate();
             },
           ),
         if (deleteStatus == true)
           IconButton(
-            icon: const Icon(Icons.delete_outlined),
+            icon: Icon(
+              Icons.delete_outlined,
+              color: CustomTheme().buttonColor('danger'),
+            ),
             onPressed: () {
               handleDelete(id.toString());
             },
@@ -143,7 +145,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ...?actions
       ],
       bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(48),
+        preferredSize: Size.fromHeight(48),
         child: Column(
           children: [
             if (tab != null) tab!,

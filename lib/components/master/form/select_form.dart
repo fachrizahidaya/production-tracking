@@ -51,6 +51,7 @@ class _SelectFormState extends State<SelectForm> {
                     field.validate();
                   },
             child: Container(
+              height: 56.0,
               padding: CustomTheme().padding('card'),
               width: double.infinity,
               decoration: widget.isDisabled

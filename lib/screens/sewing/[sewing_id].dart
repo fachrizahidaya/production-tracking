@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/models/process/sewing.dart';
 import 'package:textile_tracking/screens/detail/%5Bprocess_id%5D.dart';
 
@@ -23,6 +25,8 @@ class SewingDetail extends StatefulWidget {
 }
 
 class _SewingDetailState extends State<SewingDetail> {
+  final SewingService _sewingService = SewingService();
+
   @override
   Widget build(BuildContext context) {
     return ProcessDetail<Sewing>(
@@ -72,6 +76,49 @@ class _SewingDetailState extends State<SewingDetail> {
       withMaklon: true,
       onlySewing: true,
       forDyeing: false,
+      idProcess: 'sewing_id',
+      processService: _sewingService,
+      forPacking: false,
+      fetchFinish: (service) => service.fetchSewingFinishOptions(),
+      handleSubmitToService: (context, id, form, isLoading) async {
+        final sewing = Sewing(
+            wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+            machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+            unit_id: int.tryParse(form['item_unit_id']?.toString() ?? '1'),
+            weight_unit_id:
+                int.tryParse(form['weight_unit_id']?.toString() ?? '2'),
+            width_unit_id:
+                int.tryParse(form['width_unit_id']?.toString() ?? '3'),
+            length_unit_id:
+                int.tryParse(form['length_unit_id']?.toString() ?? '3'),
+            qty: form['item_qty'],
+            weight: form['weight'],
+            width: form['width'],
+            length: form['length'],
+            notes: form['notes'],
+            start_time: form['start_time'],
+            end_time: form['end_time'],
+            start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+            end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+            attachments: form['attachments'],
+            maklon: form['maklon'],
+            maklon_name: form['maklon_name']);
+
+        final message = await Provider.of<SewingService>(context, listen: false)
+            .finishItem(context, id, sewing, isLoading);
+
+        Navigator.pushNamedAndRemoveUntil(context, '/sewings', (_) => false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showAlertDialog(
+              context: context,
+              title: 'Sewing Selesai',
+              child: buildBoldMessage(
+                message: message,
+                prefix: "SEW",
+              ));
+        });
+      },
     );
   }
 }

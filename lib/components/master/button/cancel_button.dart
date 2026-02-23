@@ -36,7 +36,8 @@ class CancelButton extends StatelessWidget {
           ),
       child: Text(
         label,
-        style: TextStyle(color: CustomTheme().colors('danger')),
+        style: TextStyle(
+            fontSize: fontSize, color: CustomTheme().colors('danger')),
       ),
     );
   }

@@ -38,6 +38,7 @@ class DetailList extends StatefulWidget {
   final handleChangeInput;
   final form;
   final handleSubmit;
+  final itemGradeOption;
 
   const DetailList(
       {super.key,
@@ -62,7 +63,8 @@ class DetailList extends StatefulWidget {
       this.fetchFinish,
       this.handleChangeInput,
       this.form,
-      this.handleSubmit});
+      this.handleSubmit,
+      this.itemGradeOption});
 
   @override
   State<DetailList> createState() => _DetailListState();
@@ -87,13 +89,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // if (widget.data['can_update'] == true ||
-                //     widget.data['can_delete'] == true)
-                //   Padding(
-                //     padding: EdgeInsets.only(top: 16),
-                //     child: _buildActionButtons(isTablet),
-                //   ),
-
                 // Header Section
                 _buildHeaderSection(isTablet),
 
@@ -126,7 +121,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                   context,
                   MaterialPageRoute(
                     builder: (_) => FinishProcess(
-                      title: "Finish Process",
+                      title: "Selesai ${widget.label}",
                       manualWoId: woId,
                       manualProcessId: processId,
                       formPageBuilder: (context, id, processId, data, form,
@@ -135,7 +130,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                           id: woId,
                           processId: processId,
                           idProcess: widget.idProcess,
-                          data: data,
+                          data: widget.data,
                           form: form,
                           handleSubmit: widget.handleSubmit,
                           handleChangeInput: widget.handleChangeInput,
@@ -149,6 +144,10 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                           withItemGrade: widget.withItemGrade,
                           withQtyAndWeight: widget.withQtyAndWeight,
                           forPacking: widget.forPacking,
+                          fetchItemGrade: (service) => service.fetchOptions(),
+                          getItemGradeOptions: (service) =>
+                              service.dataListOption,
+                          itemGradeOption: widget.data['grades'] ?? [],
                         );
                       },
                     ),
@@ -732,7 +731,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     if (isTablet) {
       return items.length > 3
           ? Wrap(
-              alignment: WrapAlignment.center,
               spacing: 8,
               runSpacing: 16,
               children: items.map((item) {
@@ -863,18 +861,18 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         ),
         child: Row(
           children: [
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                icon,
-                size: isTablet ? 18 : 16,
-                color: CustomTheme().buttonColor('primary'),
-              ),
-            ),
+            // Container(
+            //   padding: EdgeInsets.all(8),
+            //   decoration: BoxDecoration(
+            //     color: Colors.white,
+            //     borderRadius: BorderRadius.circular(8),
+            //   ),
+            //   child: Icon(
+            //     icon,
+            //     size: isTablet ? 18 : 16,
+            //     color: CustomTheme().buttonColor('primary'),
+            //   ),
+            // ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

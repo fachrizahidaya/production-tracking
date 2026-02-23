@@ -52,10 +52,10 @@ class _DyeingDetailState extends State<DyeingDetail> {
             : 1,
         length_unit_id: form['length_unit_id'] != null
             ? int.tryParse(form['length_unit_id'].toString())
-            : 1,
+            : 3,
         width_unit_id: form['width_unit_id'] != null
             ? int.tryParse(form['width_unit_id'].toString())
-            : 1,
+            : 3,
         machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
         qty: form['qty'] ?? '0',
         width: form['width'] ?? '0',
@@ -83,10 +83,10 @@ class _DyeingDetailState extends State<DyeingDetail> {
         final dyeing = Dyeing(
           wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
           machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-          unit_id: int.tryParse(form['unit_id']?.toString() ?? ''),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
+          unit_id: int.tryParse(form['unit_id']?.toString() ?? '1'),
+          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? '3'),
           length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? ''),
+              int.tryParse(form['length_unit_id']?.toString() ?? '3'),
           qty: form['qty'],
           width: form['width'] =
               (form['width'] == null || form['width'].toString().isEmpty)
@@ -113,7 +113,6 @@ class _DyeingDetailState extends State<DyeingDetail> {
           showAlertDialog(
               context: context,
               title: 'Dyeing Selesai',
-              message: message,
               child: buildBoldMessage(
                 message: message,
                 prefix: "DYE",

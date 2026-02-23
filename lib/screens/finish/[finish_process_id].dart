@@ -330,23 +330,21 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       return RichText(
         text: TextSpan(
           style: TextStyle(
-              fontSize: CustomTheme().fontSize('lg'),
+              fontSize: CustomTheme().fontSize('xl'),
               color: Colors.black,
               height: 1.5),
           children: [
             TextSpan(
               text: 'Anda yakin ingin kembali? ',
-              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
             TextSpan(
               text: woNo,
               style: TextStyle(
-                  fontWeight: CustomTheme().fontWeight('bold'),
-                  fontSize: CustomTheme().fontSize('lg')),
+                fontWeight: CustomTheme().fontWeight('bold'),
+              ),
             ),
             TextSpan(
               text: ' tidak diselesaikan dan semua perubahan tidak disimpan!',
-              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
           ],
         ),
@@ -364,7 +362,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            title: 'Batal',
+            title: 'Batal Selesai ${widget.label}',
             buttonBackground: CustomTheme().buttonColor('danger'),
             child: buildBoldMessage(widget.form?['no_wo']));
       } else {
@@ -379,24 +377,22 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       return RichText(
         text: TextSpan(
           style: TextStyle(
-              fontSize: CustomTheme().fontSize('lg'),
+              fontSize: CustomTheme().fontSize('xl'),
               color: Colors.black,
               height: 1.5),
           children: [
             TextSpan(
               text:
                   'Anda yakin ingin menyelesaikan proses ${widget.label} untuk ',
-              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
             TextSpan(
               text: woNo,
               style: TextStyle(
-                  fontWeight: CustomTheme().fontWeight('bold'),
-                  fontSize: CustomTheme().fontSize('lg')),
+                fontWeight: CustomTheme().fontWeight('bold'),
+              ),
             ),
             TextSpan(
               text: '? Pastikan semua data sudah benar!',
-              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
           ],
         ),

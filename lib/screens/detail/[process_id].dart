@@ -97,8 +97,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final ValueNotifier<bool> _firstSubmitting = ValueNotifier(false);
 
-  String? _weightWarningValidationMessage;
-  String? _itemWarningValidationMessage;
+  late List<dynamic> itemGradeOption = [];
 
   Map<String, dynamic> data = {};
   final Map<String, dynamic> _form = {
@@ -551,80 +550,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     );
   }
 
-  double _getTotalItemQty() {
-    final workOrders = data['work_orders'];
-    if (workOrders == null) return 0;
-
-    final List<dynamic>? items = workOrders['items'];
-
-    if (items == null || items.isEmpty) return 0;
-
-    return items.fold<double>(0, (sum, item) {
-      final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
-      return sum + qty;
-    });
-  }
-
-  void _validateWeight(String weight) {
-    final greigeQty = double.tryParse(data['work_orders']['greige_qty']);
-    final berat = double.tryParse(weight);
-
-    if (greigeQty == null || berat == null || greigeQty <= 0) {
-      setState(() {
-        _weightWarningValidationMessage = null;
-      });
-      return;
-    }
-
-    final lowerLimit = greigeQty * 0.9;
-    final upperLimit = greigeQty * 1.1;
-
-    if (berat < lowerLimit || berat > upperLimit) {
-      final diffPercent = ((berat - greigeQty) / greigeQty) * 100;
-
-      setState(() {
-        _weightWarningValidationMessage =
-            'Berat ${berat < greigeQty ? 'kurang' : 'lebih'} '
-            '${diffPercent.abs().toStringAsFixed(2)}% '
-            '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
-      });
-    } else {
-      setState(() {
-        _weightWarningValidationMessage = null;
-      });
-    }
-  }
-
-  void _validateQty(String woQty) {
-    final qty = _getTotalItemQty();
-    final berat = double.tryParse(woQty);
-
-    if (qty <= 0 || berat == null) {
-      setState(() {
-        _itemWarningValidationMessage = null;
-      });
-      return;
-    }
-
-    final lowerLimit = qty * 0.9;
-    final upperLimit = qty * 1.1;
-
-    if (berat < lowerLimit || berat > upperLimit) {
-      final diffPercent = ((berat - qty) / qty) * 100;
-
-      setState(() {
-        _itemWarningValidationMessage =
-            'Qty ${berat < qty ? 'kurang' : 'lebih'} '
-            '${diffPercent.abs().toStringAsFixed(2)}% '
-            '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
-      });
-    } else {
-      setState(() {
-        _itemWarningValidationMessage = null;
-      });
-    }
-  }
-
   double getTotalItemQty() {
     final items = data['work_orders']?['items'] as List<dynamic>?;
 
@@ -675,12 +600,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     });
   }
 
-  void _onGradeChanged(List<dynamic> grades) {
-    setState(() {
-      _form['grades'] = grades;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Detail(
@@ -726,6 +645,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       forPacking: widget.forPacking,
       fetchFinish: widget.fetchFinish,
       handleSubmit: _handleSubmit,
+      itemGradeOption: itemGradeOption,
     );
   }
 }

@@ -10,6 +10,7 @@ class FormButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Color? backgroundColor;
   final customHeight;
+  final fontSize;
 
   const FormButton(
       {super.key,
@@ -18,7 +19,8 @@ class FormButton extends StatelessWidget {
       this.isLoading = false,
       this.isDisabled = false,
       this.backgroundColor,
-      this.customHeight});
+      this.customHeight,
+      this.fontSize});
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +47,7 @@ class FormButton extends StatelessWidget {
             )
           : Text(
               label,
+              style: TextStyle(fontSize: fontSize),
             ),
     );
   }

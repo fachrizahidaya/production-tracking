@@ -70,6 +70,7 @@ class _ProcessButtonState extends State<ProcessButton> {
                     child: CancelButton(
                       label: 'Batal',
                       customHeight: 56.0,
+                      fontSize: 20.0,
                       onPressed: () => widget.handleCancel(context),
                     ),
                   ),
@@ -78,6 +79,7 @@ class _ProcessButtonState extends State<ProcessButton> {
                     label: widget.labelProcess,
                     isDisabled: isDisabled,
                     customHeight: 56.0,
+                    fontSize: 20.0,
                     onPressed: () async {
                       widget.isSubmitting.value = true;
                       try {

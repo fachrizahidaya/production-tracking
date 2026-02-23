@@ -62,7 +62,7 @@ class _SummaryFilterState<T> extends State<SummaryFilter<T>> {
     });
 
     return Container(
-      padding: CustomTheme().padding('card'),
+      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 64.0),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
       child: Column(
         mainAxisSize: MainAxisSize.min,

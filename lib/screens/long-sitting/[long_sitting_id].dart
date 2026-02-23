@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
 import 'package:textile_tracking/screens/detail/%5Bprocess_id%5D.dart';
 
@@ -70,7 +72,44 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       idProcess: 'long_slitting_id',
       processService: _longSittingService,
       forPacking: false,
-      fetchFinish: (service) => service.fetchFinishOptions(),
+      fetchFinish: (service) => service.fetchSittingFinishOptions(),
+      handleSubmitToService: (context, id, form, isLoading) async {
+        final longSitting = LongSitting(
+          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+          weight_unit_id:
+              int.tryParse(form['weight_unit_id']?.toString() ?? ''),
+          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
+          length_unit_id:
+              int.tryParse(form['length_unit_id']?.toString() ?? ''),
+          weight: form['weight'],
+          width: form['width'],
+          length: form['length'],
+          notes: form['notes'],
+          start_time: form['start_time'],
+          end_time: form['end_time'],
+          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+          attachments: form['attachments'],
+        );
+
+        final message =
+            await Provider.of<LongSittingService>(context, listen: false)
+                .finishItem(context, id, longSitting, isLoading);
+
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/long-slittings', (_) => false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showAlertDialog(
+              context: context,
+              title: 'Long Slitting Selesai',
+              child: buildBoldMessage(
+                message: message,
+                prefix: "LST",
+              ));
+        });
+      },
     );
   }
 }

@@ -32,7 +32,7 @@ class CustomAlertDialog extends StatelessWidget {
                       Text(
                         title,
                         style: TextStyle(
-                            fontSize: CustomTheme().fontSize('xl'),
+                            fontSize: CustomTheme().fontSize('2xl'),
                             fontWeight: CustomTheme().fontWeight('bold')),
                       ),
                       SizedBox(height: 16),
@@ -40,6 +40,8 @@ class CustomAlertDialog extends StatelessWidget {
                           ? Text(
                               message,
                               textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: CustomTheme().fontSize('xl')),
                             )
                           : child,
                     ],
@@ -70,7 +72,9 @@ class CustomAlertDialog extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8))),
                         child: Text(
                           'OK',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: CustomTheme().fontSize('xl')),
                         ),
                       ),
                     ),

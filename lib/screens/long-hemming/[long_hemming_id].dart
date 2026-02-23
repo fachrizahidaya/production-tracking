@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/models/process/long_hemming.dart';
 import 'package:textile_tracking/screens/detail/%5Bprocess_id%5D.dart';
 
@@ -23,6 +25,8 @@ class LongHemmingDetail extends StatefulWidget {
 }
 
 class _LongHemmingDetailState extends State<LongHemmingDetail> {
+  final LongHemmingService _longHemmingService = LongHemmingService();
+
   @override
   Widget build(BuildContext context) {
     return ProcessDetail<LongHemming>(
@@ -65,6 +69,47 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
       withItemGrade: false,
       withMaklon: false,
       forDyeing: false,
+      idProcess: 'long_hemming_id',
+      processService: _longHemmingService,
+      forPacking: false,
+      fetchFinish: (service) => service.fetchHemmingFinishOptions(),
+      handleSubmitToService: (context, id, form, isLoading) async {
+        final longHemming = LongHemming(
+          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+          weight_unit_id:
+              int.tryParse(form['weight_unit_id']?.toString() ?? ''),
+          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
+          length_unit_id:
+              int.tryParse(form['length_unit_id']?.toString() ?? ''),
+          weight: form['weight'],
+          width: form['width'],
+          length: form['length'],
+          notes: form['notes'],
+          start_time: form['start_time'],
+          end_time: form['end_time'],
+          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+          attachments: form['attachments'],
+        );
+
+        final message =
+            await Provider.of<LongHemmingService>(context, listen: false)
+                .finishItem(context, id, longHemming, isLoading);
+
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/long-hemmings', (_) => false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showAlertDialog(
+              context: context,
+              title: 'Long Hemming Selesai',
+              child: buildBoldMessage(
+                message: message,
+                prefix: "LHM",
+              ));
+        });
+      },
     );
   }
 }

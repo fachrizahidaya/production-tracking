@@ -56,8 +56,9 @@ class ConfirmationDialog extends StatelessWidget {
                     message != null
                         ? Text(
                             message,
+                            textAlign: TextAlign.left,
                             style: TextStyle(
-                              fontSize: CustomTheme().fontSize('lg'),
+                              fontSize: CustomTheme().fontSize('xl'),
                             ),
                           )
                         : child,
@@ -84,6 +85,7 @@ class ConfirmationDialog extends StatelessWidget {
                       child: CancelButton(
                         label: 'Tidak',
                         onPressed: onCancel,
+                        fontSize: CustomTheme().fontSize('xl'),
                       ),
                     ),
                   ),
@@ -94,6 +96,7 @@ class ConfirmationDialog extends StatelessWidget {
                         label: 'Ya',
                         onPressed: isLoading ? null : onConfirm,
                         isLoading: isLoading,
+                        fontSize: CustomTheme().fontSize('xl'),
                       ),
                     ),
                   ),

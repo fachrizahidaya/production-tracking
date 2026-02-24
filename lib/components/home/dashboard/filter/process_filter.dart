@@ -99,8 +99,9 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                         child: StatefulBuilder(
                           builder: (context, setState) {
                             void runSearch(String value) {
-                              if (debounce?.isActive ?? false)
+                              if (debounce?.isActive ?? false) {
                                 debounce!.cancel();
+                              }
 
                               debounce =
                                   Timer(const Duration(milliseconds: 300), () {

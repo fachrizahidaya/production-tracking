@@ -11,7 +11,6 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_bytes.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/finish/%5Bfinish_process_id%5D.dart';
 import 'package:textile_tracking/screens/finish/index.dart';
 
@@ -57,6 +56,8 @@ class Detail extends StatefulWidget {
   final fetchFinish;
   final handleSubmit;
   final itemGradeOption;
+  final fetchItemGrade;
+  final getItemGradeOptions;
 
   const Detail(
       {super.key,
@@ -100,7 +101,9 @@ class Detail extends StatefulWidget {
       this.forPacking,
       this.fetchFinish,
       this.handleSubmit,
-      this.itemGradeOption});
+      this.itemGradeOption,
+      this.fetchItemGrade,
+      this.getItemGradeOptions});
 
   @override
   State<Detail> createState() => _DetailState();
@@ -392,9 +395,7 @@ class _DetailState extends State<Detail> {
           updateStatus: widget.data['can_update'],
           deleteStatus: widget.data['can_delete'],
           actions: [
-            if (widget.data['can_update'] == true &&
-                widget.label != 'Sorting' &&
-                widget.label != 'Packing')
+            if (widget.data['can_update'] == true)
               IconButton(
                 icon: const Icon(Icons.task_alt_outlined, color: Colors.orange),
                 onPressed: () {
@@ -428,10 +429,10 @@ class _DetailState extends State<Detail> {
                             withItemGrade: widget.withItemGrade,
                             withQtyAndWeight: widget.withQtyAndWeight,
                             forPacking: widget.forPacking,
-                            fetchItemGrade: (service) => service.fetchOptions(),
+                            fetchItemGrade: widget.fetchItemGrade,
                             getItemGradeOptions: (service) =>
                                 service.dataListOption,
-                            itemGradeOption: widget.data['grades'] ?? [],
+                            itemGradeOption: widget.itemGradeOption,
                           );
                         },
                       ),
@@ -472,67 +473,6 @@ class _DetailState extends State<Detail> {
                       itemGradeOption: widget.itemGradeOption,
                     ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildActionButtons(bool isTablet) {
-    return Padding(
-      padding: CustomTheme().padding('card-detail'),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          if (widget.data['can_update'] == true)
-            ElevatedButton.icon(
-              onPressed: () {
-                final String woId = widget.data['wo_id'].toString();
-                final String processId = widget.data['id'].toString();
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => FinishProcess(
-                      title: "Selesai ${widget.label}",
-                      manualWoId: woId,
-                      manualProcessId: processId,
-                      formPageBuilder: (context, id, processId, data, form,
-                          handleSubmit, handleChangeInput) {
-                        return FinishProcessManual(
-                          id: woId,
-                          processId: processId,
-                          idProcess: widget.idProcess,
-                          data: widget.data,
-                          form: form,
-                          handleSubmit: widget.handleSubmit,
-                          handleChangeInput: widget.handleChangeInput,
-                          title: 'Selesai ${widget.label}',
-                          label: widget.label,
-                          fetchWorkOrder: widget.fetchFinish,
-                          getWorkOrderOptions: (service) =>
-                              service.dataListOption,
-                          processService: widget.processService,
-                          forDyeing: widget.forDyeing,
-                          withItemGrade: widget.withItemGrade,
-                          withQtyAndWeight: widget.withQtyAndWeight,
-                          forPacking: widget.forPacking,
-                          fetchItemGrade: (service) => service.fetchOptions(),
-                          getItemGradeOptions: (service) =>
-                              service.dataListOption,
-                          itemGradeOption: widget.data['grades'] ?? [],
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
-              icon: Icon(Icons.task_alt_outlined, color: Colors.white),
-              label: Text('Selesai ${widget.label}'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                foregroundColor: Colors.white,
-              ),
-            ),
-        ].separatedBy(CustomTheme().hGap('md')),
       ),
     );
   }

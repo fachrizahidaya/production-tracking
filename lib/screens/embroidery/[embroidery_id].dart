@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,13 +47,13 @@ class _EmbroideryDetailState extends State<EmbroideryDetail> {
               : 1,
           weight_unit_id: form['weight_unit_id'] != null
               ? int.tryParse(form['weight_unit_id'].toString())
-              : 1,
+              : 2,
           length_unit_id: form['length_unit_id'] != null
               ? int.tryParse(form['length_unit_id'].toString())
-              : 1,
+              : 3,
           width_unit_id: form['width_unit_id'] != null
               ? int.tryParse(form['width_unit_id'].toString())
-              : 1,
+              : 3,
           machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
           qty: form['item_qty'] ?? '0',
           weight: form['weight'] ?? '0',

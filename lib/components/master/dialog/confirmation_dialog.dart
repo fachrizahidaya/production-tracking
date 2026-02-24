@@ -97,6 +97,7 @@ class ConfirmationDialog extends StatelessWidget {
                         onPressed: isLoading ? null : onConfirm,
                         isLoading: isLoading,
                         fontSize: CustomTheme().fontSize('xl'),
+                        backgroundColor: buttonBackground,
                       ),
                     ),
                   ),

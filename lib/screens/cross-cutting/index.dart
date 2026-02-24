@@ -302,7 +302,7 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
                           },
                         ),
                         DialogActionItem(
-                          icon: Icons.check_circle,
+                          icon: Icons.task_alt_outlined,
                           iconColor: CustomTheme().buttonColor('warning'),
                           title: 'Selesai Cross Cutting',
                           onTap: () {

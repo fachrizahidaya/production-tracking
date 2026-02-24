@@ -301,7 +301,7 @@ class _SortingScreenState extends State<SortingScreen> {
                           },
                         ),
                         DialogActionItem(
-                          icon: Icons.check_circle,
+                          icon: Icons.task_alt_outlined,
                           iconColor: CustomTheme().buttonColor('warning'),
                           title: 'Selesai Sorting',
                           onTap: () {

@@ -303,7 +303,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
                         },
                       ),
                       DialogActionItem(
-                        icon: Icons.check_circle_outline,
+                        icon: Icons.task_alt_outlined,
                         iconColor: CustomTheme().buttonColor('warning'),
                         title: 'Selesai Dyeing',
                         onTap: () {

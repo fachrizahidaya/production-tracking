@@ -301,7 +301,7 @@ class _PrintingScreenState extends State<PrintingScreen> {
                           },
                         ),
                         DialogActionItem(
-                          icon: Icons.check_circle,
+                          icon: Icons.task_alt_outlined,
                           iconColor: CustomTheme().buttonColor('warning'),
                           title: 'Selesai Printing',
                           onTap: () {

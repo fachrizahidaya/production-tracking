@@ -306,7 +306,7 @@ class _StenterScreenState extends State<StenterScreen> {
                           },
                         ),
                         DialogActionItem(
-                          icon: Icons.check_circle,
+                          icon: Icons.task_alt_outlined,
                           iconColor: CustomTheme().buttonColor('warning'),
                           title: 'Selesai Stenter',
                           onTap: () {

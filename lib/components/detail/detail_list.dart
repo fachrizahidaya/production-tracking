@@ -651,7 +651,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         ),
         if (widget.data['end_time'] != null)
           _buildTimelineItem(
-            icon: Icons.check_circle_outline,
+            icon: Icons.task_alt_outlined,
             iconColor: Colors.green,
             title: 'Selesai Proses',
             time: widget.data['end_time'],

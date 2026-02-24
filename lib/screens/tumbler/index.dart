@@ -305,7 +305,7 @@ class _TumblerScreenState extends State<TumblerScreen> {
                           },
                         ),
                         DialogActionItem(
-                          icon: Icons.check_circle,
+                          icon: Icons.task_alt_outlined,
                           iconColor: CustomTheme().buttonColor('warning'),
                           title: 'Selesai Tumbler',
                           onTap: () {

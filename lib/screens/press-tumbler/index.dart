@@ -305,7 +305,7 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
                           },
                         ),
                         DialogActionItem(
-                          icon: Icons.check_circle,
+                          icon: Icons.task_alt_outlined,
                           iconColor: CustomTheme().buttonColor('warning'),
                           title: 'Selesai Press',
                           onTap: () {

@@ -11,6 +11,7 @@ class FormButton extends StatelessWidget {
   final Color? backgroundColor;
   final customHeight;
   final fontSize;
+  final danger;
 
   const FormButton(
       {super.key,
@@ -20,7 +21,8 @@ class FormButton extends StatelessWidget {
       this.isDisabled = false,
       this.backgroundColor,
       this.customHeight,
-      this.fontSize});
+      this.fontSize,
+      this.danger});
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +32,27 @@ class FormButton extends StatelessWidget {
               ? CustomTheme().disabledButton()
               : CustomTheme().primaryButton())
           .copyWith(
+        backgroundColor: MaterialStateProperty.all(
+          isDisabled
+              ? CustomTheme().colors('disabled')
+              : danger == true
+                  ? CustomTheme().buttonColor('danger')
+                  : backgroundColor ?? CustomTheme().colors('primary'),
+        ),
+        side: MaterialStateProperty.all(
+          BorderSide(
+            color: isDisabled
+                ? CustomTheme().colors('disabled')
+                : danger == true
+                    ? CustomTheme().buttonColor('danger')
+                    : backgroundColor ?? CustomTheme().colors('primary'),
+            width: 1.5,
+          ),
+        ),
         minimumSize: customHeight != null
-            ? MaterialStateProperty.all(Size(double.infinity, customHeight))
+            ? MaterialStateProperty.all(
+                Size(double.infinity, customHeight),
+              )
             : null,
       ),
       child: isLoading
@@ -41,13 +62,16 @@ class FormButton extends StatelessWidget {
               child: CircularProgressIndicator(
                 strokeWidth: 2,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  CustomTheme().colors('secondary'),
+                  Colors.white,
                 ),
               ),
             )
           : Text(
               label,
-              style: TextStyle(fontSize: fontSize),
+              style: TextStyle(
+                fontSize: fontSize,
+                color: Colors.white,
+              ),
             ),
     );
   }

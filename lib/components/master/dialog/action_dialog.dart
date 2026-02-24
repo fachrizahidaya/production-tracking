@@ -45,7 +45,9 @@ class ActionDialog extends StatelessWidget {
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 6, horizontal: 24),
                   leading: Icon(item.icon, color: item.iconColor),
-                  title: Text(item.title),
+                  title: Text(
+                    item.title,
+                  ),
                   onTap: () {
                     Navigator.pop(context);
                     item.onTap();

@@ -301,7 +301,7 @@ class _SewingScreenState extends State<SewingScreen> {
                           },
                         ),
                         DialogActionItem(
-                          icon: Icons.check_circle,
+                          icon: Icons.task_alt_outlined,
                           iconColor: CustomTheme().buttonColor('warning'),
                           title: 'Selesai Sewing',
                           onTap: () {

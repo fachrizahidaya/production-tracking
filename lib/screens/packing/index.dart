@@ -301,7 +301,7 @@ class _PackingScreenState extends State<PackingScreen> {
                           },
                         ),
                         DialogActionItem(
-                          icon: Icons.check_circle,
+                          icon: Icons.task_alt_outlined,
                           iconColor: CustomTheme().buttonColor('warning'),
                           title: 'Selesai Packing',
                           onTap: () {

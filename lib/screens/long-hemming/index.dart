@@ -301,7 +301,7 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
                           },
                         ),
                         DialogActionItem(
-                          icon: Icons.check_circle,
+                          icon: Icons.task_alt_outlined,
                           iconColor: CustomTheme().buttonColor('warning'),
                           title: 'Selesai Long Hemming',
                           onTap: () {

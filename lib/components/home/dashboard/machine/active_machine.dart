@@ -178,7 +178,7 @@ class _ActiveMachineState extends State<ActiveMachine>
                       Expanded(
                         child: MachineSection(
                           title: 'Mesin Tersedia',
-                          icon: Icons.check_circle_outline,
+                          icon: Icons.task_alt_outlined,
                           status: const Color(0xFF10b981),
                           headerColor: 'Selesai',
                           data: filteredAvailable,

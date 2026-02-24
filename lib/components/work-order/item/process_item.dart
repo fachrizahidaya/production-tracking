@@ -347,7 +347,7 @@ class _ProcessItemState extends State<ProcessItem> {
                 if (data['start_time'] != null && data['end_time'] != null)
                   if (data['end_time'] != null)
                     _buildTimeItem(
-                      icon: Icons.check_circle_outline,
+                      icon: Icons.task_alt_outlined,
                       label: 'Waktu Selesai',
                       value: _formatTime(data['end_time']),
                       color: Colors.red,

@@ -348,7 +348,11 @@ class _SummaryCardState extends State<SummaryCard>
 
         final String slug = name.toLowerCase().replaceAll(' ', '-');
 
-        final String routeName = slug == 'press' ? '/press' : '/${slug}s';
+        final String routeName = slug == 'press'
+            ? '/press'
+            : slug == 'embroidery'
+                ? '/embroideries'
+                : '/${slug}s';
 
         Navigator.pushNamed(context, routeName);
       },

@@ -49,6 +49,9 @@ class ProcessDetail<T> extends StatefulWidget {
   final processService;
   final forPacking;
   final fetchFinish;
+  final fetchItemGrade;
+  final getItemGradeOptions;
+  final getWorkOrderOptions;
 
   const ProcessDetail(
       {super.key,
@@ -73,7 +76,10 @@ class ProcessDetail<T> extends StatefulWidget {
       this.processService,
       this.forPacking,
       this.fetchFinish,
-      this.handleSubmitToService});
+      this.handleSubmitToService,
+      this.fetchItemGrade,
+      this.getItemGradeOptions,
+      this.getWorkOrderOptions});
 
   @override
   State<ProcessDetail<T>> createState() => _ProcessDetailState<T>();
@@ -646,6 +652,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       fetchFinish: widget.fetchFinish,
       handleSubmit: _handleSubmit,
       itemGradeOption: itemGradeOption,
+      fetchItemGrade: widget.fetchItemGrade,
+      getItemGradeOptions: widget.getItemGradeOptions,
     );
   }
 }

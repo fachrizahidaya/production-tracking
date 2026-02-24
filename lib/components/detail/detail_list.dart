@@ -11,8 +11,6 @@ import 'package:textile_tracking/helpers/util/format_html.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/dyeing/%5Bdyeing_id%5D.dart';
-import 'package:textile_tracking/screens/finish/%5Bfinish_process_id%5D.dart';
-import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class DetailList extends StatefulWidget {
@@ -102,67 +100,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildActionButtons(bool isTablet) {
-    return Padding(
-      padding: CustomTheme().padding('card-detail'),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          if (widget.data['can_update'] == true)
-            ElevatedButton.icon(
-              onPressed: () {
-                final String woId = widget.data['wo_id'].toString();
-                final String processId = widget.data['id'].toString();
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => FinishProcess(
-                      title: "Selesai ${widget.label}",
-                      manualWoId: woId,
-                      manualProcessId: processId,
-                      formPageBuilder: (context, id, processId, data, form,
-                          handleSubmit, handleChangeInput) {
-                        return FinishProcessManual(
-                          id: woId,
-                          processId: processId,
-                          idProcess: widget.idProcess,
-                          data: widget.data,
-                          form: form,
-                          handleSubmit: widget.handleSubmit,
-                          handleChangeInput: widget.handleChangeInput,
-                          title: 'Selesai ${widget.label}',
-                          label: widget.label,
-                          fetchWorkOrder: widget.fetchFinish,
-                          getWorkOrderOptions: (service) =>
-                              service.dataListOption,
-                          processService: widget.processService,
-                          forDyeing: widget.forDyeing,
-                          withItemGrade: widget.withItemGrade,
-                          withQtyAndWeight: widget.withQtyAndWeight,
-                          forPacking: widget.forPacking,
-                          fetchItemGrade: (service) => service.fetchOptions(),
-                          getItemGradeOptions: (service) =>
-                              service.dataListOption,
-                          itemGradeOption: widget.data['grades'] ?? [],
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
-              icon: Icon(Icons.task_alt_outlined, color: Colors.white),
-              label: Text('Selesai ${widget.label}'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                foregroundColor: Colors.white,
-              ),
-            ),
-        ].separatedBy(CustomTheme().hGap('md')),
-      ),
     );
   }
 

@@ -60,23 +60,21 @@ class _TabSectionState extends State<TabSection> {
       return RichText(
         text: TextSpan(
           style: TextStyle(
-              fontSize: CustomTheme().fontSize('lg'),
+              fontSize: CustomTheme().fontSize('xl'),
               color: Colors.black,
               height: 1.5),
           children: [
             TextSpan(
               text: 'Anda yakin ingin kembali? ',
-              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
             TextSpan(
               text: woNo,
               style: TextStyle(
-                  fontWeight: CustomTheme().fontWeight('bold'),
-                  fontSize: CustomTheme().fontSize('lg')),
+                fontWeight: CustomTheme().fontWeight('bold'),
+              ),
             ),
             TextSpan(
               text: ' tidak dimulai dan semua perubahan tidak disimpan!',
-              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
           ],
         ),
@@ -205,7 +203,7 @@ class _TabSectionState extends State<TabSection> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
             child: Container(
-              padding: CustomTheme().padding('card'),
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
               color: Colors.white,
               child: ValueListenableBuilder<bool>(
                 valueListenable: widget.isSubmitting,
@@ -216,7 +214,8 @@ class _TabSectionState extends State<TabSection> {
                         child: CancelButton(
                           label: 'Batal',
                           onPressed: () => _handleCancel(context),
-                          customHeight: 48.0,
+                          customHeight: 56.0,
+                          fontSize: CustomTheme().fontSize('xl'),
                         ),
                       ),
                       Expanded(
@@ -226,7 +225,8 @@ class _TabSectionState extends State<TabSection> {
                         onPressed: () {
                           _handleSubmit(context);
                         },
-                        customHeight: 48.0,
+                        customHeight: 56.0,
+                        fontSize: CustomTheme().fontSize('xl'),
                       ))
                     ].separatedBy(CustomTheme().hGap('xl')),
                   );

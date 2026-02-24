@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -72,15 +72,18 @@ class _SortingDetailState extends State<SortingDetail> {
       processService: _sortingService,
       forPacking: false,
       fetchFinish: (service) => service.fetchSortingFinishOptions(),
+      fetchItemGrade: (service) => service.fetchOptions(),
+      getItemGradeOptions: (service) => service.dataListOption,
+      getWorkOrderOptions: (service) => service.dataListOption,
       handleSubmitToService: (context, id, form, isLoading) async {
         final sorting = Sorting(
           wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
           machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
           weight_unit_id:
-              int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
+              int.tryParse(form['weight_unit_id']?.toString() ?? '2'),
+          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? '3'),
           length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? ''),
+              int.tryParse(form['length_unit_id']?.toString() ?? '3'),
           notes: form['notes'],
           start_time: form['start_time'],
           end_time: form['end_time'],

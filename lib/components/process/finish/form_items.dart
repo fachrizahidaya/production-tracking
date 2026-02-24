@@ -116,13 +116,21 @@ class _FormItemsState extends State<FormItems> {
   }
 
   double getGradePercentage(int index) {
+    final grades = widget.form['grades'];
+
+    if (grades == null || grades is! List || grades.isEmpty) {
+      return 0;
+    }
+
+    if (index < 0 || index >= grades.length) {
+      return 0;
+    }
+
     final totalQty = widget.handleTotalItemQty();
     if (totalQty == 0) return 0;
 
-    final gradeQty = double.tryParse(
-          widget.form['grades']?[index]?['qty']?.toString() ?? '0',
-        ) ??
-        0;
+    final gradeQty =
+        double.tryParse(grades[index]?['qty']?.toString() ?? '0') ?? 0;
 
     return (gradeQty / totalQty) * 100;
   }
@@ -217,6 +225,10 @@ class _FormItemsState extends State<FormItems> {
                 ),
               ),
             ),
+          ].separatedBy(CustomTheme().hGap('xl')),
+        ),
+        Row(
+          children: [
             Expanded(
               flex: 1,
               child: TextForm(

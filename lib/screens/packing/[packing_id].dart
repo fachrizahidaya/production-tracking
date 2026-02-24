@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -68,8 +68,11 @@ class _PackingDetailState extends State<PackingDetail> {
       forDyeing: false,
       idProcess: 'packing_id',
       processService: _packingService,
-      forPacking: false,
+      forPacking: true,
       fetchFinish: (service) => service.fetchPackingFinishOptions(),
+      fetchItemGrade: (service) => service.fetchOptions(),
+      getItemGradeOptions: (service) => service.dataListOption,
+      getWorkOrderOptions: (service) => service.dataListOption,
       handleSubmitToService: (context, id, form, isLoading) async {
         final packing = Packing(
           wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
@@ -86,6 +89,9 @@ class _PackingDetailState extends State<PackingDetail> {
           end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
           attachments: form['attachments'],
           grades: form['grades'],
+          weight_per_dozen: form['weight_per_dozen'],
+          gsm: form['gsm'],
+          total_weight: form['total_weight'],
         );
 
         final message =

@@ -11,10 +11,13 @@ class InfoTab extends StatefulWidget {
   final data;
   final label;
   final isTablet;
-  final withNote;
 
-  const InfoTab(
-      {super.key, this.isTablet, this.data, this.label, this.withNote = false});
+  const InfoTab({
+    super.key,
+    this.isTablet,
+    this.data,
+    this.label,
+  });
 
   @override
   State<InfoTab> createState() => _InfoTabState();
@@ -29,24 +32,11 @@ class _InfoTabState extends State<InfoTab> {
   }
 
   Widget _buildWorkOrderCard(bool isTablet) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildCardHeader(isTablet),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildCardHeader(isTablet),
+      ],
     );
   }
 
@@ -98,7 +88,8 @@ class _InfoTabState extends State<InfoTab> {
                           Icon(
                             Icons.warning_amber_rounded,
                             color: Colors.redAccent[100],
-                            size: isTablet ? 22 : 18,
+                            size:
+                                CustomTheme().iconSize(isTablet ? '2xl' : 'xl'),
                           ),
                         ],
                       ],
@@ -106,8 +97,6 @@ class _InfoTabState extends State<InfoTab> {
                     Text(
                       widget.data['created_at'] != null
                           ? 'Dibuat oleh ${widget.data['user']['name']} pada ${DateFormat("dd MMM yyyy, HH.mm").format(DateTime.parse(widget.data['created_at']))}'
-                          // DateFormat("dd MMM yyyy")
-                          //     .format(DateTime.parse(widget.data['created_at']))
                           : DateFormat("dd MMM yyyy")
                               .format(DateTime.parse(widget.data['wo_date'])),
                       style: TextStyle(
@@ -130,7 +119,7 @@ class _InfoTabState extends State<InfoTab> {
 
   Widget _buildQuickInfoRow(bool isTablet) {
     return Container(
-      padding: EdgeInsets.all(isTablet ? 16 : 12),
+      padding: CustomTheme().padding(isTablet ? 'content' : 'card'),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.15),
         borderRadius: BorderRadius.circular(8),
@@ -170,21 +159,21 @@ class _InfoTabState extends State<InfoTab> {
       children: [
         Icon(
           icon,
-          size: isTablet ? 20 : 18,
+          size: CustomTheme().iconSize(isTablet ? 'xl' : 'lg'),
           color: Colors.white,
         ),
         Text(
           label,
           style: TextStyle(
-            fontSize: CustomTheme().fontSize('sm'),
+            fontSize: CustomTheme().fontSize('lg'),
             color: Colors.white.withOpacity(0.7),
           ),
         ),
         Text(
           value,
           style: TextStyle(
-              fontSize: isTablet ? 13 : 12,
-              fontWeight: FontWeight.w600,
+              fontSize: CustomTheme().fontSize('md'),
+              fontWeight: CustomTheme().fontWeight('semibold'),
               color: Colors.white),
           textAlign: TextAlign.center,
           maxLines: 1,

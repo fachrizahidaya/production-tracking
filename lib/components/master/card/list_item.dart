@@ -1,22 +1,17 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ListItem extends StatelessWidget {
   final item;
-  final VoidCallback? onTap;
-  final VoidCallback? onLongPress;
-  final bool showActions;
 
   const ListItem({
     super.key,
     this.item,
-    this.onTap,
-    this.onLongPress,
-    this.showActions = false,
   });
 
   @override
@@ -26,8 +21,6 @@ class ListItem extends StatelessWidget {
         final isTablet = constraints.maxWidth > 600;
 
         return GestureDetector(
-          onTap: onTap,
-          onLongPress: onLongPress,
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -111,28 +104,21 @@ class ListItem extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         // Item Code Badge
-        Container(
-          padding: CustomTheme().padding('badge'),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey[300]!),
-          ),
-          child: Text(
-            item['item_code']?.toString() ?? '-',
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('sm'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: Colors.grey[700],
-              letterSpacing: 0.5,
+        Row(
+          children: [
+            CustomBadge(
+              title: item['item_code']?.toString() ?? '-',
+              status: item['item_code']?.toString() ?? '-',
+              withStatus: false,
             ),
-          ),
+          ],
         ),
+
         // Item Name
         Text(
           item['item_name']?.toString() ?? '-',
           style: TextStyle(
-            fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
+            fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
             fontWeight: CustomTheme().fontWeight('semibold'),
             color: Colors.grey[800],
           ),
@@ -143,7 +129,7 @@ class ListItem extends StatelessWidget {
           Text(
             item['spk_no'].toString(),
             style: TextStyle(
-              fontSize: isTablet ? 13 : 11,
+              fontSize: CustomTheme().fontSize('lg'),
               color: Colors.grey[500],
             ),
             maxLines: 1,
@@ -271,8 +257,7 @@ class ListItem extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: isTablet ? 16 : 14,
-            color: Colors.grey[600],
+            size: CustomTheme().iconSize(isTablet ? 'lg' : 'md'),
           ),
           Flexible(
             child: Column(
@@ -282,9 +267,9 @@ class ListItem extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: CustomTheme().fontSize('xs'),
+                    fontSize: CustomTheme().fontSize('md'),
                     color: Colors.grey[500],
-                    fontWeight: CustomTheme().fontWeight('medium'),
+                    fontWeight: CustomTheme().fontWeight('semibold'),
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

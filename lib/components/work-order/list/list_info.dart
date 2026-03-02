@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/process/info_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/info_tab.dart';
 import 'package:html/parser.dart' as html_parser;
 
 class ListInfo extends StatefulWidget {

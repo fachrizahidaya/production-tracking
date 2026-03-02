@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/create_section.dart';
-import 'package:textile_tracking/components/process/info_tab.dart';
+import 'package:textile_tracking/components/process/create/note_item.dart';
+import 'package:textile_tracking/components/work-order/tab/info_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/item_tab.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -79,7 +80,10 @@ class _FormInfoTabState extends State<FormInfoTab> {
                   data: widget.data,
                   label: widget.label,
                   isTablet: isTablet,
-                  withNote: true,
+                ),
+                NoteItem(
+                  data: widget.data,
+                  label: widget.label,
                 ),
                 ItemTab(
                   data: widget.data,

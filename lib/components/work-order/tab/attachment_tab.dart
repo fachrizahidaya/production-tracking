@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_bytes.dart';
 
 class AttachmentTab extends StatefulWidget {
@@ -27,38 +28,6 @@ class AttachmentTab extends StatefulWidget {
 }
 
 class _AttachmentTabState extends State<AttachmentTab> {
-  void showImageDialog(BuildContext context, bool isNew, String filePath) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.black,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          insetPadding: CustomTheme().padding('content'),
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.6,
-            padding: CustomTheme().padding('process-content'),
-            child: InteractiveViewer(
-              minScale: 1,
-              maxScale: 4,
-              child: isNew
-                  ? Image.file(
-                      File(filePath),
-                      fit: BoxFit.contain,
-                    )
-                  : Image.network(
-                      filePath,
-                      fit: BoxFit.contain,
-                    ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   List<Widget> _buildAttachmentList(BuildContext context) {
     final existingAttachments =
         (widget.existingAttachment ?? []) as List<dynamic>;
@@ -108,15 +77,14 @@ class _AttachmentTabState extends State<AttachmentTab> {
         onTap: filePath != null
             ? () {
                 showImageDialog(
-                  context,
-                  isNew,
-                  isNew ? filePath : '$baseUrl$filePath',
+                  context: context,
+                  isNew: isNew,
+                  filePath: isNew ? filePath : '$baseUrl$filePath',
                 );
               }
             : null,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          margin: const EdgeInsets.only(bottom: 8),
+          padding: CustomTheme().padding('card'),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
@@ -127,10 +95,10 @@ class _AttachmentTabState extends State<AttachmentTab> {
             children: [
               /// Preview
               Container(
-                width: 56,
-                height: 56,
+                width: 60,
+                height: 60,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(4),
                   color: Colors.grey.shade100,
                 ),
                 clipBehavior: Clip.antiAlias,
@@ -174,22 +142,16 @@ class _AttachmentTabState extends State<AttachmentTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: TemplateCard(
-            title: 'Lampiran',
-            icon: Icons.attachment_outlined,
-            child: widget.existingAttachment.isEmpty
-                ? NoData()
-                : Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: _buildAttachmentList(context),
-                  ),
-          ),
-        ),
-      ],
+    return TemplateCard(
+      title: 'Lampiran',
+      icon: Icons.attachment_outlined,
+      child: widget.existingAttachment.isEmpty
+          ? NoData()
+          : Wrap(
+              spacing: 8,
+              runSpacing: 16,
+              children: _buildAttachmentList(context),
+            ),
     );
   }
 }

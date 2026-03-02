@@ -3,7 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/components/work-order/item/note/card_content.dart';
+import 'package:textile_tracking/components/work-order/item/note/card_header.dart';
 
 class NoteItem extends StatefulWidget {
   final dynamic item;
@@ -88,173 +89,28 @@ class _NoteItemState extends State<NoteItem>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header Section
-                _buildHeader(isTablet, isLongContent && widget.isExpandable),
+                CardHeader(
+                  isTablet: isTablet,
+                  item: widget.item,
+                  showExpandButton: isLongContent && widget.isExpandable,
+                  toggleExpanded: _toggleExpanded,
+                ),
 
                 // Content Section
                 if (hasContent)
-                  _buildContent(content, plainText, isTablet, isLongContent),
+                  CardContent(
+                    isTablet: isTablet,
+                    isExpandable: widget.isExpandable,
+                    isExpanded: _isExpanded,
+                    isLongContent: isLongContent,
+                    plainText: plainText,
+                    toggleExpanded: _toggleExpanded,
+                  ),
               ],
             ),
           ),
         );
       },
-    );
-  }
-
-  /// Header Section
-  Widget _buildHeader(bool isTablet, bool showExpandButton) {
-    final label = widget.item['label']?.toString() ?? '-';
-    final noteType = _getNoteType(label);
-
-    return InkWell(
-      onTap: showExpandButton ? _toggleExpanded : null,
-      child: Container(
-        padding: CustomTheme().padding('card'),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              noteType['color'].withOpacity(0.12),
-              noteType['color'].withOpacity(0.04),
-            ],
-          ),
-          border: Border(
-            bottom: BorderSide(
-              color: noteType['color'].withOpacity(0.2),
-              width: 1,
-            ),
-          ),
-        ),
-        child: Row(
-          children: [
-            // Icon Container
-            Container(
-              padding: CustomTheme().padding('process-content'),
-              decoration: BoxDecoration(
-                color: noteType['color'].withOpacity(0.15),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: noteType['color'].withOpacity(0.3),
-                ),
-              ),
-              child: Icon(
-                noteType['icon'],
-                size: isTablet ? 24 : 20,
-                color: noteType['color'],
-              ),
-            ),
-
-            // Label & Timestamp
-            Expanded(
-              child: Row(
-                children: [
-                  Flexible(
-                    child: Text(
-                      'Catatan $label',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        fontWeight: CustomTheme().fontWeight('bold'),
-                        color: Colors.grey[800],
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  // Type Badge
-                ].separatedBy(CustomTheme().hGap('md')),
-              ),
-            ),
-
-            // Expand Button
-          ].separatedBy(CustomTheme().hGap('md')),
-        ),
-      ),
-    );
-  }
-
-  /// Content Section
-  Widget _buildContent(
-    dynamic content,
-    String plainText,
-    bool isTablet,
-    bool isLongContent,
-  ) {
-    final shouldTruncate = isLongContent && widget.isExpandable && !_isExpanded;
-
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      child: Padding(
-        padding: CustomTheme().padding('card'),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Content Container
-            Container(
-              width: double.infinity,
-              padding: CustomTheme().padding('card'),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[200]!),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Quote Icon
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          shouldTruncate
-                              ? '${plainText.substring(0, 150)}...'
-                              : plainText,
-                          style: TextStyle(
-                            fontSize: isTablet ? 14 : 13,
-                            color: Colors.grey[800],
-                            height: 1.6,
-                          ),
-                        ),
-                        // Show More / Less Button
-                        if (isLongContent && widget.isExpandable) ...[
-                          GestureDetector(
-                            onTap: _toggleExpanded,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  _isExpanded
-                                      ? 'Tampilkan Lebih Sedikit'
-                                      : 'Selengkapnya',
-                                  style: TextStyle(
-                                    fontSize: CustomTheme().fontSize('sm'),
-                                    fontWeight:
-                                        CustomTheme().fontWeight('semibold'),
-                                    color: CustomTheme().buttonColor('primary'),
-                                  ),
-                                ),
-                                Icon(
-                                  _isExpanded
-                                      ? Icons.keyboard_arrow_up
-                                      : Icons.keyboard_arrow_down,
-                                  size: isTablet ? 18 : 16,
-                                  color: CustomTheme().buttonColor('primary'),
-                                ),
-                              ].separatedBy(CustomTheme().hGap('sm')),
-                            ),
-                          ),
-                        ],
-                      ].separatedBy(CustomTheme().vGap('md')),
-                    ),
-                  ),
-                ].separatedBy(CustomTheme().hGap('lg')),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -272,101 +128,6 @@ class _NoteItemState extends State<NoteItem>
 
     final document = html_parser.parse(htmlString);
     return document.body?.text ?? '';
-  }
-
-  Map<String, dynamic> _getNoteType(String label) {
-    final lowerLabel = label.toLowerCase();
-
-    if (lowerLabel.contains('dyeing')) {
-      return {
-        'label': 'Dyeing',
-        'icon': Icons.invert_colors_on_outlined,
-        'color': Colors.blueGrey,
-      };
-    }
-    if (lowerLabel.contains('press')) {
-      return {
-        'label': 'Press',
-        'icon': Icons.layers_outlined,
-        'color': Colors.blueGrey,
-      };
-    }
-    if (lowerLabel.contains('tumbler')) {
-      return {
-        'label': 'Tumbler',
-        'icon': Icons.dry_cleaning_outlined,
-        'color': Colors.blueGrey,
-      };
-    }
-    if (lowerLabel.contains('stenter')) {
-      return {
-        'label': 'Stenter',
-        'icon': Icons.air_outlined,
-        'color': Colors.blueGrey,
-      };
-    }
-    if (lowerLabel.contains('long slitting')) {
-      return {
-        'label': 'Long Slitting',
-        'icon': Icons.content_paste_outlined,
-        'color': Colors.blueGrey,
-      };
-    }
-    if (lowerLabel.contains('long hemming')) {
-      return {
-        'label': 'Long Hemming',
-        'icon': Icons.cut_outlined,
-        'color': Colors.blueGrey,
-      };
-    }
-    if (lowerLabel.contains('cross cutting')) {
-      return {
-        'label': 'Cross Cutting',
-        'icon': Icons.cut_outlined,
-        'color': Colors.blueGrey,
-      };
-    }
-    if (lowerLabel.contains('sewing')) {
-      return {
-        'label': ' Sewing',
-        'icon': Icons.link_outlined,
-        'color': Colors.blueGrey,
-      };
-    }
-    if (lowerLabel.contains('embroidery')) {
-      return {
-        'label': 'Embroidery',
-        'icon': Icons.color_lens_outlined,
-        'color': Colors.blueGrey,
-      };
-    }
-    if (lowerLabel.contains('printing')) {
-      return {
-        'label': 'Printing',
-        'icon': Icons.print_outlined,
-        'color': Colors.blueGrey,
-      };
-    }
-    if (lowerLabel.contains('sorting')) {
-      return {
-        'label': 'Sorting',
-        'icon': Icons.sort_outlined,
-        'color': Colors.blueGrey,
-      };
-    }
-    if (lowerLabel.contains('packing')) {
-      return {
-        'label': 'Packing',
-        'icon': Icons.inventory_2_outlined,
-        'color': Colors.blueGrey,
-      };
-    }
-
-    return {
-      'label': '',
-      'icon': Icons.note_outlined,
-      'color': Colors.blueGrey,
-    };
   }
 }
 

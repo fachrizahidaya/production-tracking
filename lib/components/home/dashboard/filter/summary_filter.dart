@@ -62,90 +62,104 @@ class _SummaryFilterState<T> extends State<SummaryFilter<T>> {
     });
 
     return Container(
-      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 64.0),
+      padding: EdgeInsets.fromLTRB(0, 16.0, 0, 64.0),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: GroupForm(
-                  label: 'Dari Tanggal',
-                  formControl: TextFormField(
-                    controller: dariTanggalInput,
-                    readOnly: true,
-                    decoration: CustomTheme().inputDateDecoration(
-                        hintTextString: 'Pilih tanggal',
-                        hasValue: dariTanggalInput.text.isNotEmpty,
-                        onPressClear: () {
-                          setState(() {
-                            widget.onHandleFilter(
-                                'start_date',
-                                DateFormat('yyyy-MM-dd')
-                                    .format(firstDayOfMonth));
-                          });
-                        },
-                        withReset: true),
-                    onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2101),
-                      );
+          Container(
+            padding: CustomTheme().padding('card-detail'),
+            child: Text(
+              'Filter Proses Produksi',
+              style: TextStyle(
+                  height: 1,
+                  fontSize: CustomTheme().fontSize('xl'),
+                  fontWeight: CustomTheme().fontWeight('bold')),
+            ),
+          ),
+          Divider(),
+          Container(
+            padding: CustomTheme().padding('card-detail'),
+            child: Row(
+              children: [
+                Expanded(
+                  child: GroupForm(
+                    label: 'Dari Tanggal',
+                    formControl: TextFormField(
+                      controller: dariTanggalInput,
+                      readOnly: true,
+                      decoration: CustomTheme().inputDateDecoration(
+                          hintTextString: 'Pilih tanggal',
+                          hasValue: dariTanggalInput.text.isNotEmpty,
+                          onPressClear: () {
+                            setState(() {
+                              widget.onHandleFilter(
+                                  'start_date',
+                                  DateFormat('yyyy-MM-dd')
+                                      .format(firstDayOfMonth));
+                            });
+                          },
+                          withReset: true),
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2101),
+                        );
 
-                      if (pickedDate != null) {
-                        setState(() {
-                          String formatted =
-                              DateFormat('yyyy-MM-dd').format(pickedDate);
-                          dariTanggalInput.text = formatted;
-                          widget.onHandleFilter('start_date', formatted);
-                        });
-                      }
-                    },
+                        if (pickedDate != null) {
+                          setState(() {
+                            String formatted =
+                                DateFormat('yyyy-MM-dd').format(pickedDate);
+                            dariTanggalInput.text = formatted;
+                            widget.onHandleFilter('start_date', formatted);
+                          });
+                        }
+                      },
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: GroupForm(
-                  label: 'Sampai Tanggal',
-                  formControl: TextFormField(
-                    controller: sampaiTanggalInput,
-                    readOnly: true,
-                    decoration: CustomTheme().inputDateDecoration(
-                        hintTextString: 'Pilih tanggal',
-                        hasValue: sampaiTanggalInput.text.isNotEmpty,
-                        onPressClear: () {
-                          setState(() {
-                            widget.onHandleFilter('end_date',
-                                DateFormat('yyyy-MM-dd').format(now));
-                          });
-                        },
-                        withReset: true),
-                    onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2101),
-                      );
+                Expanded(
+                  child: GroupForm(
+                    label: 'Sampai Tanggal',
+                    formControl: TextFormField(
+                      controller: sampaiTanggalInput,
+                      readOnly: true,
+                      decoration: CustomTheme().inputDateDecoration(
+                          hintTextString: 'Pilih tanggal',
+                          hasValue: sampaiTanggalInput.text.isNotEmpty,
+                          onPressClear: () {
+                            setState(() {
+                              widget.onHandleFilter('end_date',
+                                  DateFormat('yyyy-MM-dd').format(now));
+                            });
+                          },
+                          withReset: true),
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2101),
+                        );
 
-                      if (pickedDate != null) {
-                        setState(() {
-                          String formatted =
-                              DateFormat('yyyy-MM-dd').format(pickedDate);
-                          sampaiTanggalInput.text = formatted;
-                          widget.onHandleFilter('end_date', formatted);
-                        });
-                      }
-                    },
+                        if (pickedDate != null) {
+                          setState(() {
+                            String formatted =
+                                DateFormat('yyyy-MM-dd').format(pickedDate);
+                            sampaiTanggalInput.text = formatted;
+                            widget.onHandleFilter('end_date', formatted);
+                          });
+                        }
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ].separatedBy(CustomTheme().hGap('xl')),
+              ].separatedBy(CustomTheme().hGap('xl')),
+            ),
           ),
         ].separatedBy(CustomTheme().vGap('xl')),
       ),

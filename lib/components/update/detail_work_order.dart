@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/components/process/info_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/info_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/item_tab.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -98,7 +98,6 @@ class _DetailWorkOrderState extends State<DetailWorkOrder>
               data: widget.data,
               label: widget.label,
               isTablet: isTablet,
-              withNote: true,
             ),
             ItemTab(
               data: widget.data,

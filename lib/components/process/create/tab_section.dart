@@ -107,23 +107,21 @@ class _TabSectionState extends State<TabSection> {
       return RichText(
         text: TextSpan(
           style: TextStyle(
-              fontSize: CustomTheme().fontSize('lg'),
+              fontSize: CustomTheme().fontSize('xl'),
               color: Colors.black,
               height: 1.5),
           children: [
             TextSpan(
               text: 'Anda yakin ingin memulai proses ${widget.label} untuk ',
-              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
             TextSpan(
               text: woNo,
               style: TextStyle(
-                  fontWeight: CustomTheme().fontWeight('bold'),
-                  fontSize: CustomTheme().fontSize('lg')),
+                fontWeight: CustomTheme().fontWeight('bold'),
+              ),
             ),
             TextSpan(
               text: '? Pastikan semua data sudah benar!',
-              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
           ],
         ),

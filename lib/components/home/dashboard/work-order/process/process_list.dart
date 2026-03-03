@@ -86,10 +86,10 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
     }
 
     if (_expandedIndex != null) {
-      return 2600;
+      return 2480;
     }
 
-    return 1000;
+    return 880;
   }
 
   @override
@@ -116,7 +116,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
               : (widget.dataList == null || widget.dataList.isEmpty)
                   ? NoData()
                   : AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
+                      duration: Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                       height:
                           widget.dataList.length == 1 ? null : _adaptiveHeight,
@@ -130,7 +130,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                         },
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
-                          physics: const BouncingScrollPhysics(),
+                          physics: BouncingScrollPhysics(),
                           separatorBuilder: (_, __) => CustomTheme().hGap('xl'),
                           itemCount: widget.hasMore
                               ? widget.dataList.length + 1
@@ -140,7 +140,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                               if (!widget.isLoadMore) {
                                 Future.microtask(widget.handleLoadMore);
                               }
-                              return const SizedBox(width: 80);
+                              return SizedBox(width: 80);
                             }
 
                             final item = widget.dataList[index];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/work-order/item/note_item.dart';
 
@@ -19,7 +20,7 @@ class _NoteTabState extends State<NoteTab> {
 
     return Container(
       child: items.isEmpty
-          ? Center(child: Text('No Data'))
+          ? NoData()
           : ListView.separated(
               padding: CustomTheme().padding('content'),
               separatorBuilder: (context, index) => CustomTheme().vGap('2xl'),

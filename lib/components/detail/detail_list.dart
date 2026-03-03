@@ -734,11 +734,18 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
 
   Widget _buildNoteWo(bool isTablet) {
     return widget.data['work_orders']['notes'] != null
-        ? Text(
-            htmlToPlainText(widget.data['work_orders']['notes']),
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('lg'),
-            ),
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  htmlToPlainText(widget.data['work_orders']['notes']),
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('lg'),
+                  ),
+                ),
+              ),
+            ],
           )
         : NoData();
   }

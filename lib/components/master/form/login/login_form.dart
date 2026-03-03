@@ -71,6 +71,8 @@ class _LoginFormState extends State<LoginForm> {
                         isDisabled: widget.isDisabled,
                         isLoading: widget.isLoading,
                         backgroundColor: CustomTheme().buttonColor('primary'),
+                        customHeight: 56.0,
+                        fontSize: CustomTheme().fontSize('xl'),
                       ))
                 ],
               ),

@@ -6,6 +6,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/dyeing/rework/submit_section.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
@@ -195,7 +196,9 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showAlertDialog(
-            context: context, title: 'Dyeing Dirework', message: message);
+            context: context,
+            title: 'Dyeing Rework',
+            child: buildBoldMessage(message: message, prefix: 'DYE'));
       });
     } catch (e) {
       await showAlertDialog(

@@ -8,7 +8,6 @@ Future<void> showAlertDialog(
     child}) {
   return showDialog(
       context: context,
-      barrierDismissible: false,
       builder: (context) => CustomAlertDialog(
             title: title,
             message: message,

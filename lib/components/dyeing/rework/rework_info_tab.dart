@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/dyeing/rework/create_form.dart';
 import 'package:textile_tracking/components/dyeing/rework/wo_item_tab.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/components/process/info_tab.dart';
+import 'package:textile_tracking/components/process/create/note_item.dart';
+import 'package:textile_tracking/components/work-order/tab/info_tab.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ReworkInfoTab extends StatefulWidget {
@@ -64,7 +65,11 @@ class _ReworkInfoTabState extends State<ReworkInfoTab> {
                   data: widget.data,
                   label: widget.label,
                   isTablet: isTablet,
-                  withNote: true,
+                ),
+              if (widget.form?['wo_id'] != null)
+                NoteItem(
+                  data: widget.data,
+                  label: widget.label,
                 ),
               if (widget.form?['wo_id'] != null)
                 WoItemTab(

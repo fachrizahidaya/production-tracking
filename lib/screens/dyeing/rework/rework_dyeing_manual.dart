@@ -150,23 +150,21 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
       return RichText(
         text: TextSpan(
           style: TextStyle(
-            fontSize: CustomTheme().fontSize('lg'),
-            color: Colors.black,
-          ),
+              fontSize: CustomTheme().fontSize('xl'),
+              color: Colors.black,
+              height: 1.5),
           children: [
             TextSpan(
               text: 'Anda yakin ingin kembali? ',
-              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
             TextSpan(
               text: woNo,
               style: TextStyle(
-                  fontWeight: CustomTheme().fontWeight('bold'),
-                  fontSize: CustomTheme().fontSize('lg')),
+                fontWeight: CustomTheme().fontWeight('bold'),
+              ),
             ),
             TextSpan(
               text: ' tidak dirework dan semua perubahan tidak disimpan!',
-              style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
             ),
           ],
         ),
@@ -184,8 +182,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            title: 'Batal Rework Proses Dyeing',
-            // message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
+            title: 'Batal Rework Dyeing',
             buttonBackground: CustomTheme().buttonColor('danger'),
             child: buildBoldMessage(widget.form?['no_wo']));
       } else {
@@ -245,6 +242,31 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   }
 
   Future<void> _handleSubmit(BuildContext context) async {
+    Widget buildBoldMessage(String woNo) {
+      return RichText(
+        text: TextSpan(
+          style: TextStyle(
+              fontSize: CustomTheme().fontSize('xl'),
+              color: Colors.black,
+              height: 1.5),
+          children: [
+            TextSpan(
+              text: 'Anda yakin ingin rework proses Dyeing ',
+            ),
+            TextSpan(
+              text: woNo,
+              style: TextStyle(
+                fontWeight: CustomTheme().fontWeight('bold'),
+              ),
+            ),
+            TextSpan(
+              text: '? Pastikan semua data sudah benar!',
+            ),
+          ],
+        ),
+      );
+    }
+
     if (context.mounted) {
       if (widget.form?['wo_id'] != null) {
         showConfirmationDialog(
@@ -259,7 +281,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
               }
             },
             title: 'Rework Proses Dyeing',
-            message: 'Anda yakin ingin rework proses?',
+            child: buildBoldMessage(widget.form?['no_wo']),
             buttonBackground: CustomTheme().buttonColor('primary'));
       } else {
         Navigator.pop(context);
@@ -389,15 +411,19 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                     Expanded(
                       child: CancelButton(
                         label: 'Batal',
-                        onPressed: () => _handleCancel(context),
-                        customHeight: 48.0,
+                        onPressed: () {
+                          _handleCancel(context);
+                        },
+                        customHeight: 56.0,
+                        fontSize: CustomTheme().fontSize('xl'),
                       ),
                     ),
                     Expanded(
                         child: FormButton(
                       label: 'Mulai',
                       onPressed: () => _handleSubmit(context),
-                      customHeight: 48.0,
+                      customHeight: 56.0,
+                      fontSize: CustomTheme().fontSize('xl'),
                     ))
                   ].separatedBy(CustomTheme().hGap('xl')),
                 );

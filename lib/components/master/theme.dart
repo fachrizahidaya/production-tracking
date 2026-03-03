@@ -689,6 +689,8 @@ class CustomTheme {
         return EdgeInsets.symmetric(vertical: 16);
       case 'card-detail':
         return EdgeInsets.symmetric(horizontal: 16);
+      case 'note-process':
+        return EdgeInsets.symmetric(horizontal: 12);
       case 'badge':
         return EdgeInsets.symmetric(vertical: 6, horizontal: 12);
       case 'item-detail':

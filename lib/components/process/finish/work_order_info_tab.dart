@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/components/process/create/note_item.dart';
 import 'package:textile_tracking/components/process/finish/work_order_item_tab.dart';
-import 'package:textile_tracking/components/process/info_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/info_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:html/parser.dart' as html_parser;
@@ -49,7 +50,10 @@ class _WorkOrderInfoTabState extends State<WorkOrderInfoTab> {
                       data: widget.data,
                       isTablet: isTablet,
                       label: widget.label,
-                      withNote: true,
+                    ),
+                    NoteItem(
+                      data: widget.data,
+                      label: widget.label,
                     ),
                     WorkOrderItemTab(
                       data: widget.data,

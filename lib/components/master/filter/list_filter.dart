@@ -260,40 +260,36 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                             }
 
                             return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 16, horizontal: 24),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Pilih Status",
-                                        style: TextStyle(
-                                          height: 1,
-                                          fontSize:
-                                              CustomTheme().fontSize('xl'),
-                                          fontWeight: CustomTheme()
-                                              .fontWeight('semibold'),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        child: TextFormField(
-                                          decoration: InputDecoration(
-                                            hintText: 'Pencarian...',
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                          ),
-                                          onChanged: runSearch,
-                                        ),
-                                      ),
-                                    ].separatedBy(CustomTheme().vGap('lg')),
+                                  padding:
+                                      EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0),
+                                  child: Text(
+                                    "Pilih Status",
+                                    style: TextStyle(
+                                      height: 1,
+                                      fontSize: CustomTheme().fontSize('xl'),
+                                      fontWeight:
+                                          CustomTheme().fontWeight('semibold'),
+                                    ),
                                   ),
                                 ),
+                                Divider(),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 24),
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: 'Pencarian...',
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    onChanged: runSearch,
+                                  ),
+                                ),
+                                Divider(),
                                 Expanded(
                                   child: Scrollbar(
                                     child: ListView.separated(
@@ -377,7 +373,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                     ].separatedBy(CustomTheme().hGap('lg')),
                                   ),
                                 ),
-                              ],
+                              ].separatedBy(CustomTheme().vGap('lg')),
                             );
                           },
                         ),

@@ -43,6 +43,7 @@ class _SelectDialogState extends State<SelectDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -54,32 +55,73 @@ class _SelectDialogState extends State<SelectDialog> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Pilih ${widget.label.toString()}',
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('xl'),
-                      fontWeight: CustomTheme().fontWeight('semibold'),
-                    ),
-                  ),
-                  SizedBox(
-                    child: TextFormField(
-                      decoration: CustomTheme().inputDecoration('Pencarian...'),
-                      keyboardType: TextInputType.text,
-                      onChanged: (value) {
-                        _searchDataOption(value);
-                      },
-                    ),
-                  ),
-                ].separatedBy(CustomTheme().vGap('lg')),
+              padding: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0),
+              child: Text(
+                'Pilih ${widget.label.toString()}',
+                style: TextStyle(
+                    fontSize: CustomTheme().fontSize('xl'),
+                    fontWeight: CustomTheme().fontWeight('semibold'),
+                    height: 1),
               ),
             ),
+            Divider(),
+            // Container(
+            //     padding: EdgeInsets.symmetric(horizontal: 8),
+            //     decoration: BoxDecoration(
+            //       border: Border(
+            //         bottom: BorderSide(
+            //           color: Colors.grey.shade300,
+            //           width: 1,
+            //         ),
+            //       ),
+            //       color: Colors.white,
+            //     ),
+            //     child: Row(
+            //       children: [
+            //         Expanded(
+            //           child: TextField(
+            //             // controller: _controller,
+            //             decoration: InputDecoration(
+            //               hintText: 'Cari',
+            //               prefixIcon: const Icon(Icons.search),
+            //               // suffixIcon: _controller.text.isNotEmpty
+            //               //     ? IconButton(
+            //               //         onPressed: () {
+            //               //           _controller.clear();
+            //               //           widget.handleSearchChange('');
+            //               //           setState(() {});
+            //               //         },
+            //               //         icon: const Icon(Icons.close))
+            //               //     : null,
+            //               border: OutlineInputBorder(
+            //                   borderRadius: BorderRadius.circular(8),
+            //                   borderSide: BorderSide.none),
+            //               filled: true,
+            //               fillColor: Colors.white,
+            //             ),
+            //             onChanged: (value) {
+            //               // widget.handleSearchChange(value);
+            //               setState(() {});
+            //             },
+            //           ),
+            //         ),
+            //       ],
+            //     )),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: TextFormField(
+                decoration: CustomTheme().inputDecoration('Pencarian...'),
+                keyboardType: TextInputType.text,
+                onChanged: (value) {
+                  _searchDataOption(value);
+                },
+              ),
+            ),
+            Divider(),
             Expanded(
               child: _dataList.isEmpty
                   ? Center(
@@ -137,7 +179,7 @@ class _SelectDialogState extends State<SelectDialog> {
                       ),
                     ),
             ),
-          ],
+          ].separatedBy(CustomTheme().vGap('lg')),
         ),
       ),
     );

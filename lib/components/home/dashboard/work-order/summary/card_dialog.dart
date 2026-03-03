@@ -47,8 +47,8 @@ class CardDialog extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
+                          fontWeight: CustomTheme().fontWeight('semibold'),
+                          height: 1),
                     ),
                   ].separatedBy(CustomTheme().hGap('md')),
                 ),

@@ -141,18 +141,18 @@ class _FinishSectionState extends State<FinishSection> {
       final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
       if (image != null) {
-        final isValid = await _validateTotalImageSize(image.path);
+        // final isValid = await _validateTotalImageSize(image.path);
 
-        if (!isValid) {
-          if (mounted) {
-            await showAlertDialog(
-              context: context,
-              title: 'Error',
-              message: 'Lampiran melebihi 1 MB',
-            );
-          }
-          return;
-        }
+        // if (!isValid) {
+        //   if (mounted) {
+        //     await showAlertDialog(
+        //       context: context,
+        //       title: 'Error',
+        //       message: 'Lampiran melebihi 1 MB',
+        //     );
+        //   }
+        //   return;
+        // }
 
         setState(() {
           allAttachments.removeWhere((e) => e['is_add_button'] == true);

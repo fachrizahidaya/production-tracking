@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_html.dart';
 
@@ -17,16 +18,18 @@ class NoteItem extends StatelessWidget {
   }
 
   Widget _buildTabletInfoLayout() {
+    final noteValue = _getNoteContentByLabel(
+      notes: data['notes'],
+      label: label,
+    );
+
     return _buildInfoSection(
-        child: Padding(
-      padding: CustomTheme().padding('note-process'),
-      child: _buildInfo(
-        value: _getNoteContentByLabel(
-          notes: data['notes'],
-          label: label,
-        ),
+      child: Padding(
+        padding: CustomTheme().padding('note-process'),
+        child:
+            noteValue == null ? const NoData() : _buildInfo(value: noteValue),
       ),
-    ));
+    );
   }
 
   Widget _buildInfoSection({
@@ -39,11 +42,11 @@ class NoteItem extends StatelessWidget {
     ]);
   }
 
-  String _getNoteContentByLabel({
+  String? _getNoteContentByLabel({
     required dynamic notes,
     required String label,
   }) {
-    if (notes == null || notes is! List) return 'No Data';
+    if (notes == null || notes is! List) return null;
 
     final note = notes.whereType<Map<String, dynamic>>().firstWhere(
           (n) => n['label'] == label,
@@ -52,8 +55,8 @@ class NoteItem extends StatelessWidget {
 
     final content = note['content'];
 
-    if (content == null || content.toString().isEmpty) {
-      return 'No Data';
+    if (content == null || content.toString().trim().isEmpty) {
+      return null;
     }
 
     return htmlToPlainText(content.toString());

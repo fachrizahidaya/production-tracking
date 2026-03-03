@@ -41,27 +41,35 @@ class ConfirmationDialog extends StatelessWidget {
           children: [
             Flexible(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('2xl'),
-                        fontWeight: CustomTheme().fontWeight('bold'),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                            fontSize: CustomTheme().fontSize('2xl'),
+                            fontWeight: CustomTheme().fontWeight('bold'),
+                            height: 1),
                       ),
                     ),
-                    SizedBox(height: 16),
-                    message != null
-                        ? Text(
-                            message,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: CustomTheme().fontSize('xl'),
-                            ),
-                          )
-                        : child,
+                    Divider(),
+                    // SizedBox(height: 16),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                      child: message != null
+                          ? Text(
+                              message,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: CustomTheme().fontSize('xl'),
+                              ),
+                            )
+                          : child,
+                    ),
                   ],
                 ),
               ),

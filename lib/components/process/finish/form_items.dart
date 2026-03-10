@@ -31,6 +31,7 @@ class FormItems extends StatefulWidget {
   final handleSelectWidthUnit;
   final handleSelectUnit;
   final qty;
+  final qtyItem;
   final grades;
   final allAttachments;
   final handleSelectWo;
@@ -49,6 +50,7 @@ class FormItems extends StatefulWidget {
   final processData;
   final handleTotalItemQty;
   final handleRemainingQtyForGrade;
+  final dyeingLotNo;
 
   const FormItems(
       {super.key,
@@ -89,7 +91,9 @@ class FormItems extends StatefulWidget {
       this.weightDozen,
       this.handleRemainingQtyForGrade,
       this.handleTotalItemQty,
-      this.processData});
+      this.processData,
+      this.qtyItem,
+      this.dyeingLotNo});
 
   @override
   State<FormItems> createState() => _FormItemsState();
@@ -103,6 +107,12 @@ class _FormItemsState extends State<FormItems> {
   @override
   void initState() {
     super.initState();
+  }
+
+  void _ensureController(int index) {
+    while (widget.qtyItem.length <= index) {
+      widget.qtyItem.add(TextEditingController(text: '0'));
+    }
   }
 
   String getGradeLabel(int i) {
@@ -180,6 +190,8 @@ class _FormItemsState extends State<FormItems> {
     final percentage = getGradePercentage(i);
     final maxQty = widget.handleRemainingQtyForGrade(i);
 
+    _ensureController(i);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -197,13 +209,20 @@ class _FormItemsState extends State<FormItems> {
                 label: 'Qty (PCS)',
                 req: true,
                 isNumber: true,
+                controller: widget.qtyItem[i],
                 handleChange: (val) {
+                  if (val == null || val.trim().isEmpty) {
+                    widget.qtyItem[i].text = '0';
+                    widget.qtyItem[i].selection = TextSelection.fromPosition(
+                      TextPosition(offset: widget.qtyItem[i].text.length),
+                    );
+                  }
+
                   final safeValue =
-                      (val == null || val.toString().trim().isEmpty)
-                          ? '0'
-                          : val.toString();
+                      (val == null || val.trim().isEmpty) ? '0' : val;
 
                   widget.handleUpdateGrade(i, 'qty', safeValue);
+
                   setState(() {
                     final input =
                         double.tryParse(widget.weightDozen.text.toString()) ??
@@ -399,16 +418,50 @@ class _FormItemsState extends State<FormItems> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ViewText(
-                      viewLabel: 'No. Dyeing',
-                      viewValue: widget.processData['rework_reference']
-                              ['dyeing_no'] ??
-                          '-'),
-                  ViewText(
-                      viewLabel: 'Mesin',
-                      viewValue: widget.processData['rework_reference']
-                              ['machine']['name'] ??
-                          '-'),
+                  Row(
+                    children: [
+                      Container(
+                        padding: CustomTheme().padding('process-content'),
+                        decoration: BoxDecoration(
+                          color: CustomTheme()
+                              .buttonColor('primary')
+                              .withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.description_outlined,
+                          color: CustomTheme().buttonColor('primary'),
+                        ),
+                      ),
+                      ViewText(
+                          viewLabel: 'No. Dyeing',
+                          viewValue: widget.processData['rework_reference']
+                                  ['dyeing_no'] ??
+                              '-')
+                    ].separatedBy(CustomTheme().hGap('xl')),
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: CustomTheme().padding('process-content'),
+                        decoration: BoxDecoration(
+                          color: CustomTheme()
+                              .buttonColor('primary')
+                              .withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.description_outlined,
+                          color: CustomTheme().buttonColor('primary'),
+                        ),
+                      ),
+                      ViewText(
+                          viewLabel: 'Mesin',
+                          viewValue: widget.processData['rework_reference']
+                                  ['machine']['name'] ??
+                              '-')
+                    ].separatedBy(CustomTheme().hGap('xl')),
+                  ),
                 ].separatedBy(CustomTheme().hGap('xl')),
               )),
         if (widget.form?['wo_id'] != null)
@@ -772,6 +825,35 @@ class _FormItemsState extends State<FormItems> {
                             ),
                           ],
                         ),
+                    ].separatedBy(CustomTheme().vGap('lg')),
+                  ),
+                ),
+              if (widget.forDyeing == true)
+                TemplateCard(
+                  title: 'Lot Celup',
+                  icon: Icons.invert_colors_on_outlined,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              children: [
+                                TextForm(
+                                  label: 'No. Lot Celup',
+                                  controller: widget.dyeingLotNo,
+                                  handleChange: (value) {
+                                    widget.handleChangeInput(
+                                        'lot_celup_no', value);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ].separatedBy(CustomTheme().hGap('xl')),
+                      ),
                     ].separatedBy(CustomTheme().vGap('lg')),
                   ),
                 ),

@@ -28,6 +28,7 @@ class Dyeing {
   final dynamic start_by;
   final dynamic end_by;
   final machine;
+  final dyeingLotNo;
 
   Dyeing(
       {this.id,
@@ -54,7 +55,8 @@ class Dyeing {
       this.length_unit_id,
       this.width_unit_id,
       this.machine,
-      this.rework_reference});
+      this.rework_reference,
+      this.dyeingLotNo});
 
   factory Dyeing.fromJson(Map<String, dynamic> json) {
     return Dyeing(
@@ -82,7 +84,8 @@ class Dyeing {
         end_by: json['end_by'],
         width_unit_id: json['width_unit_id'] as int?,
         wo_no: json['wo_no'],
-        length_unit_id: json['length_unit_id'] as int?);
+        length_unit_id: json['length_unit_id'] as int?,
+        dyeingLotNo: json['lot_celup_no']);
   }
 
   Map<String, dynamic> toJson() {
@@ -112,6 +115,7 @@ class Dyeing {
       'length_unit_id': length_unit_id,
       'width_unit_id': width_unit_id,
       'wo_no': wo_no,
+      'lot_celup_no': dyeingLotNo
     };
   }
 }

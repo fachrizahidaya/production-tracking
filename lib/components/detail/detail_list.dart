@@ -543,6 +543,14 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       },
       if (widget.forDyeing == true)
         {
+          'label': 'No. Lot Celup',
+          'value': widget.data['lot_celup_no'] != null
+              ? '${widget.data['lot_celup_no']}'
+              : '-',
+          'icon': Icons.invert_colors_on_outlined,
+        },
+      if (widget.forDyeing == true)
+        {
           'label': 'Qty Hasil ${widget.label}',
           'value': widget.data['qty'] != null
               ? '${formatNumber(widget.data['qty'])} ${widget.data['unit']['code']}'
@@ -555,7 +563,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           'value': widget.data['item_qty'] != null
               ? '${formatNumber(widget.data['item_qty'])} ${widget.data['item_unit']['code']}'
               : '0 ${widget.data['item_unit'] != null ? widget.data['item_unit']['code'] : ''}',
-          'icon': Icons.trolley,
+          'icon': Icons.layers_outlined,
         },
       if (widget.forDyeing == false)
         {
@@ -563,7 +571,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           'value': widget.data['weight'] != null
               ? '${formatNumber(widget.data['weight'])} ${widget.data['weight_unit']['code']}'
               : '0 ${widget.data['weight_unit'] != null ? widget.data['weight_unit']['code'] : ''}',
-          'icon': Icons.layers_outlined,
+          'icon': Icons.scale_outlined,
         },
     ];
 

@@ -101,7 +101,8 @@ class _FinishProcessState extends State<FinishProcess> {
     'nama_satuan_berat': 'KG',
     'maklon': false,
     'maklon_name': '',
-    'grades': []
+    'grades': [],
+    'lot_celup_no': ''
   };
 
   @override

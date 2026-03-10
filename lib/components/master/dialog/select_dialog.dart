@@ -22,6 +22,7 @@ class SelectDialog extends StatefulWidget {
 
 class _SelectDialogState extends State<SelectDialog> {
   late List<dynamic> _dataList;
+  final TextEditingController _controller = TextEditingController();
 
   _searchDataOption(value) {
     setState(() {
@@ -38,6 +39,12 @@ class _SelectDialogState extends State<SelectDialog> {
   void initState() {
     super.initState();
     _dataList = widget.options;
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -69,52 +76,29 @@ class _SelectDialogState extends State<SelectDialog> {
               ),
             ),
             Divider(),
-            // Container(
-            //     padding: EdgeInsets.symmetric(horizontal: 8),
-            //     decoration: BoxDecoration(
-            //       border: Border(
-            //         bottom: BorderSide(
-            //           color: Colors.grey.shade300,
-            //           width: 1,
-            //         ),
-            //       ),
-            //       color: Colors.white,
-            //     ),
-            //     child: Row(
-            //       children: [
-            //         Expanded(
-            //           child: TextField(
-            //             // controller: _controller,
-            //             decoration: InputDecoration(
-            //               hintText: 'Cari',
-            //               prefixIcon: const Icon(Icons.search),
-            //               // suffixIcon: _controller.text.isNotEmpty
-            //               //     ? IconButton(
-            //               //         onPressed: () {
-            //               //           _controller.clear();
-            //               //           widget.handleSearchChange('');
-            //               //           setState(() {});
-            //               //         },
-            //               //         icon: const Icon(Icons.close))
-            //               //     : null,
-            //               border: OutlineInputBorder(
-            //                   borderRadius: BorderRadius.circular(8),
-            //                   borderSide: BorderSide.none),
-            //               filled: true,
-            //               fillColor: Colors.white,
-            //             ),
-            //             onChanged: (value) {
-            //               // widget.handleSearchChange(value);
-            //               setState(() {});
-            //             },
-            //           ),
-            //         ),
-            //       ],
-            //     )),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24),
-              child: TextFormField(
-                decoration: CustomTheme().inputDecoration('Pencarian...'),
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: TextField(
+                decoration:
+                    // CustomTheme().inputDecoration('Cari')
+                    InputDecoration(
+                  hintText: 'Cari',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: _controller.text.isNotEmpty
+                      ? IconButton(
+                          onPressed: () {
+                            _controller.clear();
+                            // runSearch('');
+                            setState(() {});
+                          },
+                          icon: const Icon(Icons.close))
+                      : null,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
                 keyboardType: TextInputType.text,
                 onChanged: (value) {
                   _searchDataOption(value);

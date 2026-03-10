@@ -22,6 +22,8 @@ class ProcessFilter<T> extends StatefulWidget {
 }
 
 class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
+  final TextEditingController _controller = TextEditingController();
+
   List<dynamic> statusOption = [
     {'label': 'Menunggu Diproses', 'value': 'Menunggu Diproses'},
     {'label': 'Diproses', 'value': 'Diproses'},
@@ -50,6 +52,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 
@@ -66,7 +69,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
           Container(
             padding: CustomTheme().padding('card-detail'),
             child: Text(
-              'Filter',
+              'Filter Work Order',
               style: TextStyle(
                   height: 1,
                   fontSize: CustomTheme().fontSize('xl'),
@@ -121,39 +124,46 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                             }
 
                             return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 16, horizontal: 24),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Pilih Status",
-                                        style: TextStyle(
-                                          fontSize:
-                                              CustomTheme().fontSize('xl'),
-                                          fontWeight: CustomTheme()
-                                              .fontWeight('semibold'),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        child: TextFormField(
-                                          decoration: InputDecoration(
-                                            hintText: 'Pencarian...',
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                          ),
-                                          onChanged: runSearch,
-                                        ),
-                                      ),
-                                    ].separatedBy(CustomTheme().vGap('lg')),
+                                  padding:
+                                      EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0),
+                                  child: Text(
+                                    "Pilih Status",
+                                    style: TextStyle(
+                                      fontSize: CustomTheme().fontSize('xl'),
+                                      fontWeight:
+                                          CustomTheme().fontWeight('semibold'),
+                                    ),
                                   ),
                                 ),
+                                Divider(),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      hintText: 'Cari',
+                                      prefixIcon: const Icon(Icons.search),
+                                      suffixIcon: _controller.text.isNotEmpty
+                                          ? IconButton(
+                                              onPressed: () {
+                                                _controller.clear();
+                                                runSearch('');
+                                                setState(() {});
+                                              },
+                                              icon: const Icon(Icons.close))
+                                          : null,
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          borderSide: BorderSide.none),
+                                    ),
+                                    onChanged: runSearch,
+                                  ),
+                                ),
+                                Divider(),
                                 Expanded(
                                   child: Scrollbar(
                                     child: ListView.separated(

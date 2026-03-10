@@ -47,6 +47,7 @@ class FinishSection extends StatefulWidget {
   final handleTotalItemQty;
   final handleRemainingQtyForGrade;
   final onGradeChanged;
+  final dyeingLotNo;
 
   const FinishSection(
       {super.key,
@@ -86,7 +87,8 @@ class FinishSection extends StatefulWidget {
       this.validateQty,
       this.handleRemainingQtyForGrade,
       this.handleTotalItemQty,
-      this.onGradeChanged});
+      this.onGradeChanged,
+      this.dyeingLotNo});
 
   @override
   State<FinishSection> createState() => _FinishSectionState();
@@ -141,19 +143,6 @@ class _FinishSectionState extends State<FinishSection> {
       final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
       if (image != null) {
-        // final isValid = await _validateTotalImageSize(image.path);
-
-        // if (!isValid) {
-        //   if (mounted) {
-        //     await showAlertDialog(
-        //       context: context,
-        //       title: 'Error',
-        //       message: 'Lampiran melebihi 1 MB',
-        //     );
-        //   }
-        //   return;
-        // }
-
         setState(() {
           allAttachments.removeWhere((e) => e['is_add_button'] == true);
 
@@ -316,6 +305,7 @@ class _FinishSectionState extends State<FinishSection> {
       handleRemainingQtyForGrade: widget.handleRemainingQtyForGrade,
       handleTotalItemQty: widget.handleTotalItemQty,
       onGradeChanged: widget.onGradeChanged,
+      dyeingLotNo: widget.dyeingLotNo,
     );
   }
 }

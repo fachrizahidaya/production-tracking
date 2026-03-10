@@ -31,81 +31,79 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.white,
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _controller,
-                decoration: InputDecoration(
-                  hintText: 'Cari',
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: _controller.text.isNotEmpty
-                      ? IconButton(
-                          onPressed: () {
-                            _controller.clear();
-                            widget.handleSearchChange('');
-                            setState(() {});
-                          },
-                          icon: const Icon(Icons.close))
-                      : null,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-                onChanged: (value) {
-                  widget.handleSearchChange(value);
-                  setState(() {});
-                },
-              ),
-            ),
-            Row(
-              children: [
-                if (!widget.withRefresh)
-                  SizedBox()
-                else
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8)),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.refresh_outlined,
-                      ),
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: _controller,
+            decoration: InputDecoration(
+              hintText: 'Cari',
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: _controller.text.isNotEmpty
+                  ? IconButton(
                       onPressed: () {
-                        widget.handleRefetch();
+                        _controller.clear();
+                        widget.handleSearchChange('');
+                        setState(() {});
                       },
-                    ),
-                  ),
-                IconButton(
-                  icon: Stack(
-                    children: [
-                      Icon(
-                        Icons.tune,
-                      ),
-                      if (widget.isFiltered)
-                        Positioned(
-                            right: 0,
-                            top: 0,
-                            child: Container(
-                              width: 10,
-                              height: 10,
-                              decoration: BoxDecoration(
-                                  color: CustomTheme().buttonColor('danger'),
-                                  shape: BoxShape.circle),
-                            ))
-                    ],
+                      icon: const Icon(Icons.close))
+                  : null,
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none),
+              filled: true,
+              fillColor: Colors.white,
+            ),
+            onChanged: (value) {
+              widget.handleSearchChange(value);
+              setState(() {});
+            },
+          ),
+        ),
+        Row(
+          children: [
+            if (!widget.withRefresh)
+              SizedBox()
+            else
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8)),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.refresh_outlined,
                   ),
                   onPressed: () {
-                    widget.showFilter();
+                    widget.handleRefetch();
                   },
                 ),
-              ],
-            )
+              ),
+            IconButton(
+              icon: Stack(
+                children: [
+                  Icon(
+                    Icons.tune,
+                  ),
+                  if (widget.isFiltered)
+                    Positioned(
+                        right: 0,
+                        top: 0,
+                        child: Container(
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                              color: CustomTheme().buttonColor('danger'),
+                              shape: BoxShape.circle),
+                        ))
+                ],
+              ),
+              onPressed: () {
+                widget.showFilter();
+              },
+            ),
           ],
-        ));
+        )
+      ],
+    );
   }
 }

@@ -27,7 +27,8 @@ class ActiveMachine extends StatefulWidget {
 
 class _ActiveMachineState extends State<ActiveMachine>
     with TickerProviderStateMixin {
-  String selectedProcess = 'All';
+  String get selectedProcess =>
+      processFilters.isNotEmpty ? processFilters[selectedIndex] : '';
   TabController? _tabController;
   List<String> processFilters = ['All'];
   int selectedIndex = 0;
@@ -73,7 +74,7 @@ class _ActiveMachineState extends State<ActiveMachine>
     };
 
     setState(() {
-      processFilters = ['All', ...filtered];
+      processFilters = filtered;
 
       _tabController = TabController(
         length: processFilters.length,
@@ -100,7 +101,7 @@ class _ActiveMachineState extends State<ActiveMachine>
   }
 
   bool get _shouldShowProcessFilter {
-    return processFilters.length > 2;
+    return processFilters.length > 1;
   }
 
   Widget _buildProcessFilter() {
@@ -153,7 +154,7 @@ class _ActiveMachineState extends State<ActiveMachine>
       String process,
     ) {
       if (source == null) return [];
-      if (process == 'All') return source;
+      // if (process == 'All') return source;
 
       return source.where((m) {
         final p = m is Map ? (m['process_type'] ?? '') : '';
@@ -217,7 +218,7 @@ class _ActiveMachineState extends State<ActiveMachine>
       String selectedProcess,
     ) {
       if (source == null) return [];
-      if (selectedProcess == 'All') return source;
+      // if (selectedProcess == 'All') return source;
 
       return source.where((m) {
         final process = m is Map ? (m['process_type'] ?? '') : '';

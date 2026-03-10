@@ -128,7 +128,7 @@ class _InfoTabState extends State<InfoTab> {
         children: [
           Expanded(
             child: _buildQuickInfoItem(
-              icon: Icons.business_outlined,
+              icon: Icons.scale_outlined,
               label: 'Qty Greige',
               value:
                   '${formatNumber(widget.data['greige_qty'])} ${widget.data['greige_unit']?['code']}',

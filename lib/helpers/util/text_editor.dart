@@ -113,23 +113,42 @@ class _TextEditorState extends State<TextEditor> {
               children: [
                 Expanded(
                   child: CancelButton(
-                    label: 'Kembali',
+                    label: 'Batal',
                     onPressed: () => _handleCancel(context),
-                    customHeight: 48.0,
+                    customHeight: 56.0,
+                    fontSize: CustomTheme().fontSize('xl'),
                   ),
                 ),
                 Expanded(
-                  child: FormButton(
-                    label: 'Simpan',
-                    onPressed: () async {
-                      if (!_editorReady) return;
+                  child: ValueListenableBuilder(
+                    valueListenable: _isLoading,
+                    builder: (context, loading, _) {
+                      return FormButton(
+                        label: 'Simpan',
+                        onPressed: loading
+                            ? null
+                            : () async {
+                                if (!_editorReady) return;
+                                _isLoading.value = true;
 
-                      final html = await controller.getText();
-                      if (context.mounted) {
-                        Navigator.pop(context, html);
-                      }
+                                final html = await controller.getText();
+                                final isEmpty = html.trim().isEmpty ||
+                                    html.trim() == "<p><br></p>";
+                                if (isEmpty) {
+                                  _isLoading.value = false;
+                                  return;
+                                }
+
+                                if (context.mounted) {
+                                  Navigator.pop(context, html);
+                                }
+                              },
+                        customHeight: 56.0,
+                        fontSize: CustomTheme().fontSize('xl'),
+                        isDisabled: loading,
+                        isLoading: loading,
+                      );
                     },
-                    customHeight: 48.0,
                   ),
                 ),
               ].separatedBy(CustomTheme().hGap('xl')),

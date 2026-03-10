@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/custom_search_bar.dart';
-import 'package:textile_tracking/components/master/card/custom_card.dart';
 import 'package:textile_tracking/components/master/card/item_process.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
@@ -89,77 +88,76 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
       return 2480;
     }
 
-    return 880;
+    return 960;
   }
 
   @override
   Widget build(BuildContext context) {
     MediaQuery.of(context).orientation == Orientation.portrait;
 
-    return CustomCard(
-      child: Column(
-        children: [
-          CustomSearchBar(
-            handleSearchChange: widget.handleSearch,
-            showFilter: _openFilter,
-            isFiltered: widget.isFiltered,
-            withRefresh: true,
-            handleRefetch: widget.handleRefetch,
-          ),
-          Divider(),
-          widget.firstLoading
-              ? Center(
-                  child: Padding(
-                  padding: CustomTheme().padding('content'),
-                  child: CircularProgressIndicator(),
-                ))
-              : (widget.dataList == null || widget.dataList.isEmpty)
-                  ? NoData()
-                  : AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      height:
-                          widget.dataList.length == 1 ? null : _adaptiveHeight,
-                      child: NotificationListener<ScrollNotification>(
-                        onNotification: (notification) {
-                          if (notification is OverscrollNotification &&
-                              notification.metrics.axis == Axis.horizontal) {
-                            return true;
-                          }
-                          return false;
-                        },
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          physics: BouncingScrollPhysics(),
-                          separatorBuilder: (_, __) => CustomTheme().hGap('xl'),
-                          itemCount: widget.hasMore
-                              ? widget.dataList.length + 1
-                              : widget.dataList.length,
-                          itemBuilder: (context, index) {
-                            if (index >= widget.dataList.length) {
-                              if (!widget.isLoadMore) {
-                                Future.microtask(widget.handleLoadMore);
-                              }
-                              return SizedBox(width: 80);
+    return Column(
+      children: [
+        CustomSearchBar(
+          handleSearchChange: widget.handleSearch,
+          showFilter: _openFilter,
+          isFiltered: widget.isFiltered,
+          withRefresh: true,
+          handleRefetch: widget.handleRefetch,
+        ),
+        Divider(),
+        widget.firstLoading
+            ? Center(
+                child: Padding(
+                padding: CustomTheme().padding('content'),
+                child: CircularProgressIndicator(),
+              ))
+            : (widget.dataList == null || widget.dataList.isEmpty)
+                ? NoData()
+                : AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    height:
+                        widget.dataList.length == 1 ? null : _adaptiveHeight,
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: (notification) {
+                        if (notification is OverscrollNotification &&
+                            notification.metrics.axis == Axis.horizontal) {
+                          return true;
+                        }
+                        return false;
+                      },
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        physics: BouncingScrollPhysics(),
+                        separatorBuilder: (_, __) => CustomTheme().hGap('xl'),
+                        itemCount: widget.hasMore
+                            ? widget.dataList.length + 1
+                            : widget.dataList.length,
+                        itemBuilder: (context, index) {
+                          if (index >= widget.dataList.length) {
+                            if (!widget.isLoadMore) {
+                              Future.microtask(widget.handleLoadMore);
                             }
+                            return SizedBox(width: 80);
+                          }
 
-                            final item = widget.dataList[index];
-                            return ItemProcess(
-                              item: item,
-                              showTimeline: true,
-                              isExpanded: _expandedIndex == index,
-                              onExpandChanged: (expanded) {
-                                setState(() {
-                                  _expandedIndex = expanded ? index : null;
-                                });
-                              },
-                            );
-                          },
-                        ),
+                          final item = widget.dataList[index];
+                          return ItemProcess(
+                            item: item,
+                            showTimeline: true,
+                            isExpanded: _expandedIndex == index,
+                            onExpandChanged: (expanded) {
+                              setState(() {
+                                _expandedIndex = expanded ? index : null;
+                              });
+                            },
+                          );
+                        },
+                        padding: CustomTheme().padding('content'),
                       ),
                     ),
-        ],
-      ),
+                  ),
+      ],
     );
   }
 }

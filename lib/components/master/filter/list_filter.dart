@@ -54,6 +54,7 @@ class ListFilter<T> extends StatefulWidget {
 class _ListFilterState<T> extends State<ListFilter<T>> {
   TextEditingController dariTanggalInput = TextEditingController();
   TextEditingController sampaiTanggalInput = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
   int? operatorId;
   String? namaOperator = '';
   int page = 0;
@@ -107,6 +108,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
   void dispose() {
     dariTanggalInput.dispose();
     sampaiTanggalInput.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -278,13 +280,26 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                 ),
                                 Divider(),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 24),
-                                  child: TextFormField(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: TextField(
                                     decoration: InputDecoration(
-                                      hintText: 'Pencarian...',
+                                      hintText: 'Cari',
+                                      prefixIcon: const Icon(Icons.search),
+                                      suffixIcon: _controller.text.isNotEmpty
+                                          ? IconButton(
+                                              onPressed: () {
+                                                _controller.clear();
+                                                runSearch('');
+                                                setState(() {});
+                                              },
+                                              icon: const Icon(Icons.close))
+                                          : null,
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          borderSide: BorderSide.none),
+                                      filled: true,
+                                      fillColor: Colors.white,
                                     ),
                                     onChanged: runSearch,
                                   ),

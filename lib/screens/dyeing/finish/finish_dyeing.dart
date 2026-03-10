@@ -52,6 +52,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
     'nama_satuan': '',
     'nama_satuan_panjang': '',
     'nama_satuan_lebar': '',
+    'lot_celup_no': ''
   };
 
   @override
@@ -81,28 +82,29 @@ class _FinishDyeingState extends State<FinishDyeing> {
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final dyeing = Dyeing(
-          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-          unit_id: int.tryParse(form['unit_id']?.toString() ?? ''),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
-          length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? ''),
-          qty: form['qty'],
-          width: _form['width'] =
-              (_form['width'] == null || _form['width'].toString().isEmpty)
-                  ? '0'
-                  : _form['width'],
-          length: form['length'] =
-              (_form['length'] == null || _form['length'].toString().isEmpty)
-                  ? '0'
-                  : _form['length'],
-          notes: form['notes'],
-          start_time: form['start_time'],
-          end_time: form['end_time'],
-          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
-          attachments: form['attachments'],
-        );
+            wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+            machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+            unit_id: int.tryParse(form['unit_id']?.toString() ?? ''),
+            width_unit_id:
+                int.tryParse(form['width_unit_id']?.toString() ?? ''),
+            length_unit_id:
+                int.tryParse(form['length_unit_id']?.toString() ?? ''),
+            qty: form['qty'],
+            width: _form['width'] =
+                (_form['width'] == null || _form['width'].toString().isEmpty)
+                    ? '0'
+                    : _form['width'],
+            length: form['length'] =
+                (_form['length'] == null || _form['length'].toString().isEmpty)
+                    ? '0'
+                    : _form['length'],
+            notes: form['notes'],
+            start_time: form['start_time'],
+            end_time: form['end_time'],
+            start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+            end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+            attachments: form['attachments'],
+            dyeingLotNo: form['lot_celup_no']);
 
         final message = await Provider.of<DyeingService>(context, listen: false)
             .finishItem(context, id, dyeing, isLoading);

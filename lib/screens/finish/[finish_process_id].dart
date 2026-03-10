@@ -81,6 +81,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   final TextEditingController _gsmController = TextEditingController();
   final TextEditingController _totalWeightController = TextEditingController();
   final TextEditingController _qtyItemController = TextEditingController();
+  final TextEditingController _dyeingLotNoController = TextEditingController();
   final List<TextEditingController> _qtyControllers = [];
   final List<TextEditingController> _notesControllers = [];
   List<Map<String, dynamic>> _selectedUnits = [];
@@ -107,6 +108,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     _lengthController.text = widget.form?['length']?.toString() ?? '';
     _widthController.text = widget.form?['width']?.toString() ?? '';
     _noteController.text = widget.form?['notes']?.toString() ?? '';
+    _dyeingLotNoController.text =
+        widget.form?['lot_celup_no']?.toString() ?? '';
     _weightDozenController.text =
         widget.form?['weight_per_dozen']?.toString() ?? '';
     _gsmController.text = widget.form?['gsm']?.toString() ?? '';
@@ -279,6 +282,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       if (data['notes'] != null) {
         _noteController.text = data['notes'].toString();
         widget.form?['notes'] = data['notes'];
+      }
+      if (data['lot_celup_no'] != null) {
+        _dyeingLotNoController.text = data['lot_celup_no'].toString();
+        widget.form?['lot_celup_no'] = data['lot_celup_no'];
       }
       if (data['machine'] != null) {
         widget.form?['machine_id'] = data['machine']['id'].toString();
@@ -879,6 +886,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                                   getRemainingQtyForGrade,
                               handleTotalItemQty: getTotalItemQty,
                               onGradeChanged: _onGradeChanged,
+                              dyeingLotNo: _dyeingLotNoController,
                             ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],

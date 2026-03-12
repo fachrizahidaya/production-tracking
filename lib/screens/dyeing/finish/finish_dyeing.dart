@@ -52,7 +52,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
     'nama_satuan': '',
     'nama_satuan_panjang': '',
     'nama_satuan_lebar': '',
-    'lot_celup_no': ''
+    'lot_celup_no': '',
+    'finished_unit_id': null,
+    'nama_item': '',
   };
 
   @override
@@ -66,7 +68,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
     return FinishProcess(
       title: 'Selesai Dyeing',
       fetchWorkOrder: (service) async => await service.fetchFinishOptions(),
+      fetchFinishedItem: (service) async => await service.fetchOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
+      getFinishedItemOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput) =>
           FinishDyeingManual(
@@ -104,7 +108,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
             start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
             end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
             attachments: form['attachments'],
-            dyeingLotNo: form['lot_celup_no']);
+            dyeingLotNo: form['lot_celup_no'],
+            finished_item_id:
+                int.tryParse(form['finished_item_id']?.toString() ?? ''));
 
         final message = await Provider.of<DyeingService>(context, listen: false)
             .finishItem(context, id, dyeing, isLoading);

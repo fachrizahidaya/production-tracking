@@ -31,6 +31,7 @@ class Packing {
   final machine;
   final String? maklon_name;
   final bool? maklon;
+  final finished_item_id;
 
   Packing(
       {this.id,
@@ -60,38 +61,39 @@ class Packing {
       this.maklon_name,
       this.weight_per_dozen,
       this.gsm,
-      this.total_weight});
+      this.total_weight,
+      this.finished_item_id});
 
   factory Packing.fromJson(Map<String, dynamic> json) {
     return Packing(
-      id: json['id'] as int?,
-      weight_unit_id: json['weight_unit_id'] as int?,
-      length_unit_id: json['length_unit_id'] as int?,
-      width_unit_id: json['width_unit_id'] as int?,
-      wo_id: json['wo_id'] as int?,
-      machine_id: json['machine_id'] as int?,
-      start_by_id: json['start_by_id'] as int?,
-      end_by_id: json['end_by_id'] as int?,
-      packing_no: json['packing_no'] ?? '',
-      start_time: json['start_time'] ?? '',
-      end_time: json['end_time'] ?? '',
-      weight: json['weight'] ?? '',
-      width: json['width'] ?? '',
-      length: json['length'] ?? '',
-      weight_per_dozen: json['weight_per_dozen'] ?? '',
-      gsm: json['gsm'] ?? '',
-      total_weight: json['total_weight'] ?? '',
-      status: json['status'] ?? '',
-      notes: json['notes'] ?? '',
-      attachments: json['attachments'] ?? [],
-      work_orders: json['work_orders'],
-      start_by: json['start_by'],
-      end_by: json['end_by'],
-      grades: json['grades'] ?? [],
-      machine: json['machine'] ?? {},
-      maklon: json['maklon'] as bool?,
-      maklon_name: json['maklon_name'] ?? '',
-    );
+        id: json['id'] as int?,
+        weight_unit_id: json['weight_unit_id'] as int?,
+        length_unit_id: json['length_unit_id'] as int?,
+        width_unit_id: json['width_unit_id'] as int?,
+        wo_id: json['wo_id'] as int?,
+        machine_id: json['machine_id'] as int?,
+        start_by_id: json['start_by_id'] as int?,
+        end_by_id: json['end_by_id'] as int?,
+        packing_no: json['packing_no'] ?? '',
+        start_time: json['start_time'] ?? '',
+        end_time: json['end_time'] ?? '',
+        weight: json['weight'] ?? '',
+        width: json['width'] ?? '',
+        length: json['length'] ?? '',
+        weight_per_dozen: json['weight_per_dozen'] ?? '',
+        gsm: json['gsm'] ?? '',
+        total_weight: json['total_weight'] ?? '',
+        status: json['status'] ?? '',
+        notes: json['notes'] ?? '',
+        attachments: json['attachments'] ?? [],
+        work_orders: json['work_orders'],
+        start_by: json['start_by'],
+        end_by: json['end_by'],
+        grades: json['grades'] ?? [],
+        machine: json['machine'] ?? {},
+        maklon: json['maklon'] as bool?,
+        maklon_name: json['maklon_name'] ?? '',
+        finished_item_id: json['finished_item_id'] as int?);
   }
 
   Map<String, dynamic> toJson() {
@@ -124,6 +126,7 @@ class Packing {
       'weight_per_dozen': weight_per_dozen,
       'gsm': gsm,
       'total_weight': total_weight,
+      'finished_item_id': finished_item_id
     };
   }
 }

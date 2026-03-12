@@ -37,6 +37,8 @@ class DetailList extends StatefulWidget {
   final form;
   final handleSubmit;
   final itemGradeOption;
+  final forSewing;
+  final forHemming;
 
   const DetailList(
       {super.key,
@@ -62,7 +64,9 @@ class DetailList extends StatefulWidget {
       this.handleChangeInput,
       this.form,
       this.handleSubmit,
-      this.itemGradeOption});
+      this.itemGradeOption,
+      this.forHemming,
+      this.forSewing});
 
   @override
   State<DetailList> createState() => _DetailListState();
@@ -311,8 +315,29 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         if (widget.withItemGrade == false)
           _buildInfoCard(
             title: 'Informasi Proses',
-            icon: Icons.settings_outlined,
+            icon: widget.label == 'Dyeing'
+                ? Icons.invert_colors_on_outlined
+                : widget.label == 'Press'
+                    ? Icons.layers_outlined
+                    : widget.label == 'Tumbler'
+                        ? Icons.dry_cleaning_outlined
+                        : widget.label == 'Stenter'
+                            ? Icons.air_outlined
+                            : widget.label == 'Long Slitting'
+                                ? Icons.content_paste_outlined
+                                : widget.label == 'Long Hemming'
+                                    ? Icons.cut_outlined
+                                    : Icons.settings_outlined,
             child: _buildProcessInfo(true),
+          ),
+        if (widget.forDyeing == true ||
+            widget.forHemming == true ||
+            widget.forSewing == true ||
+            widget.forPacking == true)
+          _buildInfoCard(
+            title: 'Informasi Material',
+            icon: Icons.inventory_2_outlined,
+            child: _buildMaterialInfo(true),
           ),
         if (widget.data['rework'] == true)
           _buildInfoCard(
@@ -378,6 +403,15 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             title: 'Informasi Proses',
             icon: Icons.settings_outlined,
             child: _buildProcessInfo(false),
+          ),
+        if (widget.forDyeing == true ||
+            widget.forHemming == true ||
+            widget.forSewing == true ||
+            widget.forPacking == true)
+          _buildInfoCard(
+            title: 'Informasi Material',
+            icon: Icons.settings_outlined,
+            child: _buildMaterialInfo(true),
           ),
         if (widget.data['rework'] == true)
           _buildInfoCard(
@@ -543,19 +577,19 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       },
       if (widget.forDyeing == true)
         {
-          'label': 'No. Lot Celup',
-          'value': widget.data['lot_celup_no'] != null
-              ? '${widget.data['lot_celup_no']}'
-              : '-',
-          'icon': Icons.invert_colors_on_outlined,
-        },
-      if (widget.forDyeing == true)
-        {
           'label': 'Qty Hasil ${widget.label}',
           'value': widget.data['qty'] != null
               ? '${formatNumber(widget.data['qty'])} ${widget.data['unit']['code']}'
               : '0 ${widget.data['unit'] != null ? widget.data['unit']['code'] : ''}',
           'icon': Icons.layers_outlined,
+        },
+      if (widget.forDyeing == true)
+        {
+          'label': 'No. Lot Celup',
+          'value': widget.data['lot_celup_no'] != null
+              ? '${widget.data['lot_celup_no']}'
+              : '-',
+          'icon': Icons.invert_colors_on_outlined,
         },
       if (widget.withQtyAndWeight == true)
         {
@@ -573,6 +607,25 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               : '0 ${widget.data['weight_unit'] != null ? widget.data['weight_unit']['code'] : ''}',
           'icon': Icons.scale_outlined,
         },
+    ];
+
+    return _buildInfoGrid(items, isTablet);
+  }
+
+  Widget _buildMaterialInfo(bool isTablet) {
+    final items = [
+      {
+        'label': 'Material Awal',
+        'value':
+            '${widget.data['work_orders']['finished_item'] != null ? widget.data['work_orders']['finished_item']['code'] : '-'}',
+        'icon': Icons.inventory_2_outlined,
+      },
+      {
+        'label': 'Material Finished Product',
+        'value':
+            '${widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['item_code'] : '-'}',
+        'icon': Icons.inventory_2_outlined,
+      },
     ];
 
     return _buildInfoGrid(items, isTablet);

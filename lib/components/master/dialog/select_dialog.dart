@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class SelectDialog extends StatefulWidget {
   final String label;
@@ -66,7 +65,7 @@ class _SelectDialogState extends State<SelectDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0),
+              padding: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 8.0),
               child: Text(
                 'Pilih ${widget.label.toString()}',
                 style: TextStyle(
@@ -79,11 +78,9 @@ class _SelectDialogState extends State<SelectDialog> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: TextField(
-                decoration:
-                    // CustomTheme().inputDecoration('Cari')
-                    InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Cari',
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: Icon(Icons.search),
                   suffixIcon: _controller.text.isNotEmpty
                       ? IconButton(
                           onPressed: () {
@@ -91,13 +88,11 @@ class _SelectDialogState extends State<SelectDialog> {
                             // runSearch('');
                             setState(() {});
                           },
-                          icon: const Icon(Icons.close))
+                          icon: Icon(Icons.close))
                       : null,
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none),
-                  filled: true,
-                  fillColor: Colors.white,
                 ),
                 keyboardType: TextInputType.text,
                 onChanged: (value) {
@@ -136,7 +131,6 @@ class _SelectDialogState extends State<SelectDialog> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  // Label
                                   Expanded(
                                     child: Text(
                                       '${_dataList[index]["label"]}',
@@ -147,9 +141,8 @@ class _SelectDialogState extends State<SelectDialog> {
                                       ),
                                     ),
                                   ),
-                                  // Check icon for selected
                                   if (isSelected)
-                                    const Icon(
+                                    Icon(
                                       Icons.check_circle,
                                       color: Colors.green,
                                       size: 20,
@@ -163,7 +156,7 @@ class _SelectDialogState extends State<SelectDialog> {
                       ),
                     ),
             ),
-          ].separatedBy(CustomTheme().vGap('lg')),
+          ],
         ),
       ),
     );

@@ -244,8 +244,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                 debounce!.cancel();
                               }
 
-                              debounce =
-                                  Timer(const Duration(milliseconds: 300), () {
+                              debounce = Timer(Duration(milliseconds: 300), () {
                                 setState(() {
                                   if (value.isEmpty) {
                                     filteredList = List.from(statusOption);
@@ -266,8 +265,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Padding(
-                                  padding:
-                                      EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0),
+                                  padding: EdgeInsets.fromLTRB(
+                                      24.0, 16.0, 24.0, 8.0),
                                   child: Text(
                                     "Pilih Status",
                                     style: TextStyle(
@@ -284,7 +283,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                   child: TextField(
                                     decoration: InputDecoration(
                                       hintText: 'Cari',
-                                      prefixIcon: const Icon(Icons.search),
+                                      prefixIcon: Icon(Icons.search),
                                       suffixIcon: _controller.text.isNotEmpty
                                           ? IconButton(
                                               onPressed: () {
@@ -292,14 +291,12 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                                 runSearch('');
                                                 setState(() {});
                                               },
-                                              icon: const Icon(Icons.close))
+                                              icon: Icon(Icons.close))
                                           : null,
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           borderSide: BorderSide.none),
-                                      filled: true,
-                                      fillColor: Colors.white,
                                     ),
                                     onChanged: runSearch,
                                   ),
@@ -311,6 +308,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                       itemCount: filteredList.length,
                                       itemBuilder: (context, index) {
                                         final item = filteredList[index];
+                                        final status = statusOption[index];
+
                                         final isSelected = selectedStatuses.any(
                                             (s) => s['value'] == item['value']);
 
@@ -318,17 +317,14 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                           contentPadding: EdgeInsets.symmetric(
                                               horizontal: 24),
                                           value: isSelected,
-                                          title: Text(item['label']),
+                                          title: Text(status['label']),
                                           activeColor: Colors.green,
                                           onChanged: (checked) {
                                             setState(() {
                                               if (checked == true) {
-                                                selectedStatuses.add(item);
+                                                selectedStatuses.add(status);
                                               } else {
-                                                selectedStatuses.removeWhere(
-                                                    (s) =>
-                                                        s['value'] ==
-                                                        item['value']);
+                                                selectedStatuses.remove(status);
                                               }
                                             });
                                           },
@@ -388,7 +384,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
                                     ].separatedBy(CustomTheme().hGap('lg')),
                                   ),
                                 ),
-                              ].separatedBy(CustomTheme().vGap('lg')),
+                              ],
                             );
                           },
                         ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/models/option/option_item.dart';
 
 class SelectDialog extends StatefulWidget {
   final String label;
@@ -188,36 +187,25 @@ class _SelectDialogState extends State<SelectDialog> {
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                   vertical: 8, horizontal: 24),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          item['label'],
-                                          style: TextStyle(
-                                            fontWeight: isSelected
-                                                ? FontWeight.w800
-                                                : FontWeight.w400,
-                                          ),
-                                        ),
-                                      ),
-                                      if (isSelected)
-                                        Icon(Icons.check_circle,
-                                            color: Colors.green, size: 20),
-                                    ],
-                                  ),
-                                  if (widget.isAnyAdditionalData)
-                                    Text(
-                                      '${item["code"]}',
+                                  Expanded(
+                                    child: Text(
+                                      '${_dataList[index]["label"]}',
                                       style: TextStyle(
-                                          fontWeight: isSelected
-                                              ? FontWeight.w800
-                                              : FontWeight.w400,
-                                          color: Colors.grey),
+                                        fontWeight: isSelected
+                                            ? FontWeight.w800
+                                            : FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  if (isSelected)
+                                    Icon(
+                                      Icons.check_circle,
+                                      color: Colors.green,
+                                      size: 20,
                                     ),
                                 ],
                               ),

@@ -5,18 +5,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path/path.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/helpers/service/base_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class OptionItemGrade {
+class OptionItem {
   final int? value;
   final String? label;
 
-  OptionItemGrade({this.value, this.label});
+  OptionItem({this.value, this.label});
 
-  factory OptionItemGrade.fromJson(Map<String, dynamic> json) {
-    return OptionItemGrade(
+  factory OptionItem.fromJson(Map<String, dynamic> json) {
+    return OptionItem(
       value: json['value'] as int,
       label: json['label'] ?? '',
     );
@@ -30,22 +30,22 @@ class OptionItemGrade {
   }
 }
 
-class OptionItemGradeService extends BaseService<OptionItemGrade> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/item-grade/option';
+class OptionItemService extends BaseService<OptionItem> {
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/item/option';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
 
-  final List<OptionItemGrade> _ig = [];
+  final List<OptionItem> _item = [];
 
   bool get isLoading => _isLoading;
   bool get hasMoreData => _hasMoreData;
   List<dynamic> get listOption => _listOption;
   List<dynamic> get dataListOption => _dataListOption;
 
-  List<OptionItemGrade> get options => _ig;
+  List<OptionItem> get options => _item;
 
   @override
   Future<void> fetchItems(
@@ -59,11 +59,11 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
 
   @override
   Future<void> addItem(
-      OptionItemGrade item, ValueNotifier<bool> isSubmitting) async {}
+      OptionItem item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
-  Future<void> updateItem(String id, OptionItemGrade item,
-      ValueNotifier<bool> isSubmitting) async {}
+  Future<void> updateItem(
+      String id, OptionItem item, ValueNotifier<bool> isSubmitting) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -77,7 +77,7 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
 
     if (isInitialLoad) {
       _hasMoreData = true;
-      _ig.clear();
+      _item.clear();
     }
 
     _isLoading = true;
@@ -88,7 +88,11 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
       final token = prefs.getString('access_token');
       if (token == null) throw Exception('Access token is missing');
 
-      final uri = Uri.parse('${dotenv.env['API_URL_DEV']}/item-grade/option');
+      final uri = Uri.parse('${dotenv.env['API_URL_DEV']}/item/option')
+          .replace(queryParameters: {
+        if (type != null && type.isNotEmpty) 'type': type,
+        if (searchQuery.isNotEmpty) 'search': searchQuery,
+      });
 
       final response = await http.get(uri, headers: {
         'Authorization': 'Bearer $token',
@@ -96,12 +100,12 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
-        if (decoded['data'] != null) {
-          _dataListOption = decoded['data'];
+        if (decoded['data']['data'] != null) {
+          _dataListOption = decoded['data']['data'];
         }
         notifyListeners();
       } else {
-        throw Exception('Failed to load work order: ${response.statusCode}');
+        throw Exception('Failed to load item: ${response.statusCode}');
       }
     } catch (e) {
       ScaffoldMessenger.of(context as BuildContext).showSnackBar(
@@ -120,7 +124,7 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
   }) async {
     await _fetchOptionsGeneric(
       isInitialLoad: isInitialLoad,
-      type: 'dyeing',
+      type: 'finish_product',
       searchQuery: searchQuery,
     );
   }

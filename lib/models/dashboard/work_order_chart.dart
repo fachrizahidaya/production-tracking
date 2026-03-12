@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:textile_tracking/helpers/service/base_service.dart';
 
 class WorkOrderChartService extends BaseService {
-  final String baseUrl = '${dotenv.env['API_URL']}/dashboard/wo-charts';
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/dashboard/wo-charts';
 
   bool _isLoading = false;
   List<dynamic> _dataList = [];

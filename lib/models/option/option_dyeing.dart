@@ -30,7 +30,7 @@ class OptionDyeing {
 }
 
 class OptionDyeingService extends BaseService<OptionDyeing> {
-  final String baseUrl = '${dotenv.env['API_URL']}/units';
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/units';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
@@ -87,10 +87,11 @@ class OptionDyeingService extends BaseService<OptionDyeing> {
         throw Exception('Access token is missing');
       }
 
-      final response = await http
-          .get(Uri.parse('${dotenv.env['API_URL']}/dyeing/option'), headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+          Uri.parse('${dotenv.env['API_URL_DEV']}/dyeing/option'),
+          headers: {
+            'Authorization': 'Bearer $token',
+          });
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);

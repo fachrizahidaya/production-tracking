@@ -58,6 +58,8 @@ class Detail extends StatefulWidget {
   final itemGradeOption;
   final fetchItemGrade;
   final getItemGradeOptions;
+  final forSewing;
+  final forHemming;
 
   const Detail(
       {super.key,
@@ -103,7 +105,9 @@ class Detail extends StatefulWidget {
       this.handleSubmit,
       this.itemGradeOption,
       this.fetchItemGrade,
-      this.getItemGradeOptions});
+      this.getItemGradeOptions,
+      this.forHemming,
+      this.forSewing});
 
   @override
   State<Detail> createState() => _DetailState();
@@ -260,7 +264,7 @@ class _DetailState extends State<Detail> {
     final existingAttachments =
         (widget.data['attachments'] ?? []) as List<dynamic>;
 
-    final baseUrl = dotenv.env['IMAGE_URL'] ?? '';
+    final baseUrl = dotenv.env['IMAGE_URL_DEV'] ?? '';
 
     return existingAttachments.map<Widget>((item) {
       final bool isNew = item.containsKey('path');
@@ -471,6 +475,8 @@ class _DetailState extends State<Detail> {
                       handleSubmit: widget.handleSubmit,
                       form: widget.form,
                       itemGradeOption: widget.itemGradeOption,
+                      forHemming: widget.forHemming,
+                      forSewing: widget.forSewing,
                     ),
         ),
       ),

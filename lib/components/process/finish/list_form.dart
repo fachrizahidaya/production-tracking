@@ -40,6 +40,8 @@ class ListForm extends StatefulWidget {
   final label;
   final forDyeing;
   final forPacking;
+  final forHemming;
+  final forSewing;
   final validateWeight;
   final weightWarning;
   final validateQty;
@@ -48,6 +50,7 @@ class ListForm extends StatefulWidget {
   final handleRemainingQtyForGrade;
   final onGradeChanged;
   final dyeingLotNo;
+  final handleSelectFinishedMaterial;
 
   const ListForm(
       {super.key,
@@ -93,7 +96,10 @@ class ListForm extends StatefulWidget {
       this.handleRemainingQtyForGrade,
       this.handleTotalItemQty,
       this.onGradeChanged,
-      this.dyeingLotNo});
+      this.dyeingLotNo,
+      this.forHemming,
+      this.forSewing,
+      this.handleSelectFinishedMaterial});
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -206,6 +212,9 @@ class _ListFormState extends State<ListForm> {
         handleTotalItemQty: widget.handleTotalItemQty,
         qtyItem: widget.qtyItem,
         dyeingLotNo: widget.dyeingLotNo,
+        forSewing: widget.forSewing,
+        forHemming: widget.forHemming,
+        handleSelectFinishedMaterial: widget.handleSelectFinishedMaterial,
       ),
     );
   }

@@ -76,6 +76,7 @@ class _SewingDetailState extends State<SewingDetail> {
       withMaklon: true,
       onlySewing: true,
       forDyeing: false,
+      forSewing: true,
       idProcess: 'sewing_id',
       processService: _sewingService,
       forPacking: false,

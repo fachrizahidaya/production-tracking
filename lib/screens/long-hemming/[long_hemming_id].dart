@@ -72,6 +72,7 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
       idProcess: 'long_hemming_id',
       processService: _longHemmingService,
       forPacking: false,
+      forHemming: true,
       fetchFinish: (service) => service.fetchHemmingFinishOptions(),
       handleSubmitToService: (context, id, form, isLoading) async {
         final longHemming = LongHemming(

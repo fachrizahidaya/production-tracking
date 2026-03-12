@@ -43,6 +43,8 @@ class _FinishPackingState extends State<FinishPacking> {
     'nama_satuan_panjang': '',
     'nama_satuan_lebar': '',
     'nama_satuan': '',
+    'finished_unit_id': null,
+    'nama_item': '',
   };
 
   @override
@@ -101,7 +103,9 @@ class _FinishPackingState extends State<FinishPacking> {
             start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
             end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
             attachments: form['attachments'],
-            grades: form['grades']);
+            grades: form['grades'],
+            finished_item_id:
+                int.tryParse(form['finished_item_id']?.toString() ?? ''));
 
         final message =
             await Provider.of<PackingService>(context, listen: false)

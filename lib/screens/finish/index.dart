@@ -8,6 +8,7 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/process/finish/finish_submit_section.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
@@ -40,6 +41,8 @@ class FinishProcess extends StatefulWidget {
   final getItemGradeOptions;
   final String? manualWoId;
   final String? manualProcessId;
+  final fetchFinishedItem;
+  final getFinishedItemOptions;
 
   const FinishProcess(
       {super.key,
@@ -52,7 +55,9 @@ class FinishProcess extends StatefulWidget {
       this.fetchItemGrade,
       this.manualProcessId,
       this.manualWoId,
-      this.initialData});
+      this.initialData,
+      this.fetchFinishedItem,
+      this.getFinishedItemOptions});
 
   @override
   State<FinishProcess> createState() => _FinishProcessState();
@@ -67,6 +72,7 @@ class _FinishProcessState extends State<FinishProcess> {
   bool _isScannerStopped = false;
 
   List<dynamic> workOrderOption = [];
+  List<dynamic> finishedItemOption = [];
   List<dynamic> itemGradeOption = [];
   String id = '';
 
@@ -102,7 +108,9 @@ class _FinishProcessState extends State<FinishProcess> {
     'maklon': false,
     'maklon_name': '',
     'grades': [],
-    'lot_celup_no': ''
+    'lot_celup_no': '',
+    'finished_item_id': '',
+    'nama_item': '',
   };
 
   @override
@@ -130,6 +138,7 @@ class _FinishProcessState extends State<FinishProcess> {
     _form['end_by_id'] = loggedInUser?.id;
     await _handleFetchWorkOrder();
     await _handleFetchItemGrade();
+    await _handleFetchFinishedMaterial();
   }
 
   Future<void> _handleFetchWorkOrder() async {
@@ -147,6 +156,24 @@ class _FinishProcessState extends State<FinishProcess> {
 
     setState(() {
       workOrderOption = options;
+    });
+  }
+
+  Future<void> _handleFetchFinishedMaterial() async {
+    final service = Provider.of<OptionItemService>(context, listen: false);
+
+    if (widget.fetchFinishedItem != null) {
+      await widget.fetchFinishedItem!(service);
+    } else {
+      await service.fetchOptions();
+    }
+
+    final options = widget.getFinishedItemOptions != null
+        ? widget.getFinishedItemOptions!(service)
+        : service.dataListOption;
+
+    setState(() {
+      finishedItemOption = options;
     });
   }
 

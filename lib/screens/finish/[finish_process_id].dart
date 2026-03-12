@@ -11,6 +11,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/components/process/finish/functions/fetch_function.dart';
@@ -23,7 +24,9 @@ class FinishProcessManual extends StatefulWidget {
   final void Function(String fieldName, dynamic value)? handleChangeInput;
   final handleSubmit;
   final fetchWorkOrder;
+  final fetchFinishItem;
   final getWorkOrderOptions;
+  final getFinishedItemOptions;
   final label;
   final forDyeing;
   final processService;
@@ -35,6 +38,8 @@ class FinishProcessManual extends StatefulWidget {
   final getItemGradeOptions;
   final processId;
   final forPacking;
+  final forHemming;
+  final forSewing;
 
   const FinishProcessManual(
       {super.key,
@@ -56,7 +61,11 @@ class FinishProcessManual extends StatefulWidget {
       this.withQtyAndWeight,
       this.processId,
       this.forDyeing,
-      this.forPacking});
+      this.forPacking,
+      this.forHemming,
+      this.forSewing,
+      this.fetchFinishItem,
+      this.getFinishedItemOptions});
 
   @override
   State<FinishProcessManual> createState() => _FinishProcessManualState();
@@ -66,6 +75,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   final WorkOrderService _workOrderService = WorkOrderService();
   bool _firstLoading = false;
   bool _isFetchingWorkOrder = false;
+  bool _isFetchingFinishedMaterial = false;
   bool _isFetchingUnit = false;
   bool _isFetchingGrade = false;
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
@@ -88,6 +98,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   List<Map<String, dynamic>> _selectedUnits = [];
 
   late List<dynamic> workOrderOption = [];
+  late List<dynamic> finishedItemOption = [];
   late List<dynamic> itemGradeOption = [];
   late List<dynamic> unitOption = [];
 
@@ -134,6 +145,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
 
     await _handleFetchWorkOrder();
+    await _handleFetchFinishedMaterial();
     await _handleFetchItemGrade();
     await _handleFetchUnit();
 
@@ -159,6 +171,38 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
     } finally {
       setState(() => _isFetchingWorkOrder = false);
+    }
+  }
+
+  Future<void> _handleFetchFinishedMaterial() async {
+    setState(() {
+      _isFetchingFinishedMaterial = true;
+    });
+
+    final service = Provider.of<OptionItemService>(context, listen: false);
+
+    try {
+      if (widget.fetchFinishItem != null) {
+        await widget.fetchFinishItem!(service);
+      } else {
+        await service.fetchOptions();
+      }
+
+      final data = widget.getFinishedItemOptions != null
+          ? widget.getFinishedItemOptions!(service)
+          : service.dataListOption;
+
+      setState(() {
+        finishedItemOption = data;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
+    } finally {
+      setState(() {
+        _isFetchingFinishedMaterial = false;
+      });
     }
   }
 
@@ -304,6 +348,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['width_unit_id'] = data['width_unit']['id'].toString();
         widget.form?['nama_satuan_lebar'] =
             data['width_unit']['name'].toString();
+      }
+      if (data['finished_item'] != null) {
+        widget.form?['finished_item_id'] =
+            data['finished_item']['id'].toString();
+        widget.form?['finished_item_id'] =
+            data['finished_item']['name'].toString();
       }
 
       if (data['attachments'] != null) {
@@ -567,6 +617,34 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     );
   }
 
+  _selectFinishedMaterial() {
+    if (_isFetchingFinishedMaterial) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (_) => SelectDialog(
+        label: 'SKU Material',
+        options: finishedItemOption,
+        selected: widget.form?['finished_item_id'].toString() ?? '',
+        handleChangeValue: (e) {
+          setState(() {
+            widget.form?['finished_item_id'] = e['value'].toString();
+            widget.form?['nama_item'] = e['label'].toString();
+          });
+        },
+      ),
+    );
+  }
+
   double _getTotalItemQty() {
     final workOrders = data['work_orders'];
     if (workOrders == null) return 0;
@@ -753,7 +831,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               form: widget.form,
                               formKey: _formKey,
                               handleSelectMachine: null,
-                              handleSelectWorkOrder: _selectWorkOrder,
                               handleSelectLengthUnit: _selectLengthUnit,
                               handleChangeInput: widget.handleChangeInput,
                               handleSelectUnit: _selectUnit,
@@ -768,6 +845,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               weightDozen: _weightDozenController,
                               totalWeight: _totalWeightController,
                               handleSelectWo: _selectWorkOrder,
+                              handleSelectFinishedMaterial:
+                                  _selectFinishedMaterial,
                               handleSelectQtyUnitItem: _selectQtyItemUnit,
                               handleSelectQtyUnitDyeing: _selectQtyDyeingUnit,
                               processId: processId,
@@ -780,6 +859,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               forDyeing: widget.forDyeing,
                               data: data['work_orders'],
                               forPacking: widget.forPacking,
+                              forHemming: widget.forHemming,
+                              forSewing: widget.forSewing,
                               validateWeight: _validateWeight,
                               weightWarning: _weightWarningValidationMessage,
                               validateQty: _validateQty,

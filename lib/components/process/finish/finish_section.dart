@@ -39,6 +39,8 @@ class FinishSection extends StatefulWidget {
   final handleSelectQtyUnitDyeing;
   final data;
   final forPacking;
+  final forHemming;
+  final forSewing;
 
   final qtyItem;
   final label;
@@ -51,6 +53,7 @@ class FinishSection extends StatefulWidget {
   final handleRemainingQtyForGrade;
   final onGradeChanged;
   final dyeingLotNo;
+  final handleSelectFinishedMaterial;
 
   const FinishSection(
       {super.key,
@@ -91,7 +94,10 @@ class FinishSection extends StatefulWidget {
       this.handleRemainingQtyForGrade,
       this.handleTotalItemQty,
       this.onGradeChanged,
-      this.dyeingLotNo});
+      this.dyeingLotNo,
+      this.forHemming,
+      this.forSewing,
+      this.handleSelectFinishedMaterial});
 
   @override
   State<FinishSection> createState() => _FinishSectionState();
@@ -331,6 +337,9 @@ class _FinishSectionState extends State<FinishSection> {
       handleTotalItemQty: widget.handleTotalItemQty,
       onGradeChanged: widget.onGradeChanged,
       dyeingLotNo: widget.dyeingLotNo,
+      forHemming: widget.forHemming,
+      forSewing: widget.forSewing,
+      handleSelectFinishedMaterial: widget.handleSelectFinishedMaterial,
     );
   }
 }

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -69,12 +70,14 @@ class ListItem extends StatelessWidget {
           flex: 2,
           child: _buildItemInfo(true),
         ),
+
         // Additional Info
         Expanded(
           flex: 2,
-          child: _buildAdditionalInfo(true),
+          child: (item['variants'] as List).isEmpty
+              ? NoData()
+              : _buildAdditionalInfo(true),
         ),
-        // Status Badge
       ].separatedBy(CustomTheme().hGap('xl')),
     );
   }

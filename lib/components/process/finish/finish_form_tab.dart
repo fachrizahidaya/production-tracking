@@ -7,7 +7,6 @@ class FinishFormTab extends StatefulWidget {
   final form;
   final formKey;
   final handleSelectMachine;
-  final handleSelectWorkOrder;
   final isLoading;
   final maklon;
   final isMaklon;
@@ -51,6 +50,8 @@ class FinishFormTab extends StatefulWidget {
   final label;
   final forDyeing;
   final forPacking;
+  final forHemming;
+  final forSewing;
   final validateWeight;
   final weightWarning;
   final validateQty;
@@ -59,13 +60,13 @@ class FinishFormTab extends StatefulWidget {
   final handleRemainingQtyForGrade;
   final onGradeChanged;
   final dyeingLotNo;
+  final handleSelectFinishedMaterial;
 
   const FinishFormTab(
       {super.key,
       this.form,
       this.formKey,
       this.handleSelectMachine,
-      this.handleSelectWorkOrder,
       this.id,
       this.isLoading,
       this.isMaklon,
@@ -116,7 +117,10 @@ class FinishFormTab extends StatefulWidget {
       this.handleRemainingQtyForGrade,
       this.handleTotalItemQty,
       this.onGradeChanged,
-      this.dyeingLotNo});
+      this.dyeingLotNo,
+      this.forHemming,
+      this.forSewing,
+      this.handleSelectFinishedMaterial});
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();
@@ -184,6 +188,10 @@ class _FinishFormTabState extends State<FinishFormTab>
                   handleTotalItemQty: widget.handleTotalItemQty,
                   onGradeChanged: widget.onGradeChanged,
                   dyeingLotNo: widget.dyeingLotNo,
+                  forHemming: widget.forHemming,
+                  forSewing: widget.forSewing,
+                  handleSelectFinishedMaterial:
+                      widget.handleSelectFinishedMaterial,
                 ),
               ],
             ),

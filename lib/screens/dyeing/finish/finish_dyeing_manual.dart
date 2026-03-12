@@ -15,6 +15,8 @@ class FinishDyeingManual extends StatefulWidget {
   final withItemGrade;
   final withQtyAndWeight;
   final forDyeing;
+  final forSewing;
+  final forHemming;
 
   const FinishDyeingManual(
       {super.key,
@@ -27,7 +29,9 @@ class FinishDyeingManual extends StatefulWidget {
       this.forDyeing,
       this.forPacking,
       this.withItemGrade,
-      this.withQtyAndWeight});
+      this.withQtyAndWeight,
+      this.forHemming,
+      this.forSewing});
 
   @override
   State<FinishDyeingManual> createState() => _FinishDyeingManualState();
@@ -85,7 +89,9 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
       form: widget.form,
       handleSubmit: widget.handleSubmit,
       fetchWorkOrder: (service) => service.fetchFinishOptions(),
+      fetchItemGrade: (service) => service.fetchOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
+      getFinishedItemOptions: (service) => service.dataListOption,
       processService: _dyeingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'dyeing_id',
@@ -94,6 +100,8 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
       withItemGrade: widget.withItemGrade,
       withQtyAndWeight: widget.withQtyAndWeight,
       forPacking: widget.forPacking,
+      forSewing: widget.forSewing,
+      forHemming: widget.forHemming,
     );
   }
 }

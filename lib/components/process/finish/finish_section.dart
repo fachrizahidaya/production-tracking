@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/finish/list_form.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
@@ -137,19 +140,41 @@ class _FinishSectionState extends State<FinishSection> {
     }
   }
 
+  Future<File?> compressImage(String path) async {
+    if (kIsWeb) {
+      return File(path); // skip compression on web
+    }
+
+    final dir = await getTemporaryDirectory();
+    final targetPath =
+        '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+    final result = await FlutterImageCompress.compressAndGetFile(
+      path,
+      targetPath,
+      quality: 70,
+    );
+
+    return result != null ? File(result.path) : null;
+  }
+
   Future<void> _pickAttachments() async {
     try {
       final picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
       if (image != null) {
+        final compressedFile = await compressImage(image.path);
+
+        if (compressedFile == null) return;
+
         setState(() {
           allAttachments.removeWhere((e) => e['is_add_button'] == true);
 
           final newFile = {
-            'name': image.name,
-            'path': image.path,
-            'extension': image.path.split('.').last,
+            'name': compressedFile.path.split('/').last,
+            'path': compressedFile.path,
+            'extension': compressedFile.path.split('.').last,
             'isNew': true,
           };
 

@@ -29,7 +29,8 @@ class Machine {
 }
 
 class MachineService extends BaseService {
-  final String baseUrl = '${dotenv.env['API_URL']}/dashboard/machine-status';
+  final String baseUrl =
+      '${dotenv.env['API_URL_DEV']}/dashboard/machine-status';
 
   bool _isLoading = false;
   Map<String, dynamic> _dataList = {};

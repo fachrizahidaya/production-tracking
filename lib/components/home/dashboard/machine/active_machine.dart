@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/components/home/dashboard/machine/machine_section.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/auth/storage.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -30,7 +31,7 @@ class _ActiveMachineState extends State<ActiveMachine>
   String get selectedProcess =>
       processFilters.isNotEmpty ? processFilters[selectedIndex] : '';
   TabController? _tabController;
-  List<String> processFilters = ['All'];
+  List<String> processFilters = [''];
   int selectedIndex = 0;
 
   VoidCallback? _tabListener;
@@ -172,33 +173,35 @@ class _ActiveMachineState extends State<ActiveMachine>
 
           return widget.isFetching
               ? Center(child: CircularProgressIndicator())
-              : Padding(
-                  padding: CustomTheme().padding('content'),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: MachineSection(
-                          title: 'Mesin Tersedia',
-                          icon: Icons.task_alt_outlined,
-                          status: const Color(0xFF10b981),
-                          headerColor: 'Selesai',
-                          data: filteredAvailable,
-                          isPortrait: isPortrait,
-                        ),
+              : filteredAvailable.isEmpty
+                  ? NoData()
+                  : Padding(
+                      padding: CustomTheme().padding('content'),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: MachineSection(
+                              title: 'Mesin Tersedia',
+                              icon: Icons.task_alt_outlined,
+                              status: const Color(0xFF10b981),
+                              headerColor: 'Selesai',
+                              data: filteredAvailable,
+                              isPortrait: isPortrait,
+                            ),
+                          ),
+                          Expanded(
+                            child: MachineSection(
+                              title: 'Mesin Digunakan',
+                              icon: Icons.error_outline,
+                              status: const Color(0xfff18800),
+                              headerColor: 'Diproses',
+                              data: filteredUnavailable,
+                              isPortrait: isPortrait,
+                            ),
+                          ),
+                        ].separatedBy(CustomTheme().hGap('2xl')),
                       ),
-                      Expanded(
-                        child: MachineSection(
-                          title: 'Mesin Digunakan',
-                          icon: Icons.error_outline,
-                          status: const Color(0xfff18800),
-                          headerColor: 'Diproses',
-                          data: filteredUnavailable,
-                          isPortrait: isPortrait,
-                        ),
-                      ),
-                    ].separatedBy(CustomTheme().hGap('2xl')),
-                  ),
-                );
+                    );
         }).toList(),
       ),
     );

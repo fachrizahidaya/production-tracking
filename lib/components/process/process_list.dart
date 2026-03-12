@@ -89,7 +89,15 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
             child: widget.firstLoading == true
                 ? Center(child: CircularProgressIndicator())
                 : widget.dataList.isEmpty
-                    ? NoData()
+                    ? ListView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        children: [
+                          SizedBox(
+                            height: 280,
+                          ),
+                          NoData(),
+                        ],
+                      )
                     : ListView.separated(
                         controller: _scrollController,
                         physics: AlwaysScrollableScrollPhysics(),

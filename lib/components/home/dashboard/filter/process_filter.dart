@@ -89,6 +89,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                     Timer? debounce;
 
                     return Dialog(
+                      backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -106,8 +107,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                                 debounce!.cancel();
                               }
 
-                              debounce =
-                                  Timer(const Duration(milliseconds: 300), () {
+                              debounce = Timer(Duration(milliseconds: 300), () {
                                 setState(() {
                                   if (value.isEmpty) {
                                     filteredList = List.from(statusOption);
@@ -128,11 +128,12 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Padding(
-                                  padding:
-                                      EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0),
+                                  padding: EdgeInsets.fromLTRB(
+                                      24.0, 16.0, 24.0, 8.0),
                                   child: Text(
                                     "Pilih Status",
                                     style: TextStyle(
+                                      height: 1,
                                       fontSize: CustomTheme().fontSize('xl'),
                                       fontWeight:
                                           CustomTheme().fontWeight('semibold'),
@@ -145,7 +146,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                                   child: TextField(
                                     decoration: InputDecoration(
                                       hintText: 'Cari',
-                                      prefixIcon: const Icon(Icons.search),
+                                      prefixIcon: Icon(Icons.search),
                                       suffixIcon: _controller.text.isNotEmpty
                                           ? IconButton(
                                               onPressed: () {
@@ -153,7 +154,7 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
                                                 runSearch('');
                                                 setState(() {});
                                               },
-                                              icon: const Icon(Icons.close))
+                                              icon: Icon(Icons.close))
                                           : null,
                                       border: OutlineInputBorder(
                                           borderRadius:

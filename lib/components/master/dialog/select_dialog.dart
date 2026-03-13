@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/models/option/option_item.dart';
 
 class SelectDialog extends StatefulWidget {
   final String label;
@@ -196,7 +197,7 @@ class _SelectDialogState extends State<SelectDialog> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          '${_dataList[index]["label"]}',
+                                          item['label'],
                                           style: TextStyle(
                                             fontWeight: isSelected
                                                 ? FontWeight.w800
@@ -205,16 +206,13 @@ class _SelectDialogState extends State<SelectDialog> {
                                         ),
                                       ),
                                       if (isSelected)
-                                        Icon(
-                                          Icons.check_circle,
-                                          color: Colors.green,
-                                          size: 20,
-                                        ),
+                                        Icon(Icons.check_circle,
+                                            color: Colors.green, size: 20),
                                     ],
                                   ),
-                                  if (widget.isAnyAdditionalData == true)
+                                  if (widget.isAnyAdditionalData)
                                     Text(
-                                      '${_dataList[index]["code"]}',
+                                      '${item["code"]}',
                                       style: TextStyle(
                                           fontWeight: isSelected
                                               ? FontWeight.w800

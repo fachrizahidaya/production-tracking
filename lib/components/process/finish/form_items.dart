@@ -17,8 +17,6 @@ class FormItems extends StatefulWidget {
   final withQtyAndWeight;
   final forDyeing;
   final forPacking;
-  final forHemming;
-  final forSewing;
   final itemGradeOption;
   final handleSelectQtyUnit;
   final length;
@@ -37,7 +35,6 @@ class FormItems extends StatefulWidget {
   final grades;
   final allAttachments;
   final handleSelectWo;
-  final handleSelectFinishedMaterial;
   final handleUpdateGrade;
   final handlePickAttachments;
   final handleDeleteAttachment;
@@ -96,10 +93,7 @@ class FormItems extends StatefulWidget {
       this.handleTotalItemQty,
       this.processData,
       this.qtyItem,
-      this.dyeingLotNo,
-      this.forHemming,
-      this.forSewing,
-      this.handleSelectFinishedMaterial});
+      this.dyeingLotNo});
 
   @override
   State<FormItems> createState() => _FormItemsState();
@@ -495,22 +489,22 @@ class _FormItemsState extends State<FormItems> {
                   icon: Icons.list_alt_outlined,
                   child: Column(
                     children: [
-                      // Row(
-                      //   crossAxisAlignment: CrossAxisAlignment.end,
-                      //   children: [
-                      //     Expanded(
-                      //       child: _buildFormField(formRows.firstWhere(
-                      //         (e) => e['value'] == 'length',
-                      //       )),
-                      //     ),
-                      //     CustomTheme().hGap('xl'),
-                      //     Expanded(
-                      //       child: _buildFormField(formRows.firstWhere(
-                      //         (e) => e['value'] == 'width',
-                      //       )),
-                      //     ),
-                      //   ],
-                      // ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: _buildFormField(formRows.firstWhere(
+                              (e) => e['value'] == 'length',
+                            )),
+                          ),
+                          CustomTheme().hGap('xl'),
+                          Expanded(
+                            child: _buildFormField(formRows.firstWhere(
+                              (e) => e['value'] == 'width',
+                            )),
+                          ),
+                        ],
+                      ),
                       ...formRows
                           .where((row) =>
                               row['value'] != 'length' &&
@@ -831,41 +825,6 @@ class _FormItemsState extends State<FormItems> {
                             ),
                           ],
                         ),
-                    ].separatedBy(CustomTheme().vGap('lg')),
-                  ),
-                ),
-              if (widget.forDyeing == true ||
-                  widget.forHemming == true ||
-                  widget.forSewing == true ||
-                  widget.forPacking == true)
-                TemplateCard(
-                  title: 'Material Setelah ${widget.label}',
-                  icon: Icons.inventory_2_outlined,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                              flex: 2,
-                              child: SelectForm(
-                                label: 'SKU Material',
-                                onTap: () =>
-                                    widget.handleSelectFinishedMaterial(),
-                                selectedLabel: widget.form['nama_item'] ?? '',
-                                selectedValue: widget.form['finished_item_id']
-                                        ?.toString() ??
-                                    '',
-                                required: true,
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Material wajib dipilih';
-                                  }
-                                  return null;
-                                },
-                              )),
-                        ].separatedBy(CustomTheme().hGap('xl')),
-                      ),
                     ].separatedBy(CustomTheme().vGap('lg')),
                   ),
                 ),

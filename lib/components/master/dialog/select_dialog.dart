@@ -187,25 +187,39 @@ class _SelectDialogState extends State<SelectDialog> {
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                   vertical: 8, horizontal: 24),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    child: Text(
-                                      '${_dataList[index]["label"]}',
-                                      style: TextStyle(
-                                        fontWeight: isSelected
-                                            ? FontWeight.w800
-                                            : FontWeight.w400,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          '${_dataList[index]["label"]}',
+                                          style: TextStyle(
+                                            fontWeight: isSelected
+                                                ? FontWeight.w800
+                                                : FontWeight.w400,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      if (isSelected)
+                                        Icon(
+                                          Icons.check_circle,
+                                          color: Colors.green,
+                                          size: 20,
+                                        ),
+                                    ],
                                   ),
-                                  if (isSelected)
-                                    Icon(
-                                      Icons.check_circle,
-                                      color: Colors.green,
-                                      size: 20,
+                                  if (widget.isAnyAdditionalData == true)
+                                    Text(
+                                      '${_dataList[index]["code"]}',
+                                      style: TextStyle(
+                                          fontWeight: isSelected
+                                              ? FontWeight.w800
+                                              : FontWeight.w400,
+                                          color: Colors.grey),
                                     ),
                                 ],
                               ),

@@ -563,18 +563,18 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
   /// Process Info Section
   Widget _buildProcessInfo(bool isTablet) {
     final items = [
-      {
-        'label': 'Panjang',
-        'value':
-            '${widget.data['length'] != null ? formatNumber(widget.data['length']) : '0'} ${widget.data['length_unit'] != null ? widget.data['length_unit']['code'] : 'CM'}',
-        'icon': Icons.numbers_outlined,
-      },
-      {
-        'label': 'Lebar',
-        'value':
-            '${widget.data['width'] != null ? formatNumber(widget.data['width']) : '0'} ${widget.data['width_unit'] != null ? widget.data['width_unit']['code'] : 'CM'}',
-        'icon': Icons.width_normal_outlined,
-      },
+      // {
+      //   'label': 'Panjang',
+      //   'value':
+      //       '${widget.data['length'] != null ? formatNumber(widget.data['length']) : '0'} ${widget.data['length_unit'] != null ? widget.data['length_unit']['code'] : 'CM'}',
+      //   'icon': Icons.numbers_outlined,
+      // },
+      // {
+      //   'label': 'Lebar',
+      //   'value':
+      //       '${widget.data['width'] != null ? formatNumber(widget.data['width']) : '0'} ${widget.data['width_unit'] != null ? widget.data['width_unit']['code'] : 'CM'}',
+      //   'icon': Icons.width_normal_outlined,
+      // },
       if (widget.forDyeing == true)
         {
           'label': 'Qty Hasil ${widget.label}',

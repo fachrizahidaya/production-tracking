@@ -33,10 +33,13 @@ class OptionItem {
 class OptionItemService extends BaseService<OptionItem> {
   final String baseUrl = '${dotenv.env['API_URL']}/item/option';
 
+  int _currentPage = 1;
   bool _isLoading = false;
   bool _hasMoreData = true;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
+  String _lastSearch = '';
+  String _activeSearch = '';
 
   final List<OptionItem> _item = [];
 
@@ -73,12 +76,26 @@ class OptionItemService extends BaseService<OptionItem> {
     String? type,
     String searchQuery = '',
   }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
+    // if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
+
+    // if (searchQuery != _lastSearch) {
+    //   _currentPage = 1;
+    //   _hasMoreData = true;
+    //   _dataListOption.clear();
+    //   _lastSearch = searchQuery;
+    // }
+
+    // _isLoading = true;
+    // notifyListeners();
 
     if (isInitialLoad) {
+      _activeSearch = searchQuery; // save search keyword
+      _currentPage = 1;
       _hasMoreData = true;
-      _item.clear();
+      _dataListOption.clear();
     }
+
+    if (_isLoading || !_hasMoreData) return;
 
     _isLoading = true;
     notifyListeners();
@@ -90,8 +107,9 @@ class OptionItemService extends BaseService<OptionItem> {
 
       final uri = Uri.parse('${dotenv.env['API_URL']}/item/option')
           .replace(queryParameters: {
+        'page': _currentPage.toString(),
         if (type != null && type.isNotEmpty) 'type': type,
-        if (searchQuery.isNotEmpty) 'search': searchQuery,
+        if (_activeSearch.isNotEmpty) 'search': _activeSearch,
       });
 
       final response = await http.get(uri, headers: {
@@ -100,17 +118,23 @@ class OptionItemService extends BaseService<OptionItem> {
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
-        if (decoded['data']['data'] != null) {
-          _dataListOption = decoded['data']['data'];
-        }
+
+        final data = decoded['data'];
+
+        final List newItems = data['data'];
+        final int currentPage = data['current_page'];
+        final int lastPage = data['last_page'];
+
+        _dataListOption.addAll(newItems);
+
+        _currentPage = currentPage + 1;
+        _hasMoreData = currentPage < lastPage;
+
         notifyListeners();
       } else {
         throw Exception('Failed to load item: ${response.statusCode}');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context as BuildContext).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
       rethrow;
     } finally {
       _isLoading = false;

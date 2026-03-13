@@ -206,38 +206,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
-  Future<void> _handleFetchFinishedMaterial() async {
-    setState(() {
-      _isFetchingFinishedMaterial = true;
-    });
-
-    final service = Provider.of<OptionItemService>(context, listen: false);
-
-    try {
-      if (widget.fetchFinishItem != null) {
-        await widget.fetchFinishItem!(service);
-      } else {
-        await service.fetchOptions();
-      }
-
-      final data = widget.getFinishedItemOptions != null
-          ? widget.getFinishedItemOptions!(service)
-          : service.dataListOption;
-
-      setState(() {
-        finishedItemOption = data;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
-    } finally {
-      setState(() {
-        _isFetchingFinishedMaterial = false;
-      });
-    }
-  }
-
   Future<void> _handleFetchItemGrade() async {
     setState(() {
       _isFetchingGrade = true;
@@ -646,36 +614,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
           widget.form?['nama_satuan'] = e['label'].toString();
         });
       },
-    );
-  }
-
-  _selectFinishedMaterial() {
-    if (_isFetchingFinishedMaterial) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
-
-    showDialog(
-      context: context,
-      builder: (_) => SelectDialog(
-        isAnyAdditionalData: true,
-        isManyOption: true,
-        label: 'SKU Material',
-        options: finishedItemOption,
-        selected: widget.form?['finished_item_id'].toString() ?? '',
-        handleChangeValue: (e) {
-          setState(() {
-            widget.form?['finished_item_id'] = e['value'].toString();
-            widget.form?['nama_item'] = e['label'].toString();
-          });
-        },
-      ),
     );
   }
 

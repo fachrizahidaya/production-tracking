@@ -202,30 +202,6 @@ class _FinishSectionState extends State<FinishSection> {
     }
   }
 
-  Future<bool> _validateTotalImageSize(String newFilePath) async {
-    const int maxTotalSize = 1 * 1024 * 1024; // 1 MB
-
-    int totalSize = 0;
-
-    // existing attachments
-    for (final item in allAttachments) {
-      if (item['is_add_button'] == true) continue;
-
-      if (item['path'] != null) {
-        final file = File(item['path']);
-        if (await file.exists()) {
-          totalSize += await file.length();
-        }
-      }
-    }
-
-    // add new image size
-    final newFile = File(newFilePath);
-    totalSize += await newFile.length();
-
-    return totalSize <= maxTotalSize;
-  }
-
   void showImageDialog(BuildContext context, bool isNew, String filePath) {
     showDialog(
       context: context,

@@ -1,10 +1,9 @@
-// ignore_for_file: annotate_overrides
+// ignore_for_file: annotate_overrides, prefer_final_fields
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:path/path.dart';
 import 'package:textile_tracking/helpers/service/base_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -38,7 +37,6 @@ class OptionItemService extends BaseService<OptionItem> {
   bool _hasMoreData = true;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
-  String _lastSearch = '';
   String _activeSearch = '';
 
   final List<OptionItem> _item = [];

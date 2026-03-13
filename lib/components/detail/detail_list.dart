@@ -617,13 +617,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       {
         'label': 'Material Awal',
         'value':
-            '${widget.data['work_orders']['finished_item'] != null ? widget.data['work_orders']['finished_item']['code'] : '-'}',
+            '${widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['item_code'] : '-'}',
         'icon': Icons.inventory_2_outlined,
       },
       {
         'label': 'Material Finished Product',
         'value':
-            '${widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['item_code'] : '-'}',
+            '${widget.data['finished_item'] != null ? widget.data['finished_item']['code'] : '-'}',
         'icon': Icons.inventory_2_outlined,
       },
     ];

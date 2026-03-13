@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/models/option/option_item.dart';
 
 class SelectDialog extends StatefulWidget {
   final String label;
@@ -8,6 +10,7 @@ class SelectDialog extends StatefulWidget {
   final selected;
   final handleChangeValue;
   final isAnyAdditionalData;
+  final bool isManyOption;
 
   const SelectDialog(
       {super.key,
@@ -15,7 +18,8 @@ class SelectDialog extends StatefulWidget {
       required this.options,
       this.selected,
       this.handleChangeValue,
-      this.isAnyAdditionalData = false});
+      this.isAnyAdditionalData = false,
+      this.isManyOption = false});
 
   @override
   State<SelectDialog> createState() => _SelectDialogState();
@@ -24,6 +28,7 @@ class SelectDialog extends StatefulWidget {
 class _SelectDialogState extends State<SelectDialog> {
   late List<dynamic> _dataList;
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   _searchDataOption(value) {
     setState(() {
@@ -39,17 +44,53 @@ class _SelectDialogState extends State<SelectDialog> {
   @override
   void initState() {
     super.initState();
-    _dataList = widget.options;
+    if (widget.isManyOption) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Provider.of<OptionItemService>(context, listen: false)
+            .fetchOptions(isInitialLoad: true);
+      });
+
+      _scrollController.addListener(_handleScroll);
+    } else {
+      _dataList = widget.options;
+    }
+  }
+
+  void _handleScroll() {
+    final provider = Provider.of<OptionItemService>(context, listen: false);
+
+    if (!_scrollController.hasClients) return;
+
+    final position = _scrollController.position;
+
+    if (position.pixels >= position.maxScrollExtent - 100) {
+      if (!provider.isLoading && provider.hasMoreData) {
+        provider.fetchOptions();
+      }
+    }
+  }
+
+  void _searchData(String value) {
+    if (widget.isManyOption) {
+      Provider.of<OptionItemService>(context, listen: false).fetchOptions(
+        isInitialLoad: true,
+        searchQuery: value,
+      );
+    }
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<OptionItemService>(context);
+
+    final listData = widget.isManyOption ? provider.dataListOption : _dataList;
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
@@ -98,32 +139,50 @@ class _SelectDialogState extends State<SelectDialog> {
                 ),
                 keyboardType: TextInputType.text,
                 onChanged: (value) {
-                  _searchDataOption(value);
+                  if (widget.isManyOption) {
+                    _searchData(value);
+                  } else {
+                    _searchDataOption(value);
+                  }
                 },
               ),
             ),
             Divider(),
             Expanded(
-              child: _dataList.isEmpty
+              child: listData.isEmpty
                   ? Center(
                       child: NoData(),
                     )
                   : Scrollbar(
                       child: ListView.separated(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: _dataList.length,
-                        itemBuilder: (BuildContext context, index) {
+                        controller:
+                            widget.isManyOption ? _scrollController : null,
+                        itemCount: widget.isManyOption
+                            ? listData.length + (provider.isLoading ? 1 : 0)
+                            : listData.length,
+                        itemBuilder: (context, index) {
+                          if (widget.isManyOption && index >= listData.length) {
+                            return Padding(
+                              padding: EdgeInsets.all(16),
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          }
+
+                          final item = listData[index];
+
                           final isSelected =
-                              _dataList[index]['value'].toString() ==
-                                  widget.selected;
+                              item['value'].toString() == widget.selected;
 
                           return GestureDetector(
                             onTap: () {
                               if (isSelected) {
                                 widget.handleChangeValue(null);
                               } else {
-                                widget.handleChangeValue(_dataList[index]);
+                                widget.handleChangeValue(item);
                               }
+
                               Navigator.pop(context);
                             },
                             child: Container(
@@ -138,7 +197,7 @@ class _SelectDialogState extends State<SelectDialog> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          '${_dataList[index]["label"]}',
+                                          item['label'],
                                           style: TextStyle(
                                             fontWeight: isSelected
                                                 ? FontWeight.w800
@@ -147,16 +206,13 @@ class _SelectDialogState extends State<SelectDialog> {
                                         ),
                                       ),
                                       if (isSelected)
-                                        Icon(
-                                          Icons.check_circle,
-                                          color: Colors.green,
-                                          size: 20,
-                                        ),
+                                        Icon(Icons.check_circle,
+                                            color: Colors.green, size: 20),
                                     ],
                                   ),
-                                  if (widget.isAnyAdditionalData == true)
+                                  if (widget.isAnyAdditionalData)
                                     Text(
-                                      '${_dataList[index]["code"]}',
+                                      '${item["code"]}',
                                       style: TextStyle(
                                           fontWeight: isSelected
                                               ? FontWeight.w800
@@ -168,7 +224,7 @@ class _SelectDialogState extends State<SelectDialog> {
                             ),
                           );
                         },
-                        separatorBuilder: (context, index) => Divider(),
+                        separatorBuilder: (_, __) => Divider(),
                       ),
                     ),
             ),

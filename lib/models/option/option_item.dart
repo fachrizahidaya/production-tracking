@@ -30,7 +30,7 @@ class OptionItem {
 }
 
 class OptionItemService extends BaseService<OptionItem> {
-  final String baseUrl = '${dotenv.env['API_URL']}/item/option';
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/item/option';
 
   int _currentPage = 1;
   bool _isLoading = false;
@@ -103,7 +103,7 @@ class OptionItemService extends BaseService<OptionItem> {
       final token = prefs.getString('access_token');
       if (token == null) throw Exception('Access token is missing');
 
-      final uri = Uri.parse('${dotenv.env['API_URL']}/item/option')
+      final uri = Uri.parse('${dotenv.env['API_URL_DEV']}/item/option')
           .replace(queryParameters: {
         'page': _currentPage.toString(),
         if (type != null && type.isNotEmpty) 'type': type,

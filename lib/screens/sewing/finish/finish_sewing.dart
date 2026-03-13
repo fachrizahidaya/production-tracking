@@ -84,6 +84,7 @@ class _FinishSewingState extends State<FinishSewing> {
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
         forDyeing: false,
+        forSewing: true,
         withItemGrade: false,
         withQtyAndWeight: true,
       ),

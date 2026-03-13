@@ -731,6 +731,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       context: context,
       builder: (_) => SelectDialog(
         isAnyAdditionalData: true,
+        isManyOption: true,
         label: 'SKU Material',
         options: finishedItemOption,
         selected: widget.form?['finished_item_id'].toString() ?? '',

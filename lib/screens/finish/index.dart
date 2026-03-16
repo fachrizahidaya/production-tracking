@@ -262,15 +262,18 @@ class _FinishProcessState extends State<FinishProcess> {
 
       await _workOrderService.getDataView(woId);
       final data = _workOrderService.dataView;
-      print('data');
-      print(data);
       final greigeQty = data['greige_qty'];
 
       if (greigeQty != null && greigeQty.toString().isNotEmpty) {
         _form['qty'] = greigeQty.toString();
       }
 
-      await _handleFetchFinishedMaterial(data);
+      if (widget.label == 'Dyeing' ||
+          widget.label == 'Long Hemming' ||
+          widget.label == 'Sewing' ||
+          widget.label == 'Packing') {
+        await _handleFetchFinishedMaterial(data);
+      }
 
       _form['wo_id'] = data['id']?.toString() ?? woId;
       _form['no_wo'] = data['wo_no']?.toString() ?? woNo;

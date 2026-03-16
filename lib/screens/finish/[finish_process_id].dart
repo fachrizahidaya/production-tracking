@@ -9,11 +9,12 @@ import 'package:textile_tracking/components/process/finish/finish_form_tab.dart'
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
-import 'package:textile_tracking/models/option/option_work_order.dart';
+import 'package:textile_tracking/components/process/finish/functions/fetch_function.dart';
 
 class FinishProcessManual extends StatefulWidget {
   final title;
@@ -107,6 +108,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   String? _weightWarningValidationMessage;
   String? _itemWarningValidationMessage;
 
+  final FetchFunction _fetcher = FetchFunction();
+
   var processId = '';
 
   @override
@@ -142,7 +145,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
 
     await _handleFetchWorkOrder();
-    await _handleFetchFinishedMaterial();
+    // await _handleFetchFinishedMaterial();
     await _handleFetchItemGrade();
     await _handleFetchUnit();
 
@@ -152,34 +155,22 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   Future<void> _handleFetchWorkOrder() async {
-    setState(() {
-      _isFetchingWorkOrder = true;
-    });
-
-    final service = Provider.of<OptionWorkOrderService>(context, listen: false);
+    setState(() => _isFetchingWorkOrder = true);
 
     try {
-      if (widget.fetchWorkOrder != null) {
-        await widget.fetchWorkOrder!(service);
-      } else {
-        await service.fetchOptions();
-      }
-
-      final data = widget.getWorkOrderOptions != null
-          ? widget.getWorkOrderOptions!(service)
-          : service.dataListOption;
+      final result = await _fetcher.fetchWorkOrder(
+        context,
+        customFetch: widget.fetchWorkOrder,
+        customGetter: widget.getWorkOrderOptions,
+      );
 
       setState(() {
-        workOrderOption = data;
+        workOrderOption = result;
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
     } finally {
-      setState(() {
-        _isFetchingWorkOrder = false;
-      });
+      setState(() => _isFetchingWorkOrder = false);
     }
   }
 
@@ -191,11 +182,22 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     final service = Provider.of<OptionItemService>(context, listen: false);
 
     try {
-      if (widget.fetchFinishItem != null) {
-        await widget.fetchFinishItem!(service);
-      } else {
-        await service.fetchOptions();
+      String baseCode = '';
+      String colorCode = '';
+
+      final itemCode = woData['items']?[0]?['item_code'] ?? '';
+
+      if (itemCode.isNotEmpty) {
+        final parts = itemCode.split('-');
+        baseCode = parts.first;
+        colorCode = parts.last;
       }
+
+      await service.fetchOptions(
+        process: widget.label.toLowerCase(),
+        baseCode: baseCode,
+        colorCode: colorCode,
+      );
 
       final data = widget.getFinishedItemOptions != null
           ? widget.getFinishedItemOptions!(service)
@@ -283,6 +285,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       woData = _workOrderService.dataView;
       _firstLoading = false;
     });
+
+    // AFTER woData is ready
+    await _handleFetchFinishedMaterial();
   }
 
   Future<void> _getProcessView(id) async {
@@ -482,133 +487,68 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   _selectWorkOrder() {
-    if (_isFetchingWorkOrder) {
-      showDialog(
+    showSelectDialog(
         context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
+        title: 'Work Order',
+        isLoading: null,
+        isFetching: _isFetchingWorkOrder,
+        handleChangeValue: (e) {
+          setState(() {
+            widget.form?['wo_id'] = e['value'].toString();
+            widget.form?['no_wo'] = e['label'].toString();
+            processId = e[widget.idProcess].toString();
+          });
 
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      useSafeArea: true,
-      builder: (BuildContext context) {
-        return SelectDialog(
-          label: 'Work Order',
-          options: workOrderOption,
-          selected: widget.form?['wo_id'].toString() ?? '',
-          handleChangeValue: (e) {
-            setState(() {
-              widget.form?['wo_id'] = e['value'].toString();
-              widget.form?['no_wo'] = e['label'].toString();
-              processId = e[widget.idProcess].toString();
-            });
-
-            _getDataView(e['value'].toString());
-            _getProcessView(e[widget.idProcess].toString());
-          },
-        );
-      },
-    );
+          _getDataView(e['value'].toString());
+          _getProcessView(e[widget.idProcess].toString());
+        },
+        option: workOrderOption,
+        selected: widget.form?['wo_id'].toString() ?? '');
   }
 
   _selectUnit() {
-    if (_isFetchingUnit) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
-
-    showDialog(
+    showSelectDialog(
       context: context,
-      barrierDismissible: true,
-      useSafeArea: true,
-      builder: (BuildContext context) {
-        return SelectDialog(
-          label: 'Satuan Berat',
-          options: unitOption,
-          selected: widget.form?['weight_unit_id'].toString() ?? '',
-          handleChangeValue: (e) {
-            setState(() {
-              widget.form?['weight_unit_id'] = e['value'].toString();
-              widget.form?['nama_satuan_berat'] = e['label'].toString();
-            });
-          },
-        );
+      title: 'Satuan',
+      isFetching: _isFetchingUnit,
+      option: unitOption,
+      selected: widget.form?['weight_unit_id'].toString() ?? '',
+      handleChangeValue: (e) {
+        setState(() {
+          widget.form?['weight_unit_id'] = e['value'].toString();
+          widget.form?['nama_satuan_berat'] = e['label'].toString();
+        });
       },
     );
   }
 
   _selectLengthUnit() {
-    if (_isFetchingUnit) {
-      showDialog(
+    showSelectDialog(
         context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
-
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      useSafeArea: true,
-      builder: (BuildContext context) {
-        return SelectDialog(
-          label: 'Satuan Panjang',
-          options: unitOption,
-          selected: widget.form?['length_unit_id'].toString() ?? '',
-          handleChangeValue: (e) {
-            setState(() {
-              widget.form?['length_unit_id'] = e['value'].toString();
-              widget.form?['nama_satuan_panjang'] = e['label'].toString();
-            });
-          },
-        );
-      },
-    );
+        title: 'Satuan Panjang',
+        isFetching: _isFetchingUnit,
+        option: unitOption,
+        selected: widget.form?['length_unit_id'].toString() ?? '',
+        handleChangeValue: (e) {
+          setState(() {
+            widget.form?['length_unit_id'] = e['value'].toString();
+            widget.form?['nama_satuan_panjang'] = e['label'].toString();
+          });
+        });
   }
 
   _selectWidthUnit() {
-    if (_isFetchingUnit) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
-
-    showDialog(
+    showSelectDialog(
       context: context,
-      barrierDismissible: true,
-      useSafeArea: true,
-      builder: (BuildContext context) {
-        return SelectDialog(
-          label: 'Satuan Lebar',
-          options: unitOption,
-          selected: widget.form?['width_unit_id'].toString() ?? '',
-          handleChangeValue: (e) {
-            setState(() {
-              widget.form?['width_unit_id'] = e['value'].toString();
-              widget.form?['nama_satuan_lebar'] = e['label'].toString();
-            });
-          },
-        );
+      title: 'Satuan Lebar',
+      isFetching: _isFetchingUnit,
+      option: unitOption,
+      selected: widget.form?['width_unit_id'].toString() ?? '',
+      handleChangeValue: (e) {
+        setState(() {
+          widget.form?['width_unit_id'] = e['value'].toString();
+          widget.form?['nama_satuan_lebar'] = e['label'].toString();
+        });
       },
     );
   }
@@ -660,85 +600,63 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   _selectQtyItemUnit() {
-    if (_isFetchingUnit) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
-
-    showDialog(
+    showSelectDialog(
       context: context,
-      builder: (_) => SelectDialog(
-        label: 'Satuan',
-        options: unitOption,
-        selected: widget.form?['item_unit_id'].toString() ?? '',
-        handleChangeValue: (e) {
-          setState(() {
-            widget.form?['item_unit_id'] = e['value'].toString();
-            widget.form?['nama_satuan'] = e['label'].toString();
-          });
-        },
-      ),
+      title: 'Satuan Qty',
+      isFetching: _isFetchingUnit,
+      option: unitOption,
+      selected: widget.form?['item_unit_id'].toString() ?? '',
+      handleChangeValue: (e) {
+        setState(() {
+          widget.form?['item_unit_id'] = e['value'].toString();
+          widget.form?['nama_satuan'] = e['label'].toString();
+        });
+      },
     );
   }
 
   _selectQtyDyeingUnit() {
-    if (_isFetchingUnit) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
-
-    showDialog(
+    showSelectDialog(
       context: context,
-      builder: (_) => SelectDialog(
-        label: 'Satuan',
-        options: unitOption,
-        selected: widget.form?['unit_id'].toString() ?? '',
-        handleChangeValue: (e) {
-          setState(() {
-            widget.form?['unit_id'] = e['value'].toString();
-            widget.form?['nama_satuan'] = e['label'].toString();
-          });
-        },
-      ),
+      title: 'Satuan Qty',
+      isFetching: _isFetchingUnit,
+      option: unitOption,
+      selected: widget.form?['unit_id'].toString() ?? '',
+      handleChangeValue: (e) {
+        setState(() {
+          widget.form?['unit_id'] = e['value'].toString();
+          widget.form?['nama_satuan'] = e['label'].toString();
+        });
+      },
     );
   }
 
   _selectFinishedMaterial() {
-    if (_isFetchingFinishedMaterial) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
+    final provider = Provider.of<OptionItemService>(context, listen: false);
 
     showDialog(
       context: context,
       builder: (_) => SelectDialog(
-        isAnyAdditionalData: true,
+        label: 'Material Greige',
+        options: provider.dataListOption,
+        selected: widget.form?['finished_item_id']?.toString(),
         isManyOption: true,
-        label: 'SKU Material',
-        options: finishedItemOption,
-        selected: widget.form?['finished_item_id'].toString() ?? '',
+        isAnyAdditionalData: true,
+        isLoading: provider.isLoading,
+        hasMoreData: provider.hasMoreData,
+        onSearch: (value) {
+          provider.fetchOptions(
+            isInitialLoad: true,
+            searchQuery: value,
+          );
+        },
+        onLoadMore: () {
+          provider.fetchOptions();
+        },
         handleChangeValue: (e) {
           setState(() {
-            widget.form?['finished_item_id'] = e['value'].toString();
-            widget.form?['nama_item'] = e['label'].toString();
+            widget.form?['finished_item_id'] = e?['value']?.toString();
+            widget.form?['nama_item'] = e?['label']?.toString();
           });
         },
       ),

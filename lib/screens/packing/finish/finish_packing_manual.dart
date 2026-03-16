@@ -59,6 +59,8 @@ class _FinishPackingManualState extends State<FinishPackingManual> {
       handleSubmit: widget.handleSubmit,
       fetchWorkOrder: (service) => service.fetchPackingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
+      fetchFinishItem: (service) => service.fetchOptions(),
+      getFinishedItemOptions: (service) => service.dataListOption,
       processService: _packingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'packing_id',

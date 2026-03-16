@@ -67,6 +67,7 @@ class _FinishPackingState extends State<FinishPacking> {
   Widget build(BuildContext context) {
     return FinishProcess(
       title: 'Selesai Packing',
+      label: 'Packing',
       fetchWorkOrder: (service) async =>
           await service.fetchPackingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,

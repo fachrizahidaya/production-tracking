@@ -42,7 +42,7 @@ class _WorkOrderInfoTabState extends State<WorkOrderInfoTab> {
         return SingleChildScrollView(
           padding: CustomTheme().padding('content'),
           child: widget.data == null
-              ? NoData()
+              ? SizedBox(height: 500, child: NoData())
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

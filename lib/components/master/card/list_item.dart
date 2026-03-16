@@ -9,11 +9,9 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ListItem extends StatelessWidget {
   final item;
+  final label;
 
-  const ListItem({
-    super.key,
-    this.item,
-  });
+  const ListItem({super.key, this.item, this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -318,22 +316,62 @@ class ListItem extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            _formatQuantity(item['qty']),
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
-              fontWeight: CustomTheme().fontWeight('bold'),
-              color: CustomTheme().buttonColor('primary'),
+          if (label != 'Long Hemming' ||
+              label != 'Cross Cutting' ||
+              label != ' Sewing' ||
+              label != ' Embroidery' ||
+              label != ' Printing' ||
+              label != ' Packing')
+            Text(
+              _formatQuantity(item['weight']),
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
+                fontWeight: CustomTheme().fontWeight('bold'),
+                color: CustomTheme().buttonColor('primary'),
+              ),
             ),
-          ),
-          Text(
-            item['unit']?['code']?.toString() ?? '-',
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('sm'),
-              color: Colors.grey[600],
-              fontWeight: CustomTheme().fontWeight('semibold'),
+          if (label == 'Long Hemming' ||
+              label == 'Cross Cutting' ||
+              label == ' Sewing' ||
+              label == ' Embroidery' ||
+              label == ' Printing' ||
+              label == ' Packing')
+            Text(
+              _formatQuantity(item['qty']),
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
+                fontWeight: CustomTheme().fontWeight('bold'),
+                color: CustomTheme().buttonColor('primary'),
+              ),
             ),
-          ),
+          if (label != 'Long Hemming' ||
+              label != 'Cross Cutting' ||
+              label != ' Sewing' ||
+              label != ' Embroidery' ||
+              label != ' Printing' ||
+              label != ' Packing')
+            Text(
+              item['weight_unit']?['code']?.toString() ?? '-',
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize('sm'),
+                color: Colors.grey[600],
+                fontWeight: CustomTheme().fontWeight('semibold'),
+              ),
+            ),
+          if (label == 'Long Hemming' ||
+              label == 'Cross Cutting' ||
+              label == ' Sewing' ||
+              label == ' Embroidery' ||
+              label == ' Printing' ||
+              label == ' Packing')
+            Text(
+              item['unit']?['code']?.toString() ?? '-',
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize('sm'),
+                color: Colors.grey[600],
+                fontWeight: CustomTheme().fontWeight('semibold'),
+              ),
+            ),
         ],
       ),
     );

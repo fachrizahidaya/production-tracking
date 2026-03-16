@@ -849,7 +849,7 @@ class _FormItemsState extends State<FormItems> {
                           Expanded(
                               flex: 2,
                               child: SelectForm(
-                                label: 'SKU Material',
+                                label: 'Material Greige',
                                 onTap: () =>
                                     widget.handleSelectFinishedMaterial(),
                                 selectedLabel: widget.form['nama_item'] ?? '',

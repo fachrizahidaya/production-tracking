@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/models/option/option_item.dart';
 
 class SelectDialog extends StatefulWidget {
   final String label;
@@ -11,6 +9,11 @@ class SelectDialog extends StatefulWidget {
   final handleChangeValue;
   final isAnyAdditionalData;
   final bool isManyOption;
+  final bool isLoading;
+  final bool hasMoreData;
+
+  final Function(String)? onSearch;
+  final Function()? onLoadMore;
 
   const SelectDialog(
       {super.key,
@@ -19,7 +22,11 @@ class SelectDialog extends StatefulWidget {
       this.selected,
       this.handleChangeValue,
       this.isAnyAdditionalData = false,
-      this.isManyOption = false});
+      this.isManyOption = false,
+      this.hasMoreData = false,
+      this.isLoading = false,
+      this.onLoadMore,
+      this.onSearch});
 
   @override
   State<SelectDialog> createState() => _SelectDialogState();
@@ -45,11 +52,6 @@ class _SelectDialogState extends State<SelectDialog> {
   void initState() {
     super.initState();
     if (widget.isManyOption) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Provider.of<OptionItemService>(context, listen: false)
-            .fetchOptions(isInitialLoad: true);
-      });
-
       _scrollController.addListener(_handleScroll);
     } else {
       _dataList = widget.options;
@@ -57,25 +59,14 @@ class _SelectDialogState extends State<SelectDialog> {
   }
 
   void _handleScroll() {
-    final provider = Provider.of<OptionItemService>(context, listen: false);
-
     if (!_scrollController.hasClients) return;
 
     final position = _scrollController.position;
 
     if (position.pixels >= position.maxScrollExtent - 100) {
-      if (!provider.isLoading && provider.hasMoreData) {
-        provider.fetchOptions();
+      if (!widget.isLoading && widget.hasMoreData) {
+        widget.onLoadMore?.call();
       }
-    }
-  }
-
-  void _searchData(String value) {
-    if (widget.isManyOption) {
-      Provider.of<OptionItemService>(context, listen: false).fetchOptions(
-        isInitialLoad: true,
-        searchQuery: value,
-      );
     }
   }
 
@@ -88,9 +79,7 @@ class _SelectDialogState extends State<SelectDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<OptionItemService>(context);
-
-    final listData = widget.isManyOption ? provider.dataListOption : _dataList;
+    final listData = widget.options;
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
@@ -140,7 +129,7 @@ class _SelectDialogState extends State<SelectDialog> {
                 keyboardType: TextInputType.text,
                 onChanged: (value) {
                   if (widget.isManyOption) {
-                    _searchData(value);
+                    widget.onSearch?.call(value);
                   } else {
                     _searchDataOption(value);
                   }
@@ -158,7 +147,7 @@ class _SelectDialogState extends State<SelectDialog> {
                         controller:
                             widget.isManyOption ? _scrollController : null,
                         itemCount: widget.isManyOption
-                            ? listData.length + (provider.isLoading ? 1 : 0)
+                            ? listData.length + (widget.isLoading ? 1 : 0)
                             : listData.length,
                         itemBuilder: (context, index) {
                           if (widget.isManyOption && index >= listData.length) {

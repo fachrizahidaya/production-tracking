@@ -1,10 +1,9 @@
-// ignore_for_file: annotate_overrides
+// ignore_for_file: annotate_overrides, prefer_final_fields
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:path/path.dart';
 import 'package:textile_tracking/helpers/service/base_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -31,14 +30,13 @@ class OptionItem {
 }
 
 class OptionItemService extends BaseService<OptionItem> {
-  final String baseUrl = '${dotenv.env['API_URL']}/item/option';
+  final String baseUrl = '${dotenv.env['API_URL']}/greige-item/option';
 
   int _currentPage = 1;
   bool _isLoading = false;
   bool _hasMoreData = true;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
-  String _lastSearch = '';
   String _activeSearch = '';
 
   final List<OptionItem> _item = [];
@@ -73,29 +71,17 @@ class OptionItemService extends BaseService<OptionItem> {
 
   Future<void> _fetchOptionsGeneric({
     bool isInitialLoad = false,
-    String? type,
+    String? baseCode,
+    String? process,
+    String? colorCode,
     String searchQuery = '',
   }) async {
-    // if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    // if (searchQuery != _lastSearch) {
-    //   _currentPage = 1;
-    //   _hasMoreData = true;
-    //   _dataListOption.clear();
-    //   _lastSearch = searchQuery;
-    // }
-
-    // _isLoading = true;
-    // notifyListeners();
+    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
-      _activeSearch = searchQuery; // save search keyword
-      _currentPage = 1;
       _hasMoreData = true;
-      _dataListOption.clear();
+      _item.clear();
     }
-
-    if (_isLoading || !_hasMoreData) return;
 
     _isLoading = true;
     notifyListeners();
@@ -105,11 +91,12 @@ class OptionItemService extends BaseService<OptionItem> {
       final token = prefs.getString('access_token');
       if (token == null) throw Exception('Access token is missing');
 
-      final uri = Uri.parse('${dotenv.env['API_URL']}/item/option')
+      final uri = Uri.parse('${dotenv.env['API_URL']}/greige-item/option')
           .replace(queryParameters: {
-        'page': _currentPage.toString(),
-        if (type != null && type.isNotEmpty) 'type': type,
-        if (_activeSearch.isNotEmpty) 'search': _activeSearch,
+        if (process != null && process.isNotEmpty) 'process': process,
+        if (colorCode != null && colorCode.isNotEmpty) 'color_code': colorCode,
+        if (baseCode != null && baseCode.isNotEmpty) 'base_code': baseCode,
+        if (searchQuery.isNotEmpty) 'search': searchQuery,
       });
 
       final response = await http.get(uri, headers: {
@@ -118,23 +105,17 @@ class OptionItemService extends BaseService<OptionItem> {
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
-
-        final data = decoded['data'];
-
-        final List newItems = data['data'];
-        final int currentPage = data['current_page'];
-        final int lastPage = data['last_page'];
-
-        _dataListOption.addAll(newItems);
-
-        _currentPage = currentPage + 1;
-        _hasMoreData = currentPage < lastPage;
-
+        if (decoded['data'] != null) {
+          _dataListOption = decoded['data'];
+        }
         notifyListeners();
       } else {
         throw Exception('Failed to load item: ${response.statusCode}');
       }
     } catch (e) {
+      // ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+      //   SnackBar(content: Text("$e")),
+      // );
       rethrow;
     } finally {
       _isLoading = false;
@@ -142,13 +123,77 @@ class OptionItemService extends BaseService<OptionItem> {
     }
   }
 
+  // Future<void> _fetchOptionsGeneric({
+  //   bool isInitialLoad = false,
+  //   String? type,
+  //   String searchQuery = '',
+  // }) async {
+  //   if (isInitialLoad) {
+  //     _activeSearch = searchQuery; // save search keyword
+  //     _currentPage = 1;
+  //     _hasMoreData = true;
+  //     _dataListOption.clear();
+  //   }
+
+  //   if (_isLoading || !_hasMoreData) return;
+
+  //   _isLoading = true;
+  //   notifyListeners();
+
+  //   try {
+  //     final prefs = await SharedPreferences.getInstance();
+  //     final token = prefs.getString('access_token');
+  //     if (token == null) throw Exception('Access token is missing');
+
+  //     final uri = Uri.parse('${dotenv.env['API_URL']}/item/option')
+  //         .replace(queryParameters: {
+  //       'page': _currentPage.toString(),
+  //       if (type != null && type.isNotEmpty) 'type': type,
+  //       if (_activeSearch.isNotEmpty) 'search': _activeSearch,
+  //     });
+
+  //     final response = await http.get(uri, headers: {
+  //       'Authorization': 'Bearer $token',
+  //     });
+
+  //     if (response.statusCode == 200) {
+  //       final decoded = jsonDecode(response.body);
+
+  //       final data = decoded['data'];
+
+  //       final List newItems = data['data'];
+  //       final int currentPage = data['current_page'];
+  //       final int lastPage = data['last_page'];
+
+  //       _dataListOption.addAll(newItems);
+
+  //       _currentPage = currentPage + 1;
+  //       _hasMoreData = currentPage < lastPage;
+
+  //       notifyListeners();
+  //     } else {
+  //       throw Exception('Failed to load item: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     rethrow;
+  //   } finally {
+  //     _isLoading = false;
+  //     notifyListeners();
+  //   }
+  // }
+
   Future<void> fetchOptions({
     bool isInitialLoad = false,
     String searchQuery = '',
+    String process = '',
+    String baseCode = '',
+    String colorCode = '',
   }) async {
     await _fetchOptionsGeneric(
       isInitialLoad: isInitialLoad,
-      type: 'finish_product',
+      process: process,
+      baseCode: baseCode,
+      colorCode: colorCode,
       searchQuery: searchQuery,
     );
   }

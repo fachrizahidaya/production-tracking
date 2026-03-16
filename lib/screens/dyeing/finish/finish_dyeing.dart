@@ -67,6 +67,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
   Widget build(BuildContext context) {
     return FinishProcess(
       title: 'Selesai Dyeing',
+      label: 'Dyeing',
       fetchWorkOrder: (service) async => await service.fetchFinishOptions(),
       fetchFinishedItem: (service) async => await service.fetchOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,

@@ -67,6 +67,7 @@ class _FinishLongHemmingState extends State<FinishLongHemming> {
   Widget build(BuildContext context) {
     return FinishProcess(
       title: 'Selesai Long Hemming',
+      label: 'Long Hemming',
       fetchWorkOrder: (service) async =>
           await service.fetchHemmingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,

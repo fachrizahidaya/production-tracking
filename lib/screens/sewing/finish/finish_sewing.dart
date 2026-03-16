@@ -71,6 +71,7 @@ class _FinishSewingState extends State<FinishSewing> {
   Widget build(BuildContext context) {
     return FinishProcess(
       title: 'Selesai Sewing',
+      label: 'Sewing',
       fetchWorkOrder: (service) async =>
           await service.fetchSewingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,

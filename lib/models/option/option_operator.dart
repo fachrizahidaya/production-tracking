@@ -71,11 +71,10 @@ class OptionOperatorService extends BaseService<OptionOperator> {
         throw Exception('Access token is missing');
       }
 
-      final response = await http.get(
-          Uri.parse('${dotenv.env['API_URL_DEV']}/operator/option'),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
+      final response = await http
+          .get(Uri.parse('${dotenv.env['API_URL']}/operator/option'), headers: {
+        'Authorization': 'Bearer $token',
+      });
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);

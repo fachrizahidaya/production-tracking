@@ -64,6 +64,8 @@ class _FinishLongHemmingManualState extends State<FinishLongHemmingManual> {
       handleSubmit: widget.handleSubmit,
       fetchWorkOrder: (service) => service.fetchHemmingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
+      fetchFinishItem: (service) => service.fetchOptions(),
+      getFinishedItemOptions: (service) => service.dataListOption,
       processService: _longHemmingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'long_hemming_id',

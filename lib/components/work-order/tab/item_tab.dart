@@ -12,9 +12,15 @@ class ItemTab extends StatefulWidget {
   final handleSpk;
   final refetch;
   final hasMore;
+  final label;
 
   const ItemTab(
-      {super.key, this.data, this.handleSpk, this.refetch, this.hasMore});
+      {super.key,
+      this.data,
+      this.handleSpk,
+      this.refetch,
+      this.hasMore,
+      this.label});
 
   @override
   State<ItemTab> createState() => _ItemTabState();
@@ -38,7 +44,10 @@ class _ItemTabState extends State<ItemTab> {
               children: List.generate(items.length, (index) {
                 return Column(
                   children: [
-                    ListItem(item: items[index]),
+                    ListItem(
+                      item: items[index],
+                      label: widget.label,
+                    ),
                     if (index != items.length - 1) const SizedBox(height: 12),
                   ].separatedBy(CustomTheme().vGap('xl')),
                 );

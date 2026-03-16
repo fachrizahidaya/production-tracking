@@ -90,6 +90,7 @@ class _FinishDyeingManualState extends State<FinishDyeingManual> {
       handleSubmit: widget.handleSubmit,
       fetchWorkOrder: (service) => service.fetchFinishOptions(),
       fetchItemGrade: (service) => service.fetchOptions(),
+      fetchFinishItem: (service) => service.fetchOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       getFinishedItemOptions: (service) => service.dataListOption,
       processService: _dyeingService,

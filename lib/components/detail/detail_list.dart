@@ -615,20 +615,28 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
   Widget _buildMaterialInfo(bool isTablet) {
     final items = [
       {
-        'label': 'Material Awal',
-        'value':
-            '${widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['item_code'] : '-'}',
+        'label': 'Greige Awal',
+        'value': widget.label == 'Dyeing'
+            ? '${widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['greige_item']['code'] : '-'}'
+            : '${widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['item_code'] : '-'}',
+        'another_value': widget.label == 'Dyeing'
+            ? '${widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['greige_item']['name'] : '-'}'
+            : '${widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['item_name'] : '-'}',
         'icon': Icons.inventory_2_outlined,
       },
       {
-        'label': 'Material Finished Product',
-        'value':
-            '${widget.data['finished_item'] != null ? widget.data['finished_item']['code'] : '-'}',
+        'label': 'Produk Jadi',
+        'value': widget.label == 'Dyeing'
+            ? '${widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['item_code'] : '-'}'
+            : '${widget.data['finished_item'] != null ? widget.data['finished_item']['code'] : '-'}',
+        'another_value': widget.label == 'Dyeing'
+            ? '${widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['item_name'] : '-'}'
+            : '${widget.data['finished_item'] != null ? widget.data['finished_item']['name'] : '-'}',
         'icon': Icons.inventory_2_outlined,
       },
     ];
 
-    return _buildInfoGrid(items, isTablet);
+    return _buildMultiInfoGrid(items, isTablet);
   }
 
   Widget _buildReworkInfo(bool isTablet) {
@@ -753,6 +761,60 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                   child: _buildInfoItem(
                       label: item['label'],
                       value: item['value'],
+                      icon: item['icon'],
+                      id: item['id'].toString(),
+                      isTablet: isTablet,
+                      navigateTo: item['navigate'],
+                      rightIcon: item['right-icon']),
+                );
+              }).toList());
+    }
+
+    return Column(
+      children: items
+          .map((item) => _buildInfoItem(
+              label: item['label'],
+              value: item['value'],
+              id: item['id'].toString(),
+              icon: item['icon'],
+              isTablet: isTablet,
+              navigateTo: item['navigate'],
+              rightIcon: item['right-icon']))
+          .toList(),
+    );
+  }
+
+  /// Info Grid Builder
+  Widget _buildMultiInfoGrid(List<Map<String, dynamic>> items, bool isTablet) {
+    if (isTablet) {
+      return items.length > 3
+          ? Wrap(
+              spacing: 8,
+              runSpacing: 16,
+              children: items.map((item) {
+                return SizedBox(
+                  width: (MediaQuery.of(context).size.width - 100) / 2,
+                  child: _buildMultiInfoItem(
+                      label: item['label'],
+                      value: item['value'],
+                      anotherValue: item['another_value'],
+                      icon: item['icon'],
+                      id: item['id'].toString(),
+                      isTablet: isTablet,
+                      navigateTo: item['navigate'],
+                      rightIcon: item['right-icon']),
+                );
+              }).toList(),
+            )
+          : Row(
+              spacing: 16,
+              children: items.map((item) {
+                return SizedBox(
+                  width: (MediaQuery.of(context).size.width - 100) / 2,
+                  child: _buildMultiInfoItem(
+                      label: item['label'],
+                      value: item['value'],
+                      anotherValue: item['another_value'],
                       icon: item['icon'],
                       id: item['id'].toString(),
                       isTablet: isTablet,
@@ -921,6 +983,78 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 rightIcon,
                 size: isTablet ? 18 : 16,
               ),
+          ].separatedBy(CustomTheme().hGap('md')),
+        ),
+      ),
+    );
+  }
+
+  /// Multi Info Item
+  Widget _buildMultiInfoItem(
+      {required String label,
+      required String value,
+      required String anotherValue,
+      required String id,
+      required IconData icon,
+      required bool isTablet,
+      navigateTo,
+      rightIcon}) {
+    return GestureDetector(
+      onTap: navigateTo,
+      child: Container(
+        padding: CustomTheme().padding('card'),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: isTablet ? 12 : 11,
+                      color: Colors.grey[600],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        value,
+                        style: TextStyle(
+                          fontSize: isTablet ? 14 : 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[800],
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ].separatedBy(CustomTheme().hGap('sm')),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        anotherValue,
+                        style: TextStyle(
+                          fontSize: isTablet ? 14 : 13,
+                          color: Colors.grey[600],
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ].separatedBy(CustomTheme().hGap('sm')),
+                  ),
+                ].separatedBy(CustomTheme().vGap('sm')),
+              ),
+            ),
           ].separatedBy(CustomTheme().hGap('md')),
         ),
       ),

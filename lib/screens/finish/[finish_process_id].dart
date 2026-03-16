@@ -145,7 +145,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
 
     await _handleFetchWorkOrder();
-    await _handleFetchFinishedMaterial();
+    // await _handleFetchFinishedMaterial();
     await _handleFetchItemGrade();
     await _handleFetchUnit();
 
@@ -182,11 +182,22 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     final service = Provider.of<OptionItemService>(context, listen: false);
 
     try {
-      if (widget.fetchFinishItem != null) {
-        await widget.fetchFinishItem!(service);
-      } else {
-        await service.fetchOptions();
+      String baseCode = '';
+      String colorCode = '';
+
+      final itemCode = woData['items']?[0]?['item_code'] ?? '';
+
+      if (itemCode.isNotEmpty) {
+        final parts = itemCode.split('-');
+        baseCode = parts.first;
+        colorCode = parts.last;
       }
+
+      await service.fetchOptions(
+        process: widget.label.toLowerCase(),
+        baseCode: baseCode,
+        colorCode: colorCode,
+      );
 
       final data = widget.getFinishedItemOptions != null
           ? widget.getFinishedItemOptions!(service)
@@ -274,6 +285,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       woData = _workOrderService.dataView;
       _firstLoading = false;
     });
+
+    // AFTER woData is ready
+    await _handleFetchFinishedMaterial();
   }
 
   Future<void> _getProcessView(id) async {
@@ -618,29 +632,31 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   _selectFinishedMaterial() {
-    if (_isFetchingFinishedMaterial) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
+    final provider = Provider.of<OptionItemService>(context, listen: false);
 
     showDialog(
       context: context,
       builder: (_) => SelectDialog(
-        isAnyAdditionalData: true,
+        label: 'Material Greige',
+        options: provider.dataListOption,
+        selected: widget.form?['finished_item_id']?.toString(),
         isManyOption: true,
-        label: 'SKU Material',
-        options: finishedItemOption,
-        selected: widget.form?['finished_item_id'].toString() ?? '',
+        isAnyAdditionalData: true,
+        isLoading: provider.isLoading,
+        hasMoreData: provider.hasMoreData,
+        onSearch: (value) {
+          provider.fetchOptions(
+            isInitialLoad: true,
+            searchQuery: value,
+          );
+        },
+        onLoadMore: () {
+          provider.fetchOptions();
+        },
         handleChangeValue: (e) {
           setState(() {
-            widget.form?['finished_item_id'] = e['value'].toString();
-            widget.form?['nama_item'] = e['label'].toString();
+            widget.form?['finished_item_id'] = e?['value']?.toString();
+            widget.form?['nama_item'] = e?['label']?.toString();
           });
         },
       ),

@@ -87,6 +87,7 @@ class _FormInfoTabState extends State<FormInfoTab> {
                 ),
                 ItemTab(
                   data: widget.data,
+                  label: widget.label,
                 ),
                 AttachmentTab(
                   existingAttachment: widget.data['attachments'] ?? [],

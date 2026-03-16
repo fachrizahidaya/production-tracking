@@ -25,6 +25,7 @@ class FinishProcess extends StatefulWidget {
     void Function(String fieldName, dynamic value) handleChangeInput,
   ) formPageBuilder;
   final Map<String, dynamic>? initialData;
+  final label;
 
   final Future<void> Function(
       BuildContext context,
@@ -57,7 +58,8 @@ class FinishProcess extends StatefulWidget {
       this.manualWoId,
       this.initialData,
       this.fetchFinishedItem,
-      this.getFinishedItemOptions});
+      this.getFinishedItemOptions,
+      this.label});
 
   @override
   State<FinishProcess> createState() => _FinishProcessState();
@@ -138,7 +140,7 @@ class _FinishProcessState extends State<FinishProcess> {
     _form['end_by_id'] = loggedInUser?.id;
     await _handleFetchWorkOrder();
     await _handleFetchItemGrade();
-    await _handleFetchFinishedMaterial();
+    // await _handleFetchFinishedMaterial();
   }
 
   Future<void> _handleFetchWorkOrder() async {
@@ -159,22 +161,39 @@ class _FinishProcessState extends State<FinishProcess> {
     });
   }
 
-  Future<void> _handleFetchFinishedMaterial() async {
+  Future<void> _handleFetchFinishedMaterial(Map<String, dynamic> woData) async {
     final service = Provider.of<OptionItemService>(context, listen: false);
 
-    if (widget.fetchFinishedItem != null) {
-      await widget.fetchFinishedItem!(service);
-    } else {
-      await service.fetchOptions();
+    try {
+      String baseCode = '';
+      String colorCode = '';
+
+      final itemCode = woData['items']?[0]?['item_code'] ?? '';
+
+      if (itemCode.isNotEmpty) {
+        final parts = itemCode.split('-');
+        baseCode = parts.first;
+        colorCode = parts.last;
+      }
+
+      await service.fetchOptions(
+        process: widget.label.toLowerCase(),
+        baseCode: baseCode,
+        colorCode: colorCode,
+      );
+
+      final options = widget.getFinishedItemOptions != null
+          ? widget.getFinishedItemOptions!(service)
+          : service.dataListOption;
+
+      setState(() {
+        finishedItemOption = options;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     }
-
-    final options = widget.getFinishedItemOptions != null
-        ? widget.getFinishedItemOptions!(service)
-        : service.dataListOption;
-
-    setState(() {
-      finishedItemOption = options;
-    });
   }
 
   Future<void> _handleFetchItemGrade() async {
@@ -243,6 +262,15 @@ class _FinishProcessState extends State<FinishProcess> {
 
       await _workOrderService.getDataView(woId);
       final data = _workOrderService.dataView;
+      print('data');
+      print(data);
+      final greigeQty = data['greige_qty'];
+
+      if (greigeQty != null && greigeQty.toString().isNotEmpty) {
+        _form['qty'] = greigeQty.toString();
+      }
+
+      await _handleFetchFinishedMaterial(data);
 
       _form['wo_id'] = data['id']?.toString() ?? woId;
       _form['no_wo'] = data['wo_no']?.toString() ?? woNo;

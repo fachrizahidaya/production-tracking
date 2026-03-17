@@ -140,7 +140,6 @@ class _FinishProcessState extends State<FinishProcess> {
     _form['end_by_id'] = loggedInUser?.id;
     await _handleFetchWorkOrder();
     await _handleFetchItemGrade();
-    // await _handleFetchFinishedMaterial();
   }
 
   Future<void> _handleFetchWorkOrder() async {
@@ -264,8 +263,14 @@ class _FinishProcessState extends State<FinishProcess> {
       final data = _workOrderService.dataView;
       final greigeQty = data['greige_qty'];
 
+      if (greigeQty != null &&
+          greigeQty.toString().isNotEmpty &&
+          widget.label == 'Dyeing') {
+        _form['item_qty'] = greigeQty.toString();
+      }
+
       if (greigeQty != null && greigeQty.toString().isNotEmpty) {
-        _form['qty'] = greigeQty.toString();
+        _form['weight'] = greigeQty.toString();
       }
 
       if (widget.label == 'Dyeing' ||

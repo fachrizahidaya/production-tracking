@@ -145,7 +145,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
 
     await _handleFetchWorkOrder();
-    // await _handleFetchFinishedMaterial();
     await _handleFetchItemGrade();
     await _handleFetchUnit();
 
@@ -283,10 +282,19 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
     setState(() {
       woData = _workOrderService.dataView;
+      final greigeQty = woData['greige_qty'];
+
+      if (greigeQty != null && widget.label == 'Dyeing') {
+        _qtyItemController.text = greigeQty.toString();
+        widget.form?['item_qty'] = greigeQty.toString();
+      }
+      if (greigeQty != null) {
+        _weightController.text = greigeQty.toString();
+        widget.form?['weight'] = greigeQty.toString();
+      }
       _firstLoading = false;
     });
 
-    // AFTER woData is ready
     await _handleFetchFinishedMaterial();
   }
 
@@ -305,8 +313,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['width'] = data['width'];
       }
       if (data['weight'] != null) {
-        _weightController.text = data['weight'].toString();
-        widget.form?['weight'] = data['weight'];
+        _weightController.text = woData['greige_qty'].toString();
+        widget.form?['weight'] = woData['greige_qty'];
       }
       if (data['weight_per_dozen'] != null) {
         _weightDozenController.text = data['weight_per_dozen'].toString();
@@ -321,8 +329,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['total_weight'] = data['total_weight'];
       }
       if (data['item_qty'] != null) {
-        _qtyItemController.text = data['item_qty'].toString();
-        widget.form?['item_qty'] = data['item_qty'];
+        _qtyItemController.text = woData['greige_qty'].toString();
+        widget.form?['item_qty'] = woData['greige_qty'];
       }
       if (data['qty'] != null) {
         _qtyController.text = data['qty'].toString();

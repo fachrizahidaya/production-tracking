@@ -292,11 +292,10 @@ class _FormItemsState extends State<FormItems> {
                 handleChange: (value) {
                   final safeValue =
                       (value == null || value.toString().trim().isEmpty)
-                          ? '0'
+                          ? ''
                           : value.toString();
 
                   setState(() {
-                    row['controller'].text = safeValue;
                     widget.handleChangeInput(row['value'], safeValue);
 
                     if (row['value'] == 'length') {
@@ -309,10 +308,7 @@ class _FormItemsState extends State<FormItems> {
 
                     if (row['value'] == 'weight') {
                       widget.handleChangeInput('weight_unit_id', 2);
-                    }
-
-                    if (row['value'] == 'weight') {
-                      widget.validateWeight(value);
+                      widget.validateWeight(safeValue);
                     }
                   });
                 },
@@ -537,15 +533,12 @@ class _FormItemsState extends State<FormItems> {
                                                       .toString()
                                                       .trim()
                                                       .isEmpty)
-                                              ? '0'
+                                              ? ''
                                               : value.toString();
 
                                           setState(() {
-                                            row['controller'].text = safeValue;
                                             widget.handleChangeInput(
-                                              row['value'],
-                                              safeValue,
-                                            );
+                                                row['value'], safeValue);
 
                                             if (row['value'] == 'length') {
                                               widget.handleChangeInput(
@@ -556,20 +549,11 @@ class _FormItemsState extends State<FormItems> {
                                               widget.handleChangeInput(
                                                   'width_unit_id', 3);
                                             }
+
                                             if (row['value'] == 'weight') {
                                               widget.handleChangeInput(
                                                   'weight_unit_id', 2);
-                                            }
-
-                                            if (widget.withQtyAndWeight ==
-                                                    false &&
-                                                row['value'] == 'weight') {
-                                              widget.validateWeight(value);
-                                            }
-                                            if (widget.withQtyAndWeight ==
-                                                    true &&
-                                                row['value'] == 'weight') {
-                                              widget.validateWeight(value);
+                                              widget.validateWeight(safeValue);
                                             }
                                           });
                                         },
@@ -578,6 +562,7 @@ class _FormItemsState extends State<FormItems> {
                                               value.trim().isEmpty) {
                                             return '${row['label']} wajib diisi';
                                           }
+                                          return null;
                                         },
                                       ),
                                     ],

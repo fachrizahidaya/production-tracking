@@ -32,12 +32,10 @@ class OptionItem {
 class OptionItemService extends BaseService<OptionItem> {
   final String baseUrl = '${dotenv.env['API_URL']}/greige-item/option';
 
-  int _currentPage = 1;
   bool _isLoading = false;
   bool _hasMoreData = true;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
-  String _activeSearch = '';
 
   final List<OptionItem> _item = [];
 

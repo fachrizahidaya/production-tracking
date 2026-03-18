@@ -80,7 +80,7 @@ class _LoginState extends State<Login> {
     final username = _username.text.trim();
     final password = _password.text.trim();
 
-    final url = Uri.parse('${dotenv.env['API_URL_DEV']}/login');
+    final url = Uri.parse('${dotenv.env['API_URL']}/login');
 
     try {
       setState(() => _isLoading = true);

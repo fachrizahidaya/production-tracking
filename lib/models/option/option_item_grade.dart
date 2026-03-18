@@ -31,7 +31,7 @@ class OptionItemGrade {
 }
 
 class OptionItemGradeService extends BaseService<OptionItemGrade> {
-  final String baseUrl = '${dotenv.env['API_URL']}/item-grade/option';
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/item-grade/option';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
@@ -88,7 +88,7 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
       final token = prefs.getString('access_token');
       if (token == null) throw Exception('Access token is missing');
 
-      final uri = Uri.parse('${dotenv.env['API_URL']}/item-grade/option');
+      final uri = Uri.parse('${dotenv.env['API_URL_DEV']}/item-grade/option');
 
       final response = await http.get(uri, headers: {
         'Authorization': 'Bearer $token',

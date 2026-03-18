@@ -48,11 +48,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                       },
                       icon: Icon(Icons.close))
                   : null,
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none),
-              filled: true,
-              fillColor: Colors.white,
+              border: OutlineInputBorder(borderSide: BorderSide.none),
             ),
             onChanged: (value) {
               widget.handleSearchChange(value);

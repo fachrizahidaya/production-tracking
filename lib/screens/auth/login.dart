@@ -47,6 +47,17 @@ class _LoginState extends State<Login> {
     }
   }
 
+  void _proceedLogin(
+      BuildContext context, String username, String name, String token) {
+    Provider.of<UserProvider>(context, listen: false).handleLogin(
+      username,
+      name,
+      token,
+    );
+
+    Navigator.pushReplacementNamed(context, '/dashboard');
+  }
+
   Future<void> _handleCheckLogin() async {
     final token = await ApiClient.instance.getValidToken(context);
 
@@ -59,7 +70,6 @@ class _LoginState extends State<Login> {
         prefs.getString('username') ?? '',
         prefs.getString('name') ?? '',
         token,
-        // prefs.getString('user_id') ?? '',
       );
 
       Navigator.pushReplacementNamed(context, '/dashboard');
@@ -70,7 +80,7 @@ class _LoginState extends State<Login> {
     final username = _username.text.trim();
     final password = _password.text.trim();
 
-    final url = Uri.parse('${dotenv.env['API_URL']}/login');
+    final url = Uri.parse('${dotenv.env['API_URL_DEV']}/login');
 
     try {
       setState(() => _isLoading = true);
@@ -102,24 +112,16 @@ class _LoginState extends State<Login> {
       await prefs.setString('access_token', token);
       await prefs.setString('username', response['username'] ?? '');
       await prefs.setString('name', response['name'] ?? '');
-      // await prefs.setString('user_id', response['user_id'].toString());
 
-      // save to SQLite (optional but fine)
       await Storage.instance.insertUserData(response);
 
-      // preload menus (optional)
       await MenuService().handleFetchMenu(context);
 
       if (!context.mounted) return;
 
-      Provider.of<UserProvider>(context, listen: false).handleLogin(
-        response['username'] ?? '',
-        response['name'] ?? '',
-        token,
-        // response['user_id'].toString(),
-      );
+      _proceedLogin(
+          context, response['username'] ?? '', response['name'] ?? '', token);
 
-      Navigator.pushReplacementNamed(context, '/dashboard');
       _username.clear();
       _password.clear();
     } catch (e) {
@@ -154,15 +156,12 @@ class _LoginState extends State<Login> {
       },
       child: Stack(
         children: [
-          // 🔹 Background Image
           Positioned.fill(
             child: Image.asset(
               'assets/images/login-bg.jpg',
               fit: BoxFit.cover,
             ),
           ),
-
-          // 🔹 Your existing UI
           Scaffold(
             backgroundColor: Colors.transparent,
             body: SafeArea(

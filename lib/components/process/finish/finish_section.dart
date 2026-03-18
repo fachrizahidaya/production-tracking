@@ -246,7 +246,7 @@ class _FinishSectionState extends State<FinishSection> {
       message: 'Apakah Anda yakin ingin menghapus lampiran ini?',
       buttonBackground: CustomTheme().buttonColor('danger'),
       onConfirm: () async {
-        await Future.delayed(const Duration(milliseconds: 200));
+        await Future.delayed(Duration(milliseconds: 200));
 
         if (!mounted) {
           completer.complete(false);

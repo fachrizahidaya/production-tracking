@@ -23,7 +23,7 @@ class CardContent extends StatelessWidget {
     final shouldTruncate = isLongContent && isExpandable && !isExpanded;
 
     return AnimatedSize(
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       child: Padding(
         padding: CustomTheme().padding('card'),

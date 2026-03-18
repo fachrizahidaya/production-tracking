@@ -26,7 +26,7 @@ class _WoInfoTabState extends State<WoInfoTab> {
     }
 
     if (widget.data.isEmpty) {
-      return const NoData();
+      return NoData();
     }
 
     return LayoutBuilder(

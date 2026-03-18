@@ -44,7 +44,7 @@ class MachineCard extends StatelessWidget {
                       ? CustomTheme().buttonColor('primary').withOpacity(0.15)
                       : Colors.black.withOpacity(0.05),
                   blurRadius: isSelected ? 12 : 10,
-                  offset: const Offset(0, 2),
+                  offset: Offset(0, 2),
                 ),
               ],
             ),
@@ -96,7 +96,7 @@ class MachineCardGrid extends StatelessWidget {
 
         return GridView.builder(
           shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
+          physics: NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
             crossAxisSpacing: isTablet ? 16 : 12,
@@ -147,7 +147,7 @@ class CompactMachineCard extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.03),
                   blurRadius: 8,
-                  offset: const Offset(0, 2),
+                  offset: Offset(0, 2),
                 ),
               ],
             ),
@@ -165,7 +165,7 @@ class CompactMachineCard extends StatelessWidget {
 
                 // Icon
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -192,11 +192,11 @@ class CompactMachineCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(
+                            padding: EdgeInsets.symmetric(
                               horizontal: 6,
                               vertical: 2,
                             ),
@@ -214,13 +214,13 @@ class CompactMachineCard extends StatelessWidget {
                             ),
                           ),
                           if (data['location'] != null) ...[
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             Icon(
                               Icons.location_on_outlined,
                               size: isTablet ? 14 : 12,
                               color: Colors.grey[400],
                             ),
-                            const SizedBox(width: 2),
+                            SizedBox(width: 2),
                             Text(
                               data['location'].toString(),
                               style: TextStyle(

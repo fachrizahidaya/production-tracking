@@ -48,7 +48,7 @@ class _ItemTabState extends State<ItemTab> {
                       item: items[index],
                       label: widget.label,
                     ),
-                    if (index != items.length - 1) const SizedBox(height: 12),
+                    if (index != items.length - 1) SizedBox(height: 12),
                   ].separatedBy(CustomTheme().vGap('xl')),
                 );
               }),

@@ -62,7 +62,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
 
   String? _mapStatusFilter(String filter) {
     switch (filter) {
-      case 'All':
+      case 'Semua':
         return '';
       case 'Selesai':
         return 'completed';

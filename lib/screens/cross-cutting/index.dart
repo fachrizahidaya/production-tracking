@@ -97,7 +97,7 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
   Future<void> _handleSearch(String value) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(Duration(milliseconds: 500), () {
       setState(() {
         _search = value;
         params['search'] = value;
@@ -295,8 +295,7 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const CreateCrossCutting(),
+                                builder: (context) => CreateCrossCutting(),
                               ),
                             );
                           },
@@ -308,8 +307,7 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const FinishCrossCutting(),
+                                builder: (context) => FinishCrossCutting(),
                               ),
                             );
                           },

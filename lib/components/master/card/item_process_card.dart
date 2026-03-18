@@ -42,7 +42,7 @@ class ItemProcessCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildHeader(isTablet),
-                  const Divider(),
+                  Divider(),
                 ],
               ),
 
@@ -385,7 +385,7 @@ class ItemProcessCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: CustomTheme().buttonColor('warning').withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
@@ -396,7 +396,7 @@ class ItemProcessCard extends StatelessWidget {
             color: CustomTheme().buttonColor('warning'),
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Flexible(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -409,7 +409,7 @@ class ItemProcessCard extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(height: 2),
+              SizedBox(height: 2),
               Text(
                 item['maklon_name'] ?? '-',
                 style: TextStyle(

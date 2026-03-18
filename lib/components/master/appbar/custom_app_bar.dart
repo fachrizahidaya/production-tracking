@@ -65,7 +65,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         // if (isWithNotification)
         //   IconButton(
-        //     icon: const Icon(Icons.notifications_outlined),
+        //     icon:  Icon(Icons.notifications_outlined),
         //     onPressed: () {
         //       Navigator.pushNamed(context, '/notification');
         //     },
@@ -160,5 +160,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

@@ -51,7 +51,7 @@ class AttachmentPicker extends StatelessWidget {
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(
                         Icons.add_circle_outline,
                         size: 32,
@@ -84,14 +84,13 @@ class AttachmentPicker extends StatelessWidget {
 
             Widget preview;
             if (extension == 'pdf') {
-              preview =
-                  const Icon(Icons.picture_as_pdf, color: Colors.red, size: 60);
+              preview = Icon(Icons.picture_as_pdf, color: Colors.red, size: 60);
             } else if (isNew && filePath != null) {
               preview = Image.file(File(filePath), fit: BoxFit.cover);
             } else if (filePath != null) {
               preview = Image.network(filePath, fit: BoxFit.cover);
             } else {
-              preview = const Icon(Icons.insert_drive_file);
+              preview = Icon(Icons.insert_drive_file);
             }
 
             return Stack(
@@ -114,7 +113,7 @@ class AttachmentPicker extends StatelessWidget {
                         BoxShadow(
                           color: Colors.black.withOpacity(0.1),
                           blurRadius: 4,
-                          offset: const Offset(2, 2),
+                          offset: Offset(2, 2),
                         ),
                       ],
                     ),
@@ -131,7 +130,7 @@ class AttachmentPicker extends StatelessWidget {
                     onTap: () => onDeleteAttachment(item),
                     child: Container(
                       padding: CustomTheme().padding('process-content'),
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         color: Colors.black54,
                         shape: BoxShape.circle,
                       ),

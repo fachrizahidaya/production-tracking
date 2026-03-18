@@ -25,7 +25,7 @@ class _PulseIconState extends State<PulseIcon>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 900),
+      duration: Duration(milliseconds: 900),
     )..repeat(reverse: true);
   }
 

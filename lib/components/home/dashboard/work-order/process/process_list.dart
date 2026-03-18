@@ -88,7 +88,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
       return 2480;
     }
 
-    return 960;
+    return 1200;
   }
 
   @override
@@ -116,8 +116,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                 : AnimatedContainer(
                     duration: Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
-                    height:
-                        widget.dataList.length == 1 ? null : _adaptiveHeight,
+                    height: _adaptiveHeight,
                     child: NotificationListener<ScrollNotification>(
                       onNotification: (notification) {
                         if (notification is OverscrollNotification &&

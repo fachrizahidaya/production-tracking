@@ -158,7 +158,7 @@ class CardContent extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const Spacer(),
+              Spacer(),
             ].separatedBy(CustomTheme().hGap('lg')),
           ),
           GestureDetector(

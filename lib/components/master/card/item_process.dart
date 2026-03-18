@@ -124,7 +124,7 @@ class CompactItemProcess extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.03),
                   blurRadius: 8,
-                  offset: const Offset(0, 2),
+                  offset: Offset(0, 2),
                 ),
               ],
             ),
@@ -145,7 +145,7 @@ class CompactItemProcess extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 6),
+                      SizedBox(height: 6),
                       // Process Status Dots
                       Row(
                         children: _buildProcessDots(processes, isTablet),

@@ -44,7 +44,7 @@ class _NoteEditorState extends State<NoteEditor> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           InkWell(
             onTap: () async {
               final result = await Navigator.push(

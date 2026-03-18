@@ -92,7 +92,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 future: _menuFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator());
                   }
 
                   if (snapshot.hasError) {
@@ -100,7 +100,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   }
 
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('No menu found'));
+                    return Center(child: Text('No menu found'));
                   }
 
                   final menus = flattenMenus(snapshot.data!)

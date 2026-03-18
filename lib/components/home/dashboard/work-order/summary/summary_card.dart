@@ -256,7 +256,7 @@ class CompactSummaryCard extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.03),
                   blurRadius: 8,
-                  offset: const Offset(0, 2),
+                  offset: Offset(0, 2),
                 ),
               ],
             ),
@@ -279,7 +279,7 @@ class CompactSummaryCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       _buildCompactStatus(summary, isTablet),
                     ],
                   ),
@@ -309,13 +309,13 @@ class CompactSummaryCard extends StatelessWidget {
           color: Colors.green,
           isTablet: isTablet,
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         _buildMiniStatusBadge(
           value: inProgress,
           color: Colors.blue,
           isTablet: isTablet,
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         _buildMiniStatusBadge(
           value: waiting,
           color: Colors.orange,

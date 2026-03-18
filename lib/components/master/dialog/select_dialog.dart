@@ -37,6 +37,16 @@ class _SelectDialogState extends State<SelectDialog> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isManyOption) {
+      _scrollController.addListener(_handleScroll);
+    } else {
+      _dataList = widget.options;
+    }
+  }
+
   _searchDataOption(value) {
     setState(() {
       _dataList = widget.options
@@ -46,16 +56,6 @@ class _SelectDialogState extends State<SelectDialog> {
               .contains(value.toLowerCase()))
           .toList();
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.isManyOption) {
-      _scrollController.addListener(_handleScroll);
-    } else {
-      _dataList = widget.options;
-    }
   }
 
   void _handleScroll() {

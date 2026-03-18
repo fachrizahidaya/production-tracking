@@ -389,7 +389,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -417,7 +417,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -449,7 +449,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -481,7 +481,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -509,7 +509,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -537,7 +537,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );

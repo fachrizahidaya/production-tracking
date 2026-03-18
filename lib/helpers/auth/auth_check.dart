@@ -45,9 +45,9 @@ class _AuthCheckState extends State<AuthCheck> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacementNamed(context, '/dashboard');
       });
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     } else {
-      return const Login();
+      return Login();
     }
   }
 }

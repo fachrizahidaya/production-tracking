@@ -169,7 +169,7 @@ class CustomTheme {
     return InputDecoration(
       filled: true,
       fillColor: Colors.white,
-      contentPadding: const EdgeInsets.all(12),
+      contentPadding: EdgeInsets.all(12),
       border: _defaultBorder(colors('base')),
       enabledBorder: _defaultBorder(colors('base')),
       focusedBorder: _defaultBorder(colors('base')),
@@ -194,7 +194,7 @@ class CustomTheme {
 
   OutlineInputBorder _defaultBorder(Color color) {
     return OutlineInputBorder(
-      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      borderRadius: BorderRadius.all(Radius.circular(8)),
       borderSide: BorderSide(width: 0.5, color: color),
     );
   }

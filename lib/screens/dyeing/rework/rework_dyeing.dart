@@ -223,7 +223,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-          backgroundColor: const Color(0xFFf9fafc),
+          backgroundColor: Color(0xFFf9fafc),
           appBar: CustomAppBar(
             title: 'Rework Dyeing',
             onReturn: () {

@@ -62,40 +62,22 @@ class _DashboardState extends State<Dashboard> {
     dariTanggalSummary = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
     sampaiTanggalSummary = DateFormat('yyyy-MM-dd').format(now);
 
-    setState(() {
-      params = {
-        'search': _search,
-        'page': '0',
-      };
-    });
+    params = {
+      'search': _search,
+      'page': '0',
+    };
 
-    setState(() {
-      summaryParams = {
-        'start_date': dariTanggalSummary,
-        'end_date': sampaiTanggalSummary,
-      };
-    });
+    summaryParams = {
+      'start_date': dariTanggalSummary,
+      'end_date': sampaiTanggalSummary,
+    };
 
     _loadDashboardData();
   }
 
   bool _checkIsFiltered() {
-    final filterKeys = [
-      'status',
-    ];
-
-    for (var key in filterKeys) {
-      if (params[key] != null && params[key]!.isNotEmpty) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  @override
-  void didUpdateWidget(covariant oldWidget) {
-    super.didUpdateWidget(oldWidget);
+    return params.keys.any(
+        (key) => key != 'page' && key != 'search' && params[key]!.isNotEmpty);
   }
 
   Future<void> _loadDashboardData() async {
@@ -108,13 +90,10 @@ class _DashboardState extends State<Dashboard> {
         _handleFetchStats(),
         _handleFetchPie(),
         _handleFetchMachine(),
-        _handleFetchSummary(
-          fromDate: dariTanggalSummary,
-          toDate: sampaiTanggalSummary,
-        ),
+        _handleFetchSummary(),
       ]);
 
-      await _loadMore(); // pindahkan ke sini
+      Future.microtask(() => _loadMore());
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
@@ -125,17 +104,12 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _handleFetchStats() async {
-    if (!mounted) return;
-    setState(() => isStatsLoading = true);
+    final service = Provider.of<WorkOrderStatsService>(context, listen: false);
 
-    await Provider.of<WorkOrderStatsService>(context, listen: false)
-        .getDataList();
+    await service.getDataList();
 
-    if (!mounted) return;
     setState(() {
-      statsList =
-          Provider.of<WorkOrderStatsService>(context, listen: false).dataList;
-      isStatsLoading = false;
+      statsList = service.dataList;
     });
   }
 
@@ -164,11 +138,7 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  Future<void> _handleFetchSummary({
-    String? fromDate,
-    String? toDate,
-    String? status,
-  }) async {
+  Future<void> _handleFetchSummary() async {
     if (!mounted) return;
     setState(() => isSummaryLoading = true);
 
@@ -213,7 +183,7 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _handleSearch(String value) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(Duration(milliseconds: 500), () {
       if (!mounted) return;
       setState(() {
         _search = value;
@@ -226,7 +196,7 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> _loadMore() async {
     if (!mounted) return;
-    _isLoadMore = true;
+    setState(() => _isLoadMore = true);
 
     if (params['page'] == '0') {
       setState(() {
@@ -236,10 +206,8 @@ class _DashboardState extends State<Dashboard> {
       });
     }
 
-    String newPage = (int.parse(params['page']!) + 1).toString();
-    setState(() {
-      params['page'] = newPage;
-    });
+    final currentPage = int.tryParse(params['page'] ?? '0') ?? 0;
+    params['page'] = (currentPage + 1).toString();
 
     await Provider.of<WorkOrderProcessService>(context, listen: false)
         .getDataList(context, params);
@@ -265,16 +233,14 @@ class _DashboardState extends State<Dashboard> {
   }
 
   _refetch() {
-    Future.delayed(Duration.zero, () {
-      if (!mounted) return;
-      setState(() {
-        params = {
-          'search': _search,
-          'page': '0',
-        };
-      });
-      _loadMore();
+    if (!mounted) return;
+    setState(() {
+      params = {
+        'search': _search,
+        'page': '0',
+      };
     });
+    _loadMore();
   }
 
   @override
@@ -289,7 +255,7 @@ class _DashboardState extends State<Dashboard> {
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
+        backgroundColor: Color(0xFFf9fafc),
         body: SafeArea(
           child: RefreshIndicator(
             onRefresh: () async {

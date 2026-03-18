@@ -20,11 +20,11 @@ class _OptionListState extends State<OptionList> {
     return Stack(
       children: [
         if (widget.dataList.isEmpty)
-          const Center(child: NoData())
+          Center(child: NoData())
         else
           ListView.separated(
             separatorBuilder: (context, index) => CustomTheme().vGap('xl'),
-            physics: const AlwaysScrollableScrollPhysics(),
+            physics: AlwaysScrollableScrollPhysics(),
             padding: CustomTheme().padding('content'),
             itemCount: widget.dataList.length,
             itemBuilder: (context, index) {

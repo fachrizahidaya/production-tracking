@@ -79,7 +79,7 @@ class _CreateSubmitSectionState extends State<CreateSubmitSection> {
                                   turns: orientation == Orientation.landscape
                                       ? -0.25
                                       : 0,
-                                  duration: const Duration(milliseconds: 300),
+                                  duration: Duration(milliseconds: 300),
                                   child: MobileScanner(
                                     controller: controller,
                                     onDetect: (capture) {
@@ -123,7 +123,7 @@ class _CreateSubmitSectionState extends State<CreateSubmitSection> {
                                   top: 16,
                                   right: 16,
                                   child: IconButton(
-                                    icon: const Icon(Icons.cameraswitch,
+                                    icon: Icon(Icons.cameraswitch,
                                         color: Colors.white),
                                     onPressed: () => controller.switchCamera(),
                                   ),
@@ -142,8 +142,8 @@ class _CreateSubmitSectionState extends State<CreateSubmitSection> {
                             TextStyle(fontSize: CustomTheme().fontSize('xl')),
                       ),
                       ElevatedButton.icon(
-                        icon: const Icon(Icons.edit),
-                        label: const Text("Isi Manual"),
+                        icon: Icon(Icons.edit),
+                        label: Text("Isi Manual"),
                         onPressed: () async {
                           controller.stop();
                           setState(() {
@@ -168,7 +168,7 @@ class _CreateSubmitSectionState extends State<CreateSubmitSection> {
             if (widget.isLoading)
               Container(
                 color: Color(0xFFf9fafc),
-                child: const Center(
+                child: Center(
                   child: CircularProgressIndicator(),
                 ),
               ),

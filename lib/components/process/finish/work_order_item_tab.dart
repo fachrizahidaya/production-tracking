@@ -35,7 +35,7 @@ class _WorkOrderItemTabState extends State<WorkOrderItemTab> {
                 return Column(
                   children: [
                     ListItem(item: items[index]),
-                    if (index != items.length - 1) const SizedBox(height: 12),
+                    if (index != items.length - 1) SizedBox(height: 12),
                   ].separatedBy(CustomTheme().vGap('xl')),
                 );
               }),

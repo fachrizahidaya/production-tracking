@@ -44,7 +44,7 @@ class _TextEditorState extends State<TextEditor> {
           context: context,
           isLoading: _isLoading,
           onConfirm: () async {
-            await Future.delayed(const Duration(milliseconds: 200));
+            await Future.delayed(Duration(milliseconds: 200));
             Navigator.pop(context);
             Navigator.pop(context);
           },
@@ -68,7 +68,7 @@ class _TextEditorState extends State<TextEditor> {
             children: [
               ToolBar(
                 controller: controller,
-                toolBarConfig: const [
+                toolBarConfig: [
                   ToolBarStyle.bold,
                   ToolBarStyle.italic,
                   ToolBarStyle.underline,

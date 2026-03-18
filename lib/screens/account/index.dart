@@ -22,7 +22,7 @@ class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFf9fafc),
+      backgroundColor: Color(0xFFf9fafc),
       appBar: CustomAppBar(
         title: 'Account',
         onReturn: () {

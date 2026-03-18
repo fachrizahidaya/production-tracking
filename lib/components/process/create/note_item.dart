@@ -26,8 +26,7 @@ class NoteItem extends StatelessWidget {
     return _buildInfoSection(
       child: Padding(
         padding: CustomTheme().padding('note-process'),
-        child:
-            noteValue == null ? const NoData() : _buildInfo(value: noteValue),
+        child: noteValue == null ? NoData() : _buildInfo(value: noteValue),
       ),
     );
   }

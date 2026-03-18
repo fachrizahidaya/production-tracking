@@ -77,7 +77,7 @@ class _PaginatedProcessScreenState extends State<PaginatedProcessScreen> {
 
   Future<void> _handleSearch(String value) async {
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(Duration(milliseconds: 500), () {
       setState(() {
         params['search'] = value;
         params['page'] = '0';
@@ -156,7 +156,7 @@ class _PaginatedProcessScreenState extends State<PaginatedProcessScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
+        backgroundColor: Color(0xFFf9fafc),
         appBar: CustomAppBar(title: widget.title),
         body: NotificationListener<UserScrollNotification>(
           onNotification: (notification) {
@@ -184,13 +184,13 @@ class _PaginatedProcessScreenState extends State<PaginatedProcessScreen> {
           ),
         ),
         floatingActionButton: AnimatedSlide(
-          duration: const Duration(milliseconds: 200),
-          offset: _showFab ? Offset.zero : const Offset(0, 1),
+          duration: Duration(milliseconds: 200),
+          offset: _showFab ? Offset.zero : Offset(0, 1),
           child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 200),
             opacity: _showFab ? 1 : 0,
             child: CustomFloatingButton(
-              icon: const Icon(Icons.add, size: 72, color: Colors.white),
+              icon: Icon(Icons.add, size: 72, color: Colors.white),
               onPressed: () {
                 showDialog(
                   context: context,

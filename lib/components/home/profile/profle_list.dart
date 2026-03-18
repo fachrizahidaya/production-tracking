@@ -101,26 +101,26 @@ class _ProfleListState<T> extends State<ProfleList<T>> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading && _items.isEmpty) {
-      return const Center(
+      return Center(
         child: CircularProgressIndicator(),
       );
     }
 
     if (_items.isEmpty) {
-      return const Center(
+      return Center(
         child: CircularProgressIndicator(),
       );
     }
 
     return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
+      physics: AlwaysScrollableScrollPhysics(),
       controller: _scrollController,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListView.builder(
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               padding: CustomTheme().padding('card'),
               itemCount: _items.length + (_hasMoreData ? 1 : 0),
               itemBuilder: (context, index) {
@@ -135,7 +135,7 @@ class _ProfleListState<T> extends State<ProfleList<T>> {
                     ),
                   );
                 } else {
-                  return const SizedBox.shrink();
+                  return SizedBox.shrink();
                 }
               })
         ],

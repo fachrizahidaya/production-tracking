@@ -213,7 +213,7 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _handleSearch(String value) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(Duration(milliseconds: 500), () {
       if (!mounted) return;
       setState(() {
         _search = value;
@@ -289,7 +289,7 @@ class _DashboardState extends State<Dashboard> {
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
+        backgroundColor: Color(0xFFf9fafc),
         body: SafeArea(
           child: RefreshIndicator(
             onRefresh: () async {

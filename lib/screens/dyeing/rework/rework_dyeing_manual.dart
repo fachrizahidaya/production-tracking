@@ -177,7 +177,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
             context: context,
             isLoading: _isLoading,
             onConfirm: () async {
-              await Future.delayed(const Duration(milliseconds: 200));
+              await Future.delayed(Duration(milliseconds: 200));
               Navigator.pop(context);
               Navigator.pop(context);
               Navigator.pop(context);
@@ -294,7 +294,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -330,7 +330,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -373,7 +373,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFf9fafc),
+        backgroundColor: Color(0xFFf9fafc),
         appBar: CustomAppBar(
           title: 'Rework Dyeing',
           onReturn: () {

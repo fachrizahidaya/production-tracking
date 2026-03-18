@@ -115,7 +115,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                               });
                             }
 
-                            return const SizedBox.shrink();
+                            return SizedBox.shrink();
                           }
 
                           final item = widget.dataList[index];

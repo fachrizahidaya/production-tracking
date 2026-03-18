@@ -174,7 +174,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );
@@ -209,7 +209,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: CircularProgressIndicator(),
         ),
       );

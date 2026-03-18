@@ -79,19 +79,16 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
       x: x,
       barsSpace: barSpace,
       barRods: [
-        BarChartRodData(
-            toY: y2, width: barWidth, color: const Color(0xfff18800)),
-        BarChartRodData(
-            toY: y3, width: barWidth, color: const Color(0xFF94a3b8)),
-        BarChartRodData(
-            toY: y1, width: barWidth, color: const Color(0xFF10B981)),
+        BarChartRodData(toY: y2, width: barWidth, color: Color(0xfff18800)),
+        BarChartRodData(toY: y3, width: barWidth, color: Color(0xFF94a3b8)),
+        BarChartRodData(toY: y1, width: barWidth, color: Color(0xFF10B981)),
       ],
     );
   }
 
   Widget bottomTitles(double value, TitleMeta meta) {
     if (value.toInt() < 0 || value.toInt() >= widget.data.length) {
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
 
     final name = widget.data[value.toInt()]['name'] ?? '';
@@ -151,7 +148,7 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
       child: IconButton(
         icon: Stack(
           children: [
-            const Icon(
+            Icon(
               Icons.tune,
             ),
           ],
@@ -170,7 +167,7 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
       child: IconButton(
         icon: Stack(
           children: [
-            const Icon(
+            Icon(
               Icons.refresh_outlined,
             ),
           ],
@@ -305,10 +302,10 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
                                   },
                                 ),
                               ),
-                              rightTitles: const AxisTitles(
+                              rightTitles: AxisTitles(
                                 sideTitles: SideTitles(showTitles: false),
                               ),
-                              topTitles: const AxisTitles(
+                              topTitles: AxisTitles(
                                 sideTitles: SideTitles(showTitles: false),
                               ),
                             ),
@@ -322,10 +319,9 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildLegendItem(const Color(0xfff18800), 'Diproses'),
-                    _buildLegendItem(
-                        const Color(0xFF94a3b8), 'Menunggu Diproses'),
-                    _buildLegendItem(const Color(0xFF10B981), 'Selesai'),
+                    _buildLegendItem(Color(0xfff18800), 'Diproses'),
+                    _buildLegendItem(Color(0xFF94a3b8), 'Menunggu Diproses'),
+                    _buildLegendItem(Color(0xFF10B981), 'Selesai'),
                   ].separatedBy(SizedBox(
                     width: 16,
                   )),
@@ -333,7 +329,7 @@ class _WorkOrderChartState extends State<WorkOrderChart> {
               ),
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
-        ].separatedBy(const SizedBox(height: 16)),
+        ].separatedBy(SizedBox(height: 16)),
       ),
     );
   }

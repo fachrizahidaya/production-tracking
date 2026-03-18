@@ -16,7 +16,7 @@ class ErrorBubble extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(
+            padding: EdgeInsets.symmetric(
               horizontal: 12,
               vertical: 8,
             ),
@@ -27,13 +27,13 @@ class ErrorBubble extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.15),
                   blurRadius: 6,
-                  offset: const Offset(0, 3),
+                  offset: Offset(0, 3),
                 ),
               ],
             ),
             child: Text(
               message,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 12,
               ),
@@ -42,7 +42,7 @@ class ErrorBubble extends StatelessWidget {
 
           /// little arrow
           CustomPaint(
-            size: const Size(12, 6),
+            size: Size(12, 6),
             painter: ArrowPainter(),
           ),
         ],

@@ -31,7 +31,7 @@ class _NoteItemState extends State<NoteItem>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 300),
       vsync: this,
     );
   }
@@ -79,7 +79,7 @@ class _NoteItemState extends State<NoteItem>
                     ? CustomTheme().buttonColor('primary').withOpacity(0.1)
                     : Colors.black.withOpacity(0.05),
                 blurRadius: _isExpanded ? 12 : 10,
-                offset: const Offset(0, 2),
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -166,7 +166,7 @@ class CompactNoteItem extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.03),
                   blurRadius: 8,
-                  offset: const Offset(0, 2),
+                  offset: Offset(0, 2),
                 ),
               ],
             ),
@@ -178,7 +178,7 @@ class CompactNoteItem extends StatelessWidget {
                     width: 4,
                     decoration: BoxDecoration(
                       color: noteType['color'],
-                      borderRadius: const BorderRadius.only(
+                      borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(12),
                         bottomLeft: Radius.circular(12),
                       ),
@@ -193,7 +193,7 @@ class CompactNoteItem extends StatelessWidget {
                         children: [
                           // Icon
                           Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: noteType['color'].withOpacity(0.1),
                               borderRadius: BorderRadius.circular(10),
@@ -222,9 +222,9 @@ class CompactNoteItem extends StatelessWidget {
                                         color: Colors.grey[800],
                                       ),
                                     ),
-                                    const SizedBox(width: 6),
+                                    SizedBox(width: 6),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(
+                                      padding: EdgeInsets.symmetric(
                                         horizontal: 6,
                                         vertical: 2,
                                       ),
@@ -244,7 +244,7 @@ class CompactNoteItem extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 Text(
                                   plainText,
                                   style: TextStyle(
@@ -418,7 +418,7 @@ class NoteListGrid extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color:
                           CustomTheme().buttonColor('primary').withOpacity(0.1),
@@ -430,7 +430,7 @@ class NoteListGrid extends StatelessWidget {
                       color: CustomTheme().buttonColor('primary'),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Text(
                     'Catatan',
                     style: TextStyle(
@@ -439,9 +439,9 @@ class NoteListGrid extends StatelessWidget {
                       color: Colors.grey[800],
                     ),
                   ),
-                  const Spacer(),
+                  Spacer(),
                   Container(
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                       horizontal: 12,
                       vertical: 6,
                     ),
@@ -467,7 +467,7 @@ class NoteListGrid extends StatelessWidget {
             // Notes Grid
             GridView.builder(
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
                 crossAxisSpacing: isTablet ? 14 : 0,

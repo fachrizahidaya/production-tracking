@@ -183,7 +183,7 @@ class _ActiveMachineState extends State<ActiveMachine>
                             child: MachineSection(
                               title: 'Mesin Tersedia',
                               icon: Icons.task_alt_outlined,
-                              status: const Color(0xFF10b981),
+                              status: Color(0xFF10b981),
                               headerColor: 'Selesai',
                               data: filteredAvailable,
                               isPortrait: isPortrait,
@@ -193,7 +193,7 @@ class _ActiveMachineState extends State<ActiveMachine>
                             child: MachineSection(
                               title: 'Mesin Digunakan',
                               icon: Icons.error_outline,
-                              status: const Color(0xfff18800),
+                              status: Color(0xfff18800),
                               headerColor: 'Diproses',
                               data: filteredUnavailable,
                               isPortrait: isPortrait,

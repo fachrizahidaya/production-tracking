@@ -97,7 +97,7 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
   Future<void> _handleSearch(String value) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(Duration(milliseconds: 500), () {
       setState(() {
         _search = value;
         params['search'] = value;
@@ -295,7 +295,7 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const CreateEmbroidery(),
+                                builder: (context) => CreateEmbroidery(),
                               ),
                             );
                           },

@@ -49,13 +49,13 @@ class TextForm extends StatelessWidget {
                 .inputDecoration('Isi $label', null, null, isDisabled)
                 .copyWith(
                   hintText: 'Isi $label',
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 18, // 👈 increase this
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 18,
                     horizontal: 12,
                   ),
                 ),
             keyboardType: isNumber == true
-                ? const TextInputType.numberWithOptions(decimal: true)
+                ? TextInputType.numberWithOptions(decimal: true)
                 : TextInputType.text,
             inputFormatters:
                 isNumber == true ? [ThousandsSeparatorInputFormatter()] : [],

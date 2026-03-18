@@ -17,7 +17,7 @@ class WorkOrderPie extends StatefulWidget {
 class WorkOrderPieState extends State<WorkOrderPie> {
   int touchedIndex = -1;
 
-  static const List<IconData> processIcons = [
+  static List<IconData> processIcons = [
     Icons.invert_colors_on_outlined,
     Icons.layers_outlined,
     Icons.dry_cleaning_outlined,

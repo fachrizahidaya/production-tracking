@@ -13,7 +13,6 @@ import 'package:textile_tracking/models/option/option_dyeing.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
-import 'package:textile_tracking/models/option/option_operator.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/cross_cutting.dart';
@@ -73,7 +72,6 @@ void main() async {
     ChangeNotifierProvider(create: (_) => UnitService()),
     ChangeNotifierProvider(create: (_) => OptionUnitService()),
     ChangeNotifierProvider(create: (_) => OptionMachineService()),
-    ChangeNotifierProvider(create: (_) => OptionOperatorService()),
     ChangeNotifierProvider(create: (_) => OptionWorkOrderService()),
     ChangeNotifierProvider(create: (_) => OptionItemGradeService()),
     ChangeNotifierProvider(create: (_) => OptionDyeingService()),
@@ -103,11 +101,10 @@ class MyApp extends StatelessWidget {
             titleTextStyle: TextStyle(
                 color: CustomTheme().colors('text-primary'),
                 fontSize: CustomTheme().fontSize('xl'))),
-        drawerTheme: const DrawerThemeData(backgroundColor: Colors.white),
-        bottomSheetTheme:
-            const BottomSheetThemeData(backgroundColor: Colors.white),
+        drawerTheme: DrawerThemeData(backgroundColor: Colors.white),
+        bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.white),
         scaffoldBackgroundColor: Colors.white,
-        cardTheme: const CardThemeData(
+        cardTheme: CardThemeData(
           color: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(12))),
@@ -120,26 +117,26 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => const AuthCheck(),
-        '/dashboard': (context) => const Home(),
-        '/profile': (context) => const Profile(),
-        '/notification': (context) => const NotificationList(),
-        '/dyeings': (context) => const DyeingScreen(),
-        '/press': (context) => const PressTumblerScreen(),
-        '/tumblers': (context) => const TumblerScreen(),
-        '/stenters': (context) => const StenterScreen(),
-        '/long-slittings': (context) => const LongSittingScreen(),
-        '/long-hemmings': (context) => const LongHemmingScreen(),
-        '/cross-cuttings': (context) => const CrossCuttingScreen(),
-        '/sewings': (context) => const SewingScreen(),
-        '/embroideries': (context) => const EmbroideryScreen(),
-        '/sortings': (context) => const SortingScreen(),
-        '/packings': (context) => const PackingScreen(),
-        '/printings': (context) => const PrintingScreen(),
-        '/account': (context) => const Account(),
-        '/eula': (context) => const Eula(),
-        '/privacy-policy': (context) => const PrivacyPolicy(),
-        '/terms-conditions': (context) => const TermsConditions(),
+        '/': (context) => AuthCheck(),
+        '/dashboard': (context) => Home(),
+        '/profile': (context) => Profile(),
+        '/notification': (context) => NotificationList(),
+        '/dyeings': (context) => DyeingScreen(),
+        '/press': (context) => PressTumblerScreen(),
+        '/tumblers': (context) => TumblerScreen(),
+        '/stenters': (context) => StenterScreen(),
+        '/long-slittings': (context) => LongSittingScreen(),
+        '/long-hemmings': (context) => LongHemmingScreen(),
+        '/cross-cuttings': (context) => CrossCuttingScreen(),
+        '/sewings': (context) => SewingScreen(),
+        '/embroideries': (context) => EmbroideryScreen(),
+        '/sortings': (context) => SortingScreen(),
+        '/packings': (context) => PackingScreen(),
+        '/printings': (context) => PrintingScreen(),
+        '/account': (context) => Account(),
+        '/eula': (context) => Eula(),
+        '/privacy-policy': (context) => PrivacyPolicy(),
+        '/terms-conditions': (context) => TermsConditions(),
       },
     );
   }

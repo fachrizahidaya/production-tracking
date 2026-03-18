@@ -60,7 +60,7 @@ class _AttachmentTabState extends State<AttachmentTab> {
 
       Widget preview;
       if (extension == 'pdf') {
-        preview = const Icon(Icons.picture_as_pdf, color: Colors.red, size: 60);
+        preview = Icon(Icons.picture_as_pdf, color: Colors.red, size: 60);
       } else if (isNew && filePath != null) {
         preview = Image.file(File(filePath), fit: BoxFit.cover);
       } else if (filePath != null &&
@@ -68,9 +68,9 @@ class _AttachmentTabState extends State<AttachmentTab> {
         preview = Image.network('$baseUrl$filePath',
             fit: BoxFit.cover,
             errorBuilder: (context, _, __) =>
-                const Icon(Icons.broken_image, size: 60));
+                Icon(Icons.broken_image, size: 60));
       } else {
-        preview = const Icon(Icons.insert_drive_file, size: 60);
+        preview = Icon(Icons.insert_drive_file, size: 60);
       }
 
       return GestureDetector(
@@ -105,7 +105,7 @@ class _AttachmentTabState extends State<AttachmentTab> {
                 child: preview,
               ),
 
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
 
               /// File name + size (COLUMN)
               Expanded(
@@ -117,12 +117,12 @@ class _AttachmentTabState extends State<AttachmentTab> {
                       fileName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       fileSizeText,
                       style: TextStyle(

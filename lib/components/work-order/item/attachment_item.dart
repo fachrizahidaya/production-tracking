@@ -19,7 +19,7 @@ class AttachmentItem extends StatelessWidget {
 
     Widget previewWidget;
     if (extension == '.pdf') {
-      previewWidget = const Icon(
+      previewWidget = Icon(
         Icons.picture_as_pdf,
         size: 48,
         color: Colors.black,
@@ -31,11 +31,11 @@ class AttachmentItem extends StatelessWidget {
         height: 80,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
-          return const Icon(Icons.broken_image, size: 48);
+          return Icon(Icons.broken_image, size: 48);
         },
       );
     } else {
-      previewWidget = const Icon(Icons.insert_drive_file, size: 48);
+      previewWidget = Icon(Icons.insert_drive_file, size: 48);
     }
 
     return CustomCard(

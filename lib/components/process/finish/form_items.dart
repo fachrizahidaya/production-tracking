@@ -337,7 +337,7 @@ class _FormItemsState extends State<FormItems> {
         ),
         if (row['value'] == 'weight' && widget.weightWarning != null)
           Padding(
-            padding: const EdgeInsets.only(top: 4),
+            padding: EdgeInsets.only(top: 4),
             child: Text(
               widget.weightWarning!,
               style: TextStyle(
@@ -601,7 +601,7 @@ class _FormItemsState extends State<FormItems> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            const SizedBox(width: 8),
+                                            SizedBox(width: 8),
                                             Expanded(
                                               child: Text(
                                                 widget.weightWarning ?? '-',
@@ -698,7 +698,7 @@ class _FormItemsState extends State<FormItems> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            const SizedBox(width: 8),
+                                            SizedBox(width: 8),
                                             Expanded(
                                               child: Text(
                                                 widget.qtyWarning ?? '-',
@@ -794,7 +794,7 @@ class _FormItemsState extends State<FormItems> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            const SizedBox(width: 8),
+                                            SizedBox(width: 8),
                                             Expanded(
                                               child: Text(
                                                 widget.weightWarning ?? '-',

@@ -49,7 +49,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                 controller: _controller,
                 decoration: InputDecoration(
                   hintText: 'Cari',
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: Icon(Icons.search),
                   suffixIcon: _controller.text.isNotEmpty
                       ? IconButton(
                           onPressed: () {
@@ -57,7 +57,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                             widget.handleSearchChange('');
                             setState(() {});
                           },
-                          icon: const Icon(Icons.close))
+                          icon: Icon(Icons.close))
                       : null,
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),

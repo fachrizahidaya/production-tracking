@@ -64,6 +64,8 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
           ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
           ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
         ],
+        machine_ids: form['machine_ids'],
+        machines: form['machines'],
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
@@ -98,6 +100,8 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
           start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
           end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
           attachments: form['attachments'],
+          machine_ids: form['machine_ids'] ?? [],
+          machines: form['machines'] ?? [],
         );
 
         final message =

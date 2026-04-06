@@ -34,6 +34,11 @@ class CreateCrossCutting extends StatelessWidget {
           : null,
       end_by_id: form['end_by_id'],
       attachments: form['attachments'],
+      machine_ids: (form['machines'] as List?)
+          ?.map((e) => int.tryParse(e['value'].toString()))
+          .where((e) => e != null)
+          .cast<int>()
+          .toList(),
     );
 
     final message =

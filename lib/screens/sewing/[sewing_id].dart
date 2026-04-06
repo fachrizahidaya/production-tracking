@@ -64,6 +64,8 @@ class _SewingDetailState extends State<SewingDetail> {
             ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
             ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
           ],
+          machine_ids: form['machine_ids'],
+          machines: form['machines'],
           maklon: form['maklon'],
           maklon_name: form['maklon_name']),
       canDelete: widget.canDelete,
@@ -102,6 +104,8 @@ class _SewingDetailState extends State<SewingDetail> {
             start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
             end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
             attachments: form['attachments'],
+            machines: form['machines'] ?? [],
+            machine_ids: form['machine_ids'] ?? [],
             maklon: form['maklon'],
             maklon_name: form['maklon_name']);
 

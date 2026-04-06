@@ -15,6 +15,7 @@ class CreateSection extends StatefulWidget {
   final withMaklonOrMachine;
   final withOnlyMaklon;
   final withNoMaklonOrMachine;
+  final label;
 
   const CreateSection(
       {super.key,
@@ -28,7 +29,8 @@ class CreateSection extends StatefulWidget {
       this.isMaklon,
       this.withMaklonOrMachine,
       this.withOnlyMaklon,
-      this.withNoMaklonOrMachine});
+      this.withNoMaklonOrMachine,
+      this.label});
 
   @override
   State<CreateSection> createState() => _CreateSectionState();
@@ -48,6 +50,7 @@ class _CreateSectionState extends State<CreateSection> {
       withMaklonOrMachine: widget.withMaklonOrMachine,
       withOnlyMaklon: widget.withOnlyMaklon,
       withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
+      label: widget.label,
     );
   }
 }

@@ -81,18 +81,14 @@ class _FinishProcessState extends State<FinishProcess> {
   final Map<String, dynamic> _form = {
     'wo_id': null,
     'machine_id': null,
-    'unit_id': 2,
+    'unit_id': 1,
     'item_unit_id': 1,
-    'length_unit_id': 3,
-    'width_unit_id': 3,
     'weight_unit_id': 2,
     'start_by_id': null,
     'end_by_id': null,
     'qty': '0',
     'item_qty': '0',
-    'width': '0',
     'weight': '0',
-    'length': '0',
     'total_weight': '0',
     'gsm': '0',
     'weight_per_dozen': '0',
@@ -103,6 +99,7 @@ class _FinishProcessState extends State<FinishProcess> {
     'attachments': [],
     'no_wo': '',
     'nama_mesin': '',
+    'nama_satuan_item': 'PCS',
     'nama_satuan': 'KG',
     'nama_satuan_panjang': 'CM',
     'nama_satuan_lebar': 'CM',
@@ -113,6 +110,12 @@ class _FinishProcessState extends State<FinishProcess> {
     'lot_celup_no': '',
     'finished_item_id': '',
     'nama_item': '',
+    'sku_item': '',
+    'good_weight': '0',
+    'good_weight_unit_id': 2,
+    'bs_weight': '0',
+    'bs_weight_unit_id': 2,
+    'machine_ids': [],
   };
 
   @override
@@ -132,6 +135,31 @@ class _FinishProcessState extends State<FinishProcess> {
 
     if (widget.initialData != null) {
       _form.addAll(widget.initialData!);
+    }
+
+    if (widget.label == 'Dyeing') {
+      _form['unit_id'] = 2;
+    }
+
+    if (widget.label == 'Cross Cutting' || widget.label == 'Sewing') {
+      _form['item_unit_id'] = 1;
+    }
+
+    if (widget.label == 'Cross Cutting' || widget.label == 'Sewing') {
+      _form['nama_satuan_item'] = 'PCS';
+    }
+
+    final data = _workOrderService.dataView;
+    final greigeQty = data['greige_qty'];
+
+    if (widget.label == 'Dyeing') {
+      _form['qty'] = greigeQty.toString();
+    }
+
+    if (widget.label != 'Long Hemming' &&
+        widget.label != 'Sewing' &&
+        widget.label != 'Cross Cutting') {
+      _form['weight'] = greigeQty.toString();
     }
   }
 
@@ -247,7 +275,24 @@ class _FinishProcessState extends State<FinishProcess> {
       }
 
       final String woId = processResponse['wo_id'].toString();
-      final String processId = processResponse['process_id'].toString();
+
+      String? processId;
+
+      if (processResponse['process_id'] != null) {
+        processId = processResponse['process_id'].toString();
+      } else {
+        final List<dynamic> flexible =
+            processResponse['flexible_in_progress'] ?? [];
+
+        final normalizedLabel = widget.label.toLowerCase().replaceAll(' ', '_');
+
+        final match = flexible.firstWhere(
+          (item) => item['process'] == normalizedLabel,
+          orElse: () => null,
+        );
+
+        processId = match?['process_id']?.toString();
+      }
 
       final bool workOrderExists =
           workOrderOption.any((item) => item['value'].toString() == woId);
@@ -260,23 +305,32 @@ class _FinishProcessState extends State<FinishProcess> {
       }
 
       await _workOrderService.getDataView(woId);
+
       final data = _workOrderService.dataView;
       final greigeQty = data['greige_qty'];
 
-      if (greigeQty != null &&
-          greigeQty.toString().isNotEmpty &&
-          widget.label == 'Dyeing') {
-        _form['item_qty'] = greigeQty.toString();
+      if (widget.label == 'Dyeing') {
+        _form['qty'] = greigeQty.toString();
       }
 
-      if (greigeQty != null && greigeQty.toString().isNotEmpty) {
+      if (widget.label == 'Cross Cutting' || widget.label == 'Sewing') {
+        _form['item_unit_id'] = 1;
+      }
+
+      if (widget.label == 'Cross Cutting' || widget.label == 'Sewing') {
+        _form['nama_satuan_item'] = 'PCS';
+      }
+
+      if (widget.label != 'Long Hemming' &&
+          widget.label != 'Sewing' &&
+          widget.label != 'Cross Cutting') {
         _form['weight'] = greigeQty.toString();
       }
 
       if (widget.label == 'Dyeing' ||
           widget.label == 'Long Hemming' ||
           widget.label == 'Sewing' ||
-          widget.label == 'Packing') {
+          widget.label == 'Sorting') {
         await _handleFetchFinishedMaterial(data);
       }
 
@@ -314,7 +368,7 @@ class _FinishProcessState extends State<FinishProcess> {
       await _workOrderService.getDataView(woId);
       final data = _workOrderService.dataView;
 
-      _form['wo_id'] = data['id']?.toString() ?? woId;
+      _form['wo_id'] = woId;
       _form['no_wo'] = data['wo_no'] ?? '';
       _form['process_id'] = processId;
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/card/custom_card.dart';
 import 'package:textile_tracking/components/master/theme.dart';
@@ -57,14 +58,16 @@ class _ListFormState extends State<ListForm> {
               ),
             if (widget.form?['wo_id'] != null)
               Expanded(
-                child: CustomCard(
+                child: TemplateCard(
+                    title: 'Mesin',
+                    icon: Icons.local_laundry_service_outlined,
                     child: SelectForm(
-                  label: 'Mesin',
-                  onTap: () => widget.selectMachine(),
-                  selectedLabel: widget.form['nama_mesin'] ?? '',
-                  selectedValue: widget.form['machine_id'].toString(),
-                  required: true,
-                )),
+                      label: 'Mesin',
+                      onTap: () => widget.selectMachine(),
+                      selectedLabel: widget.form['nama_mesin'] ?? '',
+                      selectedValue: widget.form['machine_id'].toString(),
+                      required: true,
+                    )),
               ),
           ].separatedBy(CustomTheme().hGap('xl'))),
     );

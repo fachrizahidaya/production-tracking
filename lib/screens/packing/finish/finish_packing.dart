@@ -82,31 +82,26 @@ class _FinishPackingState extends State<FinishPacking> {
         handleChangeInput: handleChangeInput,
         forDyeing: false,
         forPacking: true,
-        withItemGrade: true,
+        withItemGrade: false,
         withQtyAndWeight: false,
+        woId: id,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final packing = Packing(
-            wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-            machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-            weight_unit_id:
-                int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-            width_unit_id:
-                int.tryParse(form['width_unit_id']?.toString() ?? ''),
-            length_unit_id:
-                int.tryParse(form['length_unit_id']?.toString() ?? ''),
-            notes: form['notes'],
-            weight_per_dozen: form['weight_per_dozen'],
-            gsm: form['gsm'],
-            total_weight: form['total_weight'],
-            start_time: form['start_time'],
-            end_time: form['end_time'],
-            start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-            end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
-            attachments: form['attachments'],
-            grades: form['grades'],
-            finished_item_id:
-                int.tryParse(form['finished_item_id']?.toString() ?? ''));
+          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+          notes: form['notes'],
+          weight_per_dozen: form['weight_per_dozen'],
+          gsm: form['gsm'],
+          total_weight: form['total_weight'],
+          start_time: form['start_time'],
+          end_time: form['end_time'],
+          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+          attachments: form['attachments'],
+          grades: form['grades'],
+          qty: form['qty'],
+          unit_id: int.tryParse(form['unit_id']?.toString() ?? ''),
+        );
 
         final message =
             await Provider.of<PackingService>(context, listen: false)

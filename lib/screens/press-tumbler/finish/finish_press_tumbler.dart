@@ -65,6 +65,7 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
   Widget build(BuildContext context) {
     return FinishProcess(
       title: 'Selesai Press',
+      label: 'Press',
       fetchWorkOrder: (service) async =>
           await service.fetchPressFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,

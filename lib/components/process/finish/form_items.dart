@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
-import 'package:textile_tracking/components/master/text/view_text.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/note_editor.dart';
@@ -54,6 +54,9 @@ class FormItems extends StatefulWidget {
   final handleTotalItemQty;
   final handleRemainingQtyForGrade;
   final dyeingLotNo;
+  final weightGood;
+  final weightDefect;
+  final woData;
 
   const FormItems(
       {super.key,
@@ -99,7 +102,10 @@ class FormItems extends StatefulWidget {
       this.dyeingLotNo,
       this.forHemming,
       this.forSewing,
-      this.handleSelectFinishedMaterial});
+      this.handleSelectFinishedMaterial,
+      this.weightDefect,
+      this.weightGood,
+      this.woData});
 
   @override
   State<FormItems> createState() => _FormItemsState();
@@ -109,10 +115,34 @@ class _FormItemsState extends State<FormItems> {
   double beratLusin = 0;
   double gsm = 0;
   double totalBerat = 0;
+  late List<Map<String, dynamic>> _grades;
 
   @override
   void initState() {
     super.initState();
+    _grades = (widget.processData['grades'] ?? [])
+        .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
+        .toList();
+    _initGradeControllers();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final good = parseSafe(widget.form['good_weight']);
+      final defect = parseSafe(widget.form['bs_weight']);
+
+      if (good > 0 || defect > 0) {
+        calculateLongHemmingWeight();
+      }
+    });
+  }
+
+  void _initGradeControllers() {
+    for (int i = 0; i < _grades.length; i++) {
+      _ensureController(i);
+
+      final qty = _grades[i]['qty']?.toString() ?? '0';
+
+      widget.qtyItem[i].text = qty;
+    }
   }
 
   void _ensureController(int index) {
@@ -152,7 +182,7 @@ class _FormItemsState extends State<FormItems> {
   }
 
   double getMaxQtyFromGrades() {
-    final grades = widget.form['grades'] as List<dynamic>?;
+    final grades = widget.woData['grades'] as List<dynamic>?;
 
     if (grades == null || grades.isEmpty) return 0;
 
@@ -163,7 +193,8 @@ class _FormItemsState extends State<FormItems> {
   }
 
   void calculateFromBeratLusin(double value) {
-    final maxQty = getMaxQtyFromGrades();
+    final maxQty =
+        widget.woData['processes'][10]['data'][0]['grades'][0]['qty'];
 
     final size = widget.data['items'][0]['variants'][1]['value'];
     final panjang = int.tryParse(size.split('X')[0]) ?? 0;
@@ -191,10 +222,38 @@ class _FormItemsState extends State<FormItems> {
     });
   }
 
+  double parseSafe(dynamic val) {
+    final cleaned = val
+        ?.toString()
+        .replaceAll('.', '') // remove thousand
+        .replaceAll(',', '.'); // normalize decimal
+
+    return double.tryParse(cleaned ?? '') ?? 0;
+  }
+
+  void calculateLongHemmingWeight() {
+    final good = parseSafe(widget.form['good_weight']);
+    final defect = parseSafe(widget.form['bs_weight']);
+
+    final total = good + defect;
+
+    setState(() {
+      widget.handleChangeInput('weight', total.toStringAsFixed(2));
+      widget.weight.value = TextEditingValue(
+        text: total.toStringAsFixed(2),
+        selection: TextSelection.collapsed(
+          offset: total.toStringAsFixed(2).length,
+        ),
+      );
+    });
+  }
+
   Widget buildGradeCard(int i) {
     final gradeLabel = getGradeLabel(i);
     final percentage = getGradePercentage(i);
     final maxQty = widget.handleRemainingQtyForGrade(i);
+
+    final items = widget.data?['items'] ?? [];
 
     _ensureController(i);
 
@@ -210,11 +269,12 @@ class _FormItemsState extends State<FormItems> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
-              flex: 2,
+              flex: 1,
               child: TextForm(
                 label: 'Qty (PCS)',
                 req: true,
                 isNumber: true,
+                isDisabled: i == 2 ? true : false,
                 controller: widget.qtyItem[i],
                 handleChange: (val) {
                   if (val == null || val.trim().isEmpty) {
@@ -242,35 +302,45 @@ class _FormItemsState extends State<FormItems> {
             ),
             Expanded(
               flex: 1,
-              child: TextForm(
-                label: 'Max Qty (PCS)',
-                isDisabled: true,
-                controller: TextEditingController(
-                  text: maxQty.toInt().toString(),
-                ),
+              child: Column(
+                children: [_buildFinishedItem(items, i)],
               ),
-            ),
+            )
+            // Expanded(
+            //   flex: 1,
+            //   child: TextForm(
+            //     label: 'Max Qty (PCS)',
+            //     isDisabled: true,
+            //     controller: TextEditingController(
+            //       text: maxQty.toInt().toString(),
+            //     ),
+            //   ),
+            // ),
+            // Expanded(
+            //   flex: 1,
+            //   child: TextForm(
+            //     label: 'Catatan',
+            //     req: false,
+            //     handleChange: (val) =>
+            //         widget.handleUpdateGrade(i, 'notes', val),
+            //   ),
+            // ),
           ].separatedBy(CustomTheme().hGap('xl')),
         ),
-        Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: TextForm(
-                label: 'Persentase (%)',
-                isDisabled: true,
-                controller: TextEditingController(
-                  text: percentage.round().toString(),
-                ),
-              ),
-            ),
-          ].separatedBy(CustomTheme().hGap('xl')),
-        ),
-        TextForm(
-          label: 'Catatan',
-          req: false,
-          handleChange: (val) => widget.handleUpdateGrade(i, 'notes', val),
-        ),
+        // Row(
+        //   children: [
+        //     Expanded(
+        //       flex: 1,
+        //       child: TextForm(
+        //         label: 'Persentase (%)',
+        //         isDisabled: true,
+        //         controller: TextEditingController(
+        //           text: percentage.round().toString(),
+        //         ),
+        //       ),
+        //     ),
+        //   ].separatedBy(CustomTheme().hGap('xl')),
+        // ),
       ].separatedBy(CustomTheme().vGap('lg')),
     );
   }
@@ -298,13 +368,13 @@ class _FormItemsState extends State<FormItems> {
                   setState(() {
                     widget.handleChangeInput(row['value'], safeValue);
 
-                    if (row['value'] == 'length') {
-                      widget.handleChangeInput('length_unit_id', 3);
-                    }
+                    // if (row['value'] == 'length') {
+                    //   widget.handleChangeInput('length_unit_id', 3);
+                    // }
 
-                    if (row['value'] == 'width') {
-                      widget.handleChangeInput('width_unit_id', 3);
-                    }
+                    // if (row['value'] == 'width') {
+                    //   widget.handleChangeInput('width_unit_id', 3);
+                    // }
 
                     if (row['value'] == 'weight') {
                       widget.handleChangeInput('weight_unit_id', 2);
@@ -353,30 +423,52 @@ class _FormItemsState extends State<FormItems> {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> formRows = [
-      {
-        'label': 'Panjang (CM)',
-        'controller': widget.length,
-        'onSelect': widget.handleSelectLengthUnit,
-        'selectedLabel': widget.form['nama_satuan_panjang'] ?? '',
-        'selectedValue': widget.form['length_unit_id']?.toString() ?? '',
-        'unitLabel': 'Satuan Panjang',
-        'value': 'length',
-        'req': false,
-        'withSelectUnit': false,
-        'staticUnit': 'CM'
-      },
-      {
-        'label': 'Lebar (CM)',
-        'controller': widget.width,
-        'onSelect': widget.handleSelectWidthUnit,
-        'selectedLabel': widget.form['nama_satuan_lebar'] ?? '',
-        'selectedValue': widget.form['width_unit_id']?.toString() ?? '',
-        'unitLabel': 'Satuan Lebar',
-        'value': 'width',
-        'req': false,
-        'withSelectUnit': false,
-        'staticUnit': 'CM'
-      },
+      // {
+      //   'label': 'Panjang (CM)',
+      //   'controller': widget.length,
+      //   'onSelect': widget.handleSelectLengthUnit,
+      //   'selectedLabel': widget.form['nama_satuan_panjang'] ?? '',
+      //   'selectedValue': widget.form['length_unit_id']?.toString() ?? '',
+      //   'unitLabel': 'Satuan Panjang',
+      //   'value': 'length',
+      //   'req': false,
+      //   'withSelectUnit': false,
+      //   'staticUnit': 'CM'
+      // },
+      // {
+      //   'label': 'Lebar (CM)',
+      //   'controller': widget.width,
+      //   'onSelect': widget.handleSelectWidthUnit,
+      //   'selectedLabel': widget.form['nama_satuan_lebar'] ?? '',
+      //   'selectedValue': widget.form['width_unit_id']?.toString() ?? '',
+      //   'unitLabel': 'Satuan Lebar',
+      //   'value': 'width',
+      //   'req': false,
+      //   'withSelectUnit': false,
+      //   'staticUnit': 'CM'
+      // },
+      if (widget.label == 'Long Hemming')
+        {
+          'label': 'Berat Tidak Cacat (KG)',
+          'controller': widget.weightGood,
+          'value': 'good_weight',
+          'req': true,
+          'withSelectUnit': false,
+          'staticUnit': 'KG',
+          'selectedLabel': widget.form['nama_satuan_berat_good'] ?? '',
+          'selectedValue': widget.form['good_weight_unit_id']?.toString() ?? '',
+        },
+      if (widget.label == 'Long Hemming')
+        {
+          'label': 'Berat Cacat (KG)',
+          'controller': widget.weightDefect,
+          'value': 'bs_weight',
+          'req': true,
+          'withSelectUnit': false,
+          'staticUnit': 'KG',
+          'selectedLabel': widget.form['nama_satuan_berat_bs'] ?? '',
+          'selectedValue': widget.form['bs_weight_unit_id']?.toString() ?? '',
+        },
       if (widget.forDyeing == false)
         {
           'label': 'Berat (KG)',
@@ -388,7 +480,8 @@ class _FormItemsState extends State<FormItems> {
           'value': 'weight',
           'req': true,
           'withSelectUnit': false,
-          'staticUnit': 'KG'
+          'staticUnit': 'KG',
+          'isDisabled': widget.label == 'Long Hemming' ? true : false
         },
     ];
 
@@ -413,58 +506,78 @@ class _FormItemsState extends State<FormItems> {
               },
             ),
           ),
+        if (widget.data != null)
+          TemplateCard(
+              title: 'Work Order',
+              icon: Icons.sort_outlined,
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade200),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            widget.data != null
+                                ? '${widget.data['wo_no']}'
+                                : '-',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
+        if (widget.data != null &&
+            (widget.label != 'Long Hemming' &&
+                widget.label != 'Cross Cutting' &&
+                widget.label != 'Sewing' &&
+                widget.label != 'Sorting' &&
+                widget.label != 'Packing'))
+          TemplateCard(
+              title: 'Mesin',
+              icon: Icons.sort_outlined,
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade200),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            widget.data != null
+                                ? '${widget.processData['machine']['code']} ${widget.processData['machine']['name']}'
+                                : '-',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
         if (widget.processData['rework'] == true)
           TemplateCard(
               title: 'Referensi Rework',
               icon: Icons.replay_outlined,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: CustomTheme().padding('process-content'),
-                        decoration: BoxDecoration(
-                          color: CustomTheme()
-                              .buttonColor('primary')
-                              .withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.description_outlined,
-                          color: CustomTheme().buttonColor('primary'),
-                        ),
-                      ),
-                      ViewText(
-                          viewLabel: 'No. Dyeing',
-                          viewValue: widget.processData['rework_reference']
-                                  ['dyeing_no'] ??
-                              '-')
-                    ].separatedBy(CustomTheme().hGap('xl')),
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        padding: CustomTheme().padding('process-content'),
-                        decoration: BoxDecoration(
-                          color: CustomTheme()
-                              .buttonColor('primary')
-                              .withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.description_outlined,
-                          color: CustomTheme().buttonColor('primary'),
-                        ),
-                      ),
-                      ViewText(
-                          viewLabel: 'Mesin',
-                          viewValue: widget.processData['rework_reference']
-                                  ['machine']['name'] ??
-                              '-')
-                    ].separatedBy(CustomTheme().hGap('xl')),
-                  ),
-                ].separatedBy(CustomTheme().hGap('xl')),
+                children: [_buildReworkReference()],
               )),
         if (widget.form?['wo_id'] != null)
           Column(
@@ -485,7 +598,14 @@ class _FormItemsState extends State<FormItems> {
                     ].separatedBy(CustomTheme().vGap('2xl')),
                   ),
                 ),
-              if (widget.withItemGrade == false)
+              if (widget.label == 'Long Hemming' ||
+                  widget.label == 'Cross Cutting' ||
+                  widget.label == 'Sewing')
+                TemplateCard(
+                    title: 'Informasi Mesin',
+                    icon: Icons.invert_colors_on_outlined,
+                    child: _buildMachine()),
+              if (widget.withItemGrade == false && widget.label != 'Packing')
                 TemplateCard(
                   title: 'Informasi Proses',
                   icon: Icons.list_alt_outlined,
@@ -525,6 +645,7 @@ class _FormItemsState extends State<FormItems> {
                                       TextForm(
                                         label: row['label'],
                                         req: row['req'],
+                                        isDisabled: row['isDisabled'] ?? false,
                                         isNumber: true,
                                         controller: row['controller'],
                                         handleChange: (value) {
@@ -533,27 +654,29 @@ class _FormItemsState extends State<FormItems> {
                                                       .toString()
                                                       .trim()
                                                       .isEmpty)
-                                              ? ''
+                                              ? '0'
                                               : value.toString();
 
                                           setState(() {
                                             widget.handleChangeInput(
                                                 row['value'], safeValue);
 
-                                            if (row['value'] == 'length') {
+                                            if (row['value'] == 'good_weight') {
                                               widget.handleChangeInput(
-                                                  'length_unit_id', 3);
+                                                  'good_weight_unit_id', 2);
                                             }
-
-                                            if (row['value'] == 'width') {
+                                            if (row['value'] == 'bs_weight') {
                                               widget.handleChangeInput(
-                                                  'width_unit_id', 3);
+                                                  'bs_weight_unit_id', 2);
                                             }
-
                                             if (row['value'] == 'weight') {
                                               widget.handleChangeInput(
                                                   'weight_unit_id', 2);
                                               widget.validateWeight(safeValue);
+                                            }
+                                            if (widget.label ==
+                                                'Long Hemming') {
+                                              calculateLongHemmingWeight();
                                             }
                                           });
                                         },
@@ -624,6 +747,29 @@ class _FormItemsState extends State<FormItems> {
                           ],
                         );
                       }),
+                      if (widget.label == 'Packing')
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TemplateCard(
+                              title: 'Qty Packing',
+                              icon: Icons.layers_outlined,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextForm(
+                                    label: 'Total Qty',
+                                    req: false,
+                                    controller: widget.qty,
+                                    handleChange: (value) {
+                                      widget.handleChangeInput('qty', value);
+                                    },
+                                  ),
+                                ].separatedBy(CustomTheme().vGap('lg')),
+                              ),
+                            ),
+                          ].separatedBy(CustomTheme().vGap('lg')),
+                        ),
                       if (widget.withQtyAndWeight == true)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -766,10 +912,12 @@ class _FormItemsState extends State<FormItems> {
                                   child: SelectForm(
                                     label: 'Satuan',
                                     onTap: widget.handleSelectQtyUnitDyeing,
-                                    selectedLabel:
-                                        widget.form['nama_satuan'] ?? '',
-                                    selectedValue:
-                                        widget.form['unit_id']?.toString() ??
+                                    selectedLabel: widget.label == 'Dyeing'
+                                        ? 'KG'
+                                        : widget.form['nama_satuan'] ?? '',
+                                    selectedValue: widget.label == 'Dyeing'
+                                        ? '2'
+                                        : widget.form['unit_id']?.toString() ??
                                             '',
                                     required: true,
                                     validator: (value) {
@@ -821,8 +969,7 @@ class _FormItemsState extends State<FormItems> {
                 ),
               if (widget.forDyeing == true ||
                   widget.forHemming == true ||
-                  widget.forSewing == true ||
-                  widget.forPacking == true)
+                  widget.forSewing == true)
                 TemplateCard(
                   title: 'Material Setelah ${widget.label}',
                   icon: Icons.inventory_2_outlined,
@@ -834,13 +981,17 @@ class _FormItemsState extends State<FormItems> {
                           Expanded(
                               flex: 2,
                               child: SelectForm(
-                                label: 'Material Greige',
+                                label: widget.label == 'Sorting'
+                                    ? 'Material Finish'
+                                    : 'Material Semi Finish',
                                 onTap: () =>
                                     widget.handleSelectFinishedMaterial(),
                                 selectedLabel: widget.form['nama_item'] ?? '',
+                                selectedCode: widget.form['sku_item'] ?? '',
                                 selectedValue: widget.form['finished_item_id']
                                         ?.toString() ??
                                     '',
+                                isWithCode: true,
                                 required: true,
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
@@ -853,6 +1004,49 @@ class _FormItemsState extends State<FormItems> {
                       ),
                     ].separatedBy(CustomTheme().vGap('lg')),
                   ),
+                ),
+              if (widget.label == 'Packing')
+                TemplateCard(
+                  title: 'Qty Sorting',
+                  icon: Icons.sort_outlined,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              children: [_buildSortingQty()],
+                            ),
+                          ),
+                        ].separatedBy(CustomTheme().hGap('xl')),
+                      ),
+                    ].separatedBy(CustomTheme().vGap('lg')),
+                  ),
+                ),
+              if (widget.label == 'Packing')
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TemplateCard(
+                      title: 'Qty Packing',
+                      icon: Icons.layers_outlined,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextForm(
+                            label: 'Total Qty',
+                            req: false,
+                            controller: widget.qty,
+                            handleChange: (value) {
+                              widget.handleChangeInput('qty', value);
+                            },
+                          ),
+                        ].separatedBy(CustomTheme().vGap('lg')),
+                      ),
+                    ),
+                  ].separatedBy(CustomTheme().vGap('lg')),
                 ),
               if (widget.forDyeing == true)
                 TemplateCard(
@@ -971,6 +1165,175 @@ class _FormItemsState extends State<FormItems> {
             ].separatedBy(CustomTheme().vGap('2xl')),
           ),
       ].separatedBy(CustomTheme().vGap('2xl')),
+    );
+  }
+
+  Widget _buildMachine() {
+    final machines = widget.processData['machines'] as List? ?? [];
+
+    if (machines.isEmpty) return NoData();
+
+    return Wrap(
+      alignment: WrapAlignment.start, // ⬅️ ini penting
+      runAlignment: WrapAlignment.start,
+      spacing: 8, // horizontal gap
+      runSpacing: 8, // vertical gap antar baris
+      children: machines.map((machine) {
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Text(
+            '${machine['code']} - ${machine['name']}',
+            style: TextStyle(fontWeight: FontWeight.w500),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildSortingQty() {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+            vertical: 18,
+            horizontal: 12,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Text(
+                  widget.woData['processes'][10]['data'][0]['grades'][0]
+                              ['qty'] !=
+                          null
+                      ? '${widget.woData['processes'][10]['data'][0]['grades'][0]['qty']}'
+                      : '-',
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildReworkReference() {
+    final items = [
+      {
+        'label': 'No. Dyeing',
+        'value': widget.processData['rework_reference']?['dyeing_no'] ?? '-',
+        'icon': Icons.description_outlined,
+      },
+      {
+        'label': 'Mesin',
+        'value':
+            '${widget.processData['rework_reference']?['machine']?['code'] ?? ''} '
+                '${widget.processData['rework_reference']?['machine']?['name'] ?? '-'}',
+        'icon': Icons.description_outlined,
+      },
+      {
+        'label': 'Qty Hasil Dyeing',
+        'value':
+            '${widget.processData['rework_reference']?['work_orders']?['greige_qty'] ?? '-'} '
+                '${widget.processData['rework_reference']?['work_orders']?['greige_unit']?['code'] ?? ''}',
+        'icon': Icons.description_outlined,
+      },
+    ];
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: items
+          .map((item) {
+            return Container(
+              padding: CustomTheme().padding('card'),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[200]!),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min, // 🔥 prevent full width
+                children: [
+                  Icon(item['icon'] as IconData, size: 16, color: Colors.grey),
+                  SizedBox(width: 6),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item['label'].toString(),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      Text(
+                        item['value'].toString(),
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[800],
+                        ),
+                      ),
+                    ].separatedBy(CustomTheme().vGap('sm')),
+                  ),
+                ],
+              ),
+            );
+          })
+          .toList()
+          .separatedBy(CustomTheme().hGap('md')),
+    );
+  }
+
+  Widget _buildFinishedItem(List items, int i) {
+    final item = (items.length > i) ? items[i] : null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Material Finish'),
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item != null && item['item_code'] != null
+                          ? item['item_code'].toString()
+                          : '-',
+                    ),
+                    Text(
+                      item != null && item['item_name'] != null
+                          ? item['item_name'].toString()
+                          : '-',
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ].separatedBy(CustomTheme().vGap('md')),
     );
   }
 }

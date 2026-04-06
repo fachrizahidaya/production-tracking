@@ -33,6 +33,12 @@ class TextForm extends StatelessWidget {
     return FormField<String>(
       validator: req == true ? validator : null,
       builder: (FormFieldState<String> field) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (field.value == null && controller?.text != null) {
+            field.didChange(controller!.text);
+          }
+        });
+
         return GroupForm(
           label: label,
           req: req,
@@ -48,7 +54,7 @@ class TextForm extends StatelessWidget {
             decoration: CustomTheme()
                 .inputDecoration('Isi $label', null, null, isDisabled)
                 .copyWith(
-                  hintText: 'Isi $label',
+                  hintText: isNumber == true ? '0' : 'Isi $label',
                   contentPadding: EdgeInsets.symmetric(
                     vertical: 18,
                     horizontal: 12,

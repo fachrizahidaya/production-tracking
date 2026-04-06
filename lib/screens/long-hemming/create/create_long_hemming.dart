@@ -22,9 +22,12 @@ class CreateLongHemming extends StatelessWidget {
       machine_id: form['machine_id'] != null
           ? int.tryParse(form['machine_id'].toString())
           : null,
+      machine_ids: (form['machines'] as List?)
+          ?.map((e) => int.tryParse(e['value'].toString()))
+          .where((e) => e != null)
+          .cast<int>()
+          .toList(),
       weight: form['weight'],
-      width: form['width'],
-      length: form['length'],
       notes: form['notes'],
       status: form['status'],
       start_time: form['start_time'],

@@ -44,22 +44,24 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
         wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
         weight_unit_id: form['weight_unit_id'] != null
             ? int.tryParse(form['weight_unit_id'].toString())
-            : 1,
-        length_unit_id: form['length_unit_id'] != null
-            ? int.tryParse(form['length_unit_id'].toString())
-            : 1,
-        width_unit_id: form['width_unit_id'] != null
-            ? int.tryParse(form['width_unit_id'].toString())
-            : 1,
+            : 2,
         machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
         weight: form['weight'] ?? '0',
-        width: form['width'] ?? '0',
-        length: form['length'] ?? '0',
         notes: form['notes'] ?? data['notes'],
         attachments: [
           ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
           ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
         ],
+        machine_ids: form['machine_ids'],
+        machines: form['machines'],
+        bs_weight: form['bs_weight'] ?? '0',
+        bs_weight_unit_id: form['bs_weight_unit_id'] != null
+            ? int.tryParse(form['bs_weight_unit_id'].toString())
+            : 2,
+        good_weight: form['good_weight'] ?? '0',
+        good_weight_unit_id: form['good_weight_unit_id'] != null
+            ? int.tryParse(form['good_weight_unit_id'].toString())
+            : 2,
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
@@ -80,18 +82,21 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
           machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
           weight_unit_id:
               int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
-          length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? ''),
           weight: form['weight'],
-          width: form['width'],
-          length: form['length'],
           notes: form['notes'],
           start_time: form['start_time'],
           end_time: form['end_time'],
           start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
           end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
           attachments: form['attachments'],
+          machines: form['machines'] ?? [],
+          machine_ids: form['machine_ids'] ?? [],
+          bs_weight: form['bs_weight'],
+          bs_weight_unit_id:
+              int.tryParse(form['bs_weight_unit_id']?.toString() ?? ''),
+          good_weight: form['good_weight'],
+          good_weight_unit_id:
+              int.tryParse(form['good_weight_unit_id']?.toString() ?? ''),
         );
 
         final message =

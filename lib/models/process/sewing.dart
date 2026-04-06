@@ -30,6 +30,8 @@ class Sewing {
   final bool? maklon;
   final machine;
   final finished_item_id;
+  final machine_ids;
+  final machines;
 
   Sewing(
       {this.id,
@@ -58,36 +60,41 @@ class Sewing {
       this.maklon_name,
       this.unit_id,
       this.machine,
-      this.finished_item_id});
+      this.finished_item_id,
+      this.machine_ids,
+      this.machines});
 
   factory Sewing.fromJson(Map<String, dynamic> json) {
     return Sewing(
-        id: json['id'] as int?,
-        unit_id: json['item_unit_id'] as int?,
-        weight_unit_id: json['weight_unit_id'] as int?,
-        width_unit_id: json['width_unit_id'] as int?,
-        length_unit_id: json['length_unit_id'] as int?,
-        wo_id: json['wo_id'] as int?,
-        machine_id: json['machine_id'] as int?,
-        start_by_id: json['start_by_id'] as int?,
-        end_by_id: json['end_by_id'] as int?,
-        sewing_no: json['sewing_no'] ?? '',
-        start_time: json['start_time'] ?? '',
-        end_time: json['end_time'] ?? '',
-        qty: json['item_qty'] ?? '',
-        weight: json['weight'] ?? '',
-        width: json['width'] ?? '',
-        length: json['length'] ?? '',
-        status: json['status'] ?? '',
-        notes: json['notes'] ?? '',
-        attachments: json['attachments'] ?? [],
-        work_orders: json['work_orders'],
-        start_by: json['start_by'],
-        end_by: json['end_by'],
-        maklon: json['maklon'] as bool?,
-        maklon_name: json['maklon_name'] ?? '',
-        machine: json['machine'] ?? {},
-        finished_item_id: json['finished_item_id'] as int?);
+      id: json['id'] as int?,
+      unit_id: json['item_unit_id'] as int?,
+      weight_unit_id: json['weight_unit_id'] as int?,
+      width_unit_id: json['width_unit_id'] as int?,
+      length_unit_id: json['length_unit_id'] as int?,
+      wo_id: json['wo_id'] as int?,
+      machine_id: json['machine_id'] as int?,
+      start_by_id: json['start_by_id'] as int?,
+      end_by_id: json['end_by_id'] as int?,
+      sewing_no: json['sewing_no'] ?? '',
+      start_time: json['start_time'] ?? '',
+      end_time: json['end_time'] ?? '',
+      qty: json['item_qty'] ?? '',
+      weight: json['weight'] ?? '',
+      width: json['width'] ?? '',
+      length: json['length'] ?? '',
+      status: json['status'] ?? '',
+      notes: json['notes'] ?? '',
+      attachments: json['attachments'] ?? [],
+      work_orders: json['work_orders'],
+      start_by: json['start_by'],
+      end_by: json['end_by'],
+      maklon: json['maklon'] as bool?,
+      maklon_name: json['maklon_name'] ?? '',
+      machine: json['machine'] ?? {},
+      finished_item_id: json['finished_item_id'] as int?,
+      machine_ids: json['machine_ids'] ?? [],
+      machines: json['machines'] ?? [],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -118,7 +125,9 @@ class Sewing {
       'maklon': maklon == true ? 1 : 0,
       'maklon_name': maklon == true ? maklon_name : '',
       'machine': machine,
-      'finished_item_id': finished_item_id
+      'finished_item_id': finished_item_id,
+      'machine_ids': machine_ids,
+      'machines': machines,
     };
   }
 }

@@ -2,48 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
-class FilterSelectForm extends StatefulWidget {
+class MultiSelectForm extends StatelessWidget {
   final String label;
-  final VoidCallback onTap;
+  final List<dynamic> selectedValues;
   final List<dynamic> selectedItems;
+  final String selectedLabel;
+  final VoidCallback onTap;
   final bool required;
-  final bool? isDisabled;
-  final Function(Map<dynamic, dynamic>)? onRemoveItem;
-  final VoidCallback? onClearAll;
-  final Function(List<dynamic>) onSelectionChanged;
+  final onRemoveItem;
+  final onClearAll;
+  final onSelectionChanged;
 
-  const FilterSelectForm(
+  const MultiSelectForm(
       {super.key,
       required this.label,
+      required this.selectedValues,
+      required this.selectedLabel,
       required this.onTap,
-      required this.selectedItems,
-      required this.required,
-      this.isDisabled,
-      this.onRemoveItem,
+      this.required = false,
+      this.selectedItems = const [],
       this.onClearAll,
-      required this.onSelectionChanged});
+      this.onRemoveItem,
+      this.onSelectionChanged});
 
-  @override
-  State<FilterSelectForm> createState() => _FilterSelectFormState();
-}
-
-class _FilterSelectFormState extends State<FilterSelectForm> {
   @override
   Widget build(BuildContext context) {
     return GroupForm(
-      label: widget.label,
-      req: widget.required,
+      label: label,
+      req: required,
       formControl: GestureDetector(
-        onTap: widget.isDisabled == true ? null : widget.onTap,
+        onTap: onTap,
         child: Container(
           padding: CustomTheme().padding('card'),
           decoration: CustomTheme().inputStaticDecorationRequired(),
-          child: widget.selectedItems.isEmpty
+          child: selectedItems.isEmpty
               ? Row(
                   children: [
                     Expanded(
                       child: Text(
-                        "Pilih ${widget.label}",
+                        "Pilih $label",
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: CustomTheme().fontSize('lg'),
@@ -64,22 +61,36 @@ class _FilterSelectFormState extends State<FilterSelectForm> {
                         Wrap(
                           spacing: 8,
                           runSpacing: 4,
-                          children: widget.selectedItems.map((item) {
-                            return InputChip(
-                              label: Text(item['label']),
-                              onDeleted: () {
-                                widget.onRemoveItem?.call(item);
-                                widget.onSelectionChanged(widget.selectedItems);
-                              },
-                            );
-                          }).toList(),
+                          children: selectedItems
+                              .map<Widget>((item) => InputChip(
+                                    label: Text(item['label']),
+                                    onDeleted: () {
+                                      onRemoveItem?.call(item);
+                                    },
+                                  ))
+                              .toList(),
                         ),
                         Icon(Icons.arrow_drop_down,
                             size: 18, color: CustomTheme().colors('base'))
                       ],
-                    )
+                    ),
                   ],
                 ),
+
+          //  TextFormField(
+          //   decoration: InputDecoration(
+          //     labelText: required ? '$label *' : label,
+          //     hintText: 'Pilih $label',
+          //     suffixIcon: const Icon(Icons.arrow_drop_down),
+          //   ),
+          //   controller: TextEditingController(text: selectedLabel),
+          //   validator: (value) {
+          //     if (required && selectedValues.isEmpty) {
+          //       return '$label wajib dipilih';
+          //     }
+          //     return null;
+          //   },
+          // ),
         ),
       ),
     );

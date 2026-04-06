@@ -84,6 +84,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
         forDyeing: true,
         withItemGrade: false,
         withQtyAndWeight: false,
+        woId: id,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final dyeing = Dyeing(

@@ -25,6 +25,11 @@ class InfoTab extends StatefulWidget {
 
 class _InfoTabState extends State<InfoTab> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: _buildWorkOrderCard(widget.isTablet),
@@ -96,7 +101,7 @@ class _InfoTabState extends State<InfoTab> {
                     ),
                     Text(
                       widget.data['created_at'] != null
-                          ? 'Dibuat oleh ${widget.data['user']['name']} pada ${DateFormat("dd MMM yyyy, HH.mm").format(DateTime.parse(widget.data['created_at']))}'
+                          ? 'Dibuat oleh ${widget.data['user']['name']} pada ${DateFormat("dd MMM yyyy, HH.mm").format(DateTime.parse(widget.data['created_at']).toLocal())}'
                           : DateFormat("dd MMM yyyy")
                               .format(DateTime.parse(widget.data['wo_date'])),
                       style: TextStyle(
@@ -129,9 +134,19 @@ class _InfoTabState extends State<InfoTab> {
           Expanded(
             child: _buildQuickInfoItem(
               icon: Icons.scale_outlined,
-              label: 'Qty Greige',
+              label: 'Berat Greige',
               value:
                   '${formatNumber(widget.data['greige_qty'])} ${widget.data['greige_unit']?['code']}',
+              isTablet: isTablet,
+            ),
+          ),
+          _buildVerticalDivider(),
+          Expanded(
+            child: _buildQuickInfoItem(
+              icon: Icons.numbers_outlined,
+              label: 'Qty WO',
+              value:
+                  '${formatNumber(widget.data['items'][0]['process_qty'])} ${widget.data['items'][0]['unit']?['code']}',
               isTablet: isTablet,
             ),
           ),

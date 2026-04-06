@@ -16,15 +16,6 @@ class CreatePacking extends StatelessWidget {
     final packing = Packing(
       wo_id:
           form['wo_id'] != null ? int.tryParse(form['wo_id'].toString()) : null,
-      weight_unit_id: form['unit_id'] != null
-          ? int.tryParse(form['unit_id'].toString())
-          : null,
-      machine_id: form['machine_id'] != null
-          ? int.tryParse(form['machine_id'].toString())
-          : null,
-      weight: form['weight'],
-      width: form['width'],
-      length: form['length'],
       notes: form['notes'],
       status: form['status'],
       start_time: form['start_time'],

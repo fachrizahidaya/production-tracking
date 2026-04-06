@@ -264,7 +264,7 @@ class _DetailState extends State<Detail> {
     final existingAttachments =
         (widget.data['attachments'] ?? []) as List<dynamic>;
 
-    final baseUrl = dotenv.env['IMAGE_URL'] ?? '';
+    final baseUrl = dotenv.env['IMAGE_URL_DEV'] ?? '';
 
     return existingAttachments.map<Widget>((item) {
       final bool isNew = item.containsKey('path');
@@ -398,6 +398,7 @@ class _DetailState extends State<Detail> {
           id: widget.data['id'],
           updateStatus: widget.data['can_update'],
           deleteStatus: widget.data['can_delete'],
+          label: widget.label,
           actions: [
             if (widget.data['can_update'] == true)
               IconButton(

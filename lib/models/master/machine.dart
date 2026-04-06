@@ -1,29 +1,30 @@
-// ignore_for_file: annotate_overrides
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:textile_tracking/helpers/service/base_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:textile_tracking/helpers/service/base_service.dart';
 import 'package:http/http.dart' as http;
 
-class Unit {
+class Machine {
   final int? id;
   final String? code;
   final String? name;
-  final int? value;
-  final String? label;
+  final String? status;
 
-  Unit({this.id, required this.name, this.code, this.value, this.label});
+  Machine({
+    this.id,
+    required this.name,
+    this.code,
+    this.status,
+  });
 
-  factory Unit.fromJson(Map<String, dynamic> json) {
-    return Unit(
-      id: json['id'] as int,
+  factory Machine.fromJson(Map<String, dynamic> json) {
+    return Machine(
+      id: json['id'] as int?,
       name: json['name'] ?? '',
       code: json['code'] ?? '',
-      value: json['value'] as int,
-      label: json['label'] ?? '',
+      status: json['status'] ?? '',
     );
   }
 
@@ -32,38 +33,44 @@ class Unit {
       'id': id,
       'code': code,
       'name': name,
-      'value': value,
-      'label': name,
+      'status': status,
+    };
+  }
+
+  /// 🔥 Special payload for PATCH status only
+  Map<String, dynamic> toStatusJson() {
+    return {
+      'status': status,
     };
   }
 }
 
-class UnitService extends BaseService<Unit> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/units';
+class MachineMasterService extends BaseService<Machine> {
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/machine';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
   int _currentPage = 1;
   final int _itemsPerPage = 20;
-  final List<Unit> _units = [];
 
   bool get isLoading => _isLoading;
   bool get hasMoreData => _hasMoreData;
-  List<Unit> get options => _units;
 
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {
-    if (isLoading || (!hasMoreData && !isInitialLoad)) return;
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {
+    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
       _currentPage = 1;
-      hasMoreData = true;
+      _hasMoreData = true;
       items.clear();
       notifyListeners();
     }
 
-    isLoading = true;
+    _isLoading = true;
     notifyListeners();
 
     try {
@@ -79,14 +86,14 @@ class UnitService extends BaseService<Unit> {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final responseData = jsonDecode(response.body);
         final List<dynamic> dataList = responseData['data'];
 
-        List<Unit> newItems =
-            dataList.map((item) => Unit.fromJson(item)).toList();
+        List<Machine> newItems =
+            dataList.map((item) => Machine.fromJson(item)).toList();
 
         if (newItems.length < _itemsPerPage || newItems.isEmpty) {
-          hasMoreData = false;
+          _hasMoreData = false;
         }
 
         if (newItems.isNotEmpty) {
@@ -94,12 +101,12 @@ class UnitService extends BaseService<Unit> {
           _currentPage++;
         }
       } else {
-        throw Exception('Failed to load units');
+        throw Exception('Failed to load machines');
       }
     } catch (e) {
-      throw Exception("Error fetching units: $e");
+      throw Exception("Error fetching machines: $e");
     } finally {
-      isLoading = false;
+      _isLoading = false;
       notifyListeners();
     }
   }
@@ -111,7 +118,7 @@ class UnitService extends BaseService<Unit> {
   }
 
   @override
-  Future<void> addItem(Unit item, ValueNotifier<bool> isSubmitting) async {
+  Future<void> addItem(Machine item, ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -143,9 +150,47 @@ class UnitService extends BaseService<Unit> {
     }
   }
 
+  Future<void> updateStatus(
+    String id,
+    String status,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
+    try {
+      isSubmitting.value = true;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      final response = await http.patch(
+        /// ✅ FIXED ENDPOINT
+        Uri.parse('$baseUrl/$id/status'),
+
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'status': status,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        await refetchItems();
+        notifyListeners();
+      } else {
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData['message'] ?? 'Failed to update status');
+      }
+    } catch (e) {
+      throw Exception("Error updating status: $e");
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
   @override
   Future<void> updateItem(
-      String id, Unit item, ValueNotifier<bool> isSubmitting) async {
+      String id, Machine item, ValueNotifier<bool> isSubmitting) async {
     try {
       isSubmitting.value = true;
 
@@ -206,66 +251,6 @@ class UnitService extends BaseService<Unit> {
       throw Exception("Error deleting unit: $e");
     } finally {
       isSubmitting.value = false;
-    }
-  }
-
-  Future<void> fetchOptions({
-    bool isInitialLoad = false,
-    String searchQuery = '',
-  }) async {
-    if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
-
-    if (isInitialLoad) {
-      _currentPage = 1;
-      _hasMoreData = true;
-      _units.clear();
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('access_token');
-
-      if (token == null) {
-        throw Exception('Access token is missing');
-      }
-
-      final response = await http
-          .get(Uri.parse('${dotenv.env['API_URL_DEV']}/unit/option'), headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      });
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(response.body);
-
-        final List<dynamic> dataList;
-
-        if (decoded is List) {
-          dataList = decoded;
-        } else if (decoded is Map<String, dynamic> &&
-            decoded.containsKey('data')) {
-          dataList = decoded['data'];
-        } else {
-          throw Exception("Unexpected response format: $decoded");
-        }
-
-        List<Unit> newUnits =
-            dataList.map((item) => Unit.fromJson(item)).toList();
-
-        _units.clear();
-        _units.addAll(newUnits);
-        _hasMoreData = false;
-      } else {
-        throw Exception('Failed to load units');
-      }
-    } catch (e) {
-      throw Exception('Error fetching units: $e');
-    } finally {
-      _isLoading = false;
-      notifyListeners();
     }
   }
 }

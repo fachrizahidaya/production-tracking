@@ -154,6 +154,7 @@ class _TabSectionState extends State<TabSection> {
   @override
   Widget build(BuildContext context) {
     bool isDisabled;
+    final machines = widget.form?['machines'] as List? ?? [];
 
     if (widget.withOnlyMaklon == true) {
       isDisabled = widget.form?['wo_id'] == null;
@@ -161,6 +162,10 @@ class _TabSectionState extends State<TabSection> {
       isDisabled = widget.form?['wo_id'] == null;
     } else if (widget.withMaklonOrMachine == true) {
       isDisabled = widget.form?['wo_id'] == null;
+    } else if (widget.label == 'Long Hemming' ||
+        widget.label == 'Cross Cutting' ||
+        widget.label == 'Sewing') {
+      isDisabled = widget.form?['wo_id'] == null || machines.isEmpty;
     } else {
       isDisabled =
           widget.form?['wo_id'] == null || widget.form?['machine_id'] == null;

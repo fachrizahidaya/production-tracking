@@ -5,6 +5,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/auth/auth_check.dart';
 import 'package:textile_tracking/models/dashboard/machine.dart';
 import 'package:textile_tracking/models/dashboard/work_order_summary.dart';
+import 'package:textile_tracking/models/master/machine.dart';
 import 'package:textile_tracking/models/master/unit.dart';
 import 'package:textile_tracking/models/dashboard/work_order_chart.dart';
 import 'package:textile_tracking/models/dashboard/work_order_process.dart';
@@ -12,7 +13,9 @@ import 'package:textile_tracking/models/dashboard/work_order_stats.dart';
 import 'package:textile_tracking/models/option/option_dyeing.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
+import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
+import 'package:textile_tracking/models/option/option_master_item_grade.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/cross_cutting.dart';
@@ -72,8 +75,10 @@ void main() async {
     ChangeNotifierProvider(create: (_) => UnitService()),
     ChangeNotifierProvider(create: (_) => OptionUnitService()),
     ChangeNotifierProvider(create: (_) => OptionMachineService()),
+    ChangeNotifierProvider(create: (_) => OptionItemTypeService()),
     ChangeNotifierProvider(create: (_) => OptionWorkOrderService()),
     ChangeNotifierProvider(create: (_) => OptionItemGradeService()),
+    ChangeNotifierProvider(create: (_) => OptionMasterItemGradeService()),
     ChangeNotifierProvider(create: (_) => OptionDyeingService()),
     ChangeNotifierProvider(create: (_) => OptionItemService()),
     ChangeNotifierProvider(create: (_) => WorkOrderStatsService()),
@@ -81,6 +86,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => WorkOrderProcessService()),
     ChangeNotifierProvider(create: (_) => WorkOrderSummaryService()),
     ChangeNotifierProvider(create: (_) => MachineService()),
+    ChangeNotifierProvider(create: (_) => MachineMasterService()),
   ], child: MyApp()));
 }
 

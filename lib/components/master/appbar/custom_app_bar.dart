@@ -16,7 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final handleFinish;
   final handleLogout;
   final id;
-  final String? label;
+  final label;
   final user;
   final deleteStatus;
   final updateStatus;
@@ -125,7 +125,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ],
           ),
-        if (updateStatus == true && (label != 'Sorting' || label != 'Packing'))
+        if (updateStatus == true)
           IconButton(
             icon: Icon(Icons.edit_outlined),
             onPressed: () {

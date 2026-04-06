@@ -64,6 +64,7 @@ class _FinishSortingState extends State<FinishSorting> {
   Widget build(BuildContext context) {
     return FinishProcess(
       title: 'Selesai Sorting',
+      label: 'Sorting',
       fetchWorkOrder: (service) async =>
           await service.fetchSortingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
@@ -86,9 +87,6 @@ class _FinishSortingState extends State<FinishSorting> {
           machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
           weight_unit_id:
               int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
-          length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? ''),
           notes: form['notes'],
           start_time: form['start_time'],
           end_time: form['end_time'],

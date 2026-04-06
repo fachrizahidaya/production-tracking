@@ -51,6 +51,9 @@ class ListForm extends StatefulWidget {
   final onGradeChanged;
   final dyeingLotNo;
   final handleSelectFinishedMaterial;
+  final weightGood;
+  final weightDefect;
+  final woData;
 
   const ListForm(
       {super.key,
@@ -99,7 +102,10 @@ class ListForm extends StatefulWidget {
       this.dyeingLotNo,
       this.forHemming,
       this.forSewing,
-      this.handleSelectFinishedMaterial});
+      this.handleSelectFinishedMaterial,
+      this.weightDefect,
+      this.weightGood,
+      this.woData});
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -215,6 +221,9 @@ class _ListFormState extends State<ListForm> {
         forSewing: widget.forSewing,
         forHemming: widget.forHemming,
         handleSelectFinishedMaterial: widget.handleSelectFinishedMaterial,
+        weightDefect: widget.weightDefect,
+        weightGood: widget.weightGood,
+        woData: widget.woData,
       ),
     );
   }

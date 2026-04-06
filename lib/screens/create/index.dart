@@ -63,7 +63,8 @@ class _CreateProcessState extends State<CreateProcess> {
     'nama_mesin': '',
     'nama_satuan': '',
     'maklon': false,
-    'maklon_name': ''
+    'maklon_name': '',
+    'machine_ids': [],
   };
 
   @override

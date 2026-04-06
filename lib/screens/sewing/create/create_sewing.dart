@@ -36,6 +36,11 @@ class CreateSewing extends StatelessWidget {
       attachments: form['attachments'],
       maklon: form['maklon'] == true,
       maklon_name: form['maklon_name'],
+      machine_ids: (form['machines'] as List?)
+          ?.map((e) => int.tryParse(e['value'].toString()))
+          .where((e) => e != null)
+          .cast<int>()
+          .toList(),
     );
 
     final message = await Provider.of<SewingService>(context, listen: false)

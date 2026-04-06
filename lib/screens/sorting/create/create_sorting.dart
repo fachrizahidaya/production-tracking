@@ -23,8 +23,6 @@ class CreateSorting extends StatelessWidget {
           ? int.tryParse(form['machine_id'].toString())
           : null,
       weight: form['weight'],
-      width: form['width'],
-      length: form['length'],
       notes: form['notes'],
       status: form['status'],
       start_time: form['start_time'],

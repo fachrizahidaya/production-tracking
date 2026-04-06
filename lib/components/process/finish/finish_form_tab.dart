@@ -32,6 +32,7 @@ class FinishFormTab extends StatefulWidget {
   final weightDozen;
   final gsm;
   final totalWeight;
+  final woData;
 
   final isSubmitting;
   final isFormIncomplete;
@@ -61,7 +62,8 @@ class FinishFormTab extends StatefulWidget {
   final onGradeChanged;
   final dyeingLotNo;
   final handleSelectFinishedMaterial;
-
+  final weightGood;
+  final weightDefect;
   const FinishFormTab(
       {super.key,
       this.form,
@@ -120,7 +122,10 @@ class FinishFormTab extends StatefulWidget {
       this.dyeingLotNo,
       this.forHemming,
       this.forSewing,
-      this.handleSelectFinishedMaterial});
+      this.handleSelectFinishedMaterial,
+      this.weightDefect,
+      this.weightGood,
+      this.woData});
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();
@@ -192,6 +197,9 @@ class _FinishFormTabState extends State<FinishFormTab>
                   forSewing: widget.forSewing,
                   handleSelectFinishedMaterial:
                       widget.handleSelectFinishedMaterial,
+                  weightDefect: widget.weightDefect,
+                  weightGood: widget.weightGood,
+                  woData: widget.woData,
                 ),
               ],
             ),

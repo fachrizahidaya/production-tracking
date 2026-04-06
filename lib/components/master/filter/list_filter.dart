@@ -1,12 +1,9 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, use_build_context_synchronously
 
-import 'dart:async';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/button/cancel_button.dart';
-import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/filter/filter_select_form.dart';
+import 'package:textile_tracking/components/master/filter/show_filter_select_dialog.dart';
 import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -54,15 +51,14 @@ class ListFilter<T> extends StatefulWidget {
 class _ListFilterState<T> extends State<ListFilter<T>> {
   TextEditingController dariTanggalInput = TextEditingController();
   TextEditingController sampaiTanggalInput = TextEditingController();
-  final TextEditingController _controller = TextEditingController();
   int? operatorId;
   String? namaOperator = '';
   int page = 0;
 
   List<dynamic> operatorOption = [];
 
-  List<Map<String, dynamic>> selectedStatuses = [];
-  List<Map<String, dynamic>> selectedOperators = [];
+  List<dynamic> selectedStatuses = [];
+  List<dynamic> selectedOperators = [];
 
   List<dynamic> statusOption = [
     {'label': 'Diproses', 'value': 'Diproses'},
@@ -77,7 +73,7 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
       final activeStatuses = widget.params['status'].split(',');
       selectedStatuses = statusOption
           .where((s) => activeStatuses.contains(s['value']))
-          .map((s) => Map<String, dynamic>.from(s))
+          .map((s) => Map<dynamic, dynamic>.from(s))
           .toList();
     }
 
@@ -108,7 +104,6 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
   void dispose() {
     dariTanggalInput.dispose();
     sampaiTanggalInput.dispose();
-    _controller.dispose();
     super.dispose();
   }
 
@@ -220,176 +215,14 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
             child: FilterSelectForm(
               label: "Status",
               onTap: () async {
-                final result = await showDialog<List<Map<String, dynamic>>>(
+                final result = await showFilterSelectDialog(
                   context: context,
-                  builder: (_) {
-                    List<dynamic> filteredList = List.from(statusOption);
-                    Timer? debounce;
-
-                    return Dialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: StatefulBuilder(
-                          builder: (context, setState) {
-                            void runSearch(String value) {
-                              if (debounce?.isActive ?? false) {
-                                debounce!.cancel();
-                              }
-
-                              debounce = Timer(Duration(milliseconds: 300), () {
-                                setState(() {
-                                  if (value.isEmpty) {
-                                    filteredList = List.from(statusOption);
-                                  } else {
-                                    filteredList = statusOption
-                                        .where((e) => e['label']
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(value.toLowerCase()))
-                                        .toList();
-                                  }
-                                });
-                              });
-                            }
-
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                      24.0, 16.0, 24.0, 8.0),
-                                  child: Text(
-                                    "Pilih Status",
-                                    style: TextStyle(
-                                      height: 1,
-                                      fontSize: CustomTheme().fontSize('xl'),
-                                      fontWeight:
-                                          CustomTheme().fontWeight('semibold'),
-                                    ),
-                                  ),
-                                ),
-                                Divider(),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      hintText: 'Cari',
-                                      prefixIcon: Icon(Icons.search),
-                                      suffixIcon: _controller.text.isNotEmpty
-                                          ? IconButton(
-                                              onPressed: () {
-                                                _controller.clear();
-                                                runSearch('');
-                                                setState(() {});
-                                              },
-                                              icon: Icon(Icons.close))
-                                          : null,
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          borderSide: BorderSide.none),
-                                    ),
-                                    onChanged: runSearch,
-                                  ),
-                                ),
-                                Divider(),
-                                Expanded(
-                                  child: Scrollbar(
-                                    child: ListView.separated(
-                                      itemCount: filteredList.length,
-                                      itemBuilder: (context, index) {
-                                        final item = filteredList[index];
-                                        final status = statusOption[index];
-
-                                        final isSelected = selectedStatuses.any(
-                                            (s) => s['value'] == item['value']);
-
-                                        return CheckboxListTile(
-                                          contentPadding: EdgeInsets.symmetric(
-                                              horizontal: 24),
-                                          value: isSelected,
-                                          title: Text(status['label']),
-                                          activeColor: Colors.green,
-                                          onChanged: (checked) {
-                                            setState(() {
-                                              if (checked == true) {
-                                                selectedStatuses.add(status);
-                                              } else {
-                                                selectedStatuses.remove(status);
-                                              }
-                                            });
-                                          },
-                                        );
-                                      },
-                                      separatorBuilder: (context, index) =>
-                                          Divider(),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 16, horizontal: 24),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(12),
-                                        bottomRight: Radius.circular(12)),
-                                    border: Border(
-                                      top: BorderSide(
-                                          color: Colors.grey.shade200),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: SizedBox(
-                                          height: 56,
-                                          child: CancelButton(
-                                            label: 'Reset',
-                                            onPressed: () {
-                                              setState(() {
-                                                selectedStatuses.clear();
-                                                filteredList =
-                                                    List.from(statusOption);
-                                              });
-                                            },
-                                            fontSize:
-                                                CustomTheme().fontSize('xl'),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: SizedBox(
-                                          height: 56,
-                                          child: FormButton(
-                                            label: 'Terapkan',
-                                            onPressed: () {
-                                              Navigator.pop(
-                                                  context, selectedStatuses);
-                                            },
-                                            fontSize:
-                                                CustomTheme().fontSize('xl'),
-                                          ),
-                                        ),
-                                      ),
-                                    ].separatedBy(CustomTheme().hGap('lg')),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    );
+                  title: "Pilih Status",
+                  options: statusOption,
+                  selectedItems: selectedStatuses,
+                  onHandleFilter: (selected) {
+                    widget.onHandleFilter(
+                        "status", selected.map((e) => e['value']).join(","));
                   },
                 );
 

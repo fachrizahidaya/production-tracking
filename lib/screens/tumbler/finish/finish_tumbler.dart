@@ -66,6 +66,7 @@ class _FinishTumblerState extends State<FinishTumbler> {
   Widget build(BuildContext context) {
     return FinishProcess(
       title: 'Selesai Tumbler',
+      label: 'Tumbler',
       fetchWorkOrder: (service) async =>
           await service.fetchTumblerFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,

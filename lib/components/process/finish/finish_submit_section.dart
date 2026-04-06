@@ -90,7 +90,6 @@ class _FinishSubmitSectionState extends State<FinishSubmitSection> {
 
                                       for (final barcode in barcodes) {
                                         final String? code = barcode.rawValue;
-
                                         if (code != null && code.isNotEmpty) {
                                           controller.stop();
                                           setState(() {

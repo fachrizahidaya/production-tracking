@@ -42,7 +42,6 @@ class _CreateSubmitSectionState extends State<CreateSubmitSection> {
 
   @override
   void dispose() {
-    controller.dispose();
     super.dispose();
   }
 

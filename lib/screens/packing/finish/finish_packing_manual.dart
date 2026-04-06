@@ -15,6 +15,7 @@ class FinishPackingManual extends StatefulWidget {
   final forDyeing;
   final forSewing;
   final forHemming;
+  final woId;
 
   const FinishPackingManual(
       {super.key,
@@ -29,7 +30,8 @@ class FinishPackingManual extends StatefulWidget {
       this.withItemGrade,
       this.withQtyAndWeight,
       this.forHemming,
-      this.forSewing});
+      this.forSewing,
+      this.woId});
 
   @override
   State<FinishPackingManual> createState() => _FinishPackingManualState();
@@ -73,6 +75,7 @@ class _FinishPackingManualState extends State<FinishPackingManual> {
       forPacking: widget.forPacking,
       forSewing: widget.forSewing,
       forHemming: widget.forHemming,
+      woId: widget.woId,
     );
   }
 }

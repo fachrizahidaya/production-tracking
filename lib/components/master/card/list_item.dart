@@ -148,6 +148,12 @@ class ListItem extends StatelessWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
+          _buildInfoChip(
+            title: 'No. OP',
+            icon: Icons.design_services_outlined,
+            label: item['greige_item_op_no']?.toString() ?? '-',
+            isTablet: isTablet,
+          ),
           if (item['variants'][2] != null)
             _buildInfoChip(
               title: 'Desain',
@@ -316,62 +322,53 @@ class ListItem extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (label != 'Long Hemming' ||
-              label != 'Cross Cutting' ||
-              label != ' Sewing' ||
-              label != ' Embroidery' ||
-              label != ' Printing' ||
-              label != ' Packing')
-            Text(
-              _formatQuantity(item['weight']),
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
-                fontWeight: CustomTheme().fontWeight('bold'),
-                color: CustomTheme().buttonColor('primary'),
-              ),
+          // if (label != 'Long Hemming' ||
+          //     label != 'Cross Cutting' ||
+          //     label != ' Sewing' ||
+          //     label != ' Embroidery' ||
+          //     label != ' Printing' ||
+          //     label != ' Packing')
+          // if (label == 'Long Hemming' ||
+          //     label == 'Cross Cutting' ||
+          //     label == ' Sewing' ||
+          //     label == ' Embroidery' ||
+          //     label == ' Printing' ||
+          //     label == ' Packing')
+          Text(
+            _formatQuantity(item['weight']),
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
+              fontWeight: CustomTheme().fontWeight('bold'),
+              color: CustomTheme().buttonColor('primary'),
             ),
-          if (label == 'Long Hemming' ||
-              label == 'Cross Cutting' ||
-              label == ' Sewing' ||
-              label == ' Embroidery' ||
-              label == ' Printing' ||
-              label == ' Packing')
-            Text(
-              _formatQuantity(item['qty']),
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
-                fontWeight: CustomTheme().fontWeight('bold'),
-                color: CustomTheme().buttonColor('primary'),
-              ),
+          ),
+          Text(
+            item['weight_unit']?['code']?.toString() ?? '-',
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('sm'),
+              color: Colors.grey[600],
+              fontWeight: CustomTheme().fontWeight('semibold'),
             ),
-          if (label != 'Long Hemming' ||
-              label != 'Cross Cutting' ||
-              label != ' Sewing' ||
-              label != ' Embroidery' ||
-              label != ' Printing' ||
-              label != ' Packing')
-            Text(
-              item['weight_unit']?['code']?.toString() ?? '-',
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('sm'),
-                color: Colors.grey[600],
-                fontWeight: CustomTheme().fontWeight('semibold'),
-              ),
+          ),
+          SizedBox(
+            height: 12,
+          ),
+          Text(
+            _formatQuantity(item['qty']),
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
+              fontWeight: CustomTheme().fontWeight('bold'),
+              color: CustomTheme().buttonColor('primary'),
             ),
-          if (label == 'Long Hemming' ||
-              label == 'Cross Cutting' ||
-              label == ' Sewing' ||
-              label == ' Embroidery' ||
-              label == ' Printing' ||
-              label == ' Packing')
-            Text(
-              item['unit']?['code']?.toString() ?? '-',
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('sm'),
-                color: Colors.grey[600],
-                fontWeight: CustomTheme().fontWeight('semibold'),
-              ),
+          ),
+          Text(
+            item['unit']?['code']?.toString() ?? '-',
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('sm'),
+              color: Colors.grey[600],
+              fontWeight: CustomTheme().fontWeight('semibold'),
             ),
+          ),
         ],
       ),
     );

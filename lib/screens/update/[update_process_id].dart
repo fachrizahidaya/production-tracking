@@ -939,7 +939,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${machine['code'] != null ? machine['code'] : ''} ${machine['code'] != null ? '-' : ''} ${machine['name'] ?? '-'}',
+                                  '${machine['code'] ?? ''} ${machine['code'] != null ? '-' : ''} ${machine['name'] ?? '-'}',
                                   style: TextStyle(fontWeight: FontWeight.w500),
                                 ),
                                 SizedBox(width: 8),
@@ -1246,7 +1246,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                             ].separatedBy(SizedBox(width: 4)),
                           ),
                         );
-                      }).toList(),
+                      }),
                   ],
                 ),
               ),

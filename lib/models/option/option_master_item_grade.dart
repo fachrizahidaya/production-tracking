@@ -17,7 +17,7 @@ class OptionMasterItemGrade {
   factory OptionMasterItemGrade.fromJson(Map<String, dynamic> json) {
     return OptionMasterItemGrade(
       value: json['id'],
-      label: '${json['code']} - ${json['description']}',
+      label: '${json['code']}',
     );
   }
 

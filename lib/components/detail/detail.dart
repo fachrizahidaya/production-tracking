@@ -400,51 +400,51 @@ class _DetailState extends State<Detail> {
           deleteStatus: widget.data['can_delete'],
           label: widget.label,
           actions: [
-            if (widget.data['can_update'] == true)
-              IconButton(
-                icon: const Icon(Icons.task_alt_outlined, color: Colors.orange),
-                onPressed: () {
-                  final String woId = widget.data['wo_id'].toString();
-                  final String processId = widget.data['id'].toString();
+            // if (widget.data['can_update'] == true)
+            // IconButton(
+            //   icon: const Icon(Icons.task_alt_outlined, color: Colors.orange),
+            //   onPressed: () {
+            //     final String woId = widget.data['wo_id'].toString();
+            //     final String processId = widget.data['id'].toString();
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => FinishProcess(
-                        title: "Selesai ${widget.label}",
-                        manualWoId: woId,
-                        manualProcessId: processId,
-                        formPageBuilder: (context, id, processId, data, form,
-                            handleSubmit, handleChangeInput) {
-                          return FinishProcessManual(
-                            id: woId,
-                            processId: processId,
-                            idProcess: widget.idProcess,
-                            data: widget.data,
-                            form: form,
-                            handleSubmit: widget.handleSubmit,
-                            handleChangeInput: widget.handleChangeInput,
-                            title: 'Selesai ${widget.label}',
-                            label: widget.label,
-                            fetchWorkOrder: widget.fetchFinish,
-                            getWorkOrderOptions: (service) =>
-                                service.dataListOption,
-                            processService: widget.processService,
-                            forDyeing: widget.forDyeing,
-                            withItemGrade: widget.withItemGrade,
-                            withQtyAndWeight: widget.withQtyAndWeight,
-                            forPacking: widget.forPacking,
-                            fetchItemGrade: widget.fetchItemGrade,
-                            getItemGradeOptions: (service) =>
-                                service.dataListOption,
-                            itemGradeOption: widget.itemGradeOption,
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                },
-              ),
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (_) => FinishProcess(
+            //           title: "Selesai ${widget.label}",
+            //           manualWoId: woId,
+            //           manualProcessId: processId,
+            //           formPageBuilder: (context, id, processId, data, form,
+            //               handleSubmit, handleChangeInput) {
+            //             return FinishProcessManual(
+            //               id: woId,
+            //               processId: processId,
+            //               idProcess: widget.idProcess,
+            //               data: widget.data,
+            //               form: form,
+            //               handleSubmit: widget.handleSubmit,
+            //               handleChangeInput: widget.handleChangeInput,
+            //               title: 'Selesai ${widget.label}',
+            //               label: widget.label,
+            //               fetchWorkOrder: widget.fetchFinish,
+            //               getWorkOrderOptions: (service) =>
+            //                   service.dataListOption,
+            //               processService: widget.processService,
+            //               forDyeing: widget.forDyeing,
+            //               withItemGrade: widget.withItemGrade,
+            //               withQtyAndWeight: widget.withQtyAndWeight,
+            //               forPacking: widget.forPacking,
+            //               fetchItemGrade: widget.fetchItemGrade,
+            //               getItemGradeOptions: (service) =>
+            //                   service.dataListOption,
+            //               itemGradeOption: widget.itemGradeOption,
+            //             );
+            //           },
+            //         ),
+            //       ),
+            //     );
+            //   },
+            // ),
           ],
         ),
         body: SafeArea(

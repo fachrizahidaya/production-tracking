@@ -42,6 +42,9 @@ class _FinishSortingState extends State<FinishSorting> {
     'nama_satuan_panjang': '',
     'nama_satuan_lebar': '',
     'nama_satuan': '',
+    'combing': '',
+    'spraying': '',
+    'rework_long_hemming': '',
   };
 
   @override
@@ -94,6 +97,10 @@ class _FinishSortingState extends State<FinishSorting> {
           end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
           attachments: form['attachments'],
           grades: form['grades'],
+          defects: form['defects'],
+          combing: form['combing'],
+          spraying: form['spraying'],
+          rework_long_hemming: form['rework_long_hemming'],
         );
 
         final message =

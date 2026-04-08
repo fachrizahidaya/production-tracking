@@ -9,6 +9,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
+import 'package:textile_tracking/models/master/machine.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
@@ -212,7 +213,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   void _syncDefectsWithOptions() {
-    /// ✅ ONLY KEEP EXISTING DEFECTS (don't auto-create all types)
     final List<Map<String, dynamic>> updated = [];
 
     for (var defect in _defects) {
@@ -274,8 +274,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
   Future<void> _handleSubmit(String id) async {
     try {
-      // Ensure grades and defects are updated in form before submitting
-
       if (widget.handleSubmitToService != null) {
         await widget.handleSubmitToService!(
             context, id, _form, _firstSubmitting);
@@ -300,7 +298,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       _applyDataToControllers(fetched);
     });
 
-    /// 👇 Call WO after main data is ready
     final woId = fetched?['wo_id'];
     if (woId != null) {
       await _getWoView(woId);
@@ -315,10 +312,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       _defectWeightController.text = data['bs_weight'].toString();
       _form['bs_weight'] = data['bs_weight'];
     }
-    if (data['item_qty'] != null) {
-      _qtyItemController.text = data['item_qty'].toString();
-      _form['item_qty'] = data['item_qty'];
-    }
+
     if (data['weight_per_dozen'] != null) {
       _weightDozenController.text = data['weight_per_dozen'].toString();
       _form['weight_per_dozen'] = data['weight_per_dozen'];
@@ -355,7 +349,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     _combingController.text = d['combing']?.toString() ?? '';
     _sprayingController.text = d['spraying']?.toString() ?? '';
 
-    _form['item_qty'] = d['item_qty'];
+    _form['item_qty'] = d['item_qty']?.toString() ?? '';
     _form['weight'] = d['weight'];
     _form['qty'] = d['qty']?.toString() ?? '';
     _form['maklon_name'] = d['maklon_name'];
@@ -369,7 +363,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     _form['machine_ids'] = List.from(d['machine_ids'] ?? []);
     _form['grades'] = List.from(d['grades'] ?? []);
 
-    /// ✅ NORMALIZE DEFECTS FROM API TO INTERNAL FORMAT
     final rawDefects = List.from(d['defects'] ?? []);
     _form['defects'] = rawDefects.map<Map<String, dynamic>>((defect) {
       return {
@@ -400,17 +393,14 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       _form['nama_greige'] = d['greige_item']['name'].toString();
     }
 
-    /// ✅ ADD THIS
     _grades = (_form['grades'] ?? [])
         .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
         .toList();
 
-    /// ✅ DEFECTS ALREADY NORMALIZED IN _applyDataToControllers
     _defects = (_form['defects'] ?? [])
         .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
         .toList();
 
-    // Initialize qty controllers for grades
     for (var controller in _qtyControllers) {
       controller.dispose();
     }
@@ -421,7 +411,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       );
     }
 
-    // Initialize defect qty controllers
     for (var controller in _defectQtyControllers) {
       controller.dispose();
     }
@@ -510,7 +499,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     );
 
     if (result == true) {
-      _getDataView();
+      await _getDataView();
     }
   }
 
@@ -577,7 +566,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
       return {
         ...m,
-        'status': latest['status'], // 🔥 update status from API
+        'status': latest['status'],
       };
     }).toList();
 
@@ -595,18 +584,22 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     final service = Provider.of<OptionMachineService>(context, listen: false);
 
     try {
+      final currentMachineIds =
+          (data['machines'] as List<dynamic>?)?.map((m) => m['id']).toList() ??
+              [];
+
       if (widget.fetchMachine != null) {
-        await widget.fetchMachine!(service);
+        await widget.fetchMachine!(service, currentMachineIds);
       } else {
         await service.fetchOptions();
       }
 
-      final data = widget.getMachineOptions != null
+      final machineData = widget.getMachineOptions != null
           ? widget.getMachineOptions!(service)
           : service.dataListOption;
 
       setState(() {
-        machineOption = data;
+        machineOption = machineData;
       });
 
       _syncMachineStatusWithOptions();
@@ -622,17 +615,30 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   String getMachineStatus(dynamic machineId) {
-    final found = machineOption.firstWhere(
+    final foundInOption = machineOption.firstWhere(
       (opt) => opt['value'] == machineId,
       orElse: () => null,
     );
 
-    if (found != null && found['status'] != null) {
-      return found['status'];
+    if (foundInOption != null && foundInOption['status'] != null) {
+      return foundInOption['status'];
     }
 
-    /// ❌ default if not found
-    return 'Sedang Digunakan';
+    try {
+      final machineService =
+          Provider.of<MachineMasterService>(context, listen: false);
+      final foundInMaster = machineService.items.firstWhere(
+        (machine) => machine.id == machineId,
+        // orElse: () => null,
+      );
+
+      if (foundInMaster.status != null) {
+        return foundInMaster.status!;
+      }
+    } catch (e) {}
+
+    /// ❌ default if not found in both sources
+    return 'Tersedia';
   }
 
   void _onGradeChanged(List<dynamic> grades) {
@@ -882,6 +888,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           result = {
             'id': selected['value'],
             'name': selected['label'],
+            'code': selected['code'],
+            'status': selected['status'] ?? 'Tersedia',
           };
         },
         selected: '',

@@ -64,6 +64,15 @@ class FinishFormTab extends StatefulWidget {
   final handleSelectFinishedMaterial;
   final weightGood;
   final weightDefect;
+  final packingQty;
+  final combing;
+  final spraying;
+  final reworkLongHemming;
+  final itemTypeOption;
+  final defects;
+  final defectQty;
+  final handleUpdateDefect;
+
   const FinishFormTab(
       {super.key,
       this.form,
@@ -125,7 +134,15 @@ class FinishFormTab extends StatefulWidget {
       this.handleSelectFinishedMaterial,
       this.weightDefect,
       this.weightGood,
-      this.woData});
+      this.woData,
+      this.packingQty,
+      this.combing,
+      this.spraying,
+      this.reworkLongHemming,
+      this.itemTypeOption,
+      this.defects,
+      this.defectQty,
+      this.handleUpdateDefect});
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();
@@ -200,6 +217,14 @@ class _FinishFormTabState extends State<FinishFormTab>
                   weightDefect: widget.weightDefect,
                   weightGood: widget.weightGood,
                   woData: widget.woData,
+                  packingQty: widget.packingQty,
+                  combing: widget.combing,
+                  spraying: widget.spraying,
+                  reworkLongHemming: widget.reworkLongHemming,
+                  itemTypeOption: widget.itemTypeOption,
+                  defects: widget.defects,
+                  defectQty: widget.defectQty,
+                  handleUpdateDefect: widget.handleUpdateDefect,
                 ),
               ],
             ),

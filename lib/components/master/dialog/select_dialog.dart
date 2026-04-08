@@ -196,7 +196,11 @@ class _SelectDialogState extends State<SelectDialog> {
                                       Expanded(
                                         child: Text(
                                           item['label'],
-                                          style: TextStyle(),
+                                          style: TextStyle(
+                                            fontWeight: isSelected
+                                                ? FontWeight.w800
+                                                : FontWeight.w400,
+                                          ),
                                         ),
                                       ),
                                       if (isSelected)

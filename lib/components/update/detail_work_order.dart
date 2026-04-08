@@ -91,18 +91,21 @@ class _DetailWorkOrderState extends State<DetailWorkOrder>
     return LayoutBuilder(
       builder: (context, constraints) {
         final isTablet = constraints.maxWidth > 600;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InfoTab(
-              data: widget.data,
-              label: widget.label,
-              isTablet: isTablet,
-            ),
-            ItemTab(
-              data: widget.data,
-            )
-          ].separatedBy(CustomTheme().vGap('xl')),
+        return SingleChildScrollView(
+          padding: CustomTheme().padding('content'),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InfoTab(
+                data: widget.data,
+                label: widget.label,
+                isTablet: isTablet,
+              ),
+              ItemTab(
+                data: widget.data,
+              )
+            ].separatedBy(CustomTheme().vGap('xl')),
+          ),
         );
       },
     );

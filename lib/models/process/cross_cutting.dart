@@ -11,15 +11,11 @@ class CrossCutting {
   final int? end_by_id;
   final String? end_time;
   final String? qty;
-  final String? weight;
-  final String? width;
-  final String? length;
+
   final String? notes;
   final String? status;
   final int? unit_id;
-  final int? weight_unit_id;
-  final int? width_unit_id;
-  final int? length_unit_id;
+
   final int? wo_id;
   final int? machine_id;
   final attachments;
@@ -37,14 +33,8 @@ class CrossCutting {
       this.cc_no,
       this.start_time,
       this.end_time,
-      this.weight,
-      this.width,
-      this.length,
       this.notes,
       this.status,
-      this.weight_unit_id,
-      this.width_unit_id,
-      this.length_unit_id,
       this.wo_id,
       this.machine_id,
       this.start_by_id,
@@ -65,9 +55,6 @@ class CrossCutting {
   factory CrossCutting.fromJson(Map<String, dynamic> json) {
     return CrossCutting(
       id: json['id'] as int?,
-      weight_unit_id: json['weight_unit_id'] as int?,
-      length_unit_id: json['length_unit_id'] as int?,
-      width_unit_id: json['width_unit_id'] as int?,
       unit_id: json['item_unit_id'] as int?,
       wo_id: json['wo_id'] as int?,
       machine_id: json['machine_id'] as int?,
@@ -77,9 +64,6 @@ class CrossCutting {
       start_time: json['start_time'] ?? '',
       end_time: json['end_time'] ?? '',
       qty: json['item_qty'] ?? '',
-      weight: json['weight'] ?? '',
-      width: json['width'] ?? '',
-      length: json['length'] ?? '',
       status: json['status'] ?? '',
       notes: json['notes'] ?? '',
       attachments: json['attachments'] ?? [],
@@ -98,9 +82,6 @@ class CrossCutting {
     return {
       'id': id,
       'item_unit_id': unit_id,
-      'weight_unit_id': weight_unit_id,
-      'length_unit_id': length_unit_id,
-      'width_unit_id': width_unit_id,
       'wo_id': wo_id,
       'machine_id': machine_id,
       'start_by_id': start_by_id,
@@ -110,9 +91,6 @@ class CrossCutting {
       'end_time': end_time,
       'wo_no': wo_no,
       'item_qty': qty,
-      'weight': weight,
-      'width': width,
-      'length': length,
       'notes': notes,
       'status': status,
       'attachments': attachments,

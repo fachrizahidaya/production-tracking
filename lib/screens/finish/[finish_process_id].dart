@@ -13,6 +13,7 @@ import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
+import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/components/process/finish/functions/fetch_function.dart';
 
@@ -80,6 +81,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   bool _isFetchingFinishedMaterial = false;
   bool _isFetchingUnit = false;
   bool _isFetchingGrade = false;
+  bool _isFetchingItemType = false;
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
@@ -90,6 +92,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   final TextEditingController _lengthController = TextEditingController();
   final TextEditingController _widthController = TextEditingController();
   final TextEditingController _qtyController = TextEditingController();
+  final TextEditingController _packingQtyController = TextEditingController();
   final TextEditingController _weightDozenController = TextEditingController();
   final TextEditingController _gsmController = TextEditingController();
   final TextEditingController _totalWeightController = TextEditingController();
@@ -97,13 +100,20 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   final TextEditingController _dyeingLotNoController = TextEditingController();
   final TextEditingController _weightGoodController = TextEditingController();
   final TextEditingController _weightDefectController = TextEditingController();
+  final TextEditingController _combingController = TextEditingController();
+  final TextEditingController _sprayingController = TextEditingController();
+  final TextEditingController _reworkLongHemmingController =
+      TextEditingController();
   final List<TextEditingController> _qtyControllers = [];
   final List<TextEditingController> _notesControllers = [];
+  final List<TextEditingController> _defectQtyControllers = [];
+
   List<Map<String, dynamic>> _selectedUnits = [];
 
   late List<dynamic> workOrderOption = [];
   late List<dynamic> finishedItemOption = [];
   late List<dynamic> itemGradeOption = [];
+  late List<dynamic> itemTypeOption = [];
   late List<dynamic> unitOption = [];
 
   Map<String, dynamic> woData = {};
@@ -111,6 +121,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   String? _weightWarningValidationMessage;
   String? _itemWarningValidationMessage;
+
+  late List<Map<String, dynamic>> _defects;
 
   final FetchFunction _fetcher = FetchFunction();
 
@@ -120,7 +132,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   void initState() {
     super.initState();
 
-    _qtyController.text = widget.form?['qty']?.toString() ?? '';
+    _packingQtyController.text = widget.form?['qty']?.toString() ?? '';
     _qtyItemController.text = widget.form?['item_qty']?.toString() ?? '';
     _weightController.text = widget.form?['weight']?.toString() ?? '';
     _noteController.text = widget.form?['notes']?.toString() ?? '';
@@ -133,7 +145,14 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['total_weight']?.toString() ?? '';
     _weightDefectController.text = widget.form?['bs_weight']?.toString() ?? '';
     _weightGoodController.text = widget.form?['good_weight']?.toString() ?? '';
+    _combingController.text = widget.form?['combing']?.toString() ?? '';
+    _sprayingController.text = widget.form?['spraying']?.toString() ?? '';
+    _reworkLongHemmingController.text =
+        widget.form?['rework_long_hemming']?.toString() ?? '';
 
+    _defects = (widget.form?['defects'] ?? [])
+        .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
+        .toList();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _postInit();
     });
@@ -155,10 +174,47 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     await _handleFetchWorkOrder();
     await _handleFetchItemGrade();
     await _handleFetchUnit();
+    await _handleFetchItemType();
+    _syncDefectsWithOptions();
 
     setState(() {
       _firstLoading = false;
     });
+  }
+
+  void _syncDefectsWithOptions() {
+    final List<Map<String, dynamic>> updated = [];
+
+    for (var defect in _defects) {
+      // Extract defect type ID from nested structure or from flat structure
+      final defectTypeId =
+          defect['type']?['id'] ?? defect['defect_type_id'] ?? defect['id'];
+
+      // Check if this defect type exists in master data
+      final exists = (itemTypeOption ?? []).firstWhere(
+        (type) => type['id'].toString() == defectTypeId.toString(),
+        orElse: () => <String, dynamic>{},
+      );
+
+      // Only keep if exists in master data
+      if (exists.isNotEmpty) {
+        updated.add({
+          'defect_type_id': defectTypeId,
+          'qty': defect['qty'] ?? '0',
+        });
+      }
+    }
+
+    _defects = updated;
+    _handleChangeInput('defects', _defects);
+  }
+
+  void updateDefect(int index, String key, dynamic value) {
+    setState(() {
+      _defects[index][key] = value;
+    });
+
+    _handleChangeInput('defects', _defects);
   }
 
   Future<void> _handleFetchWorkOrder() async {
@@ -256,6 +312,33 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+  Future<void> _handleFetchItemType({String search = ''}) async {
+    final service = context.read<OptionItemTypeService>();
+
+    setState(() {
+      _isFetchingItemType = true;
+    });
+
+    try {
+      await service.fetchOptions(
+        isInitialLoad: true,
+        searchQuery: search,
+      );
+
+      setState(() {
+        itemTypeOption = service.dataListOption;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
+    } finally {
+      setState(() {
+        _isFetchingItemType = false;
+      });
+    }
+  }
+
   Future<void> _handleFetchUnit() async {
     setState(() {
       _isFetchingUnit = true;
@@ -329,6 +412,20 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['bs_weight'] = data['bs_weight'];
       }
 
+      if (data['combing'] != null) {
+        _combingController.text = data['combing'].toString();
+        widget.form?['combing'] = data['combing'];
+      }
+      if (data['spraying'] != null) {
+        _sprayingController.text = data['spraying'].toString();
+        widget.form?['spraying'] = data['spraying'];
+      }
+      if (data['rework_long_hemming'] != null) {
+        _reworkLongHemmingController.text =
+            data['rework_long_hemming'].toString();
+        widget.form?['rework_long_hemming'] = data['rework_long_hemming'];
+      }
+
       if (data['weight_per_dozen'] != null) {
         _weightDozenController.text = data['weight_per_dozen'].toString();
         widget.form?['weight_per_dozen'] = data['weight_per_dozen'];
@@ -343,7 +440,11 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       }
       if (data['item_qty'] != null) {
         _qtyItemController.text = data['item_qty'].toString();
-        widget.form?['item_qty'] = data['item_qty'];
+        widget.form?['item_qty'] = data['item_qty'].toString();
+      }
+      if (data['qty'] != null) {
+        _packingQtyController.text = data['qty'].toString();
+        widget.form?['qty'] = data['qty'];
       }
       if (data['qty'] != null) {
         _qtyController.text = woData['greige_qty'].toString();
@@ -403,6 +504,18 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       if (data['grades'] != null) {
         widget.form?['grades'] = List.from(data['grades']);
       }
+      final rawDefects = List.from(data['defects'] ?? []);
+      widget.form?['defects'] = rawDefects.map<Map<String, dynamic>>((defect) {
+        return {
+          'defect_type_id':
+              defect['type']?['id'] ?? defect['defect_type_id'] ?? defect['id'],
+          'qty': defect['qty'] ?? '0',
+        };
+      }).toList();
+      _defects = (widget.form?['defects'] ?? [])
+          .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
+          .toList();
+
       if (data['maklon'] != null) {
         widget.form?['maklon'] = data['maklon'];
         widget.form?['maklon'] = data['maklon'];
@@ -410,6 +523,16 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       if (data['maklon_name'] != null) {
         widget.form?['maklon_name'] = data['maklon_name'].toString();
         widget.form?['maklon_name'] = data['maklon_name'].toString();
+      }
+
+      for (var controller in _defectQtyControllers) {
+        controller.dispose();
+      }
+      _defectQtyControllers.clear();
+      for (var defect in _defects) {
+        _defectQtyControllers.add(
+          TextEditingController(text: defect['qty']?.toString() ?? '0'),
+        );
       }
     });
   }
@@ -489,9 +612,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
 
     if (context.mounted) {
-      /// ✅ SYNC ALL CONTROLLER VALUES TO FORM BEFORE SUBMIT
       widget.form?['good_weight'] = _weightGoodController.text;
-      widget.form?['bs_weight'] = _weightDefectController.text;
+      widget.form?['combing'] = _combingController.text;
+      widget.form?['spraying'] = _sprayingController.text;
+      widget.form?['rework_long_hemming'] = _reworkLongHemmingController.text;
       widget.form?['weight'] = _weightController.text;
       widget.form?['qty'] = _qtyController.text;
       widget.form?['weight_per_dozen'] = _weightDozenController.text;
@@ -830,17 +954,24 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     });
   }
 
-  /// ✅ HANDLE FORM INPUT CHANGES
   void _handleChangeInput(String fieldName, dynamic value) {
     setState(() {
       widget.form![fieldName] = value;
 
-      /// 🔥 SYNC CONTROLLERS WITH FORM
       if (fieldName == 'good_weight' && value != null) {
         _weightGoodController.text = value.toString();
       }
       if (fieldName == 'bs_weight' && value != null) {
         _weightDefectController.text = value.toString();
+      }
+      if (fieldName == 'combing' && value != null) {
+        _combingController.text = value.toString();
+      }
+      if (fieldName == 'spraying' && value != null) {
+        _sprayingController.text = value.toString();
+      }
+      if (fieldName == 'rework_long_hemming' && value != null) {
+        _reworkLongHemmingController.text = value.toString();
       }
       if (fieldName == 'weight' && value != null) {
         _weightController.text = value.toString();
@@ -915,6 +1046,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               handleSelectUnit: _selectUnit,
                               handleSelectWidthUnit: _selectWidthUnit,
                               qty: _qtyItemController,
+                              packingQty: _packingQtyController,
                               length: _lengthController,
                               width: _widthController,
                               note: _noteController,
@@ -950,8 +1082,15 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               onGradeChanged: _onGradeChanged,
                               dyeingLotNo: _dyeingLotNoController,
                               weightDefect: _weightDefectController,
+                              combing: _combingController,
+                              spraying: _sprayingController,
+                              reworkLongHemming: _reworkLongHemmingController,
                               weightGood: _weightGoodController,
                               woData: woData,
+                              itemTypeOption: itemTypeOption,
+                              defects: _defects,
+                              defectQty: _defectQtyControllers,
+                              handleUpdateDefect: updateDefect,
                             ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],

@@ -66,7 +66,10 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/long-hemmings',
-      fetchMachine: (service) => service.fetchOptionsLongHemming(),
+      fetchMachine: (service, currentMachineIds) =>
+          service.fetchOptionsLongHemming(
+        currentMachineIds: currentMachineIds,
+      ),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withMaklon: false,

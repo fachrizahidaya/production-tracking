@@ -69,6 +69,7 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
   Widget build(BuildContext context) {
     return FinishProcess(
       title: 'Selesai Cross Cutting',
+      label: 'Cross Cutting',
       fetchWorkOrder: (service) async =>
           await service.fetchCuttingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
@@ -90,16 +91,7 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
             wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
             machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
             unit_id: int.tryParse(form['item_unit_id']?.toString() ?? ''),
-            weight_unit_id:
-                int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-            width_unit_id:
-                int.tryParse(form['width_unit_id']?.toString() ?? ''),
-            length_unit_id:
-                int.tryParse(form['length_unit_id']?.toString() ?? ''),
             qty: form['item_qty'],
-            weight: form['weight'],
-            width: form['width'],
-            length: form['length'],
             notes: form['notes'],
             start_time: form['start_time'],
             end_time: form['end_time'],

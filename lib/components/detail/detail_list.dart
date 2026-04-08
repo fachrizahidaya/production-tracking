@@ -78,6 +78,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     super.initState();
   }
 
+  String capitalizeWords(String text) {
+    return text.toLowerCase().split(' ').map((word) {
+      if (word.isEmpty) return word;
+      return word[0].toUpperCase() + word.substring(1);
+    }).join(' ');
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -194,7 +201,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 _buildStatusBadge(isTablet),
               ],
             ),
-            // Quick Info Row
             if (widget.data['machine_id'] != null ||
                 widget.data['maklon_name'] != null)
               _buildQuickInfoRow(isTablet),
@@ -204,7 +210,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     );
   }
 
-  /// Status Badge
   Widget _buildStatusBadge(bool isTablet) {
     return CustomBadge(
       title: widget.data['status']?.toString() ?? '-',
@@ -213,7 +218,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     );
   }
 
-  /// Quick Info Row di Header
   Widget _buildQuickInfoRow(bool isTablet) {
     return Container(
       padding: EdgeInsets.all(isTablet ? 16 : 12),
@@ -259,7 +263,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     );
   }
 
-  /// Quick Info Item
   Widget _buildQuickInfoItem({
     required IconData icon,
     required String label,
@@ -294,7 +297,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     );
   }
 
-  /// Vertical Divider
   Widget _buildVerticalDivider() {
     return Container(
       width: 1,
@@ -304,255 +306,9 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     );
   }
 
-  /// Layout untuk Tablet
-  Widget _buildTabletLayout(bool isLargeTablet) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildInfoCard(
-          title: 'Informasi Work Order',
-          icon: Icons.description_outlined,
-          child: _buildWorkOrderInfo(true),
-        ),
-        if (widget.label == 'Long Hemming' ||
-            widget.label == 'Cross Cutting' ||
-            widget.label == 'Sewing')
-          _buildInfoCard(
-            title: 'Informasi Mesin',
-            icon: Icons.attachment_outlined,
-            child: _buildMachine(true),
-          ),
-        // if (widget.label == 'Sorting')
-        //   _buildInfoCard(
-        //     title: 'Informasi Sorting',
-        //     icon: Icons.attachment_outlined,
-        //     child: _buildGrade(true),
-        //   ),
-
-        if (widget.withItemGrade == false)
-          _buildInfoCard(
-            title: 'Informasi Proses',
-            icon: widget.label == 'Dyeing'
-                ? Icons.invert_colors_on_outlined
-                : widget.label == 'Press'
-                    ? Icons.layers_outlined
-                    : widget.label == 'Tumbler'
-                        ? Icons.dry_cleaning_outlined
-                        : widget.label == 'Stenter'
-                            ? Icons.air_outlined
-                            : widget.label == 'Long Slitting'
-                                ? Icons.content_paste_outlined
-                                : widget.label == 'Long Hemming'
-                                    ? Icons.cut_outlined
-                                    : Icons.settings_outlined,
-            child: _buildProcessInfo(true),
-          ),
-
-        if (widget.data['rework'] == true)
-          _buildInfoCard(
-            title: 'Informasi Rework',
-            icon: Icons.replay_outlined,
-            child: _buildReworkInfo(true),
-          ),
-        if (widget.label == 'Sorting')
-          _buildInfoCard(
-            title: 'Informasi Rework Long Hemming',
-            icon: Icons.grade_outlined,
-            child: _buildReworkLongHemming(true),
-          ),
-        if (widget.label == 'Sorting')
-          _buildInfoCard(
-            title: 'Informasi Tipe BS',
-            icon: Icons.attachment_outlined,
-            child: _buildTypeBs(true),
-          ),
-        if (widget.label == 'Sorting')
-          _buildInfoCard(
-            title: 'Ringkasan Sorting',
-            icon: Icons.attachment_outlined,
-            child: _buildTotalSorting(true),
-          ),
-        if (widget.forDyeing == true ||
-            widget.forHemming == true ||
-            widget.forSewing == true ||
-            widget.label == 'Sorting')
-          _buildInfoCard(
-            title: 'Informasi Material',
-            icon: Icons.inventory_2_outlined,
-            child: _buildMaterialInfo(true),
-          ),
-        if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
-          _buildInfoCard(
-            title: 'Informasi Grade',
-            icon: Icons.grade_outlined,
-            child: _buildGradeInfo(true),
-          ),
-        if (widget.label == 'Packing')
-          _buildInfoCard(
-            title: 'Informasi Berat',
-            icon: Icons.scale_outlined,
-            child: _buildWeightInfo(true),
-          ),
-        _buildInfoCard(
-          title: 'Timeline Proses',
-          icon: Icons.timeline_outlined,
-          child: _buildTimelineInfo(true),
-        ),
-        _buildInfoCard(
-          title: 'Catatan Proses',
-          icon: Icons.note_outlined,
-          child: _buildNote(true),
-        ),
-        _buildInfoCard(
-          title: 'Lampiran Proses',
-          icon: Icons.attachment_outlined,
-          child: _buildAttachment(true),
-        ),
-        _buildInfoCard(
-          title: 'Catatan dari Work Order',
-          icon: Icons.note_outlined,
-          child: _buildNoteWo(true),
-        ),
-        _buildInfoCard(
-          title: 'Material Work Order',
-          icon: Icons.inventory_2_outlined,
-          child: _buildMaterial(
-            true,
-          ),
-        ),
-      ].separatedBy(CustomTheme().vGap('xl')),
-    );
-  }
-
-  /// Layout untuk Mobile
-  Widget _buildMobileLayout() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildInfoCard(
-          title: 'Informasi Work Order',
-          icon: Icons.description_outlined,
-          child: _buildWorkOrderInfo(false),
-        ),
-        if (widget.label == 'Long Hemming' ||
-            widget.label == 'Cross Cutting' ||
-            widget.label == 'Sewing')
-          _buildInfoCard(
-            title: 'Informasi Mesin',
-            icon: Icons.attachment_outlined,
-            child: _buildMachine(true),
-          ),
-        // if (widget.label == 'Sorting')
-        //   _buildInfoCard(
-        //     title: 'Informasi Sorting',
-        //     icon: Icons.attachment_outlined,
-        //     child: _buildGrade(true),
-        //   ),
-        if (widget.label == 'Sorting')
-          _buildInfoCard(
-            title: 'Informasi Tipe BS',
-            icon: Icons.attachment_outlined,
-            child: _buildTypeBs(true),
-          ),
-        if (widget.withItemGrade == false)
-          _buildInfoCard(
-            title: 'Informasi Proses',
-            icon: widget.label == 'Dyeing'
-                ? Icons.invert_colors_on_outlined
-                : widget.label == 'Press'
-                    ? Icons.layers_outlined
-                    : widget.label == 'Tumbler'
-                        ? Icons.dry_cleaning_outlined
-                        : widget.label == 'Stenter'
-                            ? Icons.air_outlined
-                            : widget.label == 'Long Slitting'
-                                ? Icons.content_paste_outlined
-                                : widget.label == 'Long Hemming'
-                                    ? Icons.cut_outlined
-                                    : Icons.settings_outlined,
-            child: _buildProcessInfo(false),
-          ),
-        if (widget.forDyeing == true ||
-            widget.forHemming == true ||
-            widget.forSewing == true ||
-            widget.forPacking == true)
-          _buildInfoCard(
-            title: 'Informasi Material',
-            icon: Icons.settings_outlined,
-            child: _buildMaterialInfo(true),
-          ),
-        if (widget.data['rework'] == true)
-          _buildInfoCard(
-            title: 'Informasi Rework',
-            icon: Icons.replay_outlined,
-            child: _buildReworkInfo(true),
-          ),
-        if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
-          _buildInfoCard(
-            title: 'Informasi Grade',
-            icon: Icons.layers_outlined,
-            child: _buildGradeInfo(false),
-          ),
-        if (widget.label == 'Sorting')
-          _buildInfoCard(
-            title: 'Informasi Rework Long Hemming',
-            icon: Icons.grade_outlined,
-            child: _buildReworkLongHemming(true),
-          ),
-        if (widget.label == 'Packing')
-          _buildInfoCard(
-            title: 'Informasi Berat',
-            icon: Icons.layers_outlined,
-            child: _buildWeightInfo(false),
-          ),
-        _buildInfoCard(
-          title: 'Timeline Proses',
-          icon: Icons.timeline_outlined,
-          child: _buildTimelineInfo(false),
-        ),
-        _buildInfoCard(
-          title: 'Catatan Proses',
-          icon: Icons.note_outlined,
-          child: _buildNote(true),
-        ),
-        _buildInfoCard(
-          title: 'Lampiran Proses',
-          icon: Icons.attachment_outlined,
-          child: _buildAttachment(true),
-        ),
-        _buildInfoCard(
-          title: 'Catatan dari Work Order',
-          icon: Icons.note_outlined,
-          child: _buildNoteWo(true),
-        ),
-        _buildInfoCard(
-          title: 'Material Work Order',
-          icon: Icons.inventory_2_outlined,
-          child: _buildMaterial(
-            true,
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// Info Card Container
-  Widget _buildInfoCard({
-    required String title,
-    required IconData icon,
-    required Widget child,
-  }) {
-    return Padding(
-      padding: CustomTheme().padding('card-detail'),
-      child: TemplateCard(
-        title: title,
-        icon: icon,
-        child: child,
-      ),
-    );
-  }
-
-  /// Work Order Info Section
+/*
+Work Order
+*/
   Widget _buildWorkOrderInfo(bool isTablet) {
     final items = [
       {
@@ -597,58 +353,11 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     return _buildInfoGrid(items, isTablet);
   }
 
-  /// Greige Info Section
-  Widget _buildGradeInfo(bool isTablet) {
-    double getTotalGradeQty() {
-      final List<dynamic>? grades = widget.existingGrades;
-
-      if (grades == null || grades.isEmpty) return 0;
-
-      return grades.fold<double>(0.0, (sum, item) {
-        final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
-        return sum + qty;
-      });
-    }
-
-    final totalQty = getTotalGradeQty();
-
-    final items = [
-      for (int i = 0; i < widget.existingGrades.length; i++)
-        {
-          'label': ' Grade ${widget.existingGrades[i]['item_grade']['code']}',
-          'value': widget.existingGrades[i]['qty'] != null
-              ? '${widget.existingGrades[i]['qty']} ${widget.existingGrades[i]['unit']['code']}'
-              : '-',
-          'icon': Icons.grade_outlined,
-        },
-      // if (widget.existingGrades.isNotEmpty)
-      //   {
-      //     'label': 'Total Hasil ${widget.label}',
-      //     'value': totalQty != null
-      //         ? '${formatNumber(totalQty)} ${widget.existingGrades[0]['unit']['code'] ?? ''}'
-      //         : '-',
-      //     'icon': Icons.layers_outlined,
-      //   },
-    ];
-
-    return _buildInfoGrid(items, isTablet);
-  }
-
-  /// Process Info Section
+  /*
+Informasi Proses
+*/
   Widget _buildProcessInfo(bool isTablet) {
     final items = [
-      // {
-      //   'label': 'Panjang',
-      //   'value':
-      //       '${widget.data['length'] != null ? formatNumber(widget.data['length']) : '0'} ${widget.data['length_unit'] != null ? widget.data['length_unit']['code'] : 'CM'}',
-      //   'icon': Icons.numbers_outlined,
-      // },
-      // {
-      //   'label': 'Lebar',
-      //   'value':
-      //       '${widget.data['width'] != null ? formatNumber(widget.data['width']) : '0'} ${widget.data['width_unit'] != null ? widget.data['width_unit']['code'] : 'CM'}',
-      //   'icon': Icons.width_normal_outlined,
-      // },
       if (widget.forDyeing == true && widget.data['status'] == 'Selesai')
         {
           'label': 'Qty Hasil ${widget.label}',
@@ -713,30 +422,240 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     return _buildInfoGrid(items, isTablet);
   }
 
+  /*
+Grades
+*/
+  Widget _buildGradeInfo(bool isTablet) {
+    double getTotalGradeQty() {
+      final List<dynamic>? grades = widget.existingGrades;
+
+      if (grades == null || grades.isEmpty) return 0;
+
+      return grades.fold<double>(0.0, (sum, item) {
+        final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
+        return sum + qty;
+      });
+    }
+
+    final totalQty = getTotalGradeQty();
+    final items = widget.data['work_orders']?['items'] ?? [];
+
+    final gradeItems = [
+      for (int i = 0; i < widget.existingGrades.length; i++)
+        {
+          'label': 'Grade ${widget.existingGrades[i]['item_grade']['code']}',
+          'value': widget.existingGrades[i]['qty'] != null
+              ? '${formatNumber(widget.existingGrades[i]['qty'])} ${widget.existingGrades[i]['unit']['code']}'
+              : '-',
+          'another_value': i < items.length
+              ? '${items[i]['item_code'] ?? '-'} - ${items[i]['item_name'] ?? '-'}'
+              : '-',
+          'icon': Icons.grade_outlined,
+        },
+    ];
+
+    return _buildMultiInfoGrid(gradeItems, isTablet);
+  }
+
+  /*
+Ringkasan Sorting
+*/
+  Widget _buildTotalSorting(bool isTablet) {
+    /// 📊 Calculate Total Perbaikan Long Hemming (spraying + combing + rework)
+    int totalVermak = 0;
+    totalVermak +=
+        int.tryParse(widget.data['rework_long_hemming']?.toString() ?? '0') ??
+            0;
+    totalVermak += int.tryParse(widget.data['combing']?.toString() ?? '0') ?? 0;
+    totalVermak +=
+        int.tryParse(widget.data['spraying']?.toString() ?? '0') ?? 0;
+
+    /// 📊 Calculate Total Qty Sorting (sum of all grades + vermak)
+    int totalGrades = 0;
+    int gradeAQty = 0;
+    int gradeBQty = 0;
+    int gradeBSQty = 0;
+
+    if (widget.existingGrades != null && widget.existingGrades.isNotEmpty) {
+      for (var grade in widget.existingGrades) {
+        final qty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
+        totalGrades += qty;
+
+        final gradeName =
+            grade['item_grade']['code']?.toString().toLowerCase() ?? '';
+        if (gradeName.contains('a')) {
+          gradeAQty = qty;
+        } else if (gradeName.contains('b') && !gradeName.contains('bs')) {
+          gradeBQty = qty;
+        } else if (gradeName.contains('bs')) {
+          gradeBSQty = qty;
+        }
+      }
+    }
+    int totalQtySorting = totalGrades + totalVermak;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.blue.shade50,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.blue.shade200),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Grade A:',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    '$gradeAQty',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue.shade700,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Grade B:',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    '$gradeBQty',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue.shade700,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Grade BS:',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    '$gradeBSQty',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red.shade700,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Total Perbaikan:',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    '$totalVermak',
+                    style: TextStyle(
+                        fontSize: CustomTheme().fontSize('lg'),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Total Qty Sorting:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: CustomTheme().fontSize('lg'),
+                        ),
+                      ),
+                      Text(
+                        '$totalQtySorting',
+                        style: TextStyle(
+                          fontSize: CustomTheme().fontSize('2xl'),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+                ].separatedBy(SizedBox(height: 8)),
+              ),
+            ),
+          ].separatedBy(CustomTheme().vGap('lg')),
+        ),
+      ].separatedBy(CustomTheme().vGap('lg')),
+    );
+  }
+
+/*
+Info Material
+*/
   Widget _buildMaterialInfo(bool isTablet) {
     final items = [
       {
-        'label': 'Material Awal',
+        'label': 'Greige Awal',
         'value':
-            '${widget.data['greige_item'] != null ? widget.data['greige_item']['code'] : widget.data['work_orders']['items'][0]['item_code'] ?? (widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['greige_item']['code'] : '-')}',
+            '${widget.data['work_orders']['items'][0]['greige_item']['code'] ?? '-'}',
         'another_value':
-            '${widget.data['greige_item'] != null ? widget.data['greige_item']['name'] : widget.data['work_orders']['items'][0]['item_name'] ?? (widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['greige_item']['name'] : '-')}',
+            '${widget.data['work_orders']['items'][0]['greige_item']['name'] ?? '-'}',
         'icon': Icons.inventory_2_outlined,
       },
-      if (widget.data['status'] == 'Selesai')
+      if (widget.data['status'] == 'Selesai' &&
+          widget.label != 'Dyeing' &&
+          widget.label != 'Sorting')
         {
-          'label': 'Material Semi Finish',
-          'value':
-              '${widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['item_code'] : '-'}',
-          'another_value':
-              '${widget.data['work_orders']['items'] != null ? widget.data['work_orders']['items'][0]['item_name'] : '-'}',
+          'label': 'Produk Setengah Jadi',
+          'value': '${widget.data['greige_item']['code'] ?? '-'}',
+          'another_value': '${widget.data['greige_item']['name'] ?? '-'}',
           'icon': Icons.inventory_2_outlined,
         },
+      {
+        'label': 'Produk Jadi',
+        'value':
+            '${widget.data['work_orders']['items'][0]['item_code'] ?? '-'}',
+        'another_value':
+            '${widget.data['work_orders']['items'][0]['item_name'] ?? '-'}',
+        'icon': Icons.inventory_2_outlined,
+      },
     ];
 
     return _buildMultiInfoGrid(items, isTablet);
   }
 
+/*
+Rework
+*/
   Widget _buildReworkInfo(bool isTablet) {
     final items = [
       {
@@ -766,18 +685,151 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             : '0 ${widget.data['unit'] != null ? widget.data['rework_reference']['unit']['code'] : ''}',
         'icon': Icons.layers_outlined,
       },
-      // {
-      //   'label': 'Mesin',
-      //   'value': widget.data['rework_reference']['machine'] != null
-      //       ? widget.data['rework_reference']['machine']['name']
-      //       : '-',
-      //   'icon': Icons.paste_outlined,
-      // },
     ];
 
     return _buildInfoGrid(items, isTablet);
   }
 
+  /*
+Multi Mesin
+*/
+  Widget _buildMachine(bool isTablet) {
+    final machines = widget.data['machines'] as List? ?? [];
+
+    if (machines.isEmpty) return NoData();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          alignment: WrapAlignment.start,
+          runAlignment: WrapAlignment.start,
+          spacing: 16,
+          runSpacing: 16,
+          children: machines.map((machine) {
+            return Container(
+                width: machines.length > 1
+                    ? (MediaQuery.of(context).size.width - 80) / 2
+                    : double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${machine['code']} - ${machine['name']}',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      'Lokasi: ${machine['location']}',
+                    ),
+                  ].separatedBy(CustomTheme().vGap('sm')),
+                ));
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+/*
+Perbaikan >> Sorting
+*/
+  Widget _buildReworkLongHemming(bool isTablet) {
+    final items = [
+      {
+        'label': 'Vermak Long Hemming',
+        'value':
+            '${widget.data['rework_long_hemming'] != null ? formatNumber(widget.data['rework_long_hemming']) : '0'} ${'PCS'}',
+        'icon': Icons.twelve_mp_outlined,
+      },
+      {
+        'label': 'Sisiran',
+        'value':
+            '${widget.data['combing'] != null ? formatNumber(widget.data['combing']) : '0'} ${'PCS'}',
+        'icon': Icons.numbers_outlined,
+      },
+      {
+        'label': 'Semprotan',
+        'value':
+            '${widget.data['spraying'] != null ? formatNumber(widget.data['spraying']) : '0'} ${'PCS'}',
+        'icon': Icons.numbers_outlined,
+      },
+    ];
+
+    return _buildInfoGrid(items, isTablet);
+  }
+
+/*
+Tipe BS
+*/
+  Widget _buildTypeBs(bool isTablet) {
+    final itemTypes =
+        List<Map<String, dynamic>>.from(widget.data['defects'] ?? []);
+    if (itemTypes.isEmpty) return NoData();
+
+    final total = itemTypes.fold<int>(
+      0,
+      (int sum, Map<String, dynamic> item) {
+        final qty = int.tryParse(item['qty']?.toString() ?? '0') ?? 0;
+        return sum + qty;
+      },
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: itemTypes.map<Widget>((itemType) {
+            return Container(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(capitalizeWords(itemType['type']?['name'] ?? '-')),
+                  SizedBox(height: 8),
+                  Text(
+                    'Qty: ${itemType['qty']}',
+                    style: TextStyle(
+                        fontWeight: CustomTheme().fontWeight('semibold')),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+
+        SizedBox(height: 8),
+
+        /// 🔥 TOTAL BS
+        Align(
+          alignment: Alignment.centerRight,
+          child: Text(
+            'Total BS: $total',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+/*
+Berat >> Packing
+*/
   Widget _buildWeightInfo(bool isTablet) {
     final items = [
       {
@@ -803,7 +855,9 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     return _buildInfoGrid(items, isTablet);
   }
 
-  /// Timeline Info Section
+  /*
+Timeline
+*/
   Widget _buildTimelineInfo(bool isTablet) {
     return Column(
       children: [
@@ -827,6 +881,439 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             isLast: true,
           ),
       ],
+    );
+  }
+
+  Widget _buildTimelineItem({
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    dynamic time,
+    String? user,
+    required bool isFirst,
+    required bool isLast,
+  }) {
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Timeline Line
+          SizedBox(
+            width: 40,
+            child: Column(
+              children: [
+                Container(
+                  padding: CustomTheme().padding('process-content'),
+                  decoration: BoxDecoration(
+                    color: iconColor.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: iconColor,
+                      width: 2,
+                    ),
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 16,
+                    color: iconColor,
+                  ),
+                ),
+                if (!isLast)
+                  Expanded(
+                    child: Container(
+                      width: 2,
+                      margin: EdgeInsets.symmetric(vertical: 4),
+                      color: Colors.grey[300],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          // Timeline Content
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.only(bottom: isLast ? 0 : 16),
+              padding: CustomTheme().padding('card'),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[200]!),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.access_time,
+                        size: 14,
+                        color: Colors.grey[500],
+                      ),
+                      Text(
+                        time != null
+                            ? DateFormat("dd MMM yyyy, HH:mm")
+                                .format(DateTime.parse(time))
+                            : '-',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ].separatedBy(CustomTheme().hGap('md')),
+                  ),
+                  if (user != null && user.isNotEmpty) ...[
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.person_outline,
+                          size: 14,
+                          color: Colors.grey[500],
+                        ),
+                        Text(
+                          user,
+                          style: TextStyle(
+                            fontSize: CustomTheme().fontSize('sm'),
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ].separatedBy(CustomTheme().hGap('md')),
+                    ),
+                  ],
+                ].separatedBy(CustomTheme().vGap('md')),
+              ),
+            ),
+          ),
+        ].separatedBy(CustomTheme().hGap('xl')),
+      ),
+    );
+  }
+
+/*
+Lampiran
+*/
+  Widget _buildAttachment(bool isTablet) {
+    return Row(
+      children: [
+        Expanded(
+          child: widget.existingAttachment.isEmpty
+              ? NoData()
+              : Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: widget.handleBuildAttachment(context),
+                ),
+        ),
+      ],
+    );
+  }
+
+/*
+Material WO
+*/
+  Widget _buildMaterial(bool isTablet) {
+    final items = (widget.data['work_orders']['items'] ?? [])
+        .cast<Map<String, dynamic>>();
+    if (items.isEmpty) {
+      return Center(child: Text('No Data'));
+    }
+
+    return Column(
+      children: List.generate(items.length, (index) {
+        return Column(
+          children: [
+            ListItem(item: items[index]),
+            if (index != items.length - 1) SizedBox(height: 12),
+          ].separatedBy(CustomTheme().vGap('xl')),
+        );
+      }),
+    );
+  }
+
+  /*
+Catatan
+*/
+  Widget _buildNote(bool isTablet) {
+    return Row(
+      children: [
+        Expanded(
+          child: widget.data['notes'] != null
+              ? Text(
+                  htmlToPlainText(widget.data['notes']),
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('lg'),
+                  ),
+                )
+              : NoData(),
+        ),
+      ],
+    );
+  }
+
+/*
+Catatan WO
+*/
+  Widget _buildNoteWo(bool isTablet) {
+    return widget.data['work_orders']['notes'] != null
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  htmlToPlainText(widget.data['work_orders']['notes']),
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('lg'),
+                  ),
+                ),
+              ),
+            ],
+          )
+        : NoData();
+  }
+
+  /// Layout untuk Tablet
+  Widget _buildTabletLayout(bool isLargeTablet) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildInfoCard(
+          title: 'Informasi Work Order',
+          icon: Icons.description_outlined,
+          child: _buildWorkOrderInfo(true),
+        ),
+        if (widget.label == 'Long Hemming' ||
+            widget.label == 'Cross Cutting' ||
+            widget.label == 'Sewing')
+          _buildInfoCard(
+            title: 'Informasi Mesin',
+            icon: Icons.attachment_outlined,
+            child: _buildMachine(true),
+          ),
+        if (widget.withItemGrade == false)
+          _buildInfoCard(
+            title: 'Informasi Proses',
+            icon: widget.label == 'Dyeing'
+                ? Icons.invert_colors_on_outlined
+                : widget.label == 'Press'
+                    ? Icons.layers_outlined
+                    : widget.label == 'Tumbler'
+                        ? Icons.dry_cleaning_outlined
+                        : widget.label == 'Stenter'
+                            ? Icons.air_outlined
+                            : widget.label == 'Long Slitting'
+                                ? Icons.content_paste_outlined
+                                : widget.label == 'Long Hemming'
+                                    ? Icons.cut_outlined
+                                    : Icons.settings_outlined,
+            child: _buildProcessInfo(true),
+          ),
+        if (widget.data['rework'] == true)
+          _buildInfoCard(
+            title: 'Informasi Rework',
+            icon: Icons.replay_outlined,
+            child: _buildReworkInfo(true),
+          ),
+        if (widget.label == 'Sorting')
+          _buildInfoCard(
+            title: 'Informasi Perbaikan',
+            icon: Icons.grade_outlined,
+            child: _buildReworkLongHemming(true),
+          ),
+        if (widget.label == 'Sorting')
+          _buildInfoCard(
+            title: 'Informasi Tipe BS',
+            icon: Icons.attachment_outlined,
+            child: _buildTypeBs(true),
+          ),
+        if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
+          _buildInfoCard(
+            title: 'Informasi Grade',
+            icon: Icons.grade_outlined,
+            child: _buildGradeInfo(true),
+          ),
+        if (widget.label == 'Sorting')
+          _buildInfoCard(
+            title: 'Ringkasan Sorting',
+            icon: Icons.attachment_outlined,
+            child: _buildTotalSorting(true),
+          ),
+        if (widget.forDyeing == true ||
+            widget.forHemming == true ||
+            widget.forSewing == true ||
+            widget.label == 'Sorting')
+          _buildInfoCard(
+            title: 'Informasi Produk',
+            icon: Icons.inventory_2_outlined,
+            child: _buildMaterialInfo(true),
+          ),
+        if (widget.label == 'Packing')
+          _buildInfoCard(
+            title: 'Informasi Berat',
+            icon: Icons.scale_outlined,
+            child: _buildWeightInfo(true),
+          ),
+        _buildInfoCard(
+          title: 'Timeline Proses',
+          icon: Icons.timeline_outlined,
+          child: _buildTimelineInfo(true),
+        ),
+        _buildInfoCard(
+          title: 'Catatan Proses',
+          icon: Icons.note_outlined,
+          child: _buildNote(true),
+        ),
+        _buildInfoCard(
+          title: 'Lampiran Proses',
+          icon: Icons.attachment_outlined,
+          child: _buildAttachment(true),
+        ),
+        _buildInfoCard(
+          title: 'Catatan dari Work Order',
+          icon: Icons.note_outlined,
+          child: _buildNoteWo(true),
+        ),
+        _buildInfoCard(
+          title: 'Material Work Order',
+          icon: Icons.inventory_2_outlined,
+          child: _buildMaterial(
+            true,
+          ),
+        ),
+      ].separatedBy(CustomTheme().vGap('xl')),
+    );
+  }
+
+  /// Layout untuk Mobile
+  Widget _buildMobileLayout() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildInfoCard(
+          title: 'Informasi Work Order',
+          icon: Icons.description_outlined,
+          child: _buildWorkOrderInfo(false),
+        ),
+        if (widget.label == 'Long Hemming' ||
+            widget.label == 'Cross Cutting' ||
+            widget.label == 'Sewing')
+          _buildInfoCard(
+            title: 'Informasi Mesin',
+            icon: Icons.attachment_outlined,
+            child: _buildMachine(false),
+          ),
+        if (widget.withItemGrade == false)
+          _buildInfoCard(
+            title: 'Informasi Proses',
+            icon: widget.label == 'Dyeing'
+                ? Icons.invert_colors_on_outlined
+                : widget.label == 'Press'
+                    ? Icons.layers_outlined
+                    : widget.label == 'Tumbler'
+                        ? Icons.dry_cleaning_outlined
+                        : widget.label == 'Stenter'
+                            ? Icons.air_outlined
+                            : widget.label == 'Long Slitting'
+                                ? Icons.content_paste_outlined
+                                : widget.label == 'Long Hemming'
+                                    ? Icons.cut_outlined
+                                    : Icons.settings_outlined,
+            child: _buildProcessInfo(false),
+          ),
+        if (widget.data['rework'] == false)
+          _buildInfoCard(
+            title: 'Informasi Rework',
+            icon: Icons.replay_outlined,
+            child: _buildReworkInfo(false),
+          ),
+        if (widget.label == 'Sorting')
+          _buildInfoCard(
+            title: 'Informasi Rework Long Hemming',
+            icon: Icons.grade_outlined,
+            child: _buildReworkLongHemming(false),
+          ),
+        if (widget.label == 'Sorting')
+          _buildInfoCard(
+            title: 'Informasi Tipe BS',
+            icon: Icons.attachment_outlined,
+            child: _buildTypeBs(false),
+          ),
+        if (widget.label == 'Sorting')
+          _buildInfoCard(
+            title: 'Ringkasan Sorting',
+            icon: Icons.attachment_outlined,
+            child: _buildTotalSorting(false),
+          ),
+        if (widget.forDyeing == true ||
+            widget.forHemming == true ||
+            widget.forSewing == true ||
+            widget.label == 'Sorting')
+          _buildInfoCard(
+            title: 'Informasi Produk',
+            icon: Icons.inventory_2_outlined,
+            child: _buildMaterialInfo(false),
+          ),
+        if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
+          _buildInfoCard(
+            title: 'Informasi Grade',
+            icon: Icons.grade_outlined,
+            child: _buildGradeInfo(false),
+          ),
+        if (widget.label == 'Packing')
+          _buildInfoCard(
+            title: 'Informasi Berat',
+            icon: Icons.scale_outlined,
+            child: _buildWeightInfo(false),
+          ),
+        _buildInfoCard(
+          title: 'Timeline Proses',
+          icon: Icons.timeline_outlined,
+          child: _buildTimelineInfo(false),
+        ),
+        _buildInfoCard(
+          title: 'Catatan Proses',
+          icon: Icons.note_outlined,
+          child: _buildNote(false),
+        ),
+        _buildInfoCard(
+          title: 'Lampiran Proses',
+          icon: Icons.attachment_outlined,
+          child: _buildAttachment(false),
+        ),
+        _buildInfoCard(
+          title: 'Catatan dari Work Order',
+          icon: Icons.note_outlined,
+          child: _buildNoteWo(false),
+        ),
+        _buildInfoCard(
+          title: 'Material Work Order',
+          icon: Icons.inventory_2_outlined,
+          child: _buildMaterial(
+            false,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoCard({
+    required String title,
+    required IconData icon,
+    required Widget child,
+  }) {
+    return Padding(
+      padding: CustomTheme().padding('card-detail'),
+      child: TemplateCard(
+        title: title,
+        icon: icon,
+        child: child,
+      ),
     );
   }
 
@@ -885,13 +1372,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
   /// Info Grid Builder
   Widget _buildMultiInfoGrid(List<Map<String, dynamic>> items, bool isTablet) {
     if (isTablet) {
-      return items.length > 3
+      return items.length > 2
           ? Wrap(
-              spacing: 8,
+              spacing: 16,
               runSpacing: 16,
               children: items.map((item) {
                 return SizedBox(
-                  width: (MediaQuery.of(context).size.width - 100) / 2,
+                  width: (MediaQuery.of(context).size.width - 80) / 2,
                   child: _buildMultiInfoItem(
                       label: item['label'],
                       value: item['value'],
@@ -908,7 +1395,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               spacing: 16,
               children: items.map((item) {
                 return SizedBox(
-                  width: (MediaQuery.of(context).size.width - 100) / 2,
+                  width: (MediaQuery.of(context).size.width - 80) / 2,
                   child: _buildMultiInfoItem(
                       label: item['label'],
                       value: item['value'],
@@ -936,281 +1423,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildNote(bool isTablet) {
-    return Row(
-      children: [
-        Expanded(
-          child: widget.data['notes'] != null
-              ? Text(
-                  htmlToPlainText(widget.data['notes']),
-                  style: TextStyle(
-                    fontSize: CustomTheme().fontSize('lg'),
-                  ),
-                )
-              : NoData(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNoteWo(bool isTablet) {
-    return widget.data['work_orders']['notes'] != null
-        ? Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  htmlToPlainText(widget.data['work_orders']['notes']),
-                  style: TextStyle(
-                    fontSize: CustomTheme().fontSize('lg'),
-                  ),
-                ),
-              ),
-            ],
-          )
-        : NoData();
-  }
-
-  Widget _buildMachine(bool isTablet) {
-    final machines = widget.data['machines'] as List? ?? [];
-
-    if (machines.isEmpty) return NoData();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Wrap(
-          alignment: WrapAlignment.start, // ⬅️ ini penting
-          runAlignment: WrapAlignment.start,
-          spacing: 8, // horizontal gap
-          runSpacing: 8, // vertical gap antar baris
-          children: machines.map((machine) {
-            return Container(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${machine['code']} - ${machine['name']}',
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      'Lokasi: ${machine['location']}',
-                    ),
-                  ].separatedBy(CustomTheme().vGap('sm')),
-                ));
-          }).toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildReworkLongHemming(bool isTablet) {
-    final items = [
-      {
-        'label': 'Vermak Long Hemming',
-        'value':
-            '${widget.data['rework_long_hemming'] != null ? formatNumber(widget.data['rework_long_hemming']) : '0'} ${'PCS'}',
-        'icon': Icons.twelve_mp_outlined,
-      },
-      {
-        'label': 'Sisiran',
-        'value':
-            '${widget.data['combing'] != null ? formatNumber(widget.data['combing']) : '0'} ${'PCS'}',
-        'icon': Icons.numbers_outlined,
-      },
-      {
-        'label': 'Semprotan',
-        'value':
-            '${widget.data['spraying'] != null ? formatNumber(widget.data['spraying']) : '0'} ${'PCS'}',
-        'icon': Icons.numbers_outlined,
-      },
-    ];
-
-    return _buildInfoGrid(items, isTablet);
-  }
-
-  Widget _buildTypeBs(bool isTablet) {
-    final itemTypes =
-        List<Map<String, dynamic>>.from(widget.data['defects'] ?? []);
-    if (itemTypes.isEmpty) return NoData();
-
-    final total = itemTypes.fold<int>(
-      0,
-      (int sum, Map<String, dynamic> item) {
-        final qty = int.tryParse(item['qty']?.toString() ?? '0') ?? 0;
-        return sum + qty;
-      },
-    );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Wrap(
-          spacing: 8, // horizontal space
-          runSpacing: 8, // vertical space when wrap
-          children: itemTypes.map<Widget>((itemType) {
-            return Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min, // IMPORTANT
-                children: [
-                  Text(itemType['type']?['name'] ?? '-'),
-                  SizedBox(height: 8),
-                  Text(
-                    'Qty: ${itemType['qty']}',
-                    style: TextStyle(
-                        fontWeight: CustomTheme().fontWeight('semibold')),
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
-        ),
-
-        SizedBox(height: 8),
-
-        /// 🔥 TOTAL BS
-        Align(
-          alignment: Alignment.centerRight,
-          child: Text(
-            'Total BS: $total',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.red,
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget _buildTotalSorting(bool isTablet) {
-    /// 📊 Calculate Total Perbaikan Long Hemming (spraying + combing + rework)
-    int totalVermak = 0;
-    totalVermak +=
-        int.tryParse(widget.data['rework_long_hemming']?.toString() ?? '0') ??
-            0;
-    totalVermak += int.tryParse(widget.data['combing']?.toString() ?? '0') ?? 0;
-    totalVermak +=
-        int.tryParse(widget.data['spraying']?.toString() ?? '0') ?? 0;
-
-    /// 📊 Calculate Total Qty Sorting (sum of all grades + vermak)
-    int totalGrades = 0;
-    if (widget.existingGrades != null && widget.existingGrades.isNotEmpty) {
-      for (var grade in widget.existingGrades) {
-        final qty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
-        totalGrades += qty;
-      }
-    }
-    int totalQtySorting = totalGrades + totalVermak;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Total Perbaikan Long Hemming:',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      Text(
-                        '$totalVermak',
-                        style: TextStyle(
-                            fontSize: CustomTheme().fontSize('lg'),
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Total Qty Sorting:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: CustomTheme().fontSize('lg'),
-                        ),
-                      ),
-                      Text(
-                        '$totalQtySorting',
-                        style: TextStyle(
-                          fontSize: CustomTheme().fontSize('2xl'),
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ],
-                  ),
-                ].separatedBy(SizedBox(height: 8)),
-              ),
-            ),
-          ].separatedBy(CustomTheme().vGap('lg')),
-        ),
-      ].separatedBy(CustomTheme().vGap('lg')),
-    );
-  }
-
-  Widget _buildAttachment(bool isTablet) {
-    return Row(
-      children: [
-        Expanded(
-          child: widget.existingAttachment.isEmpty
-              ? NoData()
-              : Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: widget.handleBuildAttachment(context),
-                ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMaterial(bool isTablet) {
-    final items = (widget.data['work_orders']['items'] ?? [])
-        .cast<Map<String, dynamic>>();
-    if (items.isEmpty) {
-      return Center(child: Text('No Data'));
-    }
-
-    return Column(
-      children: List.generate(items.length, (index) {
-        return Column(
-          children: [
-            ListItem(item: items[index]),
-            if (index != items.length - 1) SizedBox(height: 12),
-          ].separatedBy(CustomTheme().vGap('xl')),
-        );
-      }),
-    );
-  }
-
   /// Single Info Item
   Widget _buildInfoItem(
       {required String label,
@@ -1233,18 +1445,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         ),
         child: Row(
           children: [
-            // Container(
-            //   padding: EdgeInsets.all(8),
-            //   decoration: BoxDecoration(
-            //     color: Colors.white,
-            //     borderRadius: BorderRadius.circular(8),
-            //   ),
-            //   child: Icon(
-            //     icon,
-            //     size: isTablet ? 18 : 16,
-            //     color: CustomTheme().buttonColor('primary'),
-            //   ),
-            // ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1354,6 +1554,15 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                       ),
                     ].separatedBy(CustomTheme().hGap('sm')),
                   ),
+                  Text(
+                    'Produk Jadi',
+                    style: TextStyle(
+                      fontSize: isTablet ? 12 : 11,
+                      color: Colors.grey[600],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -1361,7 +1570,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                         anotherValue,
                         style: TextStyle(
                           fontSize: isTablet ? 14 : 13,
-                          color: Colors.grey[600],
+                          color: Colors.grey[800],
+                          fontWeight: FontWeight.w600,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -1373,119 +1583,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             ),
           ].separatedBy(CustomTheme().hGap('md')),
         ),
-      ),
-    );
-  }
-
-  /// Timeline Item
-  Widget _buildTimelineItem({
-    required IconData icon,
-    required Color iconColor,
-    required String title,
-    dynamic time,
-    String? user,
-    required bool isFirst,
-    required bool isLast,
-  }) {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Timeline Line
-          SizedBox(
-            width: 40,
-            child: Column(
-              children: [
-                Container(
-                  padding: CustomTheme().padding('process-content'),
-                  decoration: BoxDecoration(
-                    color: iconColor.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: iconColor,
-                      width: 2,
-                    ),
-                  ),
-                  child: Icon(
-                    icon,
-                    size: 16,
-                    color: iconColor,
-                  ),
-                ),
-                if (!isLast)
-                  Expanded(
-                    child: Container(
-                      width: 2,
-                      margin: EdgeInsets.symmetric(vertical: 4),
-                      color: Colors.grey[300],
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          // Timeline Content
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.only(bottom: isLast ? 0 : 16),
-              padding: CustomTheme().padding('card'),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[200]!),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.access_time,
-                        size: 14,
-                        color: Colors.grey[500],
-                      ),
-                      Text(
-                        time != null
-                            ? DateFormat("dd MMM yyyy, HH:mm")
-                                .format(DateTime.parse(time))
-                            : '-',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ].separatedBy(CustomTheme().hGap('md')),
-                  ),
-                  if (user != null && user.isNotEmpty) ...[
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.person_outline,
-                          size: 14,
-                          color: Colors.grey[500],
-                        ),
-                        Text(
-                          user,
-                          style: TextStyle(
-                            fontSize: CustomTheme().fontSize('sm'),
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ].separatedBy(CustomTheme().hGap('md')),
-                    ),
-                  ],
-                ].separatedBy(CustomTheme().vGap('md')),
-              ),
-            ),
-          ),
-        ].separatedBy(CustomTheme().hGap('xl')),
       ),
     );
   }

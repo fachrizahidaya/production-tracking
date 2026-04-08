@@ -66,6 +66,7 @@ class OptionMachineService extends BaseService<OptionMachine> {
     String? process,
     String searchQuery = '',
     bool clearBeforeFetch = true,
+    List<dynamic>? currentMachineIds,
   }) async {
     if (_isLoading || !_hasMoreData) return;
 
@@ -78,11 +79,20 @@ class OptionMachineService extends BaseService<OptionMachine> {
       final token = prefs.getString('access_token');
       if (token == null) throw Exception('Access token is missing');
 
+      // Build query parameters with support for multiple current_machine_ids
+      final queryParams = <String, dynamic>{};
+      if (process != null && process.isNotEmpty)
+        queryParams['process'] = process;
+      if (searchQuery.isNotEmpty) queryParams['search'] = searchQuery;
+
+      // Add current machine IDs as array parameter
+      if (currentMachineIds != null && currentMachineIds.isNotEmpty) {
+        queryParams['current_machine_ids[]'] =
+            currentMachineIds.map((id) => id.toString()).toList();
+      }
+
       final uri = Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
-          .replace(queryParameters: {
-        if (process != null && process.isNotEmpty) 'process': process,
-        if (searchQuery.isNotEmpty) 'search': searchQuery,
-      });
+          .replace(queryParameters: queryParams);
 
       final response = await http.get(uri, headers: {
         'Authorization': 'Bearer $token',
@@ -114,35 +124,46 @@ class OptionMachineService extends BaseService<OptionMachine> {
     await _fetchOptionsGeneric();
   }
 
-  Future<void> fetchOptionsDyeing() async {
+  Future<void> fetchOptionsDyeing({List<dynamic>? currentMachineIds}) async {
     await _fetchOptionsGeneric(process: 'dyeing');
   }
 
-  Future<void> fetchOptionsPressTumbler() async {
-    await _fetchOptionsGeneric(process: 'press');
+  Future<void> fetchOptionsPressTumbler(
+      {List<dynamic>? currentMachineIds}) async {
+    await _fetchOptionsGeneric(
+        process: 'press', currentMachineIds: currentMachineIds);
   }
 
-  Future<void> fetchOptionsTumbler() async {
-    await _fetchOptionsGeneric(process: 'tumbler');
+  Future<void> fetchOptionsTumbler({List<dynamic>? currentMachineIds}) async {
+    await _fetchOptionsGeneric(
+        process: 'tumbler', currentMachineIds: currentMachineIds);
   }
 
-  Future<void> fetchOptionsStenter() async {
-    await _fetchOptionsGeneric(process: 'stenter');
+  Future<void> fetchOptionsStenter({List<dynamic>? currentMachineIds}) async {
+    await _fetchOptionsGeneric(
+        process: 'stenter', currentMachineIds: currentMachineIds);
   }
 
-  Future<void> fetchOptionsLongSitting() async {
-    await _fetchOptionsGeneric(process: 'long_slitting');
+  Future<void> fetchOptionsLongSitting(
+      {List<dynamic>? currentMachineIds}) async {
+    await _fetchOptionsGeneric(
+        process: 'long_slitting', currentMachineIds: currentMachineIds);
   }
 
-  Future<void> fetchOptionsLongHemming() async {
-    await _fetchOptionsGeneric(process: 'long_hemming');
+  Future<void> fetchOptionsLongHemming(
+      {List<dynamic>? currentMachineIds}) async {
+    await _fetchOptionsGeneric(
+        process: 'long_hemming', currentMachineIds: currentMachineIds);
   }
 
-  Future<void> fetchOptionsCrossCutting() async {
-    await _fetchOptionsGeneric(process: 'cross_cutting');
+  Future<void> fetchOptionsCrossCutting(
+      {List<dynamic>? currentMachineIds}) async {
+    await _fetchOptionsGeneric(
+        process: 'cross_cutting', currentMachineIds: currentMachineIds);
   }
 
-  Future<void> fetchOptionsSewing() async {
-    await _fetchOptionsGeneric(process: 'sewing');
+  Future<void> fetchOptionsSewing({List<dynamic>? currentMachineIds}) async {
+    await _fetchOptionsGeneric(
+        process: 'sewing', currentMachineIds: currentMachineIds);
   }
 }

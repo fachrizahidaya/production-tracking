@@ -124,6 +124,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   final TextEditingController _weightDozenController = TextEditingController();
   final TextEditingController _gsmController = TextEditingController();
   final TextEditingController _totalWeightController = TextEditingController();
+  final TextEditingController _weightGradeAController = TextEditingController();
   final List<TextEditingController> _qtyControllers = [];
   final List<TextEditingController> _notesControllers = [];
   final List<TextEditingController> _defectQtyControllers = [];
@@ -170,6 +171,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     'weight_per_dozen': '0',
     'gsm': '0',
     'total_weight': '0',
+    'weight_grade_a': '0',
   };
 
   final fieldConfigs = [
@@ -313,17 +315,25 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       _form['bs_weight'] = data['bs_weight'];
     }
 
+    if (data['qty'] != null) {
+      _packingQtyController.text = data['qty'].toString();
+      _form['qty'] = data['qty']?.toString() ?? '0';
+    }
     if (data['weight_per_dozen'] != null) {
       _weightDozenController.text = data['weight_per_dozen'].toString();
-      _form['weight_per_dozen'] = data['weight_per_dozen'];
+      _form['weight_per_dozen'] = data['weight_per_dozen']?.toString() ?? '0';
     }
     if (data['total_weight'] != null) {
       _totalWeightController.text = data['total_weight'].toString();
-      _form['total_weight'] = data['total_weight'];
+      _form['total_weight'] = data['total_weight']?.toString() ?? '0';
+    }
+    if (data['weight_grade_a'] != null) {
+      _weightGradeAController.text = data['weight_grade_a'].toString();
+      _form['weight_grade_a'] = data['weight_grade_a']?.toString() ?? '0';
     }
     if (data['gsm'] != null) {
       _gsmController.text = data['gsm'].toString();
-      _form['gsm'] = data['gsm'];
+      _form['gsm'] = data['gsm']?.toString() ?? '0';
     }
     setState(() => _firstLoading = false);
   }
@@ -342,6 +352,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     _lengthController.text = d['length']?.toString() ?? '';
     _widthController.text = d['width']?.toString() ?? '';
     _packingQtyController.text = d['qty']?.toString() ?? '';
+    _weightDozenController.text = d['weight_per_dozen']?.toString() ?? '';
     _noteController.text = d['notes']?.toString() ?? '';
     _maklonNameController.text = d['maklon_name']?.toString() ?? '';
     _reworkLongHemmingController.text =
@@ -352,6 +363,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     _form['item_qty'] = d['item_qty']?.toString() ?? '';
     _form['weight'] = d['weight'];
     _form['qty'] = d['qty']?.toString() ?? '';
+    _form['weight_per_dozen'] = d['weight_per_dozen']?.toString() ?? '';
     _form['maklon_name'] = d['maklon_name'];
     _form['maklon'] = d['maklon'];
     _form['notes'] = d['notes'];
@@ -494,6 +506,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           weightPerDozen: _weightDozenController,
           gsm: _gsmController,
           totalWeight: _totalWeightController,
+          weightGradeA: _weightGradeAController,
         ),
       ),
     );
@@ -715,6 +728,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     _packingQtyController.dispose();
     _goodWeightController.dispose();
     _defectWeightController.dispose();
+    _weightDozenController.dispose();
     for (var controller in _qtyControllers) {
       controller.dispose();
     }

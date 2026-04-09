@@ -94,6 +94,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   final TextEditingController _qtyController = TextEditingController();
   final TextEditingController _packingQtyController = TextEditingController();
   final TextEditingController _weightDozenController = TextEditingController();
+  final TextEditingController _weightGradeAController = TextEditingController();
   final TextEditingController _gsmController = TextEditingController();
   final TextEditingController _totalWeightController = TextEditingController();
   final TextEditingController _qtyItemController = TextEditingController();
@@ -140,6 +141,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['lot_celup_no']?.toString() ?? '';
     _weightDozenController.text =
         widget.form?['weight_per_dozen']?.toString() ?? '';
+    _weightGradeAController.text =
+        widget.form?['weight_grade_a']?.toString() ?? '';
     _gsmController.text = widget.form?['gsm']?.toString() ?? '';
     _totalWeightController.text =
         widget.form?['total_weight']?.toString() ?? '';
@@ -430,6 +433,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         _weightDozenController.text = data['weight_per_dozen'].toString();
         widget.form?['weight_per_dozen'] = data['weight_per_dozen'];
       }
+      if (data['weight_grade_a'] != null) {
+        _weightGradeAController.text = data['weight_grade_a'].toString();
+        widget.form?['weight_grade_a'] = data['weight_grade_a'];
+      }
       if (data['gsm'] != null) {
         _gsmController.text = data['gsm'].toString();
         widget.form?['gsm'] = data['gsm'];
@@ -618,7 +625,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       widget.form?['rework_long_hemming'] = _reworkLongHemmingController.text;
       widget.form?['weight'] = _weightController.text;
       widget.form?['qty'] = _qtyController.text;
+      widget.form?['qty'] = _packingQtyController.text;
       widget.form?['weight_per_dozen'] = _weightDozenController.text;
+      widget.form?['weight_grade_a'] = _weightGradeAController.text;
       widget.form?['gsm'] = _gsmController.text;
       widget.form?['total_weight'] = _totalWeightController.text;
 
@@ -979,8 +988,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       if (fieldName == 'qty' && value != null) {
         _qtyController.text = value.toString();
       }
-      if (fieldName == 'weight_per_dozen' && value != null) {
-        _weightDozenController.text = value.toString();
+      if (fieldName == 'weight_grade_a' && value != null) {
+        _weightGradeAController.text = value.toString();
       }
     });
   }
@@ -1054,6 +1063,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               weight: _weightController,
                               gsm: _gsmController,
                               weightDozen: _weightDozenController,
+                              weightGradeA: _weightGradeAController,
                               totalWeight: _totalWeightController,
                               handleSelectWo: _selectWorkOrder,
                               handleSelectFinishedMaterial:

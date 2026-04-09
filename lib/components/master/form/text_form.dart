@@ -15,6 +15,7 @@ class TextForm extends StatelessWidget {
   final isDisabled;
   final validator;
   final inputFormatters;
+  final isGrade;
 
   const TextForm(
       {super.key,
@@ -26,7 +27,8 @@ class TextForm extends StatelessWidget {
       this.isNumber,
       this.isDisabled = false,
       this.validator,
-      this.inputFormatters});
+      this.inputFormatters,
+      this.isGrade = false});
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +46,7 @@ class TextForm extends StatelessWidget {
           req: req,
           errorText: field.errorText,
           disabled: isDisabled,
+          isGrade: isGrade,
           formControl: TextFormField(
             enabled: !isDisabled,
             controller: controller,

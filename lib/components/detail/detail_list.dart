@@ -741,7 +741,13 @@ Perbaikan >> Sorting
   Widget _buildReworkLongHemming(bool isTablet) {
     final items = [
       {
-        'label': 'Vermak Long Hemming',
+        'label': 'Semprotan',
+        'value':
+            '${widget.data['spraying'] != null ? formatNumber(widget.data['spraying']) : '0'} ${'PCS'}',
+        'icon': Icons.numbers_outlined,
+      },
+      {
+        'label': 'Permak Long Hemming',
         'value':
             '${widget.data['rework_long_hemming'] != null ? formatNumber(widget.data['rework_long_hemming']) : '0'} ${'PCS'}',
         'icon': Icons.twelve_mp_outlined,
@@ -750,12 +756,6 @@ Perbaikan >> Sorting
         'label': 'Sisiran',
         'value':
             '${widget.data['combing'] != null ? formatNumber(widget.data['combing']) : '0'} ${'PCS'}',
-        'icon': Icons.numbers_outlined,
-      },
-      {
-        'label': 'Semprotan',
-        'value':
-            '${widget.data['spraying'] != null ? formatNumber(widget.data['spraying']) : '0'} ${'PCS'}',
         'icon': Icons.numbers_outlined,
       },
     ];
@@ -800,7 +800,7 @@ Tipe BS
                   Text(capitalizeWords(itemType['type']?['name'] ?? '-')),
                   SizedBox(height: 8),
                   Text(
-                    'Qty: ${itemType['qty']}',
+                    'Qty: ${itemType['qty']} PCS',
                     style: TextStyle(
                         fontWeight: CustomTheme().fontWeight('semibold')),
                   ),
@@ -809,14 +809,11 @@ Tipe BS
             );
           }).toList(),
         ),
-
         SizedBox(height: 8),
-
-        /// 🔥 TOTAL BS
         Align(
           alignment: Alignment.centerRight,
           child: Text(
-            'Total BS: $total',
+            'Total BS: $total PCS',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.red,
@@ -1146,8 +1143,7 @@ Catatan WO
           ),
         if (widget.forDyeing == true ||
             widget.forHemming == true ||
-            widget.forSewing == true ||
-            widget.label == 'Sorting')
+            widget.forSewing == true)
           _buildInfoCard(
             title: 'Informasi Produk',
             icon: Icons.inventory_2_outlined,
@@ -1226,7 +1222,7 @@ Catatan WO
                                     : Icons.settings_outlined,
             child: _buildProcessInfo(false),
           ),
-        if (widget.data['rework'] == false)
+        if (widget.data['rework'] == true)
           _buildInfoCard(
             title: 'Informasi Rework',
             icon: Icons.replay_outlined,
@@ -1234,7 +1230,7 @@ Catatan WO
           ),
         if (widget.label == 'Sorting')
           _buildInfoCard(
-            title: 'Informasi Rework Long Hemming',
+            title: 'Informasi Perbaikan',
             icon: Icons.grade_outlined,
             child: _buildReworkLongHemming(false),
           ),
@@ -1244,6 +1240,12 @@ Catatan WO
             icon: Icons.attachment_outlined,
             child: _buildTypeBs(false),
           ),
+        if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
+          _buildInfoCard(
+            title: 'Informasi Grade',
+            icon: Icons.grade_outlined,
+            child: _buildGradeInfo(false),
+          ),
         if (widget.label == 'Sorting')
           _buildInfoCard(
             title: 'Ringkasan Sorting',
@@ -1252,18 +1254,11 @@ Catatan WO
           ),
         if (widget.forDyeing == true ||
             widget.forHemming == true ||
-            widget.forSewing == true ||
-            widget.label == 'Sorting')
+            widget.forSewing == true)
           _buildInfoCard(
             title: 'Informasi Produk',
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(false),
-          ),
-        if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
-          _buildInfoCard(
-            title: 'Informasi Grade',
-            icon: Icons.grade_outlined,
-            child: _buildGradeInfo(false),
           ),
         if (widget.label == 'Packing')
           _buildInfoCard(
@@ -1319,40 +1314,60 @@ Catatan WO
 
   /// Info Grid Builder
   Widget _buildInfoGrid(List<Map<String, dynamic>> items, bool isTablet) {
+    final int totalRework = (widget.data['rework_long_hemming'] ?? 0) +
+        (widget.data['combing'] ?? 0) +
+        (widget.data['spraying'] ?? 0);
+
     if (isTablet) {
-      return items.length > 3
-          ? Wrap(
-              spacing: 8,
-              runSpacing: 16,
-              children: items.map((item) {
-                return SizedBox(
-                  width: (MediaQuery.of(context).size.width - 100) / 4,
-                  child: _buildInfoItem(
-                      label: item['label'],
-                      value: item['value'],
-                      icon: item['icon'],
-                      id: item['id'].toString(),
-                      isTablet: isTablet,
-                      navigateTo: item['navigate'],
-                      rightIcon: item['right-icon']),
-                );
-              }).toList(),
+      return Column(
+        children: [
+          items.length > 3
+              ? Wrap(
+                  spacing: 8,
+                  runSpacing: 16,
+                  children: items.map((item) {
+                    return SizedBox(
+                      width: (MediaQuery.of(context).size.width - 100) / 4,
+                      child: _buildInfoItem(
+                          label: item['label'],
+                          value: item['value'],
+                          icon: item['icon'],
+                          id: item['id'].toString(),
+                          isTablet: isTablet,
+                          navigateTo: item['navigate'],
+                          rightIcon: item['right-icon']),
+                    );
+                  }).toList(),
+                )
+              : Row(
+                  spacing: 16,
+                  children: items.map((item) {
+                    return SizedBox(
+                      width: (MediaQuery.of(context).size.width - 100) / 4,
+                      child: _buildInfoItem(
+                          label: item['label'],
+                          value: item['value'],
+                          icon: item['icon'],
+                          id: item['id'].toString(),
+                          isTablet: isTablet,
+                          navigateTo: item['navigate'],
+                          rightIcon: item['right-icon']),
+                    );
+                  }).toList()),
+          SizedBox(height: 8),
+          if (items[0]['label'] == 'Semprotan')
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                'Total Perbaikan: $totalRework PCS',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                ),
+              ),
             )
-          : Row(
-              spacing: 16,
-              children: items.map((item) {
-                return SizedBox(
-                  width: (MediaQuery.of(context).size.width - 100) / 4,
-                  child: _buildInfoItem(
-                      label: item['label'],
-                      value: item['value'],
-                      icon: item['icon'],
-                      id: item['id'].toString(),
-                      isTablet: isTablet,
-                      navigateTo: item['navigate'],
-                      rightIcon: item['right-icon']),
-                );
-              }).toList());
+        ],
+      );
     }
 
     return Column(
@@ -1554,15 +1569,18 @@ Catatan WO
                       ),
                     ].separatedBy(CustomTheme().hGap('sm')),
                   ),
-                  Text(
-                    'Produk Jadi',
-                    style: TextStyle(
-                      fontSize: isTablet ? 12 : 11,
-                      color: Colors.grey[600],
+                  if (label == 'Grade A' ||
+                      label == 'Grade B' ||
+                      label == 'Grade C')
+                    Text(
+                      'Produk Jadi',
+                      style: TextStyle(
+                        fontSize: isTablet ? 12 : 11,
+                        color: Colors.grey[600],
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [

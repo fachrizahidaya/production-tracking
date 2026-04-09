@@ -66,6 +66,7 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
   Widget build(BuildContext context) {
     return FinishProcess(
       title: 'Selesai Long Slitting',
+      label: 'Long Slitting',
       fetchWorkOrder: (service) async =>
           await service.fetchSittingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,

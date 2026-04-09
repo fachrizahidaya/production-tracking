@@ -63,6 +63,7 @@ class ListForm extends StatefulWidget {
   final handleSelectItemType;
   final handleUpdateDefect;
   final packingQty;
+  final weightGradeA;
 
   const ListForm(
       {super.key,
@@ -123,7 +124,8 @@ class ListForm extends StatefulWidget {
       this.defectQty,
       this.handleSelectItemType,
       this.handleUpdateDefect,
-      this.packingQty});
+      this.packingQty,
+      this.weightGradeA});
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -301,6 +303,7 @@ class _ListFormState extends State<ListForm> {
         handleSelectItemType: widget.handleSelectItemType,
         handleUpdateDefect: widget.handleUpdateDefect,
         packingQty: widget.packingQty,
+        weightGradeA: widget.weightGradeA,
       ),
     );
   }

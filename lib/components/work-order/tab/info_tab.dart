@@ -123,6 +123,12 @@ class _InfoTabState extends State<InfoTab> {
   }
 
   Widget _buildQuickInfoRow(bool isTablet) {
+    final List items = widget.data['items'] ?? [];
+
+    final int totalQty = items.fold<int>(
+      0,
+      (sum, item) => sum + (item['qty'] ?? 0) as int,
+    );
     return Container(
       padding: CustomTheme().padding(isTablet ? 'content' : 'card'),
       decoration: BoxDecoration(
@@ -146,7 +152,7 @@ class _InfoTabState extends State<InfoTab> {
               icon: Icons.numbers_outlined,
               label: 'Qty WO',
               value:
-                  '${formatNumber(widget.data['items'][0]['process_qty'])} ${widget.data['items'][0]['unit']?['code']}',
+                  '${formatNumber(totalQty)} ${widget.data['items'][0]['unit']?['code']}',
               isTablet: isTablet,
             ),
           ),

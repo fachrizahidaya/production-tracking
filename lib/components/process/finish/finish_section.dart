@@ -65,6 +65,7 @@ class FinishSection extends StatefulWidget {
   final defects;
   final defectQty;
   final handleUpdateDefect;
+  final weightGradeA;
 
   const FinishSection(
       {super.key,
@@ -119,7 +120,8 @@ class FinishSection extends StatefulWidget {
       this.itemTypeOption,
       this.defects,
       this.defectQty,
-      this.handleUpdateDefect});
+      this.handleUpdateDefect,
+      this.weightGradeA});
 
   @override
   State<FinishSection> createState() => _FinishSectionState();
@@ -349,6 +351,7 @@ class _FinishSectionState extends State<FinishSection> {
       defects: widget.defects,
       defectQty: widget.defectQty,
       handleUpdateDefect: widget.handleUpdateDefect,
+      weightGradeA: widget.weightGradeA,
     );
   }
 }

@@ -13,6 +13,7 @@ class Packing {
   final String? weight_per_dozen;
   final String? gsm;
   final String? total_weight;
+  final String? weight_grade_a;
   final String? notes;
   final String? status;
   final int? wo_id;
@@ -46,7 +47,8 @@ class Packing {
       this.total_weight,
       this.greige_item_id,
       this.qty,
-      this.unit_id});
+      this.unit_id,
+      this.weight_grade_a});
 
   factory Packing.fromJson(Map<String, dynamic> json) {
     return Packing(
@@ -69,7 +71,8 @@ class Packing {
         grades: json['grades'] ?? [],
         qty: json['qty'] ?? '',
         unit_id: json['unit_id'] as int?,
-        greige_item_id: json['greige_item_id'] as int?);
+        greige_item_id: json['greige_item_id'] as int?,
+        weight_grade_a: json['weight_grade_a'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -95,6 +98,7 @@ class Packing {
       'qty': qty,
       'unit_id': unit_id,
       'greige_item_id': greige_item_id,
+      'weight_grade_a': weight_grade_a,
     };
   }
 }

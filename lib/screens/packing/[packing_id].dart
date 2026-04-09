@@ -51,6 +51,7 @@ class _PackingDetailState extends State<PackingDetail> {
           total_weight: form['total_weight'] ?? data['total_weight'],
           weight_per_dozen:
               form['weight_per_dozen'] ?? data['weight_per_dozen'],
+          weight_grade_a: form['weight_grade_a'] ?? data['weight_grade_a'],
           greige_item_id:
               int.tryParse(form['greige_item_id']?.toString() ?? '')),
       canDelete: widget.canDelete,
@@ -83,6 +84,7 @@ class _PackingDetailState extends State<PackingDetail> {
           unit_id: int.tryParse(form['unit_id']?.toString() ?? '1'),
           greige_item_id:
               int.tryParse(form['greige_item_id']?.toString() ?? ''),
+          weight_grade_a: form['weight_grade_a'],
         );
 
         final message =

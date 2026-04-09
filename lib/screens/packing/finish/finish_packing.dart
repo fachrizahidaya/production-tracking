@@ -45,6 +45,7 @@ class _FinishPackingState extends State<FinishPacking> {
     'nama_satuan': '',
     'finished_unit_id': null,
     'nama_item': '',
+    'weight_grade_a': '',
   };
 
   @override
@@ -101,6 +102,7 @@ class _FinishPackingState extends State<FinishPacking> {
           grades: form['grades'],
           qty: form['qty'],
           unit_id: int.tryParse(form['unit_id']?.toString() ?? ''),
+          weight_grade_a: form['weight_grade_a'],
         );
 
         final message =

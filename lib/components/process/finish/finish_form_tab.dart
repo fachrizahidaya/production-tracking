@@ -72,6 +72,7 @@ class FinishFormTab extends StatefulWidget {
   final defects;
   final defectQty;
   final handleUpdateDefect;
+  final weightGradeA;
 
   const FinishFormTab(
       {super.key,
@@ -142,7 +143,8 @@ class FinishFormTab extends StatefulWidget {
       this.itemTypeOption,
       this.defects,
       this.defectQty,
-      this.handleUpdateDefect});
+      this.handleUpdateDefect,
+      this.weightGradeA});
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();
@@ -225,6 +227,7 @@ class _FinishFormTabState extends State<FinishFormTab>
                   defects: widget.defects,
                   defectQty: widget.defectQty,
                   handleUpdateDefect: widget.handleUpdateDefect,
+                  weightGradeA: widget.weightGradeA,
                 ),
               ],
             ),

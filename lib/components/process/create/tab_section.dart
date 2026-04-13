@@ -53,6 +53,11 @@ class TabSection extends StatefulWidget {
 }
 
 class _TabSectionState extends State<TabSection> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   Future<void> _handleCancel(BuildContext context) async {

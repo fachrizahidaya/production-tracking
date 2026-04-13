@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/text/thousand_separator_input_formatter.dart';
@@ -59,7 +60,7 @@ class TextForm extends StatelessWidget {
                 .copyWith(
                   hintText: isNumber == true ? '0' : 'Isi $label',
                   contentPadding: EdgeInsets.symmetric(
-                    vertical: 18,
+                    vertical: 16,
                     horizontal: 12,
                   ),
                 ),

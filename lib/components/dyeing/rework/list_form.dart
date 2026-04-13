@@ -47,14 +47,16 @@ class _ListFormState extends State<ListForm> {
           children: [
             if (widget.id == null)
               Expanded(
-                child: CustomCard(
+                child: TemplateCard(
+                    title: 'Work Order',
+                    icon: Icons.assignment_outlined,
                     child: SelectForm(
-                  label: 'Work Order',
-                  onTap: () => widget.selectWorkOrder(),
-                  selectedLabel: widget.form?['no_wo'] ?? '',
-                  selectedValue: widget.form?['wo_id']?.toString() ?? '',
-                  required: true,
-                )),
+                      label: 'Work Order',
+                      onTap: () => widget.selectWorkOrder(),
+                      selectedLabel: widget.form?['no_wo'] ?? '',
+                      selectedValue: widget.form?['wo_id']?.toString() ?? '',
+                      required: true,
+                    )),
               ),
             if (widget.form?['wo_id'] != null)
               Expanded(

@@ -13,7 +13,9 @@ Future<List<dynamic>?> showSelectDialog(
     context: context,
     builder: (context) {
       return isFetching == true
-          ? CircularProgressIndicator()
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
           : SelectDialog(
               label: title,
               options: option,

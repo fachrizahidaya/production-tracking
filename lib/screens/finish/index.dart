@@ -75,6 +75,7 @@ class _FinishProcessState extends State<FinishProcess> {
 
   List<dynamic> workOrderOption = [];
   List<dynamic> finishedItemOption = [];
+  List<dynamic> finishedItemGrb = [];
   List<dynamic> itemGradeOption = [];
   String id = '';
 
@@ -149,6 +150,10 @@ class _FinishProcessState extends State<FinishProcess> {
       _form['nama_satuan_item'] = 'PCS';
     }
 
+    if (widget.label == 'Sewing') {
+      _form['nama_satuan'] = 'PCS';
+    }
+
     final data = _workOrderService.dataView;
     final greigeQty = data['greige_qty'];
 
@@ -188,6 +193,17 @@ class _FinishProcessState extends State<FinishProcess> {
     });
   }
 
+  String formatProcessLabel(String label) {
+    final trimmed = label.trim().toLowerCase();
+
+    // kalau lebih dari 1 kata → pakai underscore
+    if (trimmed.contains(' ')) {
+      return trimmed.replaceAll(RegExp(r'\s+'), '_');
+    }
+
+    return trimmed;
+  }
+
   Future<void> _handleFetchFinishedMaterial(Map<String, dynamic> woData) async {
     final service = Provider.of<OptionItemService>(context, listen: false);
 
@@ -204,9 +220,9 @@ class _FinishProcessState extends State<FinishProcess> {
       }
 
       await service.fetchOptions(
-        process: widget.label.toLowerCase(),
+        process: formatProcessLabel(widget.label),
         baseCode: baseCode,
-        colorCode: colorCode,
+        colorCode: widget.label == 'Sorting' ? 'grb' : colorCode,
       );
 
       final options = widget.getFinishedItemOptions != null
@@ -215,6 +231,40 @@ class _FinishProcessState extends State<FinishProcess> {
 
       setState(() {
         finishedItemOption = options;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
+    }
+  }
+
+  Future<void> _handleFetchFinishedGrbMaterial(
+      Map<String, dynamic> woData) async {
+    final service = Provider.of<OptionItemService>(context, listen: false);
+
+    try {
+      String baseCode = '';
+
+      final itemCode = woData['items']?[0]?['item_code'] ?? '';
+
+      if (itemCode.isNotEmpty) {
+        final parts = itemCode.split('-');
+        baseCode = parts.first;
+      }
+
+      await service.fetchOptions(
+        process: 'sorting',
+        baseCode: baseCode,
+        colorCode: 'grb',
+      );
+
+      final options = widget.getFinishedItemOptions != null
+          ? widget.getFinishedItemOptions!(service)
+          : service.dataListOption;
+
+      setState(() {
+        finishedItemGrb = options;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -330,8 +380,13 @@ class _FinishProcessState extends State<FinishProcess> {
       if (widget.label == 'Dyeing' ||
           widget.label == 'Long Hemming' ||
           widget.label == 'Sewing' ||
-          widget.label == 'Sorting') {
+          widget.label == 'Sorting' ||
+          widget.label == 'Packing') {
         await _handleFetchFinishedMaterial(data);
+      }
+
+      if (widget.label == 'Sorting') {
+        _form['wo_data'] = data;
       }
 
       _form['wo_id'] = data['id']?.toString() ?? woId;

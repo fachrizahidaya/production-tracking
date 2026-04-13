@@ -46,6 +46,11 @@ class FormInfoTab extends StatefulWidget {
 
 class _FormInfoTabState extends State<FormInfoTab> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (widget.isLoading) {
       return Center(

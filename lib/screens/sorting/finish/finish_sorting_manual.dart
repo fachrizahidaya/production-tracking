@@ -34,6 +34,8 @@ class FinishSortingManual extends StatefulWidget {
 class _FinishSortingManualState extends State<FinishSortingManual> {
   final SortingService _sortingService = SortingService();
 
+  Map<String, dynamic>? get woData => widget.form?['wo_data'];
+
   @override
   void initState() {
     super.initState();
@@ -54,7 +56,9 @@ class _FinishSortingManualState extends State<FinishSortingManual> {
       form: widget.form,
       handleSubmit: widget.handleSubmit,
       fetchWorkOrder: (service) => service.fetchSortingFinishOptions(),
+      fetchFinishItem: (service) => service.fetchOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
+      getFinishedItemOptions: (service) => service.dataListOption,
       processService: _sortingService,
       handleChangeInput: widget.handleChangeInput,
       idProcess: 'sorting_id',

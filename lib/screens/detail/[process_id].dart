@@ -11,6 +11,7 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/models/master/machine.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_master_item_grade.dart';
@@ -100,6 +101,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   bool _isFetchingUnit = false;
   bool _isFetchingItemType = false;
   bool _isFetchingItemGrade = false;
+  bool _isFetchingFinishedMaterial = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   final WorkOrderService _workOrderService = WorkOrderService();
@@ -125,6 +127,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   final TextEditingController _gsmController = TextEditingController();
   final TextEditingController _totalWeightController = TextEditingController();
   final TextEditingController _weightGradeAController = TextEditingController();
+  final TextEditingController _totalSortingController = TextEditingController();
   final List<TextEditingController> _qtyControllers = [];
   final List<TextEditingController> _notesControllers = [];
   final List<TextEditingController> _defectQtyControllers = [];
@@ -133,6 +136,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   late List<dynamic> unitOption = [];
   late List<dynamic> machineOption = [];
   late List<dynamic> itemTypeOption = [];
+  late List<dynamic> finishedItemGrb = [];
 
   late List<dynamic> _grades;
   late List<Map<String, dynamic>> _defects;
@@ -172,6 +176,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     'gsm': '0',
     'total_weight': '0',
     'weight_grade_a': '0',
+    'total_sorting': '0'
   };
 
   final fieldConfigs = [
@@ -207,6 +212,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         'unit_id': existing['unit_id'] ?? 1,
         'qty': existing['qty'] ?? '0',
         'notes': existing['notes'] ?? '',
+        'greige_item_id': existing['greige_item_id'] ?? null,
       });
     }
 
@@ -264,6 +270,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     await _handleFetchMachine();
     await _handleFetchItemType();
     await _handleFetchItemGrade();
+    await _handleFetchFinishedGrbMaterial();
     _syncGradesWithOptions();
     _syncDefectsWithOptions();
   }
@@ -305,6 +312,15 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       await _getWoView(woId);
     }
 
+    if (widget.label == 'Sorting') {
+      await _getWoGradeTotalView(woId);
+    }
+
+    if (data['weight'] != null) {
+      _weightController.text = data['weight'].toString();
+      _form['weight'] = data['weight'];
+    }
+
     if (data['good_weight'] != null) {
       _goodWeightController.text = data['good_weight'].toString();
       _form['good_weight'] = data['good_weight'];
@@ -331,6 +347,10 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       _weightGradeAController.text = data['weight_grade_a'].toString();
       _form['weight_grade_a'] = data['weight_grade_a']?.toString() ?? '0';
     }
+    // if (data['total_sorting'] != null) {
+    //   _totalSortingController.text = data['total_sorting'].toString();
+    //   _form['total_sorting'] = data['total_sorting']?.toString() ?? '0';
+    // }
     if (data['gsm'] != null) {
       _gsmController.text = data['gsm'].toString();
       _form['gsm'] = data['gsm']?.toString() ?? '0';
@@ -359,9 +379,10 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         d['rework_long_hemming']?.toString() ?? '';
     _combingController.text = d['combing']?.toString() ?? '';
     _sprayingController.text = d['spraying']?.toString() ?? '';
+    _totalSortingController.text = d['total_sorting']?.toString() ?? '';
 
     _form['item_qty'] = d['item_qty']?.toString() ?? '';
-    _form['weight'] = d['weight'];
+    _form['weight'] = d['weight']?.toString() ?? '';
     _form['qty'] = d['qty']?.toString() ?? '';
     _form['weight_per_dozen'] = d['weight_per_dozen']?.toString() ?? '';
     _form['maklon_name'] = d['maklon_name'];
@@ -374,6 +395,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     _form['machines'] = List.from(d['machines'] ?? []);
     _form['machine_ids'] = List.from(d['machine_ids'] ?? []);
     _form['grades'] = List.from(d['grades'] ?? []);
+    _form['total_sorting'] = d['total_sorting']?.toString() ?? '';
 
     final rawDefects = List.from(d['defects'] ?? []);
     _form['defects'] = rawDefects.map<Map<String, dynamic>>((defect) {
@@ -507,6 +529,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           gsm: _gsmController,
           totalWeight: _totalWeightController,
           weightGradeA: _weightGradeAController,
+          finishedItemGrb: finishedItemGrb,
         ),
       ),
     );
@@ -709,6 +732,45 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     } finally {
       setState(() {
         _isFetchingItemType = false;
+      });
+    }
+  }
+
+  Future<void> _handleFetchFinishedGrbMaterial() async {
+    setState(() {
+      _isFetchingFinishedMaterial = true;
+    });
+
+    final service = Provider.of<OptionItemService>(context, listen: false);
+
+    try {
+      String baseCode = '';
+
+      final itemCode = woData['items']?[0]?['item_code'] ?? '';
+
+      if (itemCode.isNotEmpty) {
+        final parts = itemCode.split('-');
+        baseCode = parts.first;
+      }
+
+      await service.fetchOptions(
+        process: 'sorting',
+        baseCode: baseCode,
+        colorCode: 'grb',
+      );
+
+      final data = service.dataListOption;
+
+      setState(() {
+        finishedItemGrb = data;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
+    } finally {
+      setState(() {
+        _isFetchingFinishedMaterial = false;
       });
     }
   }
@@ -986,6 +1048,55 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     final remaining = totalQty - usedQty;
 
     return remaining < 0 ? 0 : remaining;
+  }
+
+  double _calculateTotalSortingFromWo() {
+    final processData = woData['processes']?[10]?['data']?[0];
+
+    if (processData == null) return 0;
+
+    // ✅ additional process
+    final rework = double.tryParse(
+          processData['rework_long_hemming']?.toString() ?? '0',
+        ) ??
+        0;
+
+    final combing = double.tryParse(
+          processData['combing']?.toString() ?? '0',
+        ) ??
+        0;
+
+    final spraying = double.tryParse(
+          processData['spraying']?.toString() ?? '0',
+        ) ??
+        0;
+
+    // ✅ grades qty
+    final gradesList = processData['grades'] ?? [];
+
+    double totalGrades = 0;
+    for (var grade in gradesList) {
+      final qty = double.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
+      totalGrades += qty;
+    }
+
+    return rework + combing + spraying + totalGrades;
+  }
+
+  Future<void> _getWoGradeTotalView(dynamic id) async {
+    await _workOrderService.getDataView(id);
+
+    setState(() {
+      woData = _workOrderService.dataView;
+    });
+
+    // ✅ HITUNG TOTAL SORTING
+    final totalSorting = _calculateTotalSortingFromWo();
+
+    setState(() {
+      _totalSortingController.text = totalSorting.toStringAsFixed(0);
+      _form['total_sorting'] = totalSorting.toString();
+    });
   }
 
   bool isQtyFullyDistributed() {

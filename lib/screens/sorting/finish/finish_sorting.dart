@@ -45,6 +45,7 @@ class _FinishSortingState extends State<FinishSorting> {
     'combing': '',
     'spraying': '',
     'rework_long_hemming': '',
+    'wo_data': null,
   };
 
   @override
@@ -70,7 +71,9 @@ class _FinishSortingState extends State<FinishSorting> {
       label: 'Sorting',
       fetchWorkOrder: (service) async =>
           await service.fetchSortingFinishOptions(),
+      fetchFinishedItem: (service) async => await service.fetchOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
+      getFinishedItemOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput) =>
           FinishSortingManual(

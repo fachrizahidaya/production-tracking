@@ -61,7 +61,7 @@ class _ListFormState extends State<ListForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TemplateCard(
-                icon: Icons.paste_outlined,
+                icon: Icons.assignment_outlined,
                 title: 'Work Order',
                 child: SelectForm(
                   label: 'Work Order',
@@ -81,7 +81,7 @@ class _ListFormState extends State<ListForm> {
         if (widget.id == null)
           TemplateCard(
             title: 'Work Order',
-            icon: Icons.paste_outlined,
+            icon: Icons.assessment_outlined,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -239,39 +239,42 @@ class _ListFormState extends State<ListForm> {
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: machines.map((machine) {
-                      return Container(
-                        margin: EdgeInsets.only(right: 8),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(machine['label']),
-                            SizedBox(width: 8),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  machines.removeWhere(
-                                    (e) => e['value'] == machine['value'],
-                                  );
-                                  widget.form['machines'] = machines;
-                                });
-                              },
-                              child: Icon(
-                                Icons.close,
-                                color: Colors.red,
-                                size: 16,
-                              ),
+                    children: machines
+                        .map((machine) {
+                          return Container(
+                            margin: EdgeInsets.only(right: 8),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(machine['label']),
+                                SizedBox(width: 8),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      machines.removeWhere(
+                                        (e) => e['value'] == machine['value'],
+                                      );
+                                      widget.form['machines'] = machines;
+                                    });
+                                  },
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                    size: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        })
+                        .toList()
+                        .separatedBy(CustomTheme().hGap('lg')),
                   ),
                 ),
 
@@ -292,9 +295,9 @@ class _ListFormState extends State<ListForm> {
                     ),
                   ),
                 ),
-              ],
+              ].separatedBy(CustomTheme().vGap('lg')),
             )),
-      ].separatedBy(CustomTheme().vGap('md')),
+      ],
     );
   }
 }

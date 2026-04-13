@@ -53,6 +53,7 @@ class _SortingDetailState extends State<SortingDetail> {
           ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
         ],
         grades: form['grades'] ?? data['grades'],
+        greige_item_id: int.tryParse(form['greige_item_id']?.toString() ?? ''),
         defects: form['defects'] ?? data['defects'],
         combing: form['combing'] ?? data['combing'],
         spraying: form['spraying'] ?? data['spraying'],
@@ -89,6 +90,8 @@ class _SortingDetailState extends State<SortingDetail> {
           rework_long_hemming: form['rework_long_hemming'],
           spraying: form['spraying'],
           combing: form['combing'],
+          greige_item_id:
+              int.tryParse(form['greige_item_id']?.toString() ?? ''),
         );
 
         final message =

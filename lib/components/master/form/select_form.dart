@@ -56,7 +56,8 @@ class _SelectFormState extends State<SelectForm> {
                     field.validate();
                   },
             child: Container(
-              height: widget.isWithCode ? 84.0 : 56.0,
+              height:
+                  widget.isWithCode && widget.selectedValue != '' ? 84.0 : 56.0,
               padding: CustomTheme().padding('card'),
               width: double.infinity,
               decoration: widget.isDisabled

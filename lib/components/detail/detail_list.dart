@@ -382,14 +382,14 @@ Informasi Proses
               : '-',
           'icon': Icons.invert_colors_on_outlined,
         },
-      if (widget.withQtyAndWeight == true && widget.data['status'] == 'Selesai')
-        {
-          'label': 'Qty Hasil ${widget.label}',
-          'value': widget.data['item_qty'] != null
-              ? '${formatNumber(widget.data['item_qty'])} ${widget.data['item_unit']['code']}'
-              : '0 ${widget.data['item_unit'] != null ? widget.data['item_unit']['code'] : ''}',
-          'icon': Icons.layers_outlined,
-        },
+      // if (widget.withQtyAndWeight == true && widget.data['status'] == 'Selesai')
+      //   {
+      //     'label': 'Qty Hasil ${widget.label}',
+      //     'value': widget.data['item_qty'] != null
+      //         ? '${formatNumber(widget.data['item_qty'])} ${widget.data['item_unit']['code']}'
+      //         : '0 ${widget.data['item_unit'] != null ? widget.data['item_unit']['code'] : ''}',
+      //     'icon': Icons.layers_outlined,
+      //   },
       if (widget.label == 'Long Hemming')
         {
           'label': 'Berat Bagus',
@@ -406,10 +406,11 @@ Informasi Proses
               : '0 ${widget.data['bs_weight_unit'] != null ? widget.data['bs_weight_unit']['code'] : ''}',
           'icon': Icons.scale_outlined,
         },
-      if (widget.forDyeing == false &&
-          widget.label != 'Long Hemming' &&
-          widget.label != 'Cross Cutting' &&
-          widget.label != 'Sewing')
+      if (widget.data['status'] == 'Selesai' &&
+          (widget.forDyeing == false &&
+              widget.label != 'Long Hemming' &&
+              widget.label != 'Cross Cutting' &&
+              widget.label != 'Sewing'))
         {
           'label': 'Berat',
           'value': widget.data['weight'] != null
@@ -437,8 +438,9 @@ Grades
       });
     }
 
-    final totalQty = getTotalGradeQty();
     final items = widget.data['work_orders']?['items'] ?? [];
+    final codeGradeB = widget.data['grades'][1]['greige_item']['code'];
+    final nameGradeB = widget.data['grades'][1]['greige_item']['name'];
 
     final gradeItems = [
       for (int i = 0; i < widget.existingGrades.length; i++)
@@ -447,10 +449,20 @@ Grades
           'value': widget.existingGrades[i]['qty'] != null
               ? '${formatNumber(widget.existingGrades[i]['qty'])} ${widget.existingGrades[i]['unit']['code']}'
               : '-',
-          'another_value': i < items.length
-              ? '${items[i]['item_code'] ?? '-'} - ${items[i]['item_name'] ?? '-'}'
-              : '-',
+          'another_value': widget.label == 'Sorting' &&
+                  widget.existingGrades[i]['item_grade']['code'] == 'B'
+              ? codeGradeB
+              : i < items.length
+                  ? '${items[i]['item_code'] ?? '-'}'
+                  : '',
+          'name_value': widget.label == 'Sorting' &&
+                  widget.existingGrades[i]['item_grade']['code'] == 'B'
+              ? nameGradeB
+              : i < items.length
+                  ? '${items[i]['item_name'] ?? '-'}'
+                  : '',
           'icon': Icons.grade_outlined,
+          'isGrade': true,
         },
     ];
 
@@ -626,19 +638,39 @@ Info Material
       {
         'label': 'Greige Awal',
         'value':
-            '${widget.data['work_orders']['items'][0]['greige_item']['code'] ?? '-'}',
+            '${widget.data['work_orders']['items'][0]['greige_item']['code'] ?? '${widget.data['work_orders']['items'][0]['item_code'] ?? '-'}'}',
         'another_value':
-            '${widget.data['work_orders']['items'][0]['greige_item']['name'] ?? '-'}',
+            '${widget.data['work_orders']['items'][0]['greige_item']['name'] ?? '${widget.data['work_orders']['items'][0]['item_name'] ?? '-'}'}',
         'icon': Icons.inventory_2_outlined,
+        'is_product': true,
       },
-      if (widget.data['status'] == 'Selesai' &&
-          widget.label != 'Dyeing' &&
-          widget.label != 'Sorting')
+      if (widget.label != 'Sorting' &&
+          widget.label != 'Packing' &&
+          ((widget.label == 'Dyeing' && widget.data['status'] == 'Selesai') ||
+              (widget.label == 'Long Hemming' &&
+                  widget.data['status'] == 'Selesai') ||
+              (widget.label == 'Cross Cutting' &&
+                  widget.data['status'] == 'Selesai') ||
+              (widget.label == 'Sewing' &&
+                  widget.data['status'] == 'Selesai') ||
+              (widget.label == 'Sorting' &&
+                  widget.data['status'] == 'Selesai') ||
+              (widget.label == 'Packing' &&
+                  widget.data['status'] == 'Selesai') ||
+              (widget.label != 'Dyeing' &&
+                  widget.label != 'Long Hemming' &&
+                  widget.label != 'Cross Cutting' &&
+                  widget.label != 'Sewing' &&
+                  widget.label != 'Sorting' &&
+                  widget.label != 'Packing')))
         {
           'label': 'Produk Setengah Jadi',
-          'value': '${widget.data['greige_item']['code'] ?? '-'}',
-          'another_value': '${widget.data['greige_item']['name'] ?? '-'}',
+          'value':
+              '${widget.data['greige_item']['code'] ?? (widget.label == 'Sorting' ? widget.data['grades'][1]['greige_item']['code'] : '-')}',
+          'another_value':
+              '${widget.data['greige_item']['name'] ?? (widget.label == 'Sorting' ? widget.data['grades'][1]['greige_item']['name'] : '-')}',
           'icon': Icons.inventory_2_outlined,
+          'is_product': true,
         },
       {
         'label': 'Produk Jadi',
@@ -647,6 +679,7 @@ Info Material
         'another_value':
             '${widget.data['work_orders']['items'][0]['item_name'] ?? '-'}',
         'icon': Icons.inventory_2_outlined,
+        'is_product': true,
       },
     ];
 
@@ -698,40 +731,62 @@ Multi Mesin
 
     if (machines.isEmpty) return NoData();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Wrap(
-          alignment: WrapAlignment.start,
-          runAlignment: WrapAlignment.start,
-          spacing: 16,
-          runSpacing: 16,
-          children: machines.map((machine) {
-            return Container(
-                width: machines.length > 1
-                    ? (MediaQuery.of(context).size.width - 80) / 2
-                    : double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade200),
+    return Wrap(
+      alignment: WrapAlignment.start,
+      runAlignment: WrapAlignment.start,
+      spacing: 16,
+      runSpacing: 16,
+      children: machines.map((machine) {
+        return Container(
+            width: machines.length > 1
+                ? (MediaQuery.of(context).size.width - 80) / 2
+                : double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (machine['machine'] != null)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${machine['machine']['code']} - ${machine['machine']['name']}',
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      CustomBadge(
+                        title: machine['status'],
+                        rework: true,
+                        status: machine['status'] == 'Selesai'
+                            ? 'Selesai'
+                            : 'Diproses',
+                        withStatus: true,
+                      )
+                    ],
+                  ),
+                Text(
+                  'Lokasi: ${machine['location']}',
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${machine['code']} - ${machine['name']}',
-                      style: TextStyle(fontWeight: FontWeight.w500),
+                      'Mulai: ${machine['start_time'] != null ? DateFormat('dd MMM yyyy, HH:mm').format(DateTime.parse(machine['start_time']).toLocal()) : '-'}',
                     ),
                     Text(
-                      'Lokasi: ${machine['location']}',
+                      'Selesai: ${machine['end_time'] != null ? DateFormat('dd MMM yyyy, HH:mm').format(DateTime.parse(machine['end_time']).toLocal()) : '-'}',
                     ),
-                  ].separatedBy(CustomTheme().vGap('sm')),
-                ));
-          }).toList(),
-        ),
-      ],
+                  ],
+                ),
+              ].separatedBy(CustomTheme().vGap('sm')),
+            ));
+      }).toList(),
     );
   }
 
@@ -783,8 +838,8 @@ Tipe BS
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: 16,
+          runSpacing: 16,
           children: itemTypes.map<Widget>((itemType) {
             return Container(
               padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -1003,8 +1058,8 @@ Lampiran
           child: widget.existingAttachment.isEmpty
               ? NoData()
               : Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: 16,
+                  runSpacing: 16,
                   children: widget.handleBuildAttachment(context),
                 ),
         ),
@@ -1090,10 +1145,13 @@ Catatan WO
             widget.label == 'Sewing')
           _buildInfoCard(
             title: 'Informasi Mesin',
-            icon: Icons.attachment_outlined,
+            icon: Icons.local_laundry_service_outlined,
             child: _buildMachine(true),
           ),
-        if (widget.withItemGrade == false)
+        if (widget.withItemGrade == false &&
+            (['Dyeing', 'Press', 'Tumbler', 'Stenter', 'Long Slitting']
+                .contains(widget.label)) &&
+            widget.data['status'] == 'Selesai')
           _buildInfoCard(
             title: 'Informasi Proses',
             icon: widget.label == 'Dyeing'
@@ -1141,9 +1199,7 @@ Catatan WO
             icon: Icons.attachment_outlined,
             child: _buildTotalSorting(true),
           ),
-        if (widget.forDyeing == true ||
-            widget.forHemming == true ||
-            widget.forSewing == true)
+        if (widget.label != 'Sorting')
           _buildInfoCard(
             title: 'Informasi Produk',
             icon: Icons.inventory_2_outlined,
@@ -1201,7 +1257,7 @@ Catatan WO
             widget.label == 'Sewing')
           _buildInfoCard(
             title: 'Informasi Mesin',
-            icon: Icons.attachment_outlined,
+            icon: Icons.local_laundry_service_outlined,
             child: _buildMachine(false),
           ),
         if (widget.withItemGrade == false)
@@ -1323,7 +1379,7 @@ Catatan WO
         children: [
           items.length > 3
               ? Wrap(
-                  spacing: 8,
+                  spacing: 16,
                   runSpacing: 16,
                   children: items.map((item) {
                     return SizedBox(
@@ -1355,7 +1411,7 @@ Catatan WO
                     );
                   }).toList()),
           SizedBox(height: 8),
-          if (items[0]['label'] == 'Semprotan')
+          if (widget.label == 'Sorting' && items[0]['label'] == 'Semprotan')
             Align(
               alignment: Alignment.centerRight,
               child: Text(
@@ -1393,7 +1449,7 @@ Catatan WO
               runSpacing: 16,
               children: items.map((item) {
                 return SizedBox(
-                  width: (MediaQuery.of(context).size.width - 80) / 2,
+                  width: (MediaQuery.of(context).size.width - 90) / 3,
                   child: _buildMultiInfoItem(
                       label: item['label'],
                       value: item['value'],
@@ -1402,7 +1458,10 @@ Catatan WO
                       id: item['id'].toString(),
                       isTablet: isTablet,
                       navigateTo: item['navigate'],
-                      rightIcon: item['right-icon']),
+                      rightIcon: item['right-icon'],
+                      isProduct: item['is_product'] ?? false,
+                      isGrade: item['is_grade'] ?? false,
+                      nameValue: item['name_value']),
                 );
               }).toList(),
             )
@@ -1410,7 +1469,7 @@ Catatan WO
               spacing: 16,
               children: items.map((item) {
                 return SizedBox(
-                  width: (MediaQuery.of(context).size.width - 80) / 2,
+                  width: (MediaQuery.of(context).size.width - 90) / 3,
                   child: _buildMultiInfoItem(
                       label: item['label'],
                       value: item['value'],
@@ -1419,7 +1478,10 @@ Catatan WO
                       id: item['id'].toString(),
                       isTablet: isTablet,
                       navigateTo: item['navigate'],
-                      rightIcon: item['right-icon']),
+                      rightIcon: item['right-icon'],
+                      isProduct: item['is_product'] ?? false,
+                      isGrade: item['is_grade'] ?? false,
+                      nameValue: item['name_value']),
                 );
               }).toList());
     }
@@ -1529,7 +1591,10 @@ Catatan WO
       required IconData icon,
       required bool isTablet,
       navigateTo,
-      rightIcon}) {
+      rightIcon,
+      isProduct,
+      isGrade,
+      nameValue}) {
     return GestureDetector(
       onTap: navigateTo,
       child: Container(
@@ -1557,21 +1622,37 @@ Catatan WO
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        value,
-                        style: TextStyle(
-                          fontSize: isTablet ? 14 : 13,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[800],
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            value,
+                            style: TextStyle(
+                              fontSize: isTablet ? 14 : 13,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey[800],
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            anotherValue,
+                            style: TextStyle(
+                              fontSize: isTablet ? 14 : 13,
+                              color: isProduct
+                                  ? Colors.grey[600]
+                                  : Colors.grey[800],
+                              fontWeight: CustomTheme().fontWeight('semibold'),
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ].separatedBy(CustomTheme().hGap('sm')),
                   ),
-                  if (label == 'Grade A' ||
-                      label == 'Grade B' ||
-                      label == 'Grade C')
+                  if (label == 'Grade A' || label == 'Grade B')
                     Text(
                       'Produk Jadi',
                       style: TextStyle(
@@ -1581,21 +1662,34 @@ Catatan WO
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        anotherValue,
-                        style: TextStyle(
-                          fontSize: isTablet ? 14 : 13,
-                          color: Colors.grey[800],
-                          fontWeight: FontWeight.w600,
+                  if (label == 'Grade A' || label == 'Grade B')
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          anotherValue,
+                          style: TextStyle(
+                            fontSize: isTablet ? 14 : 13,
+                            color:
+                                isProduct ? Colors.grey[600] : Colors.grey[800],
+                            fontWeight: CustomTheme().fontWeight('semibold'),
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ].separatedBy(CustomTheme().hGap('sm')),
-                  ),
+                        Text(
+                          nameValue,
+                          style: TextStyle(
+                            fontSize: isTablet ? 14 : 13,
+                            color:
+                                isProduct ? Colors.grey[600] : Colors.grey[600],
+                            fontWeight: CustomTheme().fontWeight('semibold'),
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                 ].separatedBy(CustomTheme().vGap('sm')),
               ),
             ),

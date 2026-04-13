@@ -116,6 +116,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   late List<dynamic> itemGradeOption = [];
   late List<dynamic> itemTypeOption = [];
   late List<dynamic> unitOption = [];
+  late List<dynamic> finishedItemGrb = [];
 
   Map<String, dynamic> woData = {};
   Map<String, dynamic> data = {};
@@ -178,7 +179,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     await _handleFetchItemGrade();
     await _handleFetchUnit();
     await _handleFetchItemType();
-    _syncDefectsWithOptions();
+    if (widget.label == 'Sorting') {
+      await _handleFetchFinishedMaterial();
+    }
+    // _syncDefectsWithOptions();
 
     setState(() {
       _firstLoading = false;
@@ -240,6 +244,17 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+  String formatProcessLabel(String label) {
+    final trimmed = label.trim().toLowerCase();
+
+    // kalau lebih dari 1 kata → pakai underscore
+    if (trimmed.contains(' ')) {
+      return trimmed.replaceAll(RegExp(r'\s+'), '_');
+    }
+
+    return trimmed;
+  }
+
   Future<void> _handleFetchFinishedMaterial() async {
     setState(() {
       _isFetchingFinishedMaterial = true;
@@ -248,6 +263,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     final service = Provider.of<OptionItemService>(context, listen: false);
 
     try {
+      final woData = widget.form?['wo_data'];
+
+      if (woData == null) return;
+
       String baseCode = '';
       String colorCode = '';
 
@@ -260,9 +279,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       }
 
       await service.fetchOptions(
-        process: widget.label.toLowerCase(),
+        process: formatProcessLabel(widget.label),
+
+        // 🔥 INI KUNCI UTAMA
+        colorCode: widget.label == 'Sorting' ? 'grb' : colorCode,
+
         baseCode: baseCode,
-        colorCode: colorCode,
       );
 
       final data = widget.getFinishedItemOptions != null
@@ -271,6 +293,47 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
       setState(() {
         finishedItemOption = data;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
+    } finally {
+      setState(() {
+        _isFetchingFinishedMaterial = false;
+      });
+    }
+  }
+
+  Future<void> _handleFetchFinishedGrbMaterial() async {
+    setState(() {
+      _isFetchingFinishedMaterial = true;
+    });
+
+    final service = Provider.of<OptionItemService>(context, listen: false);
+
+    try {
+      String baseCode = '';
+
+      final itemCode = woData['items']?[0]?['item_code'] ?? '';
+
+      if (itemCode.isNotEmpty) {
+        final parts = itemCode.split('-');
+        baseCode = parts.first;
+      }
+
+      await service.fetchOptions(
+        process: 'sorting',
+        baseCode: baseCode,
+        colorCode: 'grb',
+      );
+
+      final data = widget.getFinishedItemOptions != null
+          ? widget.getFinishedItemOptions!(service)
+          : service.dataListOption;
+
+      setState(() {
+        finishedItemGrb = data;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -495,11 +558,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             data['bs_weight_unit']['name'].toString();
       }
 
-      if (data['finished_item'] != null) {
-        widget.form?['finished_item_id'] =
-            data['finished_item']['id'].toString();
-        widget.form?['finished_item_name'] =
-            data['finished_item']['name'].toString();
+      if (data['greige_item'] != null) {
+        widget.form?['greige_item_id'] = data['greige_item']['id'].toString();
+        widget.form?['greige_item_name'] =
+            data['greige_item']['name'].toString();
       }
 
       if (data['attachments'] != null) {
@@ -754,6 +816,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                 'unit': {},
                 'qty': '0',
                 'notes': '',
+                'greige_item_id': null,
               });
             }
 
@@ -808,7 +871,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       builder: (_) => SelectDialog(
         label: 'Material Greige',
         options: provider.dataListOption,
-        selected: widget.form?['finished_item_id']?.toString(),
+        selected: widget.form?['greige_item_id']?.toString(),
         isManyOption: true,
         isAnyAdditionalData: true,
         isLoading: provider.isLoading,
@@ -824,9 +887,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         },
         handleChangeValue: (e) {
           setState(() {
-            widget.form?['finished_item_id'] = e?['value']?.toString();
-            widget.form?['nama_item'] = e?['label']?.toString();
-            widget.form?['sku_item'] = e?['code']?.toString();
+            widget.form?['greige_item_id'] = e?['value']?.toString();
+            widget.form?['nama_greige_item'] = e?['label']?.toString();
+            widget.form?['sku_greige_item'] = e?['code']?.toString();
           });
         },
       ),
@@ -1101,6 +1164,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               defects: _defects,
                               defectQty: _defectQtyControllers,
                               handleUpdateDefect: updateDefect,
+                              finishedItem: finishedItemOption,
                             ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],

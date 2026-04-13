@@ -53,8 +53,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
     'nama_satuan_panjang': '',
     'nama_satuan_lebar': '',
     'lot_celup_no': '',
-    'finished_unit_id': null,
-    'nama_item': '',
+    'greige_item_id': null,
+    'nama_greige_item': '',
+    'sku_greige_item': '',
   };
 
   @override
@@ -111,8 +112,8 @@ class _FinishDyeingState extends State<FinishDyeing> {
             end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
             attachments: form['attachments'],
             dyeingLotNo: form['lot_celup_no'],
-            finished_item_id:
-                int.tryParse(form['finished_item_id']?.toString() ?? ''));
+            greige_item_id:
+                int.tryParse(form['greige_item_id']?.toString() ?? ''));
 
         final message = await Provider.of<DyeingService>(context, listen: false)
             .finishItem(context, id, dyeing, isLoading);

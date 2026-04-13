@@ -99,17 +99,17 @@ class _InfoTabState extends State<InfoTab> {
                         ],
                       ],
                     ),
-                    Text(
-                      widget.data['created_at'] != null
-                          ? 'Dibuat oleh ${widget.data['user']['name']} pada ${DateFormat("dd MMM yyyy, HH.mm").format(DateTime.parse(widget.data['created_at']).toLocal())}'
-                          : DateFormat("dd MMM yyyy")
-                              .format(DateTime.parse(widget.data['wo_date'])),
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        color: Colors.white.withOpacity(0.8),
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
-                    ),
+                    // Text(
+                    //   widget.data['created_at'] != null
+                    //       ? 'Dibuat oleh ${widget.data['user']['name']} pada ${DateFormat("dd MMM yyyy, HH.mm").format(DateTime.parse(widget.data['created_at']).toLocal())}'
+                    //       : DateFormat("dd MMM yyyy")
+                    //           .format(DateTime.parse(widget.data['wo_date'])),
+                    //   style: TextStyle(
+                    //     fontSize: CustomTheme().fontSize('lg'),
+                    //     color: Colors.white.withOpacity(0.8),
+                    //     fontWeight: CustomTheme().fontWeight('semibold'),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -129,6 +129,7 @@ class _InfoTabState extends State<InfoTab> {
       0,
       (sum, item) => sum + (item['qty'] ?? 0) as int,
     );
+
     return Container(
       padding: CustomTheme().padding(isTablet ? 'content' : 'card'),
       decoration: BoxDecoration(
@@ -137,6 +138,16 @@ class _InfoTabState extends State<InfoTab> {
       ),
       child: Row(
         children: [
+          Expanded(
+            child: _buildQuickInfoItem(
+              icon: Icons.calendar_month_outlined,
+              label: 'Tanggal WO',
+              value: DateFormat("dd MMM yyyy")
+                  .format(DateTime.parse(widget.data['wo_date'])),
+              isTablet: isTablet,
+            ),
+          ),
+          _buildVerticalDivider(),
           Expanded(
             child: _buildQuickInfoItem(
               icon: Icons.scale_outlined,
@@ -149,22 +160,32 @@ class _InfoTabState extends State<InfoTab> {
           _buildVerticalDivider(),
           Expanded(
             child: _buildQuickInfoItem(
-              icon: Icons.numbers_outlined,
-              label: 'Qty WO',
-              value:
-                  '${formatNumber(totalQty)} ${widget.data['items'][0]['unit']?['code']}',
-              isTablet: isTablet,
-            ),
-          ),
-          _buildVerticalDivider(),
-          Expanded(
-            child: _buildQuickInfoItem(
               icon: Icons.access_time_outlined,
               label: 'Proses saat ini',
               value: widget.data['current_process'] ?? '-',
               isTablet: isTablet,
             ),
           ),
+          _buildVerticalDivider(),
+          Expanded(
+            child: _buildQuickInfoItem(
+              icon: Icons.person_outlined,
+              label: 'Dibuat Oleh',
+              value: widget.data['user'] != null
+                  ? widget.data['user']['name']
+                  : '-',
+              isTablet: isTablet,
+            ),
+          ),
+          // Expanded(
+          //   child: _buildQuickInfoItem(
+          //     icon: Icons.numbers_outlined,
+          //     label: 'Qty WO',
+          //     value:
+          //         '${formatNumber(totalQty)} ${widget.data['items'][0]['unit']?['code']}',
+          //     isTablet: isTablet,
+          //   ),
+          // ),
         ],
       ),
     );

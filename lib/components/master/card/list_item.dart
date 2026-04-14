@@ -23,13 +23,7 @@ class ListItem extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: Offset(0, 2),
-                ),
-              ],
+              border: Border.all(color: Colors.grey.shade200),
             ),
             child: Padding(
               padding: CustomTheme().padding('card'),

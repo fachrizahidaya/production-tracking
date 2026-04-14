@@ -116,7 +116,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   late List<dynamic> itemGradeOption = [];
   late List<dynamic> itemTypeOption = [];
   late List<dynamic> unitOption = [];
-  late List<dynamic> finishedItemGrb = [];
 
   Map<String, dynamic> woData = {};
   Map<String, dynamic> data = {};
@@ -182,38 +181,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     if (widget.label == 'Sorting') {
       await _handleFetchFinishedMaterial();
     }
-    // _syncDefectsWithOptions();
 
     setState(() {
       _firstLoading = false;
     });
-  }
-
-  void _syncDefectsWithOptions() {
-    final List<Map<String, dynamic>> updated = [];
-
-    for (var defect in _defects) {
-      // Extract defect type ID from nested structure or from flat structure
-      final defectTypeId =
-          defect['type']?['id'] ?? defect['defect_type_id'] ?? defect['id'];
-
-      // Check if this defect type exists in master data
-      final exists = (itemTypeOption ?? []).firstWhere(
-        (type) => type['id'].toString() == defectTypeId.toString(),
-        orElse: () => <String, dynamic>{},
-      );
-
-      // Only keep if exists in master data
-      if (exists.isNotEmpty) {
-        updated.add({
-          'defect_type_id': defectTypeId,
-          'qty': defect['qty'] ?? '0',
-        });
-      }
-    }
-
-    _defects = updated;
-    _handleChangeInput('defects', _defects);
   }
 
   void updateDefect(int index, String key, dynamic value) {
@@ -280,10 +251,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
       await service.fetchOptions(
         process: formatProcessLabel(widget.label),
-
-        // 🔥 INI KUNCI UTAMA
         colorCode: widget.label == 'Sorting' ? 'grb' : colorCode,
-
         baseCode: baseCode,
       );
 
@@ -293,47 +261,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
       setState(() {
         finishedItemOption = data;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
-    } finally {
-      setState(() {
-        _isFetchingFinishedMaterial = false;
-      });
-    }
-  }
-
-  Future<void> _handleFetchFinishedGrbMaterial() async {
-    setState(() {
-      _isFetchingFinishedMaterial = true;
-    });
-
-    final service = Provider.of<OptionItemService>(context, listen: false);
-
-    try {
-      String baseCode = '';
-
-      final itemCode = woData['items']?[0]?['item_code'] ?? '';
-
-      if (itemCode.isNotEmpty) {
-        final parts = itemCode.split('-');
-        baseCode = parts.first;
-      }
-
-      await service.fetchOptions(
-        process: 'sorting',
-        baseCode: baseCode,
-        colorCode: 'grb',
-      );
-
-      final data = widget.getFinishedItemOptions != null
-          ? widget.getFinishedItemOptions!(service)
-          : service.dataListOption;
-
-      setState(() {
-        finishedItemGrb = data;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1050,6 +977,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       }
       if (fieldName == 'qty' && value != null) {
         _qtyController.text = value.toString();
+      }
+      if (fieldName == 'qty' && value != null) {
+        _packingQtyController.text = value.toString();
       }
       if (fieldName == 'weight_grade_a' && value != null) {
         _weightGradeAController.text = value.toString();

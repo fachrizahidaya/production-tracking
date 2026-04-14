@@ -92,8 +92,17 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                 IconButton(
                   icon: Stack(
                     children: [
-                      Icon(
-                        Icons.tune,
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        child: Icon(
+                          Icons.tune,
+                        ),
                       ),
                       if (widget.isFiltered)
                         Positioned(

@@ -347,10 +347,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       _weightGradeAController.text = data['weight_grade_a'].toString();
       _form['weight_grade_a'] = data['weight_grade_a']?.toString() ?? '0';
     }
-    // if (data['total_sorting'] != null) {
-    //   _totalSortingController.text = data['total_sorting'].toString();
-    //   _form['total_sorting'] = data['total_sorting']?.toString() ?? '0';
-    // }
+
     if (data['gsm'] != null) {
       _gsmController.text = data['gsm'].toString();
       _form['gsm'] = data['gsm']?.toString() ?? '0';
@@ -379,7 +376,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         d['rework_long_hemming']?.toString() ?? '';
     _combingController.text = d['combing']?.toString() ?? '';
     _sprayingController.text = d['spraying']?.toString() ?? '';
-    _totalSortingController.text = d['total_sorting']?.toString() ?? '';
 
     _form['item_qty'] = d['item_qty']?.toString() ?? '';
     _form['weight'] = d['weight']?.toString() ?? '';
@@ -395,7 +391,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     _form['machines'] = List.from(d['machines'] ?? []);
     _form['machine_ids'] = List.from(d['machine_ids'] ?? []);
     _form['grades'] = List.from(d['grades'] ?? []);
-    _form['total_sorting'] = d['total_sorting']?.toString() ?? '';
 
     final rawDefects = List.from(d['defects'] ?? []);
     _form['defects'] = rawDefects.map<Map<String, dynamic>>((defect) {
@@ -534,9 +529,10 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       ),
     );
 
-    if (result == true) {
-      await _getDataView();
-    }
+    // ✅ ALWAYS fetch ulang data untuk memastikan state konsisten
+    // Jika user save (result == true) atau cancel tanpa save (result != true)
+    // Ini mencegah data stale ketika user kembali tanpa save
+    await _getDataView();
   }
 
   Future<void> _handleDelete(String id) async {

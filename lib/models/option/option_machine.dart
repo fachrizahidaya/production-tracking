@@ -85,6 +85,8 @@ class OptionMachineService extends BaseService<OptionMachine> {
         queryParams['process'] = process;
       if (searchQuery.isNotEmpty) queryParams['search'] = searchQuery;
 
+      queryParams['status'] = 'Tersedia';
+
       // Add current machine IDs as array parameter
       if (currentMachineIds != null && currentMachineIds.isNotEmpty) {
         queryParams['current_machine_ids[]'] =

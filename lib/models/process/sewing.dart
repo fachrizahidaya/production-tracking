@@ -32,6 +32,7 @@ class Sewing {
   final finished_item_id;
   final machine_ids;
   final machines;
+  final greige_item_id;
 
   Sewing(
       {this.id,
@@ -62,7 +63,8 @@ class Sewing {
       this.machine,
       this.finished_item_id,
       this.machine_ids,
-      this.machines});
+      this.machines,
+      this.greige_item_id});
 
   factory Sewing.fromJson(Map<String, dynamic> json) {
     return Sewing(
@@ -94,6 +96,7 @@ class Sewing {
       finished_item_id: json['finished_item_id'] as int?,
       machine_ids: json['machine_ids'] ?? [],
       machines: json['machines'] ?? [],
+      greige_item_id: json['greige_item_id'] as int?,
     );
   }
 
@@ -128,6 +131,7 @@ class Sewing {
       'finished_item_id': finished_item_id,
       'machine_ids': machine_ids,
       'machines': machines,
+      'greige_item_id': greige_item_id,
     };
   }
 }

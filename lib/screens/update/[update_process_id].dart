@@ -6,7 +6,6 @@ import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
-import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
@@ -198,6 +197,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
     });
 
     widget.handleChangeInput('grades', _grades);
+    _updateTotalSorting();
   }
 
   void _syncDefectsWithOptions() {
@@ -241,13 +241,16 @@ class _UpdateProcessState extends State<UpdateProcess> {
     });
 
     widget.handleChangeInput('defects', _defects);
+    _updateTotalSorting();
   }
 
   void _recalculateGradeBS() {
     final totalBs = _defects.fold<int>(
       0,
       (int sum, defect) {
-        final qty = int.tryParse(defect['qty']?.toString() ?? '0') ?? 0;
+        final qty = int.tryParse(
+                (defect['qty']?.toString() ?? '0').replaceAll(',', '')) ??
+            0;
         return sum + qty;
       },
     );
@@ -264,6 +267,9 @@ class _UpdateProcessState extends State<UpdateProcess> {
       if (index < widget.qty.length) {
         widget.qty[index].text = totalBs.toString();
       }
+
+      // ✅ UPDATE TOTAL SORTING
+      _updateTotalSorting();
     }
   }
 
@@ -284,9 +290,13 @@ class _UpdateProcessState extends State<UpdateProcess> {
   }
 
   int _calculateTotalVermak() {
-    final spraying = int.tryParse(widget.spraying.text ?? '0') ?? 0;
-    final combing = int.tryParse(widget.combing.text ?? '0') ?? 0;
-    final rework = int.tryParse(widget.reworkLongHemming.text ?? '0') ?? 0;
+    final spraying =
+        int.tryParse((widget.spraying.text ?? '0').replaceAll(',', '')) ?? 0;
+    final combing =
+        int.tryParse((widget.combing.text ?? '0').replaceAll(',', '')) ?? 0;
+    final rework = int.tryParse(
+            (widget.reworkLongHemming.text ?? '0').replaceAll(',', '')) ??
+        0;
     return spraying + combing + rework;
   }
 
@@ -297,6 +307,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
       totalGrades += qty;
     }
     return totalGrades + _calculateTotalVermak();
+  }
+
+  /// 📊 Update total_sorting field dengan hasil perhitungan
+  void _updateTotalSorting() {
+    final total = _calculateTotalQtySorting();
+    widget.handleChangeInput('total_sorting', total.toString());
   }
 
   void _ensureController(int index) {
@@ -319,72 +335,74 @@ class _UpdateProcessState extends State<UpdateProcess> {
   }
 
   double getMaxTotalQty() {
-    final gradesList =
-        // double.tryParse(widget.form['total_sorting']?.toString() ?? '0') ?? 0.0;
-        widget.woData['processes'][10]['data'][0]['grades'] ?? [];
+    final data = widget.woData['processes'][10]['data'][0];
+
+    final gradesList = data['grades'] ?? [];
 
     int totalQty = 0;
+
+    // 🔹 Ambil dari grades
     for (var grade in gradesList) {
       final qty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
       totalQty += qty;
     }
 
-    return
-        // gradesList;
-        double.tryParse(totalQty.toString() ?? '0') ?? 0.0;
+    // 🔹 Tambahan field lain
+    final spraying = int.tryParse(data['spraying']?.toString() ?? '0') ?? 0;
+
+    final reworkLongHemming =
+        int.tryParse(data['rework_long_hemming']?.toString() ?? '0') ?? 0;
+
+    final combing = int.tryParse(data['combing']?.toString() ?? '0') ?? 0;
+
+    totalQty += spraying + reworkLongHemming + combing;
+
+    return totalQty.toDouble();
+  }
+
+  int customRound(double value) {
+    final decimal = value - value.floor();
+
+    if (decimal > 0.5) {
+      return value.ceil();
+    } else {
+      return value.floor();
+    }
   }
 
   void calculateGsm(double value) {
-    final maxQty = getMaxQtyFromGrades();
-
     final size = widget.woData['items'][0]['variants'][1]['value'];
     final panjang = int.tryParse(size.split('X')[0]) ?? 0;
     final lebar = int.tryParse(size.split('X')[1]) ?? 0;
 
     setState(() {
       beratLusin = value;
+      final rawGsm = (beratLusin * 10000000) / (12 * panjang * lebar);
+
+      final roundedGsm = customRound(rawGsm);
 
       if (panjang == 0 || lebar == 0) {
         gsm = 0;
       } else {
-        gsm = (beratLusin * 10000000) / (12 * panjang * lebar);
+        gsm = roundedGsm.toDouble();
       }
 
-      // totalBeratA = maxQty == 0 ? 0 : (beratLusin / 12) * maxQty;
+      widget.gsm.text = roundedGsm.toString();
 
-      widget.gsm.text = gsm.toStringAsFixed(2);
-      // widget.weightGradeA.text = totalBeratA.toStringAsFixed(2);
-
-      widget.handleChangeInput('gsm', gsm.toStringAsFixed(2));
-      // widget.handleChangeInput(
-      //   'weight_grade_a',
-      //   totalBeratA.toStringAsFixed(2),
-      // );
+      widget.handleChangeInput('gsm', roundedGsm.toString());
     });
   }
 
   void calculateBeratA(double value) {
     final maxQty = getMaxQtyFromGrades();
 
-    final size = widget.woData['items'][0]['variants'][1]['value'];
-    final panjang = int.tryParse(size.split('X')[0]) ?? 0;
-    final lebar = int.tryParse(size.split('X')[1]) ?? 0;
-
     setState(() {
       beratLusin = value;
 
-      if (panjang == 0 || lebar == 0) {
-        gsm = 0;
-      } else {
-        gsm = (beratLusin * 10000000) / (12 * panjang * lebar);
-      }
-
       totalBeratA = maxQty == 0 ? 0 : (beratLusin / 12) * maxQty;
 
-      // widget.gsm.text = gsm.toStringAsFixed(2);
       widget.weightGradeA.text = totalBeratA.toStringAsFixed(2);
 
-      // widget.handleChangeInput('gsm', gsm.toStringAsFixed(2));
       widget.handleChangeInput(
         'weight_grade_a',
         totalBeratA.toStringAsFixed(2),
@@ -395,25 +413,13 @@ class _UpdateProcessState extends State<UpdateProcess> {
   void calculateTotalBerat(double value) {
     final maxQty = getMaxTotalQty();
 
-    final size = widget.woData['items'][0]['variants'][1]['value'];
-    final panjang = int.tryParse(size.split('X')[0]) ?? 0;
-    final lebar = int.tryParse(size.split('X')[1]) ?? 0;
-
     setState(() {
       beratLusin = value;
 
-      if (panjang == 0 || lebar == 0) {
-        gsm = 0;
-      } else {
-        gsm = (beratLusin * 10000000) / (12 * panjang * lebar);
-      }
-
       totalBerat = maxQty == 0 ? 0 : (beratLusin / 12) * maxQty;
 
-      widget.gsm.text = gsm.toStringAsFixed(2);
       widget.totalWeight.text = totalBerat.toStringAsFixed(2);
 
-      widget.handleChangeInput('gsm', gsm.toStringAsFixed(2));
       widget.handleChangeInput(
         'total_weight',
         totalBerat.toStringAsFixed(2),
@@ -580,6 +586,61 @@ class _UpdateProcessState extends State<UpdateProcess> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                TemplateCard(
+                                    title: 'No. Proses',
+                                    icon: Icons.description_outlined,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 16,
+                                            horizontal: 12,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            border: Border.all(
+                                                color: Colors.grey.shade200),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  widget.data != null
+                                                      ? widget.label == 'Dyeing'
+                                                          ? '${widget.data['dyeing_no']}'
+                                                          : widget.label ==
+                                                                  'Press'
+                                                              ? '${widget.data['press_no']}'
+                                                              : widget.label ==
+                                                                      'Tumbler'
+                                                                  ? '${widget.data['tumbler_no']}'
+                                                                  : widget.label ==
+                                                                          'Stenter'
+                                                                      ? '${widget.data['stenter_no']}'
+                                                                      : widget.label ==
+                                                                              'Long Slitting'
+                                                                          ? '${widget.data['ls_no']}'
+                                                                          : widget.label == 'Long Hemming'
+                                                                              ? '${widget.data['lh_no']}'
+                                                                              : widget.label == 'Cross Cutting'
+                                                                                  ? '${widget.data['cc_no']}'
+                                                                                  : widget.label == 'Sewing'
+                                                                                      ? '${widget.data['sewing_no']}'
+                                                                                      : widget.label == 'Sorting'
+                                                                                          ? '${widget.data['sorting_no']}'
+                                                                                          : '${widget.data['packing_no']}'
+                                                      : '-',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ].separatedBy(CustomTheme().vGap('lg')),
+                                    )),
                                 if (widget.data['machines'] == null &&
                                     widget.data['maklon'] != null)
                                   TemplateCard(
@@ -783,8 +844,16 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                               controller:
                                                   widget.cuttingSewingQty,
                                               handleChange: (value) {
+                                                final safeValue =
+                                                    (value == null ||
+                                                            value
+                                                                .toString()
+                                                                .trim()
+                                                                .isEmpty)
+                                                        ? '0'
+                                                        : value.toString();
                                                 widget.handleChangeInput(
-                                                    'item_qty', value);
+                                                    'item_qty', safeValue);
                                               },
                                             ),
                                           ].separatedBy(
@@ -844,11 +913,8 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                               widget.handleChangeInput(
                                                   'qty', safeValue);
 
-                                              final normalized = safeValue
-                                                  .replaceAll(',', '.');
-                                              final input =
-                                                  double.tryParse(normalized) ??
-                                                      0;
+                                              // final normalized = safeValue
+                                              //     .replaceAll(',', '.');
 
                                               setState(() {
                                                 final input = double.tryParse(
@@ -885,15 +951,19 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                   'weight_per_dozen',
                                                   safeValue);
 
-                                              final normalized = safeValue
-                                                  .replaceAll(',', '.');
-                                              final input =
-                                                  double.tryParse(normalized) ??
-                                                      0;
+                                              // final normalized = safeValue
+                                              //     .replaceAll(',', '.');
+                                              setState(() {
+                                                final input = double.tryParse(
+                                                        widget
+                                                            .weightPerDozen.text
+                                                            .toString()) ??
+                                                    0;
 
-                                              calculateGsm(input);
-                                              calculateBeratA(input);
-                                              calculateTotalBerat(input);
+                                                calculateGsm(input);
+                                                calculateBeratA(input);
+                                                calculateTotalBerat(input);
+                                              });
                                             },
                                           ),
                                         ),
@@ -979,9 +1049,19 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                             isNumber: true,
                                             controller: widget.spraying,
                                             handleChange: (value) {
+                                              final safeValue =
+                                                  (value == null ||
+                                                          value
+                                                              .toString()
+                                                              .trim()
+                                                              .isEmpty)
+                                                      ? '0'
+                                                      : value.toString();
+
                                               widget.handleChangeInput(
-                                                  'spraying', value);
+                                                  'spraying', safeValue);
                                               setState(() {});
+                                              _updateTotalSorting();
                                             },
                                           ),
                                         ),
@@ -994,9 +1074,19 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                             controller:
                                                 widget.reworkLongHemming,
                                             handleChange: (value) {
+                                              final safeValue =
+                                                  (value == null ||
+                                                          value
+                                                              .toString()
+                                                              .trim()
+                                                              .isEmpty)
+                                                      ? '0'
+                                                      : value.toString();
                                               widget.handleChangeInput(
-                                                  'rework_long_hemming', value);
+                                                  'rework_long_hemming',
+                                                  safeValue);
                                               setState(() {});
+                                              _updateTotalSorting();
                                             },
                                           ),
                                         ),
@@ -1008,9 +1098,19 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                             isNumber: true,
                                             controller: widget.combing,
                                             handleChange: (value) {
+                                              final safeValue =
+                                                  (value == null ||
+                                                          value
+                                                              .toString()
+                                                              .trim()
+                                                              .isEmpty)
+                                                      ? '0'
+                                                      : value.toString();
+
                                               widget.handleChangeInput(
-                                                  'combing', value);
+                                                  'combing', safeValue);
                                               setState(() {});
+                                              _updateTotalSorting();
                                             },
                                           ),
                                         ),
@@ -1097,7 +1197,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                           ),
                                                           SizedBox(height: 4),
                                                           Text(
-                                                            '${_grades[0]['qty'] ?? '0'}',
+                                                            '${formatNumber(_grades[0]['qty'])}',
                                                             style: TextStyle(
                                                                 fontSize: 20,
                                                                 fontWeight:
@@ -1143,7 +1243,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                           ),
                                                           SizedBox(height: 4),
                                                           Text(
-                                                            '${_grades[1]['qty'] ?? '0'}',
+                                                            '${formatNumber(_grades[1]['qty'])}',
                                                             style: TextStyle(
                                                                 fontSize: 20,
                                                                 fontWeight:
@@ -1189,7 +1289,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                           ),
                                                           SizedBox(height: 4),
                                                           Text(
-                                                            '${_grades[2]['qty'] ?? '0'}',
+                                                            '${formatNumber(_grades[2]['qty'])}',
                                                             style: TextStyle(
                                                                 fontSize: 20,
                                                                 fontWeight:
@@ -1235,7 +1335,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                           ),
                                                           SizedBox(height: 4),
                                                           Text(
-                                                            '${_calculateTotalVermak()}',
+                                                            '${formatNumber(_calculateTotalVermak()).toString()}',
                                                             style: TextStyle(
                                                                 fontSize: 20,
                                                                 fontWeight:
@@ -1283,7 +1383,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                           ),
                                                           SizedBox(height: 4),
                                                           Text(
-                                                            '${_calculateTotalQtySorting()}',
+                                                            '${formatNumber(_calculateTotalQtySorting()).toString()}',
                                                             style: TextStyle(
                                                               fontSize: 20,
                                                               fontWeight:
@@ -1372,195 +1472,173 @@ class _UpdateProcessState extends State<UpdateProcess> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GroupForm(
-          label: 'Mesin',
-          req: false,
-          formControl: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: machines
-                      .map((machine) {
-                        final machineData = machine['machine'];
-                        final status = machine['status'] ??
-                            widget.getMachineStatus(machine['machine']['id']);
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final itemWidth = (constraints.maxWidth - 20) / 4;
 
-                        return Container(
-                          margin: EdgeInsets.only(right: 8),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      machineData == null
-                                          ? (machine['name'] ?? '-')
-                                          : (machineData['code'] == null
-                                              ? (machineData['name'] ?? '-')
-                                              : '${machineData['code']} - ${machineData['name'] ?? '-'}'),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    // if (machines.length > 1)
-                                    //   GestureDetector(
-                                    //     onTap: () {
-                                    //       final isSubmitting =
-                                    //           ValueNotifier<bool>(false);
+            return Wrap(
+              spacing: 16,
+              runSpacing: 16, // jarak vertikal antar baris
+              children: machines
+                  .map((machine) {
+                    final machineData =
+                        machine['machine'] as Map<String, dynamic>?;
+                    final machineId = machineData?['id'];
+                    final status = machine['status'] ??
+                        (machineId != null
+                            ? widget.getMachineStatus(machineId)
+                            : null);
 
-                                    //       showConfirmationDialog(
-                                    //         context: context,
-                                    //         title: 'Hapus Mesin',
-                                    //         message:
-                                    //             'Anda yakin ingin menghapus ${machine['machine']['name'] ?? '-'}?',
-                                    //         isLoading: isSubmitting,
-                                    //         buttonBackground: CustomTheme()
-                                    //             .buttonColor('danger'),
-                                    //         onConfirm: () {
-                                    //           setState(() {
-                                    //             final updated = List<
-                                    //                 Map<String,
-                                    //                     dynamic>>.from(machines)
-                                    //               ..removeWhere((m) =>
-                                    //                   m['machine']['id'] ==
-                                    //                   machine['machine']['id']);
+                    return SizedBox(
+                      width: itemWidth,
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                machineData == null
+                                    ? (machine['name'] ?? '-')
+                                    : (machineData['code'] == null
+                                        ? (machineData['name'] ?? '-')
+                                        : '${machineData['code']} - ${machineData['name'] ?? '-'}'),
+                                style: TextStyle(fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                final isSubmitting = ValueNotifier<bool>(false);
 
-                                    //             widget.data['machines'] =
-                                    //                 updated;
-                                    //             widget.form['machines'] =
-                                    //                 updated;
-                                    //           });
-                                    //           Navigator.pop(context);
-                                    //           isSubmitting.value = false;
-                                    //         },
-                                    //       );
-                                    //     },
-                                    //     child: Icon(Icons.close,
-                                    //         color: Colors.red, size: 24),
-                                    //   ),
-                                  ].separatedBy(CustomTheme().hGap('lg'))),
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      final isSubmitting =
-                                          ValueNotifier<bool>(false);
+                                showConfirmationDialog(
+                                  context: context,
+                                  title: 'Selesaikan Mesin',
+                                  message:
+                                      'Anda yakin ingin mengubah ${machine['machine']['name'] ?? '-'} menjadi selesai?',
+                                  isLoading: isSubmitting,
+                                  buttonBackground:
+                                      CustomTheme().buttonColor('primary'),
+                                  onConfirm: () async {
+                                    try {
+                                      if (machineId == null) return;
+                                      await context
+                                          .read<MachineMasterService>()
+                                          .updateStatus(
+                                            machine['machine']['id'].toString(),
+                                            'Selesai',
+                                            isSubmitting,
+                                          );
 
-                                      showConfirmationDialog(
-                                        context: context,
-                                        title: 'Selesaikan Mesin',
-                                        message:
-                                            'Anda yakin ingin mengubah ${machine['machine']['name'] ?? '-'} menjadi selesai?',
-                                        isLoading: isSubmitting,
-                                        buttonBackground: CustomTheme()
-                                            .buttonColor('primary'),
-                                        onConfirm: () async {
-                                          try {
-                                            await context
-                                                .read<MachineMasterService>()
-                                                .updateStatus(
-                                                  machine['machine']['id']
-                                                      .toString(),
-                                                  'Selesai',
-                                                  isSubmitting,
-                                                );
+                                      /// 🔥 UPDATE STATE LOKAL (INI YANG PENTING)
+                                      setState(() {
+                                        machine['status'] = 'Selesai';
+                                      });
 
-                                            /// 🔥 UPDATE STATE LOKAL (INI YANG PENTING)
-                                            setState(() {
-                                              machine['status'] = 'Selesai';
-                                            });
+                                      Navigator.pop(context);
+                                    } catch (e) {
+                                      Navigator.pop(context);
 
-                                            Navigator.pop(context);
-                                          } catch (e) {
-                                            Navigator.pop(context);
-
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content:
-                                                    Text('Gagal update status'),
-                                              ),
-                                            );
-                                          }
-                                        },
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text('Gagal update status'),
+                                        ),
                                       );
-                                    },
-                                    child: CustomBadge(
+                                    }
+                                  },
+                                );
+                              },
+                              child: status == 'Tersedia'
+                                  ? SizedBox(
+                                      height: 24,
+                                    )
+                                  : CustomBadge(
                                       status: status == 'Selesai'
                                           ? 'Selesai'
                                           : status == 'Tersedia'
                                               ? 'Menunggu Diproses'
                                               : 'Diproses',
-                                      title: status,
-                                      rework: true,
+                                      title: status ?? '',
                                     ),
-                                  ),
-                                ].separatedBy(CustomTheme().hGap('lg')),
-                              ),
-                            ].separatedBy(CustomTheme().vGap('md')),
-                          ),
-                        );
-                      })
-                      .toList()
-                      .separatedBy(CustomTheme().hGap('lg')),
-                ),
-              ),
-
-              // TAMBAH
-              GestureDetector(
-                onTap: () async {
-                  final newMachine = await widget.handleSelectMachine();
-                  if (newMachine == null) return;
-
-                  setState(() {
-                    final current = List<Map<String, dynamic>>.from(
-                      widget.data['machines'] ?? [],
+                            ),
+                          ].separatedBy(CustomTheme().vGap('md')),
+                        ),
+                      ),
                     );
+                  })
+                  .toList()
+                  .separatedBy(CustomTheme().hGap('lg')),
+            );
+          },
+        ),
 
-                    final exists = current
-                        .any((m) => m['machine']['id'] == newMachine['id']);
+        // TAMBAH
+        GestureDetector(
+          onTap: () async {
+            final newMachine = await widget.handleSelectMachine();
+            if (newMachine == null) return;
 
-                    if (!exists) {
-                      final newItem = {
-                        'machine': newMachine,
-                        'status': 'Tersedia',
-                      };
+            setState(() {
+              final current = List<Map<String, dynamic>>.from(
+                widget.data['machines'] ?? [],
+              );
 
-                      current.add(newItem);
+              // ✅ CEK DUPLIKAT: ID sama DAN status BUKAN "Selesai"
+              final isDuplicate = current.any((m) {
+                final existingId = m['machine']?['id'];
+                final existingStatus = m['status'] ?? 'Tersedia';
 
-                      // 👉 simpan khusus untuk API
-                      _newMachines.add(newItem);
-                    }
+                return existingId.toString() == newMachine['id'].toString() &&
+                    existingStatus != 'Selesai';
+              });
 
-                    widget.data['machines'] = current;
-                    widget.form['machines'] = current;
-                  });
-                },
-                child: Container(
-                  height: 48,
-                  margin: EdgeInsets.only(top: 8),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
+              if (!isDuplicate) {
+                final newItem = {
+                  'machine': newMachine,
+                  'status': 'Tersedia',
+                };
+
+                current.add(newItem);
+
+                // 👉 simpan khusus untuk API
+                _newMachines.add(newItem);
+              } else {
+                // 🚨 SHOW WARNING: Mesin sudah ada dan masih diproses
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Mesin ini sudah ada dalam daftar dan masih dalam proses',
+                    ),
+                    backgroundColor: Colors.orange,
+                    duration: Duration(seconds: 2),
                   ),
-                  child: Center(
-                    child: Text('+ Tambah Mesin'),
-                  ),
-                ),
-              ),
-            ].separatedBy(CustomTheme().vGap('lg')),
+                );
+              }
+
+              widget.data['machines'] = current;
+              widget.form['machines'] = current;
+            });
+          },
+          child: Container(
+            height: 48,
+            margin: EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: Text('+ Tambah Mesin'),
+            ),
           ),
         ),
-      ],
+      ].separatedBy(CustomTheme().vGap('lg')),
     );
   }
 
@@ -1572,92 +1650,118 @@ class _UpdateProcessState extends State<UpdateProcess> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // LIST TIPE BS (HORIZONTAL)
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                /// ✅ DISPLAY SELECTED DEFECTS
-                if (_defects.isNotEmpty)
-                  ..._defects.asMap().entries.map((entry) {
-                    int i = entry.key;
-                    var defect = entry.value;
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final itemWidth = (constraints.maxWidth - 24) / 4;
+              return Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: [
+                  /// ✅ DISPLAY SELECTED DEFECTS
+                  if (_defects.isNotEmpty)
+                    ..._defects.asMap().entries.map((entry) {
+                      int i = entry.key;
+                      var defect = entry.value;
 
-                    _ensureDefectController(i);
+                      _ensureDefectController(i);
 
-                    final defectQty =
-                        int.tryParse(defect['qty']?.toString() ?? '0') ?? 0;
-                    // final hasQty = defectQty > 0;
+                      final defectQty =
+                          int.tryParse(defect['qty']?.toString() ?? '0') ?? 0;
+                      // final hasQty = defectQty > 0;
 
-                    return Container(
-                      margin: EdgeInsets.only(right: 8),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
+                      return SizedBox(
+                        width: itemWidth,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                (getDefectLabel(i)),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    (getDefectLabel(i)),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  CustomBadge(
+                                    title:
+                                        'Qty: ${formatNumber(defectQty).toString()} PCS',
+                                    status: 'Selesai',
+                                    rework: true,
+                                  ),
+                                ].separatedBy(CustomTheme().vGap('lg')),
                               ),
                               Row(
                                 children: [
-                                  GestureDetector(
-                                    onTap: () => _showDefectQtyDialog(i),
-                                    child: Icon(Icons.edit,
-                                        color: Colors.blue, size: 24),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: Colors.grey),
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () => _showDefectQtyDialog(i),
+                                      child: Icon(Icons.edit,
+                                          color: Colors.blue, size: 32),
+                                    ),
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      showConfirmationDialog(
-                                        context: context,
-                                        title: 'Hapus Tipe BS',
-                                        message:
-                                            'Anda yakin ingin menghapus ${getDefectLabel(i)}?',
-                                        isLoading: _isLoading,
-                                        buttonBackground:
-                                            CustomTheme().buttonColor('danger'),
-                                        onConfirm: () async {
-                                          setState(() {
-                                            _defects.removeAt(i);
-                                            if (i < widget.defectQty.length) {
-                                              widget.defectQty[i].dispose();
-                                              widget.defectQty.removeAt(i);
-                                            }
-                                            widget.form['defects'] = _defects;
-                                            _recalculateGradeBS();
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                      );
-                                    },
-                                    child: Icon(Icons.close,
-                                        color: Colors.red, size: 24),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: Colors.grey),
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        showConfirmationDialog(
+                                          context: context,
+                                          title: 'Hapus Tipe BS',
+                                          message:
+                                              'Anda yakin ingin menghapus ${getDefectLabel(i)}?',
+                                          isLoading: _isLoading,
+                                          buttonBackground: CustomTheme()
+                                              .buttonColor('danger'),
+                                          onConfirm: () async {
+                                            setState(() {
+                                              _defects.removeAt(i);
+                                              if (i < widget.defectQty.length) {
+                                                widget.defectQty[i].dispose();
+                                                widget.defectQty.removeAt(i);
+                                              }
+                                              widget.form['defects'] = _defects;
+                                              _recalculateGradeBS();
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      },
+                                      child: Icon(Icons.close,
+                                          color: Colors.red, size: 32),
+                                    ),
                                   ),
-                                ].separatedBy(CustomTheme().hGap('md')),
+                                ].separatedBy(CustomTheme().hGap('lg')),
                               )
-                            ].separatedBy(CustomTheme().hGap('xl')),
+                            ].separatedBy(CustomTheme().vGap('lg')),
                           ),
-                          CustomBadge(
-                            title: 'Qty: $defectQty',
-                            rework: true,
-                            status: 'Selesai',
-                          ),
-                        ].separatedBy(CustomTheme().vGap('lg')),
-                      ),
-                    );
-                  }),
-              ],
-            ),
+                        ),
+                      );
+                    }),
+                ],
+              );
+            },
           ),
 
           /// ✅ ADD BUTTON (also inline)
@@ -1751,33 +1855,6 @@ Select Tipe BS
                   ),
                 ),
               ),
-              // Container(
-              //   padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-              //   decoration: BoxDecoration(
-              //     color: Colors.white,
-              //     borderRadius: BorderRadius.only(
-              //       bottomLeft: Radius.circular(12),
-              //       bottomRight: Radius.circular(12),
-              //     ),
-              //     border: Border(
-              //       top: BorderSide(color: Colors.grey.shade200),
-              //     ),
-              //   ),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.end,
-              //     children: [
-              //       TextButton(
-              //         onPressed: () => Navigator.pop(context),
-              //         child: Text(
-              //           'Tutup',
-              //           style: TextStyle(
-              //             color: CustomTheme().buttonColor('primary'),
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -1873,8 +1950,10 @@ Input Qty Tipe BS
                           label: 'Simpan',
                           onPressed: () {
                             setState(() {
-                              _defects[index]['qty'] = controller.text;
-                              widget.defectQty[index].text = controller.text;
+                              _defects[index]['qty'] =
+                                  controller.text.replaceAll(',', '');
+                              widget.defectQty[index].text =
+                                  controller.text.replaceAll(',', '');
                               widget.form['defects'] = _defects;
                               // ✅ AUTO-CALCULATE BS GRADE
                               _recalculateGradeBS();
@@ -2037,29 +2116,32 @@ Qty Sorting
 
     final grandTotal = totalQty + total;
 
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        children: [
-          // Loop through grades
-          ...gradesList.asMap().entries.map((entry) {
-            final grade = entry.value;
-            final gradeName = grade['grade']?.toString() ?? '-';
-            final gradeQty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
-            final gradeUnit = grade['unit_code']?.toString() ?? '';
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Loop through grades
+        ...gradesList.asMap().entries.map((entry) {
+          final grade = entry.value;
+          final gradeName = grade['grade']?.toString() ?? '-';
+          final gradeQty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
+          final gradeUnit = grade['unit_code']?.toString() ?? '';
 
-            return Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8), // 👈 gap
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Grade ${gradeName}',
+                      'Grade $gradeName',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey.shade700,
@@ -2075,56 +2157,74 @@ Qty Sorting
                     ),
                   ],
                 ),
-                if (entry.key < gradesList.length - 1) SizedBox(height: 12),
+              ),
+            ),
+          );
+        }).toList(),
+        SizedBox(width: 12),
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Total Perbaikan',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade700,
+                    fontWeight: CustomTheme().fontWeight('semibold'),
+                  ),
+                ),
+                Text(
+                  '${formatNumber(total.toString())} PCS',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: CustomTheme().fontWeight('bold'),
+                  ),
+                ),
               ],
-            );
-          }).toList(),
-          SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Total Perbaikan',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade700,
-                  fontWeight: CustomTheme().fontWeight('semibold'),
-                ),
-              ),
-              Text(
-                '${formatNumber(total.toString())} PCS',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: CustomTheme().fontWeight('bold'),
-                ),
-              ),
-            ],
+            ),
           ),
-          Divider(color: Colors.grey.shade300),
-          SizedBox(height: 12),
-          // Total
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Total',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade700,
-                  fontWeight: CustomTheme().fontWeight('bold'),
+        ),
+        SizedBox(width: 16),
+        // Total
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Total',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade700,
+                    fontWeight: CustomTheme().fontWeight('bold'),
+                  ),
                 ),
-              ),
-              Text(
-                '${formatNumber(grandTotal.toStringAsFixed(0))} ${gradesList.isNotEmpty ? gradesList[0]['unit_code']?.toString() ?? '' : ''}',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: CustomTheme().fontWeight('bold'),
+                Text(
+                  '${formatNumber(grandTotal.toStringAsFixed(0))} ${gradesList.isNotEmpty ? gradesList[0]['unit_code']?.toString() ?? '' : ''}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: CustomTheme().fontWeight('bold'),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

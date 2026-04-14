@@ -99,7 +99,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header Section
-                _buildHeaderSection(isTablet),
+                _buildWorkOrderInfo(isTablet),
 
                 // Main Content
                 if (isTablet)
@@ -116,26 +116,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
 
   Widget _buildHeaderSection(bool isTablet) {
     return Padding(
-      padding: CustomTheme().padding('content'),
+      padding: CustomTheme().padding('card-detail'),
       child: Container(
         padding: CustomTheme().padding('card'),
         decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                CustomTheme().buttonColor('primary'),
-                CustomTheme().buttonColor('primary').withOpacity(0.8),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: CustomTheme().buttonColor('primary').withOpacity(0.3),
-                blurRadius: 12,
-                offset: Offset(0, 4),
-              ),
-            ]),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -155,7 +142,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                             style: TextStyle(
                               fontSize: isTablet ? 24 : 20,
                               fontWeight: CustomTheme().fontWeight('bold'),
-                              color: Colors.white,
+                              color: Colors.grey[800],
                             ),
                           ),
                           if (widget.data['rework'] == true)
@@ -189,7 +176,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                                 : '-',
                             style: TextStyle(
                               fontSize: CustomTheme().fontSize('lg'),
-                              color: Colors.white.withOpacity(0.8),
+                              color: Colors.grey[600],
                               fontWeight: CustomTheme().fontWeight('semibold'),
                             ),
                           ),
@@ -201,8 +188,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 _buildStatusBadge(isTablet),
               ],
             ),
-            if (widget.data['machine_id'] != null ||
-                widget.data['maklon_name'] != null)
+            if (widget.label != 'Sorting' && widget.label != 'Packing')
               _buildQuickInfoRow(isTablet),
           ].separatedBy(CustomTheme().vGap('xl')),
         ),
@@ -222,8 +208,9 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     return Container(
       padding: EdgeInsets.all(isTablet ? 16 : 12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
+        color: Colors.grey[50],
         borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey[200]!),
       ),
       child: Row(
         children: [
@@ -248,7 +235,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 isTablet: isTablet,
               ),
             ),
-          if (widget.data['machine_id'] != null) _buildVerticalDivider(),
+          if (widget.data['machine_id'] != null) _buildVerticalDivider(false),
           if (widget.data['machine_id'] != null)
             Expanded(
               child: _buildQuickInfoItem(
@@ -258,6 +245,78 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 isTablet: isTablet,
               ),
             ),
+          if (widget.forDyeing == true) _buildVerticalDivider(false),
+          if (widget.forDyeing == true && widget.data['status'] == 'Selesai')
+            Expanded(
+              child: _buildQuickInfoItem(
+                icon: Icons.scale_outlined,
+                label: 'Qty Hasil ${widget.label}',
+                value: widget.data['qty'] != null
+                    ? '${formatNumber(widget.data['qty'])} ${widget.data['unit']['code']}'
+                    : '0 ${widget.data['unit'] != null ? widget.data['unit']['code'] : ''}',
+                isTablet: isTablet,
+              ),
+            ),
+          if (widget.forDyeing == true) _buildVerticalDivider(false),
+          if (widget.forDyeing == true && widget.data['status'] == 'Selesai')
+            Expanded(
+              child: _buildQuickInfoItem(
+                icon: Icons.invert_colors_on_outlined,
+                label: 'No. Lot Celup',
+                value: widget.data['lot_celup_no'] != null
+                    ? '${widget.data['lot_celup_no']}'
+                    : '-',
+                isTablet: isTablet,
+              ),
+            ),
+          if (widget.forDyeing == false &&
+              widget.data['status'] == 'Selesai' &&
+              !(['Long Hemming', 'Cross Cutting', 'Sewing']
+                  .contains(widget.label)))
+            _buildVerticalDivider(false),
+          if (widget.forDyeing == false &&
+              widget.label != 'Long Hemming' &&
+              widget.label != 'Cross Cutting' &&
+              widget.label != 'Sewing' &&
+              widget.data['status'] == 'Selesai')
+            Expanded(
+              child: _buildQuickInfoItem(
+                icon: Icons.scale_outlined,
+                label: 'Berat',
+                value: widget.data['weight'] != null
+                    ? '${formatNumber(widget.data['weight'])} ${widget.data['weight_unit']['code']}'
+                    : '0 ${widget.data['weight_unit'] != null ? widget.data['weight_unit']['code'] : ''}',
+                isTablet: isTablet,
+              ),
+            ),
+          if (widget.label == 'Long Hemming')
+            Expanded(
+                child: _buildQuickInfoItem(
+                    icon: Icons.thumb_up_outlined,
+                    label: 'Berat Bagus',
+                    value: widget.data['good_weight'] != null
+                        ? '${formatNumber(widget.data['good_weight'])} ${widget.data['good_weight_unit']['code']}'
+                        : '0 ${widget.data['good_weight_unit'] != null ? widget.data['good_weight_unit']['code'] : ''}',
+                    isTablet: isTablet)),
+          if (widget.label == 'Long Hemming') _buildVerticalDivider(false),
+          if (widget.label == 'Long Hemming')
+            Expanded(
+                child: _buildQuickInfoItem(
+                    icon: Icons.thumb_down_outlined,
+                    label: 'Berat BS',
+                    value: widget.data['bs_weight'] != null
+                        ? '${formatNumber(widget.data['bs_weight'])} ${widget.data['bs_weight_unit']['code']}'
+                        : '0 ${widget.data['bs_weight_unit'] != null ? widget.data['bs_weight_unit']['code'] : ''}',
+                    isTablet: isTablet)),
+          if (widget.label == 'Cross Cutting' || widget.label == 'Sewing')
+            Expanded(
+                child: _buildQuickInfoItem(
+                    icon: Icons.numbers_outlined,
+                    label: 'Qty Material',
+                    value: widget.data['item_qty'] != null
+                        ? '${formatNumber(widget.data['item_qty'])} ${widget.data['item_unit']['code']}'
+                        : '0 ${widget.data['item_unit'] != null ? widget.data['item_unit']['code'] : ''}',
+                    isTablet: isTablet)),
         ],
       ),
     );
@@ -274,13 +333,13 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         Icon(
           icon,
           size: isTablet ? 20 : 18,
-          color: Colors.white,
+          color: CustomTheme().colors('primary'),
         ),
         Text(
           label,
           style: TextStyle(
             fontSize: CustomTheme().fontSize('sm'),
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.grey[800],
           ),
         ),
         Text(
@@ -288,7 +347,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
           style: TextStyle(
               fontSize: isTablet ? 13 : 12,
               fontWeight: FontWeight.w600,
-              color: Colors.white),
+              color: Colors.grey[800]),
           textAlign: TextAlign.center,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -297,12 +356,14 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildVerticalDivider() {
+  Widget _buildVerticalDivider(isWo) {
     return Container(
       width: 1,
       height: 40,
       margin: EdgeInsets.symmetric(horizontal: 8),
-      color: Colors.white.withOpacity(0.2),
+      color: isWo == true
+          ? Colors.white.withOpacity(0.2)
+          : Colors.grey.withOpacity(0.2),
     );
   }
 
@@ -310,47 +371,164 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
 Work Order
 */
   Widget _buildWorkOrderInfo(bool isTablet) {
-    final items = [
-      {
-        'label': 'No. Work Order',
-        'value': widget.data['work_orders']?['wo_no'] ?? '-',
-        'id': widget.data['work_orders']?['id'] ?? '-',
-        'icon': Icons.content_paste_outlined,
-        'navigate': () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => WorkOrderDetail(
-                id: widget.data['work_orders']?['id'].toString() ?? '-',
+    return Padding(
+      padding: CustomTheme().padding('content'),
+      child: Container(
+        padding: CustomTheme().padding('card'),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              CustomTheme().buttonColor('primary'),
+              CustomTheme().buttonColor('primary').withOpacity(0.8),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade200),
+          boxShadow: [
+            BoxShadow(
+              color: CustomTheme().buttonColor('primary').withOpacity(0.3),
+              blurRadius: 12,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'No. WO',
+                        style: TextStyle(
+                          fontSize: CustomTheme().fontSize('lg'),
+                          fontWeight: CustomTheme().fontWeight('semibold'),
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.data['work_orders']?['wo_no'] ?? '-',
+                            style: TextStyle(
+                              fontSize: isTablet ? 22 : 18,
+                              fontWeight: CustomTheme().fontWeight('bold'),
+                              color: Colors.white,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WorkOrderDetail(
+                                    id: widget.data['work_orders']?['id']
+                                            .toString() ??
+                                        '-',
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Icon(
+                              Icons.chevron_right,
+                              size: 24,
+                              color: Colors.white,
+                            ),
+                          )
+                        ].separatedBy(CustomTheme().hGap('md')),
+                      ),
+                    ].separatedBy(CustomTheme().vGap('sm')),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              padding: EdgeInsets.all(isTablet ? 16 : 12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.scale_outlined,
+                          size: isTablet ? 20 : 18,
+                          color: Colors.white,
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Qty Greige',
+                          style: TextStyle(
+                            fontSize: CustomTheme().fontSize('sm'),
+                            color: Colors.grey[300],
+                            fontWeight: CustomTheme().fontWeight('semibold'),
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          widget.data['work_orders']?['greige_qty'] != null
+                              ? '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']?['code'] ?? ''}'
+                              : '-',
+                          style: TextStyle(
+                            fontSize: CustomTheme().fontSize('base'),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  _buildVerticalDivider(true),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.calendar_today_outlined,
+                          size: isTablet ? 20 : 18,
+                          color: Colors.white,
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Tanggal WO',
+                          style: TextStyle(
+                            fontSize: CustomTheme().fontSize('sm'),
+                            color: Colors.grey[300],
+                            fontWeight: CustomTheme().fontWeight('semibold'),
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          DateFormat("dd MMM yyyy").format(DateTime.parse(
+                              widget.data['work_orders']['wo_date'])),
+                          style: TextStyle(
+                            fontSize: CustomTheme().fontSize('base'),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-          );
-        },
-        'right-icon': Icons.chevron_right_outlined,
-      },
-      {
-        'label': 'Tanggal Work Order',
-        'value': widget.data['work_orders']['wo_date'] != null
-            ? DateFormat("dd MMM yyyy")
-                .format(DateTime.parse(widget.data['work_orders']['wo_date']))
-            : '-',
-        'id': widget.data['work_orders']?['id'] ?? '-',
-        'icon': Icons.calendar_today_outlined,
-        'right-icon': null,
-        'navigate': null
-      },
-      {
-        'label': 'Qty Greige',
-        'value': widget.data['work_orders']?['greige_qty'] != null
-            ? '${formatNumber(widget.data['work_orders']['greige_qty'])} ${widget.data['work_orders']['greige_unit']?['code'] ?? ''}'
-            : '-',
-        'icon': Icons.layers_outlined,
-        'navigate': null,
-        'right-icon': null,
-      },
-    ];
-
-    return _buildInfoGrid(items, isTablet);
+          ].separatedBy(CustomTheme().vGap('lg')),
+        ),
+      ),
+    );
   }
 
   /*
@@ -382,14 +560,14 @@ Informasi Proses
               : '-',
           'icon': Icons.invert_colors_on_outlined,
         },
-      // if (widget.withQtyAndWeight == true && widget.data['status'] == 'Selesai')
-      //   {
-      //     'label': 'Qty Hasil ${widget.label}',
-      //     'value': widget.data['item_qty'] != null
-      //         ? '${formatNumber(widget.data['item_qty'])} ${widget.data['item_unit']['code']}'
-      //         : '0 ${widget.data['item_unit'] != null ? widget.data['item_unit']['code'] : ''}',
-      //     'icon': Icons.layers_outlined,
-      //   },
+      if (widget.withQtyAndWeight == true && widget.data['status'] == 'Selesai')
+        {
+          'label': 'Qty Hasil ${widget.label}',
+          'value': widget.data['item_qty'] != null
+              ? '${formatNumber(widget.data['item_qty'])} ${widget.data['item_unit']['code']}'
+              : '0 ${widget.data['item_unit'] != null ? widget.data['item_unit']['code'] : ''}',
+          'icon': Icons.layers_outlined,
+        },
       if (widget.label == 'Long Hemming')
         {
           'label': 'Berat Bagus',
@@ -427,16 +605,16 @@ Informasi Proses
 Grades
 */
   Widget _buildGradeInfo(bool isTablet) {
-    double getTotalGradeQty() {
-      final List<dynamic>? grades = widget.existingGrades;
+    // double getTotalGradeQty() {
+    //   final List<dynamic>? grades = widget.existingGrades;
 
-      if (grades == null || grades.isEmpty) return 0;
+    //   if (grades == null || grades.isEmpty) return 0;
 
-      return grades.fold<double>(0.0, (sum, item) {
-        final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
-        return sum + qty;
-      });
-    }
+    //   return grades.fold<double>(0.0, (sum, item) {
+    //     final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
+    //     return sum + qty;
+    //   });
+    // }
 
     final items = widget.data['work_orders']?['items'] ?? [];
     final codeGradeB = widget.data['grades'][1]['greige_item']['code'];
@@ -506,127 +684,169 @@ Ringkasan Sorting
     }
     int totalQtySorting = totalGrades + totalVermak;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Container(
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.blue.shade50,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.blue.shade200),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Grade A:',
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    '$gradeAQty',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue.shade700,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Grade B:',
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    '$gradeBQty',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue.shade700,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Grade BS:',
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    '$gradeBSQty',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red.shade700,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total Perbaikan:',
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    '$totalVermak',
-                    style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Total Qty Sorting:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: CustomTheme().fontSize('lg'),
-                        ),
-                      ),
-                      Text(
-                        '$totalQtySorting',
-                        style: TextStyle(
-                          fontSize: CustomTheme().fontSize('2xl'),
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ],
-                  ),
-                ].separatedBy(SizedBox(height: 8)),
-              ),
+        // Grade A
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade300),
             ),
-          ].separatedBy(CustomTheme().vGap('lg')),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Grade A',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  '$gradeAQty',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87),
+                ),
+              ],
+            ),
+          ),
         ),
-      ].separatedBy(CustomTheme().vGap('lg')),
+        SizedBox(width: 8),
+        // Grade B
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Grade B',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  '$gradeBQty',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(width: 8),
+        // Grade BS
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Tipe BS (BS-an)',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  '$gradeBSQty',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(width: 8),
+        // Perbaikan
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Perbaikan',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  '$totalVermak',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(width: 8),
+        // Hasil Sortir
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hasil Sortir',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  '$totalQtySorting',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -692,7 +912,7 @@ Rework
   Widget _buildReworkInfo(bool isTablet) {
     final items = [
       {
-        'label': 'Referensi Rework',
+        'label': 'Referensi Dyeing',
         'value': widget.data['rework_reference'] != null
             ? widget.data['rework_reference']['dyeing_no']
             : '-',
@@ -755,9 +975,17 @@ Multi Mesin
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${machine['machine']['code']} - ${machine['machine']['name']}',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${machine['machine']['code']} - ${machine['machine']['name']}',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            'Lokasi: ${machine['location']}',
+                          ),
+                        ],
                       ),
                       CustomBadge(
                         title: machine['status'],
@@ -769,9 +997,7 @@ Multi Mesin
                       )
                     ],
                   ),
-                Text(
-                  'Lokasi: ${machine['location']}',
-                ),
+                Divider(),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -784,7 +1010,7 @@ Multi Mesin
                     ),
                   ],
                 ),
-              ].separatedBy(CustomTheme().vGap('sm')),
+              ],
             ));
       }).toList(),
     );
@@ -852,12 +1078,19 @@ Tipe BS
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(capitalizeWords(itemType['type']?['name'] ?? '-')),
-                  SizedBox(height: 8),
                   Text(
-                    'Qty: ${itemType['qty']} PCS',
+                    (itemType['type']?['name'] ?? '-'),
                     style: TextStyle(
                         fontWeight: CustomTheme().fontWeight('semibold')),
+                  ),
+                  SizedBox(height: 4),
+                  SizedBox(
+                    width: 160,
+                    child: CustomBadge(
+                      title: 'Qty: ${itemType['qty']} PCS',
+                      rework: true,
+                      status: 'Selesai',
+                    ),
                   ),
                 ],
               ),
@@ -885,15 +1118,27 @@ Berat >> Packing
   Widget _buildWeightInfo(bool isTablet) {
     final items = [
       {
+        'label': 'Hasil Packing',
+        'value':
+            '${widget.data['qty'] != null ? formatNumber(widget.data['qty']) : '0'} ${'PCS'}',
+        'icon': Icons.numbers_outlined,
+      },
+      {
+        'label': 'Gramasi',
+        'value':
+            '${widget.data['gsm'] != null ? formatNumber(widget.data['gsm']) : '0'} ${'GSM'}',
+        'icon': Icons.numbers_outlined,
+      },
+      {
         'label': 'Berat 1 Lusin',
         'value':
             '${widget.data['weight_per_dozen'] != null ? formatNumber(widget.data['weight_per_dozen']) : '0'} ${'KG'}',
         'icon': Icons.twelve_mp_outlined,
       },
       {
-        'label': 'Gramasi',
+        'label': 'Berat Grade A',
         'value':
-            '${widget.data['gsm'] != null ? formatNumber(widget.data['gsm']) : '0'} ${'GSM'}',
+            '${widget.data['weight_grade_a'] != null ? formatNumber(widget.data['weight_grade_a']) : '0'} ${'KG'}',
         'icon': Icons.numbers_outlined,
       },
       {
@@ -1135,11 +1380,7 @@ Catatan WO
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildInfoCard(
-          title: 'Informasi Work Order',
-          icon: Icons.description_outlined,
-          child: _buildWorkOrderInfo(true),
-        ),
+        _buildHeaderSection(true),
         if (widget.label == 'Long Hemming' ||
             widget.label == 'Cross Cutting' ||
             widget.label == 'Sewing')
@@ -1148,25 +1389,14 @@ Catatan WO
             icon: Icons.local_laundry_service_outlined,
             child: _buildMachine(true),
           ),
-        if (widget.withItemGrade == false &&
-            (['Dyeing', 'Press', 'Tumbler', 'Stenter', 'Long Slitting']
-                .contains(widget.label)) &&
-            widget.data['status'] == 'Selesai')
+        if (widget.forDyeing == false &&
+            widget.withItemGrade == false &&
+            widget.label != 'Long Hemming' &&
+            widget.label != 'Cross Cutting' &&
+            widget.label != 'Sewing')
           _buildInfoCard(
             title: 'Informasi Proses',
-            icon: widget.label == 'Dyeing'
-                ? Icons.invert_colors_on_outlined
-                : widget.label == 'Press'
-                    ? Icons.layers_outlined
-                    : widget.label == 'Tumbler'
-                        ? Icons.dry_cleaning_outlined
-                        : widget.label == 'Stenter'
-                            ? Icons.air_outlined
-                            : widget.label == 'Long Slitting'
-                                ? Icons.content_paste_outlined
-                                : widget.label == 'Long Hemming'
-                                    ? Icons.cut_outlined
-                                    : Icons.settings_outlined,
+            icon: Icons.settings_outlined,
             child: _buildProcessInfo(true),
           ),
         if (widget.data['rework'] == true)
@@ -1195,7 +1425,7 @@ Catatan WO
           ),
         if (widget.label == 'Sorting')
           _buildInfoCard(
-            title: 'Ringkasan Sorting',
+            title: 'Ringkasan Sortir',
             icon: Icons.attachment_outlined,
             child: _buildTotalSorting(true),
           ),
@@ -1207,7 +1437,7 @@ Catatan WO
           ),
         if (widget.label == 'Packing')
           _buildInfoCard(
-            title: 'Informasi Berat',
+            title: 'Informasi Packing',
             icon: Icons.scale_outlined,
             child: _buildWeightInfo(true),
           ),
@@ -1217,26 +1447,26 @@ Catatan WO
           child: _buildTimelineInfo(true),
         ),
         _buildInfoCard(
-          title: 'Catatan Proses',
-          icon: Icons.note_outlined,
-          child: _buildNote(true),
-        ),
-        _buildInfoCard(
-          title: 'Lampiran Proses',
-          icon: Icons.attachment_outlined,
-          child: _buildAttachment(true),
-        ),
-        _buildInfoCard(
-          title: 'Catatan dari Work Order',
-          icon: Icons.note_outlined,
-          child: _buildNoteWo(true),
-        ),
-        _buildInfoCard(
           title: 'Material Work Order',
           icon: Icons.inventory_2_outlined,
           child: _buildMaterial(
             true,
           ),
+        ),
+        _buildInfoCard(
+          title: 'Catatan Proses',
+          icon: Icons.note_outlined,
+          child: _buildNote(true),
+        ),
+        _buildInfoCard(
+          title: 'Lampiran',
+          icon: Icons.attachment_outlined,
+          child: _buildAttachment(true),
+        ),
+        _buildInfoCard(
+          title: 'Catatan Work Order',
+          icon: Icons.note_outlined,
+          child: _buildNoteWo(true),
         ),
       ].separatedBy(CustomTheme().vGap('xl')),
     );
@@ -1383,7 +1613,7 @@ Catatan WO
                   runSpacing: 16,
                   children: items.map((item) {
                     return SizedBox(
-                      width: (MediaQuery.of(context).size.width - 100) / 4,
+                      width: (MediaQuery.of(context).size.width - 90) / 3,
                       child: _buildInfoItem(
                           label: item['label'],
                           value: item['value'],
@@ -1411,7 +1641,9 @@ Catatan WO
                     );
                   }).toList()),
           SizedBox(height: 8),
-          if (widget.label == 'Sorting' && items[0]['label'] == 'Semprotan')
+          if (widget.label == 'Sorting' &&
+              items[0]['label'] == 'Semprotan' &&
+              totalRework > 0)
             Align(
               alignment: Alignment.centerRight,
               child: Text(
@@ -1636,18 +1868,20 @@ Catatan WO
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Text(
-                            anotherValue,
-                            style: TextStyle(
-                              fontSize: isTablet ? 14 : 13,
-                              color: isProduct
-                                  ? Colors.grey[600]
-                                  : Colors.grey[800],
-                              fontWeight: CustomTheme().fontWeight('semibold'),
+                          if (widget.label != 'Sorting')
+                            Text(
+                              anotherValue,
+                              style: TextStyle(
+                                fontSize: isTablet ? 14 : 13,
+                                color: isProduct
+                                    ? Colors.grey[600]
+                                    : Colors.grey[800],
+                                fontWeight:
+                                    CustomTheme().fontWeight('semibold'),
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
                         ],
                       ),
                     ].separatedBy(CustomTheme().hGap('sm')),

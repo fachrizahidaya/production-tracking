@@ -46,6 +46,9 @@ class _FinishLongHemmingState extends State<FinishLongHemming> {
     'nama_satuan': '',
     'finished_item_id': null,
     'nama_item': '',
+    'greige_item_id': null,
+    'nama_greige_item': '',
+    'sku_greige_item': '',
   };
 
   @override
@@ -109,7 +112,9 @@ class _FinishLongHemmingState extends State<FinishLongHemming> {
                 int.tryParse(form['good_weight_unit_id']?.toString() ?? ''),
             bs_weight: form['bs_weight'],
             bs_weight_unit_id:
-                int.tryParse(form['bs_weight_unit_id']?.toString() ?? ''));
+                int.tryParse(form['bs_weight_unit_id']?.toString() ?? ''),
+            greige_item_id:
+                int.tryParse(form['greige_item_id']?.toString() ?? ''));
 
         final message =
             await Provider.of<LongHemmingService>(context, listen: false)

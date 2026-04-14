@@ -75,7 +75,6 @@ class _FinishProcessState extends State<FinishProcess> {
 
   List<dynamic> workOrderOption = [];
   List<dynamic> finishedItemOption = [];
-  List<dynamic> finishedItemGrb = [];
   List<dynamic> itemGradeOption = [];
   String id = '';
 
@@ -87,6 +86,7 @@ class _FinishProcessState extends State<FinishProcess> {
     'weight_unit_id': 2,
     'start_by_id': null,
     'end_by_id': null,
+    'greige_item_id': null,
     'qty': '0',
     'item_qty': '0',
     'weight': '0',
@@ -117,6 +117,7 @@ class _FinishProcessState extends State<FinishProcess> {
     'bs_weight': '0',
     'bs_weight_unit_id': 2,
     'machine_ids': [],
+    'weight_grade_a': '0',
   };
 
   @override
@@ -231,40 +232,6 @@ class _FinishProcessState extends State<FinishProcess> {
 
       setState(() {
         finishedItemOption = options;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
-    }
-  }
-
-  Future<void> _handleFetchFinishedGrbMaterial(
-      Map<String, dynamic> woData) async {
-    final service = Provider.of<OptionItemService>(context, listen: false);
-
-    try {
-      String baseCode = '';
-
-      final itemCode = woData['items']?[0]?['item_code'] ?? '';
-
-      if (itemCode.isNotEmpty) {
-        final parts = itemCode.split('-');
-        baseCode = parts.first;
-      }
-
-      await service.fetchOptions(
-        process: 'sorting',
-        baseCode: baseCode,
-        colorCode: 'grb',
-      );
-
-      final options = widget.getFinishedItemOptions != null
-          ? widget.getFinishedItemOptions!(service)
-          : service.dataListOption;
-
-      setState(() {
-        finishedItemGrb = options;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

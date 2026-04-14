@@ -36,7 +36,7 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
       service: Provider.of<CrossCuttingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<CrossCuttingService>(context, listen: false)
-              .updateItem(context, id, item, isLoading),
+              .updateItemCrossCutting(context, id, item, isLoading),
       handleDeleteService: (context, id, isLoading) =>
           Provider.of<CrossCuttingService>(context, listen: false)
               .deleteItem(context, id, isLoading),
@@ -48,10 +48,7 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
         machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
         qty: form['item_qty'] ?? '0',
         notes: form['notes'] ?? data['notes'],
-        attachments: [
-          ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
-          ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
-        ],
+        attachments: form['attachments'] ?? data['attachments'],
         machine_ids: form['machine_ids'],
         machines: form['machines'],
       ),

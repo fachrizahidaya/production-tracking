@@ -126,21 +126,41 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ],
           ),
         if (updateStatus == true)
-          IconButton(
-            icon: Icon(Icons.edit_outlined),
-            onPressed: () {
-              handleUpdate();
-            },
+          Container(
+            margin: EdgeInsets.only(
+              right: 16,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.edit_outlined),
+              onPressed: () {
+                handleUpdate();
+              },
+            ),
           ),
         if (deleteStatus == true)
-          IconButton(
-            icon: Icon(
-              Icons.delete_outlined,
-              color: CustomTheme().buttonColor('danger'),
+          Container(
+            margin: EdgeInsets.only(
+              right: 16,
             ),
-            onPressed: () {
-              handleDelete(id.toString());
-            },
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey),
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.delete_outlined,
+                color: CustomTheme().buttonColor('danger'),
+              ),
+              onPressed: () {
+                handleDelete(id.toString());
+              },
+            ),
           ),
         ...?actions
       ],

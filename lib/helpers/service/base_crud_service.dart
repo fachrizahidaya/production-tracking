@@ -269,6 +269,70 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
+  Future<String> updateItemCrossCutting(
+    BuildContext context,
+    String id,
+    T updatedItem,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
+    isSubmitting.value = true;
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      final data = toJson(updatedItem);
+
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('$baseUrl/$endpoint/$id'),
+      );
+
+      final cleaned = <String, String>{};
+
+      data.forEach((key, value) {
+        if (value == null) return;
+
+        if (value is List) {
+          for (int i = 0; i < value.length; i++) {
+            cleaned['${key}[$i]'] = value[i].toString();
+          }
+        } else {
+          cleaned[key] = value.toString();
+        }
+      });
+
+      /// 🔥 IMPORTANT FIXES
+      cleaned['_method'] = 'PATCH';
+      cleaned.remove('weight');
+      cleaned.remove('weight_unit_id');
+      cleaned.remove('attachments');
+      cleaned['notes'] = cleaned['notes'] ?? '';
+
+      request.fields.addAll(cleaned);
+
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      });
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        await refetchItems(context);
+        return jsonDecode(response.body)['message'];
+      } else {
+        final error = jsonDecode(response.body);
+        throw (error['message'] ?? 'Gagal mengubah proses');
+      }
+    } catch (e) {
+      throw ('$e');
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
   Future<String> finishItem(
     BuildContext context,
     String id,

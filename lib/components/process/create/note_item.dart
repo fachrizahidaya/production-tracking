@@ -12,7 +12,7 @@ class NoteItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TemplateCard(
-        title: 'Catatan dari Work Order',
+        title: 'Catatan WO',
         icon: Icons.description_outlined,
         child: _buildTabletInfoLayout());
   }

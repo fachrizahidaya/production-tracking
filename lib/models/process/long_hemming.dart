@@ -32,6 +32,7 @@ class LongHemming {
   final good_weight_unit_id;
   final bs_weight;
   final bs_weight_unit_id;
+  final greige_item_id;
 
   LongHemming(
       {this.id,
@@ -60,7 +61,8 @@ class LongHemming {
       this.good_weight,
       this.good_weight_unit_id,
       this.bs_weight,
-      this.bs_weight_unit_id});
+      this.bs_weight_unit_id,
+      this.greige_item_id});
 
   factory LongHemming.fromJson(Map<String, dynamic> json) {
     return LongHemming(
@@ -89,7 +91,8 @@ class LongHemming {
         good_weight: json['good_weight'] ?? '',
         good_weight_unit_id: json['good_weight_unit_id'] as int?,
         bs_weight: json['bs_weight'] ?? '',
-        bs_weight_unit_id: json['bs_weight_unit_id'] as int?);
+        bs_weight_unit_id: json['bs_weight_unit_id'] as int?,
+        greige_item_id: json['greige_item_id'] as int?);
   }
 
   Map<String, dynamic> toJson() {
@@ -121,6 +124,7 @@ class LongHemming {
       'good_weight_unit_id': good_weight_unit_id,
       'bs_weight': bs_weight,
       'bs_weight_unit_id': bs_weight_unit_id,
+      'greige_item_id': greige_item_id,
     };
   }
 }

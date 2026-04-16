@@ -85,6 +85,8 @@ class OptionMachineService extends BaseService<OptionMachine> {
         queryParams['process'] = process;
       if (searchQuery.isNotEmpty) queryParams['search'] = searchQuery;
 
+      queryParams['status'] = 'Tersedia';
+
       // Add current machine IDs as array parameter
       if (currentMachineIds != null && currentMachineIds.isNotEmpty) {
         queryParams['current_machine_ids[]'] =
@@ -124,30 +126,27 @@ class OptionMachineService extends BaseService<OptionMachine> {
     await _fetchOptionsGeneric();
   }
 
-  Future<void> fetchOptionsDyeing({List<dynamic>? currentMachineIds}) async {
-    await _fetchOptionsGeneric(process: 'dyeing');
+  Future<void> fetchOptionsDyeing() async {
+    await _fetchOptionsGeneric(process: 'dyeing', currentMachineIds: null);
   }
 
   Future<void> fetchOptionsPressTumbler(
       {List<dynamic>? currentMachineIds}) async {
-    await _fetchOptionsGeneric(
-        process: 'press', currentMachineIds: currentMachineIds);
+    await _fetchOptionsGeneric(process: 'press', currentMachineIds: null);
   }
 
   Future<void> fetchOptionsTumbler({List<dynamic>? currentMachineIds}) async {
-    await _fetchOptionsGeneric(
-        process: 'tumbler', currentMachineIds: currentMachineIds);
+    await _fetchOptionsGeneric(process: 'tumbler', currentMachineIds: null);
   }
 
   Future<void> fetchOptionsStenter({List<dynamic>? currentMachineIds}) async {
-    await _fetchOptionsGeneric(
-        process: 'stenter', currentMachineIds: currentMachineIds);
+    await _fetchOptionsGeneric(process: 'stenter', currentMachineIds: null);
   }
 
   Future<void> fetchOptionsLongSitting(
       {List<dynamic>? currentMachineIds}) async {
     await _fetchOptionsGeneric(
-        process: 'long_slitting', currentMachineIds: currentMachineIds);
+        process: 'long_slitting', currentMachineIds: null);
   }
 
   Future<void> fetchOptionsLongHemming(

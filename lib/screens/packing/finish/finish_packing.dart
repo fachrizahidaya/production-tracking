@@ -27,9 +27,10 @@ class _FinishPackingState extends State<FinishPacking> {
     'rework_reference_id': null,
     'start_by_id': null,
     'end_by_id': null,
-    'weight_per_dozen': null,
-    'gsm': null,
-    'total_weight': null,
+    'weight_per_dozen': '0',
+    'gsm': '0',
+    'total_weight': '0',
+    'qty': '0',
     'notes': '',
     'rework': null,
     'status': null,
@@ -43,9 +44,10 @@ class _FinishPackingState extends State<FinishPacking> {
     'nama_satuan_panjang': '',
     'nama_satuan_lebar': '',
     'nama_satuan': '',
-    'finished_unit_id': null,
-    'nama_item': '',
-    'weight_grade_a': '',
+    'weight_grade_a': '0',
+    'greige_item_id': null,
+    'nama_greige_item': '',
+    'sku_greige_item': '',
   };
 
   @override

@@ -99,6 +99,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'TexTrack',
+      builder: (context, child) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: child!,
+        );
+      },
       theme: ThemeData(
         primarySwatch: Colors.blue,
         appBarTheme: AppBarTheme(

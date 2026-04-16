@@ -33,6 +33,7 @@ class _PressTumblerDetailState extends State<PressTumblerDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Press',
+      isMultiMachine: false,
       service: Provider.of<PressTumblerService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<PressTumblerService>(context, listen: false)
@@ -64,7 +65,7 @@ class _PressTumblerDetailState extends State<PressTumblerDetail> {
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/press',
-      fetchMachine: (service) => service.fetchOptionsPressTumbler(),
+      fetchMachine: (service, _) => service.fetchOptionsPressTumbler(),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withMaklon: false,

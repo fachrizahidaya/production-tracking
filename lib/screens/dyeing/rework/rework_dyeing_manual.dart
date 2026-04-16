@@ -48,9 +48,6 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   final TextEditingController _noteController = TextEditingController();
-  final TextEditingController _qtyController = TextEditingController();
-  final TextEditingController _lengthController = TextEditingController();
-  final TextEditingController _widthController = TextEditingController();
 
   late List<dynamic> workOrderOption = [];
   late List<dynamic> machineOption = [];
@@ -65,9 +62,6 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   void initState() {
     super.initState();
 
-    _qtyController.text = widget.form?['qty']?.toString() ?? '';
-    _lengthController.text = widget.form?['length']?.toString() ?? '';
-    _widthController.text = widget.form?['width']?.toString() ?? '';
     _noteController.text = widget.form?['notes']?.toString() ?? '';
 
     if (widget.data != null) {
@@ -211,18 +205,6 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
     setState(() {
       dyeingData = _dyeingService.dataView;
 
-      if (dyeingData['length'] != null) {
-        _lengthController.text = dyeingData['length'].toString();
-        widget.form?['length'] = dyeingData['length'];
-      }
-      if (dyeingData['width'] != null) {
-        _widthController.text = dyeingData['width'].toString();
-        widget.form?['width'] = dyeingData['width'];
-      }
-      if (dyeingData['qty'] != null) {
-        _qtyController.text = dyeingData['qty'].toString();
-        widget.form?['qty'] = dyeingData['qty'];
-      }
       if (dyeingData['notes'] != null) {
         _noteController.text = dyeingData['notes'].toString();
         widget.form?['notes'] = dyeingData['notes'];

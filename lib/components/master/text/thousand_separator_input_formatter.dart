@@ -4,29 +4,43 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 
 class ThousandsSeparatorInputFormatter extends TextInputFormatter {
-  final NumberFormat _intFormatter = NumberFormat.decimalPattern('en_US');
+  final NumberFormat _intFormatter = NumberFormat.decimalPattern('id_ID');
 
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    final text = newValue.text;
+    String text = newValue.text;
 
-    if (text.isEmpty) {
-      return newValue;
+    if (text.isEmpty) return newValue;
+
+    // ✅ Handle user lagi ngetik koma (desimal)
+    if (text.endsWith(',')) {
+      final numericPart = text
+          .substring(0, text.length - 1)
+          .replaceAll('.', '')
+          .replaceAll(',', '.');
+
+      if (numericPart.isEmpty) {
+        return newValue;
+      }
+
+      if (double.tryParse(numericPart) != null) {
+        final formattedInt =
+            _intFormatter.format(int.parse(numericPart.split('.')[0]));
+
+        final result = '$formattedInt,';
+
+        return TextEditingValue(
+          text: result,
+          selection: TextSelection.collapsed(offset: result.length),
+        );
+      }
     }
 
-    String sanitized = text.replaceAll(RegExp(r'[^0-9.]'), '');
-
-    if ('.'.allMatches(sanitized).length > 1) {
-      return oldValue;
-    }
-
-    if (sanitized.endsWith('.') &&
-        double.tryParse(sanitized.substring(0, sanitized.length - 1)) != null) {
-      return newValue;
-    }
+    // Normalisasi
+    String sanitized = text.replaceAll('.', '').replaceAll(',', '.');
 
     if (double.tryParse(sanitized) == null) {
       return oldValue;
@@ -41,17 +55,11 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
         : _intFormatter.format(int.parse(integerPart));
 
     final formattedText =
-        decimalPart.isNotEmpty ? '$formattedInt.$decimalPart' : formattedInt;
-
-    int offset =
-        formattedText.length - (oldValue.text.length - oldValue.selection.end);
-
-    if (offset < 0) offset = 0;
-    if (offset > formattedText.length) offset = formattedText.length;
+        decimalPart.isNotEmpty ? '$formattedInt,$decimalPart' : formattedInt;
 
     return TextEditingValue(
       text: formattedText,
-      selection: TextSelection.collapsed(offset: offset),
+      selection: TextSelection.collapsed(offset: formattedText.length),
     );
   }
 }

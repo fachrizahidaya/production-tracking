@@ -60,36 +60,39 @@ class ProcessDetail<T> extends StatefulWidget {
   final getWorkOrderOptions;
   final forSewing;
   final forHemming;
+  final isMultiMachine;
 
-  const ProcessDetail(
-      {super.key,
-      required this.id,
-      required this.no,
-      required this.service,
-      required this.handleUpdateService,
-      required this.handleDeleteService,
-      required this.modelBuilder,
-      this.canDelete = false,
-      this.canUpdate = false,
-      this.label,
-      this.route,
-      this.fetchMachine,
-      this.getMachineOptions,
-      this.withItemGrade,
-      this.withQtyAndWeight,
-      this.withMaklon,
-      this.onlySewing,
-      this.forDyeing,
-      this.idProcess,
-      this.processService,
-      this.forPacking,
-      this.fetchFinish,
-      this.handleSubmitToService,
-      this.fetchItemGrade,
-      this.getItemGradeOptions,
-      this.getWorkOrderOptions,
-      this.forHemming,
-      this.forSewing});
+  const ProcessDetail({
+    super.key,
+    required this.id,
+    required this.no,
+    required this.service,
+    required this.handleUpdateService,
+    required this.handleDeleteService,
+    required this.modelBuilder,
+    this.canDelete = false,
+    this.canUpdate = false,
+    this.label,
+    this.route,
+    this.fetchMachine,
+    this.getMachineOptions,
+    this.withItemGrade,
+    this.withQtyAndWeight,
+    this.withMaklon,
+    this.onlySewing,
+    this.forDyeing,
+    this.idProcess,
+    this.processService,
+    this.forPacking,
+    this.fetchFinish,
+    this.handleSubmitToService,
+    this.fetchItemGrade,
+    this.getItemGradeOptions,
+    this.getWorkOrderOptions,
+    this.forHemming,
+    this.forSewing,
+    this.isMultiMachine = false,
+  });
 
   @override
   State<ProcessDetail<T>> createState() => _ProcessDetailState<T>();
@@ -204,7 +207,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     for (var grade in itemGradeOption) {
       final existing = _grades.firstWhere(
         (g) => g['item_grade_id'].toString() == grade['id'].toString(),
-        orElse: () => {},
+        orElse: () => <String, dynamic>{},
       );
 
       updated.add({
@@ -366,6 +369,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   void _applyDataToControllers(Map<String, dynamic> d) {
     _qtyItemController.text = d['item_qty']?.toString() ?? '';
     _weightController.text = d['weight']?.toString() ?? '';
+    _goodWeightController.text = d['good_weight']?.toString() ?? '';
+    _defectWeightController.text = d['bs_weight']?.toString() ?? '';
     _lengthController.text = d['length']?.toString() ?? '';
     _widthController.text = d['width']?.toString() ?? '';
     _packingQtyController.text = d['qty']?.toString() ?? '';
@@ -379,6 +384,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
     _form['item_qty'] = d['item_qty']?.toString() ?? '';
     _form['weight'] = d['weight']?.toString() ?? '';
+    _form['good_weight'] = d['good_weight']?.toString() ?? '';
+    _form['bs_weight'] = d['bs_weight']?.toString() ?? '';
     _form['qty'] = d['qty']?.toString() ?? '';
     _form['weight_per_dozen'] = d['weight_per_dozen']?.toString() ?? '';
     _form['maklon_name'] = d['maklon_name'];
@@ -539,7 +546,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     showConfirmationDialog(
       context: context,
       title: 'Hapus Data',
-      message: 'Yakin ingin menghapus data ini?',
+      message: 'Apakah Anda yakin ingin menghapus proses?',
       isLoading: _processLoading,
       buttonBackground: CustomTheme().buttonColor('danger'),
       onConfirm: () async {
@@ -621,7 +628,11 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
               [];
 
       if (widget.fetchMachine != null) {
-        await widget.fetchMachine!(service, currentMachineIds);
+        if (widget.isMultiMachine == true) {
+          await widget.fetchMachine!(service, currentMachineIds);
+        } else {
+          await widget.fetchMachine!(service, null);
+        }
       } else {
         await service.fetchOptions();
       }

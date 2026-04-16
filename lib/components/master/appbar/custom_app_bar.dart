@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/button/action_button.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -125,43 +126,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ],
           ),
-        if (updateStatus == true)
-          Container(
-            margin: EdgeInsets.only(
-              right: 16,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey),
-            ),
-            child: IconButton(
-              icon: Icon(Icons.edit_outlined),
-              onPressed: () {
-                handleUpdate();
-              },
-            ),
-          ),
-        if (deleteStatus == true)
-          Container(
-            margin: EdgeInsets.only(
-              right: 16,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey),
-            ),
-            child: IconButton(
-              icon: Icon(
-                Icons.delete_outlined,
-                color: CustomTheme().buttonColor('danger'),
+        Row(
+          children: [
+            if (updateStatus == true)
+              ActionTextButton(
+                label: 'Edit',
+                onPressed: handleUpdate,
               ),
-              onPressed: () {
-                handleDelete(id.toString());
-              },
-            ),
-          ),
+            if (deleteStatus == true)
+              ActionTextButton(
+                label: 'Hapus',
+                textColor: Colors.red,
+                borderColor: Colors.red,
+                onPressed: () => handleDelete(id.toString()),
+              ),
+          ],
+        ),
         ...?actions
       ],
       bottom: PreferredSize(

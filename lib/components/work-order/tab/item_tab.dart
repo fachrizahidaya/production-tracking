@@ -5,6 +5,7 @@ import 'package:textile_tracking/components/master/card/list_item.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ItemTab extends StatefulWidget {
@@ -150,7 +151,7 @@ class _ItemTabState extends State<ItemTab> {
                       ),
                     ),
                     Text(
-                      '$totalQty ${widget.data['items'][0]['unit']['code'] ?? ''}',
+                      '${formatNumber(totalQty)} ${widget.data['items'][0]['unit']['code'] ?? ''}',
                       style: TextStyle(
                         fontSize: CustomTheme().fontSize('lg'),
                         fontWeight: CustomTheme().fontWeight('semibold'),
@@ -174,7 +175,7 @@ class _ItemTabState extends State<ItemTab> {
                       ),
                     ),
                     Text(
-                      '$totalBerat ${widget.data['greige_unit']['code'] ?? ''}',
+                      '${formatNumber(totalBerat)} ${widget.data['greige_unit']['code'] ?? ''}',
                       style: TextStyle(
                         fontSize: CustomTheme().fontSize('lg'),
                         fontWeight: CustomTheme().fontWeight('semibold'),

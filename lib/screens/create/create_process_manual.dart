@@ -192,13 +192,22 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
           options: workOrderOption,
           selected: widget.form?['wo_id']?.toString() ?? '',
           handleChangeValue: (selected) {
+            final woId = selected['value']?.toString();
+            final processValue = selected[widget.idProcess];
+
             setState(() {
-              widget.form?['wo_id'] = selected['value'].toString();
-              widget.form?['no_wo'] = selected['label'].toString();
-              processId = selected[widget.idProcess].toString();
+              widget.form?['wo_id'] = woId;
+              widget.form?['no_wo'] = selected['label']?.toString();
             });
-            _getDataView(selected['value'].toString());
-            _getProcessView(selected[widget.idProcess].toString());
+
+            if (woId != null && woId.isNotEmpty) {
+              _getDataView(woId);
+            }
+
+            if (processValue != null && processValue.toString().isNotEmpty) {
+              processId = processValue.toString();
+              _getProcessView(processId);
+            }
           },
         );
       },

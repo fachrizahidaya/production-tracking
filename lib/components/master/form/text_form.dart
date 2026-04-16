@@ -2,23 +2,23 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/text/thousand_separator_input_formatter.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
 class TextForm extends StatefulWidget {
-  final String? label;
+  final label;
   final bool req;
   final formControl;
   final TextEditingController? controller;
   final Function(String)? handleChange;
   final bool? isNumber;
   final bool isDisabled;
-  final String? Function(String?)? validator;
-  final List<TextInputFormatter>? inputFormatters;
+  final validator;
+  final inputFormatters;
   final bool isGrade;
-  final String currencySymbol;
+  final bool isSorting;
+  final initialValue;
 
   const TextForm({
     super.key,
@@ -32,7 +32,8 @@ class TextForm extends StatefulWidget {
     this.validator,
     this.inputFormatters,
     this.isGrade = false,
-    this.currencySymbol = 'Rp',
+    this.isSorting = false,
+    this.initialValue,
   });
 
   @override
@@ -40,36 +41,56 @@ class TextForm extends StatefulWidget {
 }
 
 class _TextFormState extends State<TextForm> {
-  late TextEditingController _controller;
-  final NumberFormat _formatter = NumberFormat('#,##0', 'id_ID');
+  bool _isInitialized = false;
+
+  String formatToId(String value) {
+    final number = double.tryParse(value.replaceAll(',', '.')) ?? 0;
+
+    final parts = number.toString().split('.');
+    final intPart = int.parse(parts[0]);
+
+    final formattedInt = NumberFormat.decimalPattern('id_ID').format(intPart);
+
+    return parts.length > 1 && parts[1] != '0'
+        ? '$formattedInt,${parts[1]}'
+        : formattedInt;
+  }
+
+  String toRaw(String value) {
+    return value.replaceAll('.', '').replaceAll(',', '.');
+  }
 
   @override
-  void initState() {
-    super.initState();
-    _controller = widget.controller ?? TextEditingController();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-    if (widget.isNumber == true && _controller.text.isNotEmpty) {
-      _controller.text = _formatCurrency(_controller.text);
+    if (!_isInitialized &&
+        widget.controller != null &&
+        widget.initialValue != null) {
+      if (widget.isNumber == true) {
+        widget.controller!.text = formatToId(widget.initialValue.toString());
+      } else {
+        widget.controller!.text = widget.initialValue.toString();
+      }
+      _isInitialized = true;
     }
-  }
-
-  String _formatCurrency(String value) {
-    String digitsOnly = value.replaceAll(RegExp(r'[^0-9]'), '');
-    if (digitsOnly.isEmpty) return '';
-
-    final number = int.parse(digitsOnly);
-    return _formatter.format(number);
-  }
-
-  String _getRawValue(String value) {
-    return value.replaceAll(RegExp(r'[^0-9]'), '');
   }
 
   @override
   Widget build(BuildContext context) {
     return FormField<String>(
-      validator: widget.req ? widget.validator : null,
+      validator: widget.req == true ? widget.validator : null,
       builder: (FormFieldState<String> field) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (field.value == null && widget.controller?.text != null) {
+            final raw = widget.isNumber == true
+                ? toRaw(widget.controller!.text)
+                : widget.controller!.text;
+
+            field.didChange(raw);
+          }
+        });
+
         return GroupForm(
           label: widget.label,
           req: widget.req,
@@ -78,7 +99,7 @@ class _TextFormState extends State<TextForm> {
           isGrade: widget.isGrade,
           formControl: TextFormField(
             enabled: !widget.isDisabled,
-            controller: _controller,
+            controller: widget.controller,
             style: TextStyle(
               fontSize: CustomTheme().fontSize('md'),
               color: widget.isDisabled
@@ -91,47 +112,20 @@ class _TextFormState extends State<TextForm> {
                 .copyWith(
                   hintText:
                       widget.isNumber == true ? '0' : 'Isi ${widget.label}',
-                  contentPadding: const EdgeInsets.symmetric(
+                  contentPadding: EdgeInsets.symmetric(
                     vertical: 16,
                     horizontal: 12,
                   ),
-                  prefixIcon: widget.isNumber == true
-                      ? Padding(
-                          padding: const EdgeInsets.only(left: 12, right: 8),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                widget.currencySymbol,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: widget.isDisabled
-                                      ? Colors.grey.shade400
-                                      : Colors.grey.shade700,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : null,
                 ),
             keyboardType: widget.isNumber == true
-                ? const TextInputType.numberWithOptions(decimal: false)
+                ? TextInputType.numberWithOptions(decimal: true)
                 : TextInputType.text,
             inputFormatters: widget.isNumber == true
-                ? [FilteringTextInputFormatter.digitsOnly]
-                : widget.inputFormatters,
+                ? [ThousandsSeparatorInputFormatter()]
+                : [],
             onChanged: (value) {
-              if (widget.isNumber == true) {
-                final formatted = _formatCurrency(value);
-
-                _controller.value = TextEditingValue(
-                  text: formatted,
-                  selection: TextSelection.collapsed(offset: formatted.length),
-                );
-
-                final rawValue = _getRawValue(formatted);
+              if (widget.isSorting == true) {
+                final rawValue = widget.isNumber == true ? toRaw(value) : value;
 
                 field.didChange(rawValue);
                 widget.handleChange?.call(rawValue);

@@ -8,8 +8,10 @@ import 'package:textile_tracking/components/process/finish/work_order_info_tab.d
 import 'package:textile_tracking/components/process/finish/finish_form_tab.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/safe_to_api.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
+import 'package:textile_tracking/helpers/result/to_double.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
@@ -394,7 +396,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
               widget.label != 'Long Hemming' &&
               widget.label != 'Cross Cutting')) {
         _weightController.text = woData['greige_qty'].toString();
-        widget.form?['weight'] = woData['greige_qty'];
+        widget.form?['weight'] = woData['greige_qty'].toString();
       }
       if (data['good_weight'] != null) {
         _weightGoodController.text = data['good_weight'].toString();
@@ -608,17 +610,28 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
 
     if (context.mounted) {
-      widget.form?['good_weight'] = _weightGoodController.text;
-      widget.form?['combing'] = _combingController.text;
-      widget.form?['spraying'] = _sprayingController.text;
-      widget.form?['rework_long_hemming'] = _reworkLongHemmingController.text;
-      widget.form?['weight'] = _weightController.text;
-      widget.form?['qty'] = _qtyController.text;
-      widget.form?['qty'] = _packingQtyController.text;
-      widget.form?['weight_per_dozen'] = _weightDozenController.text;
+      widget.form?['good_weight'] = safeToApi(_weightGoodController.text);
+      widget.form?['bs_weight'] = safeToApi(_weightDefectController.text);
+      widget.form?['combing'] = safeToApi(_combingController.text);
+      widget.form?['spraying'] = safeToApi(_sprayingController.text);
+      widget.form?['rework_long_hemming'] =
+          safeToApi(_reworkLongHemmingController.text);
+      widget.form?['weight'] = safeToApi(_weightController.text);
+      widget.form?['qty'] = safeToApi(_qtyController.text);
+      widget.form?['qty'] = safeToApi(_packingQtyController.text);
+      widget.form?['weight_per_dozen'] = safeToApi(_weightDozenController.text);
       widget.form?['weight_grade_a'] = _weightGradeAController.text;
       widget.form?['gsm'] = _gsmController.text;
       widget.form?['total_weight'] = _totalWeightController.text;
+
+      if (widget.label == 'Sorting') {
+        widget.form?['spraying'] = toDouble(widget.form?['spraying']);
+        widget.form?['rework_long_hemming'] =
+            toDouble(widget.form?['rework_long_hemming']);
+        widget.form?['combing'] = toDouble(widget.form?['combing']);
+
+        // 🔥 Grades
+      }
 
       if (widget.form?['wo_id'] != null) {
         showConfirmationDialog(
@@ -838,8 +851,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   void _validateWeight(String weight) {
-    final greigeQty = double.tryParse(data['work_orders']['greige_qty']);
-    final berat = double.tryParse(weight);
+    final greigeQty = (data['work_orders']['greige_qty']);
+    final berat = toDouble(weight);
 
     if (greigeQty == null || berat == null || greigeQty <= 0) {
       setState(() {
@@ -868,8 +881,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   void _validateQty(String woQty) {
-    final qty = _getTotalItemQty();
-    final berat = double.tryParse(woQty);
+    final qty = widget.label == 'Packing' ? data['qty'] : _getTotalItemQty();
+    final berat = toDouble(woQty);
 
     if (qty <= 0 || berat == null) {
       setState(() {
@@ -972,6 +985,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       if (fieldName == 'rework_long_hemming' && value != null) {
         _reworkLongHemmingController.text = value.toString();
       }
+      if (fieldName == 'item_qty' && value != null) {
+        _qtyItemController.text = value.toString();
+      }
       if (fieldName == 'weight' && value != null) {
         _weightController.text = value.toString();
       }
@@ -985,6 +1001,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         _weightGradeAController.text = value.toString();
       }
     });
+  }
+
+  bool isAllMachineDone(List machines) {
+    if (machines.isEmpty) return false;
+
+    return machines.every((m) => m?['status'] == 'Selesai');
   }
 
   @override
@@ -1122,6 +1144,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             isQtyFullyDistributed: isQtyFullyDistributed,
             withItemGrade: widget.withItemGrade,
             withItemQtyAndWeight: widget.withQtyAndWeight,
+            isAllMachineDone: isAllMachineDone,
           ),
         ),
       ),

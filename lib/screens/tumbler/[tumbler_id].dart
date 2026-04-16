@@ -33,6 +33,7 @@ class _TumblerDetailState extends State<TumblerDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Tumbler',
+      isMultiMachine: false,
       service: Provider.of<TumblerService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<TumblerService>(context, listen: false)
@@ -64,7 +65,7 @@ class _TumblerDetailState extends State<TumblerDetail> {
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/tumblers',
-      fetchMachine: (service) => service.fetchTumblerFinishOptions(),
+      fetchMachine: (service, _) => service.fetchOptionsTumbler(),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withMaklon: false,
@@ -72,7 +73,7 @@ class _TumblerDetailState extends State<TumblerDetail> {
       idProcess: 'tumbler_id',
       processService: _tumblerService,
       forPacking: false,
-      fetchFinish: (service) => service.fetchFinishOptions(),
+      fetchFinish: (service) => service.fetchTumblerFinishOptions(),
       handleSubmitToService: (context, id, form, isLoading) async {
         final tumbler = Tumbler(
           wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),

@@ -245,7 +245,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 isTablet: isTablet,
               ),
             ),
-          if (widget.forDyeing == true) _buildVerticalDivider(false),
+          if (widget.forDyeing == true && widget.data['status'] == 'Selesai')
+            _buildVerticalDivider(false),
           if (widget.forDyeing == true && widget.data['status'] == 'Selesai')
             Expanded(
               child: _buildQuickInfoItem(
@@ -257,7 +258,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 isTablet: isTablet,
               ),
             ),
-          if (widget.forDyeing == true) _buildVerticalDivider(false),
+          if (widget.forDyeing == true && widget.data['status'] == 'Selesai')
+            _buildVerticalDivider(false),
           if (widget.forDyeing == true && widget.data['status'] == 'Selesai')
             Expanded(
               child: _buildQuickInfoItem(
@@ -653,12 +655,18 @@ Ringkasan Sorting
   Widget _buildTotalSorting(bool isTablet) {
     /// 📊 Calculate Total Perbaikan Long Hemming (spraying + combing + rework)
     int totalVermak = 0;
-    totalVermak +=
-        int.tryParse(widget.data['rework_long_hemming']?.toString() ?? '0') ??
-            0;
-    totalVermak += int.tryParse(widget.data['combing']?.toString() ?? '0') ?? 0;
-    totalVermak +=
-        int.tryParse(widget.data['spraying']?.toString() ?? '0') ?? 0;
+    totalVermak += int.tryParse(widget.label == 'Packing'
+            ? widget.data['sorting']['rework_long_hemming']?.toString() ?? '0'
+            : widget.data['rework_long_hemming']?.toString() ?? '0') ??
+        0;
+    totalVermak += int.tryParse(widget.label == 'Packing'
+            ? widget.data['sorting']['combing']?.toString() ?? '0'
+            : widget.data['combing']?.toString() ?? '0') ??
+        0;
+    totalVermak += int.tryParse(widget.label == 'Packing'
+            ? widget.data['sorting']['spraying']?.toString() ?? '0'
+            : widget.data['spraying']?.toString() ?? '0') ??
+        0;
 
     /// 📊 Calculate Total Qty Sorting (sum of all grades + vermak)
     int totalGrades = 0;
@@ -682,6 +690,24 @@ Ringkasan Sorting
         }
       }
     }
+
+    if (widget.data['sorting'] != null && widget.data['sorting'].isNotEmpty) {
+      for (var grade in widget.data['sorting']['grades']) {
+        final qty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
+        totalGrades += qty;
+
+        final gradeName =
+            grade['item_grade']['code']?.toString().toLowerCase() ?? '';
+        if (gradeName.contains('a')) {
+          gradeAQty = qty;
+        } else if (gradeName.contains('b') && !gradeName.contains('bs')) {
+          gradeBQty = qty;
+        } else if (gradeName.contains('bs')) {
+          gradeBSQty = qty;
+        }
+      }
+    }
+
     int totalQtySorting = totalGrades + totalVermak;
 
     return Row(
@@ -706,12 +732,23 @@ Ringkasan Sorting
                       fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 4),
-                Text(
-                  '$gradeAQty',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87),
+                Row(
+                  children: [
+                    Text(
+                      '${formatNumber(gradeAQty)}',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87),
+                    ),
+                    Text(
+                      'PCS',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: CustomTheme().fontWeight('semibold'),
+                          color: Colors.grey[600]),
+                    ),
+                  ].separatedBy(CustomTheme().hGap('md')),
                 ),
               ],
             ),
@@ -738,12 +775,23 @@ Ringkasan Sorting
                       fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 4),
-                Text(
-                  '$gradeBQty',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87),
+                Row(
+                  children: [
+                    Text(
+                      '${formatNumber(gradeBQty)}',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87),
+                    ),
+                    Text(
+                      'PCS',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: CustomTheme().fontWeight('semibold'),
+                          color: Colors.grey[600]),
+                    ),
+                  ].separatedBy(CustomTheme().hGap('md')),
                 ),
               ],
             ),
@@ -770,12 +818,23 @@ Ringkasan Sorting
                       fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 4),
-                Text(
-                  '$gradeBSQty',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87),
+                Row(
+                  children: [
+                    Text(
+                      '${formatNumber(gradeBSQty)}',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87),
+                    ),
+                    Text(
+                      'PCS',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: CustomTheme().fontWeight('semibold'),
+                          color: Colors.grey[600]),
+                    ),
+                  ].separatedBy(CustomTheme().hGap('md')),
                 ),
               ],
             ),
@@ -802,12 +861,23 @@ Ringkasan Sorting
                       fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 4),
-                Text(
-                  '$totalVermak',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87),
+                Row(
+                  children: [
+                    Text(
+                      '${formatNumber(totalVermak)}',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87),
+                    ),
+                    Text(
+                      'PCS',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: CustomTheme().fontWeight('semibold'),
+                          color: Colors.grey[600]),
+                    ),
+                  ].separatedBy(CustomTheme().hGap('md')),
                 ),
               ],
             ),
@@ -835,13 +905,27 @@ Ringkasan Sorting
                       fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 4),
-                Text(
-                  '$totalQtySorting',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${formatNumber(totalQtySorting)}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'PCS',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: CustomTheme().fontWeight('semibold'),
+                          color: Colors.grey[600]),
+                    ),
+                  ].separatedBy(
+                    CustomTheme().hGap('md'),
                   ),
-                ),
+                )
               ],
             ),
           ),
@@ -1063,45 +1147,55 @@ Tipe BS
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Wrap(
-          spacing: 16,
-          runSpacing: 16,
-          children: itemTypes.map<Widget>((itemType) {
-            return Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    (itemType['type']?['name'] ?? '-'),
-                    style: TextStyle(
-                        fontWeight: CustomTheme().fontWeight('semibold')),
-                  ),
-                  SizedBox(height: 4),
-                  SizedBox(
-                    width: 160,
-                    child: CustomBadge(
-                      title: 'Qty: ${itemType['qty']} PCS',
-                      rework: true,
-                      status: 'Selesai',
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final itemWidth = (constraints.maxWidth - 24) / 4;
+
+            return Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              children: itemTypes.map<Widget>((itemType) {
+                return SizedBox(
+                  width: itemWidth,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade200),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          (itemType['type']?['name'] ?? '-'),
+                          style: TextStyle(
+                              fontWeight: CustomTheme().fontWeight('semibold')),
+                        ),
+                        SizedBox(height: 4),
+                        Row(
+                          children: [
+                            CustomBadge(
+                              title: 'Qty: ${itemType['qty']} PCS',
+                              rework: true,
+                              status: 'Selesai',
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                );
+              }).toList(),
             );
-          }).toList(),
+          },
         ),
         SizedBox(height: 8),
         Align(
           alignment: Alignment.centerRight,
           child: Text(
-            'Total BS: $total PCS',
+            'Total BS: ${formatNumber(total)} PCS',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.red,
@@ -1318,6 +1412,13 @@ Material WO
   Widget _buildMaterial(bool isTablet) {
     final items = (widget.data['work_orders']['items'] ?? [])
         .cast<Map<String, dynamic>>();
+    final int totalQty = items.fold<int>(
+      0,
+      (sum, item) => sum + (item['qty'] ?? 0) as int,
+    );
+    final totalBerat = widget.data['greige_qty'] ?? 0;
+    final spkNo = widget.data?['items']?[0]?['spk_no'] ?? '-';
+
     if (items.isEmpty) {
       return Center(child: Text('No Data'));
     }
@@ -1326,11 +1427,137 @@ Material WO
       children: List.generate(items.length, (index) {
         return Column(
           children: [
+            // _buildProdukJadiHeader(spkNo, totalQty, totalBerat),
             ListItem(item: items[index]),
             if (index != items.length - 1) SizedBox(height: 12),
           ].separatedBy(CustomTheme().vGap('xl')),
         );
       }),
+    );
+  }
+
+  Widget _buildProdukJadiHeader(
+      String spkNo, dynamic totalQty, dynamic totalBerat) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'PRODUK JADI',
+            style: TextStyle(fontWeight: CustomTheme().fontWeight('semibold')),
+          ),
+          Divider(),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.data['items'][0]['item_code'] ?? '-',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('lg'),
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                    Text(
+                      widget.data['items'][0]['item_name'] ?? '-',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('lg'),
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'SPK',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('md'),
+                        color: Colors.grey[600],
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                    Text(
+                      spkNo.isNotEmpty ? spkNo : '-',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('lg'),
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                        color: Colors.grey[800],
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Total Qty',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('md'),
+                        color: Colors.grey[600],
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                    Text(
+                      '${formatNumber(totalQty)} ${widget.data['items'][0]['unit']['code'] ?? ''}',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('lg'),
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Berat',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('md'),
+                        color: Colors.grey[600],
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                    Text(
+                      '${formatNumber(totalBerat)} ${widget.data['greige_unit']['code'] ?? ''}',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('lg'),
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ].separatedBy(SizedBox(width: 16)),
+          ),
+        ].separatedBy(CustomTheme().vGap('md')),
+      ),
     );
   }
 
@@ -1423,7 +1650,7 @@ Catatan WO
             icon: Icons.grade_outlined,
             child: _buildGradeInfo(true),
           ),
-        if (widget.label == 'Sorting')
+        if (widget.label == 'Sorting' || widget.label == 'Packing')
           _buildInfoCard(
             title: 'Ringkasan Sortir',
             icon: Icons.attachment_outlined,
@@ -1647,7 +1874,7 @@ Catatan WO
             Align(
               alignment: Alignment.centerRight,
               child: Text(
-                'Total Perbaikan: $totalRework PCS',
+                'Total Perbaikan: ${formatNumber(totalRework)} PCS',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.red,

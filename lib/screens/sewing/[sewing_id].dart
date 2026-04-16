@@ -33,6 +33,7 @@ class _SewingDetailState extends State<SewingDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Sewing',
+      isMultiMachine: true,
       service: Provider.of<SewingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<SewingService>(context, listen: false)

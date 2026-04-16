@@ -33,6 +33,7 @@ class _StenterDetailState extends State<StenterDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Stenter',
+      isMultiMachine: false,
       service: Provider.of<StenterService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<StenterService>(context, listen: false)
@@ -64,7 +65,7 @@ class _StenterDetailState extends State<StenterDetail> {
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/stenters',
-      fetchMachine: (service) => service.fetchOptionsStenter(),
+      fetchMachine: (service, _) => service.fetchOptionsStenter(),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withMaklon: false,

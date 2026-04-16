@@ -11,7 +11,10 @@ import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/update/detail_work_order.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/format_idr.dart';
+import 'package:textile_tracking/helpers/result/normalize_form.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/helpers/result/to_double.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/machine.dart';
@@ -289,30 +292,29 @@ class _UpdateProcessState extends State<UpdateProcess> {
         '';
   }
 
-  int _calculateTotalVermak() {
-    final spraying =
-        int.tryParse((widget.spraying.text ?? '0').replaceAll(',', '')) ?? 0;
-    final combing =
-        int.tryParse((widget.combing.text ?? '0').replaceAll(',', '')) ?? 0;
-    final rework = int.tryParse(
-            (widget.reworkLongHemming.text ?? '0').replaceAll(',', '')) ??
-        0;
+  double _calculateTotalVermak() {
+    final spraying = parseSafe(widget.spraying.text);
+    final combing = parseSafe(widget.combing.text);
+    final rework = parseSafe(widget.reworkLongHemming.text);
+
     return spraying + combing + rework;
   }
 
-  int _calculateTotalQtySorting() {
-    int totalGrades = 0;
+  double _calculateTotalQtySorting() {
+    double totalGrades = 0;
+
     for (var grade in _grades) {
-      final qty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
+      final qty = parseSafe(grade['qty']);
       totalGrades += qty;
     }
+
     return totalGrades + _calculateTotalVermak();
   }
 
   /// 📊 Update total_sorting field dengan hasil perhitungan
   void _updateTotalSorting() {
     final total = _calculateTotalQtySorting();
-    widget.handleChangeInput('total_sorting', total.toString());
+    widget.handleChangeInput('total_sorting', formatIdr(total));
   }
 
   void _ensureController(int index) {
@@ -427,20 +429,15 @@ class _UpdateProcessState extends State<UpdateProcess> {
     });
   }
 
-  double parseSafe(dynamic val) {
-    if (val == null) return 0;
+  double parseSafe(dynamic value) {
+    if (value == null) return 0;
 
-    String str = val.toString().trim();
+    final clean = value
+        .toString()
+        .replaceAll('.', '') // hapus ribuan
+        .replaceAll(',', '.'); // ubah ke decimal
 
-    if (str.isEmpty) return 0;
-
-    // Jika ada koma, anggap format Indonesia (1.000,5)
-    if (str.contains(',')) {
-      str = str.replaceAll('.', ''); // hapus ribuan
-      str = str.replaceAll(',', '.'); // ubah desimal ke titik
-    }
-
-    return double.tryParse(str) ?? 0;
+    return double.tryParse(clean) ?? 0;
   }
 
   void calculateLongHemmingWeight() {
@@ -486,6 +483,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
           widget.isSubmitting.value = true;
 
           try {
+            /// 🔥 NORMALIZE SEMUA ANGKA JADI DOUBLE
             /// 🔥 MULTI MACHINE PROCESS
             if (widget.label == 'Long Hemming' ||
                 widget.label == 'Cross Cutting' ||
@@ -507,10 +505,24 @@ class _UpdateProcessState extends State<UpdateProcess> {
               widget.form['maklon_name'] = null;
             }
 
+            if (widget.label == 'Sorting') {
+              widget.form['spraying'] = toDouble(widget.form['spraying']);
+              widget.form['rework_long_hemming'] =
+                  toDouble(widget.form['rework_long_hemming']);
+              widget.form['combing'] = toDouble(widget.form['combing']);
+
+              // 🔥 Grades
+              widget.form['grades'] = (_grades ?? []).map((e) {
+                return {
+                  ...e,
+                  'qty': toDouble(e['qty']),
+                };
+              }).toList();
+            }
+
             /// 🔥 MAKLON
             else if (_isMaklon == true) {
               widget.form['machines'] = [];
-              widget.form['machine_ids'] = [];
               widget.form['machine_id'] = null;
               widget.form['nama_mesin'] = null;
               widget.form['maklon'] = true;
@@ -519,7 +531,6 @@ class _UpdateProcessState extends State<UpdateProcess> {
             /// 🔥 SINGLE MACHINE
             else {
               widget.form['machines'] = [];
-              widget.form['machine_ids'] = [];
               widget.form['maklon_name'] = null;
               widget.form['maklon'] = false;
             }
@@ -771,9 +782,14 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                           children: [
                                             Expanded(
                                               child: TextForm(
-                                                label: 'Berat Bagus',
+                                                label: 'Berat Bagus (KG)',
+                                                initialValue: widget
+                                                        .form['good_weight']
+                                                        ?.toString() ??
+                                                    '0',
                                                 req: false,
                                                 isNumber: true,
+                                                isSorting: true,
                                                 controller: widget.goodWeight,
                                                 handleChange: (value) {
                                                   final safeValue =
@@ -793,13 +809,27 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                             ),
                                             Expanded(
                                               child: TextForm(
-                                                label: 'Berat BS',
+                                                label: 'Berat BS (KG)',
                                                 req: false,
+                                                initialValue: widget
+                                                        .form['bs_weight']
+                                                        ?.toString() ??
+                                                    '0',
                                                 isNumber: true,
+                                                isSorting: true,
                                                 controller: widget.defectWeight,
                                                 handleChange: (value) {
+                                                  final safeValue =
+                                                      (value == null ||
+                                                              value
+                                                                  .toString()
+                                                                  .trim()
+                                                                  .isEmpty)
+                                                          ? '0'
+                                                          : value.toString();
+
                                                   widget.handleChangeInput(
-                                                      'bs_weight', value);
+                                                      'bs_weight', safeValue);
                                                   calculateLongHemmingWeight();
                                                 },
                                               ),
@@ -818,7 +848,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                             //   ),
                                             // ),
                                           ].separatedBy(
-                                              CustomTheme().hGap('lg')),
+                                              CustomTheme().hGap('xl')),
                                         ),
                                       ),
                                     ].separatedBy(CustomTheme().vGap('lg')),
@@ -841,6 +871,11 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                   'Qty Hasil ${widget.label} (PCS)',
                                               req: false,
                                               isNumber: true,
+                                              isSorting: true,
+                                              initialValue: widget
+                                                      .form['item_qty']
+                                                      ?.toString() ??
+                                                  '0',
                                               controller:
                                                   widget.cuttingSewingQty,
                                               handleChange: (value) {
@@ -897,6 +932,10 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                             label: 'Total Packing (PCS)',
                                             req: false,
                                             isNumber: true,
+                                            isSorting: true,
+                                            initialValue: widget.form['qty']
+                                                    ?.toString() ??
+                                                '0',
                                             controller: widget.packingQty,
                                             handleChange: (value) {
                                               final safeValue =
@@ -908,19 +947,15 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                       ? '0'
                                                       : value.toString();
 
-                                              widget.packingQty.text =
-                                                  safeValue;
                                               widget.handleChangeInput(
                                                   'qty', safeValue);
 
-                                              // final normalized = safeValue
-                                              //     .replaceAll(',', '.');
-
                                               setState(() {
                                                 final input = double.tryParse(
-                                                        widget
-                                                            .weightPerDozen.text
-                                                            .toString()) ??
+                                                      widget.weightPerDozen.text
+                                                          .replaceAll('.', '')
+                                                          .replaceAll(',', '.'),
+                                                    ) ??
                                                     0;
                                                 if (input > 0) {
                                                   calculateBeratA(input);
@@ -934,7 +969,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                           child: TextForm(
                                             label: 'Berat 1 Lusin (KG)',
                                             req: false,
+                                            isSorting: true,
                                             isNumber: true,
+                                            initialValue: widget
+                                                    .form['weight_per_dozen']
+                                                    ?.toString() ??
+                                                '0',
                                             controller: widget.weightPerDozen,
                                             handleChange: (val) {
                                               final safeValue = (val == null ||
@@ -945,19 +985,18 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                   ? '0'
                                                   : val.toString();
 
-                                              widget.weightPerDozen.text =
-                                                  safeValue;
+                                              // widget.weightPerDozen.text =
+                                              //     safeValue;
                                               widget.handleChangeInput(
                                                   'weight_per_dozen',
                                                   safeValue);
 
-                                              // final normalized = safeValue
-                                              //     .replaceAll(',', '.');
                                               setState(() {
                                                 final input = double.tryParse(
-                                                        widget
-                                                            .weightPerDozen.text
-                                                            .toString()) ??
+                                                      widget.weightPerDozen.text
+                                                          .replaceAll('.', '')
+                                                          .replaceAll(',', '.'),
+                                                    ) ??
                                                     0;
 
                                                 calculateGsm(input);
@@ -985,10 +1024,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                             isDisabled: true,
                                             isNumber: true,
                                             controller: widget.gsm,
+                                            // isSorting: true,
+                                            initialValue: widget.form['gsm']
+                                                    ?.toString() ??
+                                                '',
                                             handleChange: (value) {
                                               setState(() {
-                                                widget.gsm.text =
-                                                    value.toString();
                                                 widget.handleChangeInput(
                                                     'gsm', value);
                                               });
@@ -1001,11 +1042,14 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                             label: 'Berat Grade A (KG)',
                                             isDisabled: true,
                                             isNumber: true,
+                                            // isSorting: true,
                                             controller: widget.weightGradeA,
+                                            initialValue: widget
+                                                    .form['weight_grade_a']
+                                                    ?.toString() ??
+                                                '',
                                             handleChange: (value) {
                                               setState(() {
-                                                widget.weightGradeA.text =
-                                                    value.toString();
                                                 widget.handleChangeInput(
                                                     'weight_grade_a', value);
                                               });
@@ -1019,11 +1063,14 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                 'Total Berat Keseluruhan (KG)',
                                             isDisabled: true,
                                             isNumber: true,
+                                            // isSorting: true,
                                             controller: widget.totalWeight,
+                                            initialValue: widget
+                                                    .form['total_weight']
+                                                    ?.toString() ??
+                                                '',
                                             handleChange: (value) {
                                               setState(() {
-                                                widget.totalWeight.text =
-                                                    value.toString();
                                                 widget.handleChangeInput(
                                                     'total_weight', value);
                                               });
@@ -1048,6 +1095,11 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                             req: false,
                                             isNumber: true,
                                             controller: widget.spraying,
+                                            initialValue: widget
+                                                    .form['spraying']
+                                                    ?.toString() ??
+                                                '0',
+                                            isSorting: true,
                                             handleChange: (value) {
                                               final safeValue =
                                                   (value == null ||
@@ -1071,8 +1123,13 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                             label: 'Permak Long Hemming',
                                             req: false,
                                             isNumber: true,
+                                            isSorting: true,
                                             controller:
                                                 widget.reworkLongHemming,
+                                            initialValue: widget
+                                                    .form['rework_long_hemming']
+                                                    ?.toString() ??
+                                                '0',
                                             handleChange: (value) {
                                               final safeValue =
                                                   (value == null ||
@@ -1095,7 +1152,11 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                           child: TextForm(
                                             label: 'Sisiran',
                                             req: false,
+                                            isSorting: true,
                                             isNumber: true,
+                                            initialValue: widget.form['combing']
+                                                    ?.toString() ??
+                                                '0',
                                             controller: widget.combing,
                                             handleChange: (value) {
                                               final safeValue =
@@ -1474,107 +1535,102 @@ class _UpdateProcessState extends State<UpdateProcess> {
       children: [
         LayoutBuilder(
           builder: (context, constraints) {
-            final itemWidth = (constraints.maxWidth - 20) / 4;
+            final itemWidth = (constraints.maxWidth - 24) / 4;
 
             return Wrap(
               spacing: 16,
               runSpacing: 16, // jarak vertikal antar baris
-              children: machines
-                  .map((machine) {
-                    final machineData =
-                        machine['machine'] as Map<String, dynamic>?;
-                    final machineId = machineData?['id'];
-                    final status = machine['status'] ??
-                        (machineId != null
-                            ? widget.getMachineStatus(machineId)
-                            : null);
+              children: machines.map((machine) {
+                final machineData = machine['machine'] as Map<String, dynamic>?;
+                final machineId = machineData?['id'];
+                final status = machine['status'] ??
+                    (machineId != null
+                        ? widget.getMachineStatus(machineId)
+                        : null);
 
-                    return SizedBox(
-                      width: itemWidth,
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                machineData == null
-                                    ? (machine['name'] ?? '-')
-                                    : (machineData['code'] == null
-                                        ? (machineData['name'] ?? '-')
-                                        : '${machineData['code']} - ${machineData['name'] ?? '-'}'),
-                                style: TextStyle(fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                final isSubmitting = ValueNotifier<bool>(false);
+                return SizedBox(
+                  width: itemWidth,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (status == 'Selesai') return;
+                      final isSubmitting = ValueNotifier<bool>(false);
 
-                                showConfirmationDialog(
-                                  context: context,
-                                  title: 'Selesaikan Mesin',
-                                  message:
-                                      'Anda yakin ingin mengubah ${machine['machine']['name'] ?? '-'} menjadi selesai?',
-                                  isLoading: isSubmitting,
-                                  buttonBackground:
-                                      CustomTheme().buttonColor('primary'),
-                                  onConfirm: () async {
-                                    try {
-                                      if (machineId == null) return;
-                                      await context
-                                          .read<MachineMasterService>()
-                                          .updateStatus(
-                                            machine['machine']['id'].toString(),
-                                            'Selesai',
-                                            isSubmitting,
-                                          );
-
-                                      /// 🔥 UPDATE STATE LOKAL (INI YANG PENTING)
-                                      setState(() {
-                                        machine['status'] = 'Selesai';
-                                      });
-
-                                      Navigator.pop(context);
-                                    } catch (e) {
-                                      Navigator.pop(context);
-
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text('Gagal update status'),
-                                        ),
-                                      );
-                                    }
-                                  },
+                      showConfirmationDialog(
+                        context: context,
+                        title: 'Selesaikan Mesin',
+                        message:
+                            'Anda yakin ingin mengubah ${machine['machine']['name'] ?? '-'} menjadi selesai?',
+                        isLoading: isSubmitting,
+                        buttonBackground: CustomTheme().buttonColor('primary'),
+                        onConfirm: () async {
+                          try {
+                            if (machineId == null) return;
+                            await context
+                                .read<MachineMasterService>()
+                                .updateStatus(
+                                  machine['machine']['id'].toString(),
+                                  'Selesai',
+                                  isSubmitting,
                                 );
-                              },
-                              child: status == 'Tersedia'
-                                  ? SizedBox(
-                                      height: 24,
-                                    )
-                                  : CustomBadge(
-                                      status: status == 'Selesai'
-                                          ? 'Selesai'
-                                          : status == 'Tersedia'
-                                              ? 'Menunggu Diproses'
-                                              : 'Diproses',
-                                      title: status ?? '',
-                                    ),
-                            ),
-                          ].separatedBy(CustomTheme().vGap('md')),
-                        ),
+
+                            /// 🔥 UPDATE STATE LOKAL (INI YANG PENTING)
+                            setState(() {
+                              machine['status'] = 'Selesai';
+                            });
+
+                            Navigator.pop(context);
+                          } catch (e) {
+                            Navigator.pop(context);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Gagal update status'),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    },
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                    );
-                  })
-                  .toList()
-                  .separatedBy(CustomTheme().hGap('lg')),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              machineData == null
+                                  ? (machine['name'] ?? '-')
+                                  : (machineData['code'] == null
+                                      ? (machineData['name'] ?? '-')
+                                      : '${machineData['code']} - ${machineData['name'] ?? '-'}'),
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          status == 'Tersedia'
+                              ? SizedBox(
+                                  height: 48,
+                                )
+                              : CustomBadge(
+                                  status: status == 'Selesai'
+                                      ? 'Selesai'
+                                      : status == 'Tersedia'
+                                          ? 'Menunggu Diproses'
+                                          : 'Diproses',
+                                  title: status ?? '',
+                                ),
+                        ].separatedBy(CustomTheme().vGap('md')),
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
             );
           },
         ),
@@ -1730,7 +1786,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                           context: context,
                                           title: 'Hapus Tipe BS',
                                           message:
-                                              'Anda yakin ingin menghapus ${getDefectLabel(i)}?',
+                                              'Apakah Anda yakin ingin menghapus ${getDefectLabel(i)}?',
                                           isLoading: _isLoading,
                                           buttonBackground: CustomTheme()
                                               .buttonColor('danger'),
@@ -1909,8 +1965,17 @@ Input Qty Tipe BS
                           label: 'Qty',
                           req: true,
                           isNumber: true,
+                          initialValue:
+                              _defects[index]['qty']?.toString() ?? '0',
                           controller: controller,
-                          handleChange: (value) {},
+                          handleChange: (value) {
+                            final safeValue =
+                                (value == null || value.trim().isEmpty)
+                                    ? '0'
+                                    : value;
+
+                            _defects[index]['qty'] = toDouble(safeValue);
+                          },
                         ),
                       ),
                     ],
@@ -2049,23 +2114,23 @@ Grades
               isGrade: true,
               isDisabled: i == 2 ? true : false,
               isNumber: true,
+              isSorting: true,
+              initialValue: _grades[i]['qty']?.toString() ?? '0',
               controller: widget.qty[i],
               handleChange: (val) {
-                if (val == null || val.trim().isEmpty) {
-                  widget.qty[i].text = '0';
-                  widget.qty[i].selection = TextSelection.fromPosition(
-                    TextPosition(offset: widget.qty[i].text.length),
-                  );
-                }
+                String clean = (val ?? '')
+                    .replaceAll('.', '') // hapus ribuan
+                    .replaceAll(',', ''); // hapus koma biar integer
 
-                final safeValue =
-                    (val == null || val.trim().isEmpty) ? '0' : val;
+                if (clean.isEmpty) clean = '0';
 
                 setState(() {
-                  _grades[i]['qty'] = safeValue;
+                  _grades[i]['qty'] = clean;
                 });
 
-                widget.handleUpdateGrade(i, 'qty', safeValue);
+                widget.handleUpdateGrade(i, 'qty', clean);
+
+                _updateTotalSorting();
               },
             ),
           ),

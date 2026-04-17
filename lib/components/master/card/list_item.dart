@@ -250,7 +250,7 @@ class ListItem extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '${title}:',
+                  '$title:',
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('md'),
                     color: Colors.grey[500],

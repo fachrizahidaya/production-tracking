@@ -295,7 +295,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
         if (value is List) {
           for (int i = 0; i < value.length; i++) {
-            cleaned['${key}[$i]'] = value[i].toString();
+            cleaned['$key[$i]'] = value[i].toString();
           }
         } else {
           cleaned[key] = value.toString();

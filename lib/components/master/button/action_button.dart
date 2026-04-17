@@ -8,13 +8,13 @@ class ActionTextButton extends StatelessWidget {
   final Color? backgroundColor;
 
   const ActionTextButton({
-    Key? key,
+    super.key,
     required this.label,
     required this.onPressed,
     this.textColor,
     this.borderColor,
     this.backgroundColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

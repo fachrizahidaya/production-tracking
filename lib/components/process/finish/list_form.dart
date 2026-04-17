@@ -180,7 +180,7 @@ class _ListFormState extends State<ListForm> {
         'unit_id': existing['unit_id'] ?? 1,
         'notes': existing['notes'] ?? '',
         'qty': existing['qty'] ?? '0',
-        'greige_item_id': existing['greige_item_id'] ?? null,
+        'greige_item_id': existing['greige_item_id'],
       });
     }
 

@@ -12,7 +12,6 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/update/detail_work_order.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/format_idr.dart';
-import 'package:textile_tracking/helpers/result/normalize_form.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/to_double.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
@@ -1258,7 +1257,9 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                           ),
                                                           SizedBox(height: 4),
                                                           Text(
-                                                            '${formatNumber(_grades[0]['qty'])}',
+                                                            formatNumber(
+                                                                _grades[0]
+                                                                    ['qty']),
                                                             style: TextStyle(
                                                                 fontSize: 20,
                                                                 fontWeight:
@@ -1304,7 +1305,9 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                           ),
                                                           SizedBox(height: 4),
                                                           Text(
-                                                            '${formatNumber(_grades[1]['qty'])}',
+                                                            formatNumber(
+                                                                _grades[1]
+                                                                    ['qty']),
                                                             style: TextStyle(
                                                                 fontSize: 20,
                                                                 fontWeight:
@@ -1350,7 +1353,9 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                           ),
                                                           SizedBox(height: 4),
                                                           Text(
-                                                            '${formatNumber(_grades[2]['qty'])}',
+                                                            formatNumber(
+                                                                _grades[2]
+                                                                    ['qty']),
                                                             style: TextStyle(
                                                                 fontSize: 20,
                                                                 fontWeight:
@@ -1396,7 +1401,9 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                           ),
                                                           SizedBox(height: 4),
                                                           Text(
-                                                            '${formatNumber(_calculateTotalVermak()).toString()}',
+                                                            formatNumber(
+                                                                    _calculateTotalVermak())
+                                                                .toString(),
                                                             style: TextStyle(
                                                                 fontSize: 20,
                                                                 fontWeight:
@@ -1444,7 +1451,9 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                           ),
                                                           SizedBox(height: 4),
                                                           Text(
-                                                            '${formatNumber(_calculateTotalQtySorting()).toString()}',
+                                                            formatNumber(
+                                                                    _calculateTotalQtySorting())
+                                                                .toString(),
                                                             style: TextStyle(
                                                               fontSize: 20,
                                                               fontWeight:

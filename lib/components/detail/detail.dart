@@ -11,8 +11,6 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_bytes.dart';
-import 'package:textile_tracking/screens/finish/%5Bfinish_process_id%5D.dart';
-import 'package:textile_tracking/screens/finish/index.dart';
 
 class Detail extends StatefulWidget {
   final data;

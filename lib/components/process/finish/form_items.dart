@@ -365,12 +365,6 @@ class _FormItemsState extends State<FormItems> {
     return totalGrades + _calculateTotalVermak();
   }
 
-  /// 📊 Update total_sorting field dengan hasil perhitungan
-  void _updateTotalSorting() {
-    final total = _calculateTotalQtySorting();
-    widget.handleChangeInput('total_sorting', total.toString());
-  }
-
   void calculateLongHemmingWeight() {
     final good = parseSafe(widget.form['good_weight']);
     final defect = parseSafe(widget.form['bs_weight']);
@@ -422,48 +416,6 @@ class _FormItemsState extends State<FormItems> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> formRows = [
-      if (widget.label == 'Long Hemming')
-        {
-          'label': 'Berat Bagus (KG)',
-          'controller': widget.weightGood,
-          'value': 'good_weight',
-          'req': true,
-          'withSelectUnit': false,
-          'staticUnit': 'KG',
-          'selectedLabel': widget.form['nama_satuan_berat_good'] ?? '',
-          'selectedValue': widget.form['good_weight_unit_id']?.toString() ?? '',
-        },
-      if (widget.label == 'Long Hemming')
-        {
-          'label': 'Berat BS (KG)',
-          'controller': widget.weightDefect,
-          'value': 'bs_weight',
-          'req': true,
-          'withSelectUnit': false,
-          'staticUnit': 'KG',
-          'selectedLabel': widget.form['nama_satuan_berat_bs'] ?? '',
-          'selectedValue': widget.form['bs_weight_unit_id']?.toString() ?? '',
-        },
-      if (widget.forDyeing == false &&
-          widget.label != 'Long Hemming' &&
-          widget.label != 'Cross Cutting' &&
-          widget.label != 'Sewing')
-        {
-          'label': 'Berat (KG)',
-          'controller': widget.weight,
-          'onSelect': widget.handleSelectUnit,
-          'selectedLabel': widget.form['nama_satuan_berat'] ?? '',
-          'selectedValue': widget.form['weight_unit_id']?.toString() ?? '',
-          'unitLabel': 'Satuan Berat',
-          'value': 'weight',
-          'req': true,
-          'withSelectUnit': false,
-          'staticUnit': 'KG',
-          'isDisabled': widget.label == 'Long Hemming' ? true : false
-        },
-    ];
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -1207,7 +1159,9 @@ class _FormItemsState extends State<FormItems> {
                                         ),
                                         SizedBox(height: 4),
                                         Text(
-                                          '${formatNumber((_grades[0]['qty'] ?? '0').toString())}',
+                                          formatNumber(
+                                              (_grades[0]['qty'] ?? '0')
+                                                  .toString()),
                                           style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
@@ -1241,7 +1195,9 @@ class _FormItemsState extends State<FormItems> {
                                         ),
                                         SizedBox(height: 4),
                                         Text(
-                                          '${formatNumber((_grades[1]['qty'] ?? '0').toString())}',
+                                          formatNumber(
+                                              (_grades[1]['qty'] ?? '0')
+                                                  .toString()),
                                           style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
@@ -1275,7 +1231,9 @@ class _FormItemsState extends State<FormItems> {
                                         ),
                                         SizedBox(height: 4),
                                         Text(
-                                          '${formatNumber((_grades[2]['qty'] ?? '0').toString())}',
+                                          formatNumber(
+                                              (_grades[2]['qty'] ?? '0')
+                                                  .toString()),
                                           style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
@@ -1309,7 +1267,8 @@ class _FormItemsState extends State<FormItems> {
                                         ),
                                         SizedBox(height: 4),
                                         Text(
-                                          '${formatNumber(_calculateTotalVermak().toString())}',
+                                          formatNumber(_calculateTotalVermak()
+                                              .toString()),
                                           style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
@@ -1344,7 +1303,9 @@ class _FormItemsState extends State<FormItems> {
                                         ),
                                         SizedBox(height: 4),
                                         Text(
-                                          '${formatNumber(_calculateTotalQtySorting().toString())}',
+                                          formatNumber(
+                                              _calculateTotalQtySorting()
+                                                  .toString()),
                                           style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
@@ -1611,11 +1572,13 @@ Multi Mesin
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${machine['machine'] != null ? '${machine['machine']['code']} - ${machine['machine']['name']}' : '-'}',
+                machine['machine'] != null
+                    ? '${machine['machine']['code']} - ${machine['machine']['name']}'
+                    : '-',
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
               CustomBadge(
-                title: machine['status'] != null ? machine['status'] : '-',
+                title: machine['status'] ?? '-',
                 status: machine['status'] == 'Selesai' ? 'Selesai' : 'Diproses',
                 withStatus: true,
               )

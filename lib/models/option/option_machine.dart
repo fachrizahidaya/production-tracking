@@ -81,8 +81,9 @@ class OptionMachineService extends BaseService<OptionMachine> {
 
       // Build query parameters with support for multiple current_machine_ids
       final queryParams = <String, dynamic>{};
-      if (process != null && process.isNotEmpty)
+      if (process != null && process.isNotEmpty) {
         queryParams['process'] = process;
+      }
       if (searchQuery.isNotEmpty) queryParams['search'] = searchQuery;
 
       queryParams['status'] = 'Tersedia';

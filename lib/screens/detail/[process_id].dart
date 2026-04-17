@@ -537,8 +537,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     );
 
     // ✅ ALWAYS fetch ulang data untuk memastikan state konsisten
-    // Jika user save (result == true) atau cancel tanpa save (result != true)
-    // Ini mencegah data stale ketika user kembali tanpa save
     await _getDataView();
   }
 

@@ -735,7 +735,7 @@ Ringkasan Sorting
                 Row(
                   children: [
                     Text(
-                      '${formatNumber(gradeAQty)}',
+                      formatNumber(gradeAQty),
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -778,7 +778,7 @@ Ringkasan Sorting
                 Row(
                   children: [
                     Text(
-                      '${formatNumber(gradeBQty)}',
+                      formatNumber(gradeBQty),
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -821,7 +821,7 @@ Ringkasan Sorting
                 Row(
                   children: [
                     Text(
-                      '${formatNumber(gradeBSQty)}',
+                      formatNumber(gradeBSQty),
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -864,7 +864,7 @@ Ringkasan Sorting
                 Row(
                   children: [
                     Text(
-                      '${formatNumber(totalVermak)}',
+                      formatNumber(totalVermak),
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -909,7 +909,7 @@ Ringkasan Sorting
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      '${formatNumber(totalQtySorting)}',
+                      formatNumber(totalQtySorting),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -1412,12 +1412,12 @@ Material WO
   Widget _buildMaterial(bool isTablet) {
     final items = (widget.data['work_orders']['items'] ?? [])
         .cast<Map<String, dynamic>>();
-    final int totalQty = items.fold<int>(
-      0,
-      (sum, item) => sum + (item['qty'] ?? 0) as int,
-    );
-    final totalBerat = widget.data['greige_qty'] ?? 0;
-    final spkNo = widget.data?['items']?[0]?['spk_no'] ?? '-';
+    // final int totalQty = items.fold<int>(
+    //   0,
+    //   (sum, item) => sum + (item['qty'] ?? 0) as int,
+    // );
+    // final totalBerat = widget.data['greige_qty'] ?? 0;
+    // final spkNo = widget.data?['items']?[0]?['spk_no'] ?? '-';
 
     if (items.isEmpty) {
       return Center(child: Text('No Data'));

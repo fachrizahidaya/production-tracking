@@ -99,17 +99,6 @@ class _InfoTabState extends State<InfoTab> {
                         ],
                       ],
                     ),
-                    // Text(
-                    //   widget.data['created_at'] != null
-                    //       ? 'Dibuat oleh ${widget.data['user']['name']} pada ${DateFormat("dd MMM yyyy, HH.mm").format(DateTime.parse(widget.data['created_at']).toLocal())}'
-                    //       : DateFormat("dd MMM yyyy")
-                    //           .format(DateTime.parse(widget.data['wo_date'])),
-                    //   style: TextStyle(
-                    //     fontSize: CustomTheme().fontSize('lg'),
-                    //     color: Colors.white.withOpacity(0.8),
-                    //     fontWeight: CustomTheme().fontWeight('semibold'),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -123,13 +112,6 @@ class _InfoTabState extends State<InfoTab> {
   }
 
   Widget _buildQuickInfoRow(bool isTablet) {
-    final List items = widget.data['items'] ?? [];
-
-    final int totalQty = items.fold<int>(
-      0,
-      (sum, item) => sum + (item['qty'] ?? 0) as int,
-    );
-
     return Container(
       padding: CustomTheme().padding(isTablet ? 'content' : 'card'),
       decoration: BoxDecoration(
@@ -177,15 +159,6 @@ class _InfoTabState extends State<InfoTab> {
               isTablet: isTablet,
             ),
           ),
-          // Expanded(
-          //   child: _buildQuickInfoItem(
-          //     icon: Icons.numbers_outlined,
-          //     label: 'Qty WO',
-          //     value:
-          //         '${formatNumber(totalQty)} ${widget.data['items'][0]['unit']?['code']}',
-          //     isTablet: isTablet,
-          //   ),
-          // ),
         ],
       ),
     );

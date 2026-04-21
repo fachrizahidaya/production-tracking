@@ -171,13 +171,19 @@ class _DyeingScreenState extends State<DyeingScreen> {
 
   _refetch() {
     setState(() {
+      _search = '';
+      dariTanggal = '';
+      sampaiTanggal = '';
+      _isFiltered = false;
+
       params = {
-        'search': _search,
+        'search': '',
         'page': '0',
-        'start_date': dariTanggal,
-        'end_date': sampaiTanggal,
+        'start_date': '',
+        'end_date': '',
       };
     });
+
     _loadMore();
   }
 

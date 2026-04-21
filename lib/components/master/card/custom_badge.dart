@@ -8,6 +8,7 @@ class CustomBadge extends StatelessWidget {
   final withStatus;
   final rework;
   final forMachine;
+  final isSkipped;
 
   const CustomBadge(
       {super.key,
@@ -15,7 +16,8 @@ class CustomBadge extends StatelessWidget {
       this.status,
       this.withStatus = false,
       this.rework = false,
-      this.forMachine = false});
+      this.forMachine = false,
+      this.isSkipped = false});
 
   @override
   Widget build(BuildContext context) {

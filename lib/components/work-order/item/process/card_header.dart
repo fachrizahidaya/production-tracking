@@ -11,6 +11,8 @@ class CardHeader extends StatelessWidget {
   final item;
   final showDetails;
   final hasData;
+  final shouldSkipProcess;
+
   const CardHeader(
       {super.key,
       this.data,
@@ -18,15 +20,21 @@ class CardHeader extends StatelessWidget {
       this.isTablet,
       this.item,
       this.showDetails,
-      this.hasData});
+      this.hasData,
+      this.shouldSkipProcess});
 
   @override
   Widget build(BuildContext context) {
+    final key = item['key'];
     final bool hasProcessData = data.isNotEmpty;
 
-    final String status = !hasProcessData
-        ? 'Menunggu Diproses'
-        : (data.first['status']?.toString() ?? 'Menunggu Diproses');
+    final bool isSkipped = shouldSkipProcess(key);
+
+    final String status = isSkipped
+        ? 'Dilewati'
+        : !hasProcessData
+            ? 'Menunggu Diproses'
+            : (data.first['status']?.toString() ?? 'Menunggu Diproses');
 
     final statusConfig = _getStatusConfig(status);
 

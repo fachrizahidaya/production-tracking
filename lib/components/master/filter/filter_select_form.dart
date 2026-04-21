@@ -63,14 +63,21 @@ class _FilterSelectFormState extends State<FilterSelectForm> {
                       children: [
                         Wrap(
                           spacing: 8,
-                          runSpacing: 4,
+                          runSpacing: 8,
                           children: widget.selectedItems.map((item) {
-                            return InputChip(
-                              label: Text(item['label']),
-                              onDeleted: () {
-                                widget.onRemoveItem?.call(item);
-                                widget.onSelectionChanged(widget.selectedItems);
-                              },
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[50],
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.grey[200]!),
+                              ),
+                              child: Text(item['label']),
+                              // onDeleted: () {
+                              //   widget.onRemoveItem?.call(item);
+                              //   widget.onSelectionChanged(widget.selectedItems);
+                              // },
                             );
                           }).toList(),
                         ),

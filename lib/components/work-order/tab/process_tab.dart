@@ -23,13 +23,13 @@ class _ProcessTabState extends State<ProcessTab> {
           : GridView.builder(
               padding: CustomTheme().padding('content'),
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 520,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-              ),
+                  maxCrossAxisExtent: 520,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  mainAxisExtent: 800),
               itemCount: items.length,
               itemBuilder: (context, index) {
-                return ProcessItem(item: items[index]);
+                return ProcessItem(item: items[index], allProcesses: items);
               },
             ),
     );

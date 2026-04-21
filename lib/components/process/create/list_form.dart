@@ -97,16 +97,18 @@ class _ListFormState extends State<ListForm> {
           ),
         if (widget.form?['wo_id'] != null)
           TemplateCard(
-            title: (widget.withOnlyMaklon == true &&
-                        widget.form?['wo_id'] != null) ||
-                    (widget.withMaklonOrMachine == true &&
-                        widget.form?['wo_id'] != null)
+            title: _isMaklon
+                // (widget.withOnlyMaklon == true &&
+                //             widget.form?['wo_id'] != null) ||
+                //         (widget.withMaklonOrMachine == true &&
+                //             widget.form?['wo_id'] != null)
                 ? 'Maklon'
                 : 'Mesin',
-            icon: (widget.withOnlyMaklon == true &&
-                        widget.form?['wo_id'] != null) ||
-                    (widget.withMaklonOrMachine == true &&
-                        widget.form?['wo_id'] != null)
+            icon: _isMaklon
+                // (widget.withOnlyMaklon == true &&
+                //             widget.form?['wo_id'] != null) ||
+                //         (widget.withMaklonOrMachine == true &&
+                //             widget.form?['wo_id'] != null)
                 ? Icons.business_outlined
                 : Icons.local_laundry_service_outlined,
             child: Column(

@@ -10,6 +10,7 @@ class ProcessItem extends StatefulWidget {
   final VoidCallback? onTap;
   final bool isExpanded;
   final bool showDetails;
+  final allProcesses;
 
   const ProcessItem({
     super.key,
@@ -17,6 +18,7 @@ class ProcessItem extends StatefulWidget {
     this.onTap,
     this.isExpanded = false,
     this.showDetails = true,
+    this.allProcesses,
   });
 
   @override
@@ -27,6 +29,51 @@ class _ProcessItemState extends State<ProcessItem> {
   @override
   void initState() {
     super.initState();
+  }
+
+  String getProcessStatus(String key) {
+    final process = widget.allProcesses.firstWhere(
+      (e) => e['key'] == key,
+      orElse: () => <String, dynamic>{},
+    );
+
+    final data = process['data'] ?? [];
+
+    if (data.isEmpty) return 'Menunggu Diproses';
+
+    return data.first['status'] ?? 'Menunggu Diproses';
+  }
+
+  bool shouldSkipProcess(String key) {
+    final sortingStatus = getProcessStatus('sorting');
+    final printingStatus = getProcessStatus('printing');
+    final embroideryData = widget.allProcesses.firstWhere(
+          (e) => e['key'] == 'embroidery',
+          orElse: () => <String, dynamic>{},
+        )['data'] ??
+        [];
+
+    final printingData = widget.allProcesses.firstWhere(
+          (e) => e['key'] == 'printing',
+          orElse: () => <String, dynamic>{},
+        )['data'] ??
+        [];
+
+    if (key == 'embroidery' || key == 'printing') {
+      if ((sortingStatus == 'Diproses' || sortingStatus == 'Selesai') &&
+          embroideryData.isEmpty &&
+          printingData.isEmpty) {
+        return true;
+      }
+    }
+
+    if (key == 'sorting') {
+      if (printingStatus == 'Diproses' || printingStatus == 'Selesai') {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   @override
@@ -41,6 +88,7 @@ class _ProcessItemState extends State<ProcessItem> {
         final isTablet = constraints.maxWidth > 600;
         final data = widget.item['data'] ?? [];
         final hasData = data.isNotEmpty;
+        final processKey = widget.item['key'];
 
         return Container(
           decoration: BoxDecoration(
@@ -70,11 +118,15 @@ class _ProcessItemState extends State<ProcessItem> {
                   hasData: hasData,
                   getProcessIcon: _getProcessIcon,
                   showDetails: widget.showDetails,
+                  shouldSkipProcess: shouldSkipProcess,
                 ),
                 if (hasData)
                   CardContent(
-                    data: data.first,
+                    data: ['dyeing', 'press', 'tumbler'].contains(processKey)
+                        ? data
+                        : data.first,
                     isTablet: isTablet,
+                    processKey: processKey,
                   )
                 else
                   Expanded(child: NoData())

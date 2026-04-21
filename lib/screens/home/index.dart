@@ -155,7 +155,9 @@ class _HomeState extends State<Home> {
               handleLogout: () => _handleLogout(context),
               handleFetchMenu: () => _handleFetchMenu(),
             ),
-            body: SafeArea(child: Dashboard()),
+            body: SafeArea(
+              child: Dashboard(),
+            ),
           );
         });
   }

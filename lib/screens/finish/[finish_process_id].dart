@@ -1145,6 +1145,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             withItemGrade: widget.withItemGrade,
             withItemQtyAndWeight: widget.withQtyAndWeight,
             isAllMachineDone: isAllMachineDone,
+            label: widget.label,
           ),
         ),
       ),

@@ -106,11 +106,11 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                       ),
                       if (widget.isFiltered)
                         Positioned(
-                            right: 0,
-                            top: 0,
+                            right: 5,
+                            top: 5,
                             child: Container(
-                              width: 10,
-                              height: 10,
+                              width: 8,
+                              height: 8,
                               decoration: BoxDecoration(
                                   color: CustomTheme().buttonColor('danger'),
                                   shape: BoxShape.circle),

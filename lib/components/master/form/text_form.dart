@@ -19,6 +19,7 @@ class TextForm extends StatefulWidget {
   final bool isGrade;
   final bool isSorting;
   final initialValue;
+  final focusNode;
 
   const TextForm({
     super.key,
@@ -34,6 +35,7 @@ class TextForm extends StatefulWidget {
     this.isGrade = false,
     this.isSorting = false,
     this.initialValue,
+    this.focusNode,
   });
 
   @override
@@ -42,6 +44,7 @@ class TextForm extends StatefulWidget {
 
 class _TextFormState extends State<TextForm> {
   bool _isInitialized = false;
+  final focusNode = FocusNode();
 
   String formatToId(String value) {
     final number = double.tryParse(value.replaceAll(',', '.')) ?? 0;

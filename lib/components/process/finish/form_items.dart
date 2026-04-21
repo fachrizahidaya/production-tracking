@@ -680,11 +680,11 @@ class _FormItemsState extends State<FormItems> {
                                 child: Column(
                                   children: [
                                     TextForm(
-                                      label: 'Berat Bagus',
+                                      label: 'Berat Bagus (KG)',
                                       initialValue: widget.form['good_weight']
                                               ?.toString() ??
                                           '0',
-                                      req: false,
+                                      req: true,
                                       isNumber: true,
                                       // isSorting: true,
                                       controller: widget.weightGood,
@@ -749,8 +749,8 @@ class _FormItemsState extends State<FormItems> {
                               ),
                               Expanded(
                                 child: TextForm(
-                                  label: 'Berat BS',
-                                  req: false,
+                                  label: 'Berat BS (KG)',
+                                  req: true,
                                   initialValue:
                                       widget.form['bs_weight']?.toString() ??
                                           '0',
@@ -1094,7 +1094,7 @@ class _FormItemsState extends State<FormItems> {
                           req: false,
                           isNumber: true,
                           initialValue:
-                              widget.form['rework_sisiran']?.toString() ?? '0',
+                              widget.form['combing']?.toString() ?? '0',
                           controller: widget.combing,
                           handleChange: (value) {
                             final safeValue = (value == null ||
@@ -1478,11 +1478,10 @@ class _FormItemsState extends State<FormItems> {
                           label: 'Gramasi',
                           isDisabled: true,
                           isNumber: true,
-                          // isSorting: true,
+                          initialValue: widget.form['gsm']?.toString() ?? '0',
                           controller: widget.gsm,
                           handleChange: (value) {
                             setState(() {
-                              // widget.gsm.text = value.toString();
                               widget.handleChangeInput('gsm', value);
                             });
                           },
@@ -1494,11 +1493,11 @@ class _FormItemsState extends State<FormItems> {
                           req: false,
                           isDisabled: true,
                           isNumber: true,
-                          // isSorting: true,
+                          initialValue:
+                              widget.form['weight_grade_a']?.toString() ?? '0',
                           controller: widget.weightGradeA,
                           handleChange: (value) {
                             setState(() {
-                              // widget.weightGradeA.text = value.toString();
                               widget.handleChangeInput('weight_grade_a', value);
                             });
                           },
@@ -1509,11 +1508,11 @@ class _FormItemsState extends State<FormItems> {
                           label: 'Total Berat Kesuluruhan (KG)',
                           isDisabled: true,
                           isNumber: true,
-                          // isSorting: true,
+                          initialValue:
+                              widget.form['total_weight']?.toString() ?? '0',
                           controller: widget.totalWeight,
                           handleChange: (value) {
                             setState(() {
-                              // widget.totalWeight.text = value.toString();
                               widget.handleChangeInput('total_weight', value);
                             });
                           },
@@ -1811,32 +1810,45 @@ Grades
           Expanded(
             flex: 2,
             child: TextForm(
-              label: 'Qty (PCS)',
-              req: false,
-              isDisabled: i == 2 ? true : false,
-              isGrade: true,
-              isNumber: true,
-              isSorting: true,
-              initialValue: _grades[i]['qty']?.toString() ?? '0',
-              controller: widget.qtyItem[i],
-              handleChange: (val) {
-                if (val == null || val.trim().isEmpty) {
-                  widget.qty[i].text = '0';
-                  widget.qty[i].selection = TextSelection.fromPosition(
-                    TextPosition(offset: widget.qty[i].text.length),
-                  );
-                }
+                label: 'Qty (PCS)',
+                req: false,
+                isDisabled: i == 2 ? true : false,
+                isGrade: true,
+                isNumber: true,
+                isSorting: true,
+                initialValue: _grades[i]['qty']?.toString() ?? '0',
+                controller: widget.qtyItem[i],
+                handleChange:
+                    // (val) {
+                    //   if (val == null || val.trim().isEmpty) {
+                    //     widget.qty[i].text = '0';
+                    //     widget.qty[i].selection = TextSelection.fromPosition(
+                    //       TextPosition(offset: widget.qty[i].text.length),
+                    //     );
+                    //   }
 
-                final safeValue =
-                    (val == null || val.trim().isEmpty) ? '0' : val;
+                    //   final safeValue =
+                    //       (val == null || val.trim().isEmpty) ? '0' : val;
 
-                setState(() {
-                  _grades[i]['qty'] = safeValue;
-                });
+                    //   setState(() {
+                    //     _grades[i]['qty'] = safeValue;
+                    //   });
 
-                widget.handleUpdateGrade(i, 'qty', safeValue);
-              },
-            ),
+                    //   widget.handleUpdateGrade(i, 'qty', safeValue);
+                    // },
+                    (val) {
+                  String clean = (val ?? '')
+                      .replaceAll('.', '') // hapus ribuan
+                      .replaceAll(',', ''); // hapus koma biar integer
+
+                  if (clean.isEmpty) clean = '0';
+
+                  setState(() {
+                    _grades[i]['qty'] = clean;
+                  });
+
+                  widget.handleUpdateGrade(i, 'qty', clean);
+                }),
           ),
           SizedBox(width: 12),
         ],
@@ -1871,7 +1883,7 @@ Rework
       {
         'label': 'Qty Hasil Dyeing',
         'value':
-            '${widget.processData['rework_reference']?['work_orders']?['greige_qty'] ?? '-'} '
+            '${formatNumber(widget.processData['rework_reference']?['work_orders']?['greige_qty']) ?? '-'} '
                 '${widget.processData['rework_reference']?['work_orders']?['greige_unit']?['code'] ?? ''}',
         'icon': Icons.description_outlined,
       },
@@ -1917,9 +1929,6 @@ Rework
         }).toList());
   }
 
-/*
-Produk Jadi Compact (for table display)
-*/
   Widget _buildFinishedItemCompact(List items, int i) {
     final item = (items.length > i) ? items[i] : null;
     final gradeLabel = getGradeLabel(i);
@@ -2124,12 +2133,15 @@ Input Qty Tipe BS
                           label: 'Simpan',
                           onPressed: () {
                             setState(() {
-                              widget.defects[index]['qty'] =
-                                  controller.text.replaceAll(',', '');
-                              widget.defectQty[index].text =
-                                  controller.text.replaceAll(',', '');
+                              final cleanValue = controller.text
+                                  .replaceAll('.', '')
+                                  .replaceAll(',', '');
+
+                              widget.defects[index]['qty'] = cleanValue;
+                              widget.defectQty[index].text = cleanValue;
+
                               widget.form['defects'] = widget.defects;
-                              // ✅ AUTO-CALCULATE BS GRADE
+
                               _recalculateGradeBS();
                             });
                             Navigator.pop(context);
@@ -2161,7 +2173,7 @@ Tipe BS (BS-an)
           // LIST TIPE BS (HORIZONTAL)
           LayoutBuilder(
             builder: (context, constraints) {
-              final itemWidth = (constraints.maxWidth - 24) / 4;
+              final itemWidth = (constraints.maxWidth - 32) / 2;
               return Wrap(
                 spacing: 16,
                 runSpacing: 16,
@@ -2174,9 +2186,16 @@ Tipe BS (BS-an)
 
                       _ensureDefectController(i);
 
-                      final defectQty =
-                          int.tryParse(defect['qty']?.toString() ?? '0') ?? 0;
-                      // final hasQty = defectQty > 0;
+                      int parseQty(dynamic value) {
+                        if (value == null) return 0;
+                        final clean = value
+                            .toString()
+                            .replaceAll('.', '')
+                            .replaceAll(',', '');
+                        return int.tryParse(clean) ?? 0;
+                      }
+
+                      final defectQty = parseQty(defect['qty']);
 
                       return SizedBox(
                         width: itemWidth,
@@ -2318,13 +2337,13 @@ Produk Jadi
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.processData['greige_item'] != null
-                          ? '${widget.processData['greige_item']['code'] ?? '-'}'
+                      widget.data['items'] != null
+                          ? '${widget.data['items'][0]['item_code'] ?? '-'}'
                           : '-',
                     ),
                     Text(
-                      widget.processData['greige_item'] != null
-                          ? '${widget.processData['greige_item']['name'] ?? '-'}'
+                      widget.data['items'] != null
+                          ? '${widget.data['items'][0]['item_name'] ?? '-'}'
                           : '-',
                       style: TextStyle(
                         fontSize: 12,

@@ -157,6 +157,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     'greige_item_id': null,
     'qty': '0',
     'weight': '0',
+    'good_weight': '0',
+    'bs_weight': '0',
     'notes': '',
     'attachments': [],
     'grades': [],
@@ -384,8 +386,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
     _form['item_qty'] = d['item_qty']?.toString() ?? '';
     _form['weight'] = d['weight']?.toString() ?? '';
-    _form['good_weight'] = d['good_weight']?.toString() ?? '';
-    _form['bs_weight'] = d['bs_weight']?.toString() ?? '';
+
     _form['qty'] = d['qty']?.toString() ?? '';
     _form['weight_per_dozen'] = d['weight_per_dozen']?.toString() ?? '';
     _form['maklon_name'] = d['maklon_name'];
@@ -536,7 +537,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       ),
     );
 
-    // ✅ ALWAYS fetch ulang data untuk memastikan state konsisten
     await _getDataView();
   }
 
@@ -670,7 +670,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           Provider.of<MachineMasterService>(context, listen: false);
       final foundInMaster = machineService.items.firstWhere(
         (machine) => machine.id == machineId,
-        // orElse: () => null,
       );
 
       if (foundInMaster.status != null) {
@@ -678,7 +677,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       }
     } catch (e) {}
 
-    /// ❌ default if not found in both sources
     return 'Tersedia';
   }
 
@@ -1060,7 +1058,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
     if (processData == null) return 0;
 
-    // ✅ additional process
     final rework = double.tryParse(
           processData['rework_long_hemming']?.toString() ?? '0',
         ) ??
@@ -1076,7 +1073,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         ) ??
         0;
 
-    // ✅ grades qty
     final gradesList = processData['grades'] ?? [];
 
     double totalGrades = 0;

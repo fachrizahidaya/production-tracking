@@ -77,13 +77,13 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
           .toList();
     }
 
-    if (widget.params['user_id'] != null) {
-      final activeOperators = widget.params['user_id'].split(',');
-      selectedStatuses = operatorOption
-          .where((s) => activeOperators.contains(s['value']))
-          .map((s) => Map<String, dynamic>.from(s))
-          .toList();
-    }
+    // if (widget.params['user_id'] != null) {
+    //   final activeOperators = widget.params['user_id'].split(',');
+    //   selectedStatuses = operatorOption
+    //       .where((s) => activeOperators.contains(s['value']))
+    //       .map((s) => Map<String, dynamic>.from(s))
+    //       .toList();
+    // }
 
     dariTanggalInput.text = widget.dariTanggal;
     sampaiTanggalInput.text = widget.sampaiTanggal;
@@ -217,13 +217,8 @@ class _ListFilterState<T> extends State<ListFilter<T>> {
               onTap: () async {
                 final result = await showFilterSelectDialog(
                   context: context,
-                  title: "Pilih Status",
                   options: statusOption,
                   selectedItems: selectedStatuses,
-                  onHandleFilter: (selected) {
-                    widget.onHandleFilter(
-                        "status", selected.map((e) => e['value']).join(","));
-                  },
                 );
 
                 if (result != null) {

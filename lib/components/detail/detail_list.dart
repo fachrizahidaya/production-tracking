@@ -95,6 +95,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
         return RefreshIndicator(
           onRefresh: () async => widget.onRefresh(),
           child: SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -415,37 +416,37 @@ Work Order
                           color: Colors.grey[300],
                         ),
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            widget.data['work_orders']?['wo_no'] ?? '-',
-                            style: TextStyle(
-                              fontSize: isTablet ? 22 : 18,
-                              fontWeight: CustomTheme().fontWeight('bold'),
-                              color: Colors.white,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WorkOrderDetail(
+                                id: widget.data['work_orders']?['id']
+                                        .toString() ??
+                                    '-',
+                              ),
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => WorkOrderDetail(
-                                    id: widget.data['work_orders']?['id']
-                                            .toString() ??
-                                        '-',
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Icon(
+                          );
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.data['work_orders']?['wo_no'] ?? '-',
+                              style: TextStyle(
+                                fontSize: isTablet ? 22 : 18,
+                                fontWeight: CustomTheme().fontWeight('bold'),
+                                color: Colors.white,
+                              ),
+                            ),
+                            Icon(
                               Icons.chevron_right,
                               size: 24,
                               color: Colors.white,
-                            ),
-                          )
-                        ].separatedBy(CustomTheme().hGap('md')),
+                            )
+                          ].separatedBy(CustomTheme().hGap('md')),
+                        ),
                       ),
                     ].separatedBy(CustomTheme().vGap('sm')),
                   ),
@@ -1177,7 +1178,8 @@ Tipe BS
                         Row(
                           children: [
                             CustomBadge(
-                              title: 'Qty: ${itemType['qty']} PCS',
+                              title:
+                                  'Qty: ${formatNumber(itemType['qty'])} PCS',
                               rework: true,
                               status: 'Selesai',
                             ),
@@ -1212,15 +1214,9 @@ Berat >> Packing
   Widget _buildWeightInfo(bool isTablet) {
     final items = [
       {
-        'label': 'Hasil Packing',
+        'label': 'Total Packing',
         'value':
             '${widget.data['qty'] != null ? formatNumber(widget.data['qty']) : '0'} ${'PCS'}',
-        'icon': Icons.numbers_outlined,
-      },
-      {
-        'label': 'Gramasi',
-        'value':
-            '${widget.data['gsm'] != null ? formatNumber(widget.data['gsm']) : '0'} ${'GSM'}',
         'icon': Icons.numbers_outlined,
       },
       {
@@ -1228,6 +1224,12 @@ Berat >> Packing
         'value':
             '${widget.data['weight_per_dozen'] != null ? formatNumber(widget.data['weight_per_dozen']) : '0'} ${'KG'}',
         'icon': Icons.twelve_mp_outlined,
+      },
+      {
+        'label': 'Gramasi',
+        'value':
+            '${widget.data['gsm'] != null ? formatNumber(widget.data['gsm']) : '0'} ${'GSM'}',
+        'icon': Icons.numbers_outlined,
       },
       {
         'label': 'Berat Grade A',
@@ -1618,6 +1620,11 @@ Catatan WO
           ),
         if (widget.forDyeing == false &&
             widget.withItemGrade == false &&
+            widget.label != 'Dyeing' &&
+            widget.label != 'Press' &&
+            widget.label != 'Tumbler' &&
+            widget.label != 'Stenter' &&
+            widget.label != 'Long Slitting' &&
             widget.label != 'Long Hemming' &&
             widget.label != 'Cross Cutting' &&
             widget.label != 'Sewing')
@@ -1650,17 +1657,17 @@ Catatan WO
             icon: Icons.grade_outlined,
             child: _buildGradeInfo(true),
           ),
-        if (widget.label == 'Sorting' || widget.label == 'Packing')
-          _buildInfoCard(
-            title: 'Ringkasan Sortir',
-            icon: Icons.attachment_outlined,
-            child: _buildTotalSorting(true),
-          ),
         if (widget.label != 'Sorting')
           _buildInfoCard(
             title: 'Informasi Produk',
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(true),
+          ),
+        if (widget.label == 'Sorting' || widget.label == 'Packing')
+          _buildInfoCard(
+            title: 'Ringkasan Sortir',
+            icon: Icons.attachment_outlined,
+            child: _buildTotalSorting(true),
           ),
         if (widget.label == 'Packing')
           _buildInfoCard(

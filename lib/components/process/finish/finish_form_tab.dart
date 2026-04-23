@@ -75,6 +75,7 @@ class FinishFormTab extends StatefulWidget {
   final weightGradeA;
   final finishedItem;
   final grades;
+  final dyeingQty;
 
   const FinishFormTab(
       {super.key,
@@ -148,7 +149,8 @@ class FinishFormTab extends StatefulWidget {
       this.handleUpdateDefect,
       this.weightGradeA,
       this.finishedItem,
-      this.grades});
+      this.grades,
+      this.dyeingQty});
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();
@@ -234,6 +236,7 @@ class _FinishFormTabState extends State<FinishFormTab>
                   weightGradeA: widget.weightGradeA,
                   finishedItem: widget.finishedItem,
                   grades: widget.grades,
+                  dyeingQty: widget.dyeingQty,
                 ),
               ],
             ),

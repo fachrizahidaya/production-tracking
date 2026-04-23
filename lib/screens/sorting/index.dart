@@ -195,7 +195,7 @@ class _SortingScreenState extends State<SortingScreen> {
       child: Scaffold(
         backgroundColor: Color(0xFFf9fafc),
         appBar: CustomAppBar(
-          title: 'Sorting',
+          title: 'Sortir',
           onReturn: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
@@ -291,7 +291,7 @@ class _SortingScreenState extends State<SortingScreen> {
                         DialogActionItem(
                           icon: Icons.add,
                           iconColor: CustomTheme().buttonColor('primary'),
-                          title: 'Mulai Sorting',
+                          title: 'Mulai Sortir',
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -303,7 +303,7 @@ class _SortingScreenState extends State<SortingScreen> {
                         DialogActionItem(
                           icon: Icons.task_alt_outlined,
                           iconColor: CustomTheme().buttonColor('warning'),
-                          title: 'Selesai Sorting',
+                          title: 'Selesai Sortir',
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(

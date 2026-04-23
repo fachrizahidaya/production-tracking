@@ -38,6 +38,8 @@ class CardHeader extends StatelessWidget {
 
     final statusConfig = _getStatusConfig(status);
 
+    final displayTitle = item['label'] == 'Sorting' ? 'Sortir' : item['label'];
+
     return hasData
         ? Container(
             padding: CustomTheme().padding('card'),
@@ -81,7 +83,7 @@ class CardHeader extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        item['label']?.toString() ?? '-',
+                        displayTitle ?? '-',
                         style: TextStyle(
                           fontSize:
                               CustomTheme().fontSize(isTablet ? 'lg' : 'md'),

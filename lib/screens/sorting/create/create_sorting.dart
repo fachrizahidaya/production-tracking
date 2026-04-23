@@ -42,7 +42,7 @@ class CreateSorting extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
           context: context,
-          title: 'Sorting Dimulai',
+          title: 'Sortir Dimulai',
           child: buildBoldMessage(
             message: message,
             prefix: "SRT",
@@ -53,7 +53,7 @@ class CreateSorting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CreateProcess(
-      title: 'Mulai Sorting',
+      title: 'Mulai Sortir',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
         return CreateSortingManual(

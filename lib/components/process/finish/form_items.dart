@@ -1439,11 +1439,9 @@ class _FormItemsState extends State<FormItems> {
                                       ? '0'
                                       : val.toString();
 
-                              // widget.weightDozen.text = safeValue;
                               widget.handleChangeInput(
                                   'weight_per_dozen', safeValue);
 
-                              // final normalized = safeValue.replaceAll(',', '.');
                               setState(() {
                                 final input = double.tryParse(
                                       widget.weightDozen.text
@@ -1837,9 +1835,8 @@ Grades
                     //   widget.handleUpdateGrade(i, 'qty', safeValue);
                     // },
                     (val) {
-                  String clean = (val ?? '')
-                      .replaceAll('.', '') // hapus ribuan
-                      .replaceAll(',', ''); // hapus koma biar integer
+                  String clean =
+                      (val ?? '').replaceAll('.', '').replaceAll(',', '');
 
                   if (clean.isEmpty) clean = '0';
 

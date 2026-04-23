@@ -113,8 +113,13 @@ class _AppDrawerState extends State<AppDrawer> {
                       itemCount: menus.length,
                       itemBuilder: (context, index) {
                         final item = menus[index];
+                        final displayTitle =
+                            item.title.toLowerCase() == 'sorting'
+                                ? 'Sortir'
+                                : item.title;
+
                         return ListTile(
-                          title: Text(item.title),
+                          title: Text(displayTitle),
                           leading: Icon(
                             item.title == 'Dyeing'
                                 ? Icons.invert_colors_on_outlined

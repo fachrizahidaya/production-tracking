@@ -26,7 +26,7 @@ class CreateSortingManual extends StatelessWidget {
     final SortingService sortingService = SortingService();
 
     return CreateProcessManual(
-      title: 'Mulai Sorting',
+      title: 'Mulai Sortir',
       id: id,
       label: 'Sorting',
       data: data,

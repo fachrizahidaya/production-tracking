@@ -275,6 +275,66 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+  Map<String, dynamic>? get firstWoItem {
+    final items = woData['items'];
+
+    if (items == null || items is! List || items.isEmpty) {
+      return null;
+    }
+
+    return items.first;
+  }
+
+  Future<void> _handleFetchFinishedMaterialSorting() async {
+    setState(() => _isFetchingFinishedMaterial = true);
+
+    try {
+      final service = Provider.of<OptionItemService>(context, listen: false);
+
+      final items = woData['items'];
+
+      if (items == null || items is! List || items.isEmpty) {
+        setState(() => finishedItemOption = []);
+        return;
+      }
+
+      final itemCode = firstWoItem?['item_code'] ?? '';
+
+      if (firstWoItem == null) {
+        setState(() => finishedItemOption = []);
+        return;
+      }
+
+      if (itemCode == null || itemCode.toString().isEmpty) {
+        setState(() => finishedItemOption = []);
+        return;
+      }
+
+      final parts = itemCode.split('-');
+
+      if (parts.length < 2) {
+        setState(() => finishedItemOption = []);
+        return;
+      }
+
+      final baseCode = parts.first;
+
+      await service.fetchOptions(
+        process: 'sorting',
+        baseCode: baseCode,
+        colorCode: 'grb',
+      );
+
+      setState(() {
+        finishedItemOption = service.dataListOption;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
+    } finally {
+      setState(() => _isFetchingFinishedMaterial = false);
+    }
+  }
+
   Future<void> _handleFetchItemGrade() async {
     setState(() {
       _isFetchingGrade = true;
@@ -360,14 +420,13 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   Future<void> _getDataView(id) async {
-    setState(() {
-      _firstLoading = true;
-    });
+    setState(() => _firstLoading = true);
 
     await _workOrderService.getDataView(id);
 
     setState(() {
       woData = _workOrderService.dataView;
+
       final greigeQty = woData['greige_qty'];
 
       if (greigeQty != null && widget.label == 'Dyeing') {
@@ -375,14 +434,21 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         _qtyController.text = greigeQty.toString();
         widget.form?['qty'] = greigeQty.toString();
       }
+
       if (greigeQty != null) {
         _weightController.text = greigeQty.toString();
         widget.form?['weight'] = greigeQty.toString();
       }
+
       _firstLoading = false;
     });
 
-    await _handleFetchFinishedMaterial();
+    // 🔥 GANTI DI SINI
+    if (widget.label == 'Sorting') {
+      await _handleFetchFinishedMaterialSorting();
+    } else {
+      await _handleFetchFinishedMaterial();
+    }
   }
 
   Future<void> _getProcessView(id) async {

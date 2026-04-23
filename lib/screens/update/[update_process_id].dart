@@ -9,6 +9,7 @@ import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/form/text_form_grade.dart';
 import 'package:textile_tracking/components/update/detail_work_order.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/format_idr.dart';
@@ -2092,27 +2093,17 @@ Grades
           // Qty Column
           Expanded(
             flex: 2,
-            child: TextForm(
+            child: TextFormGrade(
               label: 'Qty (PCS)',
-              req: false,
-              isGrade: true,
-              isDisabled: i == 2 ? true : false,
-              isNumber: true,
-              isSorting: true,
-              initialValue: _grades[i]['qty']?.toString() ?? '0',
               controller: widget.qty[i],
-              handleChange: (val) {
-                String clean =
-                    (val ?? '').replaceAll('.', '').replaceAll(',', '');
-
-                if (clean.isEmpty) clean = '0';
-
+              initialValue: _grades[i]['qty']?.toString() ?? '0',
+              isDisabled: i == 2,
+              onChanged: (val) {
                 setState(() {
-                  _grades[i]['qty'] = clean;
+                  _grades[i]['qty'] = val;
                 });
 
-                widget.handleUpdateGrade(i, 'qty', clean);
-
+                widget.handleUpdateGrade(i, 'qty', val);
                 _updateTotalSorting();
               },
             ),

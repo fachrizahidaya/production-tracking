@@ -65,6 +65,7 @@ class ListForm extends StatefulWidget {
   final packingQty;
   final weightGradeA;
   final finishedItem;
+  final dyeingQty;
 
   const ListForm(
       {super.key,
@@ -127,7 +128,8 @@ class ListForm extends StatefulWidget {
       this.handleUpdateDefect,
       this.packingQty,
       this.weightGradeA,
-      this.finishedItem});
+      this.finishedItem,
+      this.dyeingQty});
 
   @override
   State<ListForm> createState() => _ListFormState();

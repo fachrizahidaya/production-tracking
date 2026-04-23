@@ -136,6 +136,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     super.initState();
 
     _packingQtyController.text = widget.form?['qty']?.toString() ?? '';
+    _qtyController.text = widget.form?['qty']?.toString() ?? '';
     _qtyItemController.text = widget.form?['item_qty']?.toString() ?? '';
     _weightController.text = widget.form?['weight']?.toString() ?? '';
     _noteController.text = widget.form?['notes']?.toString() ?? '';
@@ -180,9 +181,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     await _handleFetchItemGrade();
     await _handleFetchUnit();
     await _handleFetchItemType();
-    if (widget.label == 'Sorting') {
-      await _handleFetchFinishedMaterial();
-    }
+    await _handleFetchFinishedMaterial();
 
     setState(() {
       _firstLoading = false;
@@ -220,7 +219,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   String formatProcessLabel(String label) {
     final trimmed = label.trim().toLowerCase();
 
-    // kalau lebih dari 1 kata → pakai underscore
     if (trimmed.contains(' ')) {
       return trimmed.replaceAll(RegExp(r'\s+'), '_');
     }
@@ -683,8 +681,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       widget.form?['rework_long_hemming'] =
           safeToApi(_reworkLongHemmingController.text);
       widget.form?['weight'] = safeToApi(_weightController.text);
-      widget.form?['qty'] = safeToApi(_qtyController.text);
-      widget.form?['qty'] = safeToApi(_packingQtyController.text);
+      widget.form?['item_qty'] = safeToApi(_qtyItemController.text);
+      widget.form?['qty'] = safeToApi(
+        widget.label == 'Packing'
+            ? _packingQtyController.text
+            : _qtyController.text,
+      );
       widget.form?['weight_per_dozen'] = safeToApi(_weightDozenController.text);
       widget.form?['weight_grade_a'] = _weightGradeAController.text;
       widget.form?['gsm'] = _gsmController.text;
@@ -695,8 +697,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['rework_long_hemming'] =
             toDouble(widget.form?['rework_long_hemming']);
         widget.form?['combing'] = toDouble(widget.form?['combing']);
-
-        // 🔥 Grades
       }
 
       if (widget.form?['wo_id'] != null) {
@@ -1136,6 +1136,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               handleSelectUnit: _selectUnit,
                               handleSelectWidthUnit: _selectWidthUnit,
                               qty: _qtyItemController,
+                              dyeingQty: _qtyController,
                               packingQty: _packingQtyController,
                               length: _lengthController,
                               width: _widthController,

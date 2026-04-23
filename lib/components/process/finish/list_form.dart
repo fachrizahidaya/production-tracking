@@ -310,6 +310,7 @@ class _ListFormState extends State<ListForm> {
         packingQty: widget.packingQty,
         weightGradeA: widget.weightGradeA,
         finishedItem: widget.finishedItem,
+        dyeingQty: widget.dyeingQty,
       ),
     );
   }

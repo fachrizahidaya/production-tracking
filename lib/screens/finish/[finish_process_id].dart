@@ -136,6 +136,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     super.initState();
 
     _packingQtyController.text = widget.form?['qty']?.toString() ?? '';
+    _qtyController.text = widget.form?['qty']?.toString() ?? '';
     _qtyItemController.text = widget.form?['item_qty']?.toString() ?? '';
     _weightController.text = widget.form?['weight']?.toString() ?? '';
     _noteController.text = widget.form?['notes']?.toString() ?? '';
@@ -180,9 +181,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     await _handleFetchItemGrade();
     await _handleFetchUnit();
     await _handleFetchItemType();
-    if (widget.label == 'Sorting') {
-      await _handleFetchFinishedMaterial();
-    }
+    await _handleFetchFinishedMaterial();
 
     setState(() {
       _firstLoading = false;
@@ -220,7 +219,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   String formatProcessLabel(String label) {
     final trimmed = label.trim().toLowerCase();
 
-    // kalau lebih dari 1 kata → pakai underscore
     if (trimmed.contains(' ')) {
       return trimmed.replaceAll(RegExp(r'\s+'), '_');
     }
@@ -272,6 +270,66 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       setState(() {
         _isFetchingFinishedMaterial = false;
       });
+    }
+  }
+
+  Map<String, dynamic>? get firstWoItem {
+    final items = woData['items'];
+
+    if (items == null || items is! List || items.isEmpty) {
+      return null;
+    }
+
+    return items.first;
+  }
+
+  Future<void> _handleFetchFinishedMaterialSorting() async {
+    setState(() => _isFetchingFinishedMaterial = true);
+
+    try {
+      final service = Provider.of<OptionItemService>(context, listen: false);
+
+      final items = woData['items'];
+
+      if (items == null || items is! List || items.isEmpty) {
+        setState(() => finishedItemOption = []);
+        return;
+      }
+
+      final itemCode = firstWoItem?['item_code'] ?? '';
+
+      if (firstWoItem == null) {
+        setState(() => finishedItemOption = []);
+        return;
+      }
+
+      if (itemCode == null || itemCode.toString().isEmpty) {
+        setState(() => finishedItemOption = []);
+        return;
+      }
+
+      final parts = itemCode.split('-');
+
+      if (parts.length < 2) {
+        setState(() => finishedItemOption = []);
+        return;
+      }
+
+      final baseCode = parts.first;
+
+      await service.fetchOptions(
+        process: 'sorting',
+        baseCode: baseCode,
+        colorCode: 'grb',
+      );
+
+      setState(() {
+        finishedItemOption = service.dataListOption;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
+    } finally {
+      setState(() => _isFetchingFinishedMaterial = false);
     }
   }
 
@@ -360,14 +418,13 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   Future<void> _getDataView(id) async {
-    setState(() {
-      _firstLoading = true;
-    });
+    setState(() => _firstLoading = true);
 
     await _workOrderService.getDataView(id);
 
     setState(() {
       woData = _workOrderService.dataView;
+
       final greigeQty = woData['greige_qty'];
 
       if (greigeQty != null && widget.label == 'Dyeing') {
@@ -375,14 +432,21 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         _qtyController.text = greigeQty.toString();
         widget.form?['qty'] = greigeQty.toString();
       }
+
       if (greigeQty != null) {
         _weightController.text = greigeQty.toString();
         widget.form?['weight'] = greigeQty.toString();
       }
+
       _firstLoading = false;
     });
 
-    await _handleFetchFinishedMaterial();
+    // 🔥 GANTI DI SINI
+    if (widget.label == 'Sorting') {
+      await _handleFetchFinishedMaterialSorting();
+    } else {
+      await _handleFetchFinishedMaterial();
+    }
   }
 
   Future<void> _getProcessView(id) async {
@@ -617,8 +681,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       widget.form?['rework_long_hemming'] =
           safeToApi(_reworkLongHemmingController.text);
       widget.form?['weight'] = safeToApi(_weightController.text);
-      widget.form?['qty'] = safeToApi(_qtyController.text);
-      widget.form?['qty'] = safeToApi(_packingQtyController.text);
+      widget.form?['item_qty'] = safeToApi(_qtyItemController.text);
+      widget.form?['qty'] = safeToApi(
+        widget.label == 'Packing'
+            ? _packingQtyController.text
+            : _qtyController.text,
+      );
       widget.form?['weight_per_dozen'] = safeToApi(_weightDozenController.text);
       widget.form?['weight_grade_a'] = _weightGradeAController.text;
       widget.form?['gsm'] = _gsmController.text;
@@ -629,8 +697,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['rework_long_hemming'] =
             toDouble(widget.form?['rework_long_hemming']);
         widget.form?['combing'] = toDouble(widget.form?['combing']);
-
-        // 🔥 Grades
       }
 
       if (widget.form?['wo_id'] != null) {
@@ -1070,6 +1136,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               handleSelectUnit: _selectUnit,
                               handleSelectWidthUnit: _selectWidthUnit,
                               qty: _qtyItemController,
+                              dyeingQty: _qtyController,
                               packingQty: _packingQtyController,
                               length: _lengthController,
                               width: _widthController,

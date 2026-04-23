@@ -160,7 +160,7 @@ class CardHeader extends StatelessWidget {
     }
     if (lowerLabel.contains('sorting')) {
       return {
-        'label': 'Sorting',
+        'label': 'Sortir',
         'icon': Icons.sort_outlined,
         'color': Colors.blueGrey,
       };

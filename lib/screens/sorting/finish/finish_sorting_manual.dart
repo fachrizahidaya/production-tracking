@@ -49,7 +49,7 @@ class _FinishSortingManualState extends State<FinishSortingManual> {
   @override
   Widget build(BuildContext context) {
     return FinishProcessManual(
-      title: 'Selesai Sorting',
+      title: 'Selesai Sortir',
       id: widget.id,
       label: 'Sorting',
       data: widget.data,

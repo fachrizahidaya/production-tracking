@@ -67,7 +67,7 @@ class _FinishSortingState extends State<FinishSorting> {
   @override
   Widget build(BuildContext context) {
     return FinishProcess(
-      title: 'Selesai Sorting',
+      title: 'Selesai Sortir',
       label: 'Sorting',
       fetchWorkOrder: (service) async =>
           await service.fetchSortingFinishOptions(),
@@ -115,7 +115,7 @@ class _FinishSortingState extends State<FinishSorting> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showAlertDialog(
               context: context,
-              title: 'Sorting Selesai',
+              title: 'Sortir Selesai',
               child: buildBoldMessage(
                 message: message,
                 prefix: "SRT",

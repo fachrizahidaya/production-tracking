@@ -103,7 +103,7 @@ class _SortingDetailState extends State<SortingDetail> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showAlertDialog(
               context: context,
-              title: 'Sorting Selesai',
+              title: 'Sortir Selesai',
               child: buildBoldMessage(
                 message: message,
                 prefix: "SRT",

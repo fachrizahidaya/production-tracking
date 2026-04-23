@@ -75,6 +75,7 @@ class FormItems extends StatefulWidget {
   final packingQty;
   final weightGradeA;
   final finishedItem;
+  final dyeingQty;
 
   const FormItems(
       {super.key,
@@ -134,7 +135,8 @@ class FormItems extends StatefulWidget {
       this.handleUpdateDefect,
       this.packingQty,
       this.weightGradeA,
-      this.finishedItem});
+      this.finishedItem,
+      this.dyeingQty});
 
   @override
   State<FormItems> createState() => _FormItemsState();
@@ -244,13 +246,11 @@ class _FormItemsState extends State<FormItems> {
 
     int totalQty = 0;
 
-    // 🔹 Ambil dari grades
     for (var grade in gradesList) {
       final qty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
       totalQty += qty;
     }
 
-    // 🔹 Tambahan field lain
     final spraying = int.tryParse(data['spraying']?.toString() ?? '0') ?? 0;
 
     final reworkLongHemming =
@@ -339,8 +339,8 @@ class _FormItemsState extends State<FormItems> {
 
     // Jika ada koma, anggap format Indonesia (1.000,5)
     if (str.contains(',')) {
-      str = str.replaceAll('.', ''); // hapus ribuan
-      str = str.replaceAll(',', '.'); // ubah desimal ke titik
+      str = str.replaceAll('.', '');
+      str = str.replaceAll(',', '.');
     }
 
     return double.tryParse(str) ?? 0;
@@ -574,7 +574,7 @@ class _FormItemsState extends State<FormItems> {
                                 child: Column(
                                   children: [
                                     TextForm(
-                                      label: 'Berat',
+                                      label: 'Berat (KG)',
                                       req: true,
                                       isDisabled: false,
                                       isNumber: true,
@@ -587,6 +587,7 @@ class _FormItemsState extends State<FormItems> {
                                                 value.toString().trim().isEmpty)
                                             ? '0'
                                             : value.toString();
+
                                         widget.handleChangeInput(
                                             'weight', safeValue);
 
@@ -686,7 +687,6 @@ class _FormItemsState extends State<FormItems> {
                                           '0',
                                       req: true,
                                       isNumber: true,
-                                      // isSorting: true,
                                       controller: widget.weightGood,
                                       handleChange: (value) {
                                         final safeValue = (value == null ||
@@ -755,7 +755,6 @@ class _FormItemsState extends State<FormItems> {
                                       widget.form['bs_weight']?.toString() ??
                                           '0',
                                   isNumber: true,
-                                  isSorting: true,
                                   controller: widget.weightDefect,
                                   handleChange: (value) {
                                     final safeValue = (value == null ||
@@ -781,7 +780,8 @@ class _FormItemsState extends State<FormItems> {
                                   child: Column(
                                     children: [
                                       TextForm(
-                                        label: 'Qty Hasil ${widget.label}',
+                                        label:
+                                            'Qty Hasil ${widget.label} (PCS)',
                                         req: true,
                                         isNumber: true,
                                         initialValue: widget.form['item_qty']
@@ -794,7 +794,6 @@ class _FormItemsState extends State<FormItems> {
                                               ? '0'
                                               : value;
 
-                                          // ✅ langsung pakai raw value ("1000.25")
                                           widget.handleChangeInput(
                                               'item_qty', safeValue);
 
@@ -813,26 +812,6 @@ class _FormItemsState extends State<FormItems> {
                                     ],
                                   ),
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: SelectForm(
-                                    label: 'Satuan',
-                                    onTap: widget.handleSelectQtyUnitItem,
-                                    selectedLabel:
-                                        widget.form['nama_satuan'] ?? '',
-                                    selectedValue: widget.form['item_unit_id']
-                                            ?.toString() ??
-                                        '',
-                                    required: true,
-                                    validator: (value) {
-                                      if (value == null ||
-                                          value.trim().isEmpty) {
-                                        return 'Satuan wajib dipilih';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                )
                               ].separatedBy(CustomTheme().hGap('xl')),
                             ),
                             Row(
@@ -878,18 +857,19 @@ class _FormItemsState extends State<FormItems> {
                                   child: Column(
                                     children: [
                                       TextForm(
-                                        label: 'Berat Hasil ${widget.label}',
+                                        label:
+                                            'Berat Hasil ${widget.label} (KG)',
                                         req: true,
                                         isNumber: true,
                                         initialValue:
                                             widget.form['qty']?.toString() ??
                                                 '0',
-                                        controller: widget.qty,
+                                        controller: widget.dyeingQty,
                                         handleChange: (value) {
-                                          final safeValue =
-                                              (value == null || value.isEmpty)
-                                                  ? '0'
-                                                  : value;
+                                          final safeValue = (value == null ||
+                                                  value.trim().isEmpty)
+                                              ? '0'
+                                              : value.toString();
 
                                           widget.handleChangeInput(
                                               'qty', safeValue);
@@ -909,28 +889,6 @@ class _FormItemsState extends State<FormItems> {
                                     ],
                                   ),
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: SelectForm(
-                                    label: 'Satuan',
-                                    onTap: widget.handleSelectQtyUnitDyeing,
-                                    selectedLabel: widget.label == 'Dyeing'
-                                        ? 'KG'
-                                        : widget.form['nama_satuan'] ?? '',
-                                    selectedValue: widget.label == 'Dyeing'
-                                        ? '2'
-                                        : widget.form['unit_id']?.toString() ??
-                                            '',
-                                    required: true,
-                                    validator: (value) {
-                                      if (value == null ||
-                                          value.trim().isEmpty) {
-                                        return 'Satuan wajib dipilih';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                )
                               ].separatedBy(CustomTheme().hGap('xl')),
                             ),
                             Row(
@@ -972,7 +930,8 @@ class _FormItemsState extends State<FormItems> {
             if (widget.data != null &&
                 (widget.forDyeing == true ||
                     widget.forSewing == true ||
-                    widget.forHemming == true))
+                    widget.forHemming == true ||
+                    widget.forPacking == true))
               Expanded(
                 child: TemplateCard(
                   title: 'Produk Setelah ${widget.label}',
@@ -985,7 +944,8 @@ class _FormItemsState extends State<FormItems> {
                           Expanded(
                               flex: 2,
                               child: SelectForm(
-                                label: widget.label == 'Sorting'
+                                label: widget.label == 'Sorting' ||
+                                        widget.label == 'Packing'
                                     ? 'Produk Jadi'
                                     : 'Produk Setengah Jadi',
                                 onTap: () =>
@@ -1332,12 +1292,6 @@ class _FormItemsState extends State<FormItems> {
                 ),
               if (widget.label == 'Packing')
                 TemplateCard(
-                  title: 'Produk Jadi',
-                  icon: Icons.inventory_2_outlined,
-                  child: _buildFinishedMaterial(),
-                ),
-              if (widget.label == 'Packing')
-                TemplateCard(
                   title: 'Rincian Hasil Sortir',
                   icon: Icons.sort_outlined,
                   child: _buildSortingQty(),
@@ -1439,11 +1393,9 @@ class _FormItemsState extends State<FormItems> {
                                       ? '0'
                                       : val.toString();
 
-                              // widget.weightDozen.text = safeValue;
                               widget.handleChangeInput(
                                   'weight_per_dozen', safeValue);
 
-                              // final normalized = safeValue.replaceAll(',', '.');
                               setState(() {
                                 final input = double.tryParse(
                                       widget.weightDozen.text
@@ -1818,28 +1770,9 @@ Grades
                 isSorting: true,
                 initialValue: _grades[i]['qty']?.toString() ?? '0',
                 controller: widget.qtyItem[i],
-                handleChange:
-                    // (val) {
-                    //   if (val == null || val.trim().isEmpty) {
-                    //     widget.qty[i].text = '0';
-                    //     widget.qty[i].selection = TextSelection.fromPosition(
-                    //       TextPosition(offset: widget.qty[i].text.length),
-                    //     );
-                    //   }
-
-                    //   final safeValue =
-                    //       (val == null || val.trim().isEmpty) ? '0' : val;
-
-                    //   setState(() {
-                    //     _grades[i]['qty'] = safeValue;
-                    //   });
-
-                    //   widget.handleUpdateGrade(i, 'qty', safeValue);
-                    // },
-                    (val) {
-                  String clean = (val ?? '')
-                      .replaceAll('.', '') // hapus ribuan
-                      .replaceAll(',', ''); // hapus koma biar integer
+                handleChange: (val) {
+                  String clean =
+                      (val ?? '').replaceAll('.', '').replaceAll(',', '');
 
                   if (clean.isEmpty) clean = '0';
 
@@ -2310,53 +2243,6 @@ Tipe BS (BS-an)
           ),
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
-    );
-  }
-
-/*
-Produk Jadi
-*/
-  Widget _buildFinishedMaterial() {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-            vertical: 18,
-            horizontal: 12,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.data['items'] != null
-                          ? '${widget.data['items'][0]['item_code'] ?? '-'}'
-                          : '-',
-                    ),
-                    Text(
-                      widget.data['items'] != null
-                          ? '${widget.data['items'][0]['item_name'] ?? '-'}'
-                          : '-',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        )
-      ],
     );
   }
 }

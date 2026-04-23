@@ -387,7 +387,8 @@ class _DetailState extends State<Detail> {
       child: Scaffold(
         backgroundColor: Color(0xFFf9fafc),
         appBar: CustomAppBar(
-          title: 'Detail Proses ${widget.label}',
+          title:
+              'Detail Proses ${widget.label == 'Sorting' ? 'Sortir' : widget.label}',
           onReturn: () => Navigator.pop(context),
           canDelete: widget.canDelete,
           canUpdate: widget.canUpdate,

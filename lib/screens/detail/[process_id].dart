@@ -1091,7 +1091,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       woData = _workOrderService.dataView;
     });
 
-    // ✅ HITUNG TOTAL SORTING
     final totalSorting = _calculateTotalSortingFromWo();
 
     setState(() {

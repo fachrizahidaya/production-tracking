@@ -668,7 +668,7 @@ class TimelineItem extends StatelessWidget {
           SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Total Sorting',
+              'Total Sortir',
               style: TextStyle(
                 fontWeight: CustomTheme().fontWeight('bold'),
                 color: Colors.green[700],

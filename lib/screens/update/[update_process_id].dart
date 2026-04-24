@@ -67,6 +67,7 @@ class UpdateProcess extends StatefulWidget {
   final weightPerDozen;
   final weightGradeA;
   final finishedItemGrb;
+  final finishedItemGood;
 
   const UpdateProcess(
       {super.key,
@@ -116,7 +117,8 @@ class UpdateProcess extends StatefulWidget {
       this.totalWeight,
       this.weightPerDozen,
       this.weightGradeA,
-      this.finishedItemGrb});
+      this.finishedItemGrb,
+      this.finishedItemGood});
 
   @override
   State<UpdateProcess> createState() => _UpdateProcessState();
@@ -174,8 +176,9 @@ class _UpdateProcessState extends State<UpdateProcess> {
       dynamic greigeItemId;
 
       if (i == 0) {
-        greigeItemId =
-            widget.data?['work_orders']?['items']?[0]?['greige_item_id'];
+        greigeItemId = widget.finishedItemGood.isNotEmpty
+            ? widget.finishedItemGood[0]['value']
+            : null;
       } else if (i == 1) {
         greigeItemId = widget.finishedItemGrb.isNotEmpty
             ? widget.finishedItemGrb[0]['value']
@@ -2278,16 +2281,16 @@ Produk Jadi Compact (for table display)
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          item != null && item['item_code'] != null
-              ? item['item_code'].toString()
+          gradeLabel == 'A'
+              ? widget.finishedItemGood[0]['code']
               : gradeLabel == 'B'
                   ? widget.finishedItemGrb[0]['code']
                   : '-',
           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
         ),
         Text(
-          item != null && item['item_name'] != null
-              ? item['item_name'].toString()
+          gradeLabel == 'A'
+              ? widget.finishedItemGood[0]['label']
               : gradeLabel == 'B'
                   ? widget.finishedItemGrb[0]['label']
                   : '-',

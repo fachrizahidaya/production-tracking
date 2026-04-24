@@ -47,6 +47,7 @@ class _ProcessItemState extends State<ProcessItem> {
   bool shouldSkipProcess(String key) {
     final sortingStatus = getProcessStatus('sorting');
     final printingStatus = getProcessStatus('printing');
+
     final embroideryData = widget.allProcesses.firstWhere(
           (e) => e['key'] == 'embroidery',
           orElse: () => <String, dynamic>{},
@@ -59,18 +60,30 @@ class _ProcessItemState extends State<ProcessItem> {
         )['data'] ??
         [];
 
-    if (key == 'embroidery' || key == 'printing') {
-      if ((sortingStatus == 'Diproses' || sortingStatus == 'Selesai') &&
-          embroideryData.isEmpty &&
-          printingData.isEmpty) {
-        return true;
-      }
+    final bool isSortingDone =
+        sortingStatus == 'Diproses' || sortingStatus == 'Selesai';
+
+    final bool isPrintingDone =
+        printingStatus == 'Diproses' || printingStatus == 'Selesai';
+
+    /// ✅ RULE 1:
+    /// sorting jalan + embroidery & printing kosong → skip keduanya
+    if ((key == 'embroidery' || key == 'printing') &&
+        isSortingDone &&
+        embroideryData.isEmpty &&
+        printingData.isEmpty) {
+      return true;
     }
 
-    if (key == 'sorting') {
-      if (printingStatus == 'Diproses' || printingStatus == 'Selesai') {
-        return true;
-      }
+    /// ✅ RULE 2:
+    /// printing jalan → embroidery dilewati
+    if (key == 'embroidery' && isPrintingDone) {
+      return true;
+    }
+
+    /// (opsional, tetap dari logic kamu sebelumnya)
+    if (key == 'sorting' && isPrintingDone) {
+      return true;
     }
 
     return false;

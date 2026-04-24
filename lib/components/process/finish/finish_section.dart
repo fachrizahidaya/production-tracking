@@ -69,6 +69,8 @@ class FinishSection extends StatefulWidget {
   final finishedItem;
   final grades;
   final dyeingQty;
+  final finishedItemGrb;
+  final finishedItemGood;
 
   const FinishSection(
       {super.key,
@@ -127,7 +129,9 @@ class FinishSection extends StatefulWidget {
       this.weightGradeA,
       this.finishedItem,
       this.grades,
-      this.dyeingQty});
+      this.dyeingQty,
+      this.finishedItemGood,
+      this.finishedItemGrb});
 
   @override
   State<FinishSection> createState() => _FinishSectionState();
@@ -360,6 +364,8 @@ class _FinishSectionState extends State<FinishSection> {
       weightGradeA: widget.weightGradeA,
       finishedItem: widget.finishedItem,
       dyeingQty: widget.dyeingQty,
+      finishedItemGood: widget.finishedItemGood,
+      finishedItemGrb: widget.finishedItemGrb,
     );
   }
 }

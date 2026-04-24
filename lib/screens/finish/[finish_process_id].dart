@@ -118,6 +118,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   late List<dynamic> itemGradeOption = [];
   late List<dynamic> itemTypeOption = [];
   late List<dynamic> unitOption = [];
+  late List<dynamic> finishedItemGrb = [];
+  late List<dynamic> finishedItemGood = [];
 
   Map<String, dynamic> woData = {};
   Map<String, dynamic> data = {};
@@ -182,6 +184,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     await _handleFetchUnit();
     await _handleFetchItemType();
     await _handleFetchFinishedMaterial();
+    await _handleFetchFinishedGoodMaterial();
+    await _handleFetchFinishedGrbMaterial();
 
     setState(() {
       _firstLoading = false;
@@ -251,8 +255,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
       await service.fetchOptions(
         process: formatProcessLabel(widget.label),
-        colorCode: widget.label == 'Sorting' ? 'grb' : colorCode,
         baseCode: baseCode,
+        colorCode: widget.label == 'Sorting' ? 'grb' : colorCode,
       );
 
       final data = widget.getFinishedItemOptions != null
@@ -330,6 +334,86 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
     } finally {
       setState(() => _isFetchingFinishedMaterial = false);
+    }
+  }
+
+  Future<void> _handleFetchFinishedGrbMaterial() async {
+    setState(() {
+      _isFetchingFinishedMaterial = true;
+    });
+
+    final service = Provider.of<OptionItemService>(context, listen: false);
+
+    try {
+      String baseCode = '';
+
+      final itemCode = woData['items']?[0]?['item_code'] ?? '';
+
+      if (itemCode.isNotEmpty) {
+        final parts = itemCode.split('-');
+        baseCode = parts.first;
+      }
+
+      await service.fetchOptions(
+        process: 'sorting',
+        baseCode: baseCode,
+        colorCode: 'grb',
+      );
+
+      final data = service.dataListOption;
+
+      setState(() {
+        finishedItemGrb = data;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
+    } finally {
+      setState(() {
+        _isFetchingFinishedMaterial = false;
+      });
+    }
+  }
+
+  Future<void> _handleFetchFinishedGoodMaterial() async {
+    // setState(() {
+    //   _isFetchingFinishedMaterial = true;
+    // });
+
+    final service = Provider.of<OptionItemService>(context, listen: false);
+
+    try {
+      String baseCode = '';
+      String colorCode = '';
+
+      final itemCode = woData['items']?[0]?['item_code'] ?? '';
+
+      if (itemCode.isNotEmpty) {
+        final parts = itemCode.split('-');
+        baseCode = parts.first;
+        colorCode = parts.last;
+      }
+
+      await service.fetchOptions(
+        process: 'packing',
+        baseCode: baseCode,
+        colorCode: colorCode,
+      );
+
+      final data = service.dataListOption;
+
+      setState(() {
+        finishedItemGood = data;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
+    } finally {
+      // setState(() {
+      //   _isFetchingFinishedMaterial = false;
+      // });
     }
   }
 
@@ -1184,6 +1268,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               defectQty: _defectQtyControllers,
                               handleUpdateDefect: updateDefect,
                               finishedItem: finishedItemOption,
+                              finishedItemGood: finishedItemGood,
+                              finishedItemGrb: finishedItemGrb,
                             ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],

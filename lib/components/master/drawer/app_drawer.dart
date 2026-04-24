@@ -42,15 +42,20 @@ class _AppDrawerState extends State<AppDrawer> {
     final List<MenuItem> result = [];
 
     for (final menu in menus) {
+      if (menu.allowMobile == false) continue;
+
       if (menu.subMenuItems.isEmpty) {
         result.add(menu);
       } else {
         for (final sub in menu.subMenuItems) {
+          if (sub.allowMobile == false) continue;
+
           result.add(
             MenuItem(
               title: sub.title,
               route: sub.route,
               subMenuItems: const [],
+              allowMobile: sub.allowMobile,
             ),
           );
         }

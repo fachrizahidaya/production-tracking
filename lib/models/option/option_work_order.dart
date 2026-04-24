@@ -31,7 +31,7 @@ class OptionWorkOrder {
 }
 
 class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
-  final String baseUrl = '${dotenv.env['API_URL']}/wo/option';
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/wo/option';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
@@ -88,7 +88,7 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final token = prefs.getString('access_token');
       if (token == null) throw Exception('Access token is missing');
 
-      final uri = Uri.parse('${dotenv.env['API_URL']}/wo/option')
+      final uri = Uri.parse('${dotenv.env['API_URL_DEV']}/wo/option')
           .replace(queryParameters: {
         if (type != null && type.isNotEmpty) 'type': type,
         if (searchQuery.isNotEmpty) 'search': searchQuery,

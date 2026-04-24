@@ -1477,50 +1477,76 @@ class _FormItemsState extends State<FormItems> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Expanded(
-                          child: TextForm(
-                            label: 'Gramasi',
-                            isDisabled: true,
-                            isNumber: true,
-                            initialValue: widget.form['gsm']?.toString() ?? '0',
-                            controller: widget.gsm,
-                            handleChange: (value) {
-                              setState(() {
-                                widget.handleChangeInput('gsm', value);
-                              });
-                            },
+                          flex: 1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Gramasi (GSM)',
+                                style: TextStyle(
+                                  fontSize: CustomTheme().fontSize('sm'),
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              SizedBox(height: 6),
+                              Text(
+                                widget.gsm.text.isEmpty ? '0' : widget.gsm.text,
+                                style: TextStyle(
+                                  fontSize: CustomTheme().fontSize('md'),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Expanded(
-                          child: TextForm(
-                            label: 'Berat Grade A (KG)',
-                            req: false,
-                            isDisabled: true,
-                            isNumber: true,
-                            initialValue:
-                                widget.form['weight_grade_a']?.toString() ??
-                                    '0',
-                            controller: widget.weightGradeA,
-                            handleChange: (value) {
-                              setState(() {
-                                widget.handleChangeInput(
-                                    'weight_grade_a', value);
-                              });
-                            },
+                          flex: 1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Berat Grade A (KG)',
+                                style: TextStyle(
+                                  fontSize: CustomTheme().fontSize('sm'),
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              SizedBox(height: 6),
+                              Text(
+                                widget.weightGradeA.text.isEmpty
+                                    ? '0'
+                                    : widget.weightGradeA.text,
+                                style: TextStyle(
+                                  fontSize: CustomTheme().fontSize('md'),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Expanded(
-                          child: TextForm(
-                            label: 'Total Berat Kesuluruhan (KG)',
-                            isDisabled: true,
-                            isNumber: true,
-                            initialValue:
-                                widget.form['total_weight']?.toString() ?? '0',
-                            controller: widget.totalWeight,
-                            handleChange: (value) {
-                              setState(() {
-                                widget.handleChangeInput('total_weight', value);
-                              });
-                            },
+                          flex: 1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Total Berat Keseluruhan (KG)',
+                                style: TextStyle(
+                                  fontSize: CustomTheme().fontSize('sm'),
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              SizedBox(height: 6),
+                              Text(
+                                widget.totalWeight.text.isEmpty
+                                    ? '0'
+                                    : widget.totalWeight.text,
+                                style: TextStyle(
+                                  fontSize: CustomTheme().fontSize('md'),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ].separatedBy(CustomTheme().hGap('xl')),

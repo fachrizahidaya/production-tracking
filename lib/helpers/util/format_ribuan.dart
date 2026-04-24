@@ -1,4 +1,4 @@
-import 'package:intl/intl.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 final NumberFormat formatter = NumberFormat("#,##0.00", "en_US");
 

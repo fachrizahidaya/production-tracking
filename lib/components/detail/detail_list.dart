@@ -231,8 +231,7 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 icon: Icons.local_laundry_service_outlined,
                 label: 'Mesin',
                 value:
-                    '${widget.data['machine']?['code']} - ${widget.data['machine']?['name']}' ??
-                        '-',
+                    '${widget.data['machine']?['code']} - ${widget.data['machine']?['name']}',
                 isTablet: isTablet,
               ),
             ),

@@ -66,6 +66,8 @@ class ListForm extends StatefulWidget {
   final weightGradeA;
   final finishedItem;
   final dyeingQty;
+  final finishedItemGrb;
+  final finishedItemGood;
 
   const ListForm(
       {super.key,
@@ -129,7 +131,9 @@ class ListForm extends StatefulWidget {
       this.packingQty,
       this.weightGradeA,
       this.finishedItem,
-      this.dyeingQty});
+      this.dyeingQty,
+      this.finishedItemGood,
+      this.finishedItemGrb});
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -311,6 +315,8 @@ class _ListFormState extends State<ListForm> {
         weightGradeA: widget.weightGradeA,
         finishedItem: widget.finishedItem,
         dyeingQty: widget.dyeingQty,
+        finishedItemGood: widget.finishedItemGood,
+        finishedItemGrb: widget.finishedItemGrb,
       ),
     );
   }

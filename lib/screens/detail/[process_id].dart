@@ -140,6 +140,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   late List<dynamic> machineOption = [];
   late List<dynamic> itemTypeOption = [];
   late List<dynamic> finishedItemGrb = [];
+  late List<dynamic> finishedItemGood = [];
 
   late List<dynamic> _grades;
   late List<Map<String, dynamic>> _defects;
@@ -276,6 +277,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     await _handleFetchItemType();
     await _handleFetchItemGrade();
     await _handleFetchFinishedGrbMaterial();
+    await _handleFetchFinishedGoodMaterial();
     _syncGradesWithOptions();
     _syncDefectsWithOptions();
   }
@@ -533,6 +535,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           totalWeight: _totalWeightController,
           weightGradeA: _weightGradeAController,
           finishedItemGrb: finishedItemGrb,
+          finishedItemGood: finishedItemGood,
         ),
       ),
     );
@@ -775,6 +778,47 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       setState(() {
         _isFetchingFinishedMaterial = false;
       });
+    }
+  }
+
+  Future<void> _handleFetchFinishedGoodMaterial() async {
+    // setState(() {
+    //   _isFetchingFinishedMaterial = true;
+    // });
+
+    final service = Provider.of<OptionItemService>(context, listen: false);
+
+    try {
+      String baseCode = '';
+      String colorCode = '';
+
+      final itemCode = woData['items']?[0]?['item_code'] ?? '';
+
+      if (itemCode.isNotEmpty) {
+        final parts = itemCode.split('-');
+        baseCode = parts.first;
+        colorCode = parts.last;
+      }
+
+      await service.fetchOptions(
+        process: 'packing',
+        baseCode: baseCode,
+        colorCode: colorCode,
+      );
+
+      final data = service.dataListOption;
+
+      setState(() {
+        finishedItemGood = data;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
+    } finally {
+      // setState(() {
+      //   _isFetchingFinishedMaterial = false;
+      // });
     }
   }
 

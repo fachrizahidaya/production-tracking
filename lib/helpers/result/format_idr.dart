@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 String formatIdr(double value) {
   final parts = value.toStringAsFixed(2).split('.');
   final integerPart = parts[0];

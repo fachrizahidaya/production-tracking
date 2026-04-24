@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, prefer_final_fields
+// ignore_for_file: use_build_context_synchronously, prefer_final_fields, deprecated_member_use
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

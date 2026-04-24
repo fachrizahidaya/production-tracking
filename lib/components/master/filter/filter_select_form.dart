@@ -5,12 +5,12 @@ import 'package:textile_tracking/components/master/theme.dart';
 class FilterSelectForm extends StatefulWidget {
   final String label;
   final VoidCallback onTap;
-  final List<Map<String, dynamic>> selectedItems;
+  final List<dynamic> selectedItems;
   final bool required;
   final bool? isDisabled;
-  final Function(Map<String, dynamic>)? onRemoveItem;
+  final Function(Map<dynamic, dynamic>)? onRemoveItem;
   final VoidCallback? onClearAll;
-  final Function(List<Map<String, dynamic>>) onSelectionChanged;
+  final Function(List<dynamic>) onSelectionChanged;
 
   const FilterSelectForm(
       {super.key,
@@ -32,14 +32,12 @@ class _FilterSelectFormState extends State<FilterSelectForm> {
   Widget build(BuildContext context) {
     return GroupForm(
       label: widget.label,
+      req: widget.required,
       formControl: GestureDetector(
         onTap: widget.isDisabled == true ? null : widget.onTap,
         child: Container(
           padding: CustomTheme().padding('card'),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.grey, width: 1)),
+          decoration: CustomTheme().inputStaticDecorationRequired(),
           child: widget.selectedItems.isEmpty
               ? Row(
                   children: [
@@ -65,14 +63,21 @@ class _FilterSelectFormState extends State<FilterSelectForm> {
                       children: [
                         Wrap(
                           spacing: 8,
-                          runSpacing: 4,
+                          runSpacing: 8,
                           children: widget.selectedItems.map((item) {
-                            return InputChip(
-                              label: Text(item['label']),
-                              onDeleted: () {
-                                widget.onRemoveItem?.call(item);
-                                widget.onSelectionChanged(widget.selectedItems);
-                              },
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[50],
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.grey[200]!),
+                              ),
+                              child: Text(item['label']),
+                              // onDeleted: () {
+                              //   widget.onRemoveItem?.call(item);
+                              //   widget.onSelectionChanged(widget.selectedItems);
+                              // },
                             );
                           }).toList(),
                         ),
@@ -84,7 +89,6 @@ class _FilterSelectFormState extends State<FilterSelectForm> {
                 ),
         ),
       ),
-      req: widget.required,
     );
   }
 }

@@ -41,27 +41,25 @@ class _SortingDetailState extends State<SortingDetail> {
           Provider.of<SortingService>(context, listen: false)
               .deleteItem(context, id, isLoading),
       modelBuilder: (form, data) => Sorting(
-          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          weight_unit_id:
-              int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-          length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? ''),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
-          unit_id: int.tryParse(form['unit_id']?.toString() ?? ''),
-          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-          qty: form['qty'] ?? data['qty'],
-          weight: form['weight'] ?? data['weight'],
-          width: form['width'] ?? data['width'],
-          length: form['length'] ?? data['length'],
-          notes: form['notes'] ?? data['notes'],
-          attachments: [
-            ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
-            ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
-          ],
-          grades: [
-            ...List<Map<String, dynamic>>.from(data['grades'] ?? []),
-            ...List<Map<String, dynamic>>.from(form['grades'] ?? []),
-          ]),
+        wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+        weight_unit_id: int.tryParse(form['weight_unit_id']?.toString() ?? ''),
+        unit_id: int.tryParse(form['unit_id']?.toString() ?? ''),
+        machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+        qty: form['qty'] ?? data['qty'],
+        weight: form['weight'] ?? data['weight'],
+        notes: form['notes'] ?? data['notes'],
+        attachments: [
+          ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
+          ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
+        ],
+        grades: form['grades'] ?? data['grades'],
+        greige_item_id: int.tryParse(form['greige_item_id']?.toString() ?? ''),
+        defects: form['defects'] ?? data['defects'],
+        combing: form['combing'] ?? data['combing'],
+        spraying: form['spraying'] ?? data['spraying'],
+        rework_long_hemming:
+            form['rework_long_hemming'] ?? data['rework_long_hemming'],
+      ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/sortings',
@@ -81,9 +79,6 @@ class _SortingDetailState extends State<SortingDetail> {
           machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
           weight_unit_id:
               int.tryParse(form['weight_unit_id']?.toString() ?? '2'),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? '3'),
-          length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? '3'),
           notes: form['notes'],
           start_time: form['start_time'],
           end_time: form['end_time'],
@@ -91,6 +86,12 @@ class _SortingDetailState extends State<SortingDetail> {
           end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
           attachments: form['attachments'],
           grades: form['grades'],
+          defects: form['defects'],
+          rework_long_hemming: form['rework_long_hemming'],
+          spraying: form['spraying'],
+          combing: form['combing'],
+          greige_item_id:
+              int.tryParse(form['greige_item_id']?.toString() ?? ''),
         );
 
         final message =
@@ -102,7 +103,7 @@ class _SortingDetailState extends State<SortingDetail> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showAlertDialog(
               context: context,
-              title: 'Sorting Selesai',
+              title: 'Sortir Selesai',
               child: buildBoldMessage(
                 message: message,
                 prefix: "SRT",

@@ -54,6 +54,21 @@ class FinishSection extends StatefulWidget {
   final onGradeChanged;
   final dyeingLotNo;
   final handleSelectFinishedMaterial;
+  final weightGood;
+  final weightDefect;
+  final woData;
+  final packingQty;
+  final combing;
+  final spraying;
+  final reworkLongHemming;
+  final itemTypeOption;
+  final defects;
+  final defectQty;
+  final handleUpdateDefect;
+  final weightGradeA;
+  final finishedItem;
+  final grades;
+  final dyeingQty;
 
   const FinishSection(
       {super.key,
@@ -97,7 +112,22 @@ class FinishSection extends StatefulWidget {
       this.dyeingLotNo,
       this.forHemming,
       this.forSewing,
-      this.handleSelectFinishedMaterial});
+      this.handleSelectFinishedMaterial,
+      this.weightDefect,
+      this.weightGood,
+      this.woData,
+      this.packingQty,
+      this.combing,
+      this.spraying,
+      this.reworkLongHemming,
+      this.itemTypeOption,
+      this.defects,
+      this.defectQty,
+      this.handleUpdateDefect,
+      this.weightGradeA,
+      this.finishedItem,
+      this.grades,
+      this.dyeingQty});
 
   @override
   State<FinishSection> createState() => _FinishSectionState();
@@ -316,6 +346,20 @@ class _FinishSectionState extends State<FinishSection> {
       forHemming: widget.forHemming,
       forSewing: widget.forSewing,
       handleSelectFinishedMaterial: widget.handleSelectFinishedMaterial,
+      weightDefect: widget.weightDefect,
+      weightGood: widget.weightGood,
+      woData: widget.woData,
+      packingQty: widget.packingQty,
+      combing: widget.combing,
+      spraying: widget.spraying,
+      reworkLongHemming: widget.reworkLongHemming,
+      itemTypeOption: widget.itemTypeOption,
+      defects: widget.defects,
+      defectQty: widget.defectQty,
+      handleUpdateDefect: widget.handleUpdateDefect,
+      weightGradeA: widget.weightGradeA,
+      finishedItem: widget.finishedItem,
+      dyeingQty: widget.dyeingQty,
     );
   }
 }

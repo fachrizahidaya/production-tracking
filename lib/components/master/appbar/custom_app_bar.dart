@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/button/action_button.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -16,7 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final handleFinish;
   final handleLogout;
   final id;
-  final String? label;
+  final label;
   final user;
   final deleteStatus;
   final updateStatus;
@@ -125,23 +126,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ],
           ),
-        if (updateStatus == true && (label != 'Sorting' || label != 'Packing'))
-          IconButton(
-            icon: Icon(Icons.edit_outlined),
-            onPressed: () {
-              handleUpdate();
-            },
-          ),
-        if (deleteStatus == true)
-          IconButton(
-            icon: Icon(
-              Icons.delete_outlined,
-              color: CustomTheme().buttonColor('danger'),
-            ),
-            onPressed: () {
-              handleDelete(id.toString());
-            },
-          ),
+        Row(
+          children: [
+            if (updateStatus == true)
+              ActionTextButton(
+                label: 'Edit',
+                onPressed: handleUpdate,
+              ),
+            if (deleteStatus == true)
+              ActionTextButton(
+                label: 'Hapus',
+                textColor: Colors.red,
+                borderColor: Colors.red,
+                onPressed: () => handleDelete(id.toString()),
+              ),
+          ],
+        ),
         ...?actions
       ],
       bottom: PreferredSize(

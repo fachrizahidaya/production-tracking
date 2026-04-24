@@ -25,6 +25,11 @@ class InfoTab extends StatefulWidget {
 
 class _InfoTabState extends State<InfoTab> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: _buildWorkOrderCard(widget.isTablet),
@@ -94,17 +99,6 @@ class _InfoTabState extends State<InfoTab> {
                         ],
                       ],
                     ),
-                    Text(
-                      widget.data['created_at'] != null
-                          ? 'Dibuat oleh ${widget.data['user']['name']} pada ${DateFormat("dd MMM yyyy, HH.mm").format(DateTime.parse(widget.data['created_at']))}'
-                          : DateFormat("dd MMM yyyy")
-                              .format(DateTime.parse(widget.data['wo_date'])),
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        color: Colors.white.withOpacity(0.8),
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -128,8 +122,18 @@ class _InfoTabState extends State<InfoTab> {
         children: [
           Expanded(
             child: _buildQuickInfoItem(
+              icon: Icons.calendar_month_outlined,
+              label: 'Tanggal WO',
+              value: DateFormat("dd MMM yyyy")
+                  .format(DateTime.parse(widget.data['wo_date'])),
+              isTablet: isTablet,
+            ),
+          ),
+          _buildVerticalDivider(),
+          Expanded(
+            child: _buildQuickInfoItem(
               icon: Icons.scale_outlined,
-              label: 'Qty Greige',
+              label: 'Berat Greige',
               value:
                   '${formatNumber(widget.data['greige_qty'])} ${widget.data['greige_unit']?['code']}',
               isTablet: isTablet,
@@ -141,6 +145,17 @@ class _InfoTabState extends State<InfoTab> {
               icon: Icons.access_time_outlined,
               label: 'Proses saat ini',
               value: widget.data['current_process'] ?? '-',
+              isTablet: isTablet,
+            ),
+          ),
+          _buildVerticalDivider(),
+          Expanded(
+            child: _buildQuickInfoItem(
+              icon: Icons.person_outlined,
+              label: 'Dibuat Oleh',
+              value: widget.data['user'] != null
+                  ? widget.data['user']['name']
+                  : '-',
               isTablet: isTablet,
             ),
           ),

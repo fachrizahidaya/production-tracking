@@ -11,8 +11,6 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_bytes.dart';
-import 'package:textile_tracking/screens/finish/%5Bfinish_process_id%5D.dart';
-import 'package:textile_tracking/screens/finish/index.dart';
 
 class Detail extends StatefulWidget {
   final data;
@@ -264,7 +262,7 @@ class _DetailState extends State<Detail> {
     final existingAttachments =
         (widget.data['attachments'] ?? []) as List<dynamic>;
 
-    final baseUrl = dotenv.env['IMAGE_URL'] ?? '';
+    final baseUrl = dotenv.env['IMAGE_URL_DEV'] ?? '';
 
     return existingAttachments.map<Widget>((item) {
       final bool isNew = item.containsKey('path');
@@ -389,7 +387,8 @@ class _DetailState extends State<Detail> {
       child: Scaffold(
         backgroundColor: Color(0xFFf9fafc),
         appBar: CustomAppBar(
-          title: 'Detail Proses ${widget.label}',
+          title:
+              'Detail Proses ${widget.label == 'Sorting' ? 'Sortir' : widget.label}',
           onReturn: () => Navigator.pop(context),
           canDelete: widget.canDelete,
           canUpdate: widget.canUpdate,
@@ -398,52 +397,53 @@ class _DetailState extends State<Detail> {
           id: widget.data['id'],
           updateStatus: widget.data['can_update'],
           deleteStatus: widget.data['can_delete'],
+          label: widget.label,
           actions: [
-            if (widget.data['can_update'] == true)
-              IconButton(
-                icon: const Icon(Icons.task_alt_outlined, color: Colors.orange),
-                onPressed: () {
-                  final String woId = widget.data['wo_id'].toString();
-                  final String processId = widget.data['id'].toString();
+            // if (widget.data['can_update'] == true)
+            // IconButton(
+            //   icon: const Icon(Icons.task_alt_outlined, color: Colors.orange),
+            //   onPressed: () {
+            //     final String woId = widget.data['wo_id'].toString();
+            //     final String processId = widget.data['id'].toString();
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => FinishProcess(
-                        title: "Selesai ${widget.label}",
-                        manualWoId: woId,
-                        manualProcessId: processId,
-                        formPageBuilder: (context, id, processId, data, form,
-                            handleSubmit, handleChangeInput) {
-                          return FinishProcessManual(
-                            id: woId,
-                            processId: processId,
-                            idProcess: widget.idProcess,
-                            data: widget.data,
-                            form: form,
-                            handleSubmit: widget.handleSubmit,
-                            handleChangeInput: widget.handleChangeInput,
-                            title: 'Selesai ${widget.label}',
-                            label: widget.label,
-                            fetchWorkOrder: widget.fetchFinish,
-                            getWorkOrderOptions: (service) =>
-                                service.dataListOption,
-                            processService: widget.processService,
-                            forDyeing: widget.forDyeing,
-                            withItemGrade: widget.withItemGrade,
-                            withQtyAndWeight: widget.withQtyAndWeight,
-                            forPacking: widget.forPacking,
-                            fetchItemGrade: widget.fetchItemGrade,
-                            getItemGradeOptions: (service) =>
-                                service.dataListOption,
-                            itemGradeOption: widget.itemGradeOption,
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                },
-              ),
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (_) => FinishProcess(
+            //           title: "Selesai ${widget.label}",
+            //           manualWoId: woId,
+            //           manualProcessId: processId,
+            //           formPageBuilder: (context, id, processId, data, form,
+            //               handleSubmit, handleChangeInput) {
+            //             return FinishProcessManual(
+            //               id: woId,
+            //               processId: processId,
+            //               idProcess: widget.idProcess,
+            //               data: widget.data,
+            //               form: form,
+            //               handleSubmit: widget.handleSubmit,
+            //               handleChangeInput: widget.handleChangeInput,
+            //               title: 'Selesai ${widget.label}',
+            //               label: widget.label,
+            //               fetchWorkOrder: widget.fetchFinish,
+            //               getWorkOrderOptions: (service) =>
+            //                   service.dataListOption,
+            //               processService: widget.processService,
+            //               forDyeing: widget.forDyeing,
+            //               withItemGrade: widget.withItemGrade,
+            //               withQtyAndWeight: widget.withQtyAndWeight,
+            //               forPacking: widget.forPacking,
+            //               fetchItemGrade: widget.fetchItemGrade,
+            //               getItemGradeOptions: (service) =>
+            //                   service.dataListOption,
+            //               itemGradeOption: widget.itemGradeOption,
+            //             );
+            //           },
+            //         ),
+            //       ),
+            //     );
+            //   },
+            // ),
           ],
         ),
         body: SafeArea(

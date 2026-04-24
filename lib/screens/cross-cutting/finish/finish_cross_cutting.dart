@@ -38,6 +38,7 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
     'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     'attachments': [],
+    'machine_ids': [],
     'no_wo': '',
     'no_cc': '',
     'nama_mesin': '',
@@ -45,6 +46,7 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
     'nama_satuan_panjang': '',
     'nama_satuan_lebar': '',
     'nama_satuan': '',
+    'nama_satuan_item': '',
   };
 
   @override
@@ -67,6 +69,7 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
   Widget build(BuildContext context) {
     return FinishProcess(
       title: 'Selesai Cross Cutting',
+      label: 'Cross Cutting',
       fetchWorkOrder: (service) async =>
           await service.fetchCuttingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
@@ -85,25 +88,17 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final crossCutting = CrossCutting(
-          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-          unit_id: int.tryParse(form['item_unit_id']?.toString() ?? ''),
-          weight_unit_id:
-              int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
-          length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? ''),
-          qty: form['item_qty'],
-          weight: form['weight'],
-          width: form['width'],
-          length: form['length'],
-          notes: form['notes'],
-          start_time: form['start_time'],
-          end_time: form['end_time'],
-          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
-          attachments: form['attachments'],
-        );
+            wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+            machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+            unit_id: int.tryParse(form['item_unit_id']?.toString() ?? ''),
+            qty: form['item_qty'],
+            notes: form['notes'],
+            start_time: form['start_time'],
+            end_time: form['end_time'],
+            start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+            end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+            attachments: form['attachments'],
+            machine_ids: form['machine_ids']);
 
         final message =
             await Provider.of<CrossCuttingService>(context, listen: false)

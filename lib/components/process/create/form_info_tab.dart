@@ -46,6 +46,11 @@ class FormInfoTab extends StatefulWidget {
 
 class _FormInfoTabState extends State<FormInfoTab> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (widget.isLoading) {
       return Center(
@@ -74,6 +79,7 @@ class _FormInfoTabState extends State<FormInfoTab> {
                 withMaklonOrMachine: widget.withMaklonOrMachine,
                 withOnlyMaklon: widget.withOnlyMaklon,
                 withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
+                label: widget.label,
               ),
               if (widget.form?['wo_id'] != null) ...[
                 InfoTab(
@@ -81,11 +87,11 @@ class _FormInfoTabState extends State<FormInfoTab> {
                   label: widget.label,
                   isTablet: isTablet,
                 ),
-                NoteItem(
+                ItemTab(
                   data: widget.data,
                   label: widget.label,
                 ),
-                ItemTab(
+                NoteItem(
                   data: widget.data,
                   label: widget.label,
                 ),

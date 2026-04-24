@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/process/create/tab_section.dart';
+import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -191,49 +192,71 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
           options: workOrderOption,
           selected: widget.form?['wo_id']?.toString() ?? '',
           handleChangeValue: (selected) {
+            final woId = selected['value']?.toString();
+            final processValue = selected[widget.idProcess];
+
             setState(() {
-              widget.form?['wo_id'] = selected['value'].toString();
-              widget.form?['no_wo'] = selected['label'].toString();
-              processId = selected[widget.idProcess].toString();
+              widget.form?['wo_id'] = woId;
+              widget.form?['no_wo'] = selected['label']?.toString();
             });
-            _getDataView(selected['value'].toString());
-            _getProcessView(selected[widget.idProcess].toString());
+
+            if (woId != null && woId.isNotEmpty) {
+              _getDataView(woId);
+            }
+
+            if (processValue != null && processValue.toString().isNotEmpty) {
+              processId = processValue.toString();
+              _getProcessView(processId);
+            }
           },
         );
       },
     );
   }
 
-  void _selectMachine() {
-    if (_isFetchingMachine) {
-      showDialog(
+  Future<void> _selectMachine() async {
+    if (widget.label == 'Long Hemming' ||
+        widget.label == 'Cross Cutting' ||
+        widget.label == 'Sewing') {
+      showSelectDialog(
         context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
+        title: 'Mesin',
+        isFetching: _isFetchingMachine,
+        option: machineOption,
+        handleChangeValue: (selected) {
+          setState(() {
+            final machines = widget.form?['machines'] as List? ?? [];
 
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      useSafeArea: true,
-      builder: (BuildContext context) {
-        return SelectDialog(
-          label: 'Mesin',
-          options: machineOption,
-          selected: widget.form?['machine_id']?.toString() ?? '',
-          handleChangeValue: (selected) {
-            setState(() {
-              widget.form?['machine_id'] = selected['value'].toString();
-              widget.form?['nama_mesin'] = selected['label'].toString();
-            });
-          },
-        );
-      },
-    );
+            final isExist =
+                machines.any((e) => e['value'] == selected['value']);
+
+            if (!isExist) {
+              machines.add({
+                'value': selected['value'],
+                'label': selected['label'],
+              });
+            }
+
+            widget.form?['machines'] = machines;
+          });
+        },
+        selected: '',
+      );
+    } else {
+      showSelectDialog(
+        context: context,
+        title: 'Mesin',
+        isFetching: _isFetchingMachine,
+        option: machineOption,
+        handleChangeValue: (selected) {
+          setState(() {
+            widget.form?['machine_id'] = selected['value'].toString();
+            widget.form?['nama_mesin'] = selected['label'].toString();
+          });
+        },
+        selected: widget.form?['machine_id']?.toString() ?? '',
+      );
+    }
   }
 
   @override

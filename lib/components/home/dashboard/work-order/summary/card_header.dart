@@ -33,6 +33,8 @@ class CardHeader extends StatelessWidget {
 
     final total = _getFilteredTotal(summary);
 
+    final displayTitle = data['name'] == 'Sorting' ? 'Sortir' : data['name'];
+
     return InkWell(
       onTap: () {
         final String name = data['name']?.toString() ?? '';
@@ -85,7 +87,7 @@ class CardHeader extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    data['name'] ?? '-',
+                    displayTitle ?? '-',
                     style: TextStyle(
                       fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
                       fontWeight: CustomTheme().fontWeight('bold'),

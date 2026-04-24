@@ -42,6 +42,10 @@ class _FinishSortingState extends State<FinishSorting> {
     'nama_satuan_panjang': '',
     'nama_satuan_lebar': '',
     'nama_satuan': '',
+    'combing': '',
+    'spraying': '',
+    'rework_long_hemming': '',
+    'wo_data': null,
   };
 
   @override
@@ -63,10 +67,13 @@ class _FinishSortingState extends State<FinishSorting> {
   @override
   Widget build(BuildContext context) {
     return FinishProcess(
-      title: 'Selesai Sorting',
+      title: 'Selesai Sortir',
+      label: 'Sorting',
       fetchWorkOrder: (service) async =>
           await service.fetchSortingFinishOptions(),
+      fetchFinishedItem: (service) async => await service.fetchOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
+      getFinishedItemOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput) =>
           FinishSortingManual(
@@ -86,9 +93,6 @@ class _FinishSortingState extends State<FinishSorting> {
           machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
           weight_unit_id:
               int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
-          length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? ''),
           notes: form['notes'],
           start_time: form['start_time'],
           end_time: form['end_time'],
@@ -96,6 +100,10 @@ class _FinishSortingState extends State<FinishSorting> {
           end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
           attachments: form['attachments'],
           grades: form['grades'],
+          defects: form['defects'],
+          combing: form['combing'],
+          spraying: form['spraying'],
+          rework_long_hemming: form['rework_long_hemming'],
         );
 
         final message =
@@ -107,7 +115,7 @@ class _FinishSortingState extends State<FinishSorting> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showAlertDialog(
               context: context,
-              title: 'Sorting Selesai',
+              title: 'Sortir Selesai',
               child: buildBoldMessage(
                 message: message,
                 prefix: "SRT",

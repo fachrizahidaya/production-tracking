@@ -36,30 +36,24 @@ class _PackingDetailState extends State<PackingDetail> {
       service: Provider.of<PackingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<PackingService>(context, listen: false)
-              .updateItem(context, id, item, isLoading),
+              .updateItemPacking(context, id, item, isLoading),
       handleDeleteService: (context, id, isLoading) =>
           Provider.of<PackingService>(context, listen: false)
               .deleteItem(context, id, isLoading),
       modelBuilder: (form, data) => Packing(
           wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          weight_unit_id:
-              int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-          length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? ''),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
-          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-          weight: form['weight'] ?? data['weight'],
-          width: form['width'] ?? data['width'],
-          length: form['length'] ?? data['length'],
           notes: form['notes'] ?? data['notes'],
-          attachments: [
-            ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
-            ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
-          ],
-          grades: [
-            ...List<Map<String, dynamic>>.from(data['grades'] ?? []),
-            ...List<Map<String, dynamic>>.from(form['grades'] ?? []),
-          ]),
+          attachments: form['attachments'] ?? data['attachments'],
+          grades: form['grades'] ?? data['grades'],
+          unit_id: int.tryParse(form['unit_id']?.toString() ?? ''),
+          qty: form['qty'] ?? data['qty'],
+          gsm: form['gsm'] ?? data['gsm'],
+          total_weight: form['total_weight'] ?? data['total_weight'],
+          weight_per_dozen:
+              form['weight_per_dozen'] ?? data['weight_per_dozen'],
+          weight_grade_a: form['weight_grade_a'] ?? data['weight_grade_a'],
+          greige_item_id:
+              int.tryParse(form['greige_item_id']?.toString() ?? '')),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/packings',
@@ -76,12 +70,6 @@ class _PackingDetailState extends State<PackingDetail> {
       handleSubmitToService: (context, id, form, isLoading) async {
         final packing = Packing(
           wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-          weight_unit_id:
-              int.tryParse(form['weight_unit_id']?.toString() ?? '2'),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? '3'),
-          length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? '3'),
           notes: form['notes'],
           start_time: form['start_time'],
           end_time: form['end_time'],
@@ -92,6 +80,11 @@ class _PackingDetailState extends State<PackingDetail> {
           weight_per_dozen: form['weight_per_dozen'],
           gsm: form['gsm'],
           total_weight: form['total_weight'],
+          qty: form['qty'],
+          unit_id: int.tryParse(form['unit_id']?.toString() ?? '1'),
+          greige_item_id:
+              int.tryParse(form['greige_item_id']?.toString() ?? ''),
+          weight_grade_a: form['weight_grade_a'],
         );
 
         final message =

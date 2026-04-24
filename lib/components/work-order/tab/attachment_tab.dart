@@ -32,7 +32,7 @@ class _AttachmentTabState extends State<AttachmentTab> {
     final existingAttachments =
         (widget.existingAttachment ?? []) as List<dynamic>;
 
-    final baseUrl = dotenv.env['IMAGE_URL'] ?? '';
+    final baseUrl = dotenv.env['IMAGE_URL_DEV'] ?? '';
 
     return existingAttachments.map<Widget>((item) {
       final bool isNew = item.containsKey('path');

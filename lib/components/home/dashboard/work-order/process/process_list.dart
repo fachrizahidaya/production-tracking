@@ -85,10 +85,10 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
     }
 
     if (_expandedIndex != null) {
-      return 2480;
+      return 3400;
     }
 
-    return 1200;
+    return 1700;
   }
 
   @override

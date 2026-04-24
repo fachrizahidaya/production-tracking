@@ -180,6 +180,15 @@ class _SelectDialogState extends State<SelectDialog> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  if (widget.isAnyAdditionalData)
+                                    Text(
+                                      '${item["code"]}',
+                                      style: TextStyle(
+                                        fontWeight: isSelected
+                                            ? FontWeight.w800
+                                            : FontWeight.w400,
+                                      ),
+                                    ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -199,15 +208,6 @@ class _SelectDialogState extends State<SelectDialog> {
                                             color: Colors.green, size: 20),
                                     ],
                                   ),
-                                  if (widget.isAnyAdditionalData)
-                                    Text(
-                                      '${item["code"]}',
-                                      style: TextStyle(
-                                          fontWeight: isSelected
-                                              ? FontWeight.w800
-                                              : FontWeight.w400,
-                                          color: Colors.grey),
-                                    ),
                                 ],
                               ),
                             ),

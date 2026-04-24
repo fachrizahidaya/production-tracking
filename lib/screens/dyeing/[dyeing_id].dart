@@ -38,6 +38,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Dyeing',
+      isMultiMachine: false,
       service: Provider.of<DyeingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<DyeingService>(context, listen: false)
@@ -74,7 +75,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
       withMaklon: false,
       forDyeing: true,
       getMachineOptions: (service) => service.dataListOption,
-      fetchMachine: (service) => service.fetchOptionsDyeing(),
+      fetchMachine: (service, _) => service.fetchOptionsDyeing(),
       idProcess: 'dyeing_id',
       processService: _dyeingService,
       forPacking: false,

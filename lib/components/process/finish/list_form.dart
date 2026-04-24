@@ -51,6 +51,21 @@ class ListForm extends StatefulWidget {
   final onGradeChanged;
   final dyeingLotNo;
   final handleSelectFinishedMaterial;
+  final weightGood;
+  final weightDefect;
+  final woData;
+  final reworkLongHemming;
+  final combing;
+  final spraying;
+  final itemTypeOption;
+  final defects;
+  final defectQty;
+  final handleSelectItemType;
+  final handleUpdateDefect;
+  final packingQty;
+  final weightGradeA;
+  final finishedItem;
+  final dyeingQty;
 
   const ListForm(
       {super.key,
@@ -99,7 +114,22 @@ class ListForm extends StatefulWidget {
       this.dyeingLotNo,
       this.forHemming,
       this.forSewing,
-      this.handleSelectFinishedMaterial});
+      this.handleSelectFinishedMaterial,
+      this.weightDefect,
+      this.weightGood,
+      this.woData,
+      this.reworkLongHemming,
+      this.combing,
+      this.spraying,
+      this.itemTypeOption,
+      this.defects,
+      this.defectQty,
+      this.handleSelectItemType,
+      this.handleUpdateDefect,
+      this.packingQty,
+      this.weightGradeA,
+      this.finishedItem,
+      this.dyeingQty});
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -107,13 +137,20 @@ class ListForm extends StatefulWidget {
 
 class _ListFormState extends State<ListForm> {
   late List<Map<String, dynamic>> _grades;
+  late List<Map<String, dynamic>> _defects;
 
   @override
   void initState() {
     _grades = (widget.form['grades'] ?? [])
         .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
         .toList();
-    _syncGradesWithOptions();
+    _defects = (widget.defects ?? [])
+        .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
+        .toList();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _syncGradesWithOptions();
+      _syncDefectsWithOptions();
+    });
     super.initState();
   }
 
@@ -145,6 +182,7 @@ class _ListFormState extends State<ListForm> {
         'unit_id': existing['unit_id'] ?? 1,
         'notes': existing['notes'] ?? '',
         'qty': existing['qty'] ?? '0',
+        'greige_item_id': existing['greige_item_id'],
       });
     }
 
@@ -156,6 +194,49 @@ class _ListFormState extends State<ListForm> {
         widget.handleChangeInput('grades', _grades);
       }
     });
+  }
+
+  void _syncDefectsWithOptions() {
+    /// ✅ ONLY KEEP EXISTING DEFECTS (don't auto-create all types)
+    final List<Map<String, dynamic>> updated = [];
+
+    for (var defect in _defects) {
+      // Extract defect type ID from nested structure or from flat structure
+      final defectId =
+          defect['type']?['id'] ?? defect['defect_type_id'] ?? defect['id'];
+
+      // Check if this defect type exists in master data
+      final exists = (widget.itemTypeOption ?? []).firstWhere(
+        (type) => type['id'].toString() == defectId.toString(),
+        orElse: () => <String, dynamic>{},
+      );
+
+      // Only keep if exists in master data
+      if (exists.isNotEmpty) {
+        updated.add({
+          'defect_type_id': defectId,
+          'qty': defect['qty'] ?? '0',
+        });
+      }
+    }
+
+    setState(() {
+      _defects = updated;
+      widget.form['defects'] = _defects;
+
+      // Re-initialize defect qty controllers to match synced defects
+      for (var controller in widget.defectQty) {
+        controller.dispose();
+      }
+      widget.defectQty.clear();
+      for (var defect in _defects) {
+        widget.defectQty.add(
+          TextEditingController(text: defect['qty']?.toString() ?? '0'),
+        );
+      }
+    });
+
+    widget.handleChangeInput('defects', _defects);
   }
 
   void _updateGrade(int index, String key, dynamic value) {
@@ -215,6 +296,21 @@ class _ListFormState extends State<ListForm> {
         forSewing: widget.forSewing,
         forHemming: widget.forHemming,
         handleSelectFinishedMaterial: widget.handleSelectFinishedMaterial,
+        weightDefect: widget.weightDefect,
+        weightGood: widget.weightGood,
+        woData: widget.woData,
+        reworkLongHemming: widget.reworkLongHemming,
+        combing: widget.combing,
+        spraying: widget.spraying,
+        itemTypeOption: widget.itemTypeOption,
+        defects: _defects,
+        defectQty: widget.defectQty,
+        handleSelectItemType: widget.handleSelectItemType,
+        handleUpdateDefect: widget.handleUpdateDefect,
+        packingQty: widget.packingQty,
+        weightGradeA: widget.weightGradeA,
+        finishedItem: widget.finishedItem,
+        dyeingQty: widget.dyeingQty,
       ),
     );
   }

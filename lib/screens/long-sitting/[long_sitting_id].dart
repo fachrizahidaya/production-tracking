@@ -33,6 +33,7 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Long Slitting',
+      isMultiMachine: false,
       service: Provider.of<LongSittingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<LongSittingService>(context, listen: false)
@@ -64,7 +65,7 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/long-slittings',
-      fetchMachine: (service) => service.fetchOptionsLongSitting(),
+      fetchMachine: (service, _) => service.fetchOptionsLongSitting(),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withMaklon: false,

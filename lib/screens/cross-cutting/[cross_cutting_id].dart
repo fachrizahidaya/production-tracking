@@ -32,11 +32,12 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
     return ProcessDetail<CrossCutting>(
       id: widget.id,
       no: widget.no,
+      isMultiMachine: true,
       label: 'Cross Cutting',
       service: Provider.of<CrossCuttingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<CrossCuttingService>(context, listen: false)
-              .updateItem(context, id, item, isLoading),
+              .updateItemCrossCutting(context, id, item, isLoading),
       handleDeleteService: (context, id, isLoading) =>
           Provider.of<CrossCuttingService>(context, listen: false)
               .deleteItem(context, id, isLoading),
@@ -45,30 +46,20 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
         unit_id: form['item_unit_id'] != null
             ? int.tryParse(form['item_unit_id'].toString())
             : 1,
-        weight_unit_id: form['weight_unit_id'] != null
-            ? int.tryParse(form['weight_unit_id'].toString())
-            : 1,
-        length_unit_id: form['length_unit_id'] != null
-            ? int.tryParse(form['length_unit_id'].toString())
-            : 1,
-        width_unit_id: form['width_unit_id'] != null
-            ? int.tryParse(form['width_unit_id'].toString())
-            : 1,
         machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
         qty: form['item_qty'] ?? '0',
-        weight: form['weight'] ?? '0',
-        width: form['width'] ?? '0',
-        length: form['length'] ?? '0',
         notes: form['notes'] ?? data['notes'],
-        attachments: [
-          ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
-          ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
-        ],
+        attachments: form['attachments'] ?? data['attachments'],
+        machine_ids: form['machine_ids'],
+        machines: form['machines'],
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/cross-cuttings',
-      fetchMachine: (service) => service.fetchOptionsCrossCutting(),
+      fetchMachine: (service, currentMachineIds) =>
+          service.fetchOptionsCrossCutting(
+        currentMachineIds: currentMachineIds,
+      ),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withQtyAndWeight: true,
@@ -83,21 +74,15 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
           wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
           machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
           unit_id: int.tryParse(form['item_unit_id']?.toString() ?? '1'),
-          weight_unit_id:
-              int.tryParse(form['weight_unit_id']?.toString() ?? '2'),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? '3'),
-          length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? '3'),
           qty: form['item_qty'],
-          weight: form['weight'],
-          width: form['width'],
-          length: form['length'],
           notes: form['notes'],
           start_time: form['start_time'],
           end_time: form['end_time'],
           start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
           end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
           attachments: form['attachments'],
+          machine_ids: form['machine_ids'] ?? [],
+          machines: form['machines'] ?? [],
         );
 
         final message =

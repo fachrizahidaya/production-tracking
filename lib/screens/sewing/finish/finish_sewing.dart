@@ -38,6 +38,7 @@ class _FinishSewingState extends State<FinishSewing> {
     'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     'attachments': [],
+    'machine_ids': [],
     'no_wo': '',
     'no_sewing': '',
     'nama_mesin': '',
@@ -47,8 +48,9 @@ class _FinishSewingState extends State<FinishSewing> {
     'nama_satuan': '',
     'maklon': false,
     'maklon_name': '',
-    'finished_unit_id': null,
-    'nama_item': '',
+    'greige_item_id': null,
+    'nama_greige_item': '',
+    'sku_greige_item': '',
   };
 
   @override
@@ -75,6 +77,8 @@ class _FinishSewingState extends State<FinishSewing> {
       fetchWorkOrder: (service) async =>
           await service.fetchSewingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
+      fetchFinishedItem: (service) async => await service.fetchOptions(),
+      getFinishedItemOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput) =>
           FinishSewingManual(
@@ -110,10 +114,11 @@ class _FinishSewingState extends State<FinishSewing> {
             start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
             end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
             attachments: form['attachments'],
+            machine_ids: form['machine_ids'],
             maklon: form['maklon'],
             maklon_name: form['maklon_name'],
-            finished_item_id:
-                int.tryParse(form['finished_item_id']?.toString() ?? ''));
+            greige_item_id:
+                int.tryParse(form['greige_item_id']?.toString() ?? ''));
 
         final message = await Provider.of<SewingService>(context, listen: false)
             .finishItem(context, id, sewing, isLoading);

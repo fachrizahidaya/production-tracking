@@ -9,7 +9,7 @@ String formatNumber(dynamic value) {
 
   final formatter = NumberFormat(
     hasDecimal ? '#,##0.##' : '#,##0',
-    'en_US',
+    'id_ID',
   );
 
   return formatter.format(number);

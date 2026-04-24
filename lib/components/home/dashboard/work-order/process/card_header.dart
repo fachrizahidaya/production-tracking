@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
@@ -113,13 +114,13 @@ class CardHeader extends StatelessWidget {
                         children: [
                           _buildQtyInfo(
                             label: 'Qty Material',
-                            value: item['wo_qty'],
+                            value: formatNumber(item['wo_qty']),
                             isTablet: isTablet,
                             unit: item['wo_unit'],
                           ),
                           _buildQtyInfo(
                             label: 'Qty Greige',
-                            value: item['greige_qty'],
+                            value: formatNumber(item['greige_qty']),
                             isTablet: isTablet,
                             unit: item['greige_unit'],
                           ),
@@ -147,14 +148,27 @@ class CardHeader extends StatelessWidget {
     final processes = item['processes'] as Map<String, dynamic>? ?? {};
     if (processes.isEmpty) return 'Menunggu Diproses';
 
-    final statuses = processes.values
-        .map((p) => (p['status']?.toString().toLowerCase() ?? 'waiting'))
-        .toList();
+    List<String> statuses = [];
 
-    if (statuses.every((s) => s == 'completed' || s == 'Selesai')) {
+    for (var process in processes.values) {
+      if (process is List) {
+        for (var p in process) {
+          statuses.add(
+              (p['status']?.toString().toLowerCase() ?? 'menunggu diproses'));
+        }
+      } else if (process is Map<String, dynamic>) {
+        statuses.add((process['status']?.toString().toLowerCase() ??
+            'menunggu diproses'));
+      }
+    }
+
+    if (statuses.isEmpty) return 'Menunggu Diproses';
+
+    if (statuses.every((s) => s == 'selesai' || s == 'completed')) {
       return 'Selesai';
     }
-    if (statuses.any((s) => s == 'in_progress' || s == 'Diproses')) {
+
+    if (statuses.any((s) => s == 'diproses' || s == 'in_progress')) {
       return 'Diproses';
     }
 
@@ -164,21 +178,23 @@ class CardHeader extends StatelessWidget {
   Map<String, dynamic> _getStatusConfig(String status) {
     switch (status.toLowerCase()) {
       case 'completed':
-      case 'Selesai':
+      case 'selesai':
         return {
           'label': 'Selesai',
           'color': CustomTheme().colors('Selesai'),
           'icon': Icons.task_alt_outlined,
         };
+
       case 'in_progress':
-      case 'Diproses':
+      case 'diproses':
         return {
           'label': 'Diproses',
           'color': CustomTheme().colors('Diproses'),
           'icon': Icons.access_time_outlined,
         };
+
       case 'skipped':
-      case 'Dilewati':
+      case 'dilewati':
         return {
           'label': 'Dilewati',
           'color': CustomTheme().colors('primary'),

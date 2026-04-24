@@ -1,8 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/master/card/custom_badge.dart';
-import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -10,8 +8,9 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 class ListItem extends StatelessWidget {
   final item;
   final label;
+  final index;
 
-  const ListItem({super.key, this.item, this.label});
+  const ListItem({super.key, this.item, this.label, this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -23,34 +22,12 @@ class ListItem extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: Offset(0, 2),
-                ),
-              ],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade200),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: IntrinsicHeight(
-                child: Row(
-                  children: [
-                    // Main Content
-                    Expanded(
-                      child: Padding(
-                        padding: CustomTheme().padding('card'),
-                        child: isTablet
-                            ? _buildTabletLayout()
-                            : _buildMobileLayout(),
-                      ),
-                    ),
-                    // Quantity Section
-                    _buildQuantitySection(isTablet),
-                  ],
-                ),
-              ),
+            child: Padding(
+              padding: CustomTheme().padding('card'),
+              child: isTablet ? _buildTabletLayout() : _buildMobileLayout(),
             ),
           ),
         );
@@ -61,22 +38,23 @@ class ListItem extends StatelessWidget {
   /// Layout untuk Tablet
   Widget _buildTabletLayout() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Item Info
         Expanded(
           flex: 2,
-          child: _buildItemInfo(true),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Item Info
+              _buildItemInfo(true),
+              _buildAdditionalInfo(true),
+            ].separatedBy(CustomTheme().vGap('xl')),
+          ),
         ),
-
-        // Additional Info
-        Expanded(
-          flex: 2,
-          child: (item['variants'] as List).isEmpty
-              ? NoData()
-              : _buildAdditionalInfo(true),
-        ),
-      ].separatedBy(CustomTheme().hGap('xl')),
+        Expanded(flex: 1, child: _buildQuantitySection(true))
+      ],
     );
   }
 
@@ -100,44 +78,48 @@ class ListItem extends StatelessWidget {
 
   /// Item Info (Code + Name)
   Widget _buildItemInfo(bool isTablet) {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        // Item Code Badge
-        Row(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            CustomBadge(
-              title: item['item_code']?.toString() ?? '-',
-              status: item['item_code']?.toString() ?? '-',
-              withStatus: false,
+            Text(
+              item['greige_item']['code']?.toString() ?? '-',
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize('lg'),
+                fontWeight: CustomTheme().fontWeight('semibold'),
+                color: Colors.grey[800],
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
+
+            Text(
+              item['greige_item']['name']?.toString() ?? '-',
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize('lg'),
+                fontWeight: CustomTheme().fontWeight('semibold'),
+                color: Colors.grey[600],
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            // if (item['spk_no'] != null) ...[
+            //   Text(
+            //     item['spk_no'].toString(),
+            //     style: TextStyle(
+            //       fontSize: CustomTheme().fontSize('lg'),
+            //       color: Colors.grey[500],
+            //     ),
+            //     maxLines: 1,
+            //     overflow: TextOverflow.ellipsis,
+            //   ),
+            // ],
           ],
         ),
-
-        // Item Name
-        Text(
-          item['item_name']?.toString() ?? '-',
-          style: TextStyle(
-            fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
-            fontWeight: CustomTheme().fontWeight('semibold'),
-            color: Colors.grey[800],
-          ),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-        if (item['spk_no'] != null) ...[
-          Text(
-            item['spk_no'].toString(),
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('lg'),
-              color: Colors.grey[500],
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ].separatedBy(CustomTheme().vGap('lg')),
+      ],
     );
   }
 
@@ -148,25 +130,31 @@ class ListItem extends StatelessWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
+          _buildInfoChip(
+            title: 'No. OP',
+            icon: Icons.design_services_outlined,
+            label: item['greige_item_op_no']?.toString() ?? '-',
+            isTablet: isTablet,
+          ),
           if (item['variants'][2] != null)
             _buildInfoChip(
               title: 'Desain',
               icon: Icons.design_services_outlined,
-              label: item['variants'][2]['value']?.toString() ?? '-',
+              label: item['variants'][0]['value']?.toString() ?? '-',
+              isTablet: isTablet,
+            ),
+          if (item['variants'][1] != null)
+            _buildInfoChip(
+              title: 'Size',
+              icon: Icons.numbers_outlined,
+              label: item['variants'][1]['value']?.toString() ?? '-',
               isTablet: isTablet,
             ),
           if (item['variants'][0] != null)
             _buildInfoChip(
               title: 'Bahan',
               icon: Icons.cut_outlined,
-              label: item['variants'][0]['value']?.toString() ?? '-',
-              isTablet: isTablet,
-            ),
-          if (item['variants'][1] != null)
-            _buildInfoChip(
-              title: 'Ukuran',
-              icon: Icons.numbers_outlined,
-              label: item['variants'][1]['value']?.toString() ?? '-',
+              label: item['variants'][2]['value']?.toString() ?? '-',
               isTablet: isTablet,
             ),
           if (item['variants'][3] != null) ...[
@@ -246,7 +234,7 @@ class ListItem extends StatelessWidget {
     required bool isTablet,
   }) {
     return Container(
-      padding: CustomTheme().padding('badge'),
+      padding: CustomTheme().padding('badge-rework'),
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(8),
@@ -256,17 +244,13 @@ class ListItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: CustomTheme().iconSize(isTablet ? 'lg' : 'md'),
-          ),
           Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  title,
+                  '$title:',
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('md'),
                     color: Colors.grey[500],
@@ -276,7 +260,7 @@ class ListItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  label,
+                  ' $label',
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('sm'),
                     color: Colors.grey[700],
@@ -295,86 +279,82 @@ class ListItem extends StatelessWidget {
 
   /// Quantity Section
   Widget _buildQuantitySection(bool isTablet) {
-    return Container(
-      padding: CustomTheme().padding('card'),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            CustomTheme().buttonColor('primary').withOpacity(0.08),
-            CustomTheme().buttonColor('primary').withOpacity(0.03),
-          ],
-        ),
-        border: Border(
-          left: BorderSide(
-            color: Colors.grey[200]!,
-            width: 1,
-          ),
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          if (label != 'Long Hemming' ||
-              label != 'Cross Cutting' ||
-              label != ' Sewing' ||
-              label != ' Embroidery' ||
-              label != ' Printing' ||
-              label != ' Packing')
-            Text(
-              _formatQuantity(item['weight']),
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
-                fontWeight: CustomTheme().fontWeight('bold'),
-                color: CustomTheme().buttonColor('primary'),
+          // if (label != 'Long Hemming' ||
+          //     label != 'Cross Cutting' ||
+          //     label != ' Sewing' ||
+          //     label != ' Embroidery' ||
+          //     label != ' Printing' ||
+          //     label != ' Packing')
+          // if (label == 'Long Hemming' ||
+          //     label == 'Cross Cutting' ||
+          //     label == ' Sewing' ||
+          //     label == ' Embroidery' ||
+          //     label == ' Printing' ||
+          //     label == ' Packing')
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Qty',
+                  style: TextStyle(
+                      color: Colors.grey[600],
+                      fontWeight: CustomTheme().fontWeight('semibold')),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      _formatQuantity(item['qty']),
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('xl'),
+                        fontWeight: CustomTheme().fontWeight('bold'),
+                      ),
+                    ),
+                    Text(
+                      item['unit']?['code']?.toString() ?? '-',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('lg'),
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ].separatedBy(CustomTheme().hGap('sm')),
+                ),
+              ].separatedBy(CustomTheme().hGap('xl'))),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Berat',
+                style: TextStyle(
+                  fontWeight: CustomTheme().fontWeight('semibold'),
+                  color: Colors.grey[600],
+                ),
               ),
-            ),
-          if (label == 'Long Hemming' ||
-              label == 'Cross Cutting' ||
-              label == ' Sewing' ||
-              label == ' Embroidery' ||
-              label == ' Printing' ||
-              label == ' Packing')
-            Text(
-              _formatQuantity(item['qty']),
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
-                fontWeight: CustomTheme().fontWeight('bold'),
-                color: CustomTheme().buttonColor('primary'),
+              Row(
+                children: [
+                  Text(
+                    _formatQuantity(item['weight']),
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('xl'),
+                      fontWeight: CustomTheme().fontWeight('bold'),
+                    ),
+                  ),
+                  Text(
+                    item['weight_unit']?['code']?.toString() ?? '-',
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('lg'),
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ].separatedBy(CustomTheme().hGap('sm')),
               ),
-            ),
-          if (label != 'Long Hemming' ||
-              label != 'Cross Cutting' ||
-              label != ' Sewing' ||
-              label != ' Embroidery' ||
-              label != ' Printing' ||
-              label != ' Packing')
-            Text(
-              item['weight_unit']?['code']?.toString() ?? '-',
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('sm'),
-                color: Colors.grey[600],
-                fontWeight: CustomTheme().fontWeight('semibold'),
-              ),
-            ),
-          if (label == 'Long Hemming' ||
-              label == 'Cross Cutting' ||
-              label == ' Sewing' ||
-              label == ' Embroidery' ||
-              label == ' Printing' ||
-              label == ' Packing')
-            Text(
-              item['unit']?['code']?.toString() ?? '-',
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('sm'),
-                color: Colors.grey[600],
-                fontWeight: CustomTheme().fontWeight('semibold'),
-              ),
-            ),
-        ],
-      ),
-    );
+            ],
+          ),
+        ].separatedBy(CustomTheme().hGap('xl')));
   }
 
   /// Format Quantity

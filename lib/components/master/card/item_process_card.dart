@@ -88,7 +88,7 @@ class ItemProcessCard extends StatelessWidget {
                       fontWeight: CustomTheme().fontWeight('bold'),
                     ),
                   ),
-                  if (item['rework'] == true)
+                  if (item['rework'] == true || item['cycle_no'] > 1)
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -98,13 +98,14 @@ class ItemProcessCard extends StatelessWidget {
                           title: 'Rework',
                           rework: true,
                         ),
-                        CustomBadge(
-                          status: 'Menunggu Diproses',
-                          title: item['rework_reference'] != null
-                              ? item['rework_reference']['dyeing_no']
-                              : '-',
-                          rework: true,
-                        )
+                        if (item['rework_reference'] != null)
+                          CustomBadge(
+                            status: 'Menunggu Diproses',
+                            title: item['rework_reference'] != null
+                                ? item['rework_reference']['dyeing_no']
+                                : '-',
+                            rework: true,
+                          )
                       ].separatedBy(CustomTheme().hGap('md')),
                     ),
                 ].separatedBy(CustomTheme().hGap('xl')),

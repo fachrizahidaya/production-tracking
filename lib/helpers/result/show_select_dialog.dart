@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 
-void showSelectDialog(
+Future<List<dynamic>?> showSelectDialog(
     {context,
     title,
     option,
     isLoading,
     selected,
     handleChangeValue,
-    isFetching}) {
-  showDialog(
+    isFetching}) async {
+  return showDialog<List<dynamic>>(
     context: context,
     builder: (context) {
       return isFetching == true
-          ? CircularProgressIndicator()
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
           : SelectDialog(
               label: title,
               options: option,

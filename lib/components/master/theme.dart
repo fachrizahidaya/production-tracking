@@ -736,6 +736,12 @@ class CustomTheme {
           size: 14,
           color: Color.fromRGBO(69, 97, 219, 1),
         );
+      case 'Dilewati':
+        return Icon(
+          Icons.fast_forward_outlined,
+          size: 14,
+          color: Color.fromRGBO(69, 97, 219, 1),
+        );
       default:
         return Icon(
           Icons.question_mark_outlined,

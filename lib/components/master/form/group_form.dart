@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -9,6 +11,7 @@ class GroupForm extends StatelessWidget {
   final bool? disabled;
   final errorText;
   final errorMinHeight;
+  final isGrade;
 
   const GroupForm(
       {super.key,
@@ -17,7 +20,8 @@ class GroupForm extends StatelessWidget {
       this.req = false,
       this.disabled,
       this.errorText,
-      this.errorMinHeight = 20});
+      this.errorMinHeight = 20,
+      this.isGrade = false});
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +37,18 @@ class GroupForm extends StatelessWidget {
           children: [
             Text(
               label,
+              style: TextStyle(
+                  fontSize: isGrade == true
+                      ? CustomTheme().fontSize('sm')
+                      : CustomTheme().fontSize('md'),
+                  color: isDisabled
+                      ? Colors.black.withOpacity(0.85)
+                      : isGrade == true
+                          ? Colors.grey.shade600
+                          : Colors.black,
+                  fontWeight: isGrade == true
+                      ? CustomTheme().fontWeight('semibold')
+                      : null),
             ),
             if (req)
               Text(

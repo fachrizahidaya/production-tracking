@@ -49,9 +49,6 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
     'rework_reference_id': null,
     'start_by_id': null,
     'end_by_id': null,
-    'qty': null,
-    'width': null,
-    'length': null,
     'notes': '',
     'rework': null,
     'status': null,
@@ -170,9 +167,6 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
           rework_reference_id: _form['rework_reference_id'] != null
               ? int.tryParse(_form['rework_reference_id'].toString())
               : null,
-          qty: _form['qty'],
-          width: _form['width'],
-          length: _form['length'],
           notes: _form['notes'],
           rework: _form['rework'],
           status: _form['status'],

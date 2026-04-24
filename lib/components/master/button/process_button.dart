@@ -20,6 +20,8 @@ class ProcessButton extends StatefulWidget {
   final bool Function() isQtyFullyDistributed;
   final withItemGrade;
   final withItemQtyAndWeight;
+  final isAllMachineDone;
+  final label;
 
   const ProcessButton(
       {super.key,
@@ -37,7 +39,9 @@ class ProcessButton extends StatefulWidget {
       this.qty,
       required this.isQtyFullyDistributed,
       this.withItemGrade,
-      this.withItemQtyAndWeight});
+      this.withItemQtyAndWeight,
+      this.isAllMachineDone,
+      this.label});
 
   @override
   State<ProcessButton> createState() => _ProcessButtonState();
@@ -48,6 +52,14 @@ class _ProcessButtonState extends State<ProcessButton> {
   Widget build(BuildContext context) {
     final bool hasBasicError =
         widget.weightWarning != null || widget.qtyWarning != null;
+
+    final bool isNeedMachineValidation = [
+      'long hemming',
+      'sewing',
+      'cross cutting'
+    ].contains(widget.label.toLowerCase());
+
+    final result = widget.isAllMachineDone(widget.data?['machines'] ?? []);
 
     final bool isDisabled = widget.withItemGrade == true
         ? !widget.isQtyFullyDistributed()
@@ -77,7 +89,8 @@ class _ProcessButtonState extends State<ProcessButton> {
                   Expanded(
                       child: FormButton(
                     label: widget.labelProcess,
-                    isDisabled: isDisabled,
+                    isDisabled:
+                        isDisabled || (isNeedMachineValidation && !result),
                     customHeight: 56.0,
                     fontSize: CustomTheme().fontSize('xl'),
                     onPressed: () async {

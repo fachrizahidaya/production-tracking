@@ -270,7 +270,7 @@ class CardContent extends StatelessWidget {
         };
       case 'sorting':
         return {
-          'title': 'Sorting',
+          'title': 'Sortir',
           'icon': Icons.sort_outlined,
           'color': Colors.pink,
         };

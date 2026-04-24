@@ -167,18 +167,22 @@ class MenuItem {
   final String title;
   final String? route;
   final List<SubMenuItem> subMenuItems;
+  final bool allowMobile;
 
   MenuItem({
     required this.title,
     this.route,
     this.subMenuItems = const [],
+    required this.allowMobile,
   });
 
   factory MenuItem.fromJson(Map<String, dynamic> json) {
     final children = json['children'] as List<dynamic>? ?? [];
+
     return MenuItem(
       title: json['name'] ?? '',
       route: json['url'],
+      allowMobile: json['allow_mobile'] ?? false,
       subMenuItems:
           children.map((child) => SubMenuItem.fromJson(child)).toList(),
     );
@@ -188,16 +192,19 @@ class MenuItem {
 class SubMenuItem {
   final String title;
   final String? route;
+  final bool allowMobile;
 
   SubMenuItem({
     required this.title,
     this.route,
+    required this.allowMobile,
   });
 
   factory SubMenuItem.fromJson(Map<String, dynamic> json) {
     return SubMenuItem(
       title: json['name'] ?? '',
       route: json['url'],
+      allowMobile: json['allow_mobile'] ?? false,
     );
   }
 }

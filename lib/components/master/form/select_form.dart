@@ -71,7 +71,7 @@ class _SelectFormState extends State<SelectForm> {
                     child: Builder(
                       builder: (_) {
                         final isEmpty = (widget.selectedCode ?? '').isEmpty &&
-                            (widget.selectedLabel ?? '').isEmpty;
+                            (widget.selectedLabel).isEmpty;
 
                         if (isEmpty) {
                           return Text('Pilih ${widget.label}');
@@ -84,7 +84,7 @@ class _SelectFormState extends State<SelectForm> {
                             children: [
                               Text(widget.selectedCode ?? ''),
                               Text(
-                                widget.selectedLabel ?? '',
+                                widget.selectedLabel,
                                 style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: CustomTheme().fontSize('sm'),
@@ -94,7 +94,7 @@ class _SelectFormState extends State<SelectForm> {
                           );
                         }
 
-                        return Text(widget.selectedLabel ?? '');
+                        return Text(widget.selectedLabel);
                       },
                     ),
                   ),

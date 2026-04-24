@@ -181,11 +181,10 @@ class CardHeader extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            // statusConfig['label'],
-                            'Menunggu Diproses',
+                            statusConfig['label'],
                             style: TextStyle(
                               fontSize: CustomTheme().fontSize('sm'),
-                              // color: statusConfig['color'],
+                              color: statusConfig['color'],
                               fontWeight: CustomTheme().fontWeight('bold'),
                             ),
                           ),

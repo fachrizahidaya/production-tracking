@@ -76,6 +76,8 @@ class FormItems extends StatefulWidget {
   final weightGradeA;
   final finishedItem;
   final dyeingQty;
+  final finishedItemGood;
+  final finishedItemGrb;
 
   const FormItems(
       {super.key,
@@ -136,7 +138,9 @@ class FormItems extends StatefulWidget {
       this.packingQty,
       this.weightGradeA,
       this.finishedItem,
-      this.dyeingQty});
+      this.dyeingQty,
+      this.finishedItemGood,
+      this.finishedItemGrb});
 
   @override
   State<FormItems> createState() => _FormItemsState();
@@ -412,6 +416,40 @@ class _FormItemsState extends State<FormItems> {
         widget.qtyItem[index].text = totalBs.toString();
       }
     }
+  }
+
+  bool _isDataEmpty() {
+    if ((widget.itemGradeOption ?? []).isEmpty) return true;
+    if (_grades.isEmpty) return true;
+
+    final totalQty = _grades.fold<double>(
+      0,
+      (sum, g) => sum + parseSafe(g['qty']),
+    );
+
+    return totalQty == 0;
+  }
+
+  Widget _buildEmptyState() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 40),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.edit_note, size: 48, color: Colors.grey.shade400),
+          const SizedBox(height: 12),
+          Text(
+            'Silakan edit terlebih dahulu',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey.shade600,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -1697,7 +1735,7 @@ Grades
 */
   Widget buildGradeCard(int i) {
     final gradeLabel = getGradeLabel(i);
-    final items = widget.data?['items'] ?? [];
+    final items = widget.processData?['grades'] ?? [];
 
     _ensureController(i);
 
@@ -1870,16 +1908,16 @@ Rework
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          item != null && item['item_code'] != null
-              ? item['item_code'].toString()
+          item != null && item['greige_item'] != null
+              ? item['greige_item']['code'].toString()
               : gradeLabel == 'Grade B'
                   ? widget.finishedItem[0]['code']
                   : '-',
           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
         ),
         Text(
-          item != null && item['item_name'] != null
-              ? item['item_name'].toString()
+          item != null && item['greige_item'] != null
+              ? item['greige_item']['name'].toString()
               : gradeLabel == 'Grade B'
                   ? widget.finishedItem[0]['label']
                   : '-',

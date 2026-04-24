@@ -620,6 +620,8 @@ Grades
     // }
 
     final items = widget.data['work_orders']?['items'] ?? [];
+    final codeGradeA = widget.data['grades'][0]['greige_item']['code'];
+    final nameGradeA = widget.data['grades'][0]['greige_item']['name'];
     final codeGradeB = widget.data['grades'][1]['greige_item']['code'];
     final nameGradeB = widget.data['grades'][1]['greige_item']['name'];
 
@@ -631,17 +633,23 @@ Grades
               ? '${formatNumber(widget.existingGrades[i]['qty'])} ${widget.existingGrades[i]['unit']['code']}'
               : '-',
           'another_value': widget.label == 'Sorting' &&
-                  widget.existingGrades[i]['item_grade']['code'] == 'B'
-              ? codeGradeB
-              : i < items.length
-                  ? '${items[i]['item_code'] ?? '-'}'
-                  : '',
+                  widget.existingGrades[i]['item_grade']['code'] == 'A'
+              ? codeGradeA
+              : widget.label == 'Sorting' &&
+                      widget.existingGrades[i]['item_grade']['code'] == 'B'
+                  ? codeGradeB
+                  : i < items.length
+                      ? '${items[i]['item_code'] ?? '-'}'
+                      : '',
           'name_value': widget.label == 'Sorting' &&
-                  widget.existingGrades[i]['item_grade']['code'] == 'B'
-              ? nameGradeB
-              : i < items.length
-                  ? '${items[i]['item_name'] ?? '-'}'
-                  : '',
+                  widget.existingGrades[i]['item_grade']['code'] == 'A'
+              ? nameGradeA
+              : widget.label == 'Sorting' &&
+                      widget.existingGrades[i]['item_grade']['code'] == 'B'
+                  ? nameGradeB
+                  : i < items.length
+                      ? '${items[i]['item_name'] ?? '-'}'
+                      : '',
           'icon': Icons.grade_outlined,
           'isGrade': true,
         },

@@ -1004,7 +1004,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     final greigeQty = (data['work_orders']['greige_qty']);
     final berat = toDouble(weight);
 
-    if (greigeQty == null || berat == null || greigeQty <= 0) {
+    if (greigeQty == null || greigeQty <= 0) {
       setState(() {
         _weightWarningValidationMessage = null;
       });
@@ -1034,7 +1034,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     final qty = widget.label == 'Packing' ? data['qty'] : _getTotalItemQty();
     final berat = toDouble(woQty);
 
-    if (qty <= 0 || berat == null) {
+    if (qty <= 0) {
       setState(() {
         _itemWarningValidationMessage = null;
       });

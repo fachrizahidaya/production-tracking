@@ -218,7 +218,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         'unit_id': existing['unit_id'] ?? 1,
         'qty': existing['qty'] ?? '0',
         'notes': existing['notes'] ?? '',
-        'greige_item_id': existing['greige_item_id'] ?? null,
+        'greige_item_id': existing['greige_item_id'],
       });
     }
 
@@ -235,7 +235,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           defect['type']?['id'] ?? defect['defect_type_id'] ?? defect['id'];
 
       // Check if this defect type exists in master data
-      final exists = (itemTypeOption ?? []).firstWhere(
+      final exists = (itemTypeOption).firstWhere(
         (type) => type['id'].toString() == defectTypeId.toString(),
         orElse: () => <String, dynamic>{},
       );

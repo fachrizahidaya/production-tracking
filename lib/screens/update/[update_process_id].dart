@@ -504,7 +504,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                   toDouble(widget.form['rework_long_hemming']);
               widget.form['combing'] = toDouble(widget.form['combing']);
 
-              widget.form['grades'] = (_grades ?? []).map((e) {
+              widget.form['grades'] = (_grades).map((e) {
                 return {
                   ...e,
                   'qty': toDouble(e['qty']),
@@ -784,14 +784,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                 isSorting: true,
                                                 controller: widget.goodWeight,
                                                 handleChange: (value) {
-                                                  final safeValue =
-                                                      (value == null ||
-                                                              value
-                                                                  .toString()
-                                                                  .trim()
-                                                                  .isEmpty)
-                                                          ? '0'
-                                                          : value.toString();
+                                                  final safeValue = (value
+                                                          .toString()
+                                                          .trim()
+                                                          .isEmpty)
+                                                      ? '0'
+                                                      : value.toString();
 
                                                   widget.handleChangeInput(
                                                       'good_weight', safeValue);
@@ -811,14 +809,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                 isSorting: true,
                                                 controller: widget.defectWeight,
                                                 handleChange: (value) {
-                                                  final safeValue =
-                                                      (value == null ||
-                                                              value
-                                                                  .toString()
-                                                                  .trim()
-                                                                  .isEmpty)
-                                                          ? '0'
-                                                          : value.toString();
+                                                  final safeValue = (value
+                                                          .toString()
+                                                          .trim()
+                                                          .isEmpty)
+                                                      ? '0'
+                                                      : value.toString();
 
                                                   widget.handleChangeInput(
                                                       'bs_weight', safeValue);
@@ -858,14 +854,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                               controller:
                                                   widget.cuttingSewingQty,
                                               handleChange: (value) {
-                                                final safeValue =
-                                                    (value == null ||
-                                                            value
-                                                                .toString()
-                                                                .trim()
-                                                                .isEmpty)
-                                                        ? '0'
-                                                        : value.toString();
+                                                final safeValue = (value
+                                                        .toString()
+                                                        .trim()
+                                                        .isEmpty)
+                                                    ? '0'
+                                                    : value.toString();
                                                 widget.handleChangeInput(
                                                     'item_qty', safeValue);
                                               },
@@ -917,14 +911,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                 '0',
                                             controller: widget.packingQty,
                                             handleChange: (value) {
-                                              final safeValue =
-                                                  (value == null ||
-                                                          value
-                                                              .toString()
-                                                              .trim()
-                                                              .isEmpty)
-                                                      ? '0'
-                                                      : value.toString();
+                                              final safeValue = (value
+                                                      .toString()
+                                                      .trim()
+                                                      .isEmpty)
+                                                  ? '0'
+                                                  : value.toString();
 
                                               widget.handleChangeInput(
                                                   'qty', safeValue);
@@ -956,11 +948,10 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                 '0',
                                             controller: widget.weightPerDozen,
                                             handleChange: (val) {
-                                              final safeValue = (val == null ||
-                                                      val
-                                                          .toString()
-                                                          .trim()
-                                                          .isEmpty)
+                                              final safeValue = (val
+                                                      .toString()
+                                                      .trim()
+                                                      .isEmpty)
                                                   ? '0'
                                                   : val.toString();
 
@@ -1075,14 +1066,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                 '0',
                                             isSorting: true,
                                             handleChange: (value) {
-                                              final safeValue =
-                                                  (value == null ||
-                                                          value
-                                                              .toString()
-                                                              .trim()
-                                                              .isEmpty)
-                                                      ? '0'
-                                                      : value.toString();
+                                              final safeValue = (value
+                                                      .toString()
+                                                      .trim()
+                                                      .isEmpty)
+                                                  ? '0'
+                                                  : value.toString();
 
                                               widget.handleChangeInput(
                                                   'spraying', safeValue);
@@ -1105,14 +1094,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                     ?.toString() ??
                                                 '0',
                                             handleChange: (value) {
-                                              final safeValue =
-                                                  (value == null ||
-                                                          value
-                                                              .toString()
-                                                              .trim()
-                                                              .isEmpty)
-                                                      ? '0'
-                                                      : value.toString();
+                                              final safeValue = (value
+                                                      .toString()
+                                                      .trim()
+                                                      .isEmpty)
+                                                  ? '0'
+                                                  : value.toString();
                                               widget.handleChangeInput(
                                                   'rework_long_hemming',
                                                   safeValue);
@@ -1133,14 +1120,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                 '0',
                                             controller: widget.combing,
                                             handleChange: (value) {
-                                              final safeValue =
-                                                  (value == null ||
-                                                          value
-                                                              .toString()
-                                                              .trim()
-                                                              .isEmpty)
-                                                      ? '0'
-                                                      : value.toString();
+                                              final safeValue = (value
+                                                      .toString()
+                                                      .trim()
+                                                      .isEmpty)
+                                                  ? '0'
+                                                  : value.toString();
 
                                               widget.handleChangeInput(
                                                   'combing', safeValue);
@@ -1955,9 +1940,7 @@ Input Qty Tipe BS
                           controller: controller,
                           handleChange: (value) {
                             final safeValue =
-                                (value == null || value.trim().isEmpty)
-                                    ? '0'
-                                    : value;
+                                (value.trim().isEmpty) ? '0' : value;
 
                             _defects[index]['qty'] = toDouble(safeValue);
                           },

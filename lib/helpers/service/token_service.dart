@@ -31,7 +31,7 @@ class TokenService {
 
   Future<String?> _refreshToken(BuildContext context) async {
     try {
-      final url = '${dotenv.env['API_URL_DEV']}/refresh-token';
+      final url = '${dotenv.env['API_URL']}/refresh-token';
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final oldToken = prefs.getString('access_token');

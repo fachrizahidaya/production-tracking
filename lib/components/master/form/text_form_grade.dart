@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/text/thousand_separator_input_formatter.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 
 class TextFormGrade extends StatefulWidget {
   final String label;
@@ -67,6 +68,42 @@ class _TextFormGradeState extends State<TextFormGrade> {
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: '0',
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: EdgeInsets.all(12),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderSide: BorderSide(width: 0.5, color: Colors.black),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderSide: BorderSide(width: 0.5, color: Colors.black),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderSide: BorderSide(width: 0.5, color: Colors.black),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            width: 0.5,
+            color: Colors.black,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderSide: BorderSide(width: 0.5, color: Colors.black),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderSide: BorderSide(width: 0.5, color: Colors.black),
+        ),
+        hintStyle: TextStyle(
+          color: widget.isDisabled
+              ? Colors.black.withOpacity(0.6)
+              : Colors.black38,
+          fontWeight: FontWeight.w400,
+        ),
       ),
       inputFormatters: [
         ThousandsSeparatorInputFormatter(), // pakai versi yang sudah kita fix sebelumnya

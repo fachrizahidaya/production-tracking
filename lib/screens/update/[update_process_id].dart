@@ -987,86 +987,59 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                       children: [
                                         Expanded(
                                           flex: 1,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Gramasi (GSM)',
-                                                style: TextStyle(
-                                                  fontSize: CustomTheme()
-                                                      .fontSize('sm'),
-                                                  color: Colors.grey[600],
-                                                ),
-                                              ),
-                                              SizedBox(height: 6),
-                                              Text(
-                                                widget.gsm.text.isEmpty
-                                                    ? '0'
-                                                    : widget.gsm.text,
-                                                style: TextStyle(
-                                                  fontSize: CustomTheme()
-                                                      .fontSize('md'),
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
+                                          child: TextForm(
+                                            label: 'Gramasi (GSM)',
+                                            isDisabled: true,
+                                            isNumber: true,
+                                            controller: widget.gsm,
+                                            initialValue: widget.form['gsm']
+                                                    ?.toString() ??
+                                                '',
+                                            handleChange: (value) {
+                                              setState(() {
+                                                widget.handleChangeInput(
+                                                    'gsm', value);
+                                              });
+                                            },
                                           ),
                                         ),
                                         Expanded(
                                           flex: 1,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Berat Grade A (KG)',
-                                                style: TextStyle(
-                                                  fontSize: CustomTheme()
-                                                      .fontSize('sm'),
-                                                  color: Colors.grey[600],
-                                                ),
-                                              ),
-                                              SizedBox(height: 6),
-                                              Text(
-                                                widget.weightGradeA.text.isEmpty
-                                                    ? '0'
-                                                    : widget.weightGradeA.text,
-                                                style: TextStyle(
-                                                  fontSize: CustomTheme()
-                                                      .fontSize('md'),
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
+                                          child: TextForm(
+                                            label: 'Berat Grade A (KG)',
+                                            isDisabled: true,
+                                            isNumber: true,
+                                            controller: widget.weightGradeA,
+                                            initialValue: widget
+                                                    .form['weight_grade_a']
+                                                    ?.toString() ??
+                                                '',
+                                            handleChange: (value) {
+                                              setState(() {
+                                                widget.handleChangeInput(
+                                                    'weight_grade_a', value);
+                                              });
+                                            },
                                           ),
                                         ),
                                         Expanded(
                                           flex: 1,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
+                                          child: TextForm(
+                                            label:
                                                 'Total Berat Keseluruhan (KG)',
-                                                style: TextStyle(
-                                                  fontSize: CustomTheme()
-                                                      .fontSize('sm'),
-                                                  color: Colors.grey[600],
-                                                ),
-                                              ),
-                                              SizedBox(height: 6),
-                                              Text(
-                                                widget.totalWeight.text.isEmpty
-                                                    ? '0'
-                                                    : widget.totalWeight.text,
-                                                style: TextStyle(
-                                                  fontSize: CustomTheme()
-                                                      .fontSize('md'),
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
+                                            isDisabled: true,
+                                            isNumber: true,
+                                            controller: widget.totalWeight,
+                                            initialValue: widget
+                                                    .form['total_weight']
+                                                    ?.toString() ??
+                                                '',
+                                            handleChange: (value) {
+                                              setState(() {
+                                                widget.handleChangeInput(
+                                                    'total_weight', value);
+                                              });
+                                            },
                                           ),
                                         ),
                                       ].separatedBy(CustomTheme().hGap('xl')),

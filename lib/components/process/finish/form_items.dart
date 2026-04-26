@@ -300,21 +300,20 @@ class _FormItemsState extends State<FormItems> {
     });
   }
 
-  void calculateBeratA(double value) {
-    final maxQty = getMaxQtyFromGrades();
+  void calculateBeratA(double beratLusin) {
+    final packing = double.tryParse(
+          widget.packingQty.text.replaceAll('.', '').replaceAll(',', '.'),
+        ) ??
+        0;
 
-    setState(() {
-      beratLusin = value;
+    if (packing <= 0 || beratLusin <= 0) {
+      widget.weightGradeA.text = '0';
+      return;
+    }
 
-      beratGradeA = maxQty == 0 ? 0 : (beratLusin / 12) * maxQty;
+    final result = (packing / 12) * beratLusin;
 
-      widget.weightGradeA.text = beratGradeA.toStringAsFixed(2);
-
-      widget.handleChangeInput(
-        'weight_grade_a',
-        beratGradeA.toStringAsFixed(2),
-      );
-    });
+    widget.weightGradeA.text = result.toStringAsFixed(2);
   }
 
   void calculateTotalBerat(double value) {
@@ -1360,7 +1359,7 @@ class _FormItemsState extends State<FormItems> {
                                 label: 'Total Packing (PCS)',
                                 req: true,
                                 isNumber: true,
-                                isSorting: true,
+                                // isSorting: true,
                                 initialValue:
                                     widget.processData['qty']?.toString() ??
                                         '0',
@@ -1481,7 +1480,7 @@ class _FormItemsState extends State<FormItems> {
                             label: 'Gramasi',
                             isDisabled: true,
                             isNumber: true,
-                            initialValue: widget.form['gsm']?.toString() ?? '0',
+                            initialValue: widget.form['gsm']?.toString() ?? '',
                             controller: widget.gsm,
                             handleChange: (value) {
                               setState(() {
@@ -1497,8 +1496,7 @@ class _FormItemsState extends State<FormItems> {
                             isDisabled: true,
                             isNumber: true,
                             initialValue:
-                                widget.form['weight_grade_a']?.toString() ??
-                                    '0',
+                                widget.form['weight_grade_a']?.toString() ?? '',
                             controller: widget.weightGradeA,
                             handleChange: (value) {
                               setState(() {
@@ -1514,7 +1512,7 @@ class _FormItemsState extends State<FormItems> {
                             isDisabled: true,
                             isNumber: true,
                             initialValue:
-                                widget.form['total_weight']?.toString() ?? '0',
+                                widget.form['total_weight']?.toString() ?? '',
                             controller: widget.totalWeight,
                             handleChange: (value) {
                               setState(() {
@@ -1926,7 +1924,7 @@ Rework
           item != null && item['greige_item'] != null
               ? item['greige_item']['code'].toString()
               : gradeLabel == 'Grade B'
-                  ? widget.finishedItem[0]['code']
+                  ? widget.finishedItemGrb[0]['code']
                   : '-',
           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
         ),
@@ -1934,7 +1932,7 @@ Rework
           item != null && item['greige_item'] != null
               ? item['greige_item']['name'].toString()
               : gradeLabel == 'Grade B'
-                  ? widget.finishedItem[0]['label']
+                  ? widget.finishedItemGrb[0]['label']
                   : '-',
           style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
           maxLines: 2,

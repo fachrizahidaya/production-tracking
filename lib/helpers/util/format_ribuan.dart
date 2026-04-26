@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:easy_localization/easy_localization.dart';
 
 final NumberFormat formatter = NumberFormat("#,##0.00", "en_US");

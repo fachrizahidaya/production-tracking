@@ -184,8 +184,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     await _handleFetchUnit();
     await _handleFetchItemType();
     await _handleFetchFinishedMaterial();
-    await _handleFetchFinishedGoodMaterial();
-    await _handleFetchFinishedGrbMaterial();
 
     setState(() {
       _firstLoading = false;
@@ -256,7 +254,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       await service.fetchOptions(
         process: formatProcessLabel(widget.label),
         baseCode: baseCode,
-        colorCode: widget.label == 'Sorting' ? 'grb' : colorCode,
+        colorCode: colorCode,
       );
 
       final data = widget.getFinishedItemOptions != null
@@ -296,26 +294,26 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       final items = woData['items'];
 
       if (items == null || items is! List || items.isEmpty) {
-        setState(() => finishedItemOption = []);
+        setState(() => finishedItemGrb = []);
         return;
       }
 
       final itemCode = firstWoItem?['item_code'] ?? '';
 
       if (firstWoItem == null) {
-        setState(() => finishedItemOption = []);
+        setState(() => finishedItemGrb = []);
         return;
       }
 
       if (itemCode == null || itemCode.toString().isEmpty) {
-        setState(() => finishedItemOption = []);
+        setState(() => finishedItemGrb = []);
         return;
       }
 
       final parts = itemCode.split('-');
 
       if (parts.length < 2) {
-        setState(() => finishedItemOption = []);
+        setState(() => finishedItemGrb = []);
         return;
       }
 
@@ -328,92 +326,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       );
 
       setState(() {
-        finishedItemOption = service.dataListOption;
+        finishedItemGrb = service.dataListOption;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
     } finally {
       setState(() => _isFetchingFinishedMaterial = false);
-    }
-  }
-
-  Future<void> _handleFetchFinishedGrbMaterial() async {
-    setState(() {
-      _isFetchingFinishedMaterial = true;
-    });
-
-    final service = Provider.of<OptionItemService>(context, listen: false);
-
-    try {
-      String baseCode = '';
-
-      final itemCode = woData['items']?[0]?['item_code'] ?? '';
-
-      if (itemCode.isNotEmpty) {
-        final parts = itemCode.split('-');
-        baseCode = parts.first;
-      }
-
-      await service.fetchOptions(
-        process: 'sorting',
-        baseCode: baseCode,
-        colorCode: 'grb',
-      );
-
-      final data = service.dataListOption;
-
-      setState(() {
-        finishedItemGrb = data;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
-    } finally {
-      setState(() {
-        _isFetchingFinishedMaterial = false;
-      });
-    }
-  }
-
-  Future<void> _handleFetchFinishedGoodMaterial() async {
-    // setState(() {
-    //   _isFetchingFinishedMaterial = true;
-    // });
-
-    final service = Provider.of<OptionItemService>(context, listen: false);
-
-    try {
-      String baseCode = '';
-      String colorCode = '';
-
-      final itemCode = woData['items']?[0]?['item_code'] ?? '';
-
-      if (itemCode.isNotEmpty) {
-        final parts = itemCode.split('-');
-        baseCode = parts.first;
-        colorCode = parts.last;
-      }
-
-      await service.fetchOptions(
-        process: 'packing',
-        baseCode: baseCode,
-        colorCode: colorCode,
-      );
-
-      final data = service.dataListOption;
-
-      setState(() {
-        finishedItemGood = data;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
-    } finally {
-      // setState(() {
-      //   _isFetchingFinishedMaterial = false;
-      // });
     }
   }
 

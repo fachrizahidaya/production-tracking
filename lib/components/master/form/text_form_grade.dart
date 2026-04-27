@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/text/thousand_separator_input_formatter.dart';
-import 'package:textile_tracking/components/master/theme.dart';
 
 class TextFormGrade extends StatefulWidget {
   final String label;
@@ -106,7 +105,7 @@ class _TextFormGradeState extends State<TextFormGrade> {
         ),
       ),
       inputFormatters: [
-        ThousandsSeparatorInputFormatter(), // pakai versi yang sudah kita fix sebelumnya
+        ThousandsSeparatorInputFormatter(),
       ],
       onChanged: (value) {
         final raw = toRaw(value);

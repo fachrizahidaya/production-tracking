@@ -300,6 +300,22 @@ class _FormItemsState extends State<FormItems> {
     });
   }
 
+  String formatId(num value) {
+    final formatter = NumberFormat('#,##0.00', 'id_ID');
+    return formatter.format(value);
+  }
+
+  double parseId(String value) {
+    return double.tryParse(
+          value.replaceAll('.', '').replaceAll(',', '.'),
+        ) ??
+        0;
+  }
+
+  String toApi(num value) {
+    return value.toString();
+  }
+
   void calculateBeratA(double beratLusin) {
     final packing = double.tryParse(
           widget.packingQty.text.replaceAll('.', '').replaceAll(',', '.'),

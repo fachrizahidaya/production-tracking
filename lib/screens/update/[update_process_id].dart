@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, use_build_context_synchronously, deprecated_member_use
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
@@ -394,36 +395,62 @@ class _UpdateProcessState extends State<UpdateProcess> {
     });
   }
 
-  void calculateBeratA(double value) {
-    final maxQty = getMaxQtyFromGrades();
-
-    setState(() {
-      beratLusin = value;
-
-      totalBeratA = maxQty == 0 ? 0 : (beratLusin / 12) * maxQty;
-
-      widget.weightGradeA.text = totalBeratA.toStringAsFixed(2);
-
-      widget.handleChangeInput(
-        'weight_grade_a',
-        totalBeratA.toStringAsFixed(2),
-      );
-    });
+  String formatId(num value) {
+    final formatter = NumberFormat('#,##0.00', 'id_ID');
+    return formatter.format(value);
   }
 
-  void calculateTotalBerat(double value) {
+  double parseId(String value) {
+    return double.tryParse(
+          value.replaceAll('.', '').replaceAll(',', '.'),
+        ) ??
+        0;
+  }
+
+  String toApi(num value) {
+    return value.toString();
+  }
+
+  void calculateBeratA() {
+    final packing = double.tryParse(
+          widget.packingQty.text.replaceAll('.', '').replaceAll(',', '.'),
+        ) ??
+        0;
+
+    final beratLusin = double.tryParse(
+          widget.weightPerDozen.text.replaceAll('.', '').replaceAll(',', '.'),
+        ) ??
+        0;
+
+    if (packing <= 0 || beratLusin <= 0) {
+      widget.weightGradeA.text = '0';
+      return;
+    }
+
+    final result = (packing / 12) * beratLusin;
+
+    widget.weightGradeA.text = formatId(result);
+
+    widget.handleChangeInput(
+      'weight_grade_a',
+      toApi(result),
+    );
+  }
+
+  void calculateTotalBerat() {
     final maxQty = getMaxTotalQty();
 
+    final beratLusin = parseId(widget.weightPerDozen.text);
+
+    final total =
+        (maxQty == 0 || beratLusin == 0) ? 0 : (beratLusin / 12) * maxQty;
+
     setState(() {
-      beratLusin = value;
-
-      totalBerat = maxQty == 0 ? 0 : (beratLusin / 12) * maxQty;
-
-      widget.totalWeight.text = totalBerat.toStringAsFixed(2);
+      widget.totalWeight.text = formatId(total);
 
       widget.handleChangeInput(
         'total_weight',
-        totalBerat.toStringAsFixed(2),
+        toApi(total),
       );
     });
   }
@@ -922,15 +949,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                   'qty', safeValue);
 
                                               setState(() {
-                                                final input = double.tryParse(
-                                                      widget.weightPerDozen.text
-                                                          .replaceAll('.', '')
-                                                          .replaceAll(',', '.'),
-                                                    ) ??
-                                                    0;
-                                                if (input > 0) {
-                                                  calculateBeratA(input);
-                                                }
+                                                calculateBeratA();
                                               });
                                             },
                                           ),
@@ -960,16 +979,19 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                   safeValue);
 
                                               setState(() {
-                                                final input = double.tryParse(
-                                                      widget.weightPerDozen.text
-                                                          .replaceAll('.', '')
-                                                          .replaceAll(',', '.'),
-                                                    ) ??
-                                                    0;
+                                                calculateGsm(
+                                                  double.tryParse(
+                                                        widget
+                                                            .weightPerDozen.text
+                                                            .replaceAll('.', '')
+                                                            .replaceAll(
+                                                                ',', '.'),
+                                                      ) ??
+                                                      0,
+                                                );
 
-                                                calculateGsm(input);
-                                                calculateBeratA(input);
-                                                calculateTotalBerat(input);
+                                                calculateBeratA();
+                                                calculateTotalBerat();
                                               });
                                             },
                                           ),

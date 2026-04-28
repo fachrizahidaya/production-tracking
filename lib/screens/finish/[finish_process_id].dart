@@ -236,6 +236,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     final service = Provider.of<OptionItemService>(context, listen: false);
 
     try {
+      final woData = widget.form?['wo_data'];
+
+      if (woData == null) return;
+
       String baseCode = '';
       String colorCode = '';
 

@@ -137,7 +137,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                   widget.grades.length >= widget.itemGradeOption!.length)
                 for (int i = 0; i < widget.itemGradeOption!.length; i++)
                   _buildGradeCard(i),
-            ],
+            ].separatedBy(CustomTheme().vGap('xl')),
           ),
         ),
 
@@ -652,23 +652,51 @@ Input Qty Tipe BS
   Widget _buildFinishedItemCompact(List items, int i) {
     final gradeLabel = getGradeLabel(i);
 
+    Map<String, dynamic>? findItemByGrade(
+      List items,
+      String grade,
+    ) {
+      try {
+        // 1. cari exact match dulu (A)
+        final exact = items.firstWhere(
+          (e) => e['grade']?.toString().toUpperCase() == grade.toUpperCase(),
+          orElse: () => null,
+        );
+
+        if (exact != null) return exact;
+
+        // 2. fallback ke "Grade A"
+        final fallback = items.firstWhere(
+          (e) =>
+              e['grade']
+                  ?.toString()
+                  .toLowerCase()
+                  .contains('grade ${grade.toLowerCase()}') ==
+              true,
+          orElse: () => null,
+        );
+
+        return fallback;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    final item = gradeLabel == 'A'
+        ? findItemByGrade(widget.finishedItemGood, 'A')
+        : gradeLabel == 'B'
+            ? findItemByGrade(widget.finishedItemGrb, 'B')
+            : null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          gradeLabel == 'A'
-              ? widget.finishedItemGood[0]['code']
-              : gradeLabel == 'B'
-                  ? widget.finishedItemGrb[0]['code']
-                  : '-',
+          item?['code'] ?? '-',
           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
         ),
         Text(
-          gradeLabel == 'A'
-              ? widget.finishedItemGood[0]['label']
-              : gradeLabel == 'B'
-                  ? widget.finishedItemGrb[0]['label']
-                  : '-',
+          item?['label'] ?? '-',
           style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,

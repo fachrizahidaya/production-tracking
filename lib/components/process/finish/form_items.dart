@@ -388,7 +388,7 @@ class _FormItemsState extends State<FormItems> {
           ].separatedBy(CustomTheme().hGap('xl')),
         ),
         if (isSorting && hasSelectedWO && _isDataEmpty())
-          FormHelpers.buildEmptyState()
+          FormHelpers.buildEmptyState(false)
         else ...[
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,

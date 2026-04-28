@@ -75,7 +75,7 @@ class _FinishSortingState extends State<FinishSorting> {
       getWorkOrderOptions: (service) => service.dataListOption,
       getFinishedItemOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput) =>
+              handleChangeInput, finishedItemOption) =>
           FinishSortingManual(
         id: id,
         processId: processId,

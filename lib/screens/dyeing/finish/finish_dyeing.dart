@@ -74,7 +74,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
       getWorkOrderOptions: (service) => service.dataListOption,
       getFinishedItemOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput) =>
+              handleChangeInput, finishedItemOption) =>
           FinishDyeingManual(
         id: id,
         processId: processId,
@@ -86,6 +86,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
         withItemGrade: false,
         withQtyAndWeight: false,
         woId: id,
+        finishedItemOptions: finishedItemOption,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final dyeing = Dyeing(

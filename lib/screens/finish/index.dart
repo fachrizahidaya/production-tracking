@@ -16,14 +16,14 @@ import 'package:textile_tracking/providers/user_provider.dart';
 class FinishProcess extends StatefulWidget {
   final String title;
   final Widget Function(
-    BuildContext context,
-    dynamic id,
-    dynamic processId,
-    Map<String, dynamic> data,
-    Map<String, dynamic> form,
-    Future<void> Function(String id) handleSubmit,
-    void Function(String fieldName, dynamic value) handleChangeInput,
-  ) formPageBuilder;
+      BuildContext context,
+      dynamic id,
+      dynamic processId,
+      Map<String, dynamic> data,
+      Map<String, dynamic> form,
+      Future<void> Function(String id) handleSubmit,
+      void Function(String fieldName, dynamic value) handleChangeInput,
+      List<dynamic> finishedItemOption) formPageBuilder;
   final Map<String, dynamic>? initialData;
   final label;
 
@@ -364,15 +364,8 @@ class _FinishProcessState extends State<FinishProcess> {
 
       Navigator.push(
           context,
-          _createRoute(widget.formPageBuilder(
-            context,
-            woId,
-            processId,
-            data,
-            _form,
-            _handleSubmit,
-            _handleChangeInput,
-          )));
+          _createRoute(widget.formPageBuilder(context, woId, processId, data,
+              _form, _handleSubmit, _handleChangeInput, finishedItemOption)));
     } catch (e) {
       await showAlertDialog(
         context: context,
@@ -399,15 +392,8 @@ class _FinishProcessState extends State<FinishProcess> {
       Navigator.push(
         context,
         _createRoute(
-          widget.formPageBuilder(
-            context,
-            woId,
-            processId,
-            data,
-            _form,
-            _handleSubmit,
-            _handleChangeInput,
-          ),
+          widget.formPageBuilder(context, woId, processId, data, _form,
+              _handleSubmit, _handleChangeInput, finishedItemOption),
         ),
       );
     } catch (e) {
@@ -470,7 +456,7 @@ class _FinishProcessState extends State<FinishProcess> {
             handleSubmit: _handleSubmit,
             handleRoute: (form, handleSubmit, handleChangeInput) =>
                 _createRoute(widget.formPageBuilder(context, null, null, {},
-                    form, handleSubmit, handleChangeInput)),
+                    form, handleSubmit, handleChangeInput, finishedItemOption)),
             isLoading: _isLoading,
             handleChangeInput: _handleChangeInput,
           ),

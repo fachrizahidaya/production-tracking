@@ -13,6 +13,7 @@ class FinishSortingManual extends StatefulWidget {
   final withItemGrade;
   final withQtyAndWeight;
   final forDyeing;
+  final finishedItemOptions;
 
   const FinishSortingManual(
       {super.key,
@@ -25,7 +26,8 @@ class FinishSortingManual extends StatefulWidget {
       this.forDyeing,
       this.forPacking,
       this.withItemGrade,
-      this.withQtyAndWeight});
+      this.withQtyAndWeight,
+      this.finishedItemOptions});
 
   @override
   State<FinishSortingManual> createState() => _FinishSortingManualState();
@@ -68,6 +70,7 @@ class _FinishSortingManualState extends State<FinishSortingManual> {
       fetchItemGrade: (service) => service.fetchOptions(),
       getItemGradeOptions: (service) => service.dataListOption,
       processId: widget.processId,
+      finishedItemOptions: widget.finishedItemOptions,
     );
   }
 }

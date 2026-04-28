@@ -77,7 +77,7 @@ class _FinishPackingState extends State<FinishPacking> {
       fetchFinishedItem: (service) async => await service.fetchOptions(),
       getFinishedItemOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput) =>
+              handleChangeInput, finishedItemOption) =>
           FinishPackingManual(
         id: id,
         processId: processId,
@@ -90,6 +90,7 @@ class _FinishPackingState extends State<FinishPacking> {
         withItemGrade: false,
         withQtyAndWeight: false,
         woId: id,
+        finishedItemOptions: finishedItemOption,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final packing = Packing(

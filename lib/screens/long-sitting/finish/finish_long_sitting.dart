@@ -71,7 +71,7 @@ class _FinishLongSittingState extends State<FinishLongSitting> {
           await service.fetchSittingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput) =>
+              handleChangeInput, finishedItemOption) =>
           FinishLongSittingManual(
         id: id,
         processId: processId,

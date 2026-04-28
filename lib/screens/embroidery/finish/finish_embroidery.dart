@@ -73,7 +73,7 @@ class _FinishEmbroideryState extends State<FinishEmbroidery> {
           await service.fetchEmbroideryFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput) =>
+              handleChangeInput, finishedItemOption) =>
           FinishEmbroideryManual(
         id: id,
         processId: processId,

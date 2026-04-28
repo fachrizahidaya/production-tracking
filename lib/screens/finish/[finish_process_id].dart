@@ -236,10 +236,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     final service = Provider.of<OptionItemService>(context, listen: false);
 
     try {
-      final woData = widget.form?['wo_data'];
-
-      if (woData == null) return;
-
       String baseCode = '';
       String colorCode = '';
 
@@ -283,56 +279,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
 
     return items.first;
-  }
-
-  Future<void> _handleFetchFinishedMaterialSorting() async {
-    setState(() => _isFetchingFinishedMaterial = true);
-
-    try {
-      final service = Provider.of<OptionItemService>(context, listen: false);
-
-      final items = woData['items'];
-
-      if (items == null || items is! List || items.isEmpty) {
-        setState(() => finishedItemGrb = []);
-        return;
-      }
-
-      final itemCode = firstWoItem?['item_code'] ?? '';
-
-      if (firstWoItem == null) {
-        setState(() => finishedItemGrb = []);
-        return;
-      }
-
-      if (itemCode == null || itemCode.toString().isEmpty) {
-        setState(() => finishedItemGrb = []);
-        return;
-      }
-
-      final parts = itemCode.split('-');
-
-      if (parts.length < 2) {
-        setState(() => finishedItemGrb = []);
-        return;
-      }
-
-      final baseCode = parts.first;
-
-      await service.fetchOptions(
-        process: 'sorting',
-        baseCode: baseCode,
-        colorCode: 'grb',
-      );
-
-      setState(() {
-        finishedItemGrb = service.dataListOption;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
-    } finally {
-      setState(() => _isFetchingFinishedMaterial = false);
-    }
   }
 
   Future<void> _handleFetchItemGrade() async {
@@ -444,11 +390,11 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     });
 
     // 🔥 GANTI DI SINI
-    if (widget.label == 'Sorting') {
-      await _handleFetchFinishedMaterialSorting();
-    } else {
-      await _handleFetchFinishedMaterial();
-    }
+    // if (widget.label == 'Sorting') {
+    //   await _handleFetchFinishedMaterialSorting();
+    // } else {
+    await _handleFetchFinishedMaterial();
+    // }
   }
 
   Future<void> _getProcessView(id) async {

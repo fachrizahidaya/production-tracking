@@ -78,7 +78,7 @@ class _FinishLongHemmingState extends State<FinishLongHemming> {
       fetchFinishedItem: (service) async => await service.fetchOptions(),
       getFinishedItemOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput) =>
+              handleChangeInput, finishedItemOption) =>
           FinishLongHemmingManual(
         id: id,
         processId: processId,
@@ -90,6 +90,7 @@ class _FinishLongHemmingState extends State<FinishLongHemming> {
         forHemming: true,
         withItemGrade: false,
         withQtyAndWeight: false,
+        finishedItemOptions: finishedItemOption,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final longHemming = LongHemming(

@@ -44,6 +44,7 @@ class FinishProcessManual extends StatefulWidget {
   final forPacking;
   final forHemming;
   final forSewing;
+  final finishedItemOptions;
 
   const FinishProcessManual(
       {super.key,
@@ -70,7 +71,8 @@ class FinishProcessManual extends StatefulWidget {
       this.forSewing,
       this.fetchFinishItem,
       this.getFinishedItemOptions,
-      this.woId});
+      this.woId,
+      this.finishedItemOptions});
 
   @override
   State<FinishProcessManual> createState() => _FinishProcessManualState();
@@ -183,7 +185,13 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     await _handleFetchItemGrade();
     await _handleFetchUnit();
     await _handleFetchItemType();
-    await _handleFetchFinishedMaterial();
+    // await _handleFetchFinishedMaterial();
+
+    if ((widget.finishedItemOptions ?? []).isEmpty) {
+      await _handleFetchFinishedMaterial();
+    } else {
+      finishedItemOption = widget.finishedItemOptions!;
+    }
 
     setState(() {
       _firstLoading = false;
@@ -236,9 +244,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     final service = Provider.of<OptionItemService>(context, listen: false);
 
     try {
-      final woData = widget.form?['wo_data'];
+      // final woData = widget.form?['wo_data'];
 
-      if (woData == null) return;
+      // if (woData == null) return;
 
       String baseCode = '';
       String colorCode = '';
@@ -260,6 +268,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       final data = widget.getFinishedItemOptions != null
           ? widget.getFinishedItemOptions!(service)
           : service.dataListOption;
+      print('dat: $data');
 
       setState(() {
         finishedItemOption = data;
@@ -828,7 +837,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       context: context,
       builder: (_) => SelectDialog(
         label: 'Material Greige',
-        options: provider.dataListOption,
+        options: (widget.finishedItemOptions != null &&
+                widget.finishedItemOptions!.isNotEmpty)
+            ? widget.finishedItemOptions!
+            : finishedItemOption,
         selected: widget.form?['greige_item_id']?.toString(),
         isManyOption: true,
         isAnyAdditionalData: true,

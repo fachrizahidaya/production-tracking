@@ -73,7 +73,7 @@ class _FinishPrintingState extends State<FinishPrinting> {
           await service.fetchPrintingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput) =>
+              handleChangeInput, finishedItemOption) =>
           FinishPrintingManual(
         id: id,
         processId: processId,

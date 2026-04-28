@@ -71,7 +71,7 @@ class _FinishTumblerState extends State<FinishTumbler> {
           await service.fetchTumblerFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput) =>
+              handleChangeInput, finishedItemOption) =>
           FinishTumblerManual(
         id: id,
         processId: processId,

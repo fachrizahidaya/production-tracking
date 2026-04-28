@@ -3,7 +3,7 @@ import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 
 class FormHelpers {
-  static Widget buildEmptyState() {
+  static Widget buildEmptyState(isUpdate) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 40),
@@ -12,7 +12,9 @@ class FormHelpers {
         children: [
           Icon(Icons.edit_note, size: 48, color: Colors.grey),
           SizedBox(height: 12),
-          Text('Silakan edit terlebih dahulu'),
+          Text(isUpdate
+              ? 'Silakan keluar dan masuk kembali'
+              : 'Silakan edit terlebih dahulu'),
         ],
       ),
     );

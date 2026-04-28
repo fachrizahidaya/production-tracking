@@ -103,8 +103,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   bool _isFetchingMachine = false;
   bool _isFetchingUnit = false;
   bool _isFetchingItemType = false;
-  bool _isFetchingItemGrade = false;
-  bool _isFetchingFinishedMaterial = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   final WorkOrderService _workOrderService = WorkOrderService();
@@ -486,7 +484,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   Future<void> _handleNavigateToUpdate() async {
-    final result = await Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => UpdateProcess(
@@ -692,10 +690,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   Future<void> _handleFetchItemGrade({String search = ''}) async {
     final service = context.read<OptionMasterItemGradeService>();
 
-    setState(() {
-      _isFetchingItemGrade = true;
-    });
-
     try {
       await service.fetchOptions(
         isInitialLoad: true,
@@ -708,10 +702,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("$e")),
       );
-    } finally {
-      setState(() {
-        _isFetchingItemGrade = false;
-      });
     }
   }
 
@@ -743,10 +733,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   Future<void> _handleFetchFinishedGrbMaterial() async {
-    setState(() {
-      _isFetchingFinishedMaterial = true;
-    });
-
     final service = Provider.of<OptionItemService>(context, listen: false);
 
     try {
@@ -774,18 +760,10 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("$e")),
       );
-    } finally {
-      setState(() {
-        _isFetchingFinishedMaterial = false;
-      });
     }
   }
 
   Future<void> _handleFetchFinishedGoodMaterial() async {
-    // setState(() {
-    //   _isFetchingFinishedMaterial = true;
-    // });
-
     final service = Provider.of<OptionItemService>(context, listen: false);
 
     try {
@@ -815,10 +793,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("$e")),
       );
-    } finally {
-      // setState(() {
-      //   _isFetchingFinishedMaterial = false;
-      // });
     }
   }
 

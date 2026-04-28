@@ -81,7 +81,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
     final count = widget.dataList.length;
 
     if (count == 1) {
-      return 100;
+      return 1700;
     }
 
     if (_expandedIndex != null) {

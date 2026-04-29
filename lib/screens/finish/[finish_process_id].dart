@@ -650,7 +650,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       widget.form?['weight_per_dozen'] = safeToApi(_weightDozenController.text);
       widget.form?['weight_grade_a'] = _weightGradeAController.text;
       widget.form?['gsm'] = _gsmController.text;
-      widget.form?['total_weight'] = _totalWeightController.text;
+      widget.form?['total_weight'] = safeToApi(_totalWeightController.text);
 
       if (widget.label == 'Sorting') {
         widget.form?['spraying'] = toDouble(widget.form?['spraying']);

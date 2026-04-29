@@ -651,7 +651,6 @@ Input Qty Tipe BS
 
   Widget _buildFinishedItemCompact(List items, int i) {
     final gradeLabel = getGradeLabel(i);
-
     Map<String, dynamic>? findItemByGrade(
       List items,
       String grade,
@@ -692,11 +691,19 @@ Input Qty Tipe BS
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          item?['code'] ?? '-',
+          gradeLabel == 'A'
+              ? widget.finishedItemGood[0]['code']
+              : gradeLabel == 'B'
+                  ? widget.finishedItemGrb[0]['code']
+                  : '-',
           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
         ),
         Text(
-          item?['label'] ?? '-',
+          gradeLabel == 'A'
+              ? widget.finishedItemGood[0]['label']
+              : gradeLabel == 'B'
+                  ? widget.finishedItemGrb[0]['label']
+                  : '-',
           style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,

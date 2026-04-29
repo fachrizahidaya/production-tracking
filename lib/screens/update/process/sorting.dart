@@ -363,6 +363,15 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 Select Tipe BS
 */
   void _showSelectDefectTypeDialog() {
+    final selectedDefectsWithQty = widget.defectArray
+        .where((d) {
+          final qty = d['qty'];
+          final parsedQty = double.tryParse(qty.toString()) ?? 0;
+          return parsedQty > 0;
+        })
+        .map((d) => d['defect_type_id'].toString())
+        .toList();
+
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -397,34 +406,37 @@ Select Tipe BS
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           for (var option in widget.itemTypeOption ?? [])
-                            ListTile(
-                              title: Text(option['name'] ?? ''),
-                              onTap: () {
-                                final exists = widget.defectArray.firstWhere(
-                                  (d) =>
-                                      d['defect_type_id'].toString() ==
-                                      option['id'].toString(),
-                                  orElse: () => <String, dynamic>{},
-                                );
+                            if (!selectedDefectsWithQty
+                                .contains(option['id'].toString()))
+                              ListTile(
+                                title: Text(option['name'] ?? ''),
+                                onTap: () {
+                                  final exists = widget.defectArray.firstWhere(
+                                    (d) =>
+                                        d['defect_type_id'].toString() ==
+                                        option['id'].toString(),
+                                    orElse: () => <String, dynamic>{},
+                                  );
 
-                                if (exists.isEmpty) {
-                                  setState(() {
-                                    widget.defectArray.add({
-                                      'defect_type_id': option['id'],
-                                      'qty': '0',
+                                  if (exists.isEmpty) {
+                                    setState(() {
+                                      widget.defectArray.add({
+                                        'defect_type_id': option['id'],
+                                        'qty': '0',
+                                      });
+                                      widget.defectQty.add(
+                                        TextEditingController(text: '0'),
+                                      );
+                                      widget.form['defects'] =
+                                          widget.defectArray;
                                     });
-                                    widget.defectQty.add(
-                                      TextEditingController(text: '0'),
-                                    );
-                                    widget.form['defects'] = widget.defectArray;
-                                  });
-                                }
+                                  }
 
-                                Navigator.pop(context);
-                                _showDefectQtyDialog(
-                                    widget.defectArray.length - 1);
-                              },
-                            ),
+                                  Navigator.pop(context);
+                                  _showDefectQtyDialog(
+                                      widget.defectArray.length - 1);
+                                },
+                              ),
                         ],
                       ),
                     ],
@@ -651,41 +663,6 @@ Input Qty Tipe BS
 
   Widget _buildFinishedItemCompact(List items, int i) {
     final gradeLabel = getGradeLabel(i);
-    Map<String, dynamic>? findItemByGrade(
-      List items,
-      String grade,
-    ) {
-      try {
-        // 1. cari exact match dulu (A)
-        final exact = items.firstWhere(
-          (e) => e['grade']?.toString().toUpperCase() == grade.toUpperCase(),
-          orElse: () => null,
-        );
-
-        if (exact != null) return exact;
-
-        // 2. fallback ke "Grade A"
-        final fallback = items.firstWhere(
-          (e) =>
-              e['grade']
-                  ?.toString()
-                  .toLowerCase()
-                  .contains('grade ${grade.toLowerCase()}') ==
-              true,
-          orElse: () => null,
-        );
-
-        return fallback;
-      } catch (e) {
-        return null;
-      }
-    }
-
-    final item = gradeLabel == 'A'
-        ? findItemByGrade(widget.finishedItemGood, 'A')
-        : gradeLabel == 'B'
-            ? findItemByGrade(widget.finishedItemGrb, 'B')
-            : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

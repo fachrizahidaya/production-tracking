@@ -66,6 +66,8 @@ class _PackingEditSectionState extends State<PackingEditSection> {
                   label: 'Total Packing',
                   controller: widget.packingQty,
                   initialValue: widget.form['qty']?.toString() ?? '0',
+                  isSorting: true,
+                  isNumber: true,
                   handleChange: (val) {
                     widget.onChange('qty', val);
                     setState(() {

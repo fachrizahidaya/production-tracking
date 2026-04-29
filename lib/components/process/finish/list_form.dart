@@ -187,6 +187,7 @@ class _ListFormState extends State<ListForm> {
         'notes': existing['notes'] ?? '',
         'qty': existing['qty'] ?? '0',
         'greige_item_id': existing['greige_item_id'],
+        'name': grade['label'] ?? ''
       });
     }
 

@@ -268,7 +268,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       final data = widget.getFinishedItemOptions != null
           ? widget.getFinishedItemOptions!(service)
           : service.dataListOption;
-      print('dat: $data');
 
       setState(() {
         finishedItemOption = data;

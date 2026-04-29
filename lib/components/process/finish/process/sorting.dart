@@ -390,6 +390,15 @@ class _SortingSectionState extends State<SortingSection> {
   }
 
   void _showSelectDefectTypeDialog() {
+    final selectedDefectsWithQty = widget.defects
+        .where((d) {
+          final qty = d['qty'];
+          final parsedQty = double.tryParse(qty.toString()) ?? 0;
+          return parsedQty > 0;
+        })
+        .map((d) => d['defect_type_id'].toString())
+        .toList();
+
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -425,32 +434,36 @@ class _SortingSectionState extends State<SortingSection> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           for (var option in widget.itemTypeOption ?? [])
-                            ListTile(
-                              title: Text(option['name'] ?? ''),
-                              onTap: () {
-                                final exists = widget.defects.any(
-                                  (d) =>
-                                      d['defect_type_id'].toString() ==
-                                      option['id'].toString(),
-                                );
+                            if (!selectedDefectsWithQty
+                                .contains(option['id'].toString()))
+                              ListTile(
+                                title: Text(option['name'] ?? ''),
+                                onTap: () {
+                                  final exists = widget.defects.firstWhere(
+                                    (d) =>
+                                        d['defect_type_id'].toString() ==
+                                        option['id'].toString(),
+                                    orElse: () => <String, dynamic>{},
+                                  );
 
-                                if (!exists) {
-                                  setState(() {
-                                    widget.defects.add({
-                                      'defect_type_id': option['id'],
-                                      'qty': '0',
+                                  if (exists.isEmpty) {
+                                    setState(() {
+                                      widget.defects.add({
+                                        'defect_type_id': option['id'],
+                                        'qty': '0',
+                                      });
+                                      widget.defectQty.add(
+                                        TextEditingController(text: '0'),
+                                      );
+                                      widget.form['defects'] = widget.defects;
                                     });
-                                    widget.defectQty.add(
-                                      TextEditingController(text: '0'),
-                                    );
-                                    widget.form['defects'] = widget.defects;
-                                  });
-                                }
+                                  }
 
-                                Navigator.pop(context);
-                                _showDefectQtyDialog(widget.defects.length - 1);
-                              },
-                            ),
+                                  Navigator.pop(context);
+                                  _showDefectQtyDialog(
+                                      widget.defects.length - 1);
+                                },
+                              ),
                         ],
                       ),
                     ],

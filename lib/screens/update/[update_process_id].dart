@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
@@ -13,6 +14,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/format_idr.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/to_double.dart';
+import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/update/process/cutting_sewing.dart';
 import 'package:textile_tracking/screens/update/process/long_hemming.dart';
@@ -534,6 +536,22 @@ class _UpdateProcessState extends State<UpdateProcess> {
     }
   }
 
+  void _ensureDefectController(int index) {
+    while (widget.defectQty.length <= index) {
+      widget.defectQty.add(TextEditingController(text: '0'));
+    }
+  }
+
+  String getDefectLabel(int i) {
+    return widget.itemTypeOption.firstWhere(
+          (e) =>
+              e['id'].toString() ==
+              widget.defects[i]['defect_type_id'].toString(),
+          orElse: () => {'name': ''},
+        )['name'] ??
+        '';
+  }
+
   @override
   void didUpdateWidget(covariant UpdateProcess oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -800,6 +818,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                     handleUpdateGrade: widget.handleUpdateGrade,
                                     qty: widget.qty,
                                     recalculateGradeBS: _recalculateGradeBS,
+                                    buildMultiTipeUpdate: _buildMultiTipeUpdate,
                                   ),
                                 if (widget.label == 'Packing')
                                   PackingEditSection(
@@ -863,6 +882,347 @@ class _UpdateProcessState extends State<UpdateProcess> {
               ),
             ),
           )),
+    );
+  }
+
+  Widget _buildMultiTipeUpdate() {
+    return TemplateCard(
+      title: 'Tipe BS (BS-an)',
+      icon: Icons.stop_circle_outlined,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // LIST TIPE BS (HORIZONTAL)
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final itemWidth = (constraints.maxWidth - 32) / 2;
+              return Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: [
+                  if (_defects.isNotEmpty)
+                    ..._defects.asMap().entries.map((entry) {
+                      int i = entry.key;
+                      var defect = entry.value;
+
+                      _ensureDefectController(i);
+
+                      int parseQty(dynamic value) {
+                        if (value == null) return 0;
+                        final clean = value
+                            .toString()
+                            .replaceAll('.', '')
+                            .replaceAll(',', '');
+                        return int.tryParse(clean) ?? 0;
+                      }
+
+                      final defectQty = parseQty(defect['qty']);
+
+                      return SizedBox(
+                        width: itemWidth,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    (getDefectLabel(i)),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  CustomBadge(
+                                    title:
+                                        'Qty: ${formatNumber(defectQty).toString()} PCS',
+                                    status: 'Selesai',
+                                    rework: true,
+                                  ),
+                                ].separatedBy(CustomTheme().vGap('lg')),
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: Colors.grey),
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () => _showDefectQtyDialog(i),
+                                      child: Icon(Icons.edit,
+                                          color: Colors.blue, size: 32),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: Colors.grey),
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        showConfirmationDialog(
+                                          context: context,
+                                          title: 'Hapus Tipe BS',
+                                          message:
+                                              'Apakah Anda yakin ingin menghapus ${getDefectLabel(i)}?',
+                                          isLoading: _isLoading,
+                                          buttonBackground: CustomTheme()
+                                              .buttonColor('danger'),
+                                          onConfirm: () async {
+                                            setState(() {
+                                              _defects.removeAt(i);
+                                              if (i < widget.defectQty.length) {
+                                                widget.defectQty[i].dispose();
+                                                widget.defectQty.removeAt(i);
+                                              }
+                                              widget.form['defects'] = _defects;
+                                              _recalculateGradeBS();
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      },
+                                      child: Icon(Icons.close,
+                                          color: Colors.red, size: 32),
+                                    ),
+                                  ),
+                                ].separatedBy(CustomTheme().hGap('lg')),
+                              )
+                            ].separatedBy(CustomTheme().vGap('lg')),
+                          ),
+                        ),
+                      );
+                    }),
+                ],
+              );
+            },
+          ),
+
+          GestureDetector(
+            onTap: () => _showSelectDefectTypeDialog(),
+            child: Container(
+              margin: EdgeInsets.only(right: 8),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: Text('+ Tambah Tipe BS'),
+              ),
+            ),
+          ),
+        ].separatedBy(CustomTheme().vGap('xl')),
+      ),
+    );
+  }
+
+  void _showSelectDefectTypeDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        backgroundColor: Colors.white,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.5,
+              maxHeight: MediaQuery.of(context).size.height * 0.5),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                child: Text(
+                  'Pilih Tipe BS',
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('xl'),
+                    fontWeight: CustomTheme().fontWeight('bold'),
+                    height: 1,
+                  ),
+                ),
+              ),
+              Divider(),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (var option in widget.itemTypeOption ?? [])
+                            ListTile(
+                              title: Text(option['name'] ?? ''),
+                              onTap: () {
+                                final exists = _defects.firstWhere(
+                                  (d) =>
+                                      d['defect_type_id'].toString() ==
+                                      option['id'].toString(),
+                                  orElse: () => {},
+                                );
+
+                                if (exists.isEmpty) {
+                                  setState(() {
+                                    _defects.add({
+                                      'defect_type_id': option['id'],
+                                      'qty': '0',
+                                    });
+                                    widget.defectQty.add(
+                                      TextEditingController(text: '0'),
+                                    );
+                                    widget.form['defects'] = _defects;
+                                  });
+                                }
+
+                                Navigator.pop(context);
+                                _showDefectQtyDialog(_defects.length - 1);
+                              },
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showDefectQtyDialog(int index) {
+    final controller = TextEditingController(
+      text: _defects[index]['qty']?.toString() ?? '0',
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        backgroundColor: Colors.white,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.4,
+            maxHeight: MediaQuery.of(context).size.height * 0.4,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                        child: Text(
+                          '${getDefectLabel(index)} - Input Qty',
+                          style: TextStyle(
+                            fontSize: CustomTheme().fontSize('xl'),
+                            fontWeight: CustomTheme().fontWeight('bold'),
+                            height: 1,
+                          ),
+                        ),
+                      ),
+                      Divider(),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                        child: TextForm(
+                          label: 'Qty',
+                          req: true,
+                          isNumber: true,
+                          initialValue:
+                              _defects[index]['qty']?.toString() ?? '0',
+                          controller: controller,
+                          handleChange: (value) {
+                            final safeValue =
+                                (value.trim().isEmpty) ? '0' : value;
+
+                            _defects[index]['qty'] = toDouble(safeValue);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
+                  ),
+                  border: Border(
+                    top: BorderSide(color: Colors.grey.shade200),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 56,
+                        child: CancelButton(
+                          label: 'Batal',
+                          onPressed: () => Navigator.pop(context),
+                          fontSize: CustomTheme().fontSize('xl'),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: SizedBox(
+                        height: 56,
+                        child: FormButton(
+                          label: 'Simpan',
+                          onPressed: () {
+                            setState(() {
+                              final cleanValue = controller.text
+                                  .replaceAll('.', '')
+                                  .replaceAll(',', '');
+
+                              _defects[index]['qty'] = cleanValue;
+                              widget.defectQty[index].text = cleanValue;
+
+                              widget.form['defects'] = _defects;
+
+                              _recalculateGradeBS();
+                            });
+                            Navigator.pop(context);
+                          },
+                          fontSize: CustomTheme().fontSize('xl'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

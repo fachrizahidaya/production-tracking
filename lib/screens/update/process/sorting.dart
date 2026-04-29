@@ -78,7 +78,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     return widget.itemTypeOption.firstWhere(
           (e) =>
               e['id'].toString() ==
-              widget.defects[i]['defect_type_id'].toString(),
+              widget.defectArray[i]['defect_type_id'].toString(),
           orElse: () => {'name': ''},
         )['name'] ??
         '';
@@ -404,7 +404,7 @@ Select Tipe BS
                                   (d) =>
                                       d['defect_type_id'].toString() ==
                                       option['id'].toString(),
-                                  orElse: () => {},
+                                  orElse: () => <String, dynamic>{},
                                 );
 
                                 if (exists.isEmpty) {

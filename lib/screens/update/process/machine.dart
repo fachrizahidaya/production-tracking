@@ -107,6 +107,7 @@ class _MachineEditSectionState extends State<MachineEditSection> {
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Expanded(
@@ -132,7 +133,7 @@ class _MachineEditSectionState extends State<MachineEditSection> {
                                           : 'Diproses',
                                   title: status ?? '',
                                 ),
-                        ].separatedBy(CustomTheme().vGap('md')),
+                        ].separatedBy(CustomTheme().hGap('xl')),
                       ),
                     ),
                   ),

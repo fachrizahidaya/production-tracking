@@ -99,17 +99,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'TexTrack',
-      // builder: (context, child) {
-      //   final bottomInset = MediaQuery.of(context).viewPadding.bottom;
-
-      //   return MediaQuery(
-      //     data: MediaQuery.of(context),
-      //     child: Padding(
-      //       padding: EdgeInsets.only(bottom: bottomInset),
-      //       child: child!,
-      //     ),
-      //   );
-      // },
       theme: ThemeData(
         primarySwatch: Colors.blue,
         appBarTheme: AppBarTheme(

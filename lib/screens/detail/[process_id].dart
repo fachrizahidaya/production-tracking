@@ -754,7 +754,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       String colorCode = '';
 
       final itemCode = woData['items']?[0]?['item_code'] ?? '';
-      print('cod: $itemCode');
 
       if (itemCode.isNotEmpty) {
         final parts = itemCode.split('-');

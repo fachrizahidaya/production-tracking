@@ -94,21 +94,22 @@ class _FinishPackingState extends State<FinishPacking> {
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final packing = Packing(
-          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          notes: form['notes'],
-          weight_per_dozen: form['weight_per_dozen'],
-          gsm: form['gsm'],
-          total_weight: form['total_weight'],
-          start_time: form['start_time'],
-          end_time: form['end_time'],
-          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
-          attachments: form['attachments'],
-          grades: form['grades'],
-          qty: form['qty'],
-          unit_id: int.tryParse(form['unit_id']?.toString() ?? ''),
-          weight_grade_a: form['weight_grade_a'],
-        );
+            wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+            notes: form['notes'],
+            weight_per_dozen: form['weight_per_dozen'],
+            gsm: form['gsm'],
+            total_weight: form['total_weight'],
+            start_time: form['start_time'],
+            end_time: form['end_time'],
+            start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+            end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+            attachments: form['attachments'],
+            grades: form['grades'],
+            qty: form['qty'],
+            unit_id: int.tryParse(form['unit_id']?.toString() ?? ''),
+            weight_grade_a: form['weight_grade_a'],
+            greige_item_id:
+                int.tryParse(form['greige_item_id']?.toString() ?? ''));
 
         final message =
             await Provider.of<PackingService>(context, listen: false)

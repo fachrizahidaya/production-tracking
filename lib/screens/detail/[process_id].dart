@@ -137,6 +137,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   late List<dynamic> unitOption = [];
   late List<dynamic> machineOption = [];
   late List<dynamic> itemTypeOption = [];
+  late List<dynamic> finishedItemMaterial = [];
   late List<dynamic> finishedItemGrb = [];
   late List<dynamic> finishedItemGood = [];
 
@@ -274,6 +275,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     await _handleFetchMachine();
     await _handleFetchItemType();
     await _handleFetchItemGrade();
+    await _handleFetchFinishedMaterial();
     await _handleFetchFinishedGrbMaterial();
     await _handleFetchFinishedGoodMaterial();
     _syncGradesWithOptions();
@@ -534,6 +536,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           weightGradeA: _weightGradeAController,
           finishedItemGrb: finishedItemGrb,
           finishedItemGood: finishedItemGood,
+          finishedItemMaterial: finishedItemMaterial,
         ),
       ),
     );
@@ -729,6 +732,51 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       setState(() {
         _isFetchingItemType = false;
       });
+    }
+  }
+
+  String formatProcessLabel(String label) {
+    final trimmed = label.trim().toLowerCase();
+
+    // kalau lebih dari 1 kata → pakai underscore
+    if (trimmed.contains(' ')) {
+      return trimmed.replaceAll(RegExp(r'\s+'), '_');
+    }
+
+    return trimmed;
+  }
+
+  Future<void> _handleFetchFinishedMaterial() async {
+    final service = Provider.of<OptionItemService>(context, listen: false);
+
+    try {
+      String baseCode = '';
+      String colorCode = '';
+
+      final itemCode = woData['items']?[0]?['item_code'] ?? '';
+      print('cod: $itemCode');
+
+      if (itemCode.isNotEmpty) {
+        final parts = itemCode.split('-');
+        baseCode = parts.first;
+        colorCode = parts.last;
+      }
+
+      await service.fetchOptions(
+        process: formatProcessLabel(widget.label),
+        baseCode: baseCode,
+        colorCode: colorCode,
+      );
+
+      final data = service.dataListOption;
+
+      setState(() {
+        finishedItemMaterial = data;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     }
   }
 

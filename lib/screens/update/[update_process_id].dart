@@ -69,6 +69,7 @@ class UpdateProcess extends StatefulWidget {
   final weightGradeA;
   final finishedItemGrb;
   final finishedItemGood;
+  final finishedItemMaterial;
 
   const UpdateProcess(
       {super.key,
@@ -118,6 +119,7 @@ class UpdateProcess extends StatefulWidget {
       this.totalWeight,
       this.weightPerDozen,
       this.weightGradeA,
+      this.finishedItemMaterial,
       this.finishedItemGrb,
       this.finishedItemGood});
 
@@ -520,6 +522,13 @@ class _UpdateProcessState extends State<UpdateProcess> {
               }).toList();
             }
 
+            if (widget.label == 'Long Hemming' ||
+                widget.label == 'Sewing' ||
+                widget.label == 'Packing') {
+              widget.form['greige_item_id'] =
+                  (widget.finishedItemMaterial[0]['value']);
+            }
+
             /// 🔥 MAKLON
             else if (_isMaklon == true) {
               widget.form['machines'] = [];
@@ -597,61 +606,132 @@ class _UpdateProcessState extends State<UpdateProcess> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                TemplateCard(
-                                    title: 'No. Proses',
-                                    icon: Icons.description_outlined,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 16,
-                                            horizontal: 12,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            border: Border.all(
-                                                color: Colors.grey.shade200),
-                                          ),
-                                          child: Row(
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: TemplateCard(
+                                          title: 'No. Proses',
+                                          icon: Icons.description_outlined,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Expanded(
-                                                child: Text(
-                                                  widget.data != null
-                                                      ? widget.label == 'Dyeing'
-                                                          ? '${widget.data['dyeing_no']}'
-                                                          : widget.label ==
-                                                                  'Press'
-                                                              ? '${widget.data['press_no']}'
-                                                              : widget.label ==
-                                                                      'Tumbler'
-                                                                  ? '${widget.data['tumbler_no']}'
-                                                                  : widget.label ==
-                                                                          'Stenter'
-                                                                      ? '${widget.data['stenter_no']}'
-                                                                      : widget.label ==
-                                                                              'Long Slitting'
-                                                                          ? '${widget.data['ls_no']}'
-                                                                          : widget.label == 'Long Hemming'
-                                                                              ? '${widget.data['lh_no']}'
-                                                                              : widget.label == 'Cross Cutting'
-                                                                                  ? '${widget.data['cc_no']}'
-                                                                                  : widget.label == 'Sewing'
-                                                                                      ? '${widget.data['sewing_no']}'
-                                                                                      : widget.label == 'Sorting'
-                                                                                          ? '${widget.data['sorting_no']}'
-                                                                                          : '${widget.data['packing_no']}'
-                                                      : '-',
+                                              Container(
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 16,
+                                                  horizontal: 12,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  border: Border.all(
+                                                      color:
+                                                          Colors.grey.shade200),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        widget.data != null
+                                                            ? widget.label ==
+                                                                    'Dyeing'
+                                                                ? '${widget.data['dyeing_no']}'
+                                                                : widget.label ==
+                                                                        'Press'
+                                                                    ? '${widget.data['press_no']}'
+                                                                    : widget.label ==
+                                                                            'Tumbler'
+                                                                        ? '${widget.data['tumbler_no']}'
+                                                                        : widget.label ==
+                                                                                'Stenter'
+                                                                            ? '${widget.data['stenter_no']}'
+                                                                            : widget.label == 'Long Slitting'
+                                                                                ? '${widget.data['ls_no']}'
+                                                                                : widget.label == 'Long Hemming'
+                                                                                    ? '${widget.data['lh_no']}'
+                                                                                    : widget.label == 'Cross Cutting'
+                                                                                        ? '${widget.data['cc_no']}'
+                                                                                        : widget.label == 'Sewing'
+                                                                                            ? '${widget.data['sewing_no']}'
+                                                                                            : widget.label == 'Sorting'
+                                                                                                ? '${widget.data['sorting_no']}'
+                                                                                                : '${widget.data['packing_no']}'
+                                                            : '-',
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                      ].separatedBy(CustomTheme().vGap('lg')),
-                                    )),
+                                            ].separatedBy(
+                                                CustomTheme().vGap('lg')),
+                                          )),
+                                    ),
+                                    if (widget.label == 'Long Hemming' ||
+                                        widget.label == 'Sewing' ||
+                                        widget.label == 'Packing')
+                                      Expanded(
+                                        child: TemplateCard(
+                                            title: 'Produk Setengah Jadi',
+                                            icon: Icons.inventory_2_outlined,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 16,
+                                                    horizontal: 12,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    border: Border.all(
+                                                        color: Colors
+                                                            .grey.shade200),
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              widget.finishedItemMaterial[
+                                                                          0]?[
+                                                                      'code'] ??
+                                                                  '-',
+                                                              style: TextStyle(
+                                                                  fontWeight: CustomTheme()
+                                                                      .fontWeight(
+                                                                          'semibold')),
+                                                            ),
+                                                            Text(
+                                                              widget.finishedItemMaterial[
+                                                                          0]?[
+                                                                      'label'] ??
+                                                                  '-',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .grey),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ].separatedBy(
+                                                  CustomTheme().vGap('lg')),
+                                            )),
+                                      ),
+                                  ].separatedBy(CustomTheme().hGap('xl')),
+                                ),
                                 if (widget.data['machines'] == null &&
                                     widget.data['maklon'] != null)
                                   TemplateCard(
@@ -818,166 +898,199 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                     recalculateGradeBS: _recalculateGradeBS,
                                   ),
                                 if (widget.label == 'Packing')
-                                  TemplateCard(
-                                    title: 'Rincian Hasil Sortir',
-                                    icon: Icons.sort_outlined,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
+                                  Column(
+                                    children: [
+                                      TemplateCard(
+                                        title: 'Rincian Hasil Sortir',
+                                        icon: Icons.sort_outlined,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Column(
+                                                    children: [
+                                                      _buildSortingQty()
+                                                    ],
+                                                  ),
+                                                ),
+                                              ].separatedBy(
+                                                  CustomTheme().hGap('xl')),
+                                            ),
+                                          ].separatedBy(
+                                              CustomTheme().vGap('lg')),
+                                        ),
+                                      ),
+                                      TemplateCard(
+                                        title: 'Packing',
+                                        icon: Icons.layers_outlined,
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
+                                              child: TextForm(
+                                                label: 'Total Packing (PCS)',
+                                                req: false,
+                                                isNumber: true,
+                                                isSorting: true,
+                                                initialValue: widget.form['qty']
+                                                        ?.toString() ??
+                                                    '0',
+                                                controller: widget.packingQty,
+                                                handleChange: (value) {
+                                                  final safeValue = (value
+                                                          .toString()
+                                                          .trim()
+                                                          .isEmpty)
+                                                      ? '0'
+                                                      : value.toString();
+
+                                                  widget.handleChangeInput(
+                                                      'qty', safeValue);
+
+                                                  setState(() {
+                                                    final input =
+                                                        double.tryParse(
+                                                              widget
+                                                                  .weightPerDozen
+                                                                  .text
+                                                                  .replaceAll(
+                                                                      '.', '')
+                                                                  .replaceAll(
+                                                                      ',', '.'),
+                                                            ) ??
+                                                            0;
+                                                    if (input > 0) {
+                                                      calculateBeratA();
+                                                    }
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            Expanded(
                                               flex: 1,
-                                              child: Column(
-                                                children: [_buildSortingQty()],
+                                              child: TextForm(
+                                                label: 'Berat 1 Lusin (KG)',
+                                                req: false,
+                                                isSorting: true,
+                                                isNumber: true,
+                                                initialValue: widget.form[
+                                                            'weight_per_dozen']
+                                                        ?.toString() ??
+                                                    '0',
+                                                controller:
+                                                    widget.weightPerDozen,
+                                                handleChange: (val) {
+                                                  final safeValue = (val
+                                                          .toString()
+                                                          .trim()
+                                                          .isEmpty)
+                                                      ? '0'
+                                                      : val.toString();
+
+                                                  widget.handleChangeInput(
+                                                      'weight_per_dozen',
+                                                      safeValue);
+
+                                                  setState(() {
+                                                    calculateGsm(
+                                                      double.tryParse(
+                                                            widget
+                                                                .weightPerDozen
+                                                                .text
+                                                                .replaceAll(
+                                                                    '.', '')
+                                                                .replaceAll(
+                                                                    ',', '.'),
+                                                          ) ??
+                                                          0,
+                                                    );
+
+                                                    calculateBeratA();
+                                                    calculateTotalBerat();
+                                                  });
+                                                },
                                               ),
                                             ),
                                           ].separatedBy(
                                               CustomTheme().hGap('xl')),
                                         ),
-                                      ].separatedBy(CustomTheme().vGap('lg')),
-                                    ),
+                                      ),
+                                      TemplateCard(
+                                        title: 'Gramasi & Total Berat',
+                                        icon: Icons.scale_outlined,
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: TextForm(
+                                                label: 'Gramasi (GSM)',
+                                                isDisabled: true,
+                                                isNumber: true,
+                                                controller: widget.gsm,
+                                                initialValue: widget.form['gsm']
+                                                        ?.toString() ??
+                                                    '',
+                                                handleChange: (value) {
+                                                  setState(() {
+                                                    widget.handleChangeInput(
+                                                        'gsm', value);
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: TextForm(
+                                                label: 'Berat Grade A (KG)',
+                                                isDisabled: true,
+                                                isNumber: true,
+                                                controller: widget.weightGradeA,
+                                                initialValue: widget
+                                                        .form['weight_grade_a']
+                                                        ?.toString() ??
+                                                    '',
+                                                handleChange: (value) {
+                                                  setState(() {
+                                                    widget.handleChangeInput(
+                                                        'weight_grade_a',
+                                                        value);
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: TextForm(
+                                                label:
+                                                    'Total Berat Keseluruhan (KG)',
+                                                isDisabled: true,
+                                                isNumber: true,
+                                                controller: widget.totalWeight,
+                                                initialValue: widget
+                                                        .form['total_weight']
+                                                        ?.toString() ??
+                                                    '',
+                                                handleChange: (value) {
+                                                  setState(() {
+                                                    widget.handleChangeInput(
+                                                        'total_weight', value);
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          ].separatedBy(
+                                              CustomTheme().hGap('xl')),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                TemplateCard(
-                                  title: 'Packing',
-                                  icon: Icons.layers_outlined,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: TextForm(
-                                          label: 'Total Packing (PCS)',
-                                          req: false,
-                                          isNumber: true,
-                                          isSorting: true,
-                                          initialValue:
-                                              widget.form['qty']?.toString() ??
-                                                  '0',
-                                          controller: widget.packingQty,
-                                          handleChange: (value) {
-                                            final safeValue = (value
-                                                    .toString()
-                                                    .trim()
-                                                    .isEmpty)
-                                                ? '0'
-                                                : value.toString();
-
-                                            widget.handleChangeInput(
-                                                'qty', safeValue);
-
-                                            setState(() {
-                                              calculateBeratA();
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: TextForm(
-                                          label: 'Berat 1 Lusin (KG)',
-                                          req: false,
-                                          isSorting: true,
-                                          isNumber: true,
-                                          initialValue: widget
-                                                  .form['weight_per_dozen']
-                                                  ?.toString() ??
-                                              '0',
-                                          controller: widget.weightPerDozen,
-                                          handleChange: (val) {
-                                            final safeValue =
-                                                (val.toString().trim().isEmpty)
-                                                    ? '0'
-                                                    : val.toString();
-
-                                            widget.handleChangeInput(
-                                                'weight_per_dozen', safeValue);
-
-                                            setState(() {
-                                              calculateGsm(
-                                                double.tryParse(
-                                                      widget.weightPerDozen.text
-                                                          .replaceAll('.', '')
-                                                          .replaceAll(',', '.'),
-                                                    ) ??
-                                                    0,
-                                              );
-
-                                              calculateBeratA();
-                                              calculateTotalBerat();
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ].separatedBy(CustomTheme().hGap('xl')),
-                                  ),
-                                ),
-                                TemplateCard(
-                                  title: 'Gramasi & Total Berat',
-                                  icon: Icons.scale_outlined,
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: TextForm(
-                                          label: 'Gramasi (GSM)',
-                                          isDisabled: true,
-                                          isNumber: true,
-                                          controller: widget.gsm,
-                                          initialValue:
-                                              widget.form['gsm']?.toString() ??
-                                                  '',
-                                          handleChange: (value) {
-                                            setState(() {
-                                              widget.handleChangeInput(
-                                                  'gsm', value);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: TextForm(
-                                          label: 'Berat Grade A (KG)',
-                                          isDisabled: true,
-                                          isNumber: true,
-                                          controller: widget.weightGradeA,
-                                          initialValue: widget
-                                                  .form['weight_grade_a']
-                                                  ?.toString() ??
-                                              '',
-                                          handleChange: (value) {
-                                            setState(() {
-                                              widget.handleChangeInput(
-                                                  'weight_grade_a', value);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: TextForm(
-                                          label: 'Total Berat Keseluruhan (KG)',
-                                          isDisabled: true,
-                                          isNumber: true,
-                                          controller: widget.totalWeight,
-                                          initialValue: widget
-                                                  .form['total_weight']
-                                                  ?.toString() ??
-                                              '',
-                                          handleChange: (value) {
-                                            setState(() {
-                                              widget.handleChangeInput(
-                                                  'total_weight', value);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ].separatedBy(CustomTheme().hGap('xl')),
-                                  ),
-                                ),
                               ].separatedBy(CustomTheme().vGap('xl'))),
                         )),
                         DetailWorkOrder(

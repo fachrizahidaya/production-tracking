@@ -68,7 +68,9 @@ class _SewingDetailState extends State<SewingDetail> {
           machine_ids: form['machine_ids'],
           machines: form['machines'],
           maklon: form['maklon'],
-          maklon_name: form['maklon_name']),
+          maklon_name: form['maklon_name'],
+          greige_item_id:
+              int.tryParse(form['greige_item_id']?.toString() ?? '')),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/sewings',
@@ -110,7 +112,9 @@ class _SewingDetailState extends State<SewingDetail> {
             machines: form['machines'] ?? [],
             machine_ids: form['machine_ids'] ?? [],
             maklon: form['maklon'],
-            maklon_name: form['maklon_name']);
+            maklon_name: form['maklon_name'],
+            greige_item_id:
+                int.tryParse(form['greige_item_id']?.toString() ?? ''));
 
         final message = await Provider.of<SewingService>(context, listen: false)
             .finishItem(context, id, sewing, isLoading);

@@ -956,27 +956,11 @@ Info Material
         'icon': Icons.inventory_2_outlined,
         'is_product': true,
       },
-      if (widget.label != 'Sorting' &&
-          widget.label != 'Packing' &&
-          ((widget.label == 'Dyeing' && widget.data['status'] == 'Selesai') ||
-              (widget.label == 'Long Hemming' &&
-                  widget.data['status'] == 'Selesai') ||
-              (widget.label == 'Cross Cutting' &&
-                  widget.data['status'] == 'Selesai') ||
-              (widget.label == 'Sewing' &&
-                  widget.data['status'] == 'Selesai') ||
-              (widget.label == 'Sorting' &&
-                  widget.data['status'] == 'Selesai') ||
-              (widget.label == 'Packing' &&
-                  widget.data['status'] == 'Selesai') ||
-              (widget.label != 'Dyeing' &&
-                  widget.label != 'Long Hemming' &&
-                  widget.label != 'Cross Cutting' &&
-                  widget.label != 'Sewing' &&
-                  widget.label != 'Sorting' &&
-                  widget.label != 'Packing')))
+      if (widget.data['greige_item_id'] != null)
         {
-          'label': 'Produk Setengah Jadi',
+          'label': widget.label == 'Packing'
+              ? 'Produk Jadi'
+              : 'Produk Setengah Jadi',
           'value':
               '${widget.data['greige_item']['code'] ?? (widget.label == 'Sorting' ? widget.data['grades'][1]['greige_item']['code'] : '-')}',
           'another_value':
@@ -984,15 +968,15 @@ Info Material
           'icon': Icons.inventory_2_outlined,
           'is_product': true,
         },
-      {
-        'label': 'Produk Jadi',
-        'value':
-            '${widget.data['work_orders']['items'][0]['item_code'] ?? '-'}',
-        'another_value':
-            '${widget.data['work_orders']['items'][0]['item_name'] ?? '-'}',
-        'icon': Icons.inventory_2_outlined,
-        'is_product': true,
-      },
+      // {
+      //   'label': 'Produk Jadi',
+      //   'value':
+      //       '${widget.data['work_orders']['items'][0]['item_code'] ?? '-'}',
+      //   'another_value':
+      //       '${widget.data['work_orders']['items'][0]['item_name'] ?? '-'}',
+      //   'icon': Icons.inventory_2_outlined,
+      //   'is_product': true,
+      // },
     ];
 
     return _buildMultiInfoGrid(items, isTablet);
@@ -1421,12 +1405,12 @@ Material WO
   Widget _buildMaterial(bool isTablet) {
     final items = (widget.data['work_orders']['items'] ?? [])
         .cast<Map<String, dynamic>>();
-    // final int totalQty = items.fold<int>(
-    //   0,
-    //   (sum, item) => sum + (item['qty'] ?? 0) as int,
-    // );
-    // final totalBerat = widget.data['greige_qty'] ?? 0;
-    // final spkNo = widget.data?['items']?[0]?['spk_no'] ?? '-';
+    final int totalQty = items.fold<int>(
+      0,
+      (sum, item) => sum + (item['qty'] ?? 0) as int,
+    );
+    final totalBerat = widget.data['work_orders']['greige_qty'] ?? 0;
+    final spkNo = widget.data?['work_orders']['items']?[0]?['spk_no'] ?? '-';
 
     if (items.isEmpty) {
       return Center(child: Text('No Data'));
@@ -1436,7 +1420,7 @@ Material WO
       children: List.generate(items.length, (index) {
         return Column(
           children: [
-            // _buildProdukJadiHeader(spkNo, totalQty, totalBerat),
+            _buildProdukJadiHeader(spkNo, totalBerat, totalQty),
             ListItem(item: items[index]),
             if (index != items.length - 1) SizedBox(height: 12),
           ].separatedBy(CustomTheme().vGap('xl')),
@@ -1445,8 +1429,7 @@ Material WO
     );
   }
 
-  Widget _buildProdukJadiHeader(
-      String spkNo, dynamic totalQty, dynamic totalBerat) {
+  Widget _buildProdukJadiHeader(String spkNo, totalBerat, totalQty) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -1471,7 +1454,8 @@ Material WO
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.data['items'][0]['item_code'] ?? '-',
+                      widget.data['work_orders']['items'][0]['item_code'] ??
+                          '-',
                       style: TextStyle(
                         fontSize: CustomTheme().fontSize('lg'),
                         fontWeight: CustomTheme().fontWeight('semibold'),
@@ -1479,7 +1463,8 @@ Material WO
                       ),
                     ),
                     Text(
-                      widget.data['items'][0]['item_name'] ?? '-',
+                      widget.data['work_orders']['items'][0]['item_name'] ??
+                          '-',
                       style: TextStyle(
                         fontSize: CustomTheme().fontSize('lg'),
                         fontWeight: CustomTheme().fontWeight('semibold'),
@@ -1529,7 +1514,7 @@ Material WO
                       ),
                     ),
                     Text(
-                      '${formatNumber(totalQty)} ${widget.data['items'][0]['unit']['code'] ?? ''}',
+                      '${formatNumber(totalQty)} ${widget.data['work_orders']['items'][0]['unit']['code'] ?? ''}',
                       style: TextStyle(
                         fontSize: CustomTheme().fontSize('lg'),
                         fontWeight: CustomTheme().fontWeight('semibold'),
@@ -1553,7 +1538,7 @@ Material WO
                       ),
                     ),
                     Text(
-                      '${formatNumber(totalBerat)} ${widget.data['greige_unit']['code'] ?? ''}',
+                      '${formatNumber(totalBerat)} ${widget.data['work_orders']['greige_unit']['code'] ?? ''}',
                       style: TextStyle(
                         fontSize: CustomTheme().fontSize('lg'),
                         fontWeight: CustomTheme().fontWeight('semibold'),

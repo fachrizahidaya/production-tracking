@@ -33,6 +33,7 @@ class _StenterDetailState extends State<StenterDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Stenter',
+      prefix: 'STN',
       isMultiMachine: false,
       service: Provider.of<StenterService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>

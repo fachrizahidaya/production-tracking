@@ -38,6 +38,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Dyeing',
+      prefix: 'DYE',
       isMultiMachine: false,
       service: Provider.of<DyeingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>

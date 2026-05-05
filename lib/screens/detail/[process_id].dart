@@ -9,6 +9,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/models/master/machine.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
@@ -61,38 +62,39 @@ class ProcessDetail<T> extends StatefulWidget {
   final forSewing;
   final forHemming;
   final isMultiMachine;
+  final prefix;
 
-  const ProcessDetail({
-    super.key,
-    required this.id,
-    required this.no,
-    required this.service,
-    required this.handleUpdateService,
-    required this.handleDeleteService,
-    required this.modelBuilder,
-    this.canDelete = false,
-    this.canUpdate = false,
-    this.label,
-    this.route,
-    this.fetchMachine,
-    this.getMachineOptions,
-    this.withItemGrade,
-    this.withQtyAndWeight,
-    this.withMaklon,
-    this.onlySewing,
-    this.forDyeing,
-    this.idProcess,
-    this.processService,
-    this.forPacking,
-    this.fetchFinish,
-    this.handleSubmitToService,
-    this.fetchItemGrade,
-    this.getItemGradeOptions,
-    this.getWorkOrderOptions,
-    this.forHemming,
-    this.forSewing,
-    this.isMultiMachine = false,
-  });
+  const ProcessDetail(
+      {super.key,
+      required this.id,
+      required this.no,
+      required this.service,
+      required this.handleUpdateService,
+      required this.handleDeleteService,
+      required this.modelBuilder,
+      this.canDelete = false,
+      this.canUpdate = false,
+      this.label,
+      this.route,
+      this.fetchMachine,
+      this.getMachineOptions,
+      this.withItemGrade,
+      this.withQtyAndWeight,
+      this.withMaklon,
+      this.onlySewing,
+      this.forDyeing,
+      this.idProcess,
+      this.processService,
+      this.forPacking,
+      this.fetchFinish,
+      this.handleSubmitToService,
+      this.fetchItemGrade,
+      this.getItemGradeOptions,
+      this.getWorkOrderOptions,
+      this.forHemming,
+      this.forSewing,
+      this.isMultiMachine = false,
+      this.prefix});
 
   @override
   State<ProcessDetail<T>> createState() => _ProcessDetailState<T>();
@@ -474,7 +476,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         showAlertDialog(
             context: context,
             title: '${widget.label} Diubah',
-            message: message);
+            child: buildBoldMessage(message: message, prefix: widget.prefix));
       });
     } catch (e) {
       await showAlertDialog(

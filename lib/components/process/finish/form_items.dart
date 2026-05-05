@@ -945,8 +945,7 @@ Rework
       {
         'label': 'Qty Hasil Dyeing',
         'value':
-            '${formatNumber(widget.processData['rework_reference']?['work_orders']?['greige_qty'])}'
-                '${widget.processData['rework_reference']?['work_orders']?['greige_unit']?['code'] ?? ''}',
+            '${formatNumber(widget.processData['rework_reference']?['work_orders']?['greige_qty'])} ${widget.processData['rework_reference']?['work_orders']?['greige_unit']?['code'] ?? ''}',
         'icon': Icons.description_outlined,
       },
     ];

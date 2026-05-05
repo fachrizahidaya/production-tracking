@@ -33,6 +33,7 @@ class _SortingDetailState extends State<SortingDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Sorting',
+      prefix: 'SRT',
       service: Provider.of<SortingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<SortingService>(context, listen: false)

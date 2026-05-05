@@ -33,6 +33,7 @@ class _TumblerDetailState extends State<TumblerDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Tumbler',
+      prefix: 'TMB',
       isMultiMachine: false,
       service: Provider.of<TumblerService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>

@@ -956,7 +956,7 @@ Info Material
         'icon': Icons.inventory_2_outlined,
         'is_product': true,
       },
-      if (widget.data['greige_item_id'] != null)
+      if (widget.data['greige_item'] != null)
         {
           'label': widget.label == 'Packing'
               ? 'Produk Jadi'
@@ -968,15 +968,6 @@ Info Material
           'icon': Icons.inventory_2_outlined,
           'is_product': true,
         },
-      // {
-      //   'label': 'Produk Jadi',
-      //   'value':
-      //       '${widget.data['work_orders']['items'][0]['item_code'] ?? '-'}',
-      //   'another_value':
-      //       '${widget.data['work_orders']['items'][0]['item_name'] ?? '-'}',
-      //   'icon': Icons.inventory_2_outlined,
-      //   'is_product': true,
-      // },
     ];
 
     return _buildMultiInfoGrid(items, isTablet);

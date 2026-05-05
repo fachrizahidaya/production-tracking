@@ -34,6 +34,7 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
       no: widget.no,
       isMultiMachine: true,
       label: 'Cross Cutting',
+      prefix: 'CCT',
       service: Provider.of<CrossCuttingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<CrossCuttingService>(context, listen: false)

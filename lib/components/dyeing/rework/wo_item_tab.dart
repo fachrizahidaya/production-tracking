@@ -24,12 +24,12 @@ class _WoItemTabState extends State<WoItemTab> {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> items =
         (widget.data?['items'] ?? []).cast<Map<String, dynamic>>();
-    // final int totalQty = items.fold<int>(
-    //   0,
-    //   (sum, item) => sum + (item['qty'] ?? 0) as int,
-    // );
-    // final totalBerat = widget.data['greige_qty'] ?? 0;
-    // final spkNo = widget.data?['items']?[0]?['spk_no'] ?? '-';
+    final int totalQty = items.fold<int>(
+      0,
+      (sum, item) => sum + (item['qty'] ?? 0) as int,
+    );
+    final totalBerat = widget.data['greige_qty'] ?? 0;
+    final spkNo = widget.data?['items']?[0]?['spk_no'] ?? '-';
 
     return Container(
       decoration: BoxDecoration(
@@ -80,7 +80,7 @@ class _WoItemTabState extends State<WoItemTab> {
               ].separatedBy(CustomTheme().hGap('xl')),
             ),
           ),
-          // _buildProdukJadiHeader(spkNo, totalQty, totalBerat),
+          _buildProdukJadiHeader(spkNo, totalQty, totalBerat),
           Padding(
               padding: CustomTheme().padding('item-detail'),
               child: widget.data.isEmpty

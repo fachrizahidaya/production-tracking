@@ -185,7 +185,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     await _handleFetchItemGrade();
     await _handleFetchUnit();
     await _handleFetchItemType();
-    // await _handleFetchFinishedMaterial();
 
     if ((widget.finishedItemOptions ?? []).isEmpty) {
       await _handleFetchFinishedMaterial();
@@ -244,10 +243,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     final service = Provider.of<OptionItemService>(context, listen: false);
 
     try {
-      // final woData = widget.form?['wo_data'];
-
-      // if (woData == null) return;
-
       String baseCode = '';
       String colorCode = '';
 
@@ -401,12 +396,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       _firstLoading = false;
     });
 
-    // 🔥 GANTI DI SINI
-    // if (widget.label == 'Sorting') {
-    //   await _handleFetchFinishedMaterialSorting();
-    // } else {
     await _handleFetchFinishedMaterial();
-    // }
   }
 
   Future<void> _getProcessView(id) async {
@@ -511,21 +501,14 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             data['bs_weight_unit']['name'].toString();
       }
 
-      if (data['greige_item'] != null) {
-        widget.form?['greige_item_id'] = data['greige_item']['id'].toString();
-        widget.form?['greige_item_name'] =
-            data['greige_item']['name'].toString();
-      }
-
-      if (data['attachments'] != null) {
-        widget.form?['attachments'] = List.from(data['attachments']);
-      }
       if (data['machine_ids'] != null) {
         widget.form?['machine_ids'] = List.from(data['machine_ids']);
       }
+
       if (data['grades'] != null) {
         widget.form?['grades'] = List.from(data['grades']);
       }
+
       final rawDefects = List.from(data['defects'] ?? []);
       widget.form?['defects'] = rawDefects.map<Map<String, dynamic>>((defect) {
         return {
@@ -534,6 +517,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
           'qty': defect['qty'] ?? '0',
         };
       }).toList();
+
       _defects = (widget.form?['defects'] ?? [])
           .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
           .toList();
@@ -542,6 +526,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['maklon'] = data['maklon'];
         widget.form?['maklon'] = data['maklon'];
       }
+
       if (data['maklon_name'] != null) {
         widget.form?['maklon_name'] = data['maklon_name'].toString();
         widget.form?['maklon_name'] = data['maklon_name'].toString();

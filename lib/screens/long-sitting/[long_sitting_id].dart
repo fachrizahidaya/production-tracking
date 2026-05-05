@@ -33,6 +33,7 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Long Slitting',
+      prefix: 'LST',
       isMultiMachine: false,
       service: Provider.of<LongSittingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>

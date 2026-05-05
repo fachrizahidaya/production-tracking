@@ -33,6 +33,7 @@ class _PressTumblerDetailState extends State<PressTumblerDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Press',
+      prefix: 'PRS',
       isMultiMachine: false,
       service: Provider.of<PressTumblerService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>

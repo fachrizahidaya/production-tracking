@@ -33,6 +33,7 @@ class _PackingDetailState extends State<PackingDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Packing',
+      prefix: 'PCK',
       service: Provider.of<PackingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<PackingService>(context, listen: false)

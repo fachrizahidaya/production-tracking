@@ -33,6 +33,7 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
       id: widget.id,
       no: widget.no,
       label: 'Long Hemming',
+      prefix: 'LHM',
       isMultiMachine: true,
       service: Provider.of<LongHemmingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>

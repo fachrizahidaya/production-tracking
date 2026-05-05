@@ -48,7 +48,7 @@ class Machine {
 }
 
 class MachineMasterService extends BaseService<Machine> {
-  final String baseUrl = '${dotenv.env['API_URL']}/machine';
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/machine';
 
   bool _isLoading = false;
   bool _hasMoreData = true;

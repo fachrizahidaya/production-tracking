@@ -67,62 +67,61 @@ class UpdateProcess extends StatefulWidget {
   final totalWeight;
   final weightPerDozen;
   final weightGradeA;
-  final List<dynamic> finishedItemGood;
-  final List<dynamic> finishedItemGrb;
-  final List<dynamic> finishedItemMaterial;
+  final finishedItemGrb;
+  final finishedItemGood;
+  final finishedItemMaterial;
 
-  const UpdateProcess({
-    super.key,
-    this.label,
-    this.id,
-    this.form,
-    this.withMaklon,
-    this.handleSelectItemType,
-    this.data,
-    this.maklon,
-    this.handleChangeInput,
-    this.qtyItem,
-    this.handleSelectQtyItemUnit,
-    this.withQtyAndWeight,
-    this.length,
-    this.weight,
-    this.width,
-    this.handleUpdate,
-    this.handleSelectUnit,
-    this.handleSelectWidthUnit,
-    this.handleSelectLengthUnit,
-    this.isSubmitting,
-    this.formKey,
-    this.forDyeing,
-    this.handleSelectMachine,
-    this.grades,
-    this.getMachineStatus,
-    this.handleFetchMachine,
-    this.defectQty,
-    this.note,
-    this.qty,
-    this.itemGradeOption,
-    this.onGradeChanged,
-    this.itemTypeOption,
-    this.defects,
-    this.handleUpdateGrade,
-    this.handleUpdateDefect,
-    this.reworkLongHemming,
-    this.combing,
-    this.spraying,
-    this.woData,
-    this.cuttingSewingQty,
-    this.defectWeight,
-    this.goodWeight,
-    this.packingQty,
-    this.gsm,
-    this.totalWeight,
-    this.weightPerDozen,
-    this.weightGradeA,
-    this.finishedItemGood = const [],
-    this.finishedItemGrb = const [],
-    this.finishedItemMaterial = const [],
-  });
+  const UpdateProcess(
+      {super.key,
+      this.label,
+      this.id,
+      this.form,
+      this.withMaklon,
+      this.handleSelectItemType,
+      this.data,
+      this.maklon,
+      this.handleChangeInput,
+      this.qtyItem,
+      this.handleSelectQtyItemUnit,
+      this.withQtyAndWeight,
+      this.length,
+      this.weight,
+      this.width,
+      this.handleUpdate,
+      this.handleSelectUnit,
+      this.handleSelectWidthUnit,
+      this.handleSelectLengthUnit,
+      this.isSubmitting,
+      this.formKey,
+      this.forDyeing,
+      this.handleSelectMachine,
+      this.grades,
+      this.getMachineStatus,
+      this.handleFetchMachine,
+      this.defectQty,
+      this.note,
+      this.qty,
+      this.itemGradeOption,
+      this.onGradeChanged,
+      this.itemTypeOption,
+      this.defects,
+      this.handleUpdateGrade,
+      this.handleUpdateDefect,
+      this.reworkLongHemming,
+      this.combing,
+      this.spraying,
+      this.woData,
+      this.cuttingSewingQty,
+      this.defectWeight,
+      this.goodWeight,
+      this.packingQty,
+      this.gsm,
+      this.totalWeight,
+      this.weightPerDozen,
+      this.weightGradeA,
+      this.finishedItemMaterial,
+      this.finishedItemGrb,
+      this.finishedItemGood});
 
   @override
   State<UpdateProcess> createState() => _UpdateProcessState();
@@ -139,17 +138,6 @@ class _UpdateProcessState extends State<UpdateProcess> {
   double totalBerat = 0;
 
   List<Map<String, dynamic>> _newMachines = [];
-
-  Map<String, dynamic>? getFirst(List<dynamic> list) {
-    if (list.isEmpty) return null;
-    return list.first;
-  }
-
-  bool get isSortingDataReady {
-    return (widget.itemGradeOption?.isNotEmpty ?? false) &&
-        widget.grades.isNotEmpty &&
-        widget.grades.length >= (widget.itemGradeOption?.length ?? 0);
-  }
 
   @override
   void initState() {
@@ -334,7 +322,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
   }
 
   double getMaxTotalQty() {
-    final data = widget.woData['processes'][10]['data']?[0];
+    final data = widget.woData['processes'][10]['data'][0];
 
     final gradesList = data['grades'] ?? [];
 
@@ -368,7 +356,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
   }
 
   void calculateGsm(double value) {
-    final size = widget.woData['items']?[0]['variants'][1]['value'];
+    final size = widget.woData['items'][0]['variants'][1]['value'];
     final panjang = int.tryParse(size.split('X')[0]) ?? 0;
     final lebar = int.tryParse(size.split('X')[1]) ?? 0;
 
@@ -581,10 +569,6 @@ class _UpdateProcessState extends State<UpdateProcess> {
 
   @override
   Widget build(BuildContext context) {
-    final goodItem = getFirst(widget.finishedItemGood);
-    final grbItem = getFirst(widget.finishedItemGrb);
-    final finishedItem = getFirst(widget.finishedItemMaterial);
-
     return DefaultTabController(
       length: 2,
       child: GestureDetector(
@@ -718,7 +702,8 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                                   .start,
                                                           children: [
                                                             Text(
-                                                              finishedItem?[
+                                                              widget.finishedItemMaterial[
+                                                                          0]?[
                                                                       'code'] ??
                                                                   '-',
                                                               style: TextStyle(
@@ -727,7 +712,8 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                                           'semibold')),
                                                             ),
                                                             Text(
-                                                              finishedItem?[
+                                                              widget.finishedItemMaterial[
+                                                                          0]?[
                                                                       'label'] ??
                                                                   '-',
                                                               style: TextStyle(
@@ -887,41 +873,30 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                     onChange: widget.handleChangeInput,
                                   ),
                                 if (widget.label == 'Sorting')
-                                  isSortingDataReady
-                                      ? SortingEditSection(
-                                          form: widget.form,
-                                          grades: widget.grades,
-                                          itemGradeOption:
-                                              widget.itemGradeOption,
-                                          spraying: widget.spraying,
-                                          reworkLongHemming:
-                                              widget.reworkLongHemming,
-                                          combing: widget.combing,
-                                          onChange: widget.handleChangeInput,
-                                          updateTotalSorting:
-                                              _updateTotalSorting,
-                                          calculateTotalVermak:
-                                              _calculateTotalVermak,
-                                          calculateTotalQtySorting:
-                                              _calculateTotalQtySorting,
-                                          defectArray: _defects,
-                                          defects: widget.defects,
-                                          itemTypeOption: widget.itemTypeOption,
-                                          finishedItemGood:
-                                              widget.finishedItemGood,
-                                          finishedItemGrb:
-                                              widget.finishedItemGrb,
-                                          data: widget.data,
-                                          defectQty: widget.defectQty,
-                                          gradeArray: widget.grades,
-                                          handleUpdateGrade:
-                                              widget.handleUpdateGrade,
-                                          qty: widget.qty,
-                                          recalculateGradeBS:
-                                              _recalculateGradeBS,
-                                        )
-                                      : Center(
-                                          child: CircularProgressIndicator()),
+                                  SortingEditSection(
+                                    form: widget.form,
+                                    grades: _grades,
+                                    itemGradeOption: widget.itemGradeOption,
+                                    spraying: widget.spraying,
+                                    reworkLongHemming: widget.reworkLongHemming,
+                                    combing: widget.combing,
+                                    onChange: widget.handleChangeInput,
+                                    updateTotalSorting: _updateTotalSorting,
+                                    calculateTotalVermak: _calculateTotalVermak,
+                                    calculateTotalQtySorting:
+                                        _calculateTotalQtySorting,
+                                    defectArray: _defects,
+                                    defects: widget.defects,
+                                    itemTypeOption: widget.itemTypeOption,
+                                    finishedItemGood: widget.finishedItemGood,
+                                    finishedItemGrb: widget.finishedItemGrb,
+                                    data: widget.data,
+                                    defectQty: widget.defectQty,
+                                    gradeArray: _grades,
+                                    handleUpdateGrade: widget.handleUpdateGrade,
+                                    qty: widget.qty,
+                                    recalculateGradeBS: _recalculateGradeBS,
+                                  ),
                                 if (widget.label == 'Packing')
                                   Column(
                                     children: [
@@ -1114,7 +1089,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                               CustomTheme().hGap('xl')),
                                         ),
                                       ),
-                                    ].separatedBy(CustomTheme().vGap('xl')),
+                                    ],
                                   ),
                               ].separatedBy(CustomTheme().vGap('xl'))),
                         )),
@@ -1170,7 +1145,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
 
   Widget _buildSortingQty() {
     final gradesList =
-        widget.woData['processes'][10]['data']?[0]['grades'] ?? [];
+        widget.woData['processes'][10]['data'][0]['grades'] ?? [];
 
     double getTotalAdditionalProcess() {
       final data = widget.woData['processes']?[10]?['data']?[0];

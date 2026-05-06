@@ -14,7 +14,7 @@ class FormHelpers {
           SizedBox(height: 12),
           Text(isUpdate
               ? 'Silakan keluar dan masuk kembali'
-              : 'Silakan edit terlebih dahulu'),
+              : 'Silakan Edit dan Simpan terlebih dahulu'),
         ],
       ),
     );

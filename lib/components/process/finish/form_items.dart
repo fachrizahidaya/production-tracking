@@ -402,12 +402,7 @@ class _FormItemsState extends State<FormItems> {
     if ((widget.itemGradeOption ?? []).isEmpty) return true;
     if (_grades.isEmpty) return true;
 
-    final totalQty = _grades.fold<double>(
-      0,
-      (sum, g) => sum + parseSafe(g['qty']),
-    );
-
-    return totalQty == 0;
+    return false;
   }
 
   @override

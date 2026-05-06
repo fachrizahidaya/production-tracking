@@ -152,7 +152,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                   child: Text('Loading grades...'),
                 ),
         ),
-      ],
+      ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
 

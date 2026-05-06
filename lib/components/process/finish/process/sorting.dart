@@ -174,18 +174,17 @@ class _SortingSectionState extends State<SortingSection> {
         /// =========================
         /// GRADE MATERIAL
         /// =========================
-        if ((widget.itemGradeOption ?? []).isNotEmpty &&
-            widget.grades.isNotEmpty)
-          TemplateCard(
-            title: 'Grade Material',
-            icon: Icons.grade_outlined,
-            child: Column(
-              children: List.generate(
-                widget.itemGradeOption!.length,
-                (i) => _buildGradeCard(i),
-              ).separatedBy(CustomTheme().vGap('2xl')),
-            ),
+
+        TemplateCard(
+          title: 'Grade Material',
+          icon: Icons.grade_outlined,
+          child: Column(
+            children: List.generate(
+              widget.itemGradeOption!.length,
+              (i) => _buildGradeCard(i),
+            ).separatedBy(CustomTheme().vGap('2xl')),
           ),
+        ),
 
         /// =========================
         /// RINGKASAN

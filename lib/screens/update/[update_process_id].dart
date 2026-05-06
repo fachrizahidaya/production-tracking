@@ -145,6 +145,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
     return list.first;
   }
 
+  bool get isSortingDataReady {
+    return (widget.itemGradeOption?.isNotEmpty ?? false) &&
+        widget.grades.isNotEmpty &&
+        widget.grades.length >= (widget.itemGradeOption?.length ?? 0);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -532,7 +538,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                 widget.label == 'Sewing' ||
                 widget.label == 'Packing') {
               widget.form['greige_item_id'] =
-                  (widget.finishedItemMaterial?[0]['value']);
+                  (widget.finishedItemMaterial[0]['value']);
             }
 
             /// 🔥 MAKLON
@@ -881,30 +887,41 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                     onChange: widget.handleChangeInput,
                                   ),
                                 if (widget.label == 'Sorting')
-                                  SortingEditSection(
-                                    form: widget.form,
-                                    grades: _grades,
-                                    itemGradeOption: widget.itemGradeOption,
-                                    spraying: widget.spraying,
-                                    reworkLongHemming: widget.reworkLongHemming,
-                                    combing: widget.combing,
-                                    onChange: widget.handleChangeInput,
-                                    updateTotalSorting: _updateTotalSorting,
-                                    calculateTotalVermak: _calculateTotalVermak,
-                                    calculateTotalQtySorting:
-                                        _calculateTotalQtySorting,
-                                    defectArray: _defects,
-                                    defects: widget.defects,
-                                    itemTypeOption: widget.itemTypeOption,
-                                    finishedItemGood: widget.finishedItemGood,
-                                    finishedItemGrb: widget.finishedItemGrb,
-                                    data: widget.data,
-                                    defectQty: widget.defectQty,
-                                    gradeArray: _grades,
-                                    handleUpdateGrade: widget.handleUpdateGrade,
-                                    qty: widget.qty,
-                                    recalculateGradeBS: _recalculateGradeBS,
-                                  ),
+                                  isSortingDataReady
+                                      ? SortingEditSection(
+                                          form: widget.form,
+                                          grades: widget.grades,
+                                          itemGradeOption:
+                                              widget.itemGradeOption,
+                                          spraying: widget.spraying,
+                                          reworkLongHemming:
+                                              widget.reworkLongHemming,
+                                          combing: widget.combing,
+                                          onChange: widget.handleChangeInput,
+                                          updateTotalSorting:
+                                              _updateTotalSorting,
+                                          calculateTotalVermak:
+                                              _calculateTotalVermak,
+                                          calculateTotalQtySorting:
+                                              _calculateTotalQtySorting,
+                                          defectArray: _defects,
+                                          defects: widget.defects,
+                                          itemTypeOption: widget.itemTypeOption,
+                                          finishedItemGood:
+                                              widget.finishedItemGood,
+                                          finishedItemGrb:
+                                              widget.finishedItemGrb,
+                                          data: widget.data,
+                                          defectQty: widget.defectQty,
+                                          gradeArray: widget.grades,
+                                          handleUpdateGrade:
+                                              widget.handleUpdateGrade,
+                                          qty: widget.qty,
+                                          recalculateGradeBS:
+                                              _recalculateGradeBS,
+                                        )
+                                      : Center(
+                                          child: CircularProgressIndicator()),
                                 if (widget.label == 'Packing')
                                   Column(
                                     children: [

@@ -74,6 +74,26 @@ class SortingEditSection extends StatefulWidget {
 class _SortingEditSectionState extends State<SortingEditSection> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
+  @override
+  void initState() {
+    super.initState();
+
+    _normalizeGrades();
+
+    for (int i = 0; i < widget.gradeArray.length; i++) {
+      _ensureController(i);
+    }
+  }
+
+  void _normalizeGrades() {
+    while (widget.gradeArray.length < 3) {
+      widget.gradeArray.add({
+        'item_grade_id': null,
+        'qty': 0,
+      });
+    }
+  }
+
   String getDefectLabel(int i) {
     return widget.itemTypeOption.firstWhere(
           (e) =>

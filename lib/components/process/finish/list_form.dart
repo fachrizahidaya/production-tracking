@@ -191,14 +191,12 @@ class _ListFormState extends State<ListForm> {
       });
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        setState(() {
-          _grades = updated;
-        });
-        widget.handleChangeInput('grades', _grades);
-      }
-    });
+    if (mounted) {
+      setState(() {
+        _grades = updated;
+      });
+      widget.handleChangeInput('grades', _grades);
+    }
   }
 
   void _syncDefectsWithOptions() {

@@ -13,6 +13,7 @@ class CardContent extends StatelessWidget {
   final bool showAllTimeline;
   final onExpandChanged;
   final collapsedTimelineCount;
+
   const CardContent(
       {super.key,
       this.isTablet,
@@ -25,31 +26,86 @@ class CardContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final processes = item['processes'] as Map<String, dynamic>? ?? {};
+
     return Padding(
       padding: CustomTheme().padding('content'),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// MATERIAL ALWAYS SHOW
           _buildMaterialSection(isTablet),
-          showTimeline
-              ? TimelineProcess(
-                  showAllTimeline: showAllTimeline,
-                  buildSectionTitle: _buildSectionTitle,
-                  collapsedTimelineCount: collapsedTimelineCount,
-                  getOrderedProcessKeys: _getOrderedProcessKeys,
-                  getProcessConfig: _getProcessConfig,
-                  isTablet: isTablet,
-                  onExpandChanged: onExpandChanged,
-                  getProcessStatusConfig: _getProcessStatusConfig,
-                  processes: processes,
-                )
-              : GridProcess(
-                  buildSectionTitle: _buildSectionTitle,
-                  getOrderedProcessKeys: _getOrderedProcessKeys,
-                  getProcessConfig: _getProcessConfig,
-                  getProcessStatusConfig: _getProcessStatusConfig,
-                  isTablet: isTablet,
-                  processes: processes,
+
+          /// BUTTON EXPAND
+          if (showTimeline) ...[
+            SizedBox(height: 16),
+            Center(
+              child: InkWell(
+                onTap: () {
+                  onExpandChanged?.call(!showAllTimeline);
+                },
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color:
+                        CustomTheme().buttonColor('primary').withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color:
+                          CustomTheme().buttonColor('primary').withOpacity(0.2),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        showAllTimeline ? Icons.expand_less : Icons.expand_more,
+                        size: 18,
+                        color: CustomTheme().buttonColor('primary'),
+                      ),
+                      Text(
+                        showAllTimeline ? 'Sembunyikan Proses' : 'Lihat Proses',
+                        style: TextStyle(
+                          fontSize: CustomTheme().fontSize('sm'),
+                          fontWeight: CustomTheme().fontWeight('semibold'),
+                          color: CustomTheme().buttonColor('primary'),
+                        ),
+                      ),
+                    ].separatedBy(CustomTheme().hGap('sm')),
+                  ),
                 ),
+              ),
+            ),
+          ],
+
+          /// TIMELINE ONLY WHEN EXPANDED
+          if (showTimeline && showAllTimeline) ...[
+            SizedBox(height: 20),
+            TimelineProcess(
+              showAllTimeline: true,
+              buildSectionTitle: _buildSectionTitle,
+              getOrderedProcessKeys: _getOrderedProcessKeys,
+              getProcessConfig: _getProcessConfig,
+              isTablet: isTablet,
+              onExpandChanged: onExpandChanged,
+              getProcessStatusConfig: _getProcessStatusConfig,
+              processes: processes,
+            ),
+          ],
+
+          /// GRID MODE
+          if (!showTimeline)
+            GridProcess(
+              buildSectionTitle: _buildSectionTitle,
+              getOrderedProcessKeys: _getOrderedProcessKeys,
+              getProcessConfig: _getProcessConfig,
+              getProcessStatusConfig: _getProcessStatusConfig,
+              isTablet: isTablet,
+              processes: processes,
+            ),
         ],
       ),
     );

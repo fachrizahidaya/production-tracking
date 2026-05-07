@@ -20,6 +20,23 @@ class FormHelpers {
     );
   }
 
+  static Widget buildEmptySorting(isUpdate) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 40),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.edit_note, size: 48, color: Colors.grey),
+          SizedBox(height: 12),
+          Text(isUpdate
+              ? 'Silakan keluar dan masuk kembali'
+              : 'Silakan Edit dan Simpan terlebih dahulu'),
+        ],
+      ),
+    );
+  }
+
   static Widget buildMachine({
     required BuildContext context,
     required List machines,

@@ -26,23 +26,24 @@ class TimelineItem extends StatelessWidget {
       String key,
       dynamic process,
     ) {
-      // Khusus process tertentu
       const specialKeys = ['dyeing', 'press', 'tumbler'];
 
       if (process is List) {
         final list = process.cast<Map<String, dynamic>>();
 
+        // khusus dyeing/press/tumbler
         if (specialKeys.contains(key)) {
-          if (list.length > 1) {
-            final reworkItem = list.firstWhere(
-              (e) => e['rework_dyeing'] == true,
-              orElse: () => list.first,
-            );
-            return [reworkItem]; // ✅ hanya 1 item
-          }
+          // ambil MAIN process (bukan rework)
+          final mainProcess = list.firstWhere(
+            (e) => e['rework_dyeing'] != true,
+            orElse: () => list.first,
+          );
+
+          // timeline hanya tampil 1 card utama
+          return [mainProcess];
         }
 
-        return list; // default
+        return list;
       }
 
       if (process is Map<String, dynamic>) {
@@ -196,13 +197,15 @@ class TimelineItem extends StatelessWidget {
       return process[field]?.toString();
     }
 
-    Map<String, dynamic>? getReworkData(dynamic rawProcess) {
+    List<Map<String, dynamic>> getReworkData(dynamic rawProcess) {
       if (rawProcess is List) {
-        try {
-          return rawProcess.firstWhere((e) => e['rework_dyeing'] == true);
-        } catch (_) {}
+        return rawProcess
+            .where((e) => e['rework_dyeing'] == true)
+            .cast<Map<String, dynamic>>()
+            .toList();
       }
-      return null;
+
+      return [];
     }
 
     String getStatus(dynamic process) {
@@ -217,6 +220,8 @@ class TimelineItem extends StatelessWidget {
     final processNumber = getProcessNumber(processKey, process);
 
     final rework = getReworkData(rawProcess);
+
+    final reworks = getReworkData(rawProcess);
 
     final isSpecial = ['dyeing', 'press', 'tumbler'].contains(processKey);
 
@@ -350,9 +355,20 @@ class TimelineItem extends StatelessWidget {
             _buildProcessDetails(process, processKey, isTablet),
           ],
 
-          if (isSpecial && rework != null) ...[
+          if (isSpecial && reworks.isNotEmpty) ...[
             SizedBox(height: 12),
-            _buildReworkCard(processKey, rework, isTablet),
+            Column(
+              children: reworks.map((rework) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: _buildReworkCard(
+                    processKey,
+                    rework,
+                    isTablet,
+                  ),
+                );
+              }).toList(),
+            ),
           ],
 
           // Grades (if applicable)
@@ -625,7 +641,7 @@ class TimelineItem extends StatelessWidget {
             spacing: 8,
             runSpacing: 6,
             children: [
-              _buildSimpleChip('Rework LH', reworkLH),
+              _buildSimpleChip('Permak Long Hemming', reworkLH),
               _buildSimpleChip('Spraying', spraying),
               _buildSimpleChip('Combing', combing),
             ],

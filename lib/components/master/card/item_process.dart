@@ -82,7 +82,6 @@ class _ItemProcessState extends State<ItemProcess> {
                   showAllTimeline: _showAllTimeline,
                   showTimeline: widget.showTimeline,
                   onExpandChanged: widget.onExpandChanged,
-                  collapsedTimelineCount: _collapsedTimelineCount,
                 ),
               ],
             ),

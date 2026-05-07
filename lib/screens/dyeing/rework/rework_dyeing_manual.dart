@@ -204,22 +204,6 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
 
     setState(() {
       dyeingData = _dyeingService.dataView;
-
-      if (dyeingData['notes'] != null) {
-        _noteController.text = dyeingData['notes'].toString();
-        widget.form?['notes'] = dyeingData['notes'];
-      }
-      if (dyeingData['machine'] != null) {
-        widget.form?['machine_id'] = dyeingData['machine']['id'].toString();
-        widget.form?['nama_mesin'] = dyeingData['machine']['name'].toString();
-      }
-      if (dyeingData['unit'] != null) {
-        widget.form?['unit_id'] = dyeingData['unit']['id'].toString();
-        widget.form?['nama_satuan'] = dyeingData['unit']['name'].toString();
-      }
-      if (dyeingData['attachments'] != null) {
-        widget.form?['attachments'] = List.from(dyeingData['attachments']);
-      }
     });
   }
 

@@ -8,6 +8,7 @@ import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/process/finish/process/form_helpers.dart';
 import 'package:textile_tracking/components/update/detail_work_order.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/format_idr.dart';
@@ -567,6 +568,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
     }
   }
 
+  bool _isDataEmpty() {
+    if (_grades.isEmpty) return true;
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -872,31 +879,38 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                     controller: widget.cuttingSewingQty,
                                     onChange: widget.handleChangeInput,
                                   ),
-                                if (widget.label == 'Sorting')
-                                  SortingEditSection(
-                                    form: widget.form,
-                                    grades: _grades,
-                                    itemGradeOption: widget.itemGradeOption,
-                                    spraying: widget.spraying,
-                                    reworkLongHemming: widget.reworkLongHemming,
-                                    combing: widget.combing,
-                                    onChange: widget.handleChangeInput,
-                                    updateTotalSorting: _updateTotalSorting,
-                                    calculateTotalVermak: _calculateTotalVermak,
-                                    calculateTotalQtySorting:
-                                        _calculateTotalQtySorting,
-                                    defectArray: _defects,
-                                    defects: widget.defects,
-                                    itemTypeOption: widget.itemTypeOption,
-                                    finishedItemGood: widget.finishedItemGood,
-                                    finishedItemGrb: widget.finishedItemGrb,
-                                    data: widget.data,
-                                    defectQty: widget.defectQty,
-                                    gradeArray: _grades,
-                                    handleUpdateGrade: widget.handleUpdateGrade,
-                                    qty: widget.qty,
-                                    recalculateGradeBS: _recalculateGradeBS,
-                                  ),
+                                if (widget.label == 'Sorting' && _isDataEmpty())
+                                  FormHelpers.buildEmptyState(true)
+                                else ...[
+                                  if (widget.label == 'Sorting')
+                                    SortingEditSection(
+                                      form: widget.form,
+                                      grades: _grades,
+                                      itemGradeOption: widget.itemGradeOption,
+                                      spraying: widget.spraying,
+                                      reworkLongHemming:
+                                          widget.reworkLongHemming,
+                                      combing: widget.combing,
+                                      onChange: widget.handleChangeInput,
+                                      updateTotalSorting: _updateTotalSorting,
+                                      calculateTotalVermak:
+                                          _calculateTotalVermak,
+                                      calculateTotalQtySorting:
+                                          _calculateTotalQtySorting,
+                                      defectArray: _defects,
+                                      defects: widget.defects,
+                                      itemTypeOption: widget.itemTypeOption,
+                                      finishedItemGood: widget.finishedItemGood,
+                                      finishedItemGrb: widget.finishedItemGrb,
+                                      data: widget.data,
+                                      defectQty: widget.defectQty,
+                                      gradeArray: _grades,
+                                      handleUpdateGrade:
+                                          widget.handleUpdateGrade,
+                                      qty: widget.qty,
+                                      recalculateGradeBS: _recalculateGradeBS,
+                                    ),
+                                ],
                                 if (widget.label == 'Packing')
                                   Column(
                                     children: [

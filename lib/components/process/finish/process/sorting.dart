@@ -33,6 +33,7 @@ class SortingSection extends StatefulWidget {
   final processData;
   final handleUpdateGrade;
   final finishedItemGrb;
+  final finishedItem;
 
   const SortingSection(
       {super.key,
@@ -52,7 +53,8 @@ class SortingSection extends StatefulWidget {
       this.qtyItem,
       this.processData,
       this.handleUpdateGrade,
-      this.finishedItemGrb});
+      this.finishedItemGrb,
+      this.finishedItem});
 
   @override
   State<SortingSection> createState() => _SortingSectionState();
@@ -699,7 +701,7 @@ class _SortingSectionState extends State<SortingSection> {
           item != null && item['greige_item'] != null
               ? item['greige_item']['code'].toString()
               : gradeLabel == 'Grade B'
-                  ? widget.finishedItemGrb[0]['code']
+                  ? widget.finishedItem[0]['code']
                   : '-',
           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
         ),
@@ -707,7 +709,7 @@ class _SortingSectionState extends State<SortingSection> {
           item != null && item['greige_item'] != null
               ? item['greige_item']['name'].toString()
               : gradeLabel == 'Grade B'
-                  ? widget.finishedItemGrb[0]['label']
+                  ? widget.finishedItem[0]['label']
                   : '-',
           style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
           maxLines: 2,

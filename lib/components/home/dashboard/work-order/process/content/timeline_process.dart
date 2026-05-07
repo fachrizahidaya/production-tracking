@@ -30,58 +30,23 @@ class TimelineProcess extends StatelessWidget {
   Widget build(BuildContext context) {
     final processKeys = getOrderedProcessKeys(processes);
 
-    final visibleKeys = showAllTimeline
-        ? processKeys
-        : processKeys.take(collapsedTimelineCount).toList();
-
-    final hasMore = processKeys.length > collapsedTimelineCount;
-
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      buildSectionTitle(
-        icon: Icons.timeline_outlined,
-        title: 'Alur Proses',
-        isTablet: isTablet,
-      ),
-      SizedBox(height: isTablet ? 16 : 12),
-      TimelineItem(
-        getProcessConfig: getProcessConfig,
-        getProcessStatusConfig: getProcessStatusConfig,
-        isTablet: isTablet,
-        processes: processes,
-        visibleKeys: visibleKeys,
-      ),
-      if (hasMore)
-        ...[
-          SizedBox(height: isTablet ? 16 : 12),
-          Center(
-            child: InkWell(
-              onTap: () {
-                final next = !showAllTimeline;
-                onExpandChanged?.call(next);
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    showAllTimeline ? Icons.expand_less : Icons.expand_more,
-                    size: isTablet ? 20 : 18,
-                    color: CustomTheme().buttonColor('primary'),
-                  ),
-                  Text(
-                    showAllTimeline
-                        ? 'Sembunyikan Proses'
-                        : 'Lihat Semua Proses',
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('sm'),
-                      fontWeight: CustomTheme().fontWeight('semibold'),
-                      color: CustomTheme().buttonColor('primary'),
-                    ),
-                  ),
-                ].separatedBy(CustomTheme().hGap('sm')),
-              ),
-            ),
-          ),
-        ].separatedBy(CustomTheme().vGap('xl')),
-    ]);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildSectionTitle(
+          icon: Icons.timeline_outlined,
+          title: 'Alur Proses',
+          isTablet: isTablet,
+        ),
+        SizedBox(height: isTablet ? 16 : 12),
+        TimelineItem(
+          getProcessConfig: getProcessConfig,
+          getProcessStatusConfig: getProcessStatusConfig,
+          isTablet: isTablet,
+          processes: processes,
+          visibleKeys: processKeys,
+        ),
+      ],
+    );
   }
 }

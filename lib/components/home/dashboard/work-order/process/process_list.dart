@@ -126,9 +126,9 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                         return false;
                       },
                       child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        physics: BouncingScrollPhysics(),
-                        separatorBuilder: (_, __) => CustomTheme().hGap('xl'),
+                        // scrollDirection: Axis.horizontal,
+                        // physics: BouncingScrollPhysics(),
+                        separatorBuilder: (_, __) => CustomTheme().vGap('xl'),
                         itemCount: widget.hasMore
                             ? widget.dataList.length + 1
                             : widget.dataList.length,

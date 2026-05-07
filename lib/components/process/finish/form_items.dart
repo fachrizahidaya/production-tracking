@@ -167,7 +167,53 @@ class _FormItemsState extends State<FormItems> {
       if (good > 0 || defect > 0) {
         calculateLongHemmingWeight();
       }
+
+      _syncGradesWithOptions();
     });
+  }
+
+  void _syncGradesWithOptions() {
+    final List<Map<String, dynamic>> updated = [];
+
+    for (int i = 0; i < widget.itemGradeOption.length; i++) {
+      final grade = widget.itemGradeOption[i];
+
+      final existing = _grades.firstWhere(
+        (g) => g['item_grade_id'].toString() == grade['value'].toString(),
+        orElse: () => {},
+      );
+
+      dynamic greigeItemId;
+
+      if (i == 0) {
+        greigeItemId = widget.finishedItem.isNotEmpty
+            ? widget.finishedItem[0]['value']
+            : null;
+      } else if (i == 1) {
+        greigeItemId = widget.finishedItem.isNotEmpty
+            ? widget.finishedItem[0]['value']
+            : null;
+      } else if (i == 2) {
+        greigeItemId = null;
+      } else {
+        greigeItemId = existing['greige_item_id'];
+      }
+
+      updated.add({
+        'item_grade_id': grade['value'],
+        'unit_id': existing['unit_id'] ?? 1,
+        'qty': existing['qty'] ?? '0',
+        'notes': existing['notes'] ?? '',
+        'greige_item_id': greigeItemId,
+        'name': grade['label'] ?? ''
+      });
+    }
+
+    setState(() {
+      _grades = updated;
+    });
+
+    widget.handleChangeInput('grades', _grades);
   }
 
   void _initGradeControllers() {
@@ -401,6 +447,7 @@ class _FormItemsState extends State<FormItems> {
   bool _isDataEmpty() {
     if ((widget.itemGradeOption ?? []).isEmpty) return true;
     if (_grades.isEmpty) return true;
+    if (widget.processData?['grades'].isEmpty) return true;
 
     return false;
   }
@@ -695,6 +742,7 @@ class _FormItemsState extends State<FormItems> {
                     processData: widget.processData,
                     handleUpdateGrade: widget.handleUpdateGrade,
                     finishedItemGrb: widget.finishedItemGrb,
+                    finishedItem: widget.finishedItem,
                   ),
                 if (widget.label == 'Packing')
                   Column(

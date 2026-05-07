@@ -5,7 +5,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
-class CardContent extends StatelessWidget {
+class CardContent extends StatefulWidget {
   final data;
   final isTablet;
   final processKey;
@@ -13,15 +13,23 @@ class CardContent extends StatelessWidget {
   const CardContent({super.key, this.data, this.isTablet, this.processKey});
 
   @override
+  State<CardContent> createState() => _CardContentState();
+}
+
+class _CardContentState extends State<CardContent> {
+  bool isExpandedRework = false;
+
+  @override
   Widget build(BuildContext context) {
-    final bool isList = data is List;
+    final bool isList = widget.data is List;
 
-    final Map<String, dynamic> mainData =
-        isList ? data.last : data; // ambil latest (cycle terakhir)
+    final Map<String, dynamic> mainData = isList
+        ? widget.data.last
+        : widget.data; // ambil latest (cycle terakhir)
 
-    final List allData = isList ? data : [data];
+    final List allData = isList ? widget.data : [widget.data];
 
-    final processNumber = getProcessNumber(mainData, processKey);
+    final processNumber = getProcessNumber(mainData, widget.processKey);
 
     return Container(
       padding: CustomTheme().padding('content'),
@@ -29,16 +37,20 @@ class CardContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (processNumber != null)
-            _buildProcessNumber(processNumber, isTablet),
+            _buildProcessNumber(processNumber, widget.isTablet),
           if (mainData['start_time'] != null || mainData['end_time'] != null)
-            _buildTimeSection(mainData, isTablet),
-          if (processKey != 'packing')
-            _buildQuantitySection(mainData, isTablet, processKey),
-          if (processKey == 'dyeing') _buildDyeingSection(mainData, isTablet),
-          if (['dyeing', 'press', 'tumbler'].contains(processKey))
-            _buildReworkFromAllData(allData, isTablet, processKey),
-          if (processKey == 'sorting') _buildSortingSection(mainData, isTablet),
-          if (processKey == 'packing') _buildPackingSection(mainData, isTablet),
+            _buildTimeSection(mainData, widget.isTablet),
+          if (widget.processKey != 'packing')
+            _buildQuantitySection(mainData, widget.isTablet, widget.processKey),
+          if (widget.processKey == 'dyeing')
+            _buildDyeingSection(mainData, widget.isTablet),
+          if (['dyeing', 'press', 'tumbler'].contains(widget.processKey))
+            _buildReworkFromAllData(
+                allData, widget.isTablet, widget.processKey),
+          if (widget.processKey == 'sorting')
+            _buildSortingSection(mainData, widget.isTablet),
+          if (widget.processKey == 'packing')
+            _buildPackingSection(mainData, widget.isTablet),
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
@@ -260,18 +272,61 @@ class CardContent extends StatelessWidget {
 
     if (reworks.isEmpty) return SizedBox();
 
+    final preview = reworks.take(1).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle(
-          icon: Icons.refresh,
-          title: 'Rework',
-          isTablet: isTablet,
+        /// 🔹 HEADER
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isExpandedRework = !isExpandedRework;
+            });
+          },
+          child: Row(
+            children: [
+              Expanded(
+                child: _buildSectionTitle(
+                  icon: Icons.refresh,
+                  title: 'Rework (${reworks.length})',
+                  isTablet: isTablet,
+                ),
+              ),
+              Icon(
+                isExpandedRework ? Icons.expand_less : Icons.expand_more,
+              ),
+            ],
+          ),
         ),
-        Column(
-          children: reworks.map<Widget>((rw) {
-            return _buildReworkItem(rw, isTablet, processKey);
-          }).toList(),
+
+        /// 🔹 CONTENT
+        AnimatedCrossFade(
+          duration: Duration(milliseconds: 250),
+          crossFadeState: isExpandedRework
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
+
+          /// COLLAPSE
+          firstChild: Column(
+            children: preview
+                .map<Widget>((rw) {
+                  return _buildReworkItem(rw, isTablet, processKey);
+                })
+                .toList()
+                .separatedBy(CustomTheme().vGap('xl')),
+          ),
+
+          /// EXPAND (🔥 SCROLLABLE)
+          secondChild: SizedBox(
+            height: 300, // 🔥 batas tinggi
+            child: ListView.builder(
+              itemCount: reworks.length,
+              itemBuilder: (context, i) {
+                return _buildReworkItem(reworks[i], isTablet, processKey);
+              },
+            ),
+          ),
         ),
       ].separatedBy(CustomTheme().vGap('lg')),
     );

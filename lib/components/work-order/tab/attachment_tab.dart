@@ -9,6 +9,7 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_bytes.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AttachmentTab extends StatefulWidget {
   final Map<String, dynamic>? data;
@@ -28,24 +29,47 @@ class AttachmentTab extends StatefulWidget {
 }
 
 class _AttachmentTabState extends State<AttachmentTab> {
+  @override
+  Widget build(BuildContext context) {
+    return TemplateCard(
+      title: 'Lampiran',
+      icon: Icons.attachment_outlined,
+      child: widget.existingAttachment.isEmpty
+          ? NoData()
+          : Wrap(
+              spacing: 8,
+              runSpacing: 16,
+              children: _buildAttachmentList(context),
+            ),
+    );
+  }
+
   List<Widget> _buildAttachmentList(BuildContext context) {
     final existingAttachments =
         (widget.existingAttachment ?? []) as List<dynamic>;
 
-    final baseUrl = dotenv.env['IMAGE_URL'] ?? '';
+    final baseUrl = dotenv.env['IMAGE_URL_DEV'] ?? '';
 
     return existingAttachments.map<Widget>((item) {
       final bool isNew = item.containsKey('path');
+
       final String? filePath = isNew ? item['path'] : item['file_path'];
+
       final String fileName = isNew
           ? item['name']
           : (item['file_name'] ?? filePath?.split('/').last ?? '');
+
       final String extension = fileName.split('.').last.toLowerCase();
+
+      /// detect image
+      final bool isImage =
+          ['png', 'jpg', 'jpeg', 'gif', 'webp'].contains(extension);
 
       String fileSizeText = '';
 
       if (isNew && filePath != null) {
         final file = File(filePath);
+
         if (file.existsSync()) {
           final bytes = file.lengthSync();
           fileSizeText = formatBytes(bytes);
@@ -58,31 +82,51 @@ class _AttachmentTabState extends State<AttachmentTab> {
         }
       }
 
+      /// Preview
       Widget preview;
-      if (extension == 'pdf') {
-        preview = Icon(Icons.picture_as_pdf, color: Colors.red, size: 60);
-      } else if (isNew && filePath != null) {
-        preview = Image.file(File(filePath), fit: BoxFit.cover);
-      } else if (filePath != null &&
-          ['png', 'jpg', 'jpeg', 'gif'].contains(extension)) {
-        preview = Image.network('$baseUrl$filePath',
-            fit: BoxFit.cover,
-            errorBuilder: (context, _, __) =>
-                Icon(Icons.broken_image, size: 60));
+
+      if (isImage && isNew && filePath != null) {
+        preview = Image.file(
+          File(filePath),
+          fit: BoxFit.cover,
+        );
+      } else if (isImage && filePath != null) {
+        preview = Image.network(
+          '$baseUrl$filePath',
+          fit: BoxFit.cover,
+          errorBuilder: (context, _, __) =>
+              const Icon(Icons.broken_image, size: 40),
+        );
       } else {
-        preview = Icon(Icons.insert_drive_file, size: 60);
+        /// General document icon
+        preview = Icon(
+          Icons.description_outlined,
+          size: 40,
+          color: Colors.grey.shade700,
+        );
       }
 
       return GestureDetector(
-        onTap: filePath != null
-            ? () {
-                showImageDialog(
-                  context: context,
-                  isNew: isNew,
-                  filePath: isNew ? filePath : '$baseUrl$filePath',
-                );
-              }
-            : null,
+        onTap: filePath == null
+            ? null
+            : () async {
+                /// IMAGE => SHOW PREVIEW
+                if (isImage) {
+                  showImageDialog(
+                    context: context,
+                    isNew: isNew,
+                    filePath: isNew ? filePath : '$baseUrl$filePath',
+                  );
+                } else {
+                  /// NON IMAGE => DOWNLOAD FILE
+                  final url = '$baseUrl$filePath';
+
+                  await launchUrl(
+                    Uri.parse(url),
+                    mode: LaunchMode.externalApplication,
+                  );
+                }
+              },
         child: Container(
           padding: CustomTheme().padding('card'),
           decoration: BoxDecoration(
@@ -105,9 +149,9 @@ class _AttachmentTabState extends State<AttachmentTab> {
                 child: preview,
               ),
 
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
 
-              /// File name + size (COLUMN)
+              /// File name + size
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,12 +161,12 @@ class _AttachmentTabState extends State<AttachmentTab> {
                       fileName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       fileSizeText,
                       style: TextStyle(
@@ -138,20 +182,5 @@ class _AttachmentTabState extends State<AttachmentTab> {
         ),
       );
     }).toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TemplateCard(
-      title: 'Lampiran',
-      icon: Icons.attachment_outlined,
-      child: widget.existingAttachment.isEmpty
-          ? NoData()
-          : Wrap(
-              spacing: 8,
-              runSpacing: 16,
-              children: _buildAttachmentList(context),
-            ),
-    );
   }
 }

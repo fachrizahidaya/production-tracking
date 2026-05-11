@@ -1412,7 +1412,10 @@ Material WO
         return Column(
           children: [
             _buildProdukJadiHeader(spkNo, totalBerat, totalQty),
-            ListItem(item: items[index]),
+            ListItem(
+              item: items[index],
+              withSpk: true,
+            ),
             if (index != items.length - 1) SizedBox(height: 12),
           ].separatedBy(CustomTheme().vGap('xl')),
         );
@@ -1465,32 +1468,32 @@ Material WO
                   ],
                 ),
               ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'SPK',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('md'),
-                        color: Colors.grey[600],
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
-                    ),
-                    Text(
-                      spkNo.isNotEmpty ? spkNo : '-',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                        color: Colors.grey[800],
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
+              // Expanded(
+              //   flex: 1,
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       Text(
+              //         'SPK',
+              //         style: TextStyle(
+              //           fontSize: CustomTheme().fontSize('md'),
+              //           color: Colors.grey[600],
+              //           fontWeight: CustomTheme().fontWeight('semibold'),
+              //         ),
+              //       ),
+              //       Text(
+              //         spkNo.isNotEmpty ? spkNo : '-',
+              //         style: TextStyle(
+              //           fontSize: CustomTheme().fontSize('lg'),
+              //           fontWeight: CustomTheme().fontWeight('semibold'),
+              //           color: Colors.grey[800],
+              //         ),
+              //         maxLines: 1,
+              //         overflow: TextOverflow.ellipsis,
+              //       ),
+              //     ],
+              //   ),
+              // ),
               Expanded(
                 flex: 1,
                 child: Column(
@@ -1642,7 +1645,7 @@ Catatan WO
           ),
         if (widget.label != 'Sorting')
           _buildInfoCard(
-            title: 'Informasi Produk',
+            title: 'Material WO',
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(true),
           ),
@@ -1664,14 +1667,12 @@ Catatan WO
           child: _buildTimelineInfo(true),
         ),
         _buildInfoCard(
-          title: 'Material Work Order',
+          title: 'Material WO',
           icon: Icons.inventory_2_outlined,
-          child: _buildMaterial(
-            true,
-          ),
+          child: _buildMaterial(true),
         ),
         _buildInfoCard(
-          title: 'Catatan Proses',
+          title: 'Catatan ${widget.label}',
           icon: Icons.note_outlined,
           child: _buildNote(true),
         ),
@@ -1694,11 +1695,7 @@ Catatan WO
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildInfoCard(
-          title: 'Informasi Work Order',
-          icon: Icons.description_outlined,
-          child: _buildWorkOrderInfo(false),
-        ),
+        _buildHeaderSection(false),
         if (widget.label == 'Long Hemming' ||
             widget.label == 'Cross Cutting' ||
             widget.label == 'Sewing')
@@ -1707,22 +1704,19 @@ Catatan WO
             icon: Icons.local_laundry_service_outlined,
             child: _buildMachine(false),
           ),
-        if (widget.withItemGrade == false)
+        if (widget.forDyeing == false &&
+            widget.withItemGrade == false &&
+            widget.label != 'Dyeing' &&
+            widget.label != 'Press' &&
+            widget.label != 'Tumbler' &&
+            widget.label != 'Stenter' &&
+            widget.label != 'Long Slitting' &&
+            widget.label != 'Long Hemming' &&
+            widget.label != 'Cross Cutting' &&
+            widget.label != 'Sewing')
           _buildInfoCard(
             title: 'Informasi Proses',
-            icon: widget.label == 'Dyeing'
-                ? Icons.invert_colors_on_outlined
-                : widget.label == 'Press'
-                    ? Icons.layers_outlined
-                    : widget.label == 'Tumbler'
-                        ? Icons.dry_cleaning_outlined
-                        : widget.label == 'Stenter'
-                            ? Icons.air_outlined
-                            : widget.label == 'Long Slitting'
-                                ? Icons.content_paste_outlined
-                                : widget.label == 'Long Hemming'
-                                    ? Icons.cut_outlined
-                                    : Icons.settings_outlined,
+            icon: Icons.settings_outlined,
             child: _buildProcessInfo(false),
           ),
         if (widget.data['rework'] == true)
@@ -1749,23 +1743,21 @@ Catatan WO
             icon: Icons.grade_outlined,
             child: _buildGradeInfo(false),
           ),
-        if (widget.label == 'Sorting')
+        if (widget.label != 'Sorting')
           _buildInfoCard(
-            title: 'Ringkasan Sorting',
-            icon: Icons.attachment_outlined,
-            child: _buildTotalSorting(false),
-          ),
-        if (widget.forDyeing == true ||
-            widget.forHemming == true ||
-            widget.forSewing == true)
-          _buildInfoCard(
-            title: 'Informasi Produk',
+            title: 'Material WO',
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(false),
           ),
+        if (widget.label == 'Sorting' || widget.label == 'Packing')
+          _buildInfoCard(
+            title: 'Ringkasan Sortir',
+            icon: Icons.attachment_outlined,
+            child: _buildTotalSorting(false),
+          ),
         if (widget.label == 'Packing')
           _buildInfoCard(
-            title: 'Informasi Berat',
+            title: 'Informasi Packing',
             icon: Icons.scale_outlined,
             child: _buildWeightInfo(false),
           ),
@@ -1775,26 +1767,24 @@ Catatan WO
           child: _buildTimelineInfo(false),
         ),
         _buildInfoCard(
-          title: 'Catatan Proses',
+          title: 'Material WO',
+          icon: Icons.inventory_2_outlined,
+          child: _buildMaterial(false),
+        ),
+        _buildInfoCard(
+          title: 'Catatan ${widget.label}',
           icon: Icons.note_outlined,
           child: _buildNote(false),
         ),
         _buildInfoCard(
-          title: 'Lampiran Proses',
+          title: 'Lampiran',
           icon: Icons.attachment_outlined,
           child: _buildAttachment(false),
         ),
         _buildInfoCard(
-          title: 'Catatan dari Work Order',
+          title: 'Catatan Work Order',
           icon: Icons.note_outlined,
           child: _buildNoteWo(false),
-        ),
-        _buildInfoCard(
-          title: 'Material Work Order',
-          icon: Icons.inventory_2_outlined,
-          child: _buildMaterial(
-            false,
-          ),
         ),
       ],
     );

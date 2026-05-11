@@ -4,13 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/screens/spk/%5Bspk_id%5D.dart';
 
-class ListItem extends StatelessWidget {
+class ListItem extends StatefulWidget {
   final item;
   final label;
   final index;
+  final withSpk;
 
-  const ListItem({super.key, this.item, this.label, this.index});
+  const ListItem({super.key, this.item, this.label, this.index, this.withSpk});
+
+  @override
+  State<ListItem> createState() => _ListItemState();
+}
+
+class _ListItemState extends State<ListItem> {
+  dynamic get item => widget.item;
+  dynamic get label => widget.label;
+  dynamic get index => widget.index;
+  dynamic get withSpk => widget.withSpk;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +65,7 @@ class ListItem extends StatelessWidget {
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
         ),
-        Expanded(flex: 1, child: _buildQuantitySection(true))
+        Expanded(flex: 1, child: _buildQuantitySection(true, withSpk))
       ],
     );
   }
@@ -278,7 +290,7 @@ class ListItem extends StatelessWidget {
   }
 
   /// Quantity Section
-  Widget _buildQuantitySection(bool isTablet) {
+  Widget _buildQuantitySection(bool isTablet, withSpk) {
     return Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
@@ -296,34 +308,59 @@ class ListItem extends StatelessWidget {
           //     label == ' Embroidery' ||
           //     label == ' Printing' ||
           //     label == ' Packing')
-          Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Qty',
-                  style: TextStyle(
-                      color: Colors.grey[600],
-                      fontWeight: CustomTheme().fontWeight('semibold')),
-                ),
-                Row(
+          if (withSpk == true)
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                'SPK',
+                style: TextStyle(
+                    color: Colors.grey[600],
+                    fontWeight: CustomTheme().fontWeight('semibold')),
+              ),
+              GestureDetector(
+                onTap: _openSpkDetail,
+                child: Row(
                   children: [
                     Text(
-                      _formatQuantity(item['qty']),
+                      item['spk_no']?.toString() ?? '-',
                       style: TextStyle(
-                        fontSize: CustomTheme().fontSize('xl'),
-                        fontWeight: CustomTheme().fontWeight('bold'),
-                      ),
+                          fontSize: CustomTheme().fontSize('xl'),
+                          fontWeight: CustomTheme().fontWeight('bold'),
+                          color: Colors.blue),
                     ),
-                    Text(
-                      item['unit']?['code']?.toString() ?? '-',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ].separatedBy(CustomTheme().hGap('sm')),
+                    Icon(
+                      Icons.chevron_right_outlined,
+                      color: Colors.blue,
+                    )
+                  ],
                 ),
-              ].separatedBy(CustomTheme().hGap('xl'))),
+              ),
+            ]),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              'Qty',
+              style: TextStyle(
+                  color: Colors.grey[600],
+                  fontWeight: CustomTheme().fontWeight('semibold')),
+            ),
+            Row(
+              children: [
+                Text(
+                  _formatQuantity(item['qty']),
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('xl'),
+                    fontWeight: CustomTheme().fontWeight('bold'),
+                  ),
+                ),
+                Text(
+                  item['unit']?['code']?.toString() ?? '-',
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('lg'),
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ].separatedBy(CustomTheme().hGap('sm')),
+            ),
+          ]),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -364,5 +401,20 @@ class ListItem extends StatelessWidget {
       return formatNumber(qty);
     }
     return qty.toString();
+  }
+
+  void _openSpkDetail() {
+    final spkId = item?['spk_id'] ?? item?['spk']?['id'] ?? item?['spk_no'];
+
+    if (spkId == null || spkId.toString().isEmpty || spkId == '-') {
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SpkDetail(id: spkId.toString()),
+      ),
+    );
   }
 }

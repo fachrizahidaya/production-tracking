@@ -51,12 +51,12 @@ class _WorkOrderInfoTabState extends State<WorkOrderInfoTab> {
                       isTablet: isTablet,
                       label: widget.label,
                     ),
+                    WorkOrderItemTab(
+                      data: widget.data,
+                    ),
                     NoteItem(
                       data: widget.data,
                       label: widget.label,
-                    ),
-                    WorkOrderItemTab(
-                      data: widget.data,
                     ),
                     AttachmentTab(
                       existingAttachment: widget.data['attachments'] ?? [],

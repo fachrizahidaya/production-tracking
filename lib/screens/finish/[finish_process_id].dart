@@ -501,6 +501,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             data['bs_weight_unit']['name'].toString();
       }
 
+      if (data['greige_item'] != null) {
+        widget.form?['greige_item_id'] = data['greige_item']['id'].toString();
+        widget.form?['greige_item_name'] =
+            data['greige_item']['name'].toString();
+      }
+
       if (data['machine_ids'] != null) {
         widget.form?['machine_ids'] = List.from(data['machine_ids']);
       }

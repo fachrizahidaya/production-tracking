@@ -1,10 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:html/parser.dart' as html_parser;
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/work-order/item/note/card_content.dart';
 import 'package:textile_tracking/components/work-order/item/note/card_header.dart';
+import 'package:textile_tracking/helpers/util/format_html.dart';
 
 class NoteItem extends StatefulWidget {
   final dynamic item;
@@ -104,6 +104,7 @@ class _NoteItemState extends State<NoteItem>
                     isExpanded: _isExpanded,
                     isLongContent: isLongContent,
                     plainText: plainText,
+                    htmlContent: content,
                     toggleExpanded: _toggleExpanded,
                   ),
               ],
@@ -115,20 +116,7 @@ class _NoteItemState extends State<NoteItem>
   }
 
   /// Helper Methods
-  String _htmlToPlainText(dynamic htmlString) {
-    if (htmlString == null) return '';
-
-    if (htmlString is List) {
-      return htmlString.join(" ");
-    }
-
-    if (htmlString is! String) {
-      return htmlString.toString();
-    }
-
-    final document = html_parser.parse(htmlString);
-    return document.body?.text ?? '';
-  }
+  String _htmlToPlainText(dynamic htmlString) => htmlToPlainText(htmlString);
 }
 
 /// Compact Note Item untuk List View
@@ -278,20 +266,7 @@ class CompactNoteItem extends StatelessWidget {
     );
   }
 
-  String _htmlToPlainText(dynamic htmlString) {
-    if (htmlString == null) return '';
-
-    if (htmlString is List) {
-      return htmlString.join(" ");
-    }
-
-    if (htmlString is! String) {
-      return htmlString.toString();
-    }
-
-    final document = html_parser.parse(htmlString);
-    return document.body?.text ?? '';
-  }
+  String _htmlToPlainText(dynamic htmlString) => htmlToPlainText(htmlString);
 
   Map<String, dynamic> _getNoteType(String label) {
     final lowerLabel = label.toLowerCase();

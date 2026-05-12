@@ -98,6 +98,12 @@ class _ListItemState extends State<ListItem> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
+              'GREIGE AWAL',
+              style:
+                  TextStyle(fontWeight: CustomTheme().fontWeight('semibold')),
+            ),
+            Divider(),
+            Text(
               item['greige_item']['code']?.toString() ?? '-',
               style: TextStyle(
                 fontSize: CustomTheme().fontSize('lg'),
@@ -107,7 +113,6 @@ class _ListItemState extends State<ListItem> {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-
             Text(
               item['greige_item']['name']?.toString() ?? '-',
               style: TextStyle(
@@ -118,17 +123,6 @@ class _ListItemState extends State<ListItem> {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            // if (item['spk_no'] != null) ...[
-            //   Text(
-            //     item['spk_no'].toString(),
-            //     style: TextStyle(
-            //       fontSize: CustomTheme().fontSize('lg'),
-            //       color: Colors.grey[500],
-            //     ),
-            //     maxLines: 1,
-            //     overflow: TextOverflow.ellipsis,
-            //   ),
-            // ],
           ],
         ),
       ],
@@ -291,76 +285,86 @@ class _ListItemState extends State<ListItem> {
 
   /// Quantity Section
   Widget _buildQuantitySection(bool isTablet, withSpk) {
-    return Row(
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // if (label != 'Long Hemming' ||
-          //     label != 'Cross Cutting' ||
-          //     label != ' Sewing' ||
-          //     label != ' Embroidery' ||
-          //     label != ' Printing' ||
-          //     label != ' Packing')
-          // if (label == 'Long Hemming' ||
-          //     label == 'Cross Cutting' ||
-          //     label == ' Sewing' ||
-          //     label == ' Embroidery' ||
-          //     label == ' Printing' ||
-          //     label == ' Packing')
           if (withSpk == true)
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(
-                'SPK',
-                style: TextStyle(
-                    color: Colors.grey[600],
-                    fontWeight: CustomTheme().fontWeight('semibold')),
-              ),
-              GestureDetector(
-                onTap: _openSpkDetail,
-                child: Row(
-                  children: [
-                    Text(
-                      item['spk_no']?.toString() ?? '-',
-                      style: TextStyle(
-                          fontSize: CustomTheme().fontSize('xl'),
-                          fontWeight: CustomTheme().fontWeight('bold'),
-                          color: Colors.blue),
+            ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 80),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'SPK',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontWeight: CustomTheme().fontWeight('semibold'),
                     ),
-                    Icon(
-                      Icons.chevron_right_outlined,
-                      color: Colors.blue,
-                    )
-                  ],
+                  ),
+                  GestureDetector(
+                    onTap: _openSpkDetail,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            item['spk_no']?.toString() ?? '-',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: CustomTheme().fontSize('xl'),
+                              fontWeight: CustomTheme().fontWeight('bold'),
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                        const Icon(
+                          Icons.chevron_right_outlined,
+                          color: Colors.blue,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Qty',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontWeight: CustomTheme().fontWeight('semibold'),
                 ),
               ),
-            ]),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              'Qty',
-              style: TextStyle(
-                  color: Colors.grey[600],
-                  fontWeight: CustomTheme().fontWeight('semibold')),
-            ),
-            Row(
-              children: [
-                Text(
-                  _formatQuantity(item['qty']),
-                  style: TextStyle(
-                    fontSize: CustomTheme().fontSize('xl'),
-                    fontWeight: CustomTheme().fontWeight('bold'),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Text(
+                      _formatQuantity(item['qty']),
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('xl'),
+                        fontWeight: CustomTheme().fontWeight('bold'),
+                      ),
+                    ),
                   ),
-                ),
-                Text(
-                  item['unit']?['code']?.toString() ?? '-',
-                  style: TextStyle(
-                    fontSize: CustomTheme().fontSize('lg'),
-                    color: Colors.grey[600],
+                  Text(
+                    item['unit']?['code']?.toString() ?? '-',
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('lg'),
+                      color: Colors.grey[600],
+                    ),
                   ),
-                ),
-              ].separatedBy(CustomTheme().hGap('sm')),
-            ),
-          ]),
+                ].separatedBy(CustomTheme().hGap('sm')),
+              ),
+            ],
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -372,12 +376,16 @@ class _ListItemState extends State<ListItem> {
                 ),
               ),
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    _formatQuantity(item['weight']),
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('xl'),
-                      fontWeight: CustomTheme().fontWeight('bold'),
+                  Flexible(
+                    child: Text(
+                      _formatQuantity(item['weight']),
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('xl'),
+                        fontWeight: CustomTheme().fontWeight('bold'),
+                      ),
                     ),
                   ),
                   Text(
@@ -391,7 +399,9 @@ class _ListItemState extends State<ListItem> {
               ),
             ],
           ),
-        ].separatedBy(CustomTheme().hGap('xl')));
+        ].separatedBy(CustomTheme().hGap('xl')),
+      ),
+    );
   }
 
   /// Format Quantity

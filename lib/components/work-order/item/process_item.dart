@@ -39,9 +39,9 @@ class _ProcessItemState extends State<ProcessItem> {
 
     final data = process['data'] ?? [];
 
-    if (data.isEmpty) return 'Menunggu Diproses';
+    if (data.isEmpty) return '';
 
-    return data.first['status'] ?? 'Menunggu Diproses';
+    return data.first['status']?.toString() ?? '';
   }
 
   bool shouldSkipProcess(String key) {
@@ -115,35 +115,49 @@ class _ProcessItemState extends State<ProcessItem> {
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
                 blurRadius: 10,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
+
+          /// ✅ tinggi tetap supaya grid stabil
+          constraints: BoxConstraints(
+            minHeight: hasData ? 320 : 110,
+            maxHeight: hasData ? 520 : 110,
+          ),
+
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CardHeader(
-                  data: data,
-                  item: widget.item,
-                  isTablet: isTablet,
-                  hasData: hasData,
-                  getProcessIcon: _getProcessIcon,
-                  showDetails: widget.showDetails,
-                  shouldSkipProcess: shouldSkipProcess,
-                ),
-                if (hasData)
-                  CardContent(
-                    data: ['dyeing', 'press', 'tumbler'].contains(processKey)
-                        ? data
-                        : data.first,
+
+            /// ✅ biar content bisa scroll dan tidak overflow
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CardHeader(
+                    data: data,
+                    item: widget.item,
                     isTablet: isTablet,
-                    processKey: processKey,
-                  )
-                else
-                  Expanded(child: NoData())
-              ],
+                    hasData: hasData,
+                    getProcessIcon: _getProcessIcon,
+                    showDetails: widget.showDetails,
+                    shouldSkipProcess: shouldSkipProcess,
+                  ),
+                  if (hasData)
+                    CardContent(
+                      data: ['dyeing', 'press', 'tumbler'].contains(processKey)
+                          ? data
+                          : data.first,
+                      isTablet: isTablet,
+                      processKey: processKey,
+                    )
+                  else
+                    SizedBox.shrink(
+                      child: NoData(),
+                    ),
+                ],
+              ),
             ),
           ),
         );

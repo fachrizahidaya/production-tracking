@@ -430,8 +430,7 @@ class _FormItemsState extends State<FormItems> {
     );
 
     final grades = List<Map<String, dynamic>>.from(_grades);
-    final index =
-        grades.indexWhere((g) => g['item_grade']['code'].toString() == 'BS');
+    final index = grades.indexWhere((g) => g['name'].toString() == 'Grade BS');
 
     if (index != -1) {
       grades[index]['qty'] = totalBs;

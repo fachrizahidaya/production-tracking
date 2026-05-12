@@ -607,17 +607,6 @@ Informasi Proses
 Grades
 */
   Widget _buildGradeInfo(bool isTablet) {
-    // double getTotalGradeQty() {
-    //   final List<dynamic>? grades = widget.existingGrades;
-
-    //   if (grades == null || grades.isEmpty) return 0;
-
-    //   return grades.fold<double>(0.0, (sum, item) {
-    //     final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
-    //     return sum + qty;
-    //   });
-    // }
-
     final items = widget.data['work_orders']?['items'] ?? [];
     final codeGradeA = widget.data['grades'][0]['greige_item']['code'];
     final nameGradeA = widget.data['grades'][0]['greige_item']['name'];
@@ -948,26 +937,14 @@ Info Material
   Widget _buildMaterialInfo(bool isTablet) {
     final items = [
       {
-        'label': 'Greige Awal',
+        'label': '',
         'value':
-            '${widget.data['work_orders']['items'][0]['greige_item']['code'] ?? '${widget.data['work_orders']['items'][0]['item_code'] ?? '-'}'}',
+            '${widget.data['greige_item']['code'] ?? (widget.label == 'Sorting' ? widget.data['grades'][1]['greige_item']['code'] : '-')}',
         'another_value':
-            '${widget.data['work_orders']['items'][0]['greige_item']['name'] ?? '${widget.data['work_orders']['items'][0]['item_name'] ?? '-'}'}',
+            '${widget.data['greige_item']['name'] ?? (widget.label == 'Sorting' ? widget.data['grades'][1]['greige_item']['name'] : '-')}',
         'icon': Icons.inventory_2_outlined,
         'is_product': true,
       },
-      if (widget.data['greige_item'] != null)
-        {
-          'label': widget.label == 'Packing'
-              ? 'Produk Jadi'
-              : 'Produk Setengah Jadi',
-          'value':
-              '${widget.data['greige_item']['code'] ?? (widget.label == 'Sorting' ? widget.data['grades'][1]['greige_item']['code'] : '-')}',
-          'another_value':
-              '${widget.data['greige_item']['name'] ?? (widget.label == 'Sorting' ? widget.data['grades'][1]['greige_item']['name'] : '-')}',
-          'icon': Icons.inventory_2_outlined,
-          'is_product': true,
-        },
     ];
 
     return _buildMultiInfoGrid(items, isTablet);
@@ -1468,32 +1445,6 @@ Material WO
                   ],
                 ),
               ),
-              // Expanded(
-              //   flex: 1,
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //       Text(
-              //         'SPK',
-              //         style: TextStyle(
-              //           fontSize: CustomTheme().fontSize('md'),
-              //           color: Colors.grey[600],
-              //           fontWeight: CustomTheme().fontWeight('semibold'),
-              //         ),
-              //       ),
-              //       Text(
-              //         spkNo.isNotEmpty ? spkNo : '-',
-              //         style: TextStyle(
-              //           fontSize: CustomTheme().fontSize('lg'),
-              //           fontWeight: CustomTheme().fontWeight('semibold'),
-              //           color: Colors.grey[800],
-              //         ),
-              //         maxLines: 1,
-              //         overflow: TextOverflow.ellipsis,
-              //       ),
-              //     ],
-              //   ),
-              // ),
               Expanded(
                 flex: 1,
                 child: Column(
@@ -1643,9 +1594,11 @@ Catatan WO
             icon: Icons.grade_outlined,
             child: _buildGradeInfo(true),
           ),
-        if (widget.label != 'Sorting')
+        if (widget.label != 'Sorting' && widget.data['greige_item'] != null)
           _buildInfoCard(
-            title: 'Material WO',
+            title: widget.label == 'Packing'
+                ? 'Produk Jadi'
+                : 'Produk Setengah Jadi',
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(true),
           ),
@@ -1745,7 +1698,7 @@ Catatan WO
           ),
         if (widget.label != 'Sorting')
           _buildInfoCard(
-            title: 'Material WO',
+            title: 'Produk Setengah Jadi',
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(false),
           ),

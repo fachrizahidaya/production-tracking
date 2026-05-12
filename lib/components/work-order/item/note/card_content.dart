@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/format_html.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class CardContent extends StatelessWidget {
   final isTablet;
   final plainText;
+  final htmlContent;
   final isLongContent;
   final isExpandable;
   final isExpanded;
@@ -16,6 +18,7 @@ class CardContent extends StatelessWidget {
       this.isLongContent,
       this.isExpandable,
       this.isExpanded,
+      this.htmlContent,
       this.toggleExpanded});
 
   @override
@@ -47,16 +50,23 @@ class CardContent extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          shouldTruncate
-                              ? '${plainText.substring(0, 150)}...'
-                              : plainText,
-                          style: TextStyle(
-                            fontSize: isTablet ? 14 : 13,
-                            color: Colors.grey[800],
-                            height: 1.6,
-                          ),
-                        ),
+                        shouldTruncate
+                            ? Text(
+                                '${plainText.substring(0, 150)}...',
+                                style: TextStyle(
+                                  fontSize: isTablet ? 14 : 13,
+                                  color: Colors.grey[800],
+                                  height: 1.6,
+                                ),
+                              )
+                            : formattedHtmlContent(
+                                htmlContent ?? plainText,
+                                textStyle: TextStyle(
+                                  fontSize: isTablet ? 14 : 13,
+                                  color: Colors.grey[800],
+                                  height: 1.6,
+                                ),
+                              ),
                         // Show More / Less Button
                         if (isLongContent && isExpandable) ...[
                           GestureDetector(

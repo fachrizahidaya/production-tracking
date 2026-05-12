@@ -153,32 +153,6 @@ class _WoItemTabState extends State<WoItemTab> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'SPK',
-                        style: TextStyle(
-                          fontSize: CustomTheme().fontSize('md'),
-                          color: Colors.grey[600],
-                          fontWeight: CustomTheme().fontWeight('semibold'),
-                        ),
-                      ),
-                      Text(
-                        spkNo.isNotEmpty ? spkNo : '-',
-                        style: TextStyle(
-                          fontSize: CustomTheme().fontSize('lg'),
-                          fontWeight: CustomTheme().fontWeight('semibold'),
-                          color: Colors.grey[800],
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
                         'Total Qty',
                         style: TextStyle(
                           fontSize: CustomTheme().fontSize('md'),

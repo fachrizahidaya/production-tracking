@@ -7,6 +7,7 @@ import 'package:textile_tracking/helpers/util/format_html.dart';
 class NoteItem extends StatelessWidget {
   final data;
   final label;
+
   const NoteItem({super.key, this.data, this.label});
 
   @override
@@ -54,19 +55,19 @@ class NoteItem extends StatelessWidget {
 
     final content = note['content'];
 
-    if (content == null || content.toString().trim().isEmpty) {
+    if (content == null || isHtmlBlank(content)) {
       return null;
     }
 
-    return htmlToPlainText(content.toString());
+    return content.toString();
   }
 
   Widget _buildInfo({
     required String value,
   }) {
-    return Text(
+    return formattedHtmlContent(
       value,
-      style: TextStyle(
+      textStyle: TextStyle(
         fontSize: CustomTheme().fontSize('lg'),
       ),
     );

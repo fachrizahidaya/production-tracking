@@ -479,11 +479,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
             child: buildBoldMessage(message: message, prefix: widget.prefix));
       });
     } catch (e) {
-      await showAlertDialog(
-        context: context,
-        title: 'Error',
-        message: e.toString(),
-      );
+      rethrow;
     }
   }
 

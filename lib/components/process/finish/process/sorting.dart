@@ -200,10 +200,8 @@ class _SortingSectionState extends State<SortingSection> {
                     _summaryBox('Grade A', widget.grades[0]['qty']),
                     _summaryBox('Grade B', widget.grades[1]['qty']),
                     _summaryBox('Tipe BS', widget.grades[2]['qty']),
-                    _summaryBox(
-                        'Perbaikan', _calculateTotalVermak().toString()),
-                    _summaryBox(
-                        'Hasil Sortir', _calculateTotalQtySorting().toString(),
+                    _summaryBox('Perbaikan', _calculateTotalVermak()),
+                    _summaryBox('Hasil Sortir', _calculateTotalQtySorting(),
                         isHighlight: true),
                   ].separatedBy(SizedBox(width: 8)),
                 )

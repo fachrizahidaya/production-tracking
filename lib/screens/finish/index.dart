@@ -267,7 +267,6 @@ class _FinishProcessState extends State<FinishProcess> {
       );
 
       final options = service.dataListOption;
-      print('opt: $options');
 
       setState(() {
         finishedItemOptionGrb = options;
@@ -301,16 +300,6 @@ class _FinishProcessState extends State<FinishProcess> {
     setState(() {
       _form[field] = value;
     });
-  }
-
-  String _getSubmitAlertMessage(Object error) {
-    final message = error.toString();
-
-    if (message.toLowerCase().contains('formatexception')) {
-      return 'Gagal submit data';
-    }
-
-    return message;
   }
 
   Future<void> _handleScan(code) async {
@@ -484,7 +473,7 @@ class _FinishProcessState extends State<FinishProcess> {
       await showAlertDialog(
         context: context,
         title: 'Error',
-        message: _getSubmitAlertMessage(e),
+        message: e.toString(),
       );
     }
   }

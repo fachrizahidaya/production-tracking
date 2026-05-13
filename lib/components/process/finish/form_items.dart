@@ -190,8 +190,8 @@ class _FormItemsState extends State<FormItems> {
             ? widget.finishedItem[0]['value']
             : null;
       } else if (i == 1) {
-        greigeItemId = widget.finishedItemGrb.isNotEmpty
-            ? widget.finishedItemGrb[0]['value']
+        greigeItemId = widget.finishedItem.isNotEmpty
+            ? widget.finishedItem[0]['value']
             : null;
       } else if (i == 2) {
         greigeItemId = null;

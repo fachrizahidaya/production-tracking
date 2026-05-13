@@ -790,9 +790,9 @@ class _FormItemsState extends State<FormItems> {
                                           calculateBeratA(input);
                                         }
                                       });
-                                      setState(() {
-                                        widget.validateQty(safeValue);
-                                      });
+                                      // setState(() {
+                                      //   widget.validateQty(safeValue);
+                                      // });
                                     },
                                     validator: (value) {
                                       if (value == null ||

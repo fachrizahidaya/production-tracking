@@ -543,8 +543,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
       if (data['greige_item'] != null) {
         widget.form?['greige_item_id'] = data['greige_item']['id'].toString();
-        widget.form?['greige_item_name'] =
+        widget.form?['nama_greige_item'] =
             data['greige_item']['name'].toString();
+        widget.form?['sku_greige_item'] =
+            data['greige_item']['code'].toString();
       }
 
       if (data['machine_ids'] != null) {

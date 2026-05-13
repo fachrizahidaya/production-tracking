@@ -186,8 +186,8 @@ class _FormItemsState extends State<FormItems> {
       dynamic greigeItemId;
 
       if (i == 0) {
-        greigeItemId = widget.processData['greige_item'] != null
-            ? widget.processData['greige_item']['id']
+        greigeItemId = widget.finishedItem.isNotEmpty
+            ? widget.finishedItem[0]['value']
             : null;
       } else if (i == 1) {
         greigeItemId = widget.finishedItemGrb.isNotEmpty
@@ -882,7 +882,7 @@ class _FormItemsState extends State<FormItems> {
                         children: [
                           Expanded(
                             child: TextForm(
-                              label: 'Gramasi (GSM)',
+                              label: 'Gramasi',
                               isDisabled: true,
                               isNumber: true,
                               initialValue:
@@ -915,7 +915,7 @@ class _FormItemsState extends State<FormItems> {
                           ),
                           Expanded(
                             child: TextForm(
-                              label: 'Total Berat Keseluruhan (KG)',
+                              label: 'Total Berat Kesuluruhan (KG)',
                               isDisabled: true,
                               isNumber: true,
                               initialValue:

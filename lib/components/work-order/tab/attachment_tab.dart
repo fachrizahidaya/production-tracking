@@ -2,16 +2,14 @@
 
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:open_filex/open_filex.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_bytes.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AttachmentTab extends StatefulWidget {
   final Map<String, dynamic>? data;
@@ -120,60 +118,13 @@ class _AttachmentTabState extends State<AttachmentTab> {
                     filePath: isNew ? filePath : '$baseUrl$filePath',
                   );
                 } else {
-                  try {
-                    final url = '$baseUrl$filePath';
+                  /// NON IMAGE => DOWNLOAD FILE
+                  final url = '$baseUrl$filePath';
 
-                    /// folder download
-                    Directory directory;
-
-                    if (Platform.isAndroid) {
-                      directory = Directory('/storage/emulated/0/Download');
-                    } else {
-                      directory = await getApplicationDocumentsDirectory();
-                    }
-
-                    if (!await directory.exists()) {
-                      await directory.create(recursive: true);
-                    }
-
-                    final savePath = '${directory.path}/$fileName';
-
-                    /// loading
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (_) => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-
-                    /// download file
-                    await Dio().download(
-                      url,
-                      savePath,
-                    );
-
-                    Navigator.pop(context);
-
-                    /// langsung buka file
-                    await OpenFilex.open(savePath);
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'File berhasil didownload',
-                        ),
-                      ),
-                    );
-                  } catch (e) {
-                    Navigator.pop(context);
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Gagal download file: $e'),
-                      ),
-                    );
-                  }
+                  await launchUrl(
+                    Uri.parse(url),
+                    mode: LaunchMode.externalApplication,
+                  );
                 }
               },
         child: Container(

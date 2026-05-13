@@ -742,6 +742,7 @@ class _FormItemsState extends State<FormItems> {
                     handleUpdateGrade: widget.handleUpdateGrade,
                     finishedItemGrb: widget.finishedItemGrb,
                     finishedItem: widget.finishedItem,
+                    woData: widget.processData,
                   ),
                 if (widget.label == 'Packing')
                   Column(

@@ -192,6 +192,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       finishedItemOption = widget.finishedItemOptions!;
     }
 
+    if (widget.label == 'Sorting') {
+      await _handleFetchFinishedMaterialGrb();
+    }
+
     setState(() {
       _firstLoading = false;
     });
@@ -275,6 +279,41 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       setState(() {
         _isFetchingFinishedMaterial = false;
       });
+    }
+  }
+
+  Future<void> _handleFetchFinishedMaterialGrb() async {
+    final service = Provider.of<OptionItemService>(context, listen: false);
+
+    try {
+      String baseCode = '';
+      String colorCode = '';
+
+      final itemCode = data['greige_item']?['code'] ?? '';
+
+      if (itemCode.isNotEmpty) {
+        final parts = itemCode.split('-');
+        baseCode = parts.first;
+        colorCode = parts.last;
+      }
+
+      await service.fetchOptions(
+        process: formatProcessLabel(widget.label),
+        baseCode: baseCode,
+        colorCode: colorCode,
+      );
+
+      final grbData = widget.getFinishedItemOptions != null
+          ? widget.getFinishedItemOptions!(service)
+          : service.dataListOption;
+
+      setState(() {
+        finishedItemGrb = grbData;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
     }
   }
 
@@ -397,6 +436,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     });
 
     await _handleFetchFinishedMaterial();
+    // await _handleFetchFinishedMaterialGrb();
   }
 
   Future<void> _getProcessView(id) async {

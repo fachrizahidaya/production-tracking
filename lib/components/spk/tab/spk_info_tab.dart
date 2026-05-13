@@ -40,6 +40,7 @@ class SpkInfoTab extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _SpkHeader(data: data, isTablet: isTablet),
+              _SpkWorkOrderCard(data: data),
               _SpkMaterialCard(data: data),
               AttachmentTab(existingAttachment: data['attachments'] ?? []),
             ].separatedBy(CustomTheme().vGap('2xl')),
@@ -241,6 +242,59 @@ class _QuickInfoItem extends StatelessWidget {
   }
 }
 
+class _SpkWorkOrderCard extends StatelessWidget {
+  final Map<String, dynamic> data;
+
+  const _SpkWorkOrderCard({required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    final workOrders = (data['work_orders'] ?? []) as List<dynamic>;
+
+    return TemplateCard(
+      title: 'Work Order',
+      icon: Icons.assignment_outlined,
+      child: workOrders.isEmpty
+          ? NoData()
+          : Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              runAlignment: WrapAlignment.start,
+              children: workOrders.map((workOrder) {
+                final item = workOrder as Map<String, dynamic>;
+
+                return Container(
+                  padding: CustomTheme().padding('badge-rework'),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[50],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.receipt_long_outlined,
+                        size: CustomTheme().iconSize('md'),
+                        color: CustomTheme().buttonColor('primary'),
+                      ),
+                      Text(
+                        item['wo_no']?.toString() ?? '-',
+                        style: TextStyle(
+                          fontSize: CustomTheme().fontSize('sm'),
+                          fontWeight: CustomTheme().fontWeight('semibold'),
+                          color: Colors.grey[800],
+                        ),
+                      ),
+                    ].separatedBy(CustomTheme().hGap('md')),
+                  ),
+                );
+              }).toList(),
+            ),
+    );
+  }
+}
+
 class _SpkMaterialCard extends StatelessWidget {
   final Map<String, dynamic> data;
 
@@ -249,14 +303,6 @@ class _SpkMaterialCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = (data['items'] ?? []) as List<dynamic>;
-    final totalQty = items.fold<num>(
-      0,
-      (sum, item) => sum + ((item['qty'] ?? 0) as num),
-    );
-    final firstItem =
-        items.isNotEmpty ? items.first as Map<String, dynamic> : null;
-    final firstUnit = firstItem?['unit'] as Map<String, dynamic>?;
-    final unit = firstUnit?['code'] ?? '';
 
     return TemplateCard(
       title: 'Material',
@@ -461,11 +507,10 @@ class _SpkMaterialItem extends StatelessWidget {
             fontWeight: CustomTheme().fontWeight('semibold'),
           ),
         ),
-        Text(
-          item['status']?.toString() ?? '-',
-          style: TextStyle(
-            fontWeight: CustomTheme().fontWeight('bold'),
-          ),
+        CustomBadge(
+          title: item['status']?.toString() ?? '-',
+          withStatus: false,
+          status: 'Diproses',
         ),
       ].separatedBy(CustomTheme().vGap('sm')),
     );

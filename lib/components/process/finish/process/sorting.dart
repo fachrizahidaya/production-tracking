@@ -65,14 +65,15 @@ class SortingSection extends StatefulWidget {
 class _SortingSectionState extends State<SortingSection> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
-  double _parse(String value) {
-    return double.tryParse(
-          value.replaceAll('.', '').replaceAll(',', '.'),
-        ) ??
-        0;
+  int _parse(dynamic value) {
+    if (value == null) return 0;
+
+    final clean = value.toString().replaceAll('.', '').replaceAll(',', '');
+
+    return int.tryParse(clean) ?? 0;
   }
 
-  double _calculateTotalVermak() {
+  int _calculateTotalVermak() {
     final spraying = _parse(widget.spraying.text);
     final hemming = _parse(widget.reworkLongHemming.text);
     final combing = _parse(widget.combing.text);
@@ -80,11 +81,11 @@ class _SortingSectionState extends State<SortingSection> {
     return spraying + hemming + combing;
   }
 
-  double _calculateTotalQtySorting() {
-    double total = 0;
+  int _calculateTotalQtySorting() {
+    int total = 0;
 
     for (var g in widget.grades) {
-      total += _parse(g['qty']?.toString() ?? '0');
+      total += _parse(g['qty']);
     }
 
     return total + _calculateTotalVermak();
@@ -203,8 +204,7 @@ class _SortingSectionState extends State<SortingSection> {
                     _summaryBox('Grade B', widget.grades[1]['qty']),
                     _summaryBox('Tipe BS', widget.grades[2]['qty']),
                     _summaryBox('Perbaikan', _calculateTotalVermak()),
-                    _summaryBox('Hasil Sortir', _calculateTotalQtySorting(),
-                        isHighlight: true),
+                    _summaryBox('Total', _calculateTotalQtySorting()),
                   ].separatedBy(SizedBox(width: 8)),
                 )
               : Padding(
@@ -216,12 +216,11 @@ class _SortingSectionState extends State<SortingSection> {
     );
   }
 
-  Widget _summaryBox(String title, dynamic value, {bool isHighlight = false}) {
+  Widget _summaryBox(String title, dynamic value) {
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isHighlight ? Colors.grey.shade50 : null,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.grey.shade300),
         ),
@@ -231,8 +230,11 @@ class _SortingSectionState extends State<SortingSection> {
             Text(title, style: TextStyle(fontSize: 12)),
             SizedBox(height: 4),
             Text(
-              value?.toString() ?? '0',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              formatNumber(_parse(value)).toString(),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),

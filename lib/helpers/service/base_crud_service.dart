@@ -32,35 +32,6 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
   bool get hasMoreData => _hasMoreData;
   Map<String, dynamic> get dataView => _dataView;
 
-  static const String _submitErrorMessage = 'Gagal submit data';
-
-  String _getBackendMessage(String responseBody) {
-    try {
-      final decoded = jsonDecode(responseBody);
-      if (decoded is Map<String, dynamic> && decoded['message'] != null) {
-        return decoded['message'].toString();
-      }
-    } catch (e) {
-      return _submitErrorMessage;
-    }
-
-    return _submitErrorMessage;
-  }
-
-  String _getSubmitErrorMessage(Object error) {
-    final message = error.toString();
-
-    if (message.toLowerCase().contains('formatexception')) {
-      return _submitErrorMessage;
-    }
-
-    if (error is String && message != _submitErrorMessage) {
-      return message;
-    }
-
-    return _submitErrorMessage;
-  }
-
   Future<void> fetchItems({
     required BuildContext context,
     bool isInitialLoad = false,
@@ -229,14 +200,13 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         if (response.statusCode == 200) {
           await refetchItems(context);
           return jsonDecode(response.body)['message'];
-        } else if (response.statusCode == 400) {
-          throw _getBackendMessage(response.body);
         } else {
-          throw _submitErrorMessage;
+          final error = jsonDecode(response.body);
+          throw (error['message'] ?? 'Gagal mengubah proses');
         }
       }
     } catch (e) {
-      throw _getSubmitErrorMessage(e);
+      throw ('$e');
     } finally {
       isSubmitting.value = false;
     }
@@ -288,13 +258,12 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       if (response.statusCode == 200) {
         await refetchItems(context);
         return jsonDecode(response.body)['message'];
-      } else if (response.statusCode == 400) {
-        throw _getBackendMessage(response.body);
       } else {
-        throw _submitErrorMessage;
+        final error = jsonDecode(response.body);
+        throw (error['message'] ?? 'Gagal mengubah proses');
       }
     } catch (e) {
-      throw _getSubmitErrorMessage(e);
+      throw ('$e');
     } finally {
       isSubmitting.value = false;
     }
@@ -353,13 +322,12 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       if (response.statusCode == 200) {
         await refetchItems(context);
         return jsonDecode(response.body)['message'];
-      } else if (response.statusCode == 400) {
-        throw _getBackendMessage(response.body);
       } else {
-        throw _submitErrorMessage;
+        final error = jsonDecode(response.body);
+        throw (error['message'] ?? 'Gagal mengubah proses');
       }
     } catch (e) {
-      throw _getSubmitErrorMessage(e);
+      throw ('$e');
     } finally {
       isSubmitting.value = false;
     }
@@ -443,10 +411,9 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         if (response.statusCode == 200) {
           await refetchItems(context);
           return '${jsonDecode(body)['message']}. Proses dapat dilanjutkan atau WO sudah selesai.';
-        } else if (response.statusCode == 400) {
-          throw _getBackendMessage(body);
         } else {
-          throw _submitErrorMessage;
+          throw Exception(
+              jsonDecode(body)['message'] ?? 'Gagal menyelesaikan proses');
         }
       } else {
         final body = {
@@ -466,14 +433,13 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         if (response.statusCode == 200) {
           await refetchItems(context);
           return '${jsonDecode(response.body)['message']}. Proses dapat dilanjutkan atau WO sudah selesai.';
-        } else if (response.statusCode == 400) {
-          throw _getBackendMessage(response.body);
         } else {
-          throw _submitErrorMessage;
+          final error = jsonDecode(response.body);
+          throw (error['message'] ?? 'Gagal menyelesaikan proses');
         }
       }
     } catch (e) {
-      throw _getSubmitErrorMessage(e);
+      throw ('$e');
     } finally {
       isSubmitting.value = false;
     }

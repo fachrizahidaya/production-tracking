@@ -152,7 +152,7 @@ class _ListFormState extends State<ListForm> {
         .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
         .toList();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _syncGradesWithOptions();
+      // _syncGradesWithOptions();
       _syncDefectsWithOptions();
     });
     super.initState();
@@ -164,13 +164,13 @@ class _ListFormState extends State<ListForm> {
     );
   }
 
-  @override
-  void didUpdateWidget(covariant ListForm oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.itemGradeOption != widget.itemGradeOption) {
-      _syncGradesWithOptions();
-    }
-  }
+  // @override
+  // void didUpdateWidget(covariant ListForm oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   if (oldWidget.itemGradeOption != widget.itemGradeOption) {
+  //     _syncGradesWithOptions();
+  //   }
+  // }
 
   void _syncGradesWithOptions() {
     final List<Map<String, dynamic>> updated = [];

@@ -80,7 +80,7 @@ class _FinishSewingState extends State<FinishSewing> {
       fetchFinishedItem: (service) async => await service.fetchOptions(),
       getFinishedItemOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput, finishedItemOption) =>
+              handleChangeInput, finishedItemOption, finishedItemOptionGrb) =>
           FinishSewingManual(
         id: id,
         processId: processId,

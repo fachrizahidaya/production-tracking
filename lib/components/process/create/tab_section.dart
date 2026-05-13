@@ -159,8 +159,10 @@ class _TabSectionState extends State<TabSection> {
   @override
   Widget build(BuildContext context) {
     bool isDisabled;
-    final machines = widget.form?['machines'] as List? ?? [];
 
+    final List<Map<String, dynamic>> machines = List<Map<String, dynamic>>.from(
+      widget.form?['machines'] ?? [],
+    );
     if (widget.withOnlyMaklon == true) {
       isDisabled = widget.form?['wo_id'] == null;
     } else if (widget.withNoMaklonOrMachine == true) {

@@ -591,6 +591,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
     return false;
   }
 
+  bool _isItemEmpty() {
+    if (widget.finishedItemMaterial.isEmpty) return true;
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -697,7 +703,9 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                         widget.label == 'Packing')
                                       Expanded(
                                         child: TemplateCard(
-                                            title: 'Produk Setengah Jadi',
+                                            title: widget.label == 'Packing'
+                                                ? 'Produk Jadi'
+                                                : 'Produk Setengah Jadi',
                                             icon: Icons.inventory_2_outlined,
                                             child: Column(
                                               crossAxisAlignment:
@@ -898,6 +906,11 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                   ),
                                 if (widget.label == 'Sorting' && _isDataEmpty())
                                   FormHelpers.buildEmptyState(true)
+                                // else if ((widget.label == 'Long Hemming' ||
+                                //         widget.label == 'Sewing' ||
+                                //         widget.label == 'Packing') &&
+                                //     _isItemEmpty())
+                                //   FormHelpers.buildEmptyState(true)
                                 else ...[
                                   if (widget.label == 'Sorting')
                                     SortingEditSection(
@@ -1120,7 +1133,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                               CustomTheme().hGap('xl')),
                                         ),
                                       ),
-                                    ],
+                                    ].separatedBy(CustomTheme().vGap('xl')),
                                   ),
                               ].separatedBy(CustomTheme().vGap('xl'))),
                         )),

@@ -70,7 +70,7 @@ class _FinishPressTumblerState extends State<FinishPressTumbler> {
           await service.fetchPressFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput, finishedItemOption) =>
+              handleChangeInput, finishedItemOption, finishedItemOptionGrb) =>
           FinishPressTumblerManual(
         id: id,
         processId: processId,

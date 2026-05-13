@@ -937,8 +937,7 @@ Info Material
   Widget _buildMaterialInfo(bool isTablet) {
     final items = [
       {
-        'label':
-            widget.label == 'Packing' ? 'Produk Jadi' : 'Produk Setengah Jadi',
+        'label': '',
         'value':
             '${widget.data['greige_item']['code'] ?? (widget.label == 'Sorting' ? widget.data['grades'][1]['greige_item']['code'] : '-')}',
         'another_value':

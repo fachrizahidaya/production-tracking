@@ -45,6 +45,7 @@ class FinishProcessManual extends StatefulWidget {
   final forHemming;
   final forSewing;
   final finishedItemOptions;
+  final finishedItemOptionGrb;
 
   const FinishProcessManual(
       {super.key,
@@ -72,7 +73,8 @@ class FinishProcessManual extends StatefulWidget {
       this.fetchFinishItem,
       this.getFinishedItemOptions,
       this.woId,
-      this.finishedItemOptions});
+      this.finishedItemOptions,
+      this.finishedItemOptionGrb});
 
   @override
   State<FinishProcessManual> createState() => _FinishProcessManualState();
@@ -192,8 +194,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       finishedItemOption = widget.finishedItemOptions!;
     }
 
-    if (widget.label == 'Sorting') {
+    if ((widget.finishedItemOptionGrb ?? []).isEmpty) {
       await _handleFetchFinishedMaterialGrb();
+    } else {
+      finishedItemGrb = widget.finishedItemOptionGrb!;
     }
 
     setState(() {
@@ -289,7 +293,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       String baseCode = '';
       String colorCode = '';
 
-      final itemCode = data['greige_item']?['code'] ?? '';
+      final itemCode = woData['items']?[0]?['item_code'] ?? '';
 
       if (itemCode.isNotEmpty) {
         final parts = itemCode.split('-');
@@ -300,12 +304,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       await service.fetchOptions(
         process: formatProcessLabel(widget.label),
         baseCode: baseCode,
-        colorCode: colorCode,
+        colorCode: widget.label == 'Sorting' ? 'grb' : colorCode,
       );
 
-      final grbData = widget.getFinishedItemOptions != null
-          ? widget.getFinishedItemOptions!(service)
-          : service.dataListOption;
+      final grbData = service.dataListOption;
 
       setState(() {
         finishedItemGrb = grbData;
@@ -436,7 +438,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     });
 
     await _handleFetchFinishedMaterial();
-    // await _handleFetchFinishedMaterialGrb();
+    await _handleFetchFinishedMaterialGrb();
   }
 
   Future<void> _getProcessView(id) async {
@@ -543,8 +545,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
       if (data['greige_item'] != null) {
         widget.form?['greige_item_id'] = data['greige_item']['id'].toString();
-        widget.form?['greige_item_name'] =
+        widget.form?['nama_greige_item'] =
             data['greige_item']['name'].toString();
+        widget.form?['sku_greige_item'] =
+            data['greige_item']['code'].toString();
       }
 
       if (data['machine_ids'] != null) {

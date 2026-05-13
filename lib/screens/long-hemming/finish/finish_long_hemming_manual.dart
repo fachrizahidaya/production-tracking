@@ -16,6 +16,7 @@ class FinishLongHemmingManual extends StatefulWidget {
   final forSewing;
   final forHemming;
   final finishedItemOptions;
+  final finishedItemOptionGrb;
 
   const FinishLongHemmingManual(
       {super.key,
@@ -31,7 +32,8 @@ class FinishLongHemmingManual extends StatefulWidget {
       this.withQtyAndWeight,
       this.forHemming,
       this.forSewing,
-      this.finishedItemOptions});
+      this.finishedItemOptions,
+      this.finishedItemOptionGrb});
 
   @override
   State<FinishLongHemmingManual> createState() =>
@@ -79,6 +81,7 @@ class _FinishLongHemmingManualState extends State<FinishLongHemmingManual> {
       forHemming: widget.forHemming,
       forSewing: widget.forSewing,
       finishedItemOptions: widget.finishedItemOptions,
+      finishedItemOptionGrb: widget.finishedItemOptionGrb,
     );
   }
 }

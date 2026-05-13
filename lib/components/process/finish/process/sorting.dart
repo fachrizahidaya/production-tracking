@@ -603,6 +603,8 @@ class _SortingSectionState extends State<SortingSection> {
 
     _ensureController(i);
 
+    final isGradeBS = gradeLabel == 'Grade BS';
+
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
       decoration: BoxDecoration(
@@ -638,9 +640,10 @@ class _SortingSectionState extends State<SortingSection> {
               ],
             ),
           ),
-          SizedBox(width: 12),
 
-          // Produk Jadi Column
+          // Produk Jadi hanya tampil selain Grade BS
+          // if (!isGradeBS) ...[
+          SizedBox(width: 12),
           Expanded(
             flex: 2,
             child: Column(
@@ -659,31 +662,36 @@ class _SortingSectionState extends State<SortingSection> {
               ],
             ),
           ),
+          // ],
+
+          SizedBox(width: 12),
 
           // Qty Column
           Expanded(
             flex: 2,
             child: TextForm(
-                label: 'Qty (PCS)',
-                req: false,
-                isDisabled: i == 2 ? true : false,
-                isGrade: true,
-                isNumber: true,
-                isSorting: true,
-                initialValue: widget.grades[i]['qty']?.toString() ?? '0',
-                controller: widget.qtyItem[i],
-                handleChange: (val) {
-                  String clean = (val).replaceAll('.', '').replaceAll(',', '');
+              label: 'Qty (PCS)',
+              req: false,
+              isDisabled: i == 2 ? true : false,
+              isGrade: true,
+              isNumber: true,
+              isSorting: true,
+              initialValue: widget.grades[i]['qty']?.toString() ?? '0',
+              controller: widget.qtyItem[i],
+              handleChange: (val) {
+                String clean = (val).replaceAll('.', '').replaceAll(',', '');
 
-                  if (clean.isEmpty) clean = '0';
+                if (clean.isEmpty) clean = '0';
 
-                  setState(() {
-                    widget.grades[i]['qty'] = clean;
-                  });
+                setState(() {
+                  widget.grades[i]['qty'] = clean;
+                });
 
-                  widget.handleUpdateGrade(i, 'qty', clean);
-                }),
+                widget.handleUpdateGrade(i, 'qty', clean);
+              },
+            ),
           ),
+
           SizedBox(width: 12),
         ],
       ),
@@ -700,17 +708,25 @@ class _SortingSectionState extends State<SortingSection> {
         Text(
           item != null && item['greige_item'] != null
               ? item['greige_item']['code'].toString()
-              : gradeLabel == 'Grade B'
-                  ? widget.finishedItemGrb[0]['code']
-                  : '-',
+              : gradeLabel == 'Grade BS'
+                  ? '-'
+                  : gradeLabel == 'Grade B'
+                      ? widget.finishedItemGrb[0]['code']
+                      : widget.woData['greige_item'] != null
+                          ? widget.woData['greige_item']['code']
+                          : '-',
           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
         ),
         Text(
           item != null && item['greige_item'] != null
               ? item['greige_item']['name'].toString()
-              : gradeLabel == 'Grade B'
-                  ? widget.finishedItemGrb[0]['label']
-                  : '-',
+              : gradeLabel == 'Grade BS'
+                  ? '-'
+                  : gradeLabel == 'Grade B'
+                      ? widget.finishedItemGrb[0]['label']
+                      : widget.woData['greige_item'] != null
+                          ? widget.woData['greige_item']['name']
+                          : '-',
           style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,

@@ -75,7 +75,7 @@ class _FinishSortingState extends State<FinishSorting> {
       getWorkOrderOptions: (service) => service.dataListOption,
       getFinishedItemOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput, finishedItemOption) =>
+              handleChangeInput, finishedItemOption, finishedItemOptionGrb) =>
           FinishSortingManual(
         id: id,
         processId: processId,
@@ -86,6 +86,8 @@ class _FinishSortingState extends State<FinishSorting> {
         forDyeing: false,
         withItemGrade: true,
         withQtyAndWeight: false,
+        finishedItemOptions: finishedItemOption,
+        finishedItemOptionGrb: finishedItemOptionGrb,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final sorting = Sorting(

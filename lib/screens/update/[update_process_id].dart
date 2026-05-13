@@ -591,6 +591,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
     return false;
   }
 
+  bool _isItemEmpty() {
+    if (widget.finishedItemMaterial.isEmpty) return true;
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -900,6 +906,11 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                   ),
                                 if (widget.label == 'Sorting' && _isDataEmpty())
                                   FormHelpers.buildEmptyState(true)
+                                // else if ((widget.label == 'Long Hemming' ||
+                                //         widget.label == 'Sewing' ||
+                                //         widget.label == 'Packing') &&
+                                //     _isItemEmpty())
+                                //   FormHelpers.buildEmptyState(true)
                                 else ...[
                                   if (widget.label == 'Sorting')
                                     SortingEditSection(

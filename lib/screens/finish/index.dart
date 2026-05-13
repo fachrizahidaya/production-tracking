@@ -264,6 +264,16 @@ class _FinishProcessState extends State<FinishProcess> {
     });
   }
 
+  String _getSubmitAlertMessage(Object error) {
+    final message = error.toString();
+
+    if (message.toLowerCase().contains('formatexception')) {
+      return 'Gagal submit data';
+    }
+
+    return message;
+  }
+
   Future<void> _handleScan(code) async {
     setState(() => _isLoading = true);
     try {
@@ -415,7 +425,7 @@ class _FinishProcessState extends State<FinishProcess> {
       await showAlertDialog(
         context: context,
         title: 'Error',
-        message: e.toString(),
+        message: _getSubmitAlertMessage(e),
       );
     }
   }

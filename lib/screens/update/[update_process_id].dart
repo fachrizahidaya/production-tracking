@@ -12,6 +12,7 @@ import 'package:textile_tracking/components/process/finish/process/form_helpers.
 import 'package:textile_tracking/components/update/detail_work_order.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/format_idr.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/to_double.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
@@ -447,6 +448,16 @@ class _UpdateProcessState extends State<UpdateProcess> {
     return double.tryParse(clean) ?? 0;
   }
 
+  String _getSubmitAlertMessage(Object error) {
+    final message = error.toString();
+
+    if (message.toLowerCase().contains('formatexception')) {
+      return 'Gagal submit data';
+    }
+
+    return message;
+  }
+
   void calculateLongHemmingWeight() {
     final good = parseSafe(widget.form['good_weight']);
     final defect = parseSafe(widget.form['bs_weight']);
@@ -549,6 +560,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
 
             await widget.handleUpdate(widget.data['id'].toString());
             Navigator.pop(context);
+          } catch (e) {
+            await showAlertDialog(
+              context: context,
+              title: 'Error',
+              message: _getSubmitAlertMessage(e),
+            );
           } finally {
             widget.isSubmitting.value = false;
           }

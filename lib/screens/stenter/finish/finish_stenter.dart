@@ -70,7 +70,7 @@ class _FinishStenterState extends State<FinishStenter> {
           await service.fetchStenterFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput, finishedItemOption) =>
+              handleChangeInput, finishedItemOption, finishedItemOptionGrb) =>
           FinishStenterManual(
         id: id,
         processId: processId,

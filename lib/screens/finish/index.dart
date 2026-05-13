@@ -23,7 +23,8 @@ class FinishProcess extends StatefulWidget {
       Map<String, dynamic> form,
       Future<void> Function(String id) handleSubmit,
       void Function(String fieldName, dynamic value) handleChangeInput,
-      List<dynamic> finishedItemOption) formPageBuilder;
+      List<dynamic> finishedItemOption,
+      List<dynamic> finishedItemOptionGrb) formPageBuilder;
   final Map<String, dynamic>? initialData;
   final label;
 
@@ -75,6 +76,7 @@ class _FinishProcessState extends State<FinishProcess> {
 
   List<dynamic> workOrderOption = [];
   List<dynamic> finishedItemOption = [];
+  List<dynamic> finishedItemOptionGrb = [];
   List<dynamic> itemGradeOption = [];
   String id = '';
 
@@ -118,6 +120,8 @@ class _FinishProcessState extends State<FinishProcess> {
     'bs_weight_unit_id': 2,
     'machine_ids': [],
     'weight_grade_a': '0',
+    'nama_greige_item': '',
+    'sku_greige_item': '',
   };
 
   @override
@@ -240,6 +244,41 @@ class _FinishProcessState extends State<FinishProcess> {
     }
   }
 
+  Future<void> _handleFetchFinishedMaterialGrb(
+      Map<String, dynamic> woData) async {
+    final service = Provider.of<OptionItemService>(context, listen: false);
+
+    try {
+      String baseCode = '';
+      String colorCode = '';
+
+      final itemCode = woData['items']?[0]?['item_code'] ?? '';
+
+      if (itemCode.isNotEmpty) {
+        final parts = itemCode.split('-');
+        baseCode = parts.first;
+        colorCode = parts.last;
+      }
+
+      await service.fetchOptions(
+        process: formatProcessLabel(widget.label),
+        baseCode: baseCode,
+        colorCode: widget.label == 'Sorting' ? 'grb' : colorCode,
+      );
+
+      final options = service.dataListOption;
+      print('opt: $options');
+
+      setState(() {
+        finishedItemOptionGrb = options;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
+    }
+  }
+
   Future<void> _handleFetchItemGrade() async {
     final service = Provider.of<OptionItemGradeService>(context, listen: false);
 
@@ -353,6 +392,10 @@ class _FinishProcessState extends State<FinishProcess> {
       }
 
       if (widget.label == 'Sorting') {
+        await _handleFetchFinishedMaterialGrb(data);
+      }
+
+      if (widget.label == 'Sorting') {
         _form['wo_data'] = data;
       }
 
@@ -364,8 +407,16 @@ class _FinishProcessState extends State<FinishProcess> {
 
       Navigator.push(
           context,
-          _createRoute(widget.formPageBuilder(context, woId, processId, data,
-              _form, _handleSubmit, _handleChangeInput, finishedItemOption)));
+          _createRoute(widget.formPageBuilder(
+              context,
+              woId,
+              processId,
+              data,
+              _form,
+              _handleSubmit,
+              _handleChangeInput,
+              finishedItemOption,
+              finishedItemOptionGrb)));
     } catch (e) {
       await showAlertDialog(
         context: context,
@@ -392,8 +443,16 @@ class _FinishProcessState extends State<FinishProcess> {
       Navigator.push(
         context,
         _createRoute(
-          widget.formPageBuilder(context, woId, processId, data, _form,
-              _handleSubmit, _handleChangeInput, finishedItemOption),
+          widget.formPageBuilder(
+              context,
+              woId,
+              processId,
+              data,
+              _form,
+              _handleSubmit,
+              _handleChangeInput,
+              finishedItemOption,
+              finishedItemOptionGrb),
         ),
       );
     } catch (e) {
@@ -455,8 +514,16 @@ class _FinishProcessState extends State<FinishProcess> {
             handleScan: _handleScan,
             handleSubmit: _handleSubmit,
             handleRoute: (form, handleSubmit, handleChangeInput) =>
-                _createRoute(widget.formPageBuilder(context, null, null, {},
-                    form, handleSubmit, handleChangeInput, finishedItemOption)),
+                _createRoute(widget.formPageBuilder(
+                    context,
+                    null,
+                    null,
+                    {},
+                    form,
+                    handleSubmit,
+                    handleChangeInput,
+                    finishedItemOption,
+                    finishedItemOptionGrb)),
             isLoading: _isLoading,
             handleChangeInput: _handleChangeInput,
           ),

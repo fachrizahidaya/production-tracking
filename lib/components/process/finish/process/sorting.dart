@@ -204,8 +204,7 @@ class _SortingSectionState extends State<SortingSection> {
                     _summaryBox('Grade B', widget.grades[1]['qty']),
                     _summaryBox('Tipe BS', widget.grades[2]['qty']),
                     _summaryBox('Perbaikan', _calculateTotalVermak()),
-                    _summaryBox('Hasil Sortir', _calculateTotalQtySorting(),
-                        isHighlight: true),
+                    _summaryBox('Total', _calculateTotalQtySorting()),
                   ].separatedBy(SizedBox(width: 8)),
                 )
               : Padding(
@@ -217,12 +216,11 @@ class _SortingSectionState extends State<SortingSection> {
     );
   }
 
-  Widget _summaryBox(String title, dynamic value, {bool isHighlight = false}) {
+  Widget _summaryBox(String title, dynamic value) {
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isHighlight ? Colors.grey.shade50 : null,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.grey.shade300),
         ),

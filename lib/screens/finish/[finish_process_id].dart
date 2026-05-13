@@ -687,13 +687,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       widget.form?['gsm'] = _gsmController.text;
       widget.form?['total_weight'] = safeToApi(_totalWeightController.text);
 
-      if (widget.label == 'Sorting') {
-        widget.form?['spraying'] = toDouble(widget.form?['spraying']);
-        widget.form?['rework_long_hemming'] =
-            toDouble(widget.form?['rework_long_hemming']);
-        widget.form?['combing'] = toDouble(widget.form?['combing']);
-      }
-
       if (widget.form?['wo_id'] != null) {
         showConfirmationDialog(
             context: context,

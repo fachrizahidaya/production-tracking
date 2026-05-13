@@ -290,16 +290,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     });
   }
 
-  String _getSubmitAlertMessage(Object error) {
-    final message = error.toString();
-
-    if (message.toLowerCase().contains('formatexception')) {
-      return 'Gagal submit data';
-    }
-
-    return message;
-  }
-
   Future<void> _handleSubmit(String id) async {
     try {
       if (widget.handleSubmitToService != null) {
@@ -310,7 +300,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       await showAlertDialog(
         context: context,
         title: 'Error',
-        message: _getSubmitAlertMessage(e),
+        message: e.toString(),
       );
     }
   }
@@ -370,6 +360,12 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     if (data['gsm'] != null) {
       _gsmController.text = data['gsm'].toString();
       _form['gsm'] = data['gsm']?.toString() ?? '0';
+    }
+
+    if (data['machine'] != null) {
+      _form['machine_id'] = data['machine']['id'].toString();
+      _form['nama_mesin'] =
+          '${data['machine']['code']} - ${data['machine']['name']}'.toString();
     }
     setState(() => _firstLoading = false);
   }

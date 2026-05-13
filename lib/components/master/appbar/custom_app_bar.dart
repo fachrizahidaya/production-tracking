@@ -24,6 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final isTextEditor;
   final handleSave;
   final name;
+  final bool isLoading;
 
   const CustomAppBar(
       {super.key,
@@ -46,7 +47,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.isTextEditor = false,
       this.handleSave,
       this.name,
-      this.handleFinish});
+      this.handleFinish,
+      this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
@@ -57,20 +59,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       leading: onReturn != null
-          ? IconButton(onPressed: onReturn, icon: Icon(Icons.chevron_left))
+          ? IconButton(
+              onPressed: onReturn,
+              icon: Icon(Icons.chevron_left),
+            )
           : null,
       title: Text(
         title,
-        style: TextStyle(fontSize: CustomTheme().fontSize('xl')),
+        style: TextStyle(
+          fontSize: CustomTheme().fontSize('xl'),
+        ),
       ),
       actions: [
-        // if (isWithNotification)
-        //   IconButton(
-        //     icon:  Icon(Icons.notifications_outlined),
-        //     onPressed: () {
-        //       Navigator.pushNamed(context, '/notification');
-        //     },
-        //   ),
         if (isWithAccount)
           PopupMenuButton<String>(
             icon: CircleAvatar(
@@ -91,10 +91,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               if (value == 'logout') {
                 handleLogout();
               }
+
               if (value == 'account') {
                 Navigator.pushNamed(context, '/account');
               }
-              if (value == 'user') {}
             },
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -102,16 +102,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      name,
-                    ),
+                    Text(name),
                     Text(
                       '@$user',
                       style: TextStyle(
-                          fontSize: CustomTheme().fontSize('sm'),
-                          color: CustomTheme().colors('secondary')),
+                        fontSize: CustomTheme().fontSize('sm'),
+                        color: CustomTheme().colors('secondary'),
+                      ),
                     ),
-                  ].separatedBy(CustomTheme().vGap('sm')),
+                  ].separatedBy(
+                    CustomTheme().vGap('sm'),
+                  ),
                 ),
               ),
               PopupMenuItem(
@@ -120,29 +121,32 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               PopupMenuItem(
                 value: 'logout',
-                child: Text(
-                  'Log Out',
-                ),
+                child: Text('Log Out'),
               ),
             ],
           ),
-        Row(
-          children: [
-            if (updateStatus == true)
-              ActionTextButton(
-                label: 'Edit',
-                onPressed: handleUpdate,
-              ),
-            if (deleteStatus == true)
-              ActionTextButton(
-                label: 'Hapus',
-                textColor: Colors.red,
-                borderColor: Colors.red,
-                onPressed: () => handleDelete(id.toString()),
-              ),
-          ],
-        ),
-        ...?actions
+
+        /// TAMPILKAN SETELAH LOADING SELESAI
+        if (!isLoading)
+          Row(
+            children: [
+              if (updateStatus == true)
+                ActionTextButton(
+                  label: 'Edit',
+                  onPressed: handleUpdate,
+                ),
+              if (deleteStatus == true)
+                ActionTextButton(
+                  label: 'Hapus',
+                  textColor: Colors.red,
+                  borderColor: Colors.red,
+                  onPressed: () => handleDelete(id.toString()),
+                ),
+            ],
+          ),
+
+        /// ACTION CUSTOM JUGA MENUNGGU LOADING
+        if (!isLoading) ...?actions,
       ],
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(48),

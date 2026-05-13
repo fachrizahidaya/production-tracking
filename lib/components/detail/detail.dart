@@ -398,6 +398,10 @@ class _DetailState extends State<Detail> {
           updateStatus: widget.data['can_update'],
           deleteStatus: widget.data['can_delete'],
           label: widget.label,
+
+          /// TAMBAHAN
+          isLoading: widget.isLoading,
+
           actions: [
             // if (widget.data['can_update'] == true)
             // IconButton(

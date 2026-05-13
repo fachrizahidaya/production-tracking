@@ -703,7 +703,9 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                         widget.label == 'Packing')
                                       Expanded(
                                         child: TemplateCard(
-                                            title: 'Produk Setengah Jadi',
+                                            title: widget.label == 'Packing'
+                                                ? 'Produk Jadi'
+                                                : 'Produk Setengah Jadi',
                                             icon: Icons.inventory_2_outlined,
                                             child: Column(
                                               crossAxisAlignment:
@@ -1131,7 +1133,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                               CustomTheme().hGap('xl')),
                                         ),
                                       ),
-                                    ],
+                                    ].separatedBy(CustomTheme().vGap('xl')),
                                   ),
                               ].separatedBy(CustomTheme().vGap('xl'))),
                         )),

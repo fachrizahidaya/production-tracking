@@ -163,6 +163,7 @@ class _TabSectionState extends State<TabSection> {
     final List<Map<String, dynamic>> machines = List<Map<String, dynamic>>.from(
       widget.form?['machines'] ?? [],
     );
+
     if (widget.withOnlyMaklon == true) {
       isDisabled = widget.form?['wo_id'] == null;
     } else if (widget.withNoMaklonOrMachine == true) {

@@ -1360,7 +1360,7 @@ Lampiran
               ? NoData()
               : Wrap(
                   spacing: 16,
-                  runSpacing: 16,
+                  runSpacing: 8,
                   children: widget.handleBuildAttachment(context),
                 ),
         ),
@@ -1697,9 +1697,11 @@ Catatan WO
             icon: Icons.grade_outlined,
             child: _buildGradeInfo(false),
           ),
-        if (widget.label != 'Sorting')
+        if (widget.label != 'Sorting' && widget.data['greige_item'] != null)
           _buildInfoCard(
-            title: 'Produk Setengah Jadi',
+            title: widget.label == 'Packing'
+                ? 'Produk Jadi'
+                : 'Produk Setengah Jadi',
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(false),
           ),

@@ -36,7 +36,6 @@ class _ItemTabState extends State<ItemTab> {
       (sum, item) => sum + (item['qty'] ?? 0) as int,
     );
     final totalBerat = widget.data['greige_qty'] ?? 0;
-    final spkNo = widget.data?['items']?[0]?['spk_no'] ?? '-';
 
     return TemplateCard(
       title: 'Material',
@@ -45,7 +44,7 @@ class _ItemTabState extends State<ItemTab> {
           ? NoData()
           : Column(
               children: [
-                _buildProdukJadiHeader(spkNo, totalQty, totalBerat),
+                _buildProdukJadiHeader(totalQty, totalBerat),
                 SizedBox(height: 16),
                 Column(
                   children: List.generate(items.length, (index) {
@@ -67,9 +66,7 @@ class _ItemTabState extends State<ItemTab> {
     );
   }
 
-  /// Build Produk Jadi header with totals in row format
-  Widget _buildProdukJadiHeader(
-      String spkNo, dynamic totalQty, dynamic totalBerat) {
+  Widget _buildProdukJadiHeader(dynamic totalQty, dynamic totalBerat) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -80,40 +77,11 @@ class _ItemTabState extends State<ItemTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'PRODUK JADI',
-            style: TextStyle(fontWeight: CustomTheme().fontWeight('semibold')),
-          ),
-          Divider(),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.data['items'][0]['item_code'] ?? '-',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                    Text(
-                      widget.data['items'][0]['item_name'] ?? '-',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -137,12 +105,11 @@ class _ItemTabState extends State<ItemTab> {
                 ),
               ),
               Expanded(
-                flex: 1,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Berat',
+                      'Total Berat',
                       style: TextStyle(
                         fontSize: CustomTheme().fontSize('md'),
                         color: Colors.grey[600],
@@ -160,9 +127,9 @@ class _ItemTabState extends State<ItemTab> {
                   ],
                 ),
               ),
-            ].separatedBy(SizedBox(width: 16)),
+            ].separatedBy(CustomTheme().hGap('xl')),
           ),
-        ].separatedBy(CustomTheme().vGap('md')),
+        ],
       ),
     );
   }

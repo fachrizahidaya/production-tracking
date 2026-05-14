@@ -38,6 +38,7 @@ class CreateDyeing extends StatelessWidget {
           : null,
       end_by_id: form['end_by_id'],
       attachments: form['attachments'],
+      semifinished_products: form['semifinished_products'] ?? [],
     );
 
     final message = await Provider.of<DyeingService>(context, listen: false)
@@ -64,6 +65,7 @@ class CreateDyeing extends StatelessWidget {
   Widget build(BuildContext context) {
     return CreateProcess(
       title: "Mulai Dyeing",
+      label: 'dyeing',
       fetchWorkOrder: (service) => service.fetchOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       handleSubmitToService: _submitToService,

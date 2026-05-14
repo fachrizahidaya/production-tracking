@@ -59,7 +59,7 @@ class _ListItemState extends State<ListItem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Item Info
+              _buildProdukJadiInfo(),
               _buildItemInfo(true),
               _buildAdditionalInfo(true),
             ].separatedBy(CustomTheme().vGap('xl')),
@@ -75,7 +75,7 @@ class _ListItemState extends State<ListItem> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Top Row: Icon + Info + Status
+        _buildProdukJadiInfo(),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -85,6 +85,40 @@ class _ListItemState extends State<ListItem> {
         // Bottom Row: Additional Info
         _buildAdditionalInfo(false),
       ].separatedBy(CustomTheme().vGap('xl')),
+    );
+  }
+
+  /// Produk Jadi Info (Code + Name)
+  Widget _buildProdukJadiInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'PRODUK JADI',
+          style: TextStyle(fontWeight: CustomTheme().fontWeight('semibold')),
+        ),
+        // Divider(),
+        Text(
+          item['item_code']?.toString() ?? '-',
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('lg'),
+            fontWeight: CustomTheme().fontWeight('semibold'),
+            color: Colors.grey[800],
+          ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        Text(
+          item['item_name']?.toString() ?? '-',
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('lg'),
+            fontWeight: CustomTheme().fontWeight('semibold'),
+            color: Colors.grey[600],
+          ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ].separatedBy(CustomTheme().vGap('md')),
     );
   }
 
@@ -102,7 +136,7 @@ class _ListItemState extends State<ListItem> {
               style:
                   TextStyle(fontWeight: CustomTheme().fontWeight('semibold')),
             ),
-            Divider(),
+            // Divider(),
             Text(
               item['greige_item']['code']?.toString() ?? '-',
               style: TextStyle(
@@ -123,7 +157,7 @@ class _ListItemState extends State<ListItem> {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-          ],
+          ].separatedBy(CustomTheme().vGap('md')),
         ),
       ],
     );

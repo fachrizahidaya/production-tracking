@@ -951,10 +951,10 @@ class _FormItemsState extends State<FormItems> {
                   widget.handleChangeInput('notes', value);
                 },
               )
-            ].separatedBy(CustomTheme().vGap('lg')),
+            ].separatedBy(CustomTheme().vGap('xl')),
           ),
         // ],
-      ].separatedBy(CustomTheme().vGap('lg')),
+      ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
 

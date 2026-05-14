@@ -30,7 +30,7 @@ class OptionItemType {
 }
 
 class OptionItemTypeService extends BaseService<OptionItemType> {
-  final String baseUrl = '${dotenv.env['API_URL']}/defect-types';
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/defect-types';
 
   bool _isLoading = false;
   bool _hasMoreData = true;

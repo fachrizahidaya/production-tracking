@@ -527,12 +527,7 @@ class _SortingSectionState extends State<SortingSection> {
                           initialValue:
                               widget.defects[index]['qty']?.toString() ?? '0',
                           controller: controller,
-                          handleChange: (value) {
-                            final safeValue =
-                                (value.trim().isEmpty) ? '0' : value;
-
-                            widget.defects[index]['qty'] = toDouble(safeValue);
-                          },
+                          handleChange: (value) {},
                         ),
                       ),
                     ],

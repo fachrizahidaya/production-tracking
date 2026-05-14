@@ -157,7 +157,8 @@ class _CreateProcessState extends State<CreateProcess> {
 
       await semiFinishedService.fetchOptions(
         isInitialLoad: true,
-        process: widget.label,
+        process:
+            widget.label.toString().trim().toLowerCase().replaceAll(' ', '_'),
         baseCodes: params['base_codes'] ?? [],
         colorCodes: params['color_codes'] ?? [],
       );

@@ -144,12 +144,14 @@ class FormItems extends StatefulWidget {
   State<FormItems> createState() => _FormItemsState();
 }
 
-class _FormItemsState extends State<FormItems> {
+class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
   double beratLusin = 0;
   double gsm = 0;
   double beratGradeA = 0;
   double totalBerat = 0;
   late List<Map<String, dynamic>> _grades;
+  TabController? _semiFinishedTabController;
+  int _selectedSemiFinishedIndex = 0;
 
   @override
   void initState() {
@@ -169,7 +171,66 @@ class _FormItemsState extends State<FormItems> {
       }
 
       _syncGradesWithOptions();
+
+      // final semiFinishedProducts =
+      //     widget.processData['semifinished_products'] ?? [];
+
+      // if (semiFinishedProducts.isNotEmpty) {
+      //   widget.handleChangeInput(
+      //     'greige_item_id',
+      //     semiFinishedProducts[0]['id'],
+      //   );
+
+      //   widget.handleChangeInput(
+      //     'nama_greige_item',
+      //     semiFinishedProducts[0]['name'],
+      //   );
+
+      //   widget.handleChangeInput(
+      //     'sku_greige_item',
+      //     semiFinishedProducts[0]['code'],
+      //   );
+      // }
+
+      _initializeSemiFinishedTab();
     });
+
+    final semiFinishedProducts =
+        widget.processData['semifinished_products'] ?? [];
+
+    if (semiFinishedProducts.length > 1) {
+      _semiFinishedTabController = TabController(
+        length: semiFinishedProducts.length,
+        vsync: this,
+      );
+
+      _semiFinishedTabController!.addListener(() {
+        if (!_semiFinishedTabController!.indexIsChanging) {
+          final selectedIndex = _semiFinishedTabController!.index;
+
+          final items = widget.processData['semifinished_products'];
+
+          setState(() {
+            _selectedSemiFinishedIndex = selectedIndex;
+
+            widget.handleChangeInput(
+              'greige_item_id',
+              items[selectedIndex]['id'],
+            );
+
+            widget.handleChangeInput(
+              'nama_greige_item',
+              items[selectedIndex]['name'],
+            );
+
+            widget.handleChangeInput(
+              'sku_greige_item',
+              items[selectedIndex]['code'],
+            );
+          });
+        }
+      });
+    }
   }
 
   void _syncGradesWithOptions() {
@@ -443,6 +504,66 @@ class _FormItemsState extends State<FormItems> {
     }
   }
 
+  void _initializeSemiFinishedTab() {
+    final semiFinishedProducts =
+        widget.processData['semifinished_products'] ?? [];
+
+    // dispose controller lama
+    _semiFinishedTabController?.dispose();
+    _semiFinishedTabController = null;
+
+    if (semiFinishedProducts.length > 1) {
+      _semiFinishedTabController = TabController(
+        length: semiFinishedProducts.length,
+        vsync: this,
+      );
+
+      _semiFinishedTabController!.addListener(() {
+        if (!_semiFinishedTabController!.indexIsChanging) {
+          final selectedIndex = _semiFinishedTabController!.index;
+
+          final items = widget.processData['semifinished_products'];
+
+          setState(() {
+            _selectedSemiFinishedIndex = selectedIndex;
+
+            widget.handleChangeInput(
+              'greige_item_id',
+              items[selectedIndex]['id'],
+            );
+
+            widget.handleChangeInput(
+              'nama_greige_item',
+              items[selectedIndex]['name'],
+            );
+
+            widget.handleChangeInput(
+              'sku_greige_item',
+              items[selectedIndex]['code'],
+            );
+          });
+        }
+      });
+    }
+
+    if (semiFinishedProducts.isNotEmpty) {
+      widget.handleChangeInput(
+        'greige_item_id',
+        semiFinishedProducts[0]['id'],
+      );
+
+      widget.handleChangeInput(
+        'nama_greige_item',
+        semiFinishedProducts[0]['name'],
+      );
+
+      widget.handleChangeInput(
+        'sku_greige_item',
+        semiFinishedProducts[0]['code'],
+      );
+    }
+  }
+
   bool _isDataEmpty() {
     if ((widget.itemGradeOption ?? []).isEmpty) return true;
     if (_grades.isEmpty) return true;
@@ -451,10 +572,43 @@ class _FormItemsState extends State<FormItems> {
     return false;
   }
 
+  Map<String, dynamic>? get selectedSemiFinishedItem {
+    final items = widget.processData['semifinished_products'];
+
+    if (items == null || items.isEmpty) {
+      return null;
+    }
+
+    return items[_selectedSemiFinishedIndex];
+  }
+
+  @override
+  void didUpdateWidget(covariant FormItems oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final oldItems = oldWidget.processData['semifinished_products'];
+
+    final newItems = widget.processData['semifinished_products'];
+
+    if (oldItems != newItems) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _initializeSemiFinishedTab();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _semiFinishedTabController?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isSorting = widget.label == 'Sorting';
     final hasSelectedWO = widget.form['wo_id'] != null;
+    final semiFinishedProducts =
+        widget.processData['semifinished_products'] ?? [];
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -653,51 +807,111 @@ class _FormItemsState extends State<FormItems> {
                 validateWeight: widget.validateWeight,
                 calculateLongHemmingWeight: calculateLongHemmingWeight,
               ),
-            if (widget.data != null &&
-                (widget.forDyeing == true ||
-                    widget.forSewing == true ||
-                    widget.forHemming == true ||
-                    widget.forPacking == true))
+            if (semiFinishedProducts.length > 1)
               Expanded(
                 child: TemplateCard(
-                  title: 'Produk Setelah ${widget.label}',
+                  title: 'Produk Setengah Jadi',
                   icon: Icons.inventory_2_outlined,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                              flex: 2,
-                              child: SelectForm(
-                                label: widget.label == 'Sorting' ||
-                                        widget.label == 'Packing'
-                                    ? 'Produk Jadi'
-                                    : 'Produk Setengah Jadi',
-                                onTap: () =>
-                                    widget.handleSelectFinishedMaterial(),
-                                selectedLabel:
-                                    widget.form['nama_greige_item'] ?? '',
-                                selectedCode:
-                                    widget.form['sku_greige_item'] ?? '',
-                                selectedValue:
-                                    widget.form['greige_item_id']?.toString() ??
-                                        '',
-                                isWithCode: true,
-                                required: true,
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Produk wajib dipilih';
-                                  }
-                                  return null;
-                                },
-                              )),
-                        ].separatedBy(CustomTheme().hGap('xl')),
+                      if (_semiFinishedTabController != null)
+                        TabBar(
+                          tabAlignment: TabAlignment.start,
+                          controller: _semiFinishedTabController,
+                          isScrollable: true,
+                          labelColor: Colors.black,
+                          tabs: List.generate(
+                            semiFinishedProducts.length,
+                            (index) {
+                              return Tab(
+                                text: semiFinishedProducts[index]['code']
+                                        ?.toString()
+                                        .split('-')
+                                        .first ??
+                                    'Item ${index + 1}',
+                              );
+                            },
+                          ),
+                        ),
+                      const SizedBox(height: 16),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.white,
+                          border: Border.all(
+                            color: Colors.grey.shade200,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              selectedSemiFinishedItem?['code'] ?? '-',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              selectedSemiFinishedItem?['name'] ?? '-',
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ].separatedBy(CustomTheme().vGap('lg')),
+                    ],
                   ),
                 ),
-              )
+              ),
+            // if (widget.data != null &&
+            //     (widget.forDyeing == true ||
+            //         widget.forSewing == true ||
+            //         widget.forHemming == true ||
+            //         widget.forPacking == true))
+            //   Expanded(
+            //     child: TemplateCard(
+            //       title: 'Produk Setelah ${widget.label}',
+            //       icon: Icons.inventory_2_outlined,
+            //       child: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           Row(
+            //             children: [
+            //               Expanded(
+            //                   flex: 2,
+            //                   child: SelectForm(
+            //                     label: widget.label == 'Sorting' ||
+            //                             widget.label == 'Packing'
+            //                         ? 'Produk Jadi'
+            //                         : 'Produk Setengah Jadi',
+            //                     onTap: () =>
+            //                         widget.handleSelectFinishedMaterial(),
+            //                     selectedLabel:
+            //                         widget.form['nama_greige_item'] ?? '',
+            //                     selectedCode:
+            //                         widget.form['sku_greige_item'] ?? '',
+            //                     selectedValue:
+            //                         widget.form['greige_item_id']?.toString() ??
+            //                             '',
+            //                     isWithCode: true,
+            //                     required: true,
+            //                     validator: (value) {
+            //                       if (value == null || value.trim().isEmpty) {
+            //                         return 'Produk wajib dipilih';
+            //                       }
+            //                       return null;
+            //                     },
+            //                   )),
+            //             ].separatedBy(CustomTheme().hGap('xl')),
+            //           ),
+            //         ].separatedBy(CustomTheme().vGap('lg')),
+            //       ),
+            //     ),
+            //   )
           ].separatedBy(CustomTheme().hGap('xl')),
         ),
         Row(

@@ -217,13 +217,16 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
 
               await semiFinishedService.fetchOptions(
                 isInitialLoad: true,
-                process: widget.label.toLowerCase(),
+                process: widget.label
+                    .toString()
+                    .trim()
+                    .toLowerCase()
+                    .replaceAll(' ', '_'),
                 baseCodes: params['base_codes'] ?? [],
                 colorCodes: params['color_codes'] ?? [],
               );
 
               final semiFinishedItems = semiFinishedService.dataListOption;
-              print('item: $semiFinishedItems');
 
               widget.form?['semifinished_products'] = List.generate(
                 semiFinishedItems.length,

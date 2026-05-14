@@ -7,9 +7,11 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/process/finish/finish_submit_section.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
+import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 
@@ -122,6 +124,7 @@ class _FinishProcessState extends State<FinishProcess> {
     'weight_grade_a': '0',
     'nama_greige_item': '',
     'sku_greige_item': '',
+    'semifinished_products': [],
   };
 
   @override
@@ -296,6 +299,38 @@ class _FinishProcessState extends State<FinishProcess> {
     });
   }
 
+  Future<void> _handleFetchSemiFinishedItems(
+    Map<String, dynamic> data,
+  ) async {
+    final semiFinishedService = Provider.of<OptionItemSemiFinishedService>(
+      context,
+      listen: false,
+    );
+
+    final params = extractSemiFinishedParams(
+      data['items'] ?? [],
+    );
+
+    final processName =
+        widget.label.toString().trim().toLowerCase().replaceAll(' ', '_');
+
+    await semiFinishedService.fetchOptions(
+      isInitialLoad: true,
+      process: processName,
+      baseCodes: params['base_codes'] ?? [],
+      colorCodes: params['color_codes'] ?? [],
+    );
+
+    final semiFinishedItems = semiFinishedService.dataListOption;
+
+    _form['semifinished_products'] = List.generate(
+      semiFinishedItems.length,
+      (index) => {
+        'item_id': semiFinishedItems[index]['value'].toString(),
+      },
+    );
+  }
+
   void _handleChangeInput(String field, dynamic value) {
     setState(() {
       _form[field] = value;
@@ -362,6 +397,7 @@ class _FinishProcessState extends State<FinishProcess> {
       await _workOrderService.getDataView(woId);
 
       final data = _workOrderService.dataView;
+      await _handleFetchSemiFinishedItems(data);
       final greigeQty = data['greige_qty'];
 
       if (widget.label == 'Dyeing') {

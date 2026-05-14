@@ -935,18 +935,24 @@ Ringkasan Sorting
 Info Material
 */
   Widget _buildMaterialInfo(bool isTablet) {
-    final items = [
-      {
+    final semiFinishedProducts = List<Map<String, dynamic>>.from(
+      widget.data['semifinished_products'] ?? [],
+    );
+
+    if (semiFinishedProducts.isEmpty) {
+      return NoData();
+    }
+
+    final items = semiFinishedProducts.map((item) {
+      return {
         'label':
             widget.label == 'Packing' ? 'Produk Jadi' : 'Produk Setengah Jadi',
-        'value':
-            '${widget.data['greige_item']['code'] ?? (widget.label == 'Sorting' ? widget.data['grades'][1]['greige_item']['code'] : '-')}',
-        'another_value':
-            '${widget.data['greige_item']['name'] ?? (widget.label == 'Sorting' ? widget.data['grades'][1]['greige_item']['name'] : '-')}',
+        'value': item['code'] ?? '-',
+        'another_value': item['name'] ?? '-',
         'icon': Icons.inventory_2_outlined,
         'is_product': true,
-      },
-    ];
+      };
+    }).toList();
 
     return _buildMultiInfoGrid(items, isTablet);
   }
@@ -1389,7 +1395,7 @@ Material WO
       children: List.generate(items.length, (index) {
         return Column(
           children: [
-            _buildProdukJadiHeader(spkNo, totalBerat, totalQty),
+            // _buildProdukJadiHeader(spkNo, totalBerat, totalQty),
             ListItem(
               item: items[index],
               withSpk: true,
@@ -1412,40 +1418,9 @@ Material WO
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'PRODUK JADI',
-            style: TextStyle(fontWeight: CustomTheme().fontWeight('semibold')),
-          ),
-          Divider(),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.data['work_orders']['items'][0]['item_code'] ??
-                          '-',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                    Text(
-                      widget.data['work_orders']['items'][0]['item_name'] ??
-                          '-',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               Expanded(
                 flex: 1,
                 child: Column(
@@ -1595,11 +1570,9 @@ Catatan WO
             icon: Icons.grade_outlined,
             child: _buildGradeInfo(true),
           ),
-        if (widget.label != 'Sorting' && widget.data['greige_item'] != null)
+        if ((widget.label != 'Sorting' || widget.label != 'Packing'))
           _buildInfoCard(
-            title: widget.label == 'Packing'
-                ? 'Produk Jadi'
-                : 'Produk Setengah Jadi',
+            title: 'Produk Setengah Jadi',
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(true),
           ),
@@ -1697,11 +1670,9 @@ Catatan WO
             icon: Icons.grade_outlined,
             child: _buildGradeInfo(false),
           ),
-        if (widget.label != 'Sorting' && widget.data['greige_item'] != null)
+        if ((widget.label != 'Sorting' || widget.label != 'Packing'))
           _buildInfoCard(
-            title: widget.label == 'Packing'
-                ? 'Produk Jadi'
-                : 'Produk Setengah Jadi',
+            title: 'Produk Setengah Jadi',
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(false),
           ),

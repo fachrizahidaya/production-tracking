@@ -12,9 +12,11 @@ import 'package:textile_tracking/helpers/result/safe_to_api.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/helpers/result/to_double.dart';
+import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
+import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/components/process/finish/functions/fetch_function.dart';
@@ -711,21 +713,50 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+  Future<void> _handleFetchSemiFinishedItems() async {
+    final semiFinishedService = Provider.of<OptionItemSemiFinishedService>(
+      context,
+      listen: false,
+    );
+
+    final params = extractSemiFinishedParams(
+      woData['items'] ?? [],
+    );
+
+    final processName =
+        widget.label.toString().trim().toLowerCase().replaceAll(' ', '_');
+
+    await semiFinishedService.fetchOptions(
+      isInitialLoad: true,
+      process: processName,
+      baseCodes: params['base_codes'] ?? [],
+      colorCodes: params['color_codes'] ?? [],
+    );
+
+    final semiFinishedItems = semiFinishedService.dataListOption;
+
+    for (int i = 0; i < semiFinishedItems.length; i++) {
+      widget.form?['semifinished_products[$i][item_id]'] =
+          semiFinishedItems[i]['value'].toString();
+    }
+  }
+
   _selectWorkOrder() {
     showSelectDialog(
         context: context,
         title: 'Work Order',
         isLoading: null,
         isFetching: _isFetchingWorkOrder,
-        handleChangeValue: (e) {
+        handleChangeValue: (e) async {
           setState(() {
             widget.form?['wo_id'] = e['value'].toString();
             widget.form?['no_wo'] = e['label'].toString();
             processId = e[widget.idProcess].toString();
           });
 
-          _getDataView(e['value'].toString());
-          _getProcessView(e[widget.idProcess].toString());
+          await _getDataView(e['value'].toString());
+          await _handleFetchSemiFinishedItems();
+          await _getProcessView(e[widget.idProcess].toString());
         },
         option: workOrderOption,
         selected: widget.form?['wo_id'].toString() ?? '');

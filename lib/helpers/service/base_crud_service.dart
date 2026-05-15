@@ -358,12 +358,26 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
           'Accept': 'application/json',
         });
 
+        void addFields(dynamic data, String parentKey) {
+          if (data == null) return;
+
+          if (data is List) {
+            for (int i = 0; i < data.length; i++) {
+              addFields(data[i], '$parentKey[$i]');
+            }
+          } else if (data is Map) {
+            data.forEach((key, value) {
+              addFields(value, '$parentKey[$key]');
+            });
+          } else {
+            request.fields[parentKey] = data.toString();
+          }
+        }
+
         data.forEach((key, value) {
-          if (value == null) return;
+          if (key == 'attachments') return;
 
-          if (key == 'attachments' || key == 'grades') return;
-
-          request.fields[key] = value.toString();
+          addFields(value, key);
         });
 
         final grades = data['grades'];

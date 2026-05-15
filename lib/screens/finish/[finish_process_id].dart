@@ -551,6 +551,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             data['greige_item']['code'].toString();
       }
 
+      if (data['attachments'] != null) {
+        widget.form?['attachments'] = List.from(data['attachments']);
+      }
       if (data['machine_ids'] != null) {
         widget.form?['machine_ids'] = List.from(data['machine_ids']);
       }

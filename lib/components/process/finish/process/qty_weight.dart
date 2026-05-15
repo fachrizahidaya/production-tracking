@@ -151,6 +151,7 @@ class _QtyWeightSectionState extends State<QtyWeightSection> {
                     label: 'Berat Hasil ${widget.label} (KG)',
                     req: true,
                     isNumber: true,
+                    isDisabled: true,
                     initialValue: widget.form['qty']?.toString() ?? '0',
                     controller: widget.dyeingQty,
                     handleChange: (value) {

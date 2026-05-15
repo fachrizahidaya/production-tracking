@@ -3,60 +3,67 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
-class FormButton extends StatelessWidget {
+class FormButton extends StatefulWidget {
   final String label;
   final bool isLoading;
   final bool isDisabled;
   final VoidCallback? onPressed;
   final Color? backgroundColor;
-  final customHeight;
-  final fontSize;
-  final danger;
+  final dynamic customHeight;
+  final dynamic fontSize;
+  final dynamic danger;
 
-  const FormButton(
-      {super.key,
-      required this.label,
-      required this.onPressed,
-      this.isLoading = false,
-      this.isDisabled = false,
-      this.backgroundColor,
-      this.customHeight,
-      this.fontSize,
-      this.danger});
+  const FormButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.isLoading = false,
+    this.isDisabled = false,
+    this.backgroundColor,
+    this.customHeight,
+    this.fontSize,
+    this.danger,
+  });
 
+  @override
+  State<FormButton> createState() => _FormButtonState();
+}
+
+class _FormButtonState extends State<FormButton> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: isDisabled || isLoading ? null : onPressed,
-      style: (isDisabled || isLoading
+      onPressed:
+          widget.isDisabled || widget.isLoading ? null : widget.onPressed,
+      style: (widget.isDisabled || widget.isLoading
               ? CustomTheme().disabledButton()
               : CustomTheme().primaryButton())
           .copyWith(
         backgroundColor: MaterialStateProperty.all(
-          isDisabled
+          widget.isDisabled
               ? CustomTheme().colors('disabled')
-              : danger == true
+              : widget.danger == true
                   ? CustomTheme().buttonColor('danger')
-                  : backgroundColor ?? CustomTheme().colors('primary'),
+                  : widget.backgroundColor ?? CustomTheme().colors('primary'),
         ),
         side: MaterialStateProperty.all(
           BorderSide(
-            color: isDisabled
+            color: widget.isDisabled
                 ? CustomTheme().colors('disabled')
-                : danger == true
+                : widget.danger == true
                     ? CustomTheme().buttonColor('danger')
-                    : backgroundColor ?? CustomTheme().colors('primary'),
+                    : widget.backgroundColor ?? CustomTheme().colors('primary'),
             width: 1.5,
           ),
         ),
-        minimumSize: customHeight != null
+        minimumSize: widget.customHeight != null
             ? MaterialStateProperty.all(
-                Size(double.infinity, customHeight),
+                Size(double.infinity, widget.customHeight),
               )
             : null,
       ),
-      child: isLoading
-          ? SizedBox(
+      child: widget.isLoading
+          ? const SizedBox(
               height: 20,
               width: 20,
               child: CircularProgressIndicator(
@@ -67,9 +74,9 @@ class FormButton extends StatelessWidget {
               ),
             )
           : Text(
-              label,
+              widget.label,
               style: TextStyle(
-                fontSize: fontSize,
+                fontSize: widget.fontSize,
                 color: Colors.white,
               ),
             ),

@@ -9,6 +9,7 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_bytes.dart';
+import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AttachmentTab extends StatefulWidget {
@@ -61,6 +62,15 @@ class _AttachmentTabState extends State<AttachmentTab> {
 
       final String extension = fileName.split('.').last.toLowerCase();
 
+      final bool isPdf = extension == 'pdf';
+
+      final bool isOffice = [
+        'doc',
+        'docx',
+        'xls',
+        'xlsx',
+      ].contains(extension);
+
       /// detect image
       final bool isImage =
           ['png', 'jpg', 'jpeg', 'gif', 'webp'].contains(extension);
@@ -110,22 +120,41 @@ class _AttachmentTabState extends State<AttachmentTab> {
         onTap: filePath == null
             ? null
             : () async {
-                /// IMAGE => SHOW PREVIEW
+                /// IMAGE
                 if (isImage) {
                   showImageDialog(
                     context: context,
                     isNew: isNew,
                     filePath: isNew ? filePath : '$baseUrl$filePath',
                   );
-                } else {
-                  /// NON IMAGE => DOWNLOAD FILE
+
+                  return;
+                }
+
+                /// PDF => OPEN INSIDE APP
+                if (isPdf) {
                   final url = '$baseUrl$filePath';
 
-                  await launchUrl(
-                    Uri.parse(url),
-                    mode: LaunchMode.externalApplication,
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PdfViewerScreen(
+                        url: url,
+                        fileName: fileName,
+                      ),
+                    ),
                   );
+
+                  return;
                 }
+
+                /// OTHER FILES => OPEN EXTERNAL
+                final url = '$baseUrl$filePath';
+
+                await launchUrl(
+                  Uri.parse(url),
+                  mode: LaunchMode.externalApplication,
+                );
               },
         child: Container(
           padding: CustomTheme().padding('card'),

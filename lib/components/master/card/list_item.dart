@@ -399,7 +399,9 @@ class _ListItemState extends State<ListItem> {
               ),
             ],
           ),
-        ].separatedBy(CustomTheme().hGap('xl')),
+        ].separatedBy(SizedBox(
+          width: 24,
+        )),
       ),
     );
   }

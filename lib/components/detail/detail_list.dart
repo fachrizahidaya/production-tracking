@@ -1360,7 +1360,7 @@ Lampiran
               ? NoData()
               : Wrap(
                   spacing: 16,
-                  runSpacing: 16,
+                  runSpacing: 8,
                   children: widget.handleBuildAttachment(context),
                 ),
         ),
@@ -1616,11 +1616,6 @@ Catatan WO
             child: _buildWeightInfo(true),
           ),
         _buildInfoCard(
-          title: 'Timeline Proses',
-          icon: Icons.timeline_outlined,
-          child: _buildTimelineInfo(true),
-        ),
-        _buildInfoCard(
           title: 'Material WO',
           icon: Icons.inventory_2_outlined,
           child: _buildMaterial(true),
@@ -1639,6 +1634,11 @@ Catatan WO
           title: 'Catatan Work Order',
           icon: Icons.note_outlined,
           child: _buildNoteWo(true),
+        ),
+        _buildInfoCard(
+          title: 'Timeline Proses',
+          icon: Icons.timeline_outlined,
+          child: _buildTimelineInfo(true),
         ),
       ].separatedBy(CustomTheme().vGap('xl')),
     );
@@ -1697,9 +1697,11 @@ Catatan WO
             icon: Icons.grade_outlined,
             child: _buildGradeInfo(false),
           ),
-        if (widget.label != 'Sorting')
+        if (widget.label != 'Sorting' && widget.data['greige_item'] != null)
           _buildInfoCard(
-            title: 'Produk Setengah Jadi',
+            title: widget.label == 'Packing'
+                ? 'Produk Jadi'
+                : 'Produk Setengah Jadi',
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(false),
           ),
@@ -1842,7 +1844,7 @@ Catatan WO
               runSpacing: 16,
               children: items.map((item) {
                 return SizedBox(
-                  width: (MediaQuery.of(context).size.width - 90) / 3,
+                  width: (MediaQuery.of(context).size.width - 80) / 2,
                   child: _buildMultiInfoItem(
                       label: item['label'],
                       value: item['value'],
@@ -1862,7 +1864,7 @@ Catatan WO
               spacing: 16,
               children: items.map((item) {
                 return SizedBox(
-                  width: (MediaQuery.of(context).size.width - 90) / 3,
+                  width: (MediaQuery.of(context).size.width - 80) / 2,
                   child: _buildMultiInfoItem(
                       label: item['label'],
                       value: item['value'],

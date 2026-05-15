@@ -12,6 +12,7 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_bytes.dart';
+import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Detail extends StatefulWidget {
@@ -277,7 +278,9 @@ class _DetailState extends State<Detail> {
 
       final String extension = fileName.split('.').last.toLowerCase();
 
-      /// detect image
+      /// file type
+      final bool isPdf = extension == 'pdf';
+
       final bool isImage =
           ['png', 'jpg', 'jpeg', 'gif', 'webp'].contains(extension);
 
@@ -314,7 +317,6 @@ class _DetailState extends State<Detail> {
               const Icon(Icons.broken_image, size: 40),
         );
       } else {
-        /// General document icon
         preview = Icon(
           Icons.description_outlined,
           size: 40,
@@ -326,22 +328,41 @@ class _DetailState extends State<Detail> {
         onTap: filePath == null
             ? null
             : () async {
-                /// IMAGE => SHOW PREVIEW
+                /// IMAGE => PREVIEW
                 if (isImage) {
                   showImageDialog(
                     context: context,
                     isNew: isNew,
                     filePath: isNew ? filePath : '$baseUrl$filePath',
                   );
-                } else {
-                  /// NON IMAGE => DOWNLOAD FILE
+
+                  return;
+                }
+
+                /// PDF => OPEN INSIDE APP
+                if (isPdf) {
                   final url = '$baseUrl$filePath';
 
-                  await launchUrl(
-                    Uri.parse(url),
-                    mode: LaunchMode.externalApplication,
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PdfViewerScreen(
+                        url: url,
+                        fileName: fileName,
+                      ),
+                    ),
                   );
+
+                  return;
                 }
+
+                /// OTHER FILES => OPEN EXTERNAL
+                final url = '$baseUrl$filePath';
+
+                await launchUrl(
+                  Uri.parse(url),
+                  mode: LaunchMode.externalApplication,
+                );
               },
         child: Container(
           padding: CustomTheme().padding('card'),

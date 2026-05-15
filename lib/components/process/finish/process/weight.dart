@@ -45,6 +45,7 @@ class _WeightSectionState extends State<WeightSection> {
                       label: 'Berat (KG)',
                       req: true,
                       isNumber: true,
+                      isDisabled: true,
                       initialValue: widget.form['weight']?.toString() ?? '0',
                       controller: widget.controller,
                       handleChange: (value) {

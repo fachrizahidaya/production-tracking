@@ -725,37 +725,6 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
                       ].separatedBy(CustomTheme().vGap('lg')),
                     )),
               ),
-            if (widget.data != null && widget.forDyeing == true)
-              Expanded(
-                child: TemplateCard(
-                  title: 'Lot Celup',
-                  icon: Icons.invert_colors_on_outlined,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              children: [
-                                TextForm(
-                                  label: 'No. Lot Celup',
-                                  controller: widget.dyeingLotNo,
-                                  handleChange: (value) {
-                                    widget.handleChangeInput(
-                                        'lot_celup_no', value);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ].separatedBy(CustomTheme().hGap('xl')),
-                      ),
-                    ].separatedBy(CustomTheme().vGap('lg')),
-                  ),
-                ),
-              ),
             if (widget.data != null &&
                 widget.label != 'Dyeing' &&
                 widget.label != 'Long Hemming' &&
@@ -776,6 +745,62 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
                   },
                 ),
               ),
+            if (widget.data != null &&
+                widget.withItemGrade == false &&
+                widget.label == 'Dyeing' &&
+                widget.label != 'Packing' &&
+                widget.label != 'Press' &&
+                widget.label != 'Tumbler' &&
+                widget.label != 'Stenter' &&
+                widget.label != 'Long Slitting')
+              QtyWeightSection(
+                form: widget.form,
+                label: widget.label,
+                withItemGrade: widget.withItemGrade,
+                withQtyAndWeight: widget.withQtyAndWeight,
+                forDyeing: widget.forDyeing,
+                qty: widget.qty,
+                dyeingQty: widget.dyeingQty,
+                weightGood: widget.weightGood,
+                weightDefect: widget.weightDefect,
+                qtyWarning: widget.qtyWarning,
+                weightWarning: widget.weightWarning,
+                onChange: widget.handleChangeInput,
+                validateQty: widget.validateQty,
+                validateWeight: widget.validateWeight,
+                calculateLongHemmingWeight: calculateLongHemmingWeight,
+              ),
+            // if (widget.data != null && widget.forDyeing == true)
+            //   Expanded(
+            //     child: TemplateCard(
+            //       title: 'Lot Celup',
+            //       icon: Icons.invert_colors_on_outlined,
+            //       child: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           Row(
+            //             children: [
+            //               Expanded(
+            //                 flex: 2,
+            //                 child: Column(
+            //                   children: [
+            //                     TextForm(
+            //                       label: 'No. Lot Celup',
+            //                       controller: widget.dyeingLotNo,
+            //                       handleChange: (value) {
+            //                         widget.handleChangeInput(
+            //                             'lot_celup_no', value);
+            //                       },
+            //                     ),
+            //                   ],
+            //                 ),
+            //               ),
+            //             ].separatedBy(CustomTheme().hGap('xl')),
+            //           ),
+            //         ].separatedBy(CustomTheme().vGap('lg')),
+            //       ),
+            //     ),
+            //   ),
           ].separatedBy(CustomTheme().hGap('xl')),
         ),
         if (widget.data != null &&
@@ -793,6 +818,9 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (widget.data != null &&
+                (widget.label == 'Long Hemming' ||
+                    widget.label == 'Cross Cutting' ||
+                    widget.label == 'Sewing') &&
                 widget.withItemGrade == false &&
                 widget.label != 'Packing' &&
                 widget.label != 'Press' &&

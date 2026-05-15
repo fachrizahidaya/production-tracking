@@ -735,10 +735,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
     final semiFinishedItems = semiFinishedService.dataListOption;
 
-    for (int i = 0; i < semiFinishedItems.length; i++) {
-      widget.form?['semifinished_products[$i][item_id]'] =
-          semiFinishedItems[i]['value'].toString();
-    }
+    widget.form?['semifinished_products'] = List.generate(
+      semiFinishedItems.length,
+      (index) => {
+        'item_id': semiFinishedItems[index]['value'],
+      },
+    );
   }
 
   _selectWorkOrder() {

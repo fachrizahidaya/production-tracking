@@ -442,23 +442,46 @@ class _SpkMaterialItem extends StatelessWidget {
   }
 
   Widget _buildQtyInfo() {
-    return Wrap(
-      alignment: WrapAlignment.end,
-      spacing: 16,
-      runSpacing: 12,
-      children: [
-        _buildQtyColumn(
-          'Qty',
-          item['qty'],
-          item['unit']?['code']?.toString() ?? '',
-        ),
-        _buildQtyColumn(
-          'Diproses',
-          item['process_qty'],
-          item['unit']?['code']?.toString() ?? '',
-        ),
-        _buildStatus(),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Wrap(
+          spacing: 20,
+          runSpacing: 16,
+          alignment: WrapAlignment.start,
+          runAlignment: WrapAlignment.start,
+          children: [
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: 90,
+                maxWidth: constraints.maxWidth / 2,
+              ),
+              child: _buildQtyColumn(
+                'Qty',
+                item['qty'],
+                item['unit']?['code']?.toString() ?? '',
+              ),
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: 90,
+                maxWidth: constraints.maxWidth / 2,
+              ),
+              child: _buildQtyColumn(
+                'Diproses',
+                item['process_qty'],
+                item['unit']?['code']?.toString() ?? '',
+              ),
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: 90,
+                maxWidth: constraints.maxWidth / 2,
+              ),
+              child: _buildStatus(),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -499,6 +522,7 @@ class _SpkMaterialItem extends StatelessWidget {
   Widget _buildStatus() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           'Status',

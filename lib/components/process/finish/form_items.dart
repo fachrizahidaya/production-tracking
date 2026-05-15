@@ -582,6 +582,15 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
     return items[_selectedSemiFinishedIndex];
   }
 
+  bool get isLoadingSemiFinished {
+    final hasSelectedWO = widget.form['wo_id'] != null;
+
+    final semiFinishedProducts =
+        widget.processData['semifinished_products'] ?? [];
+
+    return hasSelectedWO && semiFinishedProducts.isEmpty;
+  }
+
   @override
   void didUpdateWidget(covariant FormItems oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -807,7 +816,16 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
                 validateWeight: widget.validateWeight,
                 calculateLongHemmingWeight: calculateLongHemmingWeight,
               ),
-            if (semiFinishedProducts.length > 1)
+            if (isLoadingSemiFinished)
+              Expanded(
+                child: SizedBox(
+                  height: 120,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              )
+            else if (semiFinishedProducts.length > 1)
               Expanded(
                 child: TemplateCard(
                   title: 'Produk Setengah Jadi',

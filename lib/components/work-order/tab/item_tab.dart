@@ -14,6 +14,7 @@ class ItemTab extends StatefulWidget {
   final refetch;
   final hasMore;
   final label;
+  final withSpk;
 
   const ItemTab(
       {super.key,
@@ -21,7 +22,8 @@ class ItemTab extends StatefulWidget {
       this.handleSpk,
       this.refetch,
       this.hasMore,
-      this.label});
+      this.label,
+      this.withSpk = false});
 
   @override
   State<ItemTab> createState() => _ItemTabState();
@@ -54,7 +56,7 @@ class _ItemTabState extends State<ItemTab> {
                           item: items[index],
                           label: widget.label,
                           index: index,
-                          withSpk: true,
+                          withSpk: widget.withSpk,
                         ),
                         if (index != items.length - 1) SizedBox(height: 12),
                       ].separatedBy(CustomTheme().vGap('xl')),

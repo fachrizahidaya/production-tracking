@@ -44,16 +44,9 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
               .deleteItem(context, id, isLoading),
       modelBuilder: (form, data) => LongHemming(
           wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          weight_unit_id: form['weight_unit_id'] != null
-              ? int.tryParse(form['weight_unit_id'].toString())
-              : 2,
           machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-          weight: form['weight'] ?? '0',
           notes: form['notes'] ?? data['notes'],
-          attachments: [
-            ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
-            ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
-          ],
+          attachments: [],
           machine_ids: form['machine_ids'],
           machines: form['machines'],
           bs_weight: form['bs_weight'] ?? '0',
@@ -65,7 +58,8 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
               ? int.tryParse(form['good_weight_unit_id'].toString())
               : 2,
           greige_item_id:
-              int.tryParse(form['greige_item_id']?.toString() ?? '')),
+              int.tryParse(form['greige_item_id']?.toString() ?? ''),
+          semifinished_products: form['semifinished_products']),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/long-hemmings',
@@ -84,27 +78,26 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
       fetchFinish: (service) => service.fetchHemmingFinishOptions(),
       handleSubmitToService: (context, id, form, isLoading) async {
         final longHemming = LongHemming(
-            wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-            machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-            weight_unit_id:
-                int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-            weight: form['weight'],
-            notes: form['notes'],
-            start_time: form['start_time'],
-            end_time: form['end_time'],
-            start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-            end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
-            attachments: form['attachments'],
-            machines: form['machines'] ?? [],
-            machine_ids: form['machine_ids'] ?? [],
-            bs_weight: form['bs_weight'],
-            bs_weight_unit_id:
-                int.tryParse(form['bs_weight_unit_id']?.toString() ?? ''),
-            good_weight: form['good_weight'],
-            good_weight_unit_id:
-                int.tryParse(form['good_weight_unit_id']?.toString() ?? ''),
-            greige_item_id:
-                int.tryParse(form['greige_item_id']?.toString() ?? ''));
+          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+          notes: form['notes'],
+          start_time: form['start_time'],
+          end_time: form['end_time'],
+          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+          attachments: form['attachments'],
+          machines: form['machines'] ?? [],
+          machine_ids: form['machine_ids'] ?? [],
+          bs_weight: form['bs_weight'],
+          bs_weight_unit_id:
+              int.tryParse(form['bs_weight_unit_id']?.toString() ?? ''),
+          good_weight: form['good_weight'],
+          good_weight_unit_id:
+              int.tryParse(form['good_weight_unit_id']?.toString() ?? ''),
+          greige_item_id:
+              int.tryParse(form['greige_item_id']?.toString() ?? ''),
+          semifinished_products: form['semifinished_products'] ?? [],
+        );
 
         final message =
             await Provider.of<LongHemmingService>(context, listen: false)

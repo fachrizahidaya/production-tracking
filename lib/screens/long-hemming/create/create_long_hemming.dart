@@ -16,9 +16,6 @@ class CreateLongHemming extends StatelessWidget {
     final longHemming = LongHemming(
       wo_id:
           form['wo_id'] != null ? int.tryParse(form['wo_id'].toString()) : null,
-      weight_unit_id: form['unit_id'] != null
-          ? int.tryParse(form['unit_id'].toString())
-          : null,
       machine_id: form['machine_id'] != null
           ? int.tryParse(form['machine_id'].toString())
           : null,
@@ -27,7 +24,6 @@ class CreateLongHemming extends StatelessWidget {
           .where((e) => e != null)
           .cast<int>()
           .toList(),
-      weight: form['weight'],
       notes: form['notes'],
       status: form['status'],
       start_time: form['start_time'],
@@ -37,6 +33,7 @@ class CreateLongHemming extends StatelessWidget {
           : null,
       end_by_id: form['end_by_id'],
       attachments: form['attachments'],
+      semifinished_products: form['semifinished_products'] ?? [],
     );
 
     final message =
@@ -61,6 +58,7 @@ class CreateLongHemming extends StatelessWidget {
   Widget build(BuildContext context) {
     return CreateProcess(
       title: 'Mulai Long Hemming',
+      label: 'long_hemming',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
         return CreateLongHemmingManual(

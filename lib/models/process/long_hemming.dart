@@ -10,11 +10,9 @@ class LongHemming {
   final int? start_by_id;
   final int? end_by_id;
   final String? end_time;
-  final String? weight;
 
   final String? notes;
   final String? status;
-  final int? weight_unit_id;
 
   final int? wo_id;
   final int? machine_id;
@@ -33,16 +31,15 @@ class LongHemming {
   final bs_weight;
   final bs_weight_unit_id;
   final greige_item_id;
+  final semifinished_products;
 
   LongHemming(
       {this.id,
       this.lh_no,
       this.start_time,
       this.end_time,
-      this.weight,
       this.notes,
       this.status,
-      this.weight_unit_id,
       this.wo_id,
       this.machine_id,
       this.start_by_id,
@@ -62,43 +59,43 @@ class LongHemming {
       this.good_weight_unit_id,
       this.bs_weight,
       this.bs_weight_unit_id,
-      this.greige_item_id});
+      this.greige_item_id,
+      this.semifinished_products});
 
   factory LongHemming.fromJson(Map<String, dynamic> json) {
     return LongHemming(
-        id: json['id'] as int?,
-        weight_unit_id: json['weight_unit_id'] as int?,
-        wo_id: json['wo_id'] as int?,
-        machine_id: json['machine_id'] as int?,
-        start_by_id: json['start_by_id'] as int?,
-        end_by_id: json['end_by_id'] as int?,
-        lh_no: json['lh_no'] ?? '',
-        start_time: json['start_time'] ?? '',
-        end_time: json['end_time'] ?? '',
-        weight: json['weight'] ?? '',
-        status: json['status'] ?? '',
-        notes: json['notes'] ?? '',
-        attachments: json['attachments'] ?? [],
-        work_orders: json['work_orders'],
-        start_by: json['start_by'],
-        end_by: json['end_by'],
-        machine: json['machine'] ?? {},
-        maklon: json['maklon'] as bool?,
-        maklon_name: json['maklon_name'] ?? '',
-        finished_item_id: json['finished_item_id'] as int?,
-        machine_ids: json['machine_ids'] ?? [],
-        machines: json['machines'] ?? [],
-        good_weight: json['good_weight'] ?? '',
-        good_weight_unit_id: json['good_weight_unit_id'] as int?,
-        bs_weight: json['bs_weight'] ?? '',
-        bs_weight_unit_id: json['bs_weight_unit_id'] as int?,
-        greige_item_id: json['greige_item_id'] as int?);
+      id: json['id'] as int?,
+      wo_id: json['wo_id'] as int?,
+      machine_id: json['machine_id'] as int?,
+      start_by_id: json['start_by_id'] as int?,
+      end_by_id: json['end_by_id'] as int?,
+      lh_no: json['lh_no'] ?? '',
+      start_time: json['start_time'] ?? '',
+      end_time: json['end_time'] ?? '',
+      status: json['status'] ?? '',
+      notes: json['notes'] ?? '',
+      attachments: json['attachments'] ?? [],
+      work_orders: json['work_orders'],
+      start_by: json['start_by'],
+      end_by: json['end_by'],
+      machine: json['machine'] ?? {},
+      maklon: json['maklon'] as bool?,
+      maklon_name: json['maklon_name'] ?? '',
+      finished_item_id: json['finished_item_id'] as int?,
+      machine_ids: json['machine_ids'] ?? [],
+      machines: json['machines'] ?? [],
+      good_weight: json['good_weight'] ?? '',
+      good_weight_unit_id: json['good_weight_unit_id'] as int?,
+      bs_weight: json['bs_weight'] ?? '',
+      bs_weight_unit_id: json['bs_weight_unit_id'] as int?,
+      greige_item_id: json['greige_item_id'] as int?,
+      semifinished_products: json['semifinished_products'] ?? [],
+    );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'weight_unit_id': weight_unit_id,
       'wo_id': wo_id,
       'machine_id': machine_id,
       'start_by_id': start_by_id,
@@ -107,7 +104,6 @@ class LongHemming {
       'start_time': start_time,
       'end_time': end_time,
       'wo_no': wo_no,
-      'weight': weight,
       'notes': notes,
       'status': status,
       'attachments': attachments,
@@ -125,6 +121,7 @@ class LongHemming {
       'bs_weight': bs_weight,
       'bs_weight_unit_id': bs_weight_unit_id,
       'greige_item_id': greige_item_id,
+      'semifinished_products': semifinished_products,
     };
   }
 }

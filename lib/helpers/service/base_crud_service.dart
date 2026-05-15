@@ -212,6 +212,140 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
+  Future<String> updateItemMultipart(
+    BuildContext context,
+    String id,
+    T updatedItem,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
+    isSubmitting.value = true;
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      final data = toJson(updatedItem);
+
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('$baseUrl/$endpoint/$id'),
+      );
+
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      });
+
+      /// 🔥 recursive serializer
+      void addFields(dynamic value, String parentKey) {
+        if (value == null) return;
+
+        /// FILE
+        if (value is File) {
+          return;
+        }
+
+        /// LIST
+        if (value is List) {
+          for (int i = 0; i < value.length; i++) {
+            addFields(value[i], '$parentKey[$i]');
+          }
+          return;
+        }
+
+        /// MAP
+        if (value is Map) {
+          value.forEach((key, val) {
+            addFields(val, '$parentKey[$key]');
+          });
+          return;
+        }
+
+        /// PRIMITIVE
+        request.fields[parentKey] = value.toString();
+      }
+
+      /// 🔥 serialize all except attachments
+      data.forEach((key, value) {
+        if (key == 'attachments') return;
+
+        addFields(value, key);
+      });
+
+      request.fields['_method'] = 'PATCH';
+
+      /// 🔥 attachments upload
+      final attachments = data['attachments'];
+
+      if (attachments is List) {
+        for (var file in attachments) {
+          /// new picked file
+          if (file is File) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+              ),
+            );
+          }
+
+          /// map file picker
+          else if (file is Map && file['path'] != null) {
+            final path = file['path'].toString();
+
+            /// existing uploaded file → skip
+            if (path.startsWith('http')) {
+              continue;
+            }
+
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                path,
+                filename: file['name'] ?? 'file',
+              ),
+            );
+          }
+        }
+      }
+
+      /// 🔥 DEBUG
+      print('=== MULTIPART FIELDS ===');
+      request.fields.forEach((k, v) {
+        print('$k : $v');
+      });
+
+      print('=== MULTIPART FILES ===');
+      for (var f in request.files) {
+        print(f.filename);
+      }
+
+      final streamedResponse = await request.send();
+
+      final response = await http.Response.fromStream(streamedResponse);
+
+      print('=== STATUS ===');
+      print(response.statusCode);
+
+      print('=== BODY ===');
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        await refetchItems(context);
+
+        return jsonDecode(response.body)['message'];
+      } else {
+        final error = jsonDecode(response.body);
+
+        throw (error['message'] ?? 'Gagal mengubah proses');
+      }
+    } catch (e) {
+      throw ('$e');
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
   Future<String> updateItemPacking(
     BuildContext context,
     String id,

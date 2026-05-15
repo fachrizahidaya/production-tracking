@@ -575,7 +575,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
   }
 
   bool _isItemEmpty() {
-    if (widget.finishedItemMaterial.isEmpty) return true;
+    if (widget.finishedItemMaterial[0]['code'] == null) return true;
 
     return false;
   }
@@ -619,6 +619,11 @@ class _UpdateProcessState extends State<UpdateProcess> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // if ((widget.label == 'Long Hemming' ||
+                                //         widget.label == 'Sewing' ||
+                                //         widget.label == 'Packing') &&
+                                //     _isItemEmpty())
+                                //   FormHelpers.buildEmptyState(true),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

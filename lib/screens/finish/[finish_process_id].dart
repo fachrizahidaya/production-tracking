@@ -552,7 +552,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['sku_greige_item'] =
             data['greige_item']['code'].toString();
       }
-
+      if (data['attachments'] != null) {
+        widget.form?['attachments'] = List.from(data['attachments']);
+      }
       if (data['machine_ids'] != null) {
         widget.form?['machine_ids'] = List.from(data['machine_ids']);
       }
@@ -688,6 +690,19 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       widget.form?['weight_grade_a'] = _weightGradeAController.text;
       widget.form?['gsm'] = _gsmController.text;
       widget.form?['total_weight'] = safeToApi(_totalWeightController.text);
+
+      widget.form?['attachments'] ??= [];
+      widget.form?['machine_ids'] ??= [];
+      widget.form?['defects'] ??= [];
+      widget.form?['grades'] ??= [];
+      widget.form?['semifinished_products'] ??= [];
+
+      widget.form?['defects'] = _defects
+          .map((e) => {
+                'defect_type_id': e['defect_type_id'],
+                'qty': e['qty'],
+              })
+          .toList();
 
       if (widget.form?['wo_id'] != null) {
         showConfirmationDialog(

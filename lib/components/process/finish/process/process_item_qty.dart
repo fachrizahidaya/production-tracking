@@ -176,13 +176,15 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
 
     /// SINGLE ITEM
     if (widget.items.length == 1) {
-      return TemplateCard(
-        title: 'Qty Produk',
-        icon: Icons.numbers_outlined,
-        child: _buildItemContent(
-          context,
-          0,
-          widget.items.first,
+      return Expanded(
+        child: TemplateCard(
+          title: 'Qty Produk',
+          icon: Icons.numbers_outlined,
+          child: _buildItemContent(
+            context,
+            0,
+            widget.items.first,
+          ),
         ),
       );
     }

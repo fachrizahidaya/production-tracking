@@ -5,24 +5,23 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
-class LongHemmingWeightSection extends StatefulWidget {
+class LongHemmingItemsWeightSection extends StatefulWidget {
   final List<dynamic> items;
   final Function(int index, String key, dynamic value) onChange;
-  final VoidCallback onRecalculate;
 
-  const LongHemmingWeightSection({
+  const LongHemmingItemsWeightSection({
     super.key,
     required this.items,
     required this.onChange,
-    required this.onRecalculate,
   });
 
   @override
-  State<LongHemmingWeightSection> createState() =>
-      _LongHemmingWeightSectionState();
+  State<LongHemmingItemsWeightSection> createState() =>
+      _LongHemmingItemsWeightSectionState();
 }
 
-class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
+class _LongHemmingItemsWeightSectionState
+    extends State<LongHemmingItemsWeightSection> {
   final Map<int, TextEditingController> _goodControllers = {};
   final Map<int, TextEditingController> _bsControllers = {};
 
@@ -43,34 +42,14 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
     }
   }
 
-  void _handleGoodWeight(int index, String value) {
-    final safeValue = value.toString().trim().isEmpty ? '0' : value.toString();
-
-    widget.onChange(index, 'good_weight', safeValue);
-
-    widget.onRecalculate();
-
-    setState(() {});
-  }
-
-  void _handleBsWeight(int index, String value) {
-    final safeValue = value.toString().trim().isEmpty ? '0' : value.toString();
-
-    widget.onChange(index, 'bs_weight', safeValue);
-
-    widget.onRecalculate();
-
-    setState(() {});
-  }
-
   @override
   void dispose() {
-    for (final controller in _goodControllers.values) {
-      controller.dispose();
+    for (final c in _goodControllers.values) {
+      c.dispose();
     }
 
-    for (final controller in _bsControllers.values) {
-      controller.dispose();
+    for (final c in _bsControllers.values) {
+      c.dispose();
     }
 
     super.dispose();
@@ -81,8 +60,7 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
     int index,
     dynamic item,
   ) {
-    final semiFinished = item['semifinished_product'];
-    final finished = item['finished_product'];
+    final isTablet = MediaQuery.of(context).size.width > 700;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,12 +87,12 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
               ),
               const SizedBox(height: 4),
               Text(
-                semiFinished?['code'] ?? '-',
+                item['semifinished_product']?['code'] ?? '-',
               ),
               Text(
-                semiFinished?['name'] ?? '-',
-                style: const TextStyle(
-                  color: Colors.grey,
+                item['semifinished_product']?['name'] ?? '-',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
                 ),
               ),
             ],
@@ -143,12 +121,12 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
               ),
               const SizedBox(height: 4),
               Text(
-                finished?['code'] ?? '-',
+                item['finished_product']?['code'] ?? '-',
               ),
               Text(
-                finished?['name'] ?? '-',
-                style: const TextStyle(
-                  color: Colors.grey,
+                item['finished_product']?['name'] ?? '-',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
                 ),
               ),
             ],
@@ -160,31 +138,39 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
           runSpacing: 16,
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width > 700
+              width: isTablet
                   ? (MediaQuery.of(context).size.width - 80) / 2
                   : double.infinity,
               child: TextForm(
                 label: 'Berat Bagus (KG)',
                 controller: _goodControllers[index],
-                initialValue: item['good_weight']?.toString() ?? '0',
-                req: false,
                 isNumber: true,
                 isSorting: true,
-                handleChange: (value) => _handleGoodWeight(index, value),
+                handleChange: (value) {
+                  widget.onChange(
+                    index,
+                    'good_weight',
+                    value,
+                  );
+                },
               ),
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width > 700
+              width: isTablet
                   ? (MediaQuery.of(context).size.width - 80) / 2
                   : double.infinity,
               child: TextForm(
                 label: 'Berat BS (KG)',
                 controller: _bsControllers[index],
-                initialValue: item['bs_weight']?.toString() ?? '0',
-                req: false,
                 isNumber: true,
                 isSorting: true,
-                handleChange: (value) => _handleBsWeight(index, value),
+                handleChange: (value) {
+                  widget.onChange(
+                    index,
+                    'bs_weight',
+                    value,
+                  );
+                },
               ),
             ),
           ],
@@ -201,65 +187,68 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
 
     /// SINGLE ITEM
     if (widget.items.length == 1) {
-      return TemplateCard(
-        title: 'Berat Produk',
-        icon: Icons.scale_outlined,
-        child: _buildItemContent(
-          context,
-          0,
-          widget.items.first,
+      return Expanded(
+        child: TemplateCard(
+          title: 'Berat Produk',
+          icon: Icons.scale_outlined,
+          child: _buildItemContent(
+            context,
+            0,
+            widget.items.first,
+          ),
         ),
       );
     }
 
-    /// MULTIPLE ITEMS
+    /// MULTI ITEM
     return DefaultTabController(
       length: widget.items.length,
-      child: TemplateCard(
-        title: 'Berat per Produk',
-        icon: Icons.scale_outlined,
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TabBar(
-                isScrollable: true,
-                dividerColor: Colors.transparent,
-                tabAlignment: TabAlignment.start,
-                tabs: widget.items.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final item = entry.value;
+      child: Expanded(
+        child: TemplateCard(
+          title: 'Berat per Produk',
+          icon: Icons.scale_outlined,
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: TabBar(
+                  isScrollable: true,
+                  dividerColor: Colors.transparent,
+                  tabAlignment: TabAlignment.start,
+                  tabs: widget.items.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final item = entry.value;
 
-                  final finished = item['finished_product'];
-
-                  return Tab(
-                    text: finished?['code'] ?? 'Produk ${index + 1}',
-                  );
-                }).toList(),
+                    return Tab(
+                      text: item['finished_product']?['code'] ??
+                          'Produk ${index + 1}',
+                    );
+                  }).toList(),
+                ),
               ),
-            ),
-            SizedBox(
-              height: 420,
-              child: TabBarView(
-                children: widget.items.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final item = entry.value;
+              SizedBox(
+                height: 420,
+                child: TabBarView(
+                  children: widget.items.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final item = entry.value;
 
-                  return SingleChildScrollView(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: _buildItemContent(
-                      context,
-                      index,
-                      item,
-                    ),
-                  );
-                }).toList(),
+                    return SingleChildScrollView(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: _buildItemContent(
+                        context,
+                        index,
+                        item,
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
-            ),
-          ].separatedBy(CustomTheme().vGap('lg')),
+            ].separatedBy(CustomTheme().vGap('lg')),
+          ),
         ),
       ),
     );

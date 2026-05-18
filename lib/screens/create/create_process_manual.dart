@@ -228,12 +228,22 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
 
               final semiFinishedItems = semiFinishedService.dataListOption;
 
-              widget.form?['semifinished_products'] = List.generate(
-                semiFinishedItems.length,
-                (index) => {
-                  'item_id': semiFinishedItems[index]['value'],
-                },
-              );
+              if (widget.label == 'Dyeing') {
+                widget.form?['semifinished_products'] = List.generate(
+                  semiFinishedItems.length,
+                  (index) => {
+                    'item_id': semiFinishedItems[index]['value'],
+                  },
+                );
+              } else {
+                widget.form?['items'] = List.generate(
+                  semiFinishedItems.length,
+                  (index) => {
+                    'semifinished_product_id': semiFinishedItems[index]
+                        ['value'],
+                  },
+                );
+              }
             }
 
             if (processValue != null && processValue.toString().isNotEmpty) {

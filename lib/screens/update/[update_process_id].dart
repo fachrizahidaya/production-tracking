@@ -448,13 +448,23 @@ class _UpdateProcessState extends State<UpdateProcess> {
   }
 
   void calculateLongHemmingWeight() {
-    final good = parseSafe(widget.form['good_weight']);
-    final defect = parseSafe(widget.form['bs_weight']);
+    final items = List<Map<String, dynamic>>.from(widget.form['items'] ?? []);
 
-    final total = good + defect;
+    double total = 0;
+
+    for (final item in items) {
+      final good = parseSafe(item['good_weight']);
+      final defect = parseSafe(item['bs_weight']);
+
+      total += good + defect;
+    }
 
     setState(() {
-      widget.handleChangeInput('weight', total.toStringAsFixed(2));
+      widget.handleChangeInput(
+        'weight',
+        total.toStringAsFixed(2),
+      );
+
       widget.weight.value = TextEditingValue(
         text: total.toStringAsFixed(2),
         selection: TextSelection.collapsed(
@@ -523,12 +533,12 @@ class _UpdateProcessState extends State<UpdateProcess> {
               }).toList();
             }
 
-            if (widget.label == 'Long Hemming' ||
-                widget.label == 'Sewing' ||
-                widget.label == 'Packing') {
-              widget.form['greige_item_id'] =
-                  (widget.finishedItemMaterial[0]['value']);
-            }
+            // if (widget.label == 'Long Hemming' ||
+            //     widget.label == 'Sewing' ||
+            //     widget.label == 'Packing') {
+            //   widget.form['greige_item_id'] =
+            //       (widget.finishedItemMaterial[0]['value']);
+            // }
 
             /// 🔥 MAKLON
             else if (_isMaklon == true) {
@@ -544,6 +554,7 @@ class _UpdateProcessState extends State<UpdateProcess> {
               widget.form['maklon_name'] = null;
               widget.form['maklon'] = false;
             }
+            widget.form.remove('semifinished_products');
 
             widget.form['wo_id'] = widget.data['wo_id'];
 
@@ -686,70 +697,70 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                                 CustomTheme().vGap('lg')),
                                           )),
                                     ),
-                                    if (widget.label == 'Long Hemming' ||
-                                        widget.label == 'Sewing' ||
-                                        widget.label == 'Packing')
-                                      Expanded(
-                                        child: TemplateCard(
-                                            title: widget.label == 'Packing'
-                                                ? 'Produk Jadi'
-                                                : 'Produk Setengah Jadi',
-                                            icon: Icons.inventory_2_outlined,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical: 16,
-                                                    horizontal: 12,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                    border: Border.all(
-                                                        color: Colors
-                                                            .grey.shade200),
-                                                  ),
-                                                  child: Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              widget.finishedItemMaterial[
-                                                                          0]?[
-                                                                      'code'] ??
-                                                                  '-',
-                                                              style: TextStyle(
-                                                                  fontWeight: CustomTheme()
-                                                                      .fontWeight(
-                                                                          'semibold')),
-                                                            ),
-                                                            Text(
-                                                              widget.finishedItemMaterial[
-                                                                          0]?[
-                                                                      'label'] ??
-                                                                  '-',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ].separatedBy(
-                                                  CustomTheme().vGap('lg')),
-                                            )),
-                                      ),
+                                    // if (widget.label == 'Long Hemming' ||
+                                    //     widget.label == 'Sewing' ||
+                                    //     widget.label == 'Packing')
+                                    //   Expanded(
+                                    //     child: TemplateCard(
+                                    //         title: widget.label == 'Packing'
+                                    //             ? 'Produk Jadi'
+                                    //             : 'Produk Setengah Jadi',
+                                    //         icon: Icons.inventory_2_outlined,
+                                    //         child: Column(
+                                    //           crossAxisAlignment:
+                                    //               CrossAxisAlignment.start,
+                                    //           children: [
+                                    //             Container(
+                                    //               padding: EdgeInsets.symmetric(
+                                    //                 vertical: 16,
+                                    //                 horizontal: 12,
+                                    //               ),
+                                    //               decoration: BoxDecoration(
+                                    //                 color: Colors.white,
+                                    //                 borderRadius:
+                                    //                     BorderRadius.circular(
+                                    //                         8),
+                                    //                 border: Border.all(
+                                    //                     color: Colors
+                                    //                         .grey.shade200),
+                                    //               ),
+                                    //               child: Row(
+                                    //                 children: [
+                                    //                   Expanded(
+                                    //                     child: Column(
+                                    //                       crossAxisAlignment:
+                                    //                           CrossAxisAlignment
+                                    //                               .start,
+                                    //                       children: [
+                                    //                         Text(
+                                    //                           widget.finishedItemMaterial[
+                                    //                                       0]?[
+                                    //                                   'code'] ??
+                                    //                               '-',
+                                    //                           style: TextStyle(
+                                    //                               fontWeight: CustomTheme()
+                                    //                                   .fontWeight(
+                                    //                                       'semibold')),
+                                    //                         ),
+                                    //                         Text(
+                                    //                           widget.finishedItemMaterial[
+                                    //                                       0]?[
+                                    //                                   'label'] ??
+                                    //                               '-',
+                                    //                           style: TextStyle(
+                                    //                               color: Colors
+                                    //                                   .grey),
+                                    //                         ),
+                                    //                       ],
+                                    //                     ),
+                                    //                   ),
+                                    //                 ],
+                                    //               ),
+                                    //             ),
+                                    //           ].separatedBy(
+                                    //               CustomTheme().vGap('lg')),
+                                    //         )),
+                                    //   ),
                                   ].separatedBy(CustomTheme().hGap('xl')),
                                 ),
                                 if (widget.data['machines'] == null &&
@@ -878,19 +889,36 @@ class _UpdateProcessState extends State<UpdateProcess> {
                                   ),
                                 if (widget.label == 'Long Hemming')
                                   LongHemmingWeightSection(
-                                    form: widget.form,
-                                    goodWeightController: widget.goodWeight,
-                                    defectWeightController: widget.defectWeight,
-                                    onChange: widget.handleChangeInput,
+                                    items: widget.form['items'] ?? [],
+                                    onChange: (index, key, value) {
+                                      final items =
+                                          List<Map<String, dynamic>>.from(
+                                              widget.form['items']);
+
+                                      items[index][key] = value;
+
+                                      widget.handleChangeInput('items', items);
+                                    },
                                     onRecalculate: calculateLongHemmingWeight,
                                   ),
                                 if (widget.label == 'Cross Cutting' ||
                                     widget.label == 'Sewing')
                                   CuttingSewingQtySection(
                                     label: widget.label,
-                                    form: widget.form,
-                                    controller: widget.cuttingSewingQty,
-                                    onChange: widget.handleChangeInput,
+                                    items: widget.form['items'] ?? [],
+                                    onChange: (index, key, value) {
+                                      final items =
+                                          List<Map<String, dynamic>>.from(
+                                        widget.form['items'],
+                                      );
+
+                                      items[index][key] = value;
+
+                                      widget.handleChangeInput(
+                                        'items',
+                                        items,
+                                      );
+                                    },
                                   ),
                                 if (widget.label == 'Sorting' && _isDataEmpty())
                                   FormHelpers.buildEmptyState(true)

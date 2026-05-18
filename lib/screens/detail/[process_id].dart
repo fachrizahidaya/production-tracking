@@ -184,7 +184,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     'total_weight': '0',
     'weight_grade_a': '0',
     'total_sorting': '0',
-    'semifinished_products': []
+    'semifinished_products': [],
+    'items': []
   };
 
   final fieldConfigs = [
@@ -411,6 +412,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     _form['machine_ids'] = List.from(d['machine_ids'] ?? []);
     _form['semifinished_products'] =
         List.from(d['semifinished_products'] ?? []);
+    _form['items'] = List.from(d['items'] ?? []);
     _form['grades'] = List.from(d['grades'] ?? []);
 
     final rawDefects = List.from(d['defects'] ?? []);

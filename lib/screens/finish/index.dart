@@ -125,6 +125,7 @@ class _FinishProcessState extends State<FinishProcess> {
     'nama_greige_item': '',
     'sku_greige_item': '',
     'semifinished_products': [],
+    'items': []
   };
 
   @override
@@ -323,12 +324,25 @@ class _FinishProcessState extends State<FinishProcess> {
 
     final semiFinishedItems = semiFinishedService.dataListOption;
 
-    _form['semifinished_products'] = List.generate(
-      semiFinishedItems.length,
-      (index) => {
-        'item_id': semiFinishedItems[index]['value'].toString(),
-      },
-    );
+    if (widget.label == 'Dyeing' ||
+        widget.label == 'Press' ||
+        widget.label == 'Tumbler' ||
+        widget.label == 'Stenter' ||
+        widget.label == 'Long Slitting') {
+      _form['semifinished_products'] = List.generate(
+        semiFinishedItems.length,
+        (index) => {
+          'item_id': semiFinishedItems[index]['value'],
+        },
+      );
+    } else {
+      _form['items'] = List.generate(
+        semiFinishedItems.length,
+        (index) => {
+          'semifinished_product_id': semiFinishedItems[index]['value'],
+        },
+      );
+    }
   }
 
   void _handleChangeInput(String field, dynamic value) {

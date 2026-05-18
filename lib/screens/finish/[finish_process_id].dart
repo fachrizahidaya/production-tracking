@@ -555,6 +555,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       if (data['attachments'] != null) {
         widget.form?['attachments'] = List.from(data['attachments']);
       }
+      if (data['items'] != null) {
+        widget.form?['items'] = List.from(data['items']);
+      }
       if (data['machine_ids'] != null) {
         widget.form?['machine_ids'] = List.from(data['machine_ids']);
       }
@@ -696,6 +699,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       widget.form?['defects'] ??= [];
       widget.form?['grades'] ??= [];
       widget.form?['semifinished_products'] ??= [];
+      widget.form?['items'] ??= [];
 
       widget.form?['defects'] = _defects
           .map((e) => {
@@ -750,12 +754,25 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
     final semiFinishedItems = semiFinishedService.dataListOption;
 
-    widget.form?['semifinished_products'] = List.generate(
-      semiFinishedItems.length,
-      (index) => {
-        'item_id': semiFinishedItems[index]['value'],
-      },
-    );
+    if (widget.label == 'Dyeing' ||
+        widget.label == 'Press' ||
+        widget.label == 'Tumbler' ||
+        widget.label == 'Stenter' ||
+        widget.label == 'Long Slitting') {
+      widget.form?['semifinished_products'] = List.generate(
+        semiFinishedItems.length,
+        (index) => {
+          'item_id': semiFinishedItems[index]['value'],
+        },
+      );
+    } else {
+      widget.form?['items'] = List.generate(
+        semiFinishedItems.length,
+        (index) => {
+          'semifinished_product_id': semiFinishedItems[index]['value'],
+        },
+      );
+    }
   }
 
   _selectWorkOrder() {

@@ -51,6 +51,7 @@ class _FinishSewingState extends State<FinishSewing> {
     'greige_item_id': null,
     'nama_greige_item': '',
     'sku_greige_item': '',
+    'items': []
   };
 
   @override
@@ -119,7 +120,8 @@ class _FinishSewingState extends State<FinishSewing> {
             maklon: form['maklon'],
             maklon_name: form['maklon_name'],
             greige_item_id:
-                int.tryParse(form['greige_item_id']?.toString() ?? ''));
+                int.tryParse(form['greige_item_id']?.toString() ?? ''),
+            items: form['items']);
 
         final message = await Provider.of<SewingService>(context, listen: false)
             .finishItem(context, id, sewing, isLoading);

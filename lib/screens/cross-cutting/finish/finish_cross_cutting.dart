@@ -98,7 +98,8 @@ class _FinishCrossCuttingState extends State<FinishCrossCutting> {
             start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
             end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
             attachments: form['attachments'],
-            machine_ids: form['machine_ids']);
+            machine_ids: form['machine_ids'],
+            items: form['items']);
 
         final message =
             await Provider.of<CrossCuttingService>(context, listen: false)

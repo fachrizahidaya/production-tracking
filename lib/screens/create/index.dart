@@ -70,6 +70,7 @@ class _CreateProcessState extends State<CreateProcess> {
     'maklon_name': '',
     'machine_ids': [],
     'semifinished_products': [],
+    'items': []
   };
 
   @override
@@ -165,12 +166,25 @@ class _CreateProcessState extends State<CreateProcess> {
 
       final semiFinishedItems = semiFinishedService.dataListOption;
 
-      _form['semifinished_products'] = List.generate(
-        semiFinishedItems.length,
-        (index) => {
-          'item_id': semiFinishedItems[index]['value'],
-        },
-      );
+      if (widget.label == 'Dyeing' ||
+          widget.label == 'Press' ||
+          widget.label == 'Tumbler' ||
+          widget.label == 'Stenter' ||
+          widget.label == 'Long Slitting') {
+        _form['semifinished_products'] = List.generate(
+          semiFinishedItems.length,
+          (index) => {
+            'item_id': semiFinishedItems[index]['value'],
+          },
+        );
+      } else {
+        _form['items'] = List.generate(
+          semiFinishedItems.length,
+          (index) => {
+            'semifinished_product_id': semiFinishedItems[index]['value'],
+          },
+        );
+      }
 
       _form['wo_id'] = data['id']?.toString() ?? woId;
       _form['no_wo'] = data['wo_no']?.toString() ?? woNo;

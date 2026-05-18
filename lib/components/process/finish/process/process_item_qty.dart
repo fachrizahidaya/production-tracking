@@ -5,12 +5,12 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
-class CuttingSewingQtySection extends StatefulWidget {
+class ProcessItemsQtySection extends StatefulWidget {
   final String label;
   final List<dynamic> items;
   final Function(int index, String key, dynamic value) onChange;
 
-  const CuttingSewingQtySection({
+  const ProcessItemsQtySection({
     super.key,
     required this.label,
     required this.items,
@@ -18,11 +18,10 @@ class CuttingSewingQtySection extends StatefulWidget {
   });
 
   @override
-  State<CuttingSewingQtySection> createState() =>
-      _CuttingSewingQtySectionState();
+  State<ProcessItemsQtySection> createState() => _ProcessItemsQtySectionState();
 }
 
-class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
+class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
   final Map<int, TextEditingController> _qtyControllers = {};
 
   @override
@@ -47,7 +46,7 @@ class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
     super.dispose();
   }
 
-  void _handleChange(
+  void _handleQty(
     int index,
     String value,
   ) {
@@ -73,11 +72,11 @@ class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
 
     final finished = item['finished_product'];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        /// Semi Finished
-        if (semiFinished != null)
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// Semi Finished
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(12),
@@ -99,10 +98,10 @@ class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  semiFinished['code'] ?? '-',
+                  semiFinished?['code'] ?? '-',
                 ),
                 Text(
-                  semiFinished['name'] ?? '-',
+                  semiFinished?['name'] ?? '-',
                   style: TextStyle(
                     color: Colors.grey.shade600,
                   ),
@@ -111,8 +110,7 @@ class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
             ),
           ),
 
-        /// Finished Product
-        if (finished != null)
+          /// Finished Product
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(12),
@@ -134,10 +132,10 @@ class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  finished['code'] ?? '-',
+                  finished?['code'] ?? '-',
                 ),
                 Text(
-                  finished['name'] ?? '-',
+                  finished?['name'] ?? '-',
                   style: TextStyle(
                     color: Colors.grey.shade600,
                   ),
@@ -146,25 +144,26 @@ class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
             ),
           ),
 
-        SizedBox(
-          width: isTablet
-              ? (MediaQuery.of(context).size.width - 80) / 2
-              : double.infinity,
-          child: TextForm(
-            label: 'Qty Hasil ${widget.label} (PCS)',
-            req: false,
-            isNumber: true,
-            isSorting: true,
-            controller: _qtyControllers[index],
-            initialValue: item['qty']?.toString() ?? '0',
-            handleChange: (value) => _handleChange(
-              index,
-              value,
+          SizedBox(
+            width: isTablet
+                ? (MediaQuery.of(context).size.width - 80) / 2
+                : double.infinity,
+            child: TextForm(
+              label: 'Qty Hasil ${widget.label} (PCS)',
+              controller: _qtyControllers[index],
+              initialValue: item['qty']?.toString() ?? '0',
+              req: false,
+              isNumber: true,
+              isSorting: true,
+              handleChange: (value) => _handleQty(
+                index,
+                value,
+              ),
             ),
           ),
+        ].separatedBy(
+          CustomTheme().vGap('lg'),
         ),
-      ].separatedBy(
-        CustomTheme().vGap('lg'),
       ),
     );
   }
@@ -191,53 +190,55 @@ class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
     /// MULTIPLE ITEM
     return DefaultTabController(
       length: widget.items.length,
-      child: TemplateCard(
-        title: 'Qty per Produk',
-        icon: Icons.numbers_outlined,
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TabBar(
-                isScrollable: true,
-                dividerColor: Colors.transparent,
-                tabAlignment: TabAlignment.start,
-                tabs: widget.items.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final item = entry.value;
+      child: Expanded(
+        child: TemplateCard(
+          title: 'Qty per Produk',
+          icon: Icons.numbers_outlined,
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: TabBar(
+                  isScrollable: true,
+                  dividerColor: Colors.transparent,
+                  tabAlignment: TabAlignment.start,
+                  tabs: widget.items.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final item = entry.value;
 
-                  return Tab(
-                    text: item['finished_product']?['code'] ??
-                        'Produk ${index + 1}',
-                  );
-                }).toList(),
+                    return Tab(
+                      text: item['finished_product']?['code'] ??
+                          'Produk ${index + 1}',
+                    );
+                  }).toList(),
+                ),
               ),
-            ),
-            SizedBox(
-              height: 320,
-              child: TabBarView(
-                children: widget.items.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final item = entry.value;
+              SizedBox(
+                height: 360,
+                child: TabBarView(
+                  children: widget.items.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final item = entry.value;
 
-                  return SingleChildScrollView(
-                    padding: const EdgeInsets.only(
-                      top: 16,
-                    ),
-                    child: _buildItemContent(
-                      context,
-                      index,
-                      item,
-                    ),
-                  );
-                }).toList(),
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        top: 16,
+                      ),
+                      child: _buildItemContent(
+                        context,
+                        index,
+                        item,
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
+            ].separatedBy(
+              CustomTheme().vGap('lg'),
             ),
-          ].separatedBy(
-            CustomTheme().vGap('lg'),
           ),
         ),
       ),

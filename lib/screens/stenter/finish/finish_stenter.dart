@@ -66,6 +66,7 @@ class _FinishStenterState extends State<FinishStenter> {
   Widget build(BuildContext context) {
     return FinishProcess(
       title: 'Selesai Stenter',
+      label: 'Stenter',
       fetchWorkOrder: (service) async =>
           await service.fetchStenterFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,

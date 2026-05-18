@@ -65,7 +65,7 @@ class CreateDyeing extends StatelessWidget {
   Widget build(BuildContext context) {
     return CreateProcess(
       title: "Mulai Dyeing",
-      label: 'dyeing',
+      label: 'Dyeing',
       fetchWorkOrder: (service) => service.fetchOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       handleSubmitToService: _submitToService,

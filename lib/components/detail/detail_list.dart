@@ -291,34 +291,34 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 isTablet: isTablet,
               ),
             ),
-          if (widget.label == 'Long Hemming')
-            Expanded(
-                child: _buildQuickInfoItem(
-                    icon: Icons.thumb_up_outlined,
-                    label: 'Berat Bagus',
-                    value: widget.data['good_weight'] != null
-                        ? '${formatNumber(widget.data['good_weight'])} ${widget.data['good_weight_unit']['code']}'
-                        : '0 ${widget.data['good_weight_unit'] != null ? widget.data['good_weight_unit']['code'] : ''}',
-                    isTablet: isTablet)),
-          if (widget.label == 'Long Hemming') _buildVerticalDivider(false),
-          if (widget.label == 'Long Hemming')
-            Expanded(
-                child: _buildQuickInfoItem(
-                    icon: Icons.thumb_down_outlined,
-                    label: 'Berat BS',
-                    value: widget.data['bs_weight'] != null
-                        ? '${formatNumber(widget.data['bs_weight'])} ${widget.data['bs_weight_unit']['code']}'
-                        : '0 ${widget.data['bs_weight_unit'] != null ? widget.data['bs_weight_unit']['code'] : ''}',
-                    isTablet: isTablet)),
-          if (widget.label == 'Cross Cutting' || widget.label == 'Sewing')
-            Expanded(
-                child: _buildQuickInfoItem(
-                    icon: Icons.numbers_outlined,
-                    label: 'Qty Material',
-                    value: widget.data['item_qty'] != null
-                        ? '${formatNumber(widget.data['item_qty'])} ${widget.data['item_unit']['code']}'
-                        : '0 ${widget.data['item_unit'] != null ? widget.data['item_unit']['code'] : ''}',
-                    isTablet: isTablet)),
+          // if (widget.label == 'Long Hemming')
+          //   Expanded(
+          //       child: _buildQuickInfoItem(
+          //           icon: Icons.thumb_up_outlined,
+          //           label: 'Berat Bagus',
+          //           value: widget.data['good_weight'] != null
+          //               ? '${formatNumber(widget.data['good_weight'])} ${widget.data['good_weight_unit']['code']}'
+          //               : '0 ${widget.data['good_weight_unit'] != null ? widget.data['good_weight_unit']['code'] : ''}',
+          //           isTablet: isTablet)),
+          // if (widget.label == 'Long Hemming') _buildVerticalDivider(false),
+          // if (widget.label == 'Long Hemming')
+          //   Expanded(
+          //       child: _buildQuickInfoItem(
+          //           icon: Icons.thumb_down_outlined,
+          //           label: 'Berat BS',
+          //           value: widget.data['bs_weight'] != null
+          //               ? '${formatNumber(widget.data['bs_weight'])} ${widget.data['bs_weight_unit']['code']}'
+          //               : '0 ${widget.data['bs_weight_unit'] != null ? widget.data['bs_weight_unit']['code'] : ''}',
+          //           isTablet: isTablet)),
+          // if (widget.label == 'Cross Cutting' || widget.label == 'Sewing')
+          //   Expanded(
+          //       child: _buildQuickInfoItem(
+          //           icon: Icons.numbers_outlined,
+          //           label: 'Qty Material',
+          //           value: widget.data['item_qty'] != null
+          //               ? '${formatNumber(widget.data['item_qty'])} ${widget.data['item_unit']['code']}'
+          //               : '0 ${widget.data['item_unit'] != null ? widget.data['item_unit']['code'] : ''}',
+          //           isTablet: isTablet)),
         ],
       ),
     );
@@ -935,26 +935,56 @@ Ringkasan Sorting
 Info Material
 */
   Widget _buildMaterialInfo(bool isTablet) {
-    final semiFinishedProducts = List<Map<String, dynamic>>.from(
-      widget.data['semifinished_products'] ?? [],
+    final bool isDyeing = widget.label == 'Dyeing';
+
+    if (isDyeing) {
+      final semiFinishedProducts = List<Map<String, dynamic>>.from(
+        widget.data['semifinished_products'] ?? [],
+      );
+
+      if (semiFinishedProducts.isEmpty) {
+        return NoData();
+      }
+
+      final items = semiFinishedProducts.map((item) {
+        return {
+          'label': 'Produk Setengah Jadi',
+          'value': item['code'] ?? '-',
+          'another_value': item['name'] ?? '-',
+          'icon': Icons.inventory_2_outlined,
+          'is_product': true,
+        };
+      }).toList();
+
+      return _buildMultiInfoGrid(items, isTablet);
+    }
+
+    final items = List<Map<String, dynamic>>.from(
+      widget.data['items'] ?? [],
     );
 
-    if (semiFinishedProducts.isEmpty) {
+    if (items.isEmpty) {
       return NoData();
     }
 
-    final items = semiFinishedProducts.map((item) {
+    final mappedItems = items.map((item) {
+      final semiFinished = item['semifinished_product'];
+      final finished = item['finished_product'];
+
+      final bool isPacking = widget.label == 'Packing';
+
+      final product = isPacking ? finished : semiFinished;
+
       return {
-        'label':
-            widget.label == 'Packing' ? 'Produk Jadi' : 'Produk Setengah Jadi',
-        'value': item['code'] ?? '-',
-        'another_value': item['name'] ?? '-',
+        'label': isPacking ? 'Produk Jadi' : 'Produk Setengah Jadi',
+        'value': product?['code'] ?? '-',
+        'another_value': product?['name'] ?? '-',
         'icon': Icons.inventory_2_outlined,
         'is_product': true,
       };
     }).toList();
 
-    return _buildMultiInfoGrid(items, isTablet);
+    return _buildMultiInfoGrid(mappedItems, isTablet);
   }
 
 /*
@@ -1517,6 +1547,440 @@ Catatan WO
         : NoData();
   }
 
+  Widget _buildWeightPerProduct(bool isTablet) {
+    final items = List<Map<String, dynamic>>.from(
+      widget.data['items'] ?? [],
+    );
+
+    if (items.isEmpty) {
+      return NoData();
+    }
+
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
+      children: items.map((item) {
+        final semiFinished = item['semifinished_product'];
+        final finished = item['finished_product'];
+
+        final goodWeight =
+            double.tryParse(item['good_weight']?.toString() ?? '0') ?? 0;
+
+        final bsWeight =
+            double.tryParse(item['bs_weight']?.toString() ?? '0') ?? 0;
+
+        return Container(
+          width: isTablet
+              ? (MediaQuery.of(context).size.width - 80) / 2
+              : double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: Colors.grey.shade200,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// Semi Finished
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.orange.shade100,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Produk Setengah Jadi',
+                      style: TextStyle(
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      semiFinished?['code'] ?? '-',
+                    ),
+                    Text(
+                      semiFinished?['name'] ?? '-',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              /// Finished Product
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.green.shade100,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Produk Jadi',
+                      style: TextStyle(
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      finished?['code'] ?? '-',
+                    ),
+                    Text(
+                      finished?['name'] ?? '-',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Berat Bagus',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${formatNumber(goodWeight)} KG',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: CustomTheme().fontWeight('bold'),
+                              color: Colors.green.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Berat BS',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${formatNumber(bsWeight)} KG',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: CustomTheme().fontWeight('bold'),
+                              color: Colors.red.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ].separatedBy(CustomTheme().vGap('lg')),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildItemResultPerProduct(bool isTablet) {
+    final items = List<Map<String, dynamic>>.from(
+      widget.data['items'] ?? [],
+    );
+
+    if (items.isEmpty) {
+      return NoData();
+    }
+
+    final bool isLongHemming = widget.label == 'Long Hemming';
+
+    final bool isQtyProcess =
+        widget.label == 'Cross Cutting' || widget.label == 'Sewing';
+
+    Widget buildItem(dynamic item) {
+      final semiFinished = item['semifinished_product'];
+
+      final finished = item['finished_product'];
+
+      final goodWeight = double.tryParse(
+            item['good_weight']?.toString() ?? '0',
+          ) ??
+          0;
+
+      final bsWeight = double.tryParse(
+            item['bs_weight']?.toString() ?? '0',
+          ) ??
+          0;
+
+      final qty = double.tryParse(
+            item['qty']?.toString() ?? '0',
+          ) ??
+          0;
+
+      return SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// Semi Finished
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.orange.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: Colors.orange.shade100,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Produk Setengah Jadi',
+                    style: TextStyle(
+                      fontWeight: CustomTheme().fontWeight('semibold'),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    semiFinished?['code'] ?? '-',
+                  ),
+                  Text(
+                    semiFinished?['name'] ?? '-',
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            /// Finished Product
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.green.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: Colors.green.shade100,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Produk Jadi',
+                    style: TextStyle(
+                      fontWeight: CustomTheme().fontWeight('semibold'),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    finished?['code'] ?? '-',
+                  ),
+                  Text(
+                    finished?['name'] ?? '-',
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            /// LONG HEMMING
+            if (isLongHemming)
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Berat Bagus',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${formatNumber(goodWeight)} KG',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: CustomTheme().fontWeight('bold'),
+                              color: Colors.green.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Berat BS',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${formatNumber(bsWeight)} KG',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: CustomTheme().fontWeight('bold'),
+                              color: Colors.red.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+            /// CROSS CUTTING / SEWING
+            if (isQtyProcess)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Qty Hasil',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${formatNumber(qty)} PCS',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: CustomTheme().fontWeight('bold'),
+                        color: Colors.blue.shade700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ].separatedBy(
+            CustomTheme().vGap('lg'),
+          ),
+        ),
+      );
+    }
+
+    /// SINGLE ITEM
+    if (items.length == 1) {
+      return buildItem(items.first);
+    }
+
+    /// MULTIPLE ITEMS
+    return DefaultTabController(
+      length: items.length,
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: TabBar(
+              isScrollable: true,
+              dividerColor: Colors.transparent,
+              tabAlignment: TabAlignment.start,
+              tabs: items.asMap().entries.map((entry) {
+                final index = entry.key;
+                final item = entry.value;
+
+                return Tab(
+                  text: item['finished_product']?['code'] ??
+                      'Produk ${index + 1}',
+                );
+              }).toList(),
+            ),
+          ),
+          SizedBox(
+            height: 320,
+            child: TabBarView(
+              children: items.map((item) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    top: 16,
+                  ),
+                  child: buildItem(item),
+                );
+              }).toList(),
+            ),
+          ),
+        ].separatedBy(
+          CustomTheme().vGap('lg'),
+        ),
+      ),
+    );
+  }
+
   /// Layout untuk Tablet
   Widget _buildTabletLayout(bool isLargeTablet) {
     return Column(
@@ -1575,6 +2039,16 @@ Catatan WO
             title: 'Produk Setengah Jadi',
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(true),
+          ),
+        if (widget.label == 'Long Hemming' ||
+            widget.label == 'Cross Cutting' ||
+            widget.label == 'Sewing')
+          _buildInfoCard(
+            title: widget.label == 'Long Hemming'
+                ? 'Berat per Produk'
+                : 'Qty per Produk',
+            icon: Icons.scale_outlined,
+            child: _buildItemResultPerProduct(true),
           ),
         if (widget.label == 'Sorting' || widget.label == 'Packing')
           _buildInfoCard(
@@ -1675,6 +2149,12 @@ Catatan WO
             title: 'Produk Setengah Jadi',
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(false),
+          ),
+        if (widget.label == 'Long Hemming')
+          _buildInfoCard(
+            title: 'Berat per Produk',
+            icon: Icons.scale_outlined,
+            child: _buildWeightPerProduct(false),
           ),
         if (widget.label == 'Sorting' || widget.label == 'Packing')
           _buildInfoCard(

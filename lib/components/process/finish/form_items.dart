@@ -6,6 +6,8 @@ import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/process/finish/process/form_helpers.dart';
+import 'package:textile_tracking/components/process/finish/process/long_hemming_weight.dart';
+import 'package:textile_tracking/components/process/finish/process/process_item_qty.dart';
 import 'package:textile_tracking/components/process/finish/process/qty_weight.dart';
 import 'package:textile_tracking/components/process/finish/process/sorting.dart';
 import 'package:textile_tracking/components/process/finish/process/weight.dart';
@@ -163,40 +165,18 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
     _initGradeControllers();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final good = parseSafe(widget.form['good_weight']);
-      final defect = parseSafe(widget.form['bs_weight']);
+      final items = widget.form['items'] ?? [];
 
-      if (good > 0 || defect > 0) {
+      if (items.isNotEmpty) {
         calculateLongHemmingWeight();
       }
 
       _syncGradesWithOptions();
 
-      // final semiFinishedProducts =
-      //     widget.processData['semifinished_products'] ?? [];
-
-      // if (semiFinishedProducts.isNotEmpty) {
-      //   widget.handleChangeInput(
-      //     'greige_item_id',
-      //     semiFinishedProducts[0]['id'],
-      //   );
-
-      //   widget.handleChangeInput(
-      //     'nama_greige_item',
-      //     semiFinishedProducts[0]['name'],
-      //   );
-
-      //   widget.handleChangeInput(
-      //     'sku_greige_item',
-      //     semiFinishedProducts[0]['code'],
-      //   );
-      // }
-
       _initializeSemiFinishedTab();
     });
 
-    final semiFinishedProducts =
-        widget.processData['semifinished_products'] ?? [];
+    final semiFinishedProducts = this.semiFinishedProducts;
 
     if (semiFinishedProducts.length > 1) {
       _semiFinishedTabController = TabController(
@@ -208,24 +188,24 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
         if (!_semiFinishedTabController!.indexIsChanging) {
           final selectedIndex = _semiFinishedTabController!.index;
 
-          final items = widget.processData['semifinished_products'];
+          final semiFinishedProducts = this.semiFinishedProducts;
 
           setState(() {
             _selectedSemiFinishedIndex = selectedIndex;
 
             widget.handleChangeInput(
               'greige_item_id',
-              items[selectedIndex]['id'],
+              semiFinishedProducts[selectedIndex]['id'],
             );
 
             widget.handleChangeInput(
               'nama_greige_item',
-              items[selectedIndex]['name'],
+              semiFinishedProducts[selectedIndex]['name'],
             );
 
             widget.handleChangeInput(
               'sku_greige_item',
-              items[selectedIndex]['code'],
+              semiFinishedProducts[selectedIndex]['code'],
             );
           });
         }
@@ -463,13 +443,23 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
   }
 
   void calculateLongHemmingWeight() {
-    final good = parseSafe(widget.form['good_weight']);
-    final defect = parseSafe(widget.form['bs_weight']);
+    final items = List<Map<String, dynamic>>.from(widget.form['items'] ?? []);
 
-    final total = good + defect;
+    double total = 0;
+
+    for (final item in items) {
+      final good = parseSafe(item['good_weight']);
+      final defect = parseSafe(item['bs_weight']);
+
+      total += good + defect;
+    }
 
     setState(() {
-      widget.handleChangeInput('weight', total.toStringAsFixed(2));
+      widget.handleChangeInput(
+        'weight',
+        total.toStringAsFixed(2),
+      );
+
       widget.weight.value = TextEditingValue(
         text: total.toStringAsFixed(2),
         selection: TextSelection.collapsed(
@@ -505,8 +495,7 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
   }
 
   void _initializeSemiFinishedTab() {
-    final semiFinishedProducts =
-        widget.processData['semifinished_products'] ?? [];
+    final semiFinishedProducts = this.semiFinishedProducts;
 
     // dispose controller lama
     _semiFinishedTabController?.dispose();
@@ -522,24 +511,24 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
         if (!_semiFinishedTabController!.indexIsChanging) {
           final selectedIndex = _semiFinishedTabController!.index;
 
-          final items = widget.processData['semifinished_products'];
+          final semiFinishedProducts = this.semiFinishedProducts;
 
           setState(() {
             _selectedSemiFinishedIndex = selectedIndex;
 
             widget.handleChangeInput(
               'greige_item_id',
-              items[selectedIndex]['id'],
+              semiFinishedProducts[selectedIndex]['id'],
             );
 
             widget.handleChangeInput(
               'nama_greige_item',
-              items[selectedIndex]['name'],
+              semiFinishedProducts[selectedIndex]['name'],
             );
 
             widget.handleChangeInput(
               'sku_greige_item',
-              items[selectedIndex]['code'],
+              semiFinishedProducts[selectedIndex]['code'],
             );
           });
         }
@@ -573,33 +562,53 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
   }
 
   Map<String, dynamic>? get selectedSemiFinishedItem {
-    final items = widget.processData['semifinished_products'];
+    final semiFinishedProducts = this.semiFinishedProducts;
 
-    if (items == null || items.isEmpty) {
+    if (semiFinishedProducts == null || semiFinishedProducts.isEmpty) {
       return null;
     }
 
-    return items[_selectedSemiFinishedIndex];
+    return semiFinishedProducts[_selectedSemiFinishedIndex];
   }
 
   bool get isLoadingSemiFinished {
     final hasSelectedWO = widget.form['wo_id'] != null;
 
-    final semiFinishedProducts =
-        widget.processData['semifinished_products'] ?? [];
+    final semiFinishedProducts = this.semiFinishedProducts;
 
     return hasSelectedWO && semiFinishedProducts.isEmpty;
+  }
+
+  List<dynamic> get semiFinishedProducts {
+    if (widget.label == 'Dyeing') {
+      return (widget.processData['semifinished_products'] ?? [])
+          .where((item) => item != null)
+          .toList();
+    }
+
+    final items = widget.processData['items'] ?? [];
+
+    return items
+        .map((item) => item['semifinished_product'])
+        .where((item) => item != null)
+        .toList();
   }
 
   @override
   void didUpdateWidget(covariant FormItems oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    final oldItems = oldWidget.processData['semifinished_products'];
+    final oldItems = (oldWidget.processData['items'] ?? [])
+        .map((item) => item['semifinished_product'])
+        .where((item) => item != null)
+        .toList();
 
-    final newItems = widget.processData['semifinished_products'];
+    final newItems = (widget.processData['items'] ?? [])
+        .map((item) => item['semifinished_product'])
+        .where((item) => item != null)
+        .toList();
 
-    if (oldItems != newItems) {
+    if (oldItems.toString() != newItems.toString()) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _initializeSemiFinishedTab();
       });
@@ -616,8 +625,7 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final isSorting = widget.label == 'Sorting';
     final hasSelectedWO = widget.form['wo_id'] != null;
-    final semiFinishedProducts =
-        widget.processData['semifinished_products'] ?? [];
+    final semiFinishedProducts = this.semiFinishedProducts;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -770,37 +778,6 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
                 validateWeight: widget.validateWeight,
                 calculateLongHemmingWeight: calculateLongHemmingWeight,
               ),
-            // if (widget.data != null && widget.forDyeing == true)
-            //   Expanded(
-            //     child: TemplateCard(
-            //       title: 'Lot Celup',
-            //       icon: Icons.invert_colors_on_outlined,
-            //       child: Column(
-            //         crossAxisAlignment: CrossAxisAlignment.start,
-            //         children: [
-            //           Row(
-            //             children: [
-            //               Expanded(
-            //                 flex: 2,
-            //                 child: Column(
-            //                   children: [
-            //                     TextForm(
-            //                       label: 'No. Lot Celup',
-            //                       controller: widget.dyeingLotNo,
-            //                       handleChange: (value) {
-            //                         widget.handleChangeInput(
-            //                             'lot_celup_no', value);
-            //                       },
-            //                     ),
-            //                   ],
-            //                 ),
-            //               ),
-            //             ].separatedBy(CustomTheme().hGap('xl')),
-            //           ),
-            //         ].separatedBy(CustomTheme().vGap('lg')),
-            //       ),
-            //     ),
-            //   ),
           ].separatedBy(CustomTheme().hGap('xl')),
         ),
         if (widget.data != null &&
@@ -827,92 +804,139 @@ class _FormItemsState extends State<FormItems> with TickerProviderStateMixin {
                 widget.label != 'Tumbler' &&
                 widget.label != 'Stenter' &&
                 widget.label != 'Long Slitting')
-              QtyWeightSection(
-                form: widget.form,
-                label: widget.label,
-                withItemGrade: widget.withItemGrade,
-                withQtyAndWeight: widget.withQtyAndWeight,
-                forDyeing: widget.forDyeing,
-                qty: widget.qty,
-                dyeingQty: widget.dyeingQty,
-                weightGood: widget.weightGood,
-                weightDefect: widget.weightDefect,
-                qtyWarning: widget.qtyWarning,
-                weightWarning: widget.weightWarning,
-                onChange: widget.handleChangeInput,
-                validateQty: widget.validateQty,
-                validateWeight: widget.validateWeight,
-                calculateLongHemmingWeight: calculateLongHemmingWeight,
-              ),
-            if (isLoadingSemiFinished)
-              Expanded(
-                child: SizedBox(
-                  height: 120,
-                  child: Center(
-                    child: CircularProgressIndicator(),
+              // QtyWeightSection(
+              //   form: widget.form,
+              //   label: widget.label,
+              //   withItemGrade: widget.withItemGrade,
+              //   withQtyAndWeight: widget.withQtyAndWeight,
+              //   forDyeing: widget.forDyeing,
+              //   qty: widget.qty,
+              //   dyeingQty: widget.dyeingQty,
+              //   weightGood: widget.weightGood,
+              //   weightDefect: widget.weightDefect,
+              //   qtyWarning: widget.qtyWarning,
+              //   weightWarning: widget.weightWarning,
+              //   onChange: widget.handleChangeInput,
+              //   validateQty: widget.validateQty,
+              //   validateWeight: widget.validateWeight,
+              //   calculateLongHemmingWeight: calculateLongHemmingWeight,
+              // ),
+              if (isLoadingSemiFinished)
+                Expanded(
+                  child: SizedBox(
+                    height: 120,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
+                )
+              else if (widget.label == 'Long Hemming')
+                LongHemmingItemsWeightSection(
+                  items: widget.form['items'] ?? [],
+                  onChange: (index, key, value) {
+                    final items =
+                        List<Map<String, dynamic>>.from(widget.form['items']);
+
+                    items[index][key] = value;
+
+                    widget.handleChangeInput('items', items);
+
+                    calculateLongHemmingWeight();
+                  },
+                )
+              else
+                ProcessItemsQtySection(
+                  label: widget.label,
+                  items: widget.form['items'] ?? [],
+                  onChange: (index, key, value) {
+                    final items = List<Map<String, dynamic>>.from(
+                      widget.form['items'],
+                    );
+
+                    items[index][key] = value;
+
+                    widget.handleChangeInput(
+                      'items',
+                      items,
+                    );
+                  },
                 ),
-              )
-            else if (semiFinishedProducts.length > 1)
-              Expanded(
-                child: TemplateCard(
-                  title: 'Produk Setengah Jadi',
-                  icon: Icons.inventory_2_outlined,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (_semiFinishedTabController != null)
-                        TabBar(
-                          tabAlignment: TabAlignment.start,
-                          controller: _semiFinishedTabController,
-                          isScrollable: true,
-                          labelColor: Colors.black,
-                          tabs: List.generate(
-                            semiFinishedProducts.length,
-                            (index) {
-                              return Tab(
-                                text: semiFinishedProducts[index]['code']
-                                        ?.toString()
-                                        .split('-')
-                                        .first ??
-                                    'Item ${index + 1}',
-                              );
-                            },
+            if (widget.label != 'Long Hemming' &&
+                widget.label != 'Cross Cutting' &&
+                widget.label != 'Sewing' &&
+                widget.label != 'Press' &&
+                widget.label != 'Tumbler' &&
+                widget.label != 'Stenter' &&
+                widget.label != 'Long Slitting')
+              if (isLoadingSemiFinished)
+                Expanded(
+                  child: SizedBox(
+                    height: 120,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                )
+              else if (semiFinishedProducts.isNotEmpty)
+                Expanded(
+                  child: TemplateCard(
+                    title: 'Produk Setengah Jadi',
+                    icon: Icons.inventory_2_outlined,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (_semiFinishedTabController != null)
+                          TabBar(
+                            tabAlignment: TabAlignment.start,
+                            controller: _semiFinishedTabController,
+                            isScrollable: true,
+                            labelColor: Colors.black,
+                            tabs: List.generate(
+                              semiFinishedProducts.length,
+                              (index) {
+                                return Tab(
+                                  text: semiFinishedProducts[index]['code']
+                                          ?.toString()
+                                          .split('-')
+                                          .first ??
+                                      'Item ${index + 1}',
+                                );
+                              },
+                            ),
+                          ),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey.shade200,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                selectedSemiFinishedItem?['code'] ?? '-',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                selectedSemiFinishedItem?['name'] ?? '-',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Colors.grey.shade200,
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              selectedSemiFinishedItem?['code'] ?? '-',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              selectedSemiFinishedItem?['name'] ?? '-',
-                              style: TextStyle(
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
             // if (widget.data != null &&
             //     (widget.forDyeing == true ||
             //         widget.forSewing == true ||

@@ -2,6 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/detail/sorting_detail_grade.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/card/list_item.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
@@ -83,6 +84,25 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
       if (word.isEmpty) return word;
       return word[0].toUpperCase() + word.substring(1);
     }).join(' ');
+  }
+
+  double parseSafe(dynamic value) {
+    if (value == null) {
+      return 0;
+    }
+
+    if (value is int) {
+      return value.toDouble();
+    }
+
+    if (value is double) {
+      return value;
+    }
+
+    return double.tryParse(
+          value.toString(),
+        ) ??
+        0;
   }
 
   @override
@@ -666,268 +686,127 @@ Ringkasan Sorting
         0;
 
     /// 📊 Calculate Total Qty Sorting (sum of all grades + vermak)
-    int totalGrades = 0;
-    int gradeAQty = 0;
-    int gradeBQty = 0;
-    int gradeBSQty = 0;
+    int totalRepair = 0;
 
-    if (widget.existingGrades != null && widget.existingGrades.isNotEmpty) {
-      for (var grade in widget.existingGrades) {
-        final qty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
-        totalGrades += qty;
+    int totalGradeA = 0;
+    int totalGradeB = 0;
+    int totalGradeBS = 0;
 
-        final gradeName =
-            grade['item_grade']['code']?.toString().toLowerCase() ?? '';
-        if (gradeName.contains('a')) {
-          gradeAQty = qty;
-        } else if (gradeName.contains('b') && !gradeName.contains('bs')) {
-          gradeBQty = qty;
-        } else if (gradeName.contains('bs')) {
-          gradeBSQty = qty;
+    final grades = widget.data['grades'] ?? [];
+
+    for (final grade in grades) {
+      final String code =
+          (grade['item_grade']?['code'] ?? '').toString().toUpperCase();
+
+      final List items = grade['items'] ?? [];
+
+      for (final item in items) {
+        final int qty = parseSafe(
+          item['qty'],
+        ).toInt();
+
+        if (code == 'A') {
+          totalGradeA += qty;
+        } else if (code == 'B') {
+          totalGradeB += qty;
+        } else if (code == 'BS') {
+          final List defects = item['defects'] ?? [];
+
+          final int totalDefects = defects.fold<int>(
+            0,
+            (int sum, defect) {
+              final int defectQty = parseSafe(
+                defect['qty'],
+              ).toInt();
+
+              return sum + defectQty;
+            },
+          );
+
+          totalGradeBS += totalDefects;
         }
+
+        final int spraying = parseSafe(
+          item['spraying'],
+        ).toInt();
+
+        final int rework = parseSafe(
+          item['rework_long_hemming'],
+        ).toInt();
+
+        final int combing = parseSafe(
+          item['combing'],
+        ).toInt();
+
+        totalRepair += spraying + rework + combing;
       }
     }
 
-    if (widget.data['sorting'] != null && widget.data['sorting'].isNotEmpty) {
-      for (var grade in widget.data['sorting']['grades']) {
-        final qty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
-        totalGrades += qty;
-
-        final gradeName =
-            grade['item_grade']['code']?.toString().toLowerCase() ?? '';
-        if (gradeName.contains('a')) {
-          gradeAQty = qty;
-        } else if (gradeName.contains('b') && !gradeName.contains('bs')) {
-          gradeBQty = qty;
-        } else if (gradeName.contains('bs')) {
-          gradeBSQty = qty;
-        }
-      }
-    }
-
-    int totalQtySorting = totalGrades + totalVermak;
+    final totalSorting = totalGradeA + totalGradeB + totalGradeBS + totalRepair;
 
     return Row(
       children: [
-        // Grade A
-        Expanded(
-          flex: 1,
-          child: Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade300),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Grade A',
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade600,
-                      fontWeight: FontWeight.w500),
-                ),
-                SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      formatNumber(gradeAQty),
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87),
-                    ),
-                    Text(
-                      'PCS',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: CustomTheme().fontWeight('semibold'),
-                          color: Colors.grey[600]),
-                    ),
-                  ].separatedBy(CustomTheme().hGap('md')),
-                ),
-              ],
-            ),
+        _buildSummaryItem(
+          'Grade A',
+          totalGradeA,
+        ),
+        _buildSummaryItem(
+          'Grade B',
+          totalGradeB,
+        ),
+        _buildSummaryItem(
+          'Tipe BS',
+          totalGradeBS,
+        ),
+        _buildSummaryItem(
+          'Perbaikan',
+          totalRepair,
+        ),
+        _buildSummaryItem(
+          'Hasil Sortir',
+          totalSorting,
+        ),
+      ].separatedBy(
+        SizedBox(width: 12),
+      ),
+    );
+  }
+
+  Widget _buildSummaryItem(
+    String title,
+    dynamic value,
+  ) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.grey.shade300,
+          ),
+          borderRadius: BorderRadius.circular(
+            12,
           ),
         ),
-        SizedBox(width: 8),
-        // Grade B
-        Expanded(
-          flex: 1,
-          child: Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade300),
+        child: Column(
+          children: [
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Grade B',
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade600,
-                      fontWeight: FontWeight.w500),
-                ),
-                SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      formatNumber(gradeBQty),
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87),
-                    ),
-                    Text(
-                      'PCS',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: CustomTheme().fontWeight('semibold'),
-                          color: Colors.grey[600]),
-                    ),
-                  ].separatedBy(CustomTheme().hGap('md')),
-                ),
-              ],
+            SizedBox(height: 8),
+            Text(
+              formatNumber(value).toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
             ),
-          ),
+          ],
         ),
-        SizedBox(width: 8),
-        // Grade BS
-        Expanded(
-          flex: 1,
-          child: Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade300),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Tipe BS (BS-an)',
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade600,
-                      fontWeight: FontWeight.w500),
-                ),
-                SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      formatNumber(gradeBSQty),
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87),
-                    ),
-                    Text(
-                      'PCS',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: CustomTheme().fontWeight('semibold'),
-                          color: Colors.grey[600]),
-                    ),
-                  ].separatedBy(CustomTheme().hGap('md')),
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(width: 8),
-        // Perbaikan
-        Expanded(
-          flex: 1,
-          child: Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade300),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Perbaikan',
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade600,
-                      fontWeight: FontWeight.w500),
-                ),
-                SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      formatNumber(totalVermak),
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87),
-                    ),
-                    Text(
-                      'PCS',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: CustomTheme().fontWeight('semibold'),
-                          color: Colors.grey[600]),
-                    ),
-                  ].separatedBy(CustomTheme().hGap('md')),
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(width: 8),
-        // Hasil Sortir
-        Expanded(
-          flex: 1,
-          child: Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Hasil Sortir',
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade600,
-                      fontWeight: FontWeight.w500),
-                ),
-                SizedBox(height: 4),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      formatNumber(totalQtySorting),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      'PCS',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: CustomTheme().fontWeight('semibold'),
-                          color: Colors.grey[600]),
-                    ),
-                  ].separatedBy(
-                    CustomTheme().hGap('md'),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -1736,6 +1615,8 @@ Catatan WO
     final bool isQtyProcess =
         widget.label == 'Cross Cutting' || widget.label == 'Sewing';
 
+    final bool isPacking = widget.label == 'Packing';
+
     Widget buildItem(dynamic item) {
       final semiFinished = item['semifinished_product'];
 
@@ -1756,77 +1637,103 @@ Catatan WO
           ) ??
           0;
 
+      final weight = double.tryParse(
+            item['weight_grade_a']?.toString() ?? '0',
+          ) ??
+          0;
+
+      final totalWeight = double.tryParse(
+            item['total_weight']?.toString() ?? '0',
+          ) ??
+          0;
+
+      final weightPerDozen = double.tryParse(
+            item['weight_per_dozen']?.toString() ?? '0',
+          ) ??
+          0;
+
+      final gsm = double.tryParse(
+            item['gsm']?.toString() ?? '0',
+          ) ??
+          0;
+
       return SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// Semi Finished
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.orange.shade50,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: Colors.orange.shade100,
+            if (semiFinished != null)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.orange.shade100,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Produk Setengah Jadi',
+                      style: TextStyle(
+                        fontWeight: CustomTheme().fontWeight(
+                          'semibold',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      semiFinished['code'] ?? '-',
+                    ),
+                    Text(
+                      semiFinished['name'] ?? '-',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Produk Setengah Jadi',
-                    style: TextStyle(
-                      fontWeight: CustomTheme().fontWeight('semibold'),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    semiFinished?['code'] ?? '-',
-                  ),
-                  Text(
-                    semiFinished?['name'] ?? '-',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
             /// Finished Product
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.green.shade50,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: Colors.green.shade100,
+            if (finished != null)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.green.shade100,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Produk Jadi',
+                      style: TextStyle(
+                        fontWeight: CustomTheme().fontWeight(
+                          'semibold',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      finished['code'] ?? '-',
+                    ),
+                    Text(
+                      finished['name'] ?? '-',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Produk Jadi',
-                    style: TextStyle(
-                      fontWeight: CustomTheme().fontWeight('semibold'),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    finished?['code'] ?? '-',
-                  ),
-                  Text(
-                    finished?['name'] ?? '-',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
             /// LONG HEMMING
             if (isLongHemming)
@@ -1837,7 +1744,9 @@ Catatan WO
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: Colors.green.shade50,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(
+                          8,
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1848,12 +1757,16 @@ Catatan WO
                               color: Colors.grey.shade600,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(
+                            height: 4,
+                          ),
                           Text(
                             '${formatNumber(goodWeight)} KG',
                             style: TextStyle(
                               fontSize: 18,
-                              fontWeight: CustomTheme().fontWeight('bold'),
+                              fontWeight: CustomTheme().fontWeight(
+                                'bold',
+                              ),
                               color: Colors.green.shade700,
                             ),
                           ),
@@ -1867,7 +1780,9 @@ Catatan WO
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: Colors.red.shade50,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(
+                          8,
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1878,12 +1793,16 @@ Catatan WO
                               color: Colors.grey.shade600,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(
+                            height: 4,
+                          ),
                           Text(
                             '${formatNumber(bsWeight)} KG',
                             style: TextStyle(
                               fontSize: 18,
-                              fontWeight: CustomTheme().fontWeight('bold'),
+                              fontWeight: CustomTheme().fontWeight(
+                                'bold',
+                              ),
                               color: Colors.red.shade700,
                             ),
                           ),
@@ -1917,11 +1836,210 @@ Catatan WO
                       '${formatNumber(qty)} PCS',
                       style: TextStyle(
                         fontSize: 20,
-                        fontWeight: CustomTheme().fontWeight('bold'),
+                        fontWeight: CustomTheme().fontWeight(
+                          'bold',
+                        ),
                         color: Colors.blue.shade700,
                       ),
                     ),
                   ],
+                ),
+              ),
+
+            /// PACKING
+            if (isPacking)
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(
+                            12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade50,
+                            borderRadius: BorderRadius.circular(
+                              8,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Hasil Packing',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                '${formatNumber(qty)} PCS',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: CustomTheme().fontWeight(
+                                    'bold',
+                                  ),
+                                  color: Colors.blue.shade700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(
+                            12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.purple.shade50,
+                            borderRadius: BorderRadius.circular(
+                              8,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Gramasi',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                formatNumber(gsm),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: CustomTheme().fontWeight(
+                                    'bold',
+                                  ),
+                                  color: Colors.purple.shade700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(
+                            12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green.shade50,
+                            borderRadius: BorderRadius.circular(
+                              8,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Berat per Lusin',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${formatNumber(weightPerDozen)} KG',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: CustomTheme().fontWeight(
+                                    'bold',
+                                  ),
+                                  color: Colors.teal.shade700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(
+                            12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.shade50,
+                            borderRadius: BorderRadius.circular(
+                              8,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Berat Grade A',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                '${formatNumber(weight)} KG',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: CustomTheme().fontWeight(
+                                    'bold',
+                                  ),
+                                  color: Colors.orange.shade700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.teal.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Total Berat',
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          '${formatNumber(totalWeight)} KG',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: CustomTheme().fontWeight(
+                              'bold',
+                            ),
+                            color: Colors.green.shade700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ].separatedBy(
+                  CustomTheme().vGap('md'),
                 ),
               ),
           ].separatedBy(
@@ -1950,19 +2068,21 @@ Catatan WO
               isScrollable: true,
               dividerColor: Colors.transparent,
               tabAlignment: TabAlignment.start,
-              tabs: items.asMap().entries.map((entry) {
-                final index = entry.key;
-                final item = entry.value;
+              tabs: items.asMap().entries.map(
+                (entry) {
+                  final index = entry.key;
+                  final item = entry.value;
 
-                return Tab(
-                  text: item['finished_product']?['code'] ??
-                      'Produk ${index + 1}',
-                );
-              }).toList(),
+                  return Tab(
+                    text: item['finished_product']?['code'] ??
+                        'Produk ${index + 1}',
+                  );
+                },
+              ).toList(),
             ),
           ),
           SizedBox(
-            height: 320,
+            height: isPacking ? 520 : 320,
             child: TabBarView(
               children: items.map((item) {
                 return Padding(
@@ -2016,25 +2136,53 @@ Catatan WO
             icon: Icons.replay_outlined,
             child: _buildReworkInfo(true),
           ),
+        // if (widget.label == 'Sorting')
+        //   _buildInfoCard(
+        //     title: 'Informasi Perbaikan',
+        //     icon: Icons.grade_outlined,
+        //     child: _buildReworkLongHemming(true),
+        //   ),
+        // if (widget.label == 'Sorting')
+        //   _buildInfoCard(
+        //     title: 'Informasi Tipe BS',
+        //     icon: Icons.attachment_outlined,
+        //     child: _buildTypeBs(true),
+        //   ),
+        // if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
+        //   _buildInfoCard(
+        //     title: 'Informasi Grade',
+        //     icon: Icons.grade_outlined,
+        //     child: _buildGradeInfo(true),
+        //   ),
         if (widget.label == 'Sorting')
           _buildInfoCard(
-            title: 'Informasi Perbaikan',
-            icon: Icons.grade_outlined,
-            child: _buildReworkLongHemming(true),
-          ),
-        if (widget.label == 'Sorting')
-          _buildInfoCard(
-            title: 'Informasi Tipe BS',
+            title: 'Ringkasan Sortir',
             icon: Icons.attachment_outlined,
-            child: _buildTypeBs(true),
+            child: _buildTotalSorting(true),
           ),
-        if (widget.withItemGrade == true && widget.existingGrades.isNotEmpty)
-          _buildInfoCard(
-            title: 'Informasi Grade',
-            icon: Icons.grade_outlined,
-            child: _buildGradeInfo(true),
+        if (widget.label == 'Packing')
+          Column(
+            children: [
+              _buildInfoCard(
+                title: 'Informasi Packing',
+                icon: Icons.inventory_2_outlined,
+                child: _buildPackingSummaryInfo(),
+              ),
+              _buildInfoCard(
+                title: 'Ringkasan Sortir',
+                icon: Icons.attachment_outlined,
+                child: _buildPackingSortingSummary(),
+              ),
+            ].separatedBy(
+              CustomTheme().vGap('xl'),
+            ),
           ),
-        if ((widget.label != 'Sorting' || widget.label != 'Packing'))
+        if (widget.label == 'Sorting')
+          Padding(
+            padding: CustomTheme().padding('card'),
+            child: SortingDetailGradeList(sortingData: widget.data),
+          ),
+        if ((widget.label != 'Sorting' && widget.label != 'Packing'))
           _buildInfoCard(
             title: 'Produk Setengah Jadi',
             icon: Icons.inventory_2_outlined,
@@ -2042,7 +2190,8 @@ Catatan WO
           ),
         if (widget.label == 'Long Hemming' ||
             widget.label == 'Cross Cutting' ||
-            widget.label == 'Sewing')
+            widget.label == 'Sewing' ||
+            widget.label == 'Packing')
           _buildInfoCard(
             title: widget.label == 'Long Hemming'
                 ? 'Berat per Produk'
@@ -2050,18 +2199,13 @@ Catatan WO
             icon: Icons.scale_outlined,
             child: _buildItemResultPerProduct(true),
           ),
-        if (widget.label == 'Sorting' || widget.label == 'Packing')
-          _buildInfoCard(
-            title: 'Ringkasan Sortir',
-            icon: Icons.attachment_outlined,
-            child: _buildTotalSorting(true),
-          ),
-        if (widget.label == 'Packing')
-          _buildInfoCard(
-            title: 'Informasi Packing',
-            icon: Icons.scale_outlined,
-            child: _buildWeightInfo(true),
-          ),
+
+        // if (widget.label == 'Packing')
+        //   _buildInfoCard(
+        //     title: 'Informasi Packing',
+        //     icon: Icons.scale_outlined,
+        //     child: _buildWeightInfo(true),
+        //   ),
         _buildInfoCard(
           title: 'Material WO',
           icon: Icons.inventory_2_outlined,
@@ -2150,11 +2294,15 @@ Catatan WO
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(false),
           ),
-        if (widget.label == 'Long Hemming')
+        if (widget.label == 'Long Hemming' ||
+            widget.label == 'Cross Cutting' ||
+            widget.label == 'Sewing')
           _buildInfoCard(
-            title: 'Berat per Produk',
+            title: widget.label == 'Long Hemming'
+                ? 'Berat per Produk'
+                : 'Qty per Produk',
             icon: Icons.scale_outlined,
-            child: _buildWeightPerProduct(false),
+            child: _buildItemResultPerProduct(false),
           ),
         if (widget.label == 'Sorting' || widget.label == 'Packing')
           _buildInfoCard(
@@ -2545,6 +2693,297 @@ Catatan WO
             ),
           ].separatedBy(CustomTheme().hGap('md')),
         ),
+      ),
+    );
+  }
+
+  Widget _buildPackingSortingSummary() {
+    final sorting = widget.data['sorting'];
+
+    if (sorting == null) {
+      return const SizedBox();
+    }
+
+    final grades = sorting['grades'] ?? [];
+
+    double totalGradeA = 0;
+    double totalGradeB = 0;
+    double totalBS = 0;
+
+    final Map<String, double> defectTotals = {};
+
+    for (final grade in grades) {
+      final gradeCode = grade['item_grade']?['code']?.toString().toUpperCase();
+
+      final items = grade['items'] ?? [];
+
+      for (final item in items) {
+        final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
+
+        /// GRADE
+        if (gradeCode == 'A') {
+          totalGradeA += qty;
+        }
+
+        if (gradeCode == 'B') {
+          totalGradeB += qty;
+        }
+
+        if (gradeCode == 'BS') {
+          totalBS += qty;
+        }
+
+        /// DEFECT / TIPE BS
+        final defects = item['defects'] ?? [];
+
+        for (final defect in defects) {
+          final defectName = defect['type']?['name'] ?? 'Unknown';
+
+          final defectQty = double.tryParse(
+                defect['qty']?.toString() ?? '0',
+              ) ??
+              0;
+
+          defectTotals[defectName] =
+              (defectTotals[defectName] ?? 0) + defectQty;
+        }
+      }
+    }
+
+    final grandTotal = totalGradeA + totalGradeB + totalBS;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          spacing: 16,
+          children: [
+            _buildSummaryCard(
+              'Grade A',
+              totalGradeA,
+              Icons.check_circle_outline,
+              Colors.green,
+            ),
+            _buildSummaryCard(
+              'Grade B',
+              totalGradeB,
+              Icons.warning_amber_outlined,
+              Colors.orange,
+            ),
+            _buildSummaryCard(
+              'BS',
+              totalBS,
+              Icons.cancel_outlined,
+              Colors.red,
+            ),
+            _buildSummaryCard(
+              'Total',
+              grandTotal,
+              Icons.inventory_2_outlined,
+              Colors.blue,
+            ),
+          ],
+        ),
+        // if (defectTotals.isNotEmpty) ...[
+        //   CustomTheme().vGap('xl'),
+        //   Text(
+        //     'Tipe BS',
+        //     style: TextStyle(
+        //       fontWeight: CustomTheme().fontWeight('semibold'),
+        //     ),
+        //   ),
+        //   CustomTheme().vGap('md'),
+        //   Wrap(
+        //     spacing: 12,
+        //     runSpacing: 12,
+        //     children: defectTotals.entries.map((entry) {
+        //       return Container(
+        //         padding: const EdgeInsets.symmetric(
+        //           horizontal: 14,
+        //           vertical: 10,
+        //         ),
+        //         decoration: BoxDecoration(
+        //           color: Colors.red.shade50,
+        //           borderRadius: BorderRadius.circular(10),
+        //           border: Border.all(
+        //             color: Colors.red.shade100,
+        //           ),
+        //         ),
+        //         child: Row(
+        //           mainAxisSize: MainAxisSize.min,
+        //           children: [
+        //             Icon(
+        //               Icons.error_outline,
+        //               size: 18,
+        //               color: Colors.red.shade700,
+        //             ),
+        //             const SizedBox(width: 8),
+        //             Text(
+        //               '${entry.key} : ${entry.value.toInt()}',
+        //               style: TextStyle(
+        //                 fontWeight: CustomTheme().fontWeight(
+        //                   'medium',
+        //                 ),
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //       );
+        //     }).toList(),
+        //   ),
+        // ],
+      ],
+    );
+  }
+
+  Widget _buildSummaryCard(
+    String title,
+    double value,
+    IconData icon,
+    Color color,
+  ) {
+    return Container(
+      width: 180,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: color.withOpacity(0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Icon(
+          //   icon,
+          //   color: color,
+          // ),
+          // const SizedBox(height: 12),
+          Text(
+            formatNumber(value.toInt().toString()),
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: CustomTheme().fontWeight('bold'),
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(title),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPackingSummaryInfo() {
+    final items = widget.data['items'] ?? [];
+
+    double totalPacking = 0;
+    double totalWeight = 0;
+
+    for (final item in items) {
+      totalPacking += parseSafe(item['qty']);
+
+      totalWeight += parseSafe(item['total_weight']);
+    }
+
+    return Row(
+      children: [
+        Expanded(
+          child: _buildPackingInfoCard(
+            title: 'Total Packing',
+            value: formatNumber(totalPacking),
+            subtitle: 'PCS',
+            icon: Icons.inventory_2_outlined,
+            color: Colors.blue,
+          ),
+        ),
+        Expanded(
+          child: _buildPackingInfoCard(
+            title: 'Total Berat',
+            value: formatNumber(totalWeight),
+            subtitle: 'KG',
+            icon: Icons.scale_outlined,
+            color: Colors.green,
+          ),
+        ),
+      ].separatedBy(
+        CustomTheme().hGap('lg'),
+      ),
+    );
+  }
+
+  Widget _buildPackingInfoCard({
+    required String title,
+    required String value,
+    required String subtitle,
+    required IconData icon,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: color.withOpacity(0.15),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              icon,
+              color: color,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: CustomTheme().fontWeight(
+                          'bold',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 3,
+                      ),
+                      child: Text(
+                        subtitle,
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -14,18 +14,19 @@ class CreatePacking extends StatelessWidget {
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
     final packing = Packing(
-      wo_id:
-          form['wo_id'] != null ? int.tryParse(form['wo_id'].toString()) : null,
-      notes: form['notes'],
-      status: form['status'],
-      start_time: form['start_time'],
-      end_time: form['end_time'],
-      start_by_id: form['start_by_id'] != null
-          ? int.tryParse(form['start_by_id'].toString())
-          : null,
-      end_by_id: form['end_by_id'],
-      attachments: form['attachments'],
-    );
+        wo_id: form['wo_id'] != null
+            ? int.tryParse(form['wo_id'].toString())
+            : null,
+        notes: form['notes'],
+        status: form['status'],
+        start_time: form['start_time'],
+        end_time: form['end_time'],
+        start_by_id: form['start_by_id'] != null
+            ? int.tryParse(form['start_by_id'].toString())
+            : null,
+        end_by_id: form['end_by_id'],
+        attachments: form['attachments'],
+        semifinished_products: form['semifinished_products'] ?? []);
 
     final message = await Provider.of<PackingService>(context, listen: false)
         .addItem(context, packing, isLoading);

@@ -5,271 +5,366 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
-class PackingEditSection extends StatefulWidget {
-  final Map form;
+class PackingSection extends StatefulWidget {
+  final Map data;
+  final Map processData;
 
-  final TextEditingController packingQty;
-  final TextEditingController weightPerDozen;
-  final TextEditingController gsm;
-  final TextEditingController weightGradeA;
-  final TextEditingController totalWeight;
-
-  final Function(String, dynamic) onChange;
-
-  final Function calculateGsm;
-  final Function calculateBeratA;
-  final Function calculateTotalBerat;
-
-  final buildSortingQty;
-
-  final woData;
-
-  const PackingEditSection(
-      {super.key,
-      required this.form,
-      required this.packingQty,
-      required this.weightPerDozen,
-      required this.gsm,
-      required this.weightGradeA,
-      required this.totalWeight,
-      required this.onChange,
-      required this.calculateGsm,
-      required this.calculateBeratA,
-      required this.calculateTotalBerat,
-      this.buildSortingQty,
-      this.woData});
+  const PackingSection({
+    super.key,
+    required this.data,
+    required this.processData,
+  });
 
   @override
-  State<PackingEditSection> createState() => _PackingEditSectionState();
+  State<PackingSection> createState() => _PackingSectionState();
 }
 
-class _PackingEditSectionState extends State<PackingEditSection> {
-  @override
-  Widget build(BuildContext context) {
+class _PackingSectionState extends State<PackingSection> {
+  double calculateGsmValue(double weightPerDozen) {
+    return weightPerDozen * 100;
+  }
+
+  String formatNumber(dynamic value) {
+    if (value == null) return '0';
+
+    final number = double.tryParse(value.toString()) ?? 0;
+
+    if (number % 1 == 0) {
+      return number.toInt().toString();
+    }
+
+    return number.toStringAsFixed(2);
+  }
+
+  Widget _buildSortingQty() {
+    final items = widget.processData['items'] ?? [];
+
+    double totalGradeA = 0;
+    double totalBS = 0;
+    double totalRepair = 0;
+
+    for (final item in items) {
+      totalGradeA +=
+          double.tryParse(item['grade_a_qty']?.toString() ?? '0') ?? 0;
+
+      totalBS += double.tryParse(item['bs_qty']?.toString() ?? '0') ?? 0;
+
+      totalRepair +=
+          double.tryParse(item['repair_qty']?.toString() ?? '0') ?? 0;
+    }
+
     return Column(
       children: [
-        /// ✅ HASIL SORTIR
-        TemplateCard(
-          title: 'Rincian Hasil Sortir',
-          icon: Icons.sort_outlined,
-          child: _buildSortingQty(),
-        ),
-
-        /// ✅ PACKING INPUT
-        TemplateCard(
-          title: 'Packing',
-          icon: Icons.layers_outlined,
-          child: Row(
-            children: [
-              Expanded(
-                child: TextForm(
-                  label: 'Total Packing',
-                  controller: widget.packingQty,
-                  initialValue: widget.form['qty']?.toString() ?? '0',
-                  isSorting: true,
-                  isNumber: true,
-                  handleChange: (val) {
-                    widget.onChange('qty', val);
-                    setState(() {
-                      widget.calculateBeratA();
-                    });
-                  },
-                ),
+        Row(
+          children: [
+            Expanded(
+              child: _summaryItem(
+                'Grade A',
+                formatNumber(totalGradeA),
               ),
-              Expanded(
-                child: TextForm(
-                  label: 'Berat / Lusin',
-                  controller: widget.weightPerDozen,
-                  initialValue:
-                      widget.form['weight_per_dozen']?.toString() ?? '0',
-                  handleChange: (val) {
-                    widget.onChange('weight_per_dozen', val);
-
-                    setState(() {
-                      widget.calculateGsm();
-                      widget.calculateBeratA();
-                      widget.calculateTotalBerat();
-                    });
-                  },
-                ),
+            ),
+            Expanded(
+              child: _summaryItem(
+                'BS',
+                formatNumber(totalBS),
               ),
-            ].separatedBy(CustomTheme().hGap('xl')),
+            ),
+            Expanded(
+              child: _summaryItem(
+                'Perbaikan',
+                formatNumber(totalRepair),
+              ),
+            ),
+          ].separatedBy(
+            CustomTheme().hGap('md'),
           ),
         ),
-
-        /// ✅ RESULT
-        TemplateCard(
-          title: 'Gramasi & Total',
-          icon: Icons.scale_outlined,
-          child: Row(
-            children: [
-              _readonly('GSM', widget.gsm),
-              _readonly('Berat A', widget.weightGradeA),
-              _readonly('Total', widget.totalWeight),
-            ].separatedBy(CustomTheme().hGap('xl')),
-          ),
-        ),
-      ].separatedBy(CustomTheme().vGap('lg')),
+      ],
     );
   }
 
-  Widget _readonly(String label, TextEditingController controller) {
-    return Expanded(
-      child: TextForm(
-        label: label,
-        isDisabled: true,
-        controller: controller,
+  Widget _summaryItem(String title, String value) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: CustomTheme().fontWeight('bold'),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(title),
+        ],
       ),
     );
   }
 
-  Widget _buildSortingQty() {
-    final gradesList =
-        widget.woData['processes'][10]['data'][0]['grades'] ?? [];
+  @override
+  Widget build(BuildContext context) {
+    final items = widget.data['items'] ?? [];
 
-    double getTotalAdditionalProcess() {
-      final data = widget.woData['processes']?[10]?['data']?[0];
-
-      if (data == null) return 0;
-
-      final rework = double.tryParse(
-            data['rework_long_hemming']?.toString() ?? '0',
-          ) ??
-          0;
-
-      final spraying = double.tryParse(
-            data['spraying']?.toString() ?? '0',
-          ) ??
-          0;
-
-      final combing = double.tryParse(
-            data['combing']?.toString() ?? '0',
-          ) ??
-          0;
-
-      return rework + spraying + combing;
-    }
-
-    final total = getTotalAdditionalProcess();
-
-    // Calculate total quantity
-    int totalQty = 0;
-    for (var grade in gradesList) {
-      final qty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
-      totalQty += qty;
-    }
-
-    final grandTotal = totalQty + total;
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
-        // Loop through grades
-        ...gradesList.asMap().entries.map((entry) {
-          final grade = entry.value;
-          final gradeName = grade['grade']?.toString() ?? '-';
-          final gradeQty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
-          final gradeUnit = grade['unit_code']?.toString() ?? '';
-
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8), // 👈 gap
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Grade $gradeName',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade700,
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
+        /// GLOBAL SORTING RESULT
+        TemplateCard(
+          title: 'Rincian Hasil Sortir',
+          icon: Icons.sort_outlined,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        _buildSortingQty(),
+                      ],
                     ),
-                    Text(
-                      '${formatNumber(gradeQty.toString())} $gradeUnit',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: CustomTheme().fontWeight('bold'),
-                      ),
-                    ),
-                  ],
+                  ),
+                ].separatedBy(
+                  CustomTheme().hGap('xl'),
                 ),
               ),
-            ),
-          );
-        }).toList(),
-        SizedBox(width: 12),
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Total Perbaikan',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade700,
-                    fontWeight: CustomTheme().fontWeight('semibold'),
-                  ),
-                ),
-                Text(
-                  '${formatNumber(total.toString())} PCS',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: CustomTheme().fontWeight('bold'),
-                  ),
-                ),
-              ],
+            ].separatedBy(
+              CustomTheme().vGap('lg'),
             ),
           ),
         ),
-        SizedBox(width: 16),
-        // Total
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Total',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade700,
-                    fontWeight: CustomTheme().fontWeight('bold'),
+
+        /// PER ITEM PACKING
+        DefaultTabController(
+          length: items.length,
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: TabBar(
+                  isScrollable: true,
+                  dividerColor: Colors.transparent,
+                  tabAlignment: TabAlignment.start,
+                  tabs: List.generate(
+                    items.length,
+                    (index) {
+                      final item = items[index];
+
+                      return Tab(
+                        text: item['finished_product']?['code'] ??
+                            'Produk ${index + 1}',
+                      );
+                    },
                   ),
                 ),
-                Text(
-                  '${formatNumber(grandTotal.toStringAsFixed(0))} ${gradesList.isNotEmpty ? gradesList[0]['unit_code']?.toString() ?? '' : ''}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: CustomTheme().fontWeight('bold'),
+              ),
+              SizedBox(
+                height: 600,
+                child: TabBarView(
+                  children: List.generate(
+                    items.length,
+                    (index) {
+                      final item = items[index];
+
+                      final qtyController = TextEditingController(
+                        text: item['qty']?.toString() ?? '0',
+                      );
+
+                      final weightPerDozenController = TextEditingController(
+                        text: item['weight_per_dozen']?.toString() ?? '0',
+                      );
+
+                      return SingleChildScrollView(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Column(
+                          children: [
+                            /// PRODUCT INFO
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.green.shade50,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: Colors.green.shade100,
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Produk Jadi',
+                                    style: TextStyle(
+                                      fontWeight: CustomTheme().fontWeight(
+                                        'semibold',
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    item['finished_product']?['code'] ?? '-',
+                                  ),
+                                  Text(
+                                    item['finished_product']?['name'] ?? '-',
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            /// PACKING
+                            TemplateCard(
+                              title: 'Packing',
+                              icon: Icons.layers_outlined,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: TextForm(
+                                      label: 'Total Packing (PCS)',
+                                      req: false,
+                                      isNumber: true,
+                                      isSorting: true,
+                                      controller: qtyController,
+                                      initialValue:
+                                          item['qty']?.toString() ?? '0',
+                                      handleChange: (value) {
+                                        final qty = double.tryParse(value) ?? 0;
+
+                                        item['qty'] = qty;
+
+                                        final weightPerDozen = double.tryParse(
+                                              weightPerDozenController.text,
+                                            ) ??
+                                            0;
+
+                                        final beratGradeA =
+                                            (qty / 12) * weightPerDozen;
+
+                                        item['weight_grade_a'] = beratGradeA;
+
+                                        item['total_weight'] = beratGradeA;
+
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: TextForm(
+                                      label: 'Berat 1 Lusin (KG)',
+                                      req: false,
+                                      isSorting: true,
+                                      isNumber: true,
+                                      controller: weightPerDozenController,
+                                      initialValue: item['weight_per_dozen']
+                                              ?.toString() ??
+                                          '0',
+                                      handleChange: (value) {
+                                        final weightPerDozen =
+                                            double.tryParse(value) ?? 0;
+
+                                        item['weight_per_dozen'] =
+                                            weightPerDozen;
+
+                                        final qty = double.tryParse(
+                                              qtyController.text,
+                                            ) ??
+                                            0;
+
+                                        item['gsm'] = calculateGsmValue(
+                                          weightPerDozen,
+                                        );
+
+                                        final beratGradeA =
+                                            (qty / 12) * weightPerDozen;
+
+                                        item['weight_grade_a'] = beratGradeA;
+
+                                        item['total_weight'] = beratGradeA;
+
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                ].separatedBy(
+                                  CustomTheme().hGap('xl'),
+                                ),
+                              ),
+                            ),
+
+                            /// RESULT
+                            TemplateCard(
+                              title: 'Gramasi & Total Berat',
+                              icon: Icons.scale_outlined,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Expanded(
+                                    child: TextForm(
+                                      label: 'Gramasi (GSM)',
+                                      isDisabled: true,
+                                      controller: TextEditingController(
+                                        text: formatNumber(
+                                          item['gsm'] ?? 0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: TextForm(
+                                      label: 'Berat Grade A (KG)',
+                                      isDisabled: true,
+                                      controller: TextEditingController(
+                                        text: formatNumber(
+                                          item['weight_grade_a'] ?? 0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: TextForm(
+                                      label: 'Total Berat Keseluruhan (KG)',
+                                      isDisabled: true,
+                                      controller: TextEditingController(
+                                        text: formatNumber(
+                                          item['total_weight'] ?? 0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ].separatedBy(
+                                  CustomTheme().hGap('xl'),
+                                ),
+                              ),
+                            ),
+                          ].separatedBy(
+                            CustomTheme().vGap('xl'),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
-              ],
+              ),
+            ].separatedBy(
+              CustomTheme().vGap('lg'),
             ),
           ),
         ),
-      ],
+      ].separatedBy(
+        CustomTheme().vGap('xl'),
+      ),
     );
   }
 }

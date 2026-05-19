@@ -36,7 +36,6 @@ class _FinishLongHemmingState extends State<FinishLongHemming> {
     'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     'attachments': [],
-    'machine_ids': [],
     'no_wo': '',
     'no_lh': '',
     'nama_mesin': '',
@@ -104,7 +103,6 @@ class _FinishLongHemmingState extends State<FinishLongHemming> {
             start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
             end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
             attachments: form['attachments'],
-            machine_ids: form['machine_ids'],
             finished_item_id:
                 int.tryParse(form['finished_item_id']?.toString() ?? ''),
             good_weight: form['good_weight'],

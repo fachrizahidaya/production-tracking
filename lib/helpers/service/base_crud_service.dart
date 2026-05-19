@@ -3,10 +3,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
+import 'package:textile_tracking/models/process/sorting.dart';
 import 'package:textile_tracking/providers/api_client.dart';
 
 abstract class BaseCrudService<T> extends ChangeNotifier {
@@ -243,8 +245,35 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       cleaned['_method'] = 'PATCH';
       cleaned.remove('grades');
       cleaned.remove('attachments');
+      cleaned.remove('items');
       cleaned['notes'] = cleaned['notes'] ?? '';
 
+      /// ITEMS
+      if (data['items'] != null && data['items'] is List) {
+        final items = List<Map<String, dynamic>>.from(
+          data['items'],
+        );
+
+        for (int i = 0; i < items.length; i++) {
+          final item = items[i];
+
+          request.fields['items[$i][item_id]'] =
+              item['item_id']?.toString() ?? '';
+
+          request.fields['items[$i][qty]'] = item['qty']?.toString() ?? '0';
+
+          request.fields['items[$i][weight_per_dozen]'] =
+              item['weight_per_dozen']?.toString() ?? '0';
+
+          request.fields['items[$i][gsm]'] = item['gsm']?.toString() ?? '0';
+
+          request.fields['items[$i][weight_grade_a]'] =
+              item['weight_grade_a']?.toString() ?? '0';
+
+          request.fields['items[$i][total_weight]'] =
+              item['total_weight']?.toString() ?? '0';
+        }
+      }
       request.fields.addAll(cleaned);
 
       request.headers.addAll({
@@ -467,38 +496,246 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
-  Future<String> reworkItem(BuildContext context, String id,
-      Dyeing reworkedItem, ValueNotifier<bool> isSubmitting) async {
-    try {
-      isSubmitting.value = true;
+  Future<String> finishSortingItem(
+    BuildContext context,
+    String id,
+    Map<String, dynamic> data,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
+    isSubmitting.value = true;
 
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
+
       String? token = prefs.getString('access_token');
 
-      {
-        final body = {
-          ...reworkedItem.toJson(),
-        };
+      final attachments = data['attachments'] ?? [];
 
-        final response = await http.post(
-          Uri.parse('$baseUrl/$endpoint/$id/rework'),
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode(body),
-        );
+      final uri = Uri.parse('$baseUrl/$endpoint/$id/complete');
 
-        if (response.statusCode == 201) {
-          await refetchItems(context);
-          return jsonDecode(response.body)['message'];
+      final request = http.MultipartRequest(
+        'POST',
+        uri,
+      );
+
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      });
+
+      request.fields['_method'] = 'PATCH';
+
+      /*
+    |--------------------------------------------------------------------------
+    | BASIC FIELDS
+    |--------------------------------------------------------------------------
+    */
+
+      void addField(String key, dynamic value) {
+        if (value == null) return;
+
+        if (value is double) {
+          request.fields[key] = value.toInt().toString();
         } else {
-          final error = jsonDecode(response.body);
-          throw (error['message'] ?? 'Gagal Rework proses');
+          request.fields[key] = value.toString();
         }
       }
+
+      addField('notes', data['notes']);
+      addField('wo_id', data['wo_id']);
+      addField('qty', data['qty']);
+      addField('weight', data['weight']);
+      addField('spraying', data['spraying']);
+      addField('combing', data['combing']);
+      addField(
+        'rework_long_hemming',
+        data['rework_long_hemming'],
+      );
+
+      /*
+    |--------------------------------------------------------------------------
+    | GRADES
+    |--------------------------------------------------------------------------
+    */
+
+      final grades = data['grades'] ?? [];
+
+      for (int i = 0; i < grades.length; i++) {
+        final grade = grades[i];
+
+        addField(
+          'grades[$i][item_grade_id]',
+          grade['item_grade_id'],
+        );
+
+        addField(
+          'grades[$i][notes]',
+          grade['notes'],
+        );
+
+        final items = grade['items'] ?? [];
+
+        for (int j = 0; j < items.length; j++) {
+          final item = items[j];
+
+          addField(
+            'grades[$i][items][$j][item_id]',
+            item['item_id'],
+          );
+
+          addField(
+            'grades[$i][items][$j][semifinished_product_id]',
+            item['semifinished_product_id'],
+          );
+
+          /*
+        |--------------------------------------------------------------------------
+        | FORCE INTEGER
+        |--------------------------------------------------------------------------
+        */
+
+          addField(
+            'grades[$i][items][$j][qty]',
+            (item['qty'] ?? 0).toInt(),
+          );
+
+          addField(
+            'grades[$i][items][$j][spraying]',
+            (item['spraying'] ?? 0).toInt(),
+          );
+
+          addField(
+            'grades[$i][items][$j][combing]',
+            (item['combing'] ?? 0).toInt(),
+          );
+
+          addField(
+            'grades[$i][items][$j][rework_long_hemming]',
+            (item['rework_long_hemming'] ?? 0).toInt(),
+          );
+
+          final defects = item['defects'] ?? [];
+
+          for (int k = 0; k < defects.length; k++) {
+            final defect = defects[k];
+
+            addField(
+              'grades[$i][items][$j][defects][$k][defect_type_id]',
+              defect['defect_type_id'],
+            );
+
+            addField(
+              'grades[$i][items][$j][defects][$k][qty]',
+              (defect['qty'] ?? 0).toInt(),
+            );
+          }
+        }
+      }
+
+      /*
+    |--------------------------------------------------------------------------
+    | ATTACHMENTS
+    |--------------------------------------------------------------------------
+    */
+
+      for (final file in attachments) {
+        /*
+  |--------------------------------------------------------------------------
+  | FILE
+  |--------------------------------------------------------------------------
+  */
+        if (file is File) {
+          request.files.add(
+            await http.MultipartFile.fromPath(
+              'attachments[]',
+              file.path,
+            ),
+          );
+        }
+
+        /*
+  |--------------------------------------------------------------------------
+  | MAP
+  |--------------------------------------------------------------------------
+  */
+        else if (file is Map && file['path'] != null) {
+          request.files.add(
+            await http.MultipartFile.fromPath(
+              'attachments[]',
+              file['path'],
+              filename: file['name'] ?? 'file',
+            ),
+          );
+        }
+
+        /*
+  |--------------------------------------------------------------------------
+  | XFILE
+  |--------------------------------------------------------------------------
+  */
+        else if (file is XFile) {
+          request.files.add(
+            await http.MultipartFile.fromPath(
+              'attachments[]',
+              file.path,
+              filename: file.name,
+            ),
+          );
+        }
+      }
+
+      final response = await request.send();
+
+      final body = await response.stream.bytesToString();
+
+      if (response.statusCode == 200) {
+        await refetchItems(context);
+
+        return jsonDecode(body)['message'];
+      }
+
+      throw jsonDecode(body)['message'];
     } catch (e) {
-      throw ("$e");
+      throw '$e';
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
+  Future<String> reworkItem(
+    BuildContext context,
+    String id,
+    Dyeing reworkedItem,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
+    isSubmitting.value = true;
+
+    try {
+      final uri = Uri.parse('$baseUrl/$endpoint/$id/rework');
+
+      final body = {
+        ...reworkedItem.toJson(),
+      };
+
+      final response = await ApiClient.instance.post(
+        context,
+        uri,
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final res = jsonDecode(response.body);
+
+        await refetchItems(context);
+
+        return '${res['message']}.';
+      } else {
+        final error = jsonDecode(response.body);
+
+        throw (error['message'] ?? 'Gagal rework proses');
+      }
+    } catch (e) {
+      throw ('$e');
     } finally {
       isSubmitting.value = false;
     }

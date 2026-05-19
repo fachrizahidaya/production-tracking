@@ -38,7 +38,6 @@ class _FinishSewingState extends State<FinishSewing> {
     'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
     'attachments': [],
-    'machine_ids': [],
     'no_wo': '',
     'no_sewing': '',
     'nama_mesin': '',
@@ -116,7 +115,6 @@ class _FinishSewingState extends State<FinishSewing> {
             start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
             end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
             attachments: form['attachments'],
-            machine_ids: form['machine_ids'],
             maklon: form['maklon'],
             maklon_name: form['maklon_name'],
             greige_item_id:

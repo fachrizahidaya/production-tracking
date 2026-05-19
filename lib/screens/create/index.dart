@@ -170,7 +170,8 @@ class _CreateProcessState extends State<CreateProcess> {
           widget.label == 'Press' ||
           widget.label == 'Tumbler' ||
           widget.label == 'Stenter' ||
-          widget.label == 'Long Slitting') {
+          widget.label == 'Long Slitting' ||
+          widget.label == 'Packing') {
         _form['semifinished_products'] = List.generate(
           semiFinishedItems.length,
           (index) => {

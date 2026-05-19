@@ -89,8 +89,7 @@ class _ProcessButtonState extends State<ProcessButton> {
                   Expanded(
                       child: FormButton(
                     label: widget.labelProcess,
-                    isDisabled:
-                        isDisabled || (isNeedMachineValidation && !result),
+                    isDisabled: (isNeedMachineValidation && !result),
                     customHeight: 56.0,
                     fontSize: CustomTheme().fontSize('xl'),
                     onPressed: () async {

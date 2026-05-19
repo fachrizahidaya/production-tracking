@@ -9,8 +9,10 @@ import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
@@ -98,7 +100,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
       );
     } finally {
       setState(() {
-        _isFetchingMachine = false;
+        _isFetchingWorkOrder = false;
       });
     }
   }
@@ -134,7 +136,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
       );
     } finally {
       setState(() {
-        _isFetchingWorkOrder = false;
+        _isFetchingMachine = false;
       });
     }
   }
@@ -275,16 +277,46 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
         return SelectDialog(
           label: 'Work Order',
           options: workOrderOption,
-          selected: widget.form?['wo_id'].toString() ?? '',
-          handleChangeValue: (e) {
+          selected: widget.form?['wo_id']?.toString() ?? '',
+          handleChangeValue: (e) async {
+            final semiFinishedService =
+                Provider.of<OptionItemSemiFinishedService>(
+              context,
+              listen: false,
+            );
+
             setState(() {
               widget.form?['wo_id'] = e['value'].toString();
               widget.form?['no_wo'] = e['label'].toString();
               dyeingId = e['dyeing_id'].toString();
             });
 
-            _getDataView(e['value'].toString());
-            _getDyeingView(e['dyeing_id'].toString());
+            await _getDataView(e['value'].toString());
+            widget.form?['unit_id'] = woData['greige_unit_id']?.toString() ??
+                woData['processes']?[0]?['data']?[0]?['unit_id']?.toString();
+
+            widget.form?['qty'] = woData['greige_qty']?.toString() ??
+                woData['processes']?[0]?['data']?[0]?['qty']?.toString();
+
+            final params = extractSemiFinishedParams(
+              woData['items'] ?? [],
+            );
+            await semiFinishedService.fetchOptions(
+              isInitialLoad: true,
+              process: 'dyeing',
+              baseCodes: params['base_codes'] ?? [],
+              colorCodes: params['color_codes'] ?? [],
+            );
+            final semiFinishedItems = semiFinishedService.dataListOption;
+
+            widget.form?['semifinished_products'] = List.generate(
+              semiFinishedItems.length,
+              (index) => {
+                'item_id': semiFinishedItems[index]['value'],
+              },
+            );
+
+            await _getDyeingView(e['dyeing_id'].toString());
           },
         );
       },

@@ -963,30 +963,10 @@ class _UpdateProcessState extends State<UpdateProcess>
                                   if (widget.label == 'Sorting')
                                     SortingEditSection(
                                       form: widget.form,
-                                      // grades: _grades,
                                       itemGradeOption: widget.itemGradeOption,
-                                      // spraying: widget.spraying,
-                                      // reworkLongHemming:
-                                      //     widget.reworkLongHemming,
-                                      // combing: widget.combing,
-                                      // onChange: widget.handleChangeInput,
                                       updateTotalSorting: _updateTotalSorting,
-                                      // calculateTotalVermak:
-                                      //     _calculateTotalVermak,
-                                      // calculateTotalQtySorting:
-                                      //     _calculateTotalQtySorting,
-                                      // defectArray: _defects,
-                                      // defects: widget.defects,
                                       itemTypeOption: widget.itemTypeOption,
-                                      // finishedItemGood: widget.finishedItemGood,
-                                      // finishedItemGrb: widget.finishedItemGrb,
                                       data: widget.data,
-                                      // defectQty: widget.defectQty,
-                                      // gradeArray: _grades,
-                                      // handleUpdateGrade:
-                                      //     widget.handleUpdateGrade,
-                                      // qty: widget.qty,
-                                      // recalculateGradeBS: _recalculateGradeBS,
                                     ),
                                 ],
                                 if (widget.label == 'Packing')
@@ -1022,7 +1002,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             }).toList(),
                                           ),
                                         ),
-                                        SizedBox(height: 16),
+                                        // SizedBox(height: 16),
                                         SizedBox(
                                           height: 400,
                                           child: TabBarView(
@@ -1032,9 +1012,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                               final itemId = item['id'];
 
                                               return TemplateCard(
-                                                title: item['finished_product']
-                                                        ?['code'] ??
-                                                    '-',
+                                                title: 'Material',
                                                 icon:
                                                     Icons.inventory_2_outlined,
                                                 child: Column(
@@ -1165,7 +1143,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             }).toList(),
                                           ),
                                         ),
-                                      ],
+                                      ].separatedBy(CustomTheme().vGap('xl')),
                                     ),
                                   )
                               ].separatedBy(CustomTheme().vGap('xl'))),
@@ -1303,7 +1281,6 @@ class _UpdateProcessState extends State<UpdateProcess>
             ),
           );
         }).toList(),
-        SizedBox(width: 12),
         // Expanded(
         //   child: Container(
         //     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
@@ -1334,7 +1311,6 @@ class _UpdateProcessState extends State<UpdateProcess>
         //     ),
         //   ),
         // ),
-        // SizedBox(width: 16),
         // Total
         Expanded(
           child: Container(

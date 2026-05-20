@@ -1365,36 +1365,36 @@ Qty Sorting
           );
         }).toList(),
         SizedBox(width: 12),
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Perbaikan',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade700,
-                    fontWeight: CustomTheme().fontWeight('semibold'),
-                  ),
-                ),
-                Text(
-                  '${formatNumber(total.toString())} PCS',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: CustomTheme().fontWeight('bold'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        // Expanded(
+        //   child: Container(
+        //     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        //     decoration: BoxDecoration(
+        //       color: Colors.white,
+        //       borderRadius: BorderRadius.circular(8),
+        //       border: Border.all(color: Colors.grey.shade200),
+        //     ),
+        //     child: Column(
+        //       crossAxisAlignment: CrossAxisAlignment.start,
+        //       children: [
+        //         Text(
+        //           'Perbaikan',
+        //           style: TextStyle(
+        //             fontSize: 14,
+        //             color: Colors.grey.shade700,
+        //             fontWeight: CustomTheme().fontWeight('semibold'),
+        //           ),
+        //         ),
+        //         Text(
+        //           '${formatNumber(total.toString())} PCS',
+        //           style: TextStyle(
+        //             fontSize: 16,
+        //             fontWeight: CustomTheme().fontWeight('bold'),
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
         SizedBox(width: 16),
         // Total
         Expanded(

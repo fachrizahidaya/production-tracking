@@ -96,7 +96,7 @@ class SortingDetailGradeList extends StatelessWidget {
           ),
           SizedBox(height: 16),
           SizedBox(
-            height: 500,
+            height: 660,
             child: TabBarView(
               children: [
                 for (final item in items)
@@ -116,7 +116,12 @@ class SortingDetailGradeList extends StatelessWidget {
   ) {
     final grades = item['grades'] ?? [];
 
-    final defects = item['defects'] ?? [];
+    final bsGrade = grades.firstWhere(
+      (e) => e['code'] == 'BS',
+      orElse: () => {},
+    );
+
+    final defects = bsGrade['defects'] ?? [];
 
     return Column(
       children: [
@@ -140,6 +145,70 @@ class SortingDetailGradeList extends StatelessWidget {
             ),
           ),
         ),
+        SizedBox(height: 16),
+
+        /*
+|--------------------------------------------------------------------------
+| TIPE BS
+|--------------------------------------------------------------------------
+*/
+
+        if (defects.isNotEmpty)
+          TemplateCard(
+            title: 'Tipe BS',
+            icon: Icons.warning_amber_outlined,
+            child: SizedBox(
+              height: 80,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: defects.length,
+                separatorBuilder: (_, __) => SizedBox(width: 12),
+                itemBuilder: (context, index) {
+                  final defect = defects[index];
+
+                  return Container(
+                    constraints: BoxConstraints(
+                      minWidth: 120,
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: Colors.red.shade100,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          defect['type']['name'] ?? '-',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            color: Colors.red.shade700,
+                          ),
+                        ),
+                        SizedBox(height: 6),
+                        Text(
+                          formatNumber(defect['qty']),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
         SizedBox(height: 16),
 
         /*
@@ -179,62 +248,6 @@ class SortingDetailGradeList extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 16),
-
-        /*
-|--------------------------------------------------------------------------
-| DEFECTS
-|--------------------------------------------------------------------------
-*/
-
-        if (defects.isNotEmpty)
-          TemplateCard(
-            title: 'Tipe BS',
-            icon: Icons.warning_amber_outlined,
-            child: SizedBox(
-              height: 52,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: defects.length,
-                separatorBuilder: (_, __) => SizedBox(width: 8),
-                itemBuilder: (context, index) {
-                  final defect = defects[index];
-
-                  return Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(
-                        color: Colors.grey.shade300,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          defect['name'] ?? '-',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          formatNumber(defect['qty']),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
       ],
     );
   }
@@ -265,8 +278,32 @@ class SortingDetailGradeList extends StatelessWidget {
           ),
           Expanded(
             flex: 2,
-            child: Text(
-              grade['semifinished_product']?['code'] ?? '-',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: grade['code'] == 'BS'
+                  ? [
+                      Text(
+                        'Perhitungan otomatis dari total Tipe BS',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ]
+                  : grade['code'] == 'B' &&
+                          grade['semifinished_product']?['code'] == null
+                      ? [
+                          Text(
+                            'Material code belum tersedia',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ]
+                      : [
+                          Text(
+                            grade['semifinished_product']?['code'] ?? '',
+                          ),
+                          Text(
+                            grade['semifinished_product']?['name'] ?? '-',
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ],
             ),
           ),
           Expanded(
@@ -286,36 +323,6 @@ class SortingDetailGradeList extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
-                      SizedBox(height: 4),
-                      Wrap(
-                        alignment: WrapAlignment.end,
-                        spacing: 4,
-                        runSpacing: 4,
-                        children: [
-                          for (final defect in (grade['defects'] ?? []))
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.red.shade50,
-                                borderRadius: BorderRadius.circular(100),
-                                border: Border.all(
-                                  color: Colors.red.shade100,
-                                ),
-                              ),
-                              child: Text(
-                                '${defect['type']?['name'] ?? '-'} (${formatNumber(defect['qty'])})',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.red.shade700,
-                                ),
-                              ),
-                            ),
-                        ],
                       ),
                     ],
                   )

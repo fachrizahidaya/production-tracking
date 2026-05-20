@@ -553,7 +553,33 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           ),
           Expanded(
             flex: 2,
-            child: Text(grade['semifinished_product']?['code'] ?? '-'),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: grade['code'] == 'BS'
+                  ? [
+                      Text(
+                        'Perhitungan otomatis dari total Tipe BS',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ]
+                  : grade['code'] == 'B' &&
+                          grade['semifinished_product']?['code'] == null
+                      ? [
+                          Text(
+                            'Material code belum tersedia',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ]
+                      : [
+                          Text(
+                            grade['semifinished_product']?['code'] ?? '',
+                          ),
+                          Text(
+                            grade['semifinished_product']?['name'] ?? '-',
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ],
+            ),
           ),
           Expanded(
             flex: 2,

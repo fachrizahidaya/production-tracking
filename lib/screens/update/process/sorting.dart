@@ -91,7 +91,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     final grades = widget.data['grades'] ?? [];
     final woItems = widget.data['work_orders']?['items'] ?? [];
 
-    final Map<int, Map<String, dynamic>> groupedItems = {};
+    final Map<dynamic, Map<String, dynamic>> groupedItems = {};
 
     /*
 |--------------------------------------------------------------------------
@@ -105,7 +105,9 @@ class _SortingEditSectionState extends State<SortingEditSection> {
       final itemGrade = grade['item_grade'];
 
       for (final item in gradeItems) {
-        final itemId = item['item_id'];
+        final itemId = item['item_id'] ??
+            item['finished_product']?['id'] ??
+            DateTime.now().millisecondsSinceEpoch;
 
         if (!groupedItems.containsKey(itemId)) {
           groupedItems[itemId] = {
@@ -150,31 +152,89 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 */
 
     if (groupedItems.isEmpty) {
+      final semiFinishedServiceGradesA =
+          Provider.of<OptionItemSemiFinishedService>(
+        context,
+        listen: false,
+      );
       final semiFinishedService = Provider.of<OptionItemSemiFinishedService>(
         context,
         listen: false,
       );
 
+      final paramsGradeA = extractSemiFinishedParams(
+        woItems,
+      );
       final params = extractSemiFinishedParams(
         woItems,
       );
 
+      /// FETCH GRADE A
       await semiFinishedService.fetchOptions(
         isInitialLoad: true,
-        process: 'sorting',
+        process: 'packing',
         baseCodes: params['base_codes'] ?? [],
         colorCodes: params['color_codes'] ?? [],
       );
 
-      final semiFinishedItems = semiFinishedService.dataListOption;
+      final List<Map<String, dynamic>> semiFinishedItemsGradeA =
+          List<Map<String, dynamic>>.from(
+        semiFinishedService.dataListOption.map(
+          (e) => Map<String, dynamic>.from(e),
+        ),
+      );
+
+      /// FETCH GRADE B
+      await semiFinishedService.fetchOptions(
+        isInitialLoad: true,
+        process: 'packing',
+        baseCodes: params['base_codes'] ?? [],
+        colorCodes: ['GRB'],
+      );
+
+      final List<Map<String, dynamic>> semiFinishedItemsGradeB =
+          List<Map<String, dynamic>>.from(
+        semiFinishedService.dataListOption.map(
+          (e) => Map<String, dynamic>.from(e),
+        ),
+      );
 
       for (int i = 0; i < woItems.length; i++) {
         final woItem = woItems[i];
 
-        final gradeBItem =
-            i < semiFinishedItems.length ? semiFinishedItems[i] : null;
+        final itemCode = woItem['item_code']?.toString() ?? '';
 
-        groupedItems[woItem['greige_item_id']] = {
+        /// ambil base code sebelum "-"
+        /// contoh:
+        /// HGN187C0-55NN-LYO -> HGN187C0
+        final baseCode = itemCode.split('-').first;
+        Map<String, dynamic>? gradeAItem;
+        Map<String, dynamic>? gradeBItem;
+
+        try {
+          gradeAItem = semiFinishedItemsGradeA.firstWhere(
+            (e) {
+              final optionCode = e['code']?.toString() ?? '';
+              final optionBaseCode = optionCode.split('-').first;
+
+              return optionBaseCode == baseCode;
+            },
+          );
+          gradeBItem = semiFinishedItemsGradeB.firstWhere(
+            (e) {
+              final optionCode = e['code']?.toString() ?? '';
+              final optionBaseCode = optionCode.split('-').first;
+
+              return optionBaseCode == baseCode;
+            },
+          );
+        } catch (_) {
+          gradeAItem = null;
+          gradeBItem = null;
+        }
+        final itemKey = woItem['greige_item_id'] ?? woItem['id'];
+
+        groupedItems[itemKey] = {
           'item_id': woItem['greige_item_id'],
           'finished_product': {
             'id': woItem['greige_item_id'],
@@ -192,18 +252,25 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 | GRADE A
 |--------------------------------------------------------------------------
 */
+            /*
+|--------------------------------------------------------------------------
+| GRADE A
+|--------------------------------------------------------------------------
+*/
             {
               'item_grade_id': 1,
               'name': 'Grade A',
               'code': 'A',
               'qty': 0,
               'notes': null,
-              'semifinished_product_id': woItem['greige_item_id'],
-              'semifinished_product': {
-                'id': woItem['greige_item_id'],
-                'code': woItem['item_code'],
-                'name': woItem['item_name'],
-              },
+              'semifinished_product_id': gradeAItem?['value'],
+              'semifinished_product': gradeAItem != null
+                  ? {
+                      'id': gradeAItem['value'],
+                      'code': gradeAItem['code'],
+                      'name': gradeAItem['label'],
+                    }
+                  : null,
               'finished_product': {
                 'id': woItem['greige_item_id'],
                 'code': woItem['item_code'],
@@ -310,12 +377,12 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
     final defects = item['defects'] ?? [];
 
-    double total = 0;
+    int total = 0;
 
     for (final defect in defects) {
       total += parseSafe(
         defect['qty'],
-      );
+      ).toInt();
     }
 
     final grades = item['grades'] ?? [];
@@ -572,10 +639,14 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                         ]
                       : [
                           Text(
-                            grade['semifinished_product']?['code'] ?? '',
+                            grade['semifinished_product']?['code'] ??
+                                grade['finished_product']?['code'] ??
+                                '-',
                           ),
                           Text(
-                            grade['semifinished_product']?['name'] ?? '-',
+                            grade['semifinished_product']?['name'] ??
+                                grade['finished_product']?['name'] ??
+                                '-',
                             style: const TextStyle(color: Colors.grey),
                           ),
                         ],

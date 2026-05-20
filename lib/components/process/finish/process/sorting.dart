@@ -794,7 +794,7 @@ class _SortingSectionState extends State<SortingSection> {
         children: [
           if (defects.isNotEmpty)
             SizedBox(
-              height: 52,
+              height: 75,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: defects.length,
@@ -841,7 +841,7 @@ class _SortingSectionState extends State<SortingSection> {
     int itemIndex,
     int defectIndex,
   ) {
-    final defect = _items[itemIndex]['defects'][defectIndex];
+    final defect = widget.form['items'][itemIndex]['defects'][defectIndex];
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -849,59 +849,84 @@ class _SortingSectionState extends State<SortingSection> {
         vertical: 8,
       ),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
         borderRadius: BorderRadius.circular(
-          100,
+          8,
         ),
         border: Border.all(
           color: Colors.grey.shade300,
         ),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
         children: [
-          Text(
-            defect['name'],
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                defect['name'],
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                formatNumber(defect['qty']),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade700,
+                ),
+              ),
+            ],
           ),
-          SizedBox(width: 8),
-          Text(
-            formatNumber(defect['qty']),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(width: 8),
-          GestureDetector(
-            onTap: () => _showEditDefectDialog(
-              itemIndex,
-              defectIndex,
-            ),
-            child: Icon(
-              Icons.edit,
-              size: 18,
-            ),
-          ),
-          SizedBox(width: 6),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _items[itemIndex]['defects'].removeAt(
-                  defectIndex,
-                );
-
-                _recalculateGradeBS(
+          SizedBox(width: 16),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap: () => _showEditDefectDialog(
                   itemIndex,
-                );
-              });
-            },
-            child: Icon(
-              Icons.close,
-              color: Colors.red,
-              size: 18,
-            ),
+                  defectIndex,
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Icon(
+                    Icons.edit,
+                    size: 16,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+              SizedBox(width: 8),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    widget.form['items'][itemIndex]['defects']
+                        .removeAt(defectIndex);
+
+                    _recalculateGradeBS(
+                      itemIndex,
+                    );
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Icon(
+                    Icons.close,
+                    size: 16,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -926,82 +951,134 @@ class _SortingSectionState extends State<SortingSection> {
     final selectedIds =
         defects.map((e) => e['defect_type_id'].toString()).toList();
 
-    final availableDefects = (widget.itemTypeOption ?? [])
-        .where(
-          (e) => !selectedIds.contains(
-            e['id'].toString(),
-          ),
-        )
-        .toList();
-
     showDialog(
       context: context,
       builder: (_) {
-        return Dialog(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 400,
-              maxHeight: 500,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'Pilih Tipe BS',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  if (availableDefects.isEmpty)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 24),
-                      child: Text(
-                        'Semua tipe BS sudah dipilih',
+        final TextEditingController searchController = TextEditingController();
+
+        List availableDefects = (widget.itemTypeOption ?? [])
+            .where(
+              (e) => !selectedIds.contains(
+                e['id'].toString(),
+              ),
+            )
+            .toList();
+
+        List filteredDefects = List.from(availableDefects);
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            void runSearch(String value) {
+              setState(() {
+                filteredDefects = availableDefects.where((e) {
+                  final keyword = value.toLowerCase().trim();
+
+                  return [
+                    e['name'],
+                    e['code'],
+                  ].join(' ').toLowerCase().contains(keyword);
+                }).toList();
+              });
+            }
+
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 400,
+                  maxHeight: 500,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        'Pilih Tipe BS',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    )
-                  else
-                    Flexible(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: availableDefects.length,
-                        itemBuilder: (context, index) {
-                          final e = availableDefects[index];
+                      const SizedBox(height: 16),
 
-                          return ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            title: Text(
-                              e['name'],
-                            ),
-                            onTap: () {
-                              setState(() {
-                                defects.add({
-                                  'defect_type_id': e['id'],
-                                  'name': e['name'],
-                                  'qty': 0,
-                                });
+                      /*
+|--------------------------------------------------------------------------
+| SEARCH
+|--------------------------------------------------------------------------
+*/
+                      TextField(
+                        controller: searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Cari Tipe BS',
+                          prefixIcon: Icon(Icons.search),
+                          suffixIcon: searchController.text.isNotEmpty
+                              ? IconButton(
+                                  onPressed: () {
+                                    searchController.clear();
+                                    runSearch('');
+                                  },
+                                  icon: Icon(Icons.close),
+                                )
+                              : null,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onChanged: runSearch,
+                      ),
+                      const SizedBox(height: 16),
+                      if (filteredDefects.isEmpty)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 24,
+                          ),
+                          child: Text(
+                            'Tipe BS tidak ditemukan',
+                          ),
+                        )
+                      else
+                        Flexible(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: filteredDefects.length,
+                            itemBuilder: (context, index) {
+                              final e = filteredDefects[index];
 
-                                _syncFormItems();
-                              });
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  e['name'],
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    defects.add({
+                                      'defect_type_id': e['id'],
+                                      'name': e['name'],
+                                      'qty': 0,
+                                    });
+                                  });
 
-                              Navigator.pop(context);
+                                  Navigator.pop(context);
 
-                              _showEditDefectDialog(
-                                itemIndex,
-                                defects.length - 1,
+                                  _showEditDefectDialog(
+                                    itemIndex,
+                                    defects.length - 1,
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
-                      ),
-                    ),
-                ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -1027,6 +1104,9 @@ class _SortingSectionState extends State<SortingSection> {
       context: context,
       builder: (_) {
         return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Container(
             width: 400,
             padding: EdgeInsets.all(16),

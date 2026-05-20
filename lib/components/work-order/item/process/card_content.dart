@@ -30,7 +30,6 @@ class _CardContentState extends State<CardContent> {
     final List allData = isList ? widget.data : [widget.data];
 
     final processNumber = getProcessNumber(mainData, widget.processKey);
-
     return Container(
       padding: CustomTheme().padding('content'),
       child: Column(
@@ -38,17 +37,34 @@ class _CardContentState extends State<CardContent> {
         children: [
           if (processNumber != null)
             _buildProcessNumber(processNumber, widget.isTablet),
+
+          /// ✅ PROSES PRODUKSI
+          if (_hasProductionItems(mainData))
+            _buildProductionItemsSection(mainData, widget.isTablet),
+
           if (mainData['start_time'] != null || mainData['end_time'] != null)
             _buildTimeSection(mainData, widget.isTablet),
+
           if (widget.processKey != 'packing')
-            _buildQuantitySection(mainData, widget.isTablet, widget.processKey),
+            _buildQuantitySection(
+              mainData,
+              widget.isTablet,
+              widget.processKey,
+            ),
+
           if (widget.processKey == 'dyeing')
             _buildDyeingSection(mainData, widget.isTablet),
+
           if (['dyeing', 'press', 'tumbler'].contains(widget.processKey))
             _buildReworkFromAllData(
-                allData, widget.isTablet, widget.processKey),
+              allData,
+              widget.isTablet,
+              widget.processKey,
+            ),
+
           if (widget.processKey == 'sorting')
             _buildSortingSection(mainData, widget.isTablet),
+
           if (widget.processKey == 'packing')
             _buildPackingSection(mainData, widget.isTablet),
         ].separatedBy(CustomTheme().vGap('xl')),
@@ -440,7 +456,7 @@ class _CardContentState extends State<CardContent> {
               ),
               if (grade['qty'] != null) ...[
                 Text(
-                  '${formatNumber(grade['qty'])} ${grade['unit_code']}',
+                  '${formatNumber(grade['qty'])} ${grade['unit_code'] ?? 'PCS'}',
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('xs'),
                     fontWeight: CustomTheme().fontWeight('bold'),
@@ -766,6 +782,232 @@ class _CardContentState extends State<CardContent> {
     );
   }
 
+  bool _hasProductionItems(Map<String, dynamic> data) {
+    return (data['items'] != null && (data['items'] as List).isNotEmpty) ||
+        (data['semifinished_products'] != null &&
+            (data['semifinished_products'] as List).isNotEmpty) ||
+        (data['finished_products'] != null &&
+            (data['finished_products'] as List).isNotEmpty);
+  }
+
+  Widget _buildProductionItemsSection(
+    Map<String, dynamic> data,
+    bool isTablet,
+  ) {
+    final List items = data['items'] ?? [];
+
+    if (items.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle(
+          icon: Icons.precision_manufacturing_outlined,
+          title: 'Item Produksi',
+          isTablet: isTablet,
+        ),
+        ...items
+            .map((item) {
+              /// ✅ PACKING = finished product
+              final productionItem = widget.processKey == 'packing'
+                  ? item['finished_product']
+                  : item['semifinished_product'];
+
+              final goodWeight = item['good_weight'];
+              final bsWeight = item['bs_weight'];
+              final qty = item['qty'];
+
+              return Container(
+                padding: CustomTheme().padding('process-content'),
+                decoration: BoxDecoration(
+                  color: Colors.indigo.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Colors.indigo.withOpacity(0.2),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// ✅ ITEM
+                    if (productionItem != null)
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            widget.processKey == 'packing'
+                                ? Icons.inventory_2_outlined
+                                : Icons.precision_manufacturing_outlined,
+                            color: widget.processKey == 'packing'
+                                ? Colors.green
+                                : Colors.orange,
+                            size: isTablet ? 18 : 16,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.processKey == 'packing'
+                                      ? 'Finished Product'
+                                      : 'Semi Finished',
+                                  style: TextStyle(
+                                    fontSize: CustomTheme().fontSize('xs'),
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                Text(
+                                  productionItem['code'] ?? '-',
+                                  style: TextStyle(
+                                    fontWeight:
+                                        CustomTheme().fontWeight('bold'),
+                                  ),
+                                ),
+                                Text(
+                                  productionItem['name'] ?? '-',
+                                  style: TextStyle(
+                                    fontSize: CustomTheme().fontSize('sm'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ].separatedBy(CustomTheme().hGap('md')),
+                      ),
+
+                    /// ✅ LONG HEMMING
+                    if (widget.processKey == 'long_hemming')
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildInfoCard(
+                              icon: Icons.check_circle_outline,
+                              label: 'Berat Bagus',
+                              value: formatNumber(goodWeight ?? 0),
+                              unit: 'KG',
+                              color: Colors.green,
+                              isTablet: isTablet,
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildInfoCard(
+                              icon: Icons.cancel_outlined,
+                              label: 'Berat BS',
+                              value: formatNumber(bsWeight ?? 0),
+                              unit: 'KG',
+                              color: Colors.red,
+                              isTablet: isTablet,
+                            ),
+                          ),
+                        ].separatedBy(CustomTheme().hGap('lg')),
+                      ),
+
+                    /// ✅ PACKING DETAIL
+                    if (widget.processKey == 'packing')
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildInfoCard(
+                                  icon: Icons.inventory_2_outlined,
+                                  label: 'Qty',
+                                  value: formatNumber(qty ?? 0),
+                                  unit: 'PCS',
+                                  color: Colors.blue,
+                                  isTablet: isTablet,
+                                ),
+                              ),
+                              Expanded(
+                                child: _buildInfoCard(
+                                  icon: Icons.scale_outlined,
+                                  label: 'Berat / Lusin',
+                                  value: formatNumber(
+                                    item['weight_per_dozen'] ?? 0,
+                                  ),
+                                  unit: 'KG',
+                                  color: Colors.orange,
+                                  isTablet: isTablet,
+                                ),
+                              ),
+                            ].separatedBy(CustomTheme().hGap('lg')),
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildInfoCard(
+                                  icon: Icons.texture_outlined,
+                                  label: 'Gramasi',
+                                  value: formatNumber(item['gsm'] ?? 0),
+                                  unit: 'GSM',
+                                  color: Colors.purple,
+                                  isTablet: isTablet,
+                                ),
+                              ),
+                              Expanded(
+                                child: _buildInfoCard(
+                                  icon: Icons.verified_outlined,
+                                  label: 'Berat Grade A',
+                                  value: formatNumber(
+                                    item['weight_grade_a'] ?? 0,
+                                  ),
+                                  unit: 'KG',
+                                  color: Colors.green,
+                                  isTablet: isTablet,
+                                ),
+                              ),
+                            ].separatedBy(CustomTheme().hGap('lg')),
+                          ),
+                          _buildInfoCard(
+                            icon: Icons.scale,
+                            label: 'Total Berat',
+                            value: formatNumber(
+                              item['total_weight'] ?? 0,
+                            ),
+                            unit: 'KG',
+                            color: Colors.teal,
+                            isTablet: isTablet,
+                          ),
+                        ].separatedBy(CustomTheme().vGap('lg')),
+                      ),
+
+                    /// ✅ CROSS CUTTING & SEWING
+                    if ([
+                      'cross_cutting',
+                      'sewing',
+                    ].contains(widget.processKey))
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '${formatNumber(qty ?? 0)} PCS',
+                            style: TextStyle(
+                              color: Colors.blue[700],
+                              fontWeight: CustomTheme().fontWeight('bold'),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ].separatedBy(CustomTheme().vGap('lg')),
+                ),
+              );
+            })
+            .toList()
+            .separatedBy(CustomTheme().vGap('lg')),
+      ].separatedBy(CustomTheme().vGap('lg')),
+    );
+  }
+
   String _formatTime(dynamic time) {
     if (time == null) return '-';
 
@@ -777,14 +1019,14 @@ class _CardContentState extends State<CardContent> {
         'Feb',
         'Mar',
         'Apr',
-        'May',
+        'Mei',
         'Jun',
         'Jul',
         'Aug',
         'Sep',
         'Oct',
         'Nov',
-        'Dec',
+        'Des',
       ];
 
       final day = dateTime.day.toString().padLeft(2, '0');

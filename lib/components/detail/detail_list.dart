@@ -209,7 +209,9 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 _buildStatusBadge(isTablet),
               ],
             ),
-            if (widget.label != 'Sewing' &&
+            if (widget.label != 'Long Hemming' &&
+                widget.label != 'Cross Cutting' &&
+                widget.label != 'Sewing' &&
                 widget.label != 'Sorting' &&
                 widget.label != 'Packing')
               _buildQuickInfoRow(isTablet),
@@ -2079,7 +2081,7 @@ Catatan WO
             widget.label == 'Sewing' ||
             widget.label == 'Packing')
           _buildInfoCard(
-            title: 'Detail per Material',
+            title: 'Detail Per Material',
             icon: Icons.scale_outlined,
             child: _buildItemResultPerProduct(true),
           ),
@@ -2154,21 +2156,10 @@ Catatan WO
             child: _buildReworkInfo(false),
           ),
         if (widget.label == 'Packing')
-          Column(
-            children: [
-              _buildInfoCard(
-                title: 'Informasi Packing',
-                icon: Icons.inventory_2_outlined,
-                child: _buildPackingSummaryInfo(),
-              ),
-              _buildInfoCard(
-                title: 'Ringkasan Sortir',
-                icon: Icons.attachment_outlined,
-                child: _buildPackingSortingSummary(),
-              ),
-            ].separatedBy(
-              CustomTheme().vGap('xl'),
-            ),
+          _buildInfoCard(
+            title: 'Informasi Packing',
+            icon: Icons.inventory_2_outlined,
+            child: _buildPackingSummaryInfo(),
           ),
         if (widget.label == 'Sorting')
           Padding(
@@ -2181,7 +2172,11 @@ Catatan WO
             icon: Icons.attachment_outlined,
             child: _buildTotalSorting(false),
           ),
-        if ((widget.label != 'Sorting' && widget.label != 'Packing'))
+        if ((widget.label != 'Long Hemming' &&
+            widget.label != 'Cross Cutting' &&
+            widget.label != 'Sewing' &&
+            widget.label != 'Sorting' &&
+            widget.label != 'Packing'))
           _buildInfoCard(
             title: 'Produk Setengah Jadi',
             icon: Icons.inventory_2_outlined,
@@ -2192,11 +2187,15 @@ Catatan WO
             widget.label == 'Sewing' ||
             widget.label == 'Packing')
           _buildInfoCard(
-            title: widget.label == 'Long Hemming'
-                ? 'Berat per Produk'
-                : 'Qty per Produk',
+            title: 'Detail per Material',
             icon: Icons.scale_outlined,
             child: _buildItemResultPerProduct(false),
+          ),
+        if (widget.label == 'Packing')
+          _buildInfoCard(
+            title: 'Ringkasan Sortir',
+            icon: Icons.attachment_outlined,
+            child: _buildPackingSortingSummary(),
           ),
         _buildInfoCard(
           title: 'Material WO',

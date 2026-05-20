@@ -62,6 +62,7 @@ class SortingDetailGradeList extends StatelessWidget {
           'qty': item['qty'] ?? 0,
           'defects': item['defects'] ?? [],
           'semifinished_product': item['semifinished_product'],
+          'finished_product': item['finished_product'],
           'spraying': item['spraying'] ?? 0,
           'rework_long_hemming': item['rework_long_hemming'] ?? 0,
           'combing': item['combing'] ?? 0,
@@ -70,6 +71,14 @@ class SortingDetailGradeList extends StatelessWidget {
     }
 
     final items = groupedItems.values.toList();
+
+    /// semua grade ada tapi items kosong
+    if (items.isEmpty) {
+      return TemplateCard(
+          title: 'Detail Per Material',
+          icon: Icons.inventory_2_outlined,
+          child: NoData());
+    }
 
     return DefaultTabController(
       length: items.length,
@@ -96,7 +105,7 @@ class SortingDetailGradeList extends StatelessWidget {
           ),
           SizedBox(height: 16),
           SizedBox(
-            height: 660,
+            height: 700,
             child: TabBarView(
               children: [
                 for (final item in items)
@@ -297,10 +306,14 @@ class SortingDetailGradeList extends StatelessWidget {
                         ]
                       : [
                           Text(
-                            grade['semifinished_product']?['code'] ?? '',
+                            grade['semifinished_product']?['code'] ??
+                                grade['finished_product']?['code'] ??
+                                '-',
                           ),
                           Text(
-                            grade['semifinished_product']?['name'] ?? '-',
+                            grade['semifinished_product']?['name'] ??
+                                grade['finished_product']?['name'] ??
+                                '-',
                             style: const TextStyle(color: Colors.grey),
                           ),
                         ],

@@ -160,7 +160,7 @@ class _ListItemState extends State<ListItem> {
                   ),
                 ),
                 Text(
-                  item['greige_item']['code']?.toString() ?? '-',
+                  item['greige_item']?['code']?.toString() ?? '-',
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('lg'),
                     fontWeight: CustomTheme().fontWeight('semibold'),
@@ -170,7 +170,7 @@ class _ListItemState extends State<ListItem> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  item['greige_item']['name']?.toString() ?? '-',
+                  item['greige_item']?['name']?.toString() ?? '-',
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('lg'),
                     fontWeight: CustomTheme().fontWeight('semibold'),

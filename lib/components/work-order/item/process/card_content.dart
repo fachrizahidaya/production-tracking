@@ -30,6 +30,7 @@ class _CardContentState extends State<CardContent> {
     final List allData = isList ? widget.data : [widget.data];
 
     final processNumber = getProcessNumber(mainData, widget.processKey);
+
     return Container(
       padding: CustomTheme().padding('content'),
       child: Column(
@@ -39,7 +40,7 @@ class _CardContentState extends State<CardContent> {
             _buildProcessNumber(processNumber, widget.isTablet),
 
           /// ✅ PROSES PRODUKSI
-          if (_hasProductionItems(mainData))
+          if (_hasProductionItems(mainData) && widget.processKey != 'dyeing')
             _buildProductionItemsSection(mainData, widget.isTablet),
 
           if (mainData['start_time'] != null || mainData['end_time'] != null)
@@ -208,7 +209,7 @@ class _CardContentState extends State<CardContent> {
           Expanded(
             child: _buildInfoCard(
               icon: Icons.inventory_2_outlined,
-              label: 'Quantity',
+              label: 'Qty',
               value: formatNumber(data['qty'] ?? data['item_qty']),
               unit: data['item_unit'] != null
                   ? data['item_unit']['code'].toString()
@@ -234,36 +235,80 @@ class _CardContentState extends State<CardContent> {
 
   Widget _buildDyeingSection(Map<String, dynamic> data, bool isTablet) {
     final lot = data['lot_celup_no'];
+    final cycleNo = data['cycle_no'];
+    final isRework = data['rework_dyeing'] == true;
+    final notes = data['notes'];
+
+    final List semifinishedProducts = data['semifinished_products'] ?? [];
+
+    final List attachments = data['attachments'] ?? [];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 🔹 LOT CELUP
-        if (lot != null) ...[
+        /// 🔹 LOT & CYCLE
+
+        /// 🔹 REWORK STATUS
+
+        /// 🔹 SEMI FINISHED PRODUCTS
+        if (semifinishedProducts.isNotEmpty) ...[
           _buildSectionTitle(
-            icon: Icons.confirmation_number_outlined,
-            title: 'Lot Celup',
+            icon: Icons.inventory_2_outlined,
+            title: 'Semi Finished Products',
             isTablet: isTablet,
           ),
-          Container(
-            padding: CustomTheme().padding('process-content'),
-            decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.blue.withOpacity(0.2)),
-            ),
-            child: Text(
-              lot.toString(),
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('md'),
-                fontWeight: CustomTheme().fontWeight('bold'),
-                color: Colors.blue[700],
-              ),
-            ),
-          ),
+          ...semifinishedProducts
+              .map((item) {
+                return Container(
+                  padding: CustomTheme().padding('process-content'),
+                  decoration: BoxDecoration(
+                    color: Colors.indigo.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Colors.indigo.withOpacity(0.15),
+                    ),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.category_outlined,
+                        color: Colors.indigo,
+                        size: isTablet ? 18 : 16,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item['code'] ?? '-',
+                              style: TextStyle(
+                                fontWeight: CustomTheme().fontWeight('bold'),
+                              ),
+                            ),
+                            Text(
+                              item['name'] ?? '-',
+                              style: TextStyle(
+                                fontSize: CustomTheme().fontSize('sm'),
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                          ].separatedBy(
+                            CustomTheme().vGap('sm'),
+                          ),
+                        ),
+                      ),
+                    ].separatedBy(CustomTheme().hGap('lg')),
+                  ),
+                );
+              })
+              .toList()
+              .separatedBy(CustomTheme().vGap('md')),
         ],
 
-        // 🔹 REWORK
+        /// 🔹 ATTACHMENTS
+
+        /// 🔹 NOTES
       ].separatedBy(CustomTheme().vGap('lg')),
     );
   }
@@ -583,110 +628,162 @@ class _CardContentState extends State<CardContent> {
     );
   }
 
-  Widget _buildSortingSection(Map<String, dynamic> data, bool isTablet) {
+  Widget _buildSortingSection(
+    Map<String, dynamic> data,
+    bool isTablet,
+  ) {
+    final List grades = data['grades'] ?? [];
+
     final int rework = data['rework_long_hemming'] ?? 0;
     final int spraying = data['spraying'] ?? 0;
     final int combing = data['combing'] ?? 0;
 
-    final int totalPerbaikan = rework + spraying + combing;
-
-    final List grades = data['grades'] ?? [];
-
-    final int totalGrade = grades.fold(
-      0,
-      (sum, g) => sum + ((g['qty'] ?? 0) as int),
-    );
-
-    final int totalSortir = totalPerbaikan + totalGrade;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 🔹 PERBAIKAN
         _buildSectionTitle(
-          icon: Icons.build_outlined,
-          title: 'Perbaikan',
+          icon: Icons.sort_outlined,
+          title: 'Hasil Sortir',
           isTablet: isTablet,
         ),
-
-        Row(
-          children: [
-            Expanded(
-              child: _buildInfoCard(
-                icon: Icons.refresh,
-                label: 'Rework LH',
-                value: formatNumber(rework),
-                unit: 'PCS',
-                color: Colors.orange,
-                isTablet: isTablet,
-              ),
-            ),
-            Expanded(
-              child: _buildInfoCard(
-                icon: Icons.water_drop_outlined,
-                label: 'Spraying',
-                value: formatNumber(spraying),
-                unit: 'PCS',
-                color: Colors.blue,
-                isTablet: isTablet,
-              ),
-            ),
-            Expanded(
-              child: _buildInfoCard(
-                icon: Icons.cleaning_services_outlined,
-                label: 'Combing',
-                value: formatNumber(combing),
-                unit: 'PCS',
-                color: Colors.green,
-                isTablet: isTablet,
-              ),
-            ),
-          ].separatedBy(CustomTheme().hGap('lg')),
+        SizedBox(
+          height: 16,
         ),
+        ...grades
+            .map((item) {
+              final List itemGrades = item['grades'] ?? [];
 
-        _buildInfoCard(
-          icon: Icons.calculate_outlined,
-          label: 'Total Perbaikan',
-          value: formatNumber(totalPerbaikan),
-          unit: 'PCS',
-          color: Colors.deepOrange,
-          isTablet: isTablet,
-        ),
+              int gradeA = 0;
+              int gradeB = 0;
+              int gradeBS = 0;
 
-        // 🔹 GRADES
-        if (grades.isNotEmpty) ...[
-          _buildSectionTitle(
-            icon: Icons.grade_outlined,
-            title: 'Grades',
-            isTablet: isTablet,
-          ),
-          _buildGradesSection(grades, isTablet),
-          _buildInfoCard(
-            icon: Icons.summarize_outlined,
-            label: 'Total Grades',
-            value: formatNumber(totalGrade),
-            unit: 'PCS',
-            color: Colors.purple,
-            isTablet: isTablet,
-          ),
-        ],
+              for (final g in itemGrades) {
+                final grade = g['grade'];
 
-        // 🔹 TOTAL SORTIR
-        _buildSectionTitle(
-          icon: Icons.analytics_outlined,
-          title: 'Total Sortir',
-          isTablet: isTablet,
-        ),
+                if (grade == 'A') {
+                  gradeA = (g['qty'] ?? 0);
+                } else if (grade == 'B') {
+                  gradeB = (g['qty'] ?? 0);
+                } else if (grade == 'BS') {
+                  gradeBS = (g['qty'] ?? 0);
+                }
+              }
 
-        _buildInfoCard(
-          icon: Icons.check_circle,
-          label: 'Total',
-          value: formatNumber(totalSortir),
-          unit: 'PCS',
-          color: Colors.teal,
-          isTablet: isTablet,
-        ),
-      ].separatedBy(CustomTheme().vGap('lg')),
+              final totalItem =
+                  rework + spraying + combing + gradeA + gradeB + gradeBS;
+
+              return Container(
+                padding: CustomTheme().padding('process-content'),
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.03),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Colors.grey.withOpacity(0.15),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// 🔹 ITEM HEADER
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.inventory_2_outlined,
+                          color: Colors.indigo,
+                          size: isTablet ? 18 : 16,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item['item_code'] ?? '-',
+                                style: TextStyle(
+                                  fontWeight: CustomTheme().fontWeight('bold'),
+                                ),
+                              ),
+                              Text(
+                                item['item_name'] ?? '-',
+                                style: TextStyle(
+                                  fontSize: CustomTheme().fontSize('sm'),
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                            ].separatedBy(
+                              CustomTheme().vGap('sm'),
+                            ),
+                          ),
+                        ),
+                      ].separatedBy(CustomTheme().hGap('lg')),
+                    ),
+
+                    /// 🔹 SORTING RESULT
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: [
+                        _buildMiniGradeCard(
+                          label: 'Permak Long Hemming',
+                          value: rework,
+                          color: Colors.orange,
+                          icon: Icons.refresh,
+                          isTablet: isTablet,
+                        ),
+                        _buildMiniGradeCard(
+                          label: 'Semprotan',
+                          value: spraying,
+                          color: Colors.blue,
+                          icon: Icons.water_drop_outlined,
+                          isTablet: isTablet,
+                        ),
+                        _buildMiniGradeCard(
+                          label: 'Sisiran',
+                          value: combing,
+                          color: Colors.teal,
+                          icon: Icons.cleaning_services_outlined,
+                          isTablet: isTablet,
+                        ),
+                        _buildMiniGradeCard(
+                          label: 'Grade A',
+                          value: gradeA,
+                          color: Colors.green,
+                          icon: Icons.grade,
+                          isTablet: isTablet,
+                        ),
+                        _buildMiniGradeCard(
+                          label: 'Grade B',
+                          value: gradeB,
+                          color: Colors.amber,
+                          icon: Icons.grade_outlined,
+                          isTablet: isTablet,
+                        ),
+                        _buildMiniGradeCard(
+                          label: 'BS',
+                          value: gradeBS,
+                          color: Colors.red,
+                          icon: Icons.cancel_outlined,
+                          isTablet: isTablet,
+                        ),
+                      ],
+                    ),
+
+                    /// 🔹 TOTAL ITEM
+                    _buildInfoCard(
+                      icon: Icons.calculate_outlined,
+                      label: 'Total',
+                      value: formatNumber(totalItem),
+                      unit: 'PCS',
+                      color: Colors.indigo,
+                      isTablet: isTablet,
+                    ),
+                  ].separatedBy(CustomTheme().vGap('lg')),
+                ),
+              );
+            })
+            .toList()
+            .separatedBy(CustomTheme().vGap('lg')),
+      ],
     );
   }
 
@@ -805,7 +902,7 @@ class _CardContentState extends State<CardContent> {
       children: [
         _buildSectionTitle(
           icon: Icons.precision_manufacturing_outlined,
-          title: 'Item Produksi',
+          title: 'Material',
           isTablet: isTablet,
         ),
         ...items
@@ -1005,6 +1102,54 @@ class _CardContentState extends State<CardContent> {
             .toList()
             .separatedBy(CustomTheme().vGap('lg')),
       ].separatedBy(CustomTheme().vGap('lg')),
+    );
+  }
+
+  Widget _buildMiniGradeCard({
+    required String label,
+    required int value,
+    required Color color,
+    required IconData icon,
+    required bool isTablet,
+  }) {
+    return Container(
+      width: isTablet ? 150 : 135,
+      padding: EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 10,
+      ),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: color.withOpacity(0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            icon,
+            color: color,
+            size: isTablet ? 18 : 16,
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('xs'),
+              color: Colors.grey[700],
+            ),
+          ),
+          Text(
+            '${formatNumber(value)} PCS',
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('md'),
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+        ].separatedBy(CustomTheme().vGap('sm')),
+      ),
     );
   }
 

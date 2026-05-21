@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -87,23 +88,36 @@ class SortingDetailGradeList extends StatelessWidget {
           Container(
             height: 50,
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: Colors.grey[200],
               borderRadius: BorderRadius.circular(
                 12,
               ),
             ),
-            child: TabBar(
-              isScrollable: true,
-              dividerColor: Colors.transparent,
-              tabs: [
-                for (final item in items)
-                  Tab(
-                    text: item['finished_product']?['code'] ?? '-',
-                  ),
-              ],
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: TabBar(
+                isScrollable: false,
+                dividerColor: Colors.transparent,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.black,
+                indicatorColor: Colors.white,
+                indicator: BoxDecoration(
+                  color: Colors.blue[800],
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                tabs: [
+                  for (final item in items)
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      child: Tab(
+                        text: item['finished_product']?['code'] ?? '-',
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 12),
           SizedBox(
             height: 700,
             child: TabBarView(
@@ -132,132 +146,137 @@ class SortingDetailGradeList extends StatelessWidget {
 
     final defects = bsGrade['defects'] ?? [];
 
-    return Column(
-      children: [
-        /*
-|--------------------------------------------------------------------------
-| GRADE
-|--------------------------------------------------------------------------
-*/
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          /*
+      |--------------------------------------------------------------------------
+      | GRADE
+      |--------------------------------------------------------------------------
+      */
 
-        TemplateCard(
-          title: 'Grade',
-          icon: Icons.grade_outlined,
-          child: Column(
-            children: [
-              for (final grade in grades)
-                _buildGradeCard(
-                  grade,
-                ),
-            ].separatedBy(
-              SizedBox(height: 12),
-            ),
-          ),
-        ),
-        SizedBox(height: 16),
-
-        /*
-|--------------------------------------------------------------------------
-| TIPE BS
-|--------------------------------------------------------------------------
-*/
-
-        if (defects.isNotEmpty)
           TemplateCard(
-            title: 'Tipe BS',
-            icon: Icons.warning_amber_outlined,
-            child: SizedBox(
-              height: 80,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: defects.length,
-                separatorBuilder: (_, __) => SizedBox(width: 12),
-                itemBuilder: (context, index) {
-                  final defect = defects[index];
+            title: 'Grade',
+            icon: Icons.grade_outlined,
+            child: Column(
+              children: [
+                for (final grade in grades)
+                  _buildGradeCard(
+                    grade,
+                  ),
+              ].separatedBy(
+                CustomTheme().vGap('xl'),
+              ),
+            ),
+          ),
+          // SizedBox(height: 16),
 
-                  return Container(
-                    constraints: BoxConstraints(
-                      minWidth: 120,
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.red.shade50,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: Colors.red.shade100,
+          /*
+      |--------------------------------------------------------------------------
+      | TIPE BS
+      |--------------------------------------------------------------------------
+      */
+
+          if (defects.isNotEmpty)
+            TemplateCard(
+              title: 'Tipe BS',
+              icon: Icons.warning_amber_outlined,
+              child: SizedBox(
+                height: 80,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: defects.length,
+                  separatorBuilder: (_, __) => SizedBox(width: 12),
+                  itemBuilder: (context, index) {
+                    final defect = defects[index];
+
+                    return Container(
+                      constraints: BoxConstraints(
+                        minWidth: 120,
                       ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          defect['type']['name'] ?? '-',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: Colors.red.shade700,
-                          ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.red.shade100,
                         ),
-                        SizedBox(height: 6),
-                        Text(
-                          formatNumber(defect['qty']),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            defect['type']['name'] ?? '-',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                              color: Colors.red.shade700,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                          SizedBox(height: 6),
+                          Text(
+                            formatNumber(defect['qty']),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        SizedBox(height: 16),
+          // SizedBox(height: 16),
 
-        /*
-|--------------------------------------------------------------------------
-| PERBAIKAN
-|--------------------------------------------------------------------------
-*/
+          /*
+      |--------------------------------------------------------------------------
+      | PERBAIKAN
+      |--------------------------------------------------------------------------
+      */
 
-        TemplateCard(
-          title: 'Perbaikan',
-          icon: Icons.build_outlined,
-          child: Row(
-            children: [
-              _buildRepairBox(
-                'Semprotan',
-                gradeValue(
-                  grades,
-                  'spraying',
+          TemplateCard(
+            title: 'Perbaikan',
+            icon: Icons.build_outlined,
+            child: Row(
+              children: [
+                _buildRepairBox(
+                  'Semprotan',
+                  gradeValue(
+                    grades,
+                    'spraying',
+                  ),
                 ),
-              ),
-              _buildRepairBox(
-                'Permak Long Hemming',
-                gradeValue(
-                  grades,
-                  'rework_long_hemming',
+                _buildRepairBox(
+                  'Permak Long Hemming',
+                  gradeValue(
+                    grades,
+                    'rework_long_hemming',
+                  ),
                 ),
-              ),
-              _buildRepairBox(
-                'Sisiran',
-                gradeValue(
-                  grades,
-                  'combing',
+                _buildRepairBox(
+                  'Sisiran',
+                  gradeValue(
+                    grades,
+                    'combing',
+                  ),
                 ),
-              ),
-            ].separatedBy(
-              SizedBox(width: 12),
+              ].separatedBy(CustomTheme().hGap('xl')),
             ),
           ),
-        ),
-      ],
+        ].separatedBy(CustomTheme().vGap('xl')),
+      ),
     );
   }
 

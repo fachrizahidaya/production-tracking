@@ -450,20 +450,31 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           Container(
             height: 50,
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(
-                12,
-              ),
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: TabBar(
-              isScrollable: true,
-              dividerColor: Colors.transparent,
-              tabs: [
-                for (final item in items)
-                  Tab(
-                    text: item['finished_product']?['code'] ?? '-',
-                  ),
-              ],
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: TabBar(
+                isScrollable: false,
+                dividerColor: Colors.transparent,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.black,
+                indicatorColor: Colors.white,
+                indicator: BoxDecoration(
+                  color: Colors.blue[800],
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                tabs: [
+                  for (final item in items)
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      child: Tab(
+                        text: item['finished_product']?['code'] ?? '-',
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
           SizedBox(height: 16),
@@ -474,7 +485,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 |--------------------------------------------------------------------------
 */
           SizedBox(
-            height: 1000,
+            height: 1100,
             child: TabBarView(
               children: [
                 for (int itemIndex = 0; itemIndex < items.length; itemIndex++)
@@ -502,83 +513,90 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
     final grades = item['grades'] ?? [];
 
-    return Column(
-      children: [
-        /*
-|--------------------------------------------------------------------------
-| GRADES
-|--------------------------------------------------------------------------
-*/
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          /*
+      |--------------------------------------------------------------------------
+      | GRADES
+      |--------------------------------------------------------------------------
+      */
 
-        TemplateCard(
-          title: 'Grade',
-          icon: Icons.grade_outlined,
-          child: Column(
-            children: [
-              for (int i = 0; i < grades.length; i++)
-                _buildGradeCard(
+          TemplateCard(
+            title: 'Grade',
+            icon: Icons.grade_outlined,
+            child: Column(
+              children: [
+                for (int i = 0; i < grades.length; i++)
+                  _buildGradeCard(
+                    itemIndex,
+                    i,
+                  ),
+              ].separatedBy(
+                SizedBox(height: 12),
+              ),
+            ),
+          ),
+
+          /*
+      |--------------------------------------------------------------------------
+      | PERBAIKAN
+      |--------------------------------------------------------------------------
+      */
+
+          TemplateCard(
+            title: 'Perbaikan',
+            icon: Icons.build_outlined,
+            child: Row(
+              children: [
+                _buildRepairInput(
                   itemIndex,
-                  i,
+                  'spraying',
+                  'Semprotan',
                 ),
-            ].separatedBy(
-              SizedBox(height: 12),
+                _buildRepairInput(
+                  itemIndex,
+                  'rework_long_hemming',
+                  'Permak Long Hemming',
+                ),
+                _buildRepairInput(
+                  itemIndex,
+                  'combing',
+                  'Sisiran',
+                ),
+              ].separatedBy(
+                SizedBox(width: 12),
+              ),
             ),
           ),
-        ),
 
-        /*
-|--------------------------------------------------------------------------
-| PERBAIKAN
-|--------------------------------------------------------------------------
-*/
+          /*
+      |--------------------------------------------------------------------------
+      | DEFECTS
+      |--------------------------------------------------------------------------
+      */
 
-        TemplateCard(
-          title: 'Perbaikan',
-          icon: Icons.build_outlined,
-          child: Row(
-            children: [
-              _buildRepairInput(
-                itemIndex,
-                'spraying',
-                'Semprotan',
-              ),
-              _buildRepairInput(
-                itemIndex,
-                'rework_long_hemming',
-                'Permak Long Hemming',
-              ),
-              _buildRepairInput(
-                itemIndex,
-                'combing',
-                'Sisiran',
-              ),
-            ].separatedBy(
-              SizedBox(width: 12),
-            ),
+          _buildDefectsCard(
+            itemIndex,
           ),
+
+          /*
+      |--------------------------------------------------------------------------
+      | SUMMARY
+      |--------------------------------------------------------------------------
+      */
+
+          _buildSummary(
+            itemIndex,
+          ),
+        ].separatedBy(
+          SizedBox(height: 16),
         ),
-
-        /*
-|--------------------------------------------------------------------------
-| DEFECTS
-|--------------------------------------------------------------------------
-*/
-
-        _buildDefectsCard(
-          itemIndex,
-        ),
-
-        /*
-|--------------------------------------------------------------------------
-| SUMMARY
-|--------------------------------------------------------------------------
-*/
-
-        _buildSummary(
-          itemIndex,
-        ),
-      ].separatedBy(
-        SizedBox(height: 16),
       ),
     );
   }

@@ -539,15 +539,28 @@ class _SortingSectionState extends State<SortingSection> {
                 12,
               ),
             ),
-            child: TabBar(
-              isScrollable: true,
-              dividerColor: Colors.transparent,
-              tabs: [
-                for (final item in items)
-                  Tab(
-                    text: item['finished_product']?['code'] ?? '-',
-                  ),
-              ],
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: TabBar(
+                isScrollable: false,
+                dividerColor: Colors.transparent,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.black,
+                indicatorColor: Colors.white,
+                indicator: BoxDecoration(
+                  color: Colors.blue[800],
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                tabs: [
+                  for (final item in items)
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      child: Tab(
+                        text: item['finished_product']?['code'] ?? '-',
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
           SizedBox(height: 16),
@@ -586,83 +599,90 @@ class _SortingSectionState extends State<SortingSection> {
 
     final grades = item['grades'] ?? [];
 
-    return Column(
-      children: [
-        /*
-|--------------------------------------------------------------------------
-| GRADES
-|--------------------------------------------------------------------------
-*/
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          /*
+      |--------------------------------------------------------------------------
+      | GRADES
+      |--------------------------------------------------------------------------
+      */
 
-        TemplateCard(
-          title: 'Grade',
-          icon: Icons.grade_outlined,
-          child: Column(
-            children: [
-              for (int i = 0; i < grades.length; i++)
-                _buildGradeCard(
+          TemplateCard(
+            title: 'Grade',
+            icon: Icons.grade_outlined,
+            child: Column(
+              children: [
+                for (int i = 0; i < grades.length; i++)
+                  _buildGradeCard(
+                    itemIndex,
+                    i,
+                  ),
+              ].separatedBy(
+                SizedBox(height: 12),
+              ),
+            ),
+          ),
+
+          /*
+      |--------------------------------------------------------------------------
+      | PERBAIKAN
+      |--------------------------------------------------------------------------
+      */
+
+          TemplateCard(
+            title: 'Perbaikan',
+            icon: Icons.build_outlined,
+            child: Row(
+              children: [
+                _buildRepairInput(
                   itemIndex,
-                  i,
+                  'spraying',
+                  'Semprotan',
                 ),
-            ].separatedBy(
-              SizedBox(height: 12),
+                _buildRepairInput(
+                  itemIndex,
+                  'rework_long_hemming',
+                  'Permak Long Hemming',
+                ),
+                _buildRepairInput(
+                  itemIndex,
+                  'combing',
+                  'Sisiran',
+                ),
+              ].separatedBy(
+                SizedBox(width: 12),
+              ),
             ),
           ),
-        ),
 
-        /*
-|--------------------------------------------------------------------------
-| PERBAIKAN
-|--------------------------------------------------------------------------
-*/
+          /*
+      |--------------------------------------------------------------------------
+      | DEFECTS
+      |--------------------------------------------------------------------------
+      */
 
-        TemplateCard(
-          title: 'Perbaikan',
-          icon: Icons.build_outlined,
-          child: Row(
-            children: [
-              _buildRepairInput(
-                itemIndex,
-                'spraying',
-                'Semprotan',
-              ),
-              _buildRepairInput(
-                itemIndex,
-                'rework_long_hemming',
-                'Permak Long Hemming',
-              ),
-              _buildRepairInput(
-                itemIndex,
-                'combing',
-                'Sisiran',
-              ),
-            ].separatedBy(
-              SizedBox(width: 12),
-            ),
+          _buildDefectsCard(
+            itemIndex,
           ),
+
+          /*
+      |--------------------------------------------------------------------------
+      | SUMMARY
+      |--------------------------------------------------------------------------
+      */
+
+          _buildSummary(
+            itemIndex,
+          ),
+        ].separatedBy(
+          SizedBox(height: 16),
         ),
-
-        /*
-|--------------------------------------------------------------------------
-| DEFECTS
-|--------------------------------------------------------------------------
-*/
-
-        _buildDefectsCard(
-          itemIndex,
-        ),
-
-        /*
-|--------------------------------------------------------------------------
-| SUMMARY
-|--------------------------------------------------------------------------
-*/
-
-        _buildSummary(
-          itemIndex,
-        ),
-      ].separatedBy(
-        SizedBox(height: 16),
       ),
     );
   }
@@ -679,38 +699,97 @@ class _SortingSectionState extends State<SortingSection> {
   ) {
     final grade = _items[itemIndex]['grades'][gradeIndex];
 
+    final isBS = (grade['code'] ?? '').toString().toUpperCase() == 'BS';
+
     return Container(
-      padding: EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.grey.shade300,
         ),
-        borderRadius: BorderRadius.circular(
-          12,
-        ),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
+          /*
+|--------------------------------------------------------------------------
+| GRADE LABEL
+|--------------------------------------------------------------------------
+*/
           Expanded(
-            flex: 1,
             child: Text(
               grade['code'] ?? '-',
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
+          const SizedBox(width: 12),
+
+          /*
+|--------------------------------------------------------------------------
+| PRODUCT INFO
+|--------------------------------------------------------------------------
+*/
           Expanded(
             flex: 2,
-            child: Text(
-              grade['semifinished_product']?['code'] ?? '-',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: isBS
+                  ? [
+                      Text(
+                        'Perhitungan otomatis dari total Tipe BS',
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ]
+                  : grade['code'] == 'B' &&
+                          grade['semifinished_product']?['code'] == null
+                      ? [
+                          Text(
+                            'Material code belum tersedia',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ]
+                      : [
+                          Text(
+                            grade['semifinished_product']?['code'] ??
+                                grade['finished_product']?['code'] ??
+                                '-',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            grade['semifinished_product']?['name'] ??
+                                grade['finished_product']?['name'] ??
+                                '-',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
             ),
           ),
+          const SizedBox(width: 12),
+
+          /*
+|--------------------------------------------------------------------------
+| QTY
+|--------------------------------------------------------------------------
+*/
           Expanded(
             flex: 2,
             child: TextFormGrade(
               label: 'Qty',
-              isDisabled: grade['code'] == 'BS',
+              isDisabled: isBS,
               initialValue: '${grade['qty'] ?? 0}',
               controller: _getGradeController(
                 itemIndex,
@@ -718,7 +797,10 @@ class _SortingSectionState extends State<SortingSection> {
                 grade['qty'] ?? 0,
               ),
               onChanged: (value) {
-                grade['qty'] = num.tryParse(value.toString()) ?? 0;
+                grade['qty'] = num.tryParse(
+                      value.toString(),
+                    ) ??
+                    0;
 
                 _syncFormItems();
 
@@ -841,7 +923,13 @@ class _SortingSectionState extends State<SortingSection> {
     int itemIndex,
     int defectIndex,
   ) {
-    final defect = widget.form['items'][itemIndex]['defects'][defectIndex];
+    final defects = _items[itemIndex]['defects'] ?? [];
+
+    if (defectIndex >= defects.length) {
+      return const SizedBox();
+    }
+
+    final defect = defects[defectIndex];
 
     return Container(
       padding: EdgeInsets.symmetric(

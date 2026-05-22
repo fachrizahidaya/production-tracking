@@ -41,6 +41,7 @@ class _WoInfoTabState extends State<WoInfoTab> {
               ),
               ItemTab(
                 data: widget.data,
+                withSpk: true,
               ),
               AttachmentTab(
                   existingAttachment: widget.data['attachments'] ?? [])

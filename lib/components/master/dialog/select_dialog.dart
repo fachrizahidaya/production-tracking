@@ -40,10 +40,11 @@ class _SelectDialogState extends State<SelectDialog> {
   @override
   void initState() {
     super.initState();
+
+    _dataList = widget.options;
+
     if (widget.isManyOption) {
       _scrollController.addListener(_handleScroll);
-    } else {
-      _dataList = widget.options;
     }
   }
 
@@ -79,7 +80,8 @@ class _SelectDialogState extends State<SelectDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final listData = widget.options;
+    final listData = widget.isManyOption ? widget.options : _dataList;
+
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(

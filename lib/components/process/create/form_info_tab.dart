@@ -87,10 +87,7 @@ class _FormInfoTabState extends State<FormInfoTab> {
                   label: widget.label,
                   isTablet: isTablet,
                 ),
-                ItemTab(
-                  data: widget.data,
-                  label: widget.label,
-                ),
+                ItemTab(data: widget.data, label: widget.label, withSpk: false),
                 NoteItem(
                   data: widget.data,
                   label: widget.label,

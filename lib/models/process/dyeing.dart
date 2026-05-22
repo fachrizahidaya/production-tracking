@@ -30,6 +30,7 @@ class Dyeing {
   final machine;
   final dyeingLotNo;
   final greige_item_id;
+  final semifinished_products;
 
   Dyeing(
       {this.id,
@@ -58,37 +59,40 @@ class Dyeing {
       this.machine,
       this.rework_reference,
       this.dyeingLotNo,
-      this.greige_item_id});
+      this.greige_item_id,
+      this.semifinished_products});
 
   factory Dyeing.fromJson(Map<String, dynamic> json) {
     return Dyeing(
-        id: json['id'] as int?,
-        unit_id: json['unit_id'] as int?,
-        wo_id: json['wo_id'] as int?,
-        machine_id: json['machine_id'] as int?,
-        start_by_id: json['start_by_id'] as int?,
-        end_by_id: json['end_by_id'] as int?,
-        rework_reference_id: json['rework_reference_id'] as int?,
-        dyeing_no: json['dyeing_no'] ?? '',
-        start_time: json['start_time'] ?? '',
-        end_time: json['end_time'] ?? '',
-        qty: json['qty'] ?? '',
-        width: json['width'] ?? '',
-        length: json['length'] ?? '',
-        status: json['status'] ?? '',
-        rework: json['rework'] as bool?,
-        work_orders: json['work_orders'],
-        notes: json['notes'] ?? '',
-        attachments: json['attachments'] ?? [],
-        machine: json['machine'] ?? {},
-        rework_reference: json['rework_reference'],
-        start_by: json['start_by'],
-        end_by: json['end_by'],
-        width_unit_id: json['width_unit_id'] as int?,
-        wo_no: json['wo_no'],
-        length_unit_id: json['length_unit_id'] as int?,
-        dyeingLotNo: json['lot_celup_no'],
-        greige_item_id: json['greige_item_id'] as int?);
+      id: json['id'] as int?,
+      unit_id: json['unit_id'] as int?,
+      wo_id: json['wo_id'] as int?,
+      machine_id: json['machine_id'] as int?,
+      start_by_id: json['start_by_id'] as int?,
+      end_by_id: json['end_by_id'] as int?,
+      rework_reference_id: json['rework_reference_id'] as int?,
+      dyeing_no: json['dyeing_no'] ?? '',
+      start_time: json['start_time'] ?? '',
+      end_time: json['end_time'] ?? '',
+      qty: json['qty'] ?? '',
+      width: json['width'] ?? '',
+      length: json['length'] ?? '',
+      status: json['status'] ?? '',
+      rework: json['rework'] as bool?,
+      work_orders: json['work_orders'],
+      notes: json['notes'] ?? '',
+      attachments: json['attachments'] ?? [],
+      machine: json['machine'] ?? {},
+      rework_reference: json['rework_reference'],
+      start_by: json['start_by'],
+      end_by: json['end_by'],
+      width_unit_id: json['width_unit_id'] as int?,
+      wo_no: json['wo_no'],
+      length_unit_id: json['length_unit_id'] as int?,
+      dyeingLotNo: json['lot_celup_no'],
+      greige_item_id: json['greige_item_id'] as int?,
+      semifinished_products: json['semifinished_products'] ?? [],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -120,6 +124,7 @@ class Dyeing {
       'wo_no': wo_no,
       'lot_celup_no': dyeingLotNo,
       'greige_item_id': greige_item_id,
+      'semifinished_products': semifinished_products,
     };
   }
 }

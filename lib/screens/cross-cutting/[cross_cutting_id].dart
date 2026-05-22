@@ -43,17 +43,17 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
           Provider.of<CrossCuttingService>(context, listen: false)
               .deleteItem(context, id, isLoading),
       modelBuilder: (form, data) => CrossCutting(
-        wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-        unit_id: form['item_unit_id'] != null
-            ? int.tryParse(form['item_unit_id'].toString())
-            : 1,
-        machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-        qty: form['item_qty'] ?? '0',
-        notes: form['notes'] ?? data['notes'],
-        attachments: form['attachments'] ?? data['attachments'],
-        machine_ids: form['machine_ids'],
-        machines: form['machines'],
-      ),
+          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+          unit_id: form['item_unit_id'] != null
+              ? int.tryParse(form['item_unit_id'].toString())
+              : 1,
+          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+          qty: form['item_qty'] ?? '0',
+          notes: form['notes'] ?? data['notes'],
+          attachments: form['attachments'] ?? data['attachments'],
+          machine_ids: form['machine_ids'],
+          machines: form['machines'],
+          items: form['items']),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/cross-cuttings',
@@ -72,19 +72,19 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
       fetchFinish: (service) => service.fetchCuttingFinishOptions(),
       handleSubmitToService: (context, id, form, isLoading) async {
         final crossCutting = CrossCutting(
-          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-          unit_id: int.tryParse(form['item_unit_id']?.toString() ?? '1'),
-          qty: form['item_qty'],
-          notes: form['notes'],
-          start_time: form['start_time'],
-          end_time: form['end_time'],
-          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
-          attachments: form['attachments'],
-          machine_ids: form['machine_ids'] ?? [],
-          machines: form['machines'] ?? [],
-        );
+            wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+            machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+            unit_id: int.tryParse(form['item_unit_id']?.toString() ?? '1'),
+            qty: form['item_qty'],
+            notes: form['notes'],
+            start_time: form['start_time'],
+            end_time: form['end_time'],
+            start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+            end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+            attachments: form['attachments'],
+            machine_ids: form['machine_ids'] ?? [],
+            machines: form['machines'] ?? [],
+            items: form['items'] ?? []);
 
         final message =
             await Provider.of<CrossCuttingService>(context, listen: false)

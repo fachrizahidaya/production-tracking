@@ -96,66 +96,90 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
     MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomSearchBar(
-          handleSearchChange: widget.handleSearch,
-          showFilter: _openFilter,
-          isFiltered: widget.isFiltered,
-          withRefresh: true,
-          handleRefetch: widget.handleRefetch,
+        /// STICKY-LIKE SEARCH
+        Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: Column(
+            children: [
+              CustomSearchBar(
+                handleSearchChange: widget.handleSearch,
+                showFilter: _openFilter,
+                isFiltered: widget.isFiltered,
+                withRefresh: true,
+                handleRefetch: widget.handleRefetch,
+              ),
+              Divider(height: 1),
+            ],
+          ),
         ),
-        Divider(),
-        widget.firstLoading
-            ? Center(
-                child: Padding(
-                padding: CustomTheme().padding('content'),
-                child: CircularProgressIndicator(),
-              ))
-            : (widget.dataList == null || widget.dataList.isEmpty)
-                ? NoData()
-                : AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    height: _adaptiveHeight,
-                    child: NotificationListener<ScrollNotification>(
-                      onNotification: (notification) {
-                        if (notification is OverscrollNotification &&
-                            notification.metrics.axis == Axis.horizontal) {
-                          return true;
-                        }
-                        return false;
-                      },
-                      child: ListView.separated(
-                        // scrollDirection: Axis.horizontal,
-                        // physics: BouncingScrollPhysics(),
-                        separatorBuilder: (_, __) => CustomTheme().vGap('xl'),
-                        itemCount: widget.hasMore
-                            ? widget.dataList.length + 1
-                            : widget.dataList.length,
-                        itemBuilder: (context, index) {
-                          if (index >= widget.dataList.length) {
-                            if (!widget.isLoadMore) {
-                              Future.microtask(widget.handleLoadMore);
-                            }
-                            return SizedBox(width: 80);
-                          }
 
-                          final item = widget.dataList[index];
-                          return ItemProcess(
-                            item: item,
-                            showTimeline: true,
-                            isExpanded: _expandedIndex == index,
-                            onExpandChanged: (expanded) {
-                              setState(() {
-                                _expandedIndex = expanded ? index : null;
-                              });
-                            },
-                          );
-                        },
-                        padding: CustomTheme().padding('content'),
+        /// LOADING
+        if (widget.firstLoading)
+          Padding(
+            padding: CustomTheme().padding('content'),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+
+        /// EMPTY
+        else if (widget.dataList == null || widget.dataList.isEmpty)
+          Padding(
+            padding: CustomTheme().padding('content'),
+            child: NoData(),
+          )
+
+        /// LIST
+        else
+          Padding(
+            padding: CustomTheme().padding('content'),
+            child: Column(
+              children: [
+                ...List.generate(
+                  widget.dataList.length,
+                  (index) {
+                    final item = widget.dataList[index];
+
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: index == widget.dataList.length - 1 ? 0 : 24,
                       ),
+                      child: AnimatedSize(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        child: ItemProcess(
+                          item: item,
+                          showTimeline: true,
+                          isExpanded: _expandedIndex == index,
+                          onExpandChanged: (expanded) {
+                            setState(() {
+                              _expandedIndex = expanded ? index : null;
+                            });
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+
+                /// LOAD MORE
+                if (widget.hasMore)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 24,
                     ),
+                    child: widget.isLoadMore
+                        ? CircularProgressIndicator()
+                        : ElevatedButton(
+                            onPressed: widget.handleLoadMore,
+                            child: Text('Load More'),
+                          ),
                   ),
+              ],
+            ),
+          ),
       ],
     );
   }

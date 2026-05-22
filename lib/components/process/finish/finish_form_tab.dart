@@ -78,6 +78,7 @@ class FinishFormTab extends StatefulWidget {
   final dyeingQty;
   final finishedItemGrb;
   final finishedItemGood;
+  final isInitializing;
 
   const FinishFormTab(
       {super.key,
@@ -154,7 +155,8 @@ class FinishFormTab extends StatefulWidget {
       this.grades,
       this.dyeingQty,
       this.finishedItemGood,
-      this.finishedItemGrb});
+      this.finishedItemGrb,
+      this.isInitializing});
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();
@@ -243,6 +245,7 @@ class _FinishFormTabState extends State<FinishFormTab>
                   dyeingQty: widget.dyeingQty,
                   finishedItemGood: widget.finishedItemGood,
                   finishedItemGrb: widget.finishedItemGrb,
+                  isInitializing: widget.isInitializing,
                 ),
               ],
             ),

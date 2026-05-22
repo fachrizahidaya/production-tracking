@@ -49,24 +49,27 @@ class _ListItemState extends State<ListItem> {
 
   /// Layout untuk Tablet
   Widget _buildTabletLayout() {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          flex: 2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Item Info
-              _buildItemInfo(true),
-              _buildAdditionalInfo(true),
-            ].separatedBy(CustomTheme().vGap('xl')),
-          ),
+        Row(
+          children: [
+            Expanded(child: _buildQuantitySection(true, withSpk)),
+          ],
         ),
-        Expanded(flex: 1, child: _buildQuantitySection(true, withSpk))
-      ],
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: _buildProdukJadiInfo(),
+            ),
+            Expanded(
+              child: _buildItemInfo(true),
+            ),
+          ].separatedBy(CustomTheme().hGap('xl')),
+        ),
+        _buildAdditionalInfo(true),
+      ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
 
@@ -75,57 +78,112 @@ class _ListItemState extends State<ListItem> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Top Row: Icon + Info + Status
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: _buildItemInfo(false)),
-          ].separatedBy(CustomTheme().vGap('xl')),
-        ),
-        // Bottom Row: Additional Info
+        _buildQuantitySection(false, withSpk),
+        _buildProdukJadiInfo(),
+        _buildItemInfo(false),
         _buildAdditionalInfo(false),
       ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
 
+  /// Produk Jadi Info (Code + Name)
+  Widget _buildProdukJadiInfo() {
+    return Container(
+      width: double.infinity,
+      padding: CustomTheme().padding('card'),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.blue.shade100,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'PRODUK JADI',
+            style: TextStyle(
+              fontWeight: CustomTheme().fontWeight('bold'),
+              color: Colors.blue.shade700,
+            ),
+          ),
+          Text(
+            item['item_code']?.toString() ?? '-',
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('lg'),
+              fontWeight: CustomTheme().fontWeight('semibold'),
+              color: Colors.grey[800],
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            item['item_name']?.toString() ?? '-',
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('lg'),
+              fontWeight: CustomTheme().fontWeight('semibold'),
+              color: Colors.grey[600],
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ].separatedBy(CustomTheme().vGap('md')),
+      ),
+    );
+  }
+
   /// Item Info (Code + Name)
   Widget _buildItemInfo(bool isTablet) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              'GREIGE AWAL',
-              style:
-                  TextStyle(fontWeight: CustomTheme().fontWeight('semibold')),
-            ),
-            Divider(),
-            Text(
-              item['greige_item']['code']?.toString() ?? '-',
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('lg'),
-                fontWeight: CustomTheme().fontWeight('semibold'),
-                color: Colors.grey[800],
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-              item['greige_item']['name']?.toString() ?? '-',
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('lg'),
-                fontWeight: CustomTheme().fontWeight('semibold'),
-                color: Colors.grey[600],
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+    return Container(
+      width: double.infinity,
+      padding: CustomTheme().padding('card'),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.orange.shade100,
         ),
-      ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'GREIGE AWAL',
+                  style: TextStyle(
+                    fontWeight: CustomTheme().fontWeight('bold'),
+                    color: Colors.orange.shade700,
+                  ),
+                ),
+                Text(
+                  item['greige_item']?['code']?.toString() ?? '-',
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('lg'),
+                    fontWeight: CustomTheme().fontWeight('semibold'),
+                    color: Colors.grey[800],
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  item['greige_item']?['name']?.toString() ?? '-',
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('lg'),
+                    fontWeight: CustomTheme().fontWeight('semibold'),
+                    color: Colors.grey[600],
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ].separatedBy(CustomTheme().vGap('md')),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -285,123 +343,131 @@ class _ListItemState extends State<ListItem> {
 
   /// Quantity Section
   Widget _buildQuantitySection(bool isTablet, withSpk) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          if (withSpk == true)
-            ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 80),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'SPK',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontWeight: CustomTheme().fontWeight('semibold'),
+    return Container(
+      padding: CustomTheme().padding('card'),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (withSpk == true)
+              ConstrainedBox(
+                constraints: const BoxConstraints(minWidth: 80),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'SPK',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: _openSpkDetail,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            item['spk_no']?.toString() ?? '-',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: CustomTheme().fontSize('xl'),
-                              fontWeight: CustomTheme().fontWeight('bold'),
-                              color: Colors.blue,
+                    GestureDetector(
+                      onTap: _openSpkDetail,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              item['spk_no']?.toString() ?? '-',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: CustomTheme().fontSize('xl'),
+                                fontWeight: CustomTheme().fontWeight('bold'),
+                                color: Colors.blue,
+                              ),
                             ),
                           ),
-                        ),
-                        const Icon(
-                          Icons.chevron_right_outlined,
-                          color: Colors.blue,
-                        ),
-                      ],
+                          const Icon(
+                            Icons.chevron_right_outlined,
+                            color: Colors.blue,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Qty',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontWeight: CustomTheme().fontWeight('semibold'),
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        _formatQuantity(item['qty']),
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: CustomTheme().fontSize('xl'),
+                          fontWeight: CustomTheme().fontWeight('bold'),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      item['unit']?['code']?.toString() ?? '-',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('lg'),
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ].separatedBy(CustomTheme().hGap('sm')),
+                ),
+              ],
             ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Qty',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontWeight: CustomTheme().fontWeight('semibold'),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Berat',
+                  style: TextStyle(
+                    fontWeight: CustomTheme().fontWeight('semibold'),
+                    color: Colors.grey[600],
+                  ),
                 ),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    child: Text(
-                      _formatQuantity(item['qty']),
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('xl'),
-                        fontWeight: CustomTheme().fontWeight('bold'),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        _formatQuantity(item['weight']),
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: CustomTheme().fontSize('xl'),
+                          fontWeight: CustomTheme().fontWeight('bold'),
+                        ),
                       ),
                     ),
-                  ),
-                  Text(
-                    item['unit']?['code']?.toString() ?? '-',
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('lg'),
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ].separatedBy(CustomTheme().hGap('sm')),
-              ),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Berat',
-                style: TextStyle(
-                  fontWeight: CustomTheme().fontWeight('semibold'),
-                  color: Colors.grey[600],
-                ),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    child: Text(
-                      _formatQuantity(item['weight']),
-                      overflow: TextOverflow.ellipsis,
+                    Text(
+                      item['weight_unit']?['code']?.toString() ?? '-',
                       style: TextStyle(
-                        fontSize: CustomTheme().fontSize('xl'),
-                        fontWeight: CustomTheme().fontWeight('bold'),
+                        fontSize: CustomTheme().fontSize('lg'),
+                        color: Colors.grey[600],
                       ),
                     ),
-                  ),
-                  Text(
-                    item['weight_unit']?['code']?.toString() ?? '-',
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('lg'),
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ].separatedBy(CustomTheme().hGap('sm')),
-              ),
-            ],
-          ),
-        ].separatedBy(SizedBox(
-          width: 24,
-        )),
+                  ].separatedBy(CustomTheme().hGap('sm')),
+                ),
+              ],
+            ),
+          ].separatedBy(SizedBox(
+            width: 24,
+          )),
+        ),
       ),
     );
   }

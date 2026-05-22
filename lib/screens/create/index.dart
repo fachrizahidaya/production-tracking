@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/process/create/create_submit_section.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 
@@ -23,6 +25,7 @@ class CreateProcess extends StatefulWidget {
   final handleSubmitToService;
   final fetchWorkOrder;
   final getWorkOrderOptions;
+  final label;
 
   const CreateProcess(
       {super.key,
@@ -30,7 +33,8 @@ class CreateProcess extends StatefulWidget {
       required this.formPageBuilder,
       this.handleSubmitToService,
       this.fetchWorkOrder,
-      this.getWorkOrderOptions});
+      this.getWorkOrderOptions,
+      this.label});
 
   @override
   State<CreateProcess> createState() => _CreateProcessState();
@@ -65,6 +69,8 @@ class _CreateProcessState extends State<CreateProcess> {
     'maklon': false,
     'maklon_name': '',
     'machine_ids': [],
+    'semifinished_products': [],
+    'items': []
   };
 
   @override
@@ -140,6 +146,46 @@ class _CreateProcessState extends State<CreateProcess> {
 
       await _workOrderService.getDataView(woId);
       final data = _workOrderService.dataView;
+
+      final semiFinishedService = Provider.of<OptionItemSemiFinishedService>(
+        context,
+        listen: false,
+      );
+
+      final params = extractSemiFinishedParams(
+        data['items'] ?? [],
+      );
+
+      await semiFinishedService.fetchOptions(
+        isInitialLoad: true,
+        process:
+            widget.label.toString().trim().toLowerCase().replaceAll(' ', '_'),
+        baseCodes: params['base_codes'] ?? [],
+        colorCodes: params['color_codes'] ?? [],
+      );
+
+      final semiFinishedItems = semiFinishedService.dataListOption;
+
+      if (widget.label == 'Dyeing' ||
+          widget.label == 'Press' ||
+          widget.label == 'Tumbler' ||
+          widget.label == 'Stenter' ||
+          widget.label == 'Long Slitting' ||
+          widget.label == 'Packing') {
+        _form['semifinished_products'] = List.generate(
+          semiFinishedItems.length,
+          (index) => {
+            'item_id': semiFinishedItems[index]['value'],
+          },
+        );
+      } else {
+        _form['items'] = List.generate(
+          semiFinishedItems.length,
+          (index) => {
+            'semifinished_product_id': semiFinishedItems[index]['value'],
+          },
+        );
+      }
 
       _form['wo_id'] = data['id']?.toString() ?? woId;
       _form['no_wo'] = data['wo_no']?.toString() ?? woNo;

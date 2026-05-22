@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/process/create/tab_section.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
+import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 
@@ -191,7 +193,13 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
           label: 'Work Order',
           options: workOrderOption,
           selected: widget.form?['wo_id']?.toString() ?? '',
-          handleChangeValue: (selected) {
+          handleChangeValue: (selected) async {
+            final semiFinishedService =
+                Provider.of<OptionItemSemiFinishedService>(
+              context,
+              listen: false,
+            );
+
             final woId = selected['value']?.toString();
             final processValue = selected[widget.idProcess];
 
@@ -201,11 +209,46 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
             });
 
             if (woId != null && woId.isNotEmpty) {
-              _getDataView(woId);
+              await _getDataView(woId);
+
+              final params = extractSemiFinishedParams(
+                woData['items'] ?? [],
+              );
+
+              await semiFinishedService.fetchOptions(
+                isInitialLoad: true,
+                process: widget.label
+                    .toString()
+                    .trim()
+                    .toLowerCase()
+                    .replaceAll(' ', '_'),
+                baseCodes: params['base_codes'] ?? [],
+                colorCodes: params['color_codes'] ?? [],
+              );
+
+              final semiFinishedItems = semiFinishedService.dataListOption;
+
+              if (widget.label == 'Dyeing') {
+                widget.form?['semifinished_products'] = List.generate(
+                  semiFinishedItems.length,
+                  (index) => {
+                    'item_id': semiFinishedItems[index]['value'],
+                  },
+                );
+              } else {
+                widget.form?['items'] = List.generate(
+                  semiFinishedItems.length,
+                  (index) => {
+                    'semifinished_product_id': semiFinishedItems[index]
+                        ['value'],
+                  },
+                );
+              }
             }
 
             if (processValue != null && processValue.toString().isNotEmpty) {
               processId = processValue.toString();
+
               _getProcessView(processId);
             }
           },

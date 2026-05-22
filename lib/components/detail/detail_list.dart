@@ -282,8 +282,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 isTablet: isTablet,
               ),
             ),
-          if (widget.forDyeing == true && widget.data['status'] == 'Selesai')
-            _buildVerticalDivider(false),
           if (widget.forDyeing == false &&
               widget.data['status'] == 'Selesai' &&
               !(['Long Hemming', 'Cross Cutting', 'Sewing']
@@ -1700,16 +1698,12 @@ Catatan WO
             icon: Icons.attachment_outlined,
             child: _buildTotalSorting(true),
           ),
-        // if ((widget.label != 'Long Hemming' &&
-        //     widget.label != 'Cross Cutting' &&
-        //     widget.label != 'Sewing' &&
-        //     widget.label != 'Sorting' &&
-        //     widget.label != 'Packing'))
-        //   _buildInfoCard(
-        //     title: 'Produk Setengah Jadi',
-        //     icon: Icons.inventory_2_outlined,
-        //     child: _buildMaterialInfo(true),
-        //   ),
+        if ((widget.label == 'Dyeing'))
+          _buildInfoCard(
+            title: 'Produk Setengah Jadi',
+            icon: Icons.inventory_2_outlined,
+            child: _buildMaterialInfo(true),
+          ),
         if (widget.label == 'Long Hemming' ||
             widget.label == 'Cross Cutting' ||
             widget.label == 'Sewing' ||

@@ -8,6 +8,7 @@ import 'package:textile_tracking/components/master/form/text_form_grade.dart';
 import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 
 class SortingSection extends StatefulWidget {
@@ -41,15 +42,22 @@ class _SortingSectionState extends State<SortingSection> {
   final Map<String, TextEditingController> _gradeControllers = {};
   final Map<String, TextEditingController> _repairControllers = {};
   late List<Map<String, dynamic>> _items;
+  List itemGradeOption = [];
+
+  bool _isFetchingGrade = false;
 
   @override
   void initState() {
     super.initState();
+
     _items = [];
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _initializeFormFromApi();
-      }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+
+      await _handleFetchItemGrade();
+
+      await _initializeFormFromApi();
     });
   }
 
@@ -83,6 +91,37 @@ class _SortingSectionState extends State<SortingSection> {
     }
 
     return _repairControllers[mapKey]!;
+  }
+
+  Future<void> _handleFetchItemGrade() async {
+    setState(() {
+      _isFetchingGrade = true;
+    });
+
+    final service = Provider.of<OptionItemGradeService>(
+      context,
+      listen: false,
+    );
+
+    try {
+      await service.fetchOptions();
+
+      final data = service.dataListOption;
+
+      setState(() {
+        itemGradeOption = data;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("$e"),
+        ),
+      );
+    } finally {
+      setState(() {
+        _isFetchingGrade = false;
+      });
+    }
   }
 
   /*
@@ -224,6 +263,34 @@ class _SortingSectionState extends State<SortingSection> {
         ),
       );
 
+      final gradeAOption = itemGradeOption.firstWhere(
+        (e) => (e['label'] ?? '').toString().toLowerCase() == 'grade a',
+        orElse: () => {
+          'value': 1,
+          'label': 'Grade A',
+        },
+      );
+
+      final gradeBOption = itemGradeOption.firstWhere(
+        (e) => (e['label'] ?? '').toString().toLowerCase() == 'grade b',
+        orElse: () => {
+          'value': 2,
+          'label': 'Grade B',
+        },
+      );
+
+      final gradeBSOption = itemGradeOption.firstWhere(
+        (e) {
+          final label = (e['label'] ?? '').toString().toLowerCase();
+
+          return label == 'grade bs' || label == 'bs';
+        },
+        orElse: () => {
+          'value': 3,
+          'label': 'Grade BS',
+        },
+      );
+
       for (int i = 0; i < woItems.length; i++) {
         final woItem = woItems[i];
 
@@ -280,7 +347,7 @@ class _SortingSectionState extends State<SortingSection> {
 |--------------------------------------------------------------------------
 */
             {
-              'item_grade_id': 1,
+              'item_grade_id': gradeAOption['value'],
               'name': 'Grade A',
               'code': 'A',
               'qty': 0,
@@ -309,7 +376,7 @@ class _SortingSectionState extends State<SortingSection> {
 |--------------------------------------------------------------------------
 */
             {
-              'item_grade_id': 2,
+              'item_grade_id': gradeBOption['value'],
               'name': 'Grade B',
               'code': 'B',
               'qty': 0,
@@ -338,7 +405,7 @@ class _SortingSectionState extends State<SortingSection> {
 |--------------------------------------------------------------------------
 */
             {
-              'item_grade_id': 3,
+              'item_grade_id': gradeBSOption['value'],
               'name': 'BS',
               'code': 'BS',
               'qty': 0,

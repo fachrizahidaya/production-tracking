@@ -1360,7 +1360,7 @@ class _SortingSectionState extends State<SortingSection> {
     final totalSorting = gradeA + gradeB + gradeBS + totalRepair;
 
     return TemplateCard(
-      title: 'Rincian Sortir',
+      title: 'Hasil Sortir',
       icon: Icons.summarize_outlined,
       child: Row(
         children: [
@@ -1468,7 +1468,7 @@ class _SortingSectionState extends State<SortingSection> {
     final totalSorting = totalGradeA + totalGradeB + totalGradeBS + totalRepair;
 
     return TemplateCard(
-      title: 'Rincian Hasil Sortir',
+      title: 'Total Hasil Sortir',
       icon: Icons.analytics_outlined,
       child: Row(
         children: [

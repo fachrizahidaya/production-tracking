@@ -177,7 +177,7 @@ class _FormItemsState extends State<FormItems>
     _initGradeControllers();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final items = widget.form['items'] ?? [];
+      final items = safeItems;
 
       if (items.isNotEmpty) {
         calculateLongHemmingWeight();
@@ -203,11 +203,15 @@ class _FormItemsState extends State<FormItems>
         );
 
         _weightGradeAControllers[itemId] = TextEditingController(
-          text: item['weight_grade_a']?.toString() ?? '0',
+          text: formatId(
+            parseInput(item['weight_grade_a']),
+          ),
         );
 
         _totalWeightControllers[itemId] = TextEditingController(
-          text: item['total_weight']?.toString() ?? '0',
+          text: formatId(
+            parseInput(item['total_weight']),
+          ),
         );
       }
     });
@@ -303,81 +307,10 @@ class _FormItemsState extends State<FormItems>
     }
   }
 
-  String getGradeLabel(int i) {
-    return widget.itemGradeOption.firstWhere(
-          (e) =>
-              e['value'].toString() ==
-              widget.grades[i]['item_grade_id'].toString(),
-          orElse: () => {'label': ''},
-        )['label'] ??
-        '';
-  }
-
-  String getDefectLabel(int i) {
-    return widget.itemTypeOption.firstWhere(
-          (e) =>
-              e['id'].toString() ==
-              widget.defects[i]['defect_type_id'].toString(),
-          orElse: () => {'name': ''},
-        )['name'] ??
-        '';
-  }
-
-  double getGradePercentage(int index) {
-    final grades = widget.form['grades'];
-
-    if (grades == null || grades is! List || grades.isEmpty) {
-      return 0;
-    }
-
-    if (index < 0 || index >= grades.length) {
-      return 0;
-    }
-
-    final totalQty = widget.handleTotalItemQty();
-    if (totalQty == 0) return 0;
-
-    final gradeQty =
-        double.tryParse(grades[index]?['qty']?.toString() ?? '0') ?? 0;
-
-    return (gradeQty / totalQty) * 100;
-  }
-
   void _ensureController(int index) {
     while (widget.qtyItem.length <= index) {
       widget.qtyItem.add(TextEditingController(text: '0'));
     }
-  }
-
-  double getMaxQtyFromGrades() {
-    final grades =
-        double.tryParse(widget.form['qty']?.toString() ?? '0') ?? 0.0;
-
-    return grades;
-  }
-
-  double getMaxTotalQty() {
-    final data = widget.woData['processes'][10]['data'][0];
-
-    final gradesList = data['grades'] ?? [];
-
-    int totalQty = 0;
-
-    for (var grade in gradesList) {
-      final qty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
-      totalQty += qty;
-    }
-
-    final spraying = int.tryParse(data['spraying']?.toString() ?? '0') ?? 0;
-
-    final reworkLongHemming =
-        int.tryParse(data['rework_long_hemming']?.toString() ?? '0') ?? 0;
-
-    final combing = int.tryParse(data['combing']?.toString() ?? '0') ?? 0;
-
-    totalQty += spraying + reworkLongHemming + combing;
-
-    return totalQty.toDouble();
   }
 
   int customRound(double value) {
@@ -428,17 +361,6 @@ class _FormItemsState extends State<FormItems>
   String formatId(num value) {
     final formatter = NumberFormat('#,##0.00', 'id_ID');
     return formatter.format(value);
-  }
-
-  double parseId(String value) {
-    return double.tryParse(
-          value.replaceAll('.', '').replaceAll(',', '.'),
-        ) ??
-        0;
-  }
-
-  String toApi(num value) {
-    return value.toString();
   }
 
   void calculateBeratA(
@@ -736,6 +658,80 @@ class _FormItemsState extends State<FormItems>
     };
   }
 
+  List<Map<String, dynamic>> get safeItems {
+    final raw = widget.form['items'];
+
+    if (raw is List) {
+      return List<Map<String, dynamic>>.from(raw);
+    }
+
+    return [];
+  }
+
+  double get totalGradeASorting {
+    final grades = widget.processData?['sorting']?['grades'] ?? [];
+
+    double total = 0;
+
+    for (final grade in grades) {
+      final code = grade['item_grade']?['code'];
+
+      if (code == 'A') {
+        total += parseInput(grade['qty']);
+      }
+    }
+
+    return total;
+  }
+
+  double get totalAllSorting {
+    final grades = widget.processData?['sorting']?['grades'] ?? [];
+
+    double total = 0;
+
+    for (final grade in grades) {
+      total += parseInput(grade['qty']);
+    }
+
+    return total;
+  }
+
+  double get totalPackingInput {
+    final items = widget.processData?['items'] ?? widget.form['items'] ?? [];
+
+    double total = 0;
+
+    for (final item in items) {
+      total += parseInput(item['qty']);
+    }
+
+    return total;
+  }
+
+  double get totalWeightGradeAAll {
+    final items = widget.processData?['items'] ?? widget.form['items'] ?? [];
+
+    double total = 0;
+
+    for (final item in items) {
+      total += parseInput(item['weight_grade_a']);
+    }
+
+    return total;
+  }
+
+  double get totalWeightAll {
+    final items = widget.processData?['items'] ?? widget.form['items'] ?? [];
+
+    double total = 0;
+
+    for (final item in items) {
+      total += parseInput(item['total_weight']);
+    }
+
+    return total;
+  }
+
   @override
   void dispose() {
     _semiFinishedTabController?.dispose();
@@ -746,6 +742,8 @@ class _FormItemsState extends State<FormItems>
   Widget build(BuildContext context) {
     super.build(context);
     final semiFinishedProducts = this.semiFinishedProducts;
+    final items =
+        (widget.form['items'] is List) ? safeItems : <Map<String, dynamic>>[];
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -1080,7 +1078,7 @@ class _FormItemsState extends State<FormItems>
                 ),
               if (widget.label == 'Packing')
                 DefaultTabController(
-                  length: (widget.form['items'] ?? []).length,
+                  length: items.length,
                   child: Column(
                     children: [
                       Container(
@@ -1117,12 +1115,84 @@ class _FormItemsState extends State<FormItems>
                           ),
                         ),
                       ),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.blue.shade100,
+                          ),
+                        ),
+                        child: Wrap(
+                          spacing: 12,
+                          runSpacing: 12,
+                          children: [
+                            _buildSummaryItem(
+                              'Total Grade A Sorting',
+                              formatNumber(totalGradeASorting),
+                            ),
+                            _buildSummaryItem(
+                              'Total Keseluruhan Sorting',
+                              formatNumber(totalAllSorting),
+                            ),
+                            _buildSummaryItem(
+                              'Total Packing',
+                              formatNumber(totalPackingInput),
+                            ),
+                            _buildSummaryItem(
+                              'Total Berat Grade A',
+                              formatId(totalWeightGradeAAll),
+                            ),
+                            _buildSummaryItem(
+                              'Total Berat Keseluruhan',
+                              formatId(totalWeightAll),
+                            ),
+                          ],
+                        ),
+                      ),
                       SizedBox(
-                        height: 700,
+                        height: 500,
                         child: TabBarView(
-                          children:
-                              (widget.form['items'] ?? []).map<Widget>((item) {
+                          children: (safeItems).map<Widget>((item) {
                             final itemId = item['id'];
+
+                            _packingQtyControllers.putIfAbsent(
+                              itemId,
+                              () => TextEditingController(
+                                text: item['qty']?.toString() ?? '0',
+                              ),
+                            );
+
+                            _weightPerDozenControllers.putIfAbsent(
+                              itemId,
+                              () => TextEditingController(
+                                text:
+                                    item['weight_per_dozen']?.toString() ?? '0',
+                              ),
+                            );
+
+                            _gsmControllers.putIfAbsent(
+                              itemId,
+                              () => TextEditingController(
+                                text: item['gsm']?.toString() ?? '0',
+                              ),
+                            );
+
+                            _weightGradeAControllers.putIfAbsent(
+                              itemId,
+                              () => TextEditingController(
+                                text: item['weight_grade_a']?.toString() ?? '0',
+                              ),
+                            );
+
+                            _totalWeightControllers.putIfAbsent(
+                              itemId,
+                              () => TextEditingController(
+                                text: item['total_weight']?.toString() ?? '0',
+                              ),
+                            );
 
                             final sortingQty = getSortingGradeQty(
                               item,
@@ -1183,9 +1253,8 @@ class _FormItemsState extends State<FormItems>
                                               ),
                                               SizedBox(height: 4),
                                               Text(
-                                                formatId(
-                                                  sortingQty['grade_a'],
-                                                ),
+                                                formatNumber(
+                                                    sortingQty['grade_a']),
                                               ),
                                             ],
                                           ),
@@ -1201,8 +1270,25 @@ class _FormItemsState extends State<FormItems>
                                               ),
                                               SizedBox(height: 4),
                                               Text(
-                                                formatId(
-                                                  sortingQty['grade_b'],
+                                                formatNumber(
+                                                    sortingQty['grade_b']),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'Tipe BS',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                formatNumber(
+                                                  sortingQty['grade_bs'],
                                                 ),
                                               ),
                                             ],
@@ -1212,15 +1298,26 @@ class _FormItemsState extends State<FormItems>
                                           child: Column(
                                             children: [
                                               Text(
-                                                'Grade BS',
+                                                'Total Keseluruhan',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                               ),
                                               SizedBox(height: 4),
                                               Text(
-                                                formatId(
-                                                  sortingQty['grade_bs'],
+                                                formatNumber(
+                                                  parseInput(
+                                                        sortingQty['grade_a'],
+                                                      ) +
+                                                      parseInput(
+                                                        sortingQty['grade_b'],
+                                                      ) +
+                                                      parseInput(
+                                                        sortingQty['grade_bs'],
+                                                      ),
+                                                ),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                               ),
                                             ],
@@ -1237,9 +1334,15 @@ class _FormItemsState extends State<FormItems>
                                           controller:
                                               _packingQtyControllers[itemId]!,
                                           onChanged: (value) {
-                                            item['qty'] = value;
+                                            setState(() {
+                                              item['qty'] = value;
 
-                                            calculateBeratA(item);
+                                              calculateBeratA(item);
+                                              calculateTotalBerat(
+                                                item,
+                                                widget.processData,
+                                              );
+                                            });
                                           },
                                         ),
                                       ),
@@ -1250,12 +1353,16 @@ class _FormItemsState extends State<FormItems>
                                               _weightPerDozenControllers[
                                                   itemId]!,
                                           onChanged: (value) {
-                                            item['weight_per_dozen'] = value;
+                                            setState(() {
+                                              item['weight_per_dozen'] = value;
 
-                                            calculateGsm(item);
-                                            calculateBeratA(item);
-                                            calculateTotalBerat(
-                                                item, widget.processData);
+                                              calculateGsm(item);
+                                              calculateBeratA(item);
+                                              calculateTotalBerat(
+                                                item,
+                                                widget.processData,
+                                              );
+                                            });
                                           },
                                         ),
                                       ),
@@ -1398,6 +1505,43 @@ Rework
             ),
           );
         }).toList());
+  }
+
+  Widget _buildSummaryItem(
+    String title,
+    String value,
+  ) {
+    return Container(
+      width: 220,
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.grey.shade200,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey.shade600,
+            ),
+          ),
+          SizedBox(height: 6),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
 /*

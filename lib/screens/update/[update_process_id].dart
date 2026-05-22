@@ -181,11 +181,15 @@ class _UpdateProcessState extends State<UpdateProcess>
       );
 
       _weightGradeAControllers[itemId] = TextEditingController(
-        text: item['weight_grade_a']?.toString() ?? '0',
+        text: formatId(
+          parseInput(item['weight_grade_a']),
+        ),
       );
 
       _totalWeightControllers[itemId] = TextEditingController(
-        text: item['total_weight']?.toString() ?? '0',
+        text: formatId(
+          parseInput(item['total_weight']),
+        ),
       );
     }
 
@@ -283,22 +287,6 @@ class _UpdateProcessState extends State<UpdateProcess>
     _updateTotalSorting();
   }
 
-  String getGradeLabel(int i) {
-    return widget.itemGradeOption.firstWhere(
-          (e) => e['id'].toString() == _grades[i]['item_grade_id'].toString(),
-          orElse: () => {'name': ''},
-        )['name'] ??
-        '';
-  }
-
-  String getDefectLabel(int i) {
-    return widget.itemTypeOption.firstWhere(
-          (e) => e['id'].toString() == _defects[i]['defect_type_id'].toString(),
-          orElse: () => {'name': ''},
-        )['name'] ??
-        '';
-  }
-
   double _calculateTotalVermak() {
     final spraying = parseSafe(widget.spraying.text);
     final combing = parseSafe(widget.combing.text);
@@ -321,43 +309,6 @@ class _UpdateProcessState extends State<UpdateProcess>
   void _updateTotalSorting() {
     final total = _calculateTotalQtySorting();
     widget.handleChangeInput('total_sorting', formatIdr(total));
-  }
-
-  double getMaxQtyFromGrades() {
-    final grades =
-        double.tryParse(widget.form['qty']?.toString() ?? '0') ?? 0.0;
-
-    return grades;
-  }
-
-  double getMaxTotalQty() {
-    final sorting = widget.data['sorting'];
-
-    if (sorting == null) return 0;
-
-    final grades = sorting['grades'] ?? [];
-
-    double totalQty = 0;
-
-    for (final grade in grades) {
-      totalQty += parseSafe(
-        grade['qty'],
-      );
-    }
-
-    totalQty += parseSafe(
-      sorting['spraying'],
-    );
-
-    totalQty += parseSafe(
-      sorting['rework_long_hemming'],
-    );
-
-    totalQty += parseSafe(
-      sorting['combing'],
-    );
-
-    return totalQty;
   }
 
   int customRound(double value) {
@@ -619,6 +570,74 @@ class _UpdateProcessState extends State<UpdateProcess>
     }
 
     return groupedGrades.values.toList();
+  }
+
+  double get totalGradeASorting {
+    final grades = widget.data?['sorting']?['grades'] ??
+        widget.data?['sorting']?['grades'] ??
+        [];
+
+    double total = 0;
+
+    for (final grade in grades) {
+      final code = grade['item_grade']?['code'];
+
+      if (code == 'A') {
+        total += parseInput(grade['qty']);
+      }
+    }
+
+    return total;
+  }
+
+  double get totalAllSorting {
+    final grades = widget.data?['sorting']?['grades'] ??
+        widget.data?['sorting']?['grades'] ??
+        [];
+
+    double total = 0;
+
+    for (final grade in grades) {
+      total += parseInput(grade['qty']);
+    }
+
+    return total;
+  }
+
+  double get totalPackingInput {
+    final items = widget.data?['items'] ?? widget.form['items'] ?? [];
+
+    double total = 0;
+
+    for (final item in items) {
+      total += parseInput(item['qty']);
+    }
+
+    return total;
+  }
+
+  double get totalWeightGradeAAll {
+    final items = widget.data?['items'] ?? widget.form['items'] ?? [];
+
+    double total = 0;
+
+    for (final item in items) {
+      total += parseInput(item['weight_grade_a']);
+    }
+
+    return total;
+  }
+
+  double get totalWeightAll {
+    final items = widget.data?['items'] ?? widget.form['items'] ?? [];
+
+    double total = 0;
+
+    for (final item in items) {
+      total += parseInput(item['total_weight']);
+    }
+
+    return total;
   }
 
   Future<void> _handleCancel(BuildContext context) async {
@@ -1040,6 +1059,45 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             ),
                                           ),
                                         ),
+                                        Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue.shade50,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                              color: Colors.blue.shade100,
+                                            ),
+                                          ),
+                                          child: Wrap(
+                                            spacing: 12,
+                                            runSpacing: 12,
+                                            children: [
+                                              _buildSummaryItem(
+                                                'Total Grade A Sorting',
+                                                formatNumber(
+                                                    totalGradeASorting),
+                                              ),
+                                              _buildSummaryItem(
+                                                'Total Keseluruhan Sorting',
+                                                formatNumber(totalAllSorting),
+                                              ),
+                                              _buildSummaryItem(
+                                                'Total Packing',
+                                                formatNumber(totalPackingInput),
+                                              ),
+                                              _buildSummaryItem(
+                                                'Total Berat Grade A',
+                                                formatId(totalWeightGradeAAll),
+                                              ),
+                                              _buildSummaryItem(
+                                                'Total Berat Keseluruhan',
+                                                formatId(totalWeightAll),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                         SizedBox(
                                           height: 500,
                                           child: TabBarView(
@@ -1242,11 +1300,17 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                                       itemId]!,
                                                               onChanged:
                                                                   (value) {
-                                                                item['qty'] =
-                                                                    value;
+                                                                setState(() {
+                                                                  item['qty'] =
+                                                                      value;
 
-                                                                calculateBeratA(
-                                                                    item);
+                                                                  calculateBeratA(
+                                                                      item);
+                                                                  calculateTotalBerat(
+                                                                    item,
+                                                                    widget.data,
+                                                                  );
+                                                                });
                                                               },
                                                             ),
                                                           ),
@@ -1260,17 +1324,19 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                                       itemId]!,
                                                               onChanged:
                                                                   (value) {
-                                                                item['weight_per_dozen'] =
-                                                                    value;
+                                                                setState(() {
+                                                                  item['weight_per_dozen'] =
+                                                                      value;
 
-                                                                calculateGsm(
-                                                                    item);
-                                                                calculateBeratA(
-                                                                    item);
-                                                                calculateTotalBerat(
+                                                                  calculateGsm(
+                                                                      item);
+                                                                  calculateBeratA(
+                                                                      item);
+                                                                  calculateTotalBerat(
                                                                     item,
-                                                                    widget
-                                                                        .data);
+                                                                    widget.data,
+                                                                  );
+                                                                });
                                                               },
                                                             ),
                                                           ),
@@ -1331,7 +1397,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                         ),
                                       ].separatedBy(CustomTheme().vGap('xl')),
                                     ),
-                                  )
+                                  ),
                               ].separatedBy(CustomTheme().vGap('xl'))),
                         )),
                         DetailWorkOrder(
@@ -1381,6 +1447,43 @@ class _UpdateProcessState extends State<UpdateProcess>
               ),
             ),
           )),
+    );
+  }
+
+  Widget _buildSummaryItem(
+    String title,
+    String value,
+  ) {
+    return Container(
+      width: 220,
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.grey.shade200,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey.shade600,
+            ),
+          ),
+          SizedBox(height: 6),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

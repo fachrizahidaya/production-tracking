@@ -88,7 +88,10 @@ class ItemProcessCard extends StatelessWidget {
                       fontWeight: CustomTheme().fontWeight('bold'),
                     ),
                   ),
-                  if (item['rework'] == true || item['cycle_no'] > 1)
+                  if ((label == 'No. Dyeing' ||
+                          label == 'No. Press' ||
+                          label == 'No. Tumbler') &&
+                      (item['rework'] == true || item['cycle_no'] > 1))
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [

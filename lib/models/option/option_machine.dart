@@ -94,7 +94,7 @@ class OptionMachineService extends BaseService<OptionMachine> {
             currentMachineIds.map((id) => id.toString()).toList();
       }
 
-      final uri = Uri.parse('${dotenv.env['API_URL_DEV']}/machine/option')
+      final uri = Uri.parse('${dotenv.env['API_URL']}/machine/option')
           .replace(queryParameters: queryParams);
 
       final response = await http.get(uri, headers: {

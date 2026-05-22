@@ -30,7 +30,7 @@ class OptionMasterItemGrade {
 }
 
 class OptionMasterItemGradeService extends BaseService<OptionMasterItemGrade> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/item-grades';
+  final String baseUrl = '${dotenv.env['API_URL']}/item-grades';
 
   bool _isLoading = false;
   bool _hasMoreData = true;

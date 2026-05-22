@@ -39,7 +39,7 @@ class Unit {
 }
 
 class UnitService extends BaseService<Unit> {
-  final String baseUrl = '${dotenv.env['API_URL_DEV']}/units';
+  final String baseUrl = '${dotenv.env['API_URL']}/units';
 
   bool _isLoading = false;
   bool _hasMoreData = true;
@@ -233,7 +233,7 @@ class UnitService extends BaseService<Unit> {
       }
 
       final response = await http
-          .get(Uri.parse('${dotenv.env['API_URL_DEV']}/unit/option'), headers: {
+          .get(Uri.parse('${dotenv.env['API_URL']}/unit/option'), headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       });

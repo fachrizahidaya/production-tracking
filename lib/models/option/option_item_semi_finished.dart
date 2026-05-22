@@ -32,7 +32,7 @@ class OptionItemSemiFinished {
 class OptionItemSemiFinishedService
     extends BaseService<OptionItemSemiFinished> {
   final String baseUrl =
-      '${dotenv.env['API_URL_DEV']}/semifinished-product/item-option';
+      '${dotenv.env['API_URL']}/semifinished-product/item-option';
 
   bool _isLoading = false;
   bool _hasMoreData = true;

@@ -1800,16 +1800,16 @@ Catatan WO
             icon: Icons.attachment_outlined,
             child: _buildTotalSorting(false),
           ),
-        if ((widget.label != 'Long Hemming' &&
-            widget.label != 'Cross Cutting' &&
-            widget.label != 'Sewing' &&
-            widget.label != 'Sorting' &&
-            widget.label != 'Packing'))
-          _buildInfoCard(
-            title: 'Produk Setengah Jadi',
-            icon: Icons.inventory_2_outlined,
-            child: _buildMaterialInfo(false),
-          ),
+        // if ((widget.label != 'Long Hemming' &&
+        //     widget.label != 'Cross Cutting' &&
+        //     widget.label != 'Sewing' &&
+        //     widget.label != 'Sorting' &&
+        //     widget.label != 'Packing'))
+        //   _buildInfoCard(
+        //     title: 'Produk Setengah Jadi',
+        //     icon: Icons.inventory_2_outlined,
+        //     child: _buildMaterialInfo(false),
+        //   ),
         if (widget.label == 'Long Hemming' ||
             widget.label == 'Cross Cutting' ||
             widget.label == 'Sewing' ||

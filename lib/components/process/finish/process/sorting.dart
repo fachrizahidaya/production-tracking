@@ -330,14 +330,14 @@ class _SortingSectionState extends State<SortingSection> {
           gradeBItem = null;
         }
 
-        final greigeItemId = woItem['greige_item_id'];
+        final itemKey = woItem['greige_item_id'] ??
+            woItem['id'] ??
+            DateTime.now().millisecondsSinceEpoch + i;
 
-        if (greigeItemId == null) continue;
-
-        groupedItems[greigeItemId] = {
-          'item_id': woItem['greige_item_id'],
+        groupedItems[itemKey] = {
+          'item_id': woItem['greige_item_id'] ?? woItem['id'],
           'finished_product': {
-            'id': woItem['greige_item_id'],
+            'id': woItem['greige_item_id'] ?? woItem['id'],
             'code': woItem['item_code'],
             'name': woItem['item_name'],
           },

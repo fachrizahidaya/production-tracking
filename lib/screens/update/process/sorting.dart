@@ -174,7 +174,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
       /// FETCH GRADE B
       await semiFinishedService.fetchOptions(
         isInitialLoad: true,
-        process: 'packing',
+        process: 'sorting',
         baseCodes: params['base_codes'] ?? [],
         colorCodes: ['GRB'],
       );

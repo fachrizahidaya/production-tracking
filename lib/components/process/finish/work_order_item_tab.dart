@@ -68,40 +68,10 @@ class _WorkOrderItemTabState extends State<WorkOrderItemTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'PRODUK JADI',
-            style: TextStyle(fontWeight: CustomTheme().fontWeight('semibold')),
-          ),
-          Divider(),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.data['items'][0]['item_code'] ?? '-',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                    Text(
-                      widget.data['items'][0]['item_name'] ?? '-',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -125,7 +95,6 @@ class _WorkOrderItemTabState extends State<WorkOrderItemTab> {
                 ),
               ),
               Expanded(
-                flex: 1,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

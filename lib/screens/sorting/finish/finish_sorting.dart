@@ -46,6 +46,7 @@ class _FinishSortingState extends State<FinishSorting> {
     'spraying': '',
     'rework_long_hemming': '',
     'wo_data': null,
+    'items': []
   };
 
   @override
@@ -110,7 +111,12 @@ class _FinishSortingState extends State<FinishSorting> {
 
         final message =
             await Provider.of<SortingService>(context, listen: false)
-                .finishItem(context, id, sorting, isLoading);
+                .finishSortingItem(
+          context,
+          id,
+          sorting.toJson(),
+          isLoading,
+        );
 
         Navigator.pushNamedAndRemoveUntil(context, '/sortings', (_) => false);
 

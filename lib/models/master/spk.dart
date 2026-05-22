@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class SpkService extends ChangeNotifier {
-  final String baseUrl = '${dotenv.env['API_URL']}/spk';
+  final String baseUrl = '${dotenv.env['API_URL_DEV']}/spk';
 
   Map<String, dynamic> _dataView = {};
 

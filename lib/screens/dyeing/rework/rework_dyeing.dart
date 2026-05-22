@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/dyeing/rework/submit_section.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
+import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
+import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
@@ -49,6 +51,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
     'rework_reference_id': null,
     'start_by_id': null,
     'end_by_id': null,
+    'qty': null,
     'notes': '',
     'rework': null,
     'status': null,
@@ -59,6 +62,9 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
     'no_dyeing': '',
     'nama_mesin': '',
     'nama_satuan': '',
+    'semifinished_products': [],
+    'items': [],
+    'attachments_ids': [],
   };
 
   void _handleChangeInput(fieldName, value) {
@@ -122,9 +128,39 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
       await _workOrderService.getDataView(woId);
       final data = _workOrderService.dataView;
 
+      final semiFinishedService = Provider.of<OptionItemSemiFinishedService>(
+        context,
+        listen: false,
+      );
+
+      final params = extractSemiFinishedParams(
+        data['items'] ?? [],
+      );
+
+      await semiFinishedService.fetchOptions(
+        isInitialLoad: true,
+        process: 'dyeing',
+        baseCodes: params['base_codes'] ?? [],
+        colorCodes: params['color_codes'] ?? [],
+      );
+
+      final semiFinishedItems = semiFinishedService.dataListOption;
+
+      _form['semifinished_products'] = List.generate(
+        semiFinishedItems.length,
+        (index) => {
+          'item_id': semiFinishedItems[index]['value'],
+        },
+      );
+
       _form['wo_id'] = data['id']?.toString() ?? woId;
       _form['no_wo'] = data['wo_no']?.toString() ?? woNo;
       _form['process_id'] = processId;
+      _form['unit_id'] = data['greige_unit_id']?.toString() ??
+          data['processes']?[0]?['data']?[0]?['unit_id']?.toString();
+
+      _form['qty'] = data['greige_qty']?.toString() ??
+          data['processes']?[0]?['data']?[0]?['qty']?.toString();
 
       setState(() => _isLoading = false);
       Navigator.push(
@@ -155,30 +191,33 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
   Future<void> _handleSubmit(id) async {
     try {
       final dyeing = Dyeing(
-          wo_id: _form['wo_id'] != null
-              ? int.tryParse(_form['wo_id'].toString())
-              : null,
-          unit_id: _form['unit_id'] != null
-              ? int.tryParse(_form['unit_id'].toString())
-              : null,
-          machine_id: _form['machine_id'] != null
-              ? int.tryParse(_form['machine_id'].toString())
-              : null,
-          rework_reference_id: _form['rework_reference_id'] != null
-              ? int.tryParse(_form['rework_reference_id'].toString())
-              : null,
-          notes: _form['notes'],
-          rework: _form['rework'],
-          status: _form['status'],
-          start_time: _form['start_time'],
-          end_time: _form['end_time'],
-          start_by_id: _form['start_by_id'] != null
-              ? int.tryParse(_form['start_by_id'].toString())
-              : null,
-          end_by_id: _form['end_by_id'] != null
-              ? int.tryParse(_form['end_by_id'])
-              : null,
-          attachments: _form['attachments']);
+        wo_id: _form['wo_id'] != null
+            ? int.tryParse(_form['wo_id'].toString())
+            : null,
+        unit_id: _form['unit_id'] != null
+            ? int.tryParse(_form['unit_id'].toString())
+            : null,
+        machine_id: _form['machine_id'] != null
+            ? int.tryParse(_form['machine_id'].toString())
+            : null,
+        rework_reference_id: _form['rework_reference_id'] != null
+            ? int.tryParse(_form['rework_reference_id'].toString())
+            : null,
+        notes: _form['notes'],
+        rework: _form['rework'],
+        status: _form['status'],
+        start_time: _form['start_time'],
+        end_time: _form['end_time'],
+        start_by_id: _form['start_by_id'] != null
+            ? int.tryParse(_form['start_by_id'].toString())
+            : null,
+        end_by_id: _form['end_by_id'] != null
+            ? int.tryParse(_form['end_by_id'])
+            : null,
+        attachments: _form['attachments'],
+        semifinished_products: _form['semifinished_products'],
+        qty: _form['qty'],
+      );
       final message = await Provider.of<DyeingService>(context, listen: false)
           .reworkItem(context, id, dyeing, _firstLoading);
 

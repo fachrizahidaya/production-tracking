@@ -477,6 +477,17 @@ class _SpkMaterialItem extends StatelessWidget {
                 minWidth: 90,
                 maxWidth: constraints.maxWidth / 2,
               ),
+              child: _buildQtyColumn(
+                'Berat',
+                item['weight'],
+                item['weight_unit']?['code']?.toString() ?? 'KG',
+              ),
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: 90,
+                maxWidth: constraints.maxWidth / 2,
+              ),
               child: _buildStatus(),
             ),
           ],

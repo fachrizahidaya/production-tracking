@@ -219,8 +219,6 @@ class TimelineItem extends StatelessWidget {
 
     final processNumber = getProcessNumber(processKey, process);
 
-    final rework = getReworkData(rawProcess);
-
     final reworks = getReworkData(rawProcess);
 
     final isSpecial = ['dyeing', 'press', 'tumbler'].contains(processKey);
@@ -236,7 +234,9 @@ class TimelineItem extends StatelessWidget {
     String finalStatus = process['status'];
 
     if (sortingStatus == 'diproses' || sortingStatus == 'selesai') {
-      if (processKey == 'embroidery' || processKey == 'printing') {
+      if (processKey == 'embroidery' ||
+          processKey == 'printing' ||
+          processKey == 'stenter') {
         finalStatus = 'Dilewati';
       }
     }
@@ -348,35 +348,39 @@ class TimelineItem extends StatelessWidget {
           ),
 
           // Process Details
+
+          // Process Details
           if (_hasProcessDetails(process)) ...[
             SizedBox(height: isTablet ? 14 : 12),
             Divider(height: 1, color: Colors.grey[200]),
             SizedBox(height: isTablet ? 14 : 12),
-            _buildProcessDetails(process, processKey, isTablet),
+            _buildProcessDetails(
+              process,
+              processKey,
+              isTablet,
+            ),
           ],
 
-          if (isSpecial && reworks.isNotEmpty) ...[
+// Items Detail
+          if (process['items'] != null &&
+              (process['items'] as List).isNotEmpty) ...[
             SizedBox(height: 12),
-            Column(
-              children: reworks.map((rework) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: _buildReworkCard(
-                    processKey,
-                    rework,
-                    isTablet,
-                  ),
-                );
-              }).toList(),
+            _buildItemsSection(
+              items: process['items'],
+              isTablet: isTablet,
+              processKey: processKey,
+            ),
+          ],
+
+          if (processKey == 'sorting' && process['grades'] != null) ...[
+            SizedBox(height: 12),
+            _buildSortingItemsSection(
+              process['grades'],
+              isTablet,
             ),
           ],
 
           // Grades (if applicable)
-          if (process['grades'] != null &&
-              (process['grades'] as List).isNotEmpty) ...[
-            SizedBox(height: isTablet ? 14 : 12),
-            _buildGradesSection(process['grades'], isTablet),
-          ],
 
           // ✅ Sorting Improvement Section
           if (processKey == 'sorting') ...[
@@ -385,13 +389,6 @@ class TimelineItem extends StatelessWidget {
 
             SizedBox(height: isTablet ? 10 : 8),
             _buildSortingTotalSection(process, isTablet), // ✅ DIPISAH
-          ],
-
-          if (processKey == 'packing') ...[
-            SizedBox(height: isTablet ? 14 : 12),
-            Divider(height: 1, color: Colors.grey[200]),
-            SizedBox(height: isTablet ? 14 : 12),
-            _buildPackingSection(process, isTablet),
           ],
         ],
       ),
@@ -424,29 +421,26 @@ class TimelineItem extends StatelessWidget {
       Map<String, dynamic> process, String processKey, bool isTablet) {
     final details = <Widget>[];
 
-    // Quantity
     if (process['qty'] != null) {
       details.add(_buildDetailItem(
         icon: Icons.inventory_2_outlined,
         label: 'Qty',
         value:
-            '${formatNumber(process['qty'])} ${process['unit']['code'] ?? 'PCS'}',
+            '${formatNumber(process['qty'])} ${process['unit']?['code'] ?? 'PCS'}',
         isTablet: isTablet,
       ));
     }
 
-    // Weight
     if (process['weight'] != null) {
       details.add(_buildDetailItem(
         icon: Icons.scale_outlined,
         label: 'Berat',
         value:
-            '${formatNumber(process['weight'])} ${process['weight_unit']['code'] ?? 'KG'}',
+            '${formatNumber(process['weight'])} ${process['weight_unit']?['code'] ?? 'KG'}',
         isTablet: isTablet,
       ));
     }
 
-    // Good Weight (Berat Bagus)
     if (process['good_weight'] != null) {
       details.add(_buildDetailItem(
         icon: Icons.thumb_up_outlined,
@@ -457,13 +451,12 @@ class TimelineItem extends StatelessWidget {
       ));
     }
 
-    // Item Qty
     if (process['item_qty'] != null) {
       details.add(_buildDetailItem(
         icon: Icons.inventory_2_outlined,
         label: 'Qty',
         value:
-            '${formatNumber(process['item_qty'])} ${process['item_unit']['code'] ?? 'PCS'} ',
+            '${formatNumber(process['item_qty'])} ${process['item_unit']?['code'] ?? 'PCS'}',
         isTablet: isTablet,
       ));
     }
@@ -584,13 +577,13 @@ class TimelineItem extends StatelessWidget {
               ),
             ],
           ),
-          Wrap(
-            spacing: isTablet ? 10 : 8,
-            runSpacing: isTablet ? 8 : 6,
-            children: grades.map((grade) {
-              return _buildGradeChip(grade, isTablet);
-            }).toList(),
-          ),
+          // Wrap(
+          //   spacing: isTablet ? 10 : 8,
+          //   runSpacing: isTablet ? 8 : 6,
+          //   children: grades.map((grade) {
+          //     return _buildGradeChip(grade, isTablet);
+          //   }).toList(),
+          // ),
         ].separatedBy(CustomTheme().vGap('lg')),
       ),
     );
@@ -900,6 +893,186 @@ class TimelineItem extends StatelessWidget {
     }
 
     return content;
+  }
+
+  Widget _buildItemsSection({
+    required List items,
+    required bool isTablet,
+    required String processKey,
+  }) {
+    if (items.isEmpty) return SizedBox.shrink();
+
+    return Column(
+      children: items.map<Widget>((item) {
+        final finishedProduct = item['finished_product']?['name'] ??
+            item['finished_product']?['code'] ??
+            '-';
+
+        return Container(
+          margin: EdgeInsets.only(bottom: 10),
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                finishedProduct,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              SizedBox(height: 10),
+              Wrap(
+                spacing: 16,
+                runSpacing: 10,
+                children: [
+                  if (item['qty'] != null)
+                    _buildDetailItem(
+                      icon: Icons.inventory_2_outlined,
+                      label: 'Qty',
+                      value: formatNumber(item['qty']),
+                      isTablet: isTablet,
+                    ),
+                  if (item['good_weight'] != null)
+                    _buildDetailItem(
+                      icon: Icons.scale_outlined,
+                      label: 'Good Weight',
+                      value: formatNumber(item['good_weight']),
+                      isTablet: isTablet,
+                    ),
+                  if (item['bs_weight'] != null)
+                    _buildDetailItem(
+                      icon: Icons.warning_amber_rounded,
+                      label: 'BS Weight',
+                      value: formatNumber(item['bs_weight']),
+                      isTablet: isTablet,
+                    ),
+                  if (item['gsm'] != null)
+                    _buildDetailItem(
+                      icon: Icons.texture,
+                      label: 'GSM',
+                      value: formatNumber(item['gsm']),
+                      isTablet: isTablet,
+                    ),
+                  if (item['weight_grade_a'] != null)
+                    _buildDetailItem(
+                      icon: Icons.verified,
+                      label: 'Berat Grade A',
+                      value: formatNumber(item['weight_grade_a']),
+                      isTablet: isTablet,
+                    ),
+                  if (item['total_weight'] != null)
+                    _buildDetailItem(
+                      icon: Icons.scale,
+                      label: 'Total Berat',
+                      value: formatNumber(item['total_weight']),
+                      isTablet: isTablet,
+                    ),
+                ],
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildSortingItemsSection(
+    List grades,
+    bool isTablet,
+  ) {
+    return Column(
+      children: grades.map<Widget>((grade) {
+        final gradeName = grade['item_grade']?['code'] ?? '-';
+        final items = grade['items'] ?? [];
+
+        return Container(
+          margin: EdgeInsets.only(bottom: 12),
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.purple.shade100),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Grade $gradeName',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.purple,
+                ),
+              ),
+              SizedBox(height: 10),
+              ...items.map<Widget>((item) {
+                final spraying = item['spraying'] ?? 0;
+                final reworkLH = item['rework_long_hemming'] ?? 0;
+                final combing = item['combing'] ?? 0;
+
+                return Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Colors.grey.shade200,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item['finished_product']?['name'] ?? '-',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Wrap(
+                        spacing: 12,
+                        runSpacing: 10,
+                        children: [
+                          _buildDetailItem(
+                            icon: Icons.inventory,
+                            label: 'Qty',
+                            value: formatNumber(item['qty']),
+                            isTablet: isTablet,
+                          ),
+                          _buildDetailItem(
+                            icon: Icons.cleaning_services_outlined,
+                            label: 'Semprotan',
+                            value: formatNumber(spraying),
+                            isTablet: isTablet,
+                          ),
+                          _buildDetailItem(
+                            icon: Icons.build_circle_outlined,
+                            label: 'Permak Long Hemming',
+                            value: formatNumber(reworkLH),
+                            isTablet: isTablet,
+                          ),
+                          _buildDetailItem(
+                            icon: Icons.content_cut_outlined,
+                            label: 'Sisiran',
+                            value: formatNumber(combing),
+                            isTablet: isTablet,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ],
+          ),
+        );
+      }).toList(),
+    );
   }
 
   bool _hasProcessDetails(Map<String, dynamic> process) {

@@ -14,30 +14,28 @@ class CreateLongHemming extends StatelessWidget {
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
     final longHemming = LongHemming(
-      wo_id:
-          form['wo_id'] != null ? int.tryParse(form['wo_id'].toString()) : null,
-      weight_unit_id: form['unit_id'] != null
-          ? int.tryParse(form['unit_id'].toString())
-          : null,
-      machine_id: form['machine_id'] != null
-          ? int.tryParse(form['machine_id'].toString())
-          : null,
-      machine_ids: (form['machines'] as List?)
-          ?.map((e) => int.tryParse(e['value'].toString()))
-          .where((e) => e != null)
-          .cast<int>()
-          .toList(),
-      weight: form['weight'],
-      notes: form['notes'],
-      status: form['status'],
-      start_time: form['start_time'],
-      end_time: form['end_time'],
-      start_by_id: form['start_by_id'] != null
-          ? int.tryParse(form['start_by_id'].toString())
-          : null,
-      end_by_id: form['end_by_id'],
-      attachments: form['attachments'],
-    );
+        wo_id: form['wo_id'] != null
+            ? int.tryParse(form['wo_id'].toString())
+            : null,
+        machine_id: form['machine_id'] != null
+            ? int.tryParse(form['machine_id'].toString())
+            : null,
+        machine_ids: (form['machines'] as List?)
+            ?.map((e) => int.tryParse(e['value'].toString()))
+            .where((e) => e != null)
+            .cast<int>()
+            .toList(),
+        notes: form['notes'],
+        status: form['status'],
+        start_time: form['start_time'],
+        end_time: form['end_time'],
+        start_by_id: form['start_by_id'] != null
+            ? int.tryParse(form['start_by_id'].toString())
+            : null,
+        end_by_id: form['end_by_id'],
+        attachments: form['attachments'],
+        semifinished_products: form['semifinished_products'] ?? [],
+        items: form['items'] ?? []);
 
     final message =
         await Provider.of<LongHemmingService>(context, listen: false)
@@ -61,6 +59,7 @@ class CreateLongHemming extends StatelessWidget {
   Widget build(BuildContext context) {
     return CreateProcess(
       title: 'Mulai Long Hemming',
+      label: 'Long Hemming',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
         return CreateLongHemmingManual(

@@ -33,6 +33,8 @@ class Sorting {
   final rework_long_hemming;
   final combing;
   final greige_item_id;
+  final items;
+  final semifinished_products;
 
   Sorting(
       {this.id,
@@ -62,7 +64,9 @@ class Sorting {
       this.spraying,
       this.rework_long_hemming,
       this.defects,
-      this.greige_item_id});
+      this.greige_item_id,
+      this.items,
+      this.semifinished_products});
 
   factory Sorting.fromJson(Map<String, dynamic> json) {
     return Sorting(
@@ -93,6 +97,8 @@ class Sorting {
       rework_long_hemming: json['rework_long_hemming'] ?? '',
       defects: json['defects'] ?? [],
       greige_item_id: json['greige_item_id'] as int?,
+      items: json['items'] ?? [],
+      semifinished_products: json['semifinished_products'] ?? [],
     );
   }
 
@@ -126,6 +132,8 @@ class Sorting {
       'spraying': spraying,
       'rework_long_hemming': rework_long_hemming,
       'greige_item_id': greige_item_id,
+      'items': items,
+      'semifinished_products': semifinished_products
     };
   }
 }

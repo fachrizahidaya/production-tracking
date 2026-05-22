@@ -49,7 +49,7 @@ class _AttachmentTabState extends State<AttachmentTab> {
     final existingAttachments =
         (widget.existingAttachment ?? []) as List<dynamic>;
 
-    final baseUrl = dotenv.env['IMAGE_URL'] ?? '';
+    final baseUrl = dotenv.env['IMAGE_URL_DEV'] ?? '';
 
     return existingAttachments.map<Widget>((item) {
       final bool isNew = item.containsKey('path');
@@ -63,13 +63,6 @@ class _AttachmentTabState extends State<AttachmentTab> {
       final String extension = fileName.split('.').last.toLowerCase();
 
       final bool isPdf = extension == 'pdf';
-
-      final bool isOffice = [
-        'doc',
-        'docx',
-        'xls',
-        'xlsx',
-      ].contains(extension);
 
       /// detect image
       final bool isImage =

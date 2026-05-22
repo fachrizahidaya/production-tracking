@@ -54,7 +54,9 @@ class _PackingDetailState extends State<PackingDetail> {
               form['weight_per_dozen'] ?? data['weight_per_dozen'],
           weight_grade_a: form['weight_grade_a'] ?? data['weight_grade_a'],
           greige_item_id:
-              int.tryParse(form['greige_item_id']?.toString() ?? '')),
+              int.tryParse(form['greige_item_id']?.toString() ?? ''),
+          semifinished_products: form['semifinished_products'],
+          items: form['items']),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/packings',
@@ -70,23 +72,24 @@ class _PackingDetailState extends State<PackingDetail> {
       getWorkOrderOptions: (service) => service.dataListOption,
       handleSubmitToService: (context, id, form, isLoading) async {
         final packing = Packing(
-          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          notes: form['notes'],
-          start_time: form['start_time'],
-          end_time: form['end_time'],
-          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
-          attachments: form['attachments'],
-          grades: form['grades'],
-          weight_per_dozen: form['weight_per_dozen'],
-          gsm: form['gsm'],
-          total_weight: form['total_weight'],
-          qty: form['qty'],
-          unit_id: int.tryParse(form['unit_id']?.toString() ?? '1'),
-          greige_item_id:
-              int.tryParse(form['greige_item_id']?.toString() ?? ''),
-          weight_grade_a: form['weight_grade_a'],
-        );
+            wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+            notes: form['notes'],
+            start_time: form['start_time'],
+            end_time: form['end_time'],
+            start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+            end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+            attachments: form['attachments'],
+            grades: form['grades'],
+            weight_per_dozen: form['weight_per_dozen'],
+            gsm: form['gsm'],
+            total_weight: form['total_weight'],
+            qty: form['qty'],
+            unit_id: int.tryParse(form['unit_id']?.toString() ?? '1'),
+            greige_item_id:
+                int.tryParse(form['greige_item_id']?.toString() ?? ''),
+            weight_grade_a: form['weight_grade_a'],
+            semifinished_products: form['semifinished_products'],
+            items: form['items']);
 
         final message =
             await Provider.of<PackingService>(context, listen: false)

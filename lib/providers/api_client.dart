@@ -32,7 +32,7 @@ class ApiClient {
       final prefs = await SharedPreferences.getInstance();
       final oldToken = prefs.getString('access_token');
 
-      final url = Uri.parse('${dotenv.env['API_URL']}/refresh-token');
+      final url = Uri.parse('${dotenv.env['API_URL_DEV']}/refresh-token');
 
       final res = await http.post(
         url,

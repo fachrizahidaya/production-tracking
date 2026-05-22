@@ -2062,7 +2062,7 @@ Catatan WO
           ),
         if (widget.label == 'Sorting')
           _buildInfoCard(
-            title: 'Ringkasan Sortir',
+            title: 'Total Sortir',
             icon: Icons.attachment_outlined,
             child: _buildTotalSorting(true),
           ),
@@ -2085,12 +2085,12 @@ Catatan WO
             icon: Icons.scale_outlined,
             child: _buildItemResultPerProduct(true),
           ),
-        if (widget.label == 'Packing')
-          _buildInfoCard(
-            title: 'Ringkasan Sortir',
-            icon: Icons.attachment_outlined,
-            child: _buildPackingSortingSummary(),
-          ),
+        // if (widget.label == 'Packing')
+        //   _buildInfoCard(
+        //     title: 'Total Sortir',
+        //     icon: Icons.attachment_outlined,
+        //     child: _buildPackingSortingSummary(),
+        //   ),
         _buildInfoCard(
           title: 'Material WO',
           icon: Icons.inventory_2_outlined,

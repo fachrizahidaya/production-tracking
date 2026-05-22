@@ -418,13 +418,13 @@ class _FormItemsState extends State<FormItems>
       return;
     }
 
-    final rawGsm = (beratLusin * 10000000) / (12 * panjang * lebar);
+    final rawGsm = (beratLusin * 10000000) / (12 * 70 * 140);
 
     final rounded = customRound(rawGsm);
 
     item['gsm'] = rounded;
 
-    _gsmControllers[itemId]?.text = rounded.toString();
+    _gsmControllers[itemId]?.text = formatId(rounded);
   }
 
   String formatId(num value) {
@@ -457,24 +457,58 @@ class _FormItemsState extends State<FormItems>
 
     item['weight_grade_a'] = result;
 
-    _weightGradeAControllers[itemId]?.text = result.toStringAsFixed(2);
+    _weightGradeAControllers[itemId]?.text = formatId(result);
   }
 
   void calculateTotalBerat(
     Map<String, dynamic> item,
+    Map<String, dynamic> processData,
   ) {
     final itemId = item['id'];
 
-    final totalQty = parseInput(item['qty']);
+    double totalQty = 0;
 
-    final beratLusin = parseInput(item['weight_per_dozen']);
+    final grades = processData['sorting']?['grades'] ?? [];
+
+    final itemCode = item['finished_product']?['code']?.toString().trim();
+
+    for (final grade in grades) {
+      final gradeItems = grade['items'] ?? [];
+
+      final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
+        (gradeItem) {
+          final gradeItemCode =
+              gradeItem?['finished_product']?['code']?.toString().trim();
+
+          return gradeItemCode == itemCode;
+        },
+        orElse: () => null,
+      );
+
+      if (matched != null) {
+        totalQty += parseInput(
+          matched['qty'],
+        );
+      }
+    }
+
+    /// fallback
+    if (totalQty <= 0) {
+      totalQty = parseInput(
+        item['qty'],
+      );
+    }
+
+    final beratLusin = parseInput(
+      item['weight_per_dozen'],
+    );
 
     final result =
         totalQty <= 0 || beratLusin <= 0 ? 0 : (totalQty / 12) * beratLusin;
 
     item['total_weight'] = result;
 
-    _totalWeightControllers[itemId]?.text = result.toStringAsFixed(2);
+    _totalWeightControllers[itemId]?.text = formatId(result);
   }
 
   double parseInput(dynamic value) {
@@ -687,6 +721,53 @@ class _FormItemsState extends State<FormItems>
         _initializeSemiFinishedTab();
       });
     }
+  }
+
+  Map<String, dynamic> getSortingGradeQty(
+    Map<String, dynamic> item,
+    Map<String, dynamic> data,
+  ) {
+    final grades = data['sorting']?['grades'] ?? [];
+
+    double gradeA = 0;
+    double gradeB = 0;
+    double gradeBS = 0;
+
+    final itemCode = item['finished_product']?['code']?.toString().trim();
+
+    for (final grade in grades) {
+      final gradeCode = grade['item_grade']?['code']?.toString().trim();
+
+      final gradeItems = grade['items'] ?? [];
+
+      final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
+        (gradeItem) {
+          final gradeItemCode =
+              gradeItem?['finished_product']?['code']?.toString().trim();
+
+          return gradeItemCode == itemCode;
+        },
+        orElse: () => null,
+      );
+
+      if (matched != null) {
+        final qty = parseInput(matched['qty']);
+
+        if (gradeCode == 'A') {
+          gradeA = qty;
+        } else if (gradeCode == 'B') {
+          gradeB = qty;
+        } else if (gradeCode == 'BS') {
+          gradeBS = qty;
+        }
+      }
+    }
+
+    return {
+      'grade_a': gradeA,
+      'grade_b': gradeB,
+      'grade_bs': gradeBS,
+    };
   }
 
   @override
@@ -1023,19 +1104,9 @@ class _FormItemsState extends State<FormItems>
               if (widget.label == 'Sorting')
                 SortingSection(
                   form: widget.form,
-                  // grades: _grades,
                   itemGradeOption: widget.itemGradeOption,
-                  // spraying: widget.spraying,
-                  // reworkLongHemming: widget.reworkLongHemming,
-                  // combing: widget.combing,
-                  // onChange: widget.handleChangeInput,
-                  // defectQty: widget.defectQty,
-                  // defects: widget.defects,
                   itemTypeOption: widget.itemTypeOption,
-                  // recalculateGradeBS: _recalculateGradeBS,
-                  // qtyItem: widget.qtyItem,
                   processData: widget.processData,
-                  // handleUpdateGrade: widget.handleUpdateGrade,
                   finishedItemGrb: widget.finishedItemGrb,
                   finishedItem: widget.finishedItem,
                   woData: widget.woData,
@@ -1047,35 +1118,56 @@ class _FormItemsState extends State<FormItems>
                   child: Column(
                     children: [
                       TemplateCard(
-                        title: 'Rincian Hasil Sortir',
+                        title: 'Rincian Sortir',
                         icon: Icons.sort_outlined,
                         child: _buildSortingQty(),
                       ),
                       Container(
                         height: 48,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: TabBar(
-                          isScrollable: true,
-                          labelColor: Colors.black,
-                          unselectedLabelColor: Colors.grey,
-                          indicatorColor: Theme.of(context).primaryColor,
-                          tabs: (widget.form['items'] ?? []).map<Tab>((item) {
-                            return Tab(
-                              text: item['finished_product']?['code'] ?? '-',
-                            );
-                          }).toList(),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 6),
+                          child: TabBar(
+                            dividerColor: Colors.transparent,
+                            labelColor: Colors.white,
+                            unselectedLabelColor: Colors.black,
+                            indicatorColor: Colors.white,
+                            indicator: BoxDecoration(
+                              color: Colors.blue[800],
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            tabs: [
+                              for (final item
+                                  in (widget.processData['items'] ?? []))
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4,
+                                    horizontal: 8,
+                                  ),
+                                  child: Tab(
+                                    text: item['finished_product']?['code'] ??
+                                        '-',
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
                       ),
-                      SizedBox(height: 16),
+                      // SizedBox(height: 16),
                       SizedBox(
-                        height: 400,
+                        height: 700,
                         child: TabBarView(
                           children:
                               (widget.form['items'] ?? []).map<Widget>((item) {
                             final itemId = item['id'];
+
+                            final sortingQty = getSortingGradeQty(
+                              item,
+                              widget.processData,
+                            );
 
                             return TemplateCard(
                               title: item['finished_product']?['code'] ?? '-',
@@ -1108,24 +1200,93 @@ class _FormItemsState extends State<FormItems>
                                       ],
                                     ),
                                   ),
+                                  Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue.shade50,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: Colors.blue.shade100,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'Grade A',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                formatId(
+                                                  sortingQty['grade_a'],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'Grade B',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                formatId(
+                                                  sortingQty['grade_b'],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'Grade BS',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                formatId(
+                                                  sortingQty['grade_bs'],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                   Row(
                                     children: [
                                       Expanded(
                                         child: PackingNumberForm(
-                                          label: 'Total Packing',
+                                          label: 'Total Packing (PCS)',
                                           controller:
                                               _packingQtyControllers[itemId]!,
                                           onChanged: (value) {
                                             item['qty'] = value;
 
                                             calculateBeratA(item);
-                                            calculateTotalBerat(item);
+                                            // calculateTotalBerat(item);
                                           },
                                         ),
                                       ),
                                       Expanded(
                                         child: PackingNumberForm(
-                                          label: 'Total Packing',
+                                          label: 'Berat per Lusin (KG)',
                                           controller:
                                               _weightPerDozenControllers[
                                                   itemId]!,
@@ -1134,7 +1295,8 @@ class _FormItemsState extends State<FormItems>
 
                                             calculateGsm(item);
                                             calculateBeratA(item);
-                                            calculateTotalBerat(item);
+                                            calculateTotalBerat(
+                                                item, widget.processData);
                                           },
                                         ),
                                       ),
@@ -1146,14 +1308,14 @@ class _FormItemsState extends State<FormItems>
                                     children: [
                                       Expanded(
                                         child: TextForm(
-                                          label: 'GSM',
+                                          label: 'Gramasi (GSM)',
                                           isDisabled: true,
                                           controller: _gsmControllers[itemId],
                                         ),
                                       ),
                                       Expanded(
                                         child: TextForm(
-                                          label: 'Berat Grade A',
+                                          label: 'Berat Grade A (KG)',
                                           isDisabled: true,
                                           controller:
                                               _weightGradeAControllers[itemId],
@@ -1161,7 +1323,7 @@ class _FormItemsState extends State<FormItems>
                                       ),
                                       Expanded(
                                         child: TextForm(
-                                          label: 'Total Berat',
+                                          label: 'Total Berat (KG)',
                                           isDisabled: true,
                                           controller:
                                               _totalWeightControllers[itemId],
@@ -1172,7 +1334,7 @@ class _FormItemsState extends State<FormItems>
                                     ),
                                   ),
                                 ].separatedBy(
-                                  CustomTheme().vGap('lg'),
+                                  CustomTheme().vGap('xl'),
                                 ),
                               ),
                             );
@@ -1203,7 +1365,7 @@ class _FormItemsState extends State<FormItems>
               )
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
-      ].separatedBy(CustomTheme().vGap('xl')),
+      ].separatedBy(CustomTheme().vGap('sm')),
     );
   }
 
@@ -1358,7 +1520,7 @@ Qty Sorting
                         fontWeight: CustomTheme().fontWeight('bold'),
                       ),
                     ),
-                  ],
+                  ].separatedBy(CustomTheme().vGap('lg')),
                 ),
               ),
             ),
@@ -1395,7 +1557,7 @@ Qty Sorting
         //     ),
         //   ),
         // ),
-        SizedBox(width: 16),
+        // SizedBox(width: 8),
         // Total
         Expanded(
           child: Container(

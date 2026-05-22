@@ -1,16 +1,11 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
-import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/form/text_form_grade.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
-import 'package:textile_tracking/helpers/result/to_double.dart';
 import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -152,19 +147,11 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 */
 
     if (groupedItems.isEmpty) {
-      final semiFinishedServiceGradesA =
-          Provider.of<OptionItemSemiFinishedService>(
-        context,
-        listen: false,
-      );
       final semiFinishedService = Provider.of<OptionItemSemiFinishedService>(
         context,
         listen: false,
       );
 
-      final paramsGradeA = extractSemiFinishedParams(
-        woItems,
-      );
       final params = extractSemiFinishedParams(
         woItems,
       );
@@ -445,8 +432,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 | TAB HEADER
 |--------------------------------------------------------------------------
 */
-          _buildGlobalSummary(),
-          SizedBox(height: 16),
           Container(
             height: 50,
             decoration: BoxDecoration(
@@ -477,7 +462,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
               ),
             ),
           ),
-          SizedBox(height: 16),
 
           /*
 |--------------------------------------------------------------------------
@@ -495,7 +479,8 @@ class _SortingEditSectionState extends State<SortingEditSection> {
               ],
             ),
           ),
-        ],
+          _buildGlobalSummary(),
+        ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
   }
@@ -612,8 +597,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     int gradeIndex,
   ) {
     final grade = widget.form['items'][itemIndex]['grades'][gradeIndex];
-
-    final isBS = (grade['code'] ?? '').toString().toUpperCase() == 'BS';
 
     return Container(
       padding: EdgeInsets.all(12),
@@ -1194,7 +1177,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     final totalSorting = gradeA + gradeB + gradeBS + totalRepair;
 
     return TemplateCard(
-      title: 'Rincian Sortir',
+      title: 'Hasil Sortir',
       icon: Icons.summarize_outlined,
       child: Row(
         children: [
@@ -1301,7 +1284,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     final totalSorting = totalGradeA + totalGradeB + totalGradeBS + totalRepair;
 
     return TemplateCard(
-      title: 'Rincian Hasil Sortir',
+      title: 'Total Hasil Sortir',
       icon: Icons.analytics_outlined,
       child: Row(
         children: [

@@ -425,13 +425,13 @@ class _UpdateProcessState extends State<UpdateProcess>
       return;
     }
 
-    final rawGsm = (beratLusin * 10000000) / (12 * panjang * lebar);
+    final rawGsm = (beratLusin * 10000000) / (12 * 70 * 140);
 
     final rounded = customRound(rawGsm);
 
     item['gsm'] = rounded;
 
-    _gsmControllers[itemId]?.text = rounded.toString();
+    _gsmControllers[itemId]?.text = formatId(rounded);
   }
 
   String formatId(num value) {
@@ -462,23 +462,133 @@ class _UpdateProcessState extends State<UpdateProcess>
 
     item['weight_grade_a'] = result;
 
-    _weightGradeAControllers[itemId]?.text = result.toStringAsFixed(2);
+    _weightGradeAControllers[itemId]?.text = formatId(result);
+  }
+
+  double getItemQty(Map<String, dynamic> item) {
+    /// qty input packing/manual
+    final inputQty = parseInput(item['qty']);
+
+    /// ambil WO items
+    final woItems = item['work_orders']?['items'];
+
+    if (woItems is List) {
+      /// cari item WO yang sesuai
+      final matched = woItems.cast<Map<String, dynamic>?>().firstWhere(
+            (woItem) =>
+                woItem?['finished_product_id'] == item['finished_product_id'],
+            orElse: () => null,
+          );
+
+      if (matched != null) {
+        final woQty = parseInput(matched['qty']);
+
+        if (woQty > 0) {
+          return woQty;
+        }
+      }
+    }
+
+    /// fallback lama
+    return inputQty;
   }
 
   void calculateTotalBerat(
     Map<String, dynamic> item,
+    Map<String, dynamic> processData,
   ) {
     final itemId = item['id'];
 
-    final totalQty = parseInput(item['qty']);
-    final beratLusin = parseInput(item['weight_per_dozen']);
+    double totalQty = 0;
+
+    final grades = processData['sorting']?['grades'] ?? [];
+
+    final itemCode = item['finished_product']?['code']?.toString().trim();
+
+    for (final grade in grades) {
+      final gradeItems = grade['items'] ?? [];
+
+      final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
+        (gradeItem) {
+          final gradeItemCode =
+              gradeItem?['finished_product']?['code']?.toString().trim();
+
+          return gradeItemCode == itemCode;
+        },
+        orElse: () => null,
+      );
+
+      if (matched != null) {
+        totalQty += parseInput(
+          matched['qty'],
+        );
+      }
+    }
+
+    /// fallback
+    if (totalQty <= 0) {
+      totalQty = parseInput(
+        item['qty'],
+      );
+    }
+
+    final beratLusin = parseInput(
+      item['weight_per_dozen'],
+    );
 
     final result =
         totalQty <= 0 || beratLusin <= 0 ? 0 : (totalQty / 12) * beratLusin;
 
     item['total_weight'] = result;
 
-    _totalWeightControllers[itemId]?.text = result.toStringAsFixed(2);
+    _totalWeightControllers[itemId]?.text = formatId(result);
+  }
+
+  Map<String, dynamic> getSortingGradeQty(
+    Map<String, dynamic> item,
+    Map<String, dynamic> data,
+  ) {
+    final grades = data['sorting']?['grades'] ?? [];
+
+    double gradeA = 0;
+    double gradeB = 0;
+    double gradeBS = 0;
+
+    final itemCode = item['finished_product']?['code']?.toString().trim();
+
+    for (final grade in grades) {
+      final gradeCode = grade['item_grade']?['code']?.toString().trim();
+
+      final gradeItems = grade['items'] ?? [];
+
+      final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
+        (gradeItem) {
+          final gradeItemCode =
+              gradeItem?['finished_product']?['code']?.toString().trim();
+
+          return gradeItemCode == itemCode;
+        },
+        orElse: () => null,
+      );
+
+      if (matched != null) {
+        final qty = parseInput(matched['qty']);
+
+        if (gradeCode == 'A') {
+          gradeA = qty;
+        } else if (gradeCode == 'B') {
+          gradeB = qty;
+        } else if (gradeCode == 'BS') {
+          gradeBS = qty;
+        }
+      }
+    }
+
+    return {
+      'grade_a': gradeA,
+      'grade_b': gradeB,
+      'grade_bs': gradeBS,
+    };
   }
 
   double parseSafe(dynamic value) {
@@ -637,13 +747,6 @@ class _UpdateProcessState extends State<UpdateProcess>
 
               widget.form['grades'] = buildGradesPayload();
             }
-
-            // if (widget.label == 'Long Hemming' ||
-            //     widget.label == 'Sewing' ||
-            //     widget.label == 'Packing') {
-            //   widget.form['greige_item_id'] =
-            //       (widget.finishedItemMaterial[0]['value']);
-            // }
 
             /// 🔥 MAKLON
             else if (_isMaklon == true) {
@@ -971,172 +1074,347 @@ class _UpdateProcessState extends State<UpdateProcess>
                                 ],
                                 if (widget.label == 'Packing')
                                   DefaultTabController(
-                                    length: (widget.data['items'] ?? []).length,
+                                    length: (widget.form['items'] ?? []).length,
                                     child: Column(
                                       children: [
-                                        TemplateCard(
-                                          title: 'Rincian Hasil Sortir',
-                                          icon: Icons.sort_outlined,
-                                          child: _buildSortingQty(),
-                                        ),
+                                        // TemplateCard(
+                                        //   title: 'Rincian Sortir',
+                                        //   icon: Icons.sort_outlined,
+                                        //   child: _buildSortingQty(),
+                                        // ),
                                         Container(
                                           height: 48,
                                           decoration: BoxDecoration(
-                                            color: Colors.white,
+                                            color: Colors.grey[200],
                                             borderRadius:
-                                                BorderRadius.circular(8),
+                                                BorderRadius.circular(12),
                                           ),
-                                          child: TabBar(
-                                            isScrollable: true,
-                                            labelColor: Colors.black,
-                                            unselectedLabelColor: Colors.grey,
-                                            indicatorColor:
-                                                Theme.of(context).primaryColor,
-                                            tabs: (widget.data['items'] ?? [])
-                                                .map<Tab>((item) {
-                                              return Tab(
-                                                text: item['finished_product']
-                                                        ?['code'] ??
-                                                    '-',
-                                              );
-                                            }).toList(),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 6),
+                                            child: TabBar(
+                                              dividerColor: Colors.transparent,
+                                              labelColor: Colors.white,
+                                              unselectedLabelColor:
+                                                  Colors.black,
+                                              indicatorColor: Colors.white,
+                                              indicator: BoxDecoration(
+                                                color: Colors.blue[800],
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                              ),
+                                              tabs: [
+                                                for (final item
+                                                    in (widget.data['items'] ??
+                                                        []))
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      vertical: 4,
+                                                      horizontal: 8,
+                                                    ),
+                                                    child: Tab(
+                                                      text:
+                                                          item['finished_product']
+                                                                  ?['code'] ??
+                                                              '-',
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                        // SizedBox(height: 16),
                                         SizedBox(
-                                          height: 400,
+                                          height: 500,
                                           child: TabBarView(
                                             children:
                                                 (widget.data['items'] ?? [])
                                                     .map<Widget>((item) {
                                               final itemId = item['id'];
+                                              final sortingQty =
+                                                  getSortingGradeQty(
+                                                      item, widget.data);
+                                              final totalSorting = parseInput(
+                                                      sortingQty['grade_a']) +
+                                                  parseInput(
+                                                      sortingQty['grade_b']) +
+                                                  parseInput(
+                                                      sortingQty['grade_bs']);
 
-                                              return TemplateCard(
-                                                title: 'Material',
-                                                icon:
-                                                    Icons.inventory_2_outlined,
-                                                child: Column(
-                                                  children: [
-                                                    Container(
-                                                      width: double.infinity,
-                                                      padding:
-                                                          EdgeInsets.all(12),
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            Colors.grey.shade50,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
+                                              return Container(
+                                                padding: EdgeInsets.all(12),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey[100],
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                child: TemplateCard(
+                                                  title: 'Material',
+                                                  icon: Icons
+                                                      .inventory_2_outlined,
+                                                  child: Column(
+                                                    children: [
+                                                      Container(
+                                                        width: double.infinity,
+                                                        padding:
+                                                            EdgeInsets.all(12),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors
+                                                              .grey.shade50,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
+                                                        ),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              item['finished_product']
+                                                                      ?[
+                                                                      'code'] ??
+                                                                  '-',
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            SizedBox(height: 4),
+                                                            Text(
+                                                              item['finished_product']
+                                                                      ?[
+                                                                      'name'] ??
+                                                                  '-',
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                      Container(
+                                                        width: double.infinity,
+                                                        padding:
+                                                            EdgeInsets.all(12),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors
+                                                              .blue.shade50,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
+                                                          border: Border.all(
+                                                            color: Colors
+                                                                .blue.shade100,
+                                                          ),
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Expanded(
+                                                              child: Column(
+                                                                children: [
+                                                                  Text(
+                                                                    'Grade A',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          4),
+                                                                  Text(
+                                                                    formatNumber(
+                                                                        sortingQty[
+                                                                            'grade_a']),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              child: Column(
+                                                                children: [
+                                                                  Text(
+                                                                    'Grade B',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          4),
+                                                                  Text(
+                                                                    formatNumber(
+                                                                        sortingQty[
+                                                                            'grade_b']),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              child: Column(
+                                                                children: [
+                                                                  Text(
+                                                                    'Tipe BS',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          4),
+                                                                  Text(
+                                                                    formatNumber(
+                                                                      sortingQty[
+                                                                          'grade_bs'],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              child: Column(
+                                                                children: [
+                                                                  Text(
+                                                                    'Total Keseluruhan',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          4),
+                                                                  Text(
+                                                                    formatNumber(
+                                                                      parseInput(
+                                                                            sortingQty['grade_a'],
+                                                                          ) +
+                                                                          parseInput(
+                                                                            sortingQty['grade_b'],
+                                                                          ) +
+                                                                          parseInput(
+                                                                            sortingQty['grade_bs'],
+                                                                          ),
+                                                                    ),
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Row(
                                                         children: [
-                                                          Text(
-                                                            item['finished_product']
-                                                                    ?['code'] ??
-                                                                '-',
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                                          Expanded(
+                                                            child:
+                                                                PackingNumberForm(
+                                                              label:
+                                                                  'Total Packing (PCS)',
+                                                              controller:
+                                                                  _packingQtyControllers[
+                                                                      itemId]!,
+                                                              onChanged:
+                                                                  (value) {
+                                                                item['qty'] =
+                                                                    value;
+
+                                                                calculateBeratA(
+                                                                    item);
+                                                                // calculateTotalBerat(
+                                                                //     item);
+                                                              },
                                                             ),
                                                           ),
-                                                          SizedBox(height: 4),
-                                                          Text(
-                                                            item['finished_product']
-                                                                    ?['name'] ??
-                                                                '-',
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child:
-                                                              PackingNumberForm(
-                                                            label:
-                                                                'Total Packing',
-                                                            controller:
-                                                                _packingQtyControllers[
-                                                                    itemId]!,
-                                                            onChanged: (value) {
-                                                              item['qty'] =
-                                                                  value;
+                                                          Expanded(
+                                                            child:
+                                                                PackingNumberForm(
+                                                              label:
+                                                                  'Berat 1 Lusin (KG)',
+                                                              controller:
+                                                                  _weightPerDozenControllers[
+                                                                      itemId]!,
+                                                              onChanged:
+                                                                  (value) {
+                                                                item['weight_per_dozen'] =
+                                                                    value;
 
-                                                              calculateBeratA(
-                                                                  item);
-                                                              calculateTotalBerat(
-                                                                  item);
-                                                            },
+                                                                calculateGsm(
+                                                                    item);
+                                                                calculateBeratA(
+                                                                    item);
+                                                                calculateTotalBerat(
+                                                                    item,
+                                                                    widget
+                                                                        .data);
+                                                              },
+                                                            ),
                                                           ),
+                                                        ].separatedBy(
+                                                          CustomTheme()
+                                                              .hGap('xl'),
                                                         ),
-                                                        Expanded(
-                                                          child:
-                                                              PackingNumberForm(
-                                                            label:
-                                                                'Berat 1 Lusin',
-                                                            controller:
-                                                                _weightPerDozenControllers[
-                                                                    itemId]!,
-                                                            onChanged: (value) {
-                                                              item['weight_per_dozen'] =
-                                                                  value;
-
-                                                              calculateGsm(
-                                                                  item);
-                                                              calculateBeratA(
-                                                                  item);
-                                                              calculateTotalBerat(
-                                                                  item);
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ].separatedBy(
-                                                        CustomTheme()
-                                                            .hGap('xl'),
                                                       ),
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child: TextForm(
-                                                            label: 'GSM',
-                                                            isDisabled: true,
-                                                            controller:
-                                                                _gsmControllers[
-                                                                    itemId],
+                                                      Row(
+                                                        children: [
+                                                          Expanded(
+                                                            child: TextForm(
+                                                              label:
+                                                                  'Gramasi (GSM)',
+                                                              isDisabled: true,
+                                                              controller:
+                                                                  _gsmControllers[
+                                                                      itemId],
+                                                              handleChange:
+                                                                  (value) {
+                                                                setState(() {});
+                                                              },
+                                                            ),
                                                           ),
-                                                        ),
-                                                        Expanded(
-                                                          child: TextForm(
-                                                            label:
-                                                                'Berat Grade A',
-                                                            isDisabled: true,
-                                                            controller:
-                                                                _weightGradeAControllers[
-                                                                    itemId],
+                                                          Expanded(
+                                                            child: TextForm(
+                                                              label:
+                                                                  'Berat Grade A (KG)',
+                                                              isDisabled: true,
+                                                              controller:
+                                                                  _weightGradeAControllers[
+                                                                      itemId],
+                                                            ),
                                                           ),
-                                                        ),
-                                                        Expanded(
-                                                          child: TextForm(
-                                                            label:
-                                                                'Total Berat',
-                                                            isDisabled: true,
-                                                            controller:
-                                                                _totalWeightControllers[
-                                                                    itemId],
+                                                          Expanded(
+                                                            child: TextForm(
+                                                              label:
+                                                                  'Total Berat (KG)',
+                                                              isDisabled: true,
+                                                              controller:
+                                                                  _totalWeightControllers[
+                                                                      itemId],
+                                                            ),
                                                           ),
+                                                        ].separatedBy(
+                                                          CustomTheme()
+                                                              .hGap('xl'),
                                                         ),
-                                                      ].separatedBy(
-                                                        CustomTheme()
-                                                            .hGap('xl'),
                                                       ),
+                                                    ].separatedBy(
+                                                      CustomTheme().vGap('xl'),
                                                     ),
-                                                  ].separatedBy(
-                                                    CustomTheme().vGap('lg'),
                                                   ),
                                                 ),
                                               );
@@ -1199,11 +1477,10 @@ class _UpdateProcessState extends State<UpdateProcess>
   }
 
   Widget _buildSortingQty() {
-    final gradesList =
-        widget.woData['processes'][10]['data'][0]['grades'] ?? [];
+    final gradesList = widget.data['sorting']?['grades'] ?? [];
 
     double getTotalAdditionalProcess() {
-      final data = widget.woData['processes']?[10]?['data']?[0];
+      final data = widget.data['sorting'];
 
       if (data == null) return 0;
 
@@ -1243,9 +1520,9 @@ class _UpdateProcessState extends State<UpdateProcess>
         // Loop through grades
         ...gradesList.asMap().entries.map((entry) {
           final grade = entry.value;
-          final gradeName = grade['grade']?.toString() ?? '-';
+          final gradeName = grade['item_grade']['code']?.toString() ?? '-';
           final gradeQty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
-          final gradeUnit = grade['unit_code']?.toString() ?? '';
+          final gradeUnit = grade['unit']?['code']?.toString() ?? '';
 
           return Expanded(
             child: Padding(
@@ -1261,7 +1538,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Grade $gradeName',
+                      '${gradeName == 'BS' ? 'Tipe' : 'Grade'} $gradeName',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey.shade700,
@@ -1275,12 +1552,13 @@ class _UpdateProcessState extends State<UpdateProcess>
                         fontWeight: CustomTheme().fontWeight('bold'),
                       ),
                     ),
-                  ],
+                  ].separatedBy(CustomTheme().vGap('lg')),
                 ),
               ),
             ),
           );
         }).toList(),
+        SizedBox(width: 12),
         // Expanded(
         //   child: Container(
         //     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
@@ -1293,7 +1571,7 @@ class _UpdateProcessState extends State<UpdateProcess>
         //       crossAxisAlignment: CrossAxisAlignment.start,
         //       children: [
         //         Text(
-        //           'Total Perbaikan',
+        //           'Perbaikan',
         //           style: TextStyle(
         //             fontSize: 14,
         //             color: Colors.grey.shade700,
@@ -1311,6 +1589,7 @@ class _UpdateProcessState extends State<UpdateProcess>
         //     ),
         //   ),
         // ),
+        // SizedBox(width: 8),
         // Total
         Expanded(
           child: Container(
@@ -1332,13 +1611,13 @@ class _UpdateProcessState extends State<UpdateProcess>
                   ),
                 ),
                 Text(
-                  '${formatNumber(grandTotal.toStringAsFixed(0))} ${gradesList.isNotEmpty ? gradesList[0]['unit_code']?.toString() ?? '' : ''}',
+                  '${formatNumber(grandTotal.toStringAsFixed(0))} PCS',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: CustomTheme().fontWeight('bold'),
                   ),
                 ),
-              ],
+              ].separatedBy(CustomTheme().vGap('lg')),
             ),
           ),
         ),

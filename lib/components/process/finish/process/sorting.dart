@@ -571,7 +571,7 @@ class _SortingSectionState extends State<SortingSection> {
 |--------------------------------------------------------------------------
 */
           SizedBox(
-            height: 1000,
+            height: 1200,
             child: TabBarView(
               children: [
                 for (int itemIndex = 0; itemIndex < items.length; itemIndex++)

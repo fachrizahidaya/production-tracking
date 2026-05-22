@@ -181,6 +181,8 @@ class _SortingSectionState extends State<SortingSection> {
       for (final item in gradeItems) {
         final itemId = item['item_id'];
 
+        if (itemId == null) continue;
+
         if (!groupedItems.containsKey(itemId)) {
           groupedItems[itemId] = {
             'item_id': itemId,
@@ -328,7 +330,11 @@ class _SortingSectionState extends State<SortingSection> {
           gradeBItem = null;
         }
 
-        groupedItems[woItem['greige_item_id']] = {
+        final greigeItemId = woItem['greige_item_id'];
+
+        if (greigeItemId == null) continue;
+
+        groupedItems[greigeItemId] = {
           'item_id': woItem['greige_item_id'],
           'finished_product': {
             'id': woItem['greige_item_id'],
@@ -501,47 +507,6 @@ class _SortingSectionState extends State<SortingSection> {
 | HELPERS
 |--------------------------------------------------------------------------
 */
-
-  double parseSafe(dynamic value) {
-    if (value == null) {
-      return 0;
-    }
-
-    if (value is int) {
-      return value.toDouble();
-    }
-
-    if (value is double) {
-      return value;
-    }
-
-    return double.tryParse(
-          value.toString(),
-        ) ??
-        0;
-  }
-
-  double parseInput(dynamic value) {
-    if (value == null) return 0;
-
-    String str = value.toString().trim();
-
-    if (str.isEmpty) return 0;
-
-    final ribuanRegex = RegExp(r'^\d{1,3}(\.\d{3})+$');
-
-    if (ribuanRegex.hasMatch(str)) {
-      str = str.replaceAll('.', '');
-      return double.tryParse(str) ?? 0;
-    }
-
-    if (str.contains(',')) {
-      str = str.replaceAll('.', '');
-      str = str.replaceAll(',', '.');
-    }
-
-    return double.tryParse(str) ?? 0;
-  }
 
   void _syncFormItems() {
     widget.form['items'] = List<Map<String, dynamic>>.from(_items);

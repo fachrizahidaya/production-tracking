@@ -49,7 +49,7 @@ class _ItemProcessState extends State<ItemProcess> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 650,
+      width: double.infinity,
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isTablet = constraints.maxWidth > 600;

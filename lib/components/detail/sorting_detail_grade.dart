@@ -117,7 +117,6 @@ class SortingDetailGradeList extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 12),
           SizedBox(
             height: 700,
             child: TabBarView(
@@ -129,7 +128,7 @@ class SortingDetailGradeList extends StatelessWidget {
               ],
             ),
           ),
-        ],
+        ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
   }
@@ -174,7 +173,6 @@ class SortingDetailGradeList extends StatelessWidget {
               ),
             ),
           ),
-          // SizedBox(height: 16),
 
           /*
       |--------------------------------------------------------------------------
@@ -238,7 +236,6 @@ class SortingDetailGradeList extends StatelessWidget {
                 ),
               ),
             ),
-          // SizedBox(height: 16),
 
           /*
       |--------------------------------------------------------------------------

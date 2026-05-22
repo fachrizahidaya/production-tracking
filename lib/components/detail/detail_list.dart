@@ -284,17 +284,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             ),
           if (widget.forDyeing == true && widget.data['status'] == 'Selesai')
             _buildVerticalDivider(false),
-          if (widget.forDyeing == true && widget.data['status'] == 'Selesai')
-            Expanded(
-              child: _buildQuickInfoItem(
-                icon: Icons.invert_colors_on_outlined,
-                label: 'No. Lot Celup',
-                value: widget.data['lot_celup_no'] != null
-                    ? '${widget.data['lot_celup_no']}'
-                    : '-',
-                isTablet: isTablet,
-              ),
-            ),
           if (widget.forDyeing == false &&
               widget.data['status'] == 'Selesai' &&
               !(['Long Hemming', 'Cross Cutting', 'Sewing']
@@ -1711,16 +1700,16 @@ Catatan WO
             icon: Icons.attachment_outlined,
             child: _buildTotalSorting(true),
           ),
-        if ((widget.label != 'Long Hemming' &&
-            widget.label != 'Cross Cutting' &&
-            widget.label != 'Sewing' &&
-            widget.label != 'Sorting' &&
-            widget.label != 'Packing'))
-          _buildInfoCard(
-            title: 'Produk Setengah Jadi',
-            icon: Icons.inventory_2_outlined,
-            child: _buildMaterialInfo(true),
-          ),
+        // if ((widget.label != 'Long Hemming' &&
+        //     widget.label != 'Cross Cutting' &&
+        //     widget.label != 'Sewing' &&
+        //     widget.label != 'Sorting' &&
+        //     widget.label != 'Packing'))
+        //   _buildInfoCard(
+        //     title: 'Produk Setengah Jadi',
+        //     icon: Icons.inventory_2_outlined,
+        //     child: _buildMaterialInfo(true),
+        //   ),
         if (widget.label == 'Long Hemming' ||
             widget.label == 'Cross Cutting' ||
             widget.label == 'Sewing' ||

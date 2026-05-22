@@ -27,6 +27,7 @@ class CrossCutting {
   final bool? maklon;
   final machine_ids;
   final machines;
+  final items;
 
   CrossCutting(
       {this.id,
@@ -50,7 +51,8 @@ class CrossCutting {
       this.maklon,
       this.maklon_name,
       this.machine_ids,
-      this.machines});
+      this.machines,
+      this.items});
 
   factory CrossCutting.fromJson(Map<String, dynamic> json) {
     return CrossCutting(
@@ -75,6 +77,7 @@ class CrossCutting {
       maklon_name: json['maklon_name'] ?? '',
       machine_ids: json['machine_ids'] ?? [],
       machines: json['machines'] ?? [],
+      items: json['items'] ?? [],
     );
   }
 
@@ -102,6 +105,7 @@ class CrossCutting {
       'maklon_name': maklon == true ? maklon_name : '',
       'machine_ids': machine_ids,
       'machines': machines,
+      'items': items
     };
   }
 }

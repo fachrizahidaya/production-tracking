@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/process/content/timeline_item.dart';
-import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class TimelineProcess extends StatelessWidget {
   final buildSectionTitle;

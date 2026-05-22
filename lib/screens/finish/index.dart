@@ -7,9 +7,11 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/process/finish/finish_submit_section.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
+import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 
@@ -92,9 +94,6 @@ class _FinishProcessState extends State<FinishProcess> {
     'qty': '0',
     'item_qty': '0',
     'weight': '0',
-    'total_weight': '0',
-    'gsm': '0',
-    'weight_per_dozen': '0',
     'notes': '',
     'status': null,
     'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
@@ -118,10 +117,10 @@ class _FinishProcessState extends State<FinishProcess> {
     'good_weight_unit_id': 2,
     'bs_weight': '0',
     'bs_weight_unit_id': 2,
-    'machine_ids': [],
-    'weight_grade_a': '0',
     'nama_greige_item': '',
     'sku_greige_item': '',
+    'semifinished_products': [],
+    'items': []
   };
 
   @override
@@ -296,6 +295,51 @@ class _FinishProcessState extends State<FinishProcess> {
     });
   }
 
+  Future<void> _handleFetchSemiFinishedItems(
+    Map<String, dynamic> data,
+  ) async {
+    final semiFinishedService = Provider.of<OptionItemSemiFinishedService>(
+      context,
+      listen: false,
+    );
+
+    final params = extractSemiFinishedParams(
+      data['items'] ?? [],
+    );
+
+    final processName =
+        widget.label.toString().trim().toLowerCase().replaceAll(' ', '_');
+
+    await semiFinishedService.fetchOptions(
+      isInitialLoad: true,
+      process: processName,
+      baseCodes: params['base_codes'] ?? [],
+      colorCodes: params['color_codes'] ?? [],
+    );
+
+    final semiFinishedItems = semiFinishedService.dataListOption;
+
+    if (widget.label == 'Dyeing' ||
+        widget.label == 'Press' ||
+        widget.label == 'Tumbler' ||
+        widget.label == 'Stenter' ||
+        widget.label == 'Long Slitting') {
+      _form['semifinished_products'] = List.generate(
+        semiFinishedItems.length,
+        (index) => {
+          'item_id': semiFinishedItems[index]['value'],
+        },
+      );
+    } else {
+      _form['items'] = List.generate(
+        semiFinishedItems.length,
+        (index) => {
+          'semifinished_product_id': semiFinishedItems[index]['value'],
+        },
+      );
+    }
+  }
+
   void _handleChangeInput(String field, dynamic value) {
     setState(() {
       _form[field] = value;
@@ -362,6 +406,7 @@ class _FinishProcessState extends State<FinishProcess> {
       await _workOrderService.getDataView(woId);
 
       final data = _workOrderService.dataView;
+      await _handleFetchSemiFinishedItems(data);
       final greigeQty = data['greige_qty'];
 
       if (widget.label == 'Dyeing') {

@@ -12,9 +12,11 @@ import 'package:textile_tracking/helpers/result/safe_to_api.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/helpers/result/to_double.dart';
+import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
+import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/components/process/finish/functions/fetch_function.dart';
@@ -88,6 +90,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   bool _isFetchingUnit = false;
   bool _isFetchingGrade = false;
   bool _isFetchingItemType = false;
+  bool _isInitializingSorting = false;
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
@@ -442,6 +445,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   Future<void> _getProcessView(id) async {
+    if (widget.label == 'Sorting') {
+      setState(() {
+        _isInitializingSorting = true;
+      });
+    }
+
     await widget.processService.getDataView(context, id);
 
     setState(() {
@@ -550,12 +559,11 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['sku_greige_item'] =
             data['greige_item']['code'].toString();
       }
-
       if (data['attachments'] != null) {
         widget.form?['attachments'] = List.from(data['attachments']);
       }
-      if (data['machine_ids'] != null) {
-        widget.form?['machine_ids'] = List.from(data['machine_ids']);
+      if (data['items'] != null) {
+        widget.form?['items'] = List.from(data['items']);
       }
 
       if (data['grades'] != null) {
@@ -593,6 +601,16 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         _defectQtyControllers.add(
           TextEditingController(text: defect['qty']?.toString() ?? '0'),
         );
+      }
+
+      if (widget.label == 'Sorting') {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            setState(() {
+              _isInitializingSorting = false;
+            });
+          }
+        });
       }
     });
   }
@@ -689,6 +707,26 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       widget.form?['weight_grade_a'] = _weightGradeAController.text;
       widget.form?['gsm'] = _gsmController.text;
       widget.form?['total_weight'] = safeToApi(_totalWeightController.text);
+      if (widget.label == 'Sorting') {
+        widget.form?['items'] = List<Map<String, dynamic>>.from(
+          widget.form?['items'] ?? [],
+        );
+
+        widget.form?['grades'] = buildGradesPayload();
+      }
+
+      widget.form?['attachments'] ??= [];
+      widget.form?['defects'] ??= [];
+      widget.form?['grades'] ??= [];
+      widget.form?['semifinished_products'] ??= [];
+      widget.form?['items'] ??= [];
+
+      widget.form?['defects'] = _defects
+          .map((e) => {
+                'defect_type_id': e['defect_type_id'],
+                'qty': e['qty'],
+              })
+          .toList();
 
       if (widget.form?['wo_id'] != null) {
         showConfirmationDialog(
@@ -714,24 +752,104 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+  Future<void> _handleFetchSemiFinishedItems() async {
+    final semiFinishedService = Provider.of<OptionItemSemiFinishedService>(
+      context,
+      listen: false,
+    );
+
+    final params = extractSemiFinishedParams(
+      woData['items'] ?? [],
+    );
+
+    final processName =
+        widget.label.toString().trim().toLowerCase().replaceAll(' ', '_');
+
+    await semiFinishedService.fetchOptions(
+      isInitialLoad: true,
+      process: processName,
+      baseCodes: params['base_codes'] ?? [],
+      colorCodes: params['color_codes'] ?? [],
+    );
+
+    final semiFinishedItems = semiFinishedService.dataListOption;
+
+    if (widget.label == 'Dyeing' ||
+        widget.label == 'Press' ||
+        widget.label == 'Tumbler' ||
+        widget.label == 'Stenter' ||
+        widget.label == 'Long Slitting') {
+      widget.form?['semifinished_products'] = List.generate(
+        semiFinishedItems.length,
+        (index) => {
+          'item_id': semiFinishedItems[index]['value'],
+        },
+      );
+    } else {
+      widget.form?['items'] = List.generate(
+        semiFinishedItems.length,
+        (index) => {
+          'semifinished_product_id': semiFinishedItems[index]['value'],
+        },
+      );
+    }
+  }
+
   _selectWorkOrder() {
     showSelectDialog(
-        context: context,
-        title: 'Work Order',
-        isLoading: null,
-        isFetching: _isFetchingWorkOrder,
-        handleChangeValue: (e) {
-          setState(() {
-            widget.form?['wo_id'] = e['value'].toString();
-            widget.form?['no_wo'] = e['label'].toString();
-            processId = e[widget.idProcess].toString();
-          });
+      context: context,
+      title: 'Work Order',
+      isLoading: null,
+      isFetching: _isFetchingWorkOrder,
+      handleChangeValue: (e) async {
+        setState(() {
+          widget.form?['wo_id'] = e['value'].toString();
+          widget.form?['no_wo'] = e['label'].toString();
+          processId = e[widget.idProcess].toString();
 
-          _getDataView(e['value'].toString());
-          _getProcessView(e[widget.idProcess].toString());
-        },
-        option: workOrderOption,
-        selected: widget.form?['wo_id'].toString() ?? '');
+          // reset agar tidak baca data lama
+          data = {};
+          widget.form?['items'] = [];
+          widget.form?['grades'] = [];
+        });
+
+        /*
+      |--------------------------------------------------------------------------
+      | LOAD PROCESS DULU
+      |--------------------------------------------------------------------------
+      */
+
+        await _getProcessView(
+          e[widget.idProcess].toString(),
+        );
+
+        /*
+      |--------------------------------------------------------------------------
+      | BARU WO
+      |--------------------------------------------------------------------------
+      */
+
+        await _getDataView(
+          e['value'].toString(),
+        );
+
+        /*
+      |--------------------------------------------------------------------------
+      | FALLBACK JIKA PROCESS BELUM ADA
+      |--------------------------------------------------------------------------
+      */
+
+        if ((data['items'] ?? []).isEmpty) {
+          await _handleFetchSemiFinishedItems();
+        }
+
+        if (mounted) {
+          setState(() {});
+        }
+      },
+      option: workOrderOption,
+      selected: widget.form?['wo_id'].toString() ?? '',
+    );
   }
 
   _selectUnit() {
@@ -1069,6 +1187,69 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     return machines.every((m) => m?['status'] == 'Selesai');
   }
 
+  List<Map<String, dynamic>> buildGradesPayload() {
+    final items = List<Map<String, dynamic>>.from(
+      widget.form?['items'] ?? [],
+    );
+
+    final Map<int, Map<String, dynamic>> groupedGrades = {};
+
+    for (final item in items) {
+      final grades = List<Map<String, dynamic>>.from(
+        item['grades'] ?? [],
+      );
+
+      final defects = List<Map<String, dynamic>>.from(
+        item['defects'] ?? [],
+      );
+
+      for (final grade in grades) {
+        final gradeId = grade['item_grade_id'];
+
+        if (!groupedGrades.containsKey(gradeId)) {
+          groupedGrades[gradeId] = {
+            'item_grade_id': gradeId,
+            'notes': 'Grade ${grade['name'] ?? grade['code']}',
+            'items': [],
+          };
+        }
+
+        final isBS = (grade['code'] ?? '').toString().toUpperCase() == 'BS';
+
+        groupedGrades[gradeId]!['items'].add({
+          'item_id': item['item_id'],
+          'semifinished_product_id': grade['semifinished_product_id'],
+          'qty': toDouble(
+            grade['qty'],
+          ),
+          'spraying': toDouble(
+            grade['spraying'] ?? 0,
+          ),
+          'rework_long_hemming': toDouble(
+            grade['rework_long_hemming'] ?? 0,
+          ),
+          'combing': toDouble(
+            grade['combing'] ?? 0,
+          ),
+          if (isBS)
+            'defects': defects.map((e) {
+              return {
+                'defect_type_id': e['defect_type_id'],
+                'qty': toDouble(
+                  e['qty'],
+                ),
+              };
+            }).toList(),
+        });
+      }
+    }
+
+    return groupedGrades.values.where((e) {
+      final items = e['items'] as List?;
+      return items != null && items.isNotEmpty;
+    }).toList();
+  }
+
   @override
   void dispose() {
     if (widget.form != null) {
@@ -1180,6 +1361,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               finishedItem: finishedItemOption,
                               finishedItemGood: finishedItemGood,
                               finishedItemGrb: finishedItemGrb,
+                              isInitializing: _isInitializingSorting,
                             ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],

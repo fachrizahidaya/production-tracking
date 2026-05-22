@@ -13,6 +13,7 @@ import 'package:textile_tracking/models/dashboard/work_order_stats.dart';
 import 'package:textile_tracking/models/option/option_dyeing.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
+import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_master_item_grade.dart';
@@ -81,6 +82,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => OptionMasterItemGradeService()),
     ChangeNotifierProvider(create: (_) => OptionDyeingService()),
     ChangeNotifierProvider(create: (_) => OptionItemService()),
+    ChangeNotifierProvider(create: (_) => OptionItemSemiFinishedService()),
     ChangeNotifierProvider(create: (_) => WorkOrderStatsService()),
     ChangeNotifierProvider(create: (_) => WorkOrderChartService()),
     ChangeNotifierProvider(create: (_) => WorkOrderProcessService()),

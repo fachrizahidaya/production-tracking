@@ -153,7 +153,7 @@ class _ProcessItemState extends State<ProcessItem> {
                       processKey: processKey,
                     )
                   else
-                    SizedBox.shrink(
+                    SizedBox(
                       child: NoData(),
                     ),
                 ],

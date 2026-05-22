@@ -71,7 +71,9 @@ class _SewingDetailState extends State<SewingDetail> {
           maklon: form['maklon'],
           maklon_name: form['maklon_name'],
           greige_item_id:
-              int.tryParse(form['greige_item_id']?.toString() ?? '')),
+              int.tryParse(form['greige_item_id']?.toString() ?? ''),
+          semifinished_products: form['semifinished_products'],
+          items: form['items']),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/sewings',
@@ -91,31 +93,33 @@ class _SewingDetailState extends State<SewingDetail> {
       fetchFinish: (service) => service.fetchSewingFinishOptions(),
       handleSubmitToService: (context, id, form, isLoading) async {
         final sewing = Sewing(
-            wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-            machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-            unit_id: int.tryParse(form['item_unit_id']?.toString() ?? '1'),
-            weight_unit_id:
-                int.tryParse(form['weight_unit_id']?.toString() ?? '2'),
-            width_unit_id:
-                int.tryParse(form['width_unit_id']?.toString() ?? '3'),
-            length_unit_id:
-                int.tryParse(form['length_unit_id']?.toString() ?? '3'),
-            qty: form['item_qty'],
-            weight: form['weight'],
-            width: form['width'],
-            length: form['length'],
-            notes: form['notes'],
-            start_time: form['start_time'],
-            end_time: form['end_time'],
-            start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-            end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
-            attachments: form['attachments'],
-            machines: form['machines'] ?? [],
-            machine_ids: form['machine_ids'] ?? [],
-            maklon: form['maklon'],
-            maklon_name: form['maklon_name'],
-            greige_item_id:
-                int.tryParse(form['greige_item_id']?.toString() ?? ''));
+          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+          unit_id: int.tryParse(form['item_unit_id']?.toString() ?? '1'),
+          weight_unit_id:
+              int.tryParse(form['weight_unit_id']?.toString() ?? '2'),
+          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? '3'),
+          length_unit_id:
+              int.tryParse(form['length_unit_id']?.toString() ?? '3'),
+          qty: form['item_qty'],
+          weight: form['weight'],
+          width: form['width'],
+          length: form['length'],
+          notes: form['notes'],
+          start_time: form['start_time'],
+          end_time: form['end_time'],
+          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+          attachments: form['attachments'],
+          machines: form['machines'] ?? [],
+          machine_ids: form['machine_ids'] ?? [],
+          maklon: form['maklon'],
+          maklon_name: form['maklon_name'],
+          greige_item_id:
+              int.tryParse(form['greige_item_id']?.toString() ?? ''),
+          items: form['items'] ?? [],
+          semifinished_products: form['semifinished_products'] ?? [],
+        );
 
         final message = await Provider.of<SewingService>(context, listen: false)
             .finishItem(context, id, sewing, isLoading);

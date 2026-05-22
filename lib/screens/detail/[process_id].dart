@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, file_names
+// ignore_for_file: use_build_context_synchronously, file_names, empty_catches
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -183,7 +183,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     'gsm': '0',
     'total_weight': '0',
     'weight_grade_a': '0',
-    'total_sorting': '0'
+    'total_sorting': '0',
+    'semifinished_products': [],
+    'items': []
   };
 
   final fieldConfigs = [
@@ -408,6 +410,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     _form['attachments'] = List.from(d['attachments'] ?? []);
     _form['machines'] = List.from(d['machines'] ?? []);
     _form['machine_ids'] = List.from(d['machine_ids'] ?? []);
+    _form['semifinished_products'] =
+        List.from(d['semifinished_products'] ?? []);
+    _form['items'] = List.from(d['items'] ?? []);
     _form['grades'] = List.from(d['grades'] ?? []);
 
     final rawDefects = List.from(d['defects'] ?? []);

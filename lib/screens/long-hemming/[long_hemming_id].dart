@@ -44,16 +44,9 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
               .deleteItem(context, id, isLoading),
       modelBuilder: (form, data) => LongHemming(
           wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          weight_unit_id: form['weight_unit_id'] != null
-              ? int.tryParse(form['weight_unit_id'].toString())
-              : 2,
           machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-          weight: form['weight'] ?? '0',
           notes: form['notes'] ?? data['notes'],
-          attachments: [
-            ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
-            ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
-          ],
+          attachments: [],
           machine_ids: form['machine_ids'],
           machines: form['machines'],
           bs_weight: form['bs_weight'] ?? '0',
@@ -65,7 +58,9 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
               ? int.tryParse(form['good_weight_unit_id'].toString())
               : 2,
           greige_item_id:
-              int.tryParse(form['greige_item_id']?.toString() ?? '')),
+              int.tryParse(form['greige_item_id']?.toString() ?? ''),
+          semifinished_products: form['semifinished_products'],
+          items: form['items']),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       route: '/long-hemmings',
@@ -86,9 +81,6 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
         final longHemming = LongHemming(
             wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
             machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-            weight_unit_id:
-                int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-            weight: form['weight'],
             notes: form['notes'],
             start_time: form['start_time'],
             end_time: form['end_time'],
@@ -104,7 +96,9 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
             good_weight_unit_id:
                 int.tryParse(form['good_weight_unit_id']?.toString() ?? ''),
             greige_item_id:
-                int.tryParse(form['greige_item_id']?.toString() ?? ''));
+                int.tryParse(form['greige_item_id']?.toString() ?? ''),
+            semifinished_products: form['semifinished_products'] ?? [],
+            items: form['items'] ?? []);
 
         final message =
             await Provider.of<LongHemmingService>(context, listen: false)

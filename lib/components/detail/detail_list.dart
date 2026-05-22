@@ -1817,7 +1817,9 @@ Catatan WO
             widget.label != 'Sorting' &&
             widget.label != 'Packing'))
           _buildInfoCard(
-            title: 'Produk Setengah Jadi',
+            title: widget.label == 'Packing'
+                ? 'Produk Jadi'
+                : 'Produk Setengah Jadi',
             icon: Icons.inventory_2_outlined,
             child: _buildMaterialInfo(false),
           ),

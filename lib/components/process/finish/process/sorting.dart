@@ -108,10 +108,10 @@ class _SortingSectionState extends State<SortingSection> {
       );
 
       /*
-  |--------------------------------------------------------------------------
-  | SYNC EXISTING DATA
-  |--------------------------------------------------------------------------
-  */
+|--------------------------------------------------------------------------
+| SYNC EXISTING DATA
+|--------------------------------------------------------------------------
+*/
 
       _syncFormItems();
 
@@ -194,20 +194,72 @@ class _SortingSectionState extends State<SortingSection> {
         woItems,
       );
 
+      /// FETCH GRADE A
       await semiFinishedService.fetchOptions(
         isInitialLoad: true,
-        process: 'sorting',
+        process: 'packing',
         baseCodes: params['base_codes'] ?? [],
         colorCodes: params['color_codes'] ?? [],
       );
 
-      final semiFinishedItems = semiFinishedService.dataListOption;
+      final List<Map<String, dynamic>> semiFinishedItemsGradeA =
+          List<Map<String, dynamic>>.from(
+        semiFinishedService.dataListOption.map(
+          (e) => Map<String, dynamic>.from(e),
+        ),
+      );
+
+      /// FETCH GRADE B
+      await semiFinishedService.fetchOptions(
+        isInitialLoad: true,
+        process: 'sorting',
+        baseCodes: params['base_codes'] ?? [],
+        colorCodes: ['GRB'],
+      );
+
+      final List<Map<String, dynamic>> semiFinishedItemsGradeB =
+          List<Map<String, dynamic>>.from(
+        semiFinishedService.dataListOption.map(
+          (e) => Map<String, dynamic>.from(e),
+        ),
+      );
 
       for (int i = 0; i < woItems.length; i++) {
         final woItem = woItems[i];
 
-        final gradeBItem =
-            i < semiFinishedItems.length ? semiFinishedItems[i] : null;
+        final itemCode = woItem['item_code']?.toString() ?? '';
+
+        /// ambil base code sebelum "-"
+        final baseCode = itemCode.split('-').first;
+
+        Map<String, dynamic>? gradeAItem;
+        Map<String, dynamic>? gradeBItem;
+
+        try {
+          gradeAItem = semiFinishedItemsGradeA.firstWhere(
+            (e) {
+              final optionCode = e['code']?.toString() ?? '';
+              final optionBaseCode = optionCode.split('-').first;
+
+              return optionBaseCode == baseCode;
+            },
+          );
+        } catch (_) {
+          gradeAItem = null;
+        }
+
+        try {
+          gradeBItem = semiFinishedItemsGradeB.firstWhere(
+            (e) {
+              final optionCode = e['code']?.toString() ?? '';
+              final optionBaseCode = optionCode.split('-').first;
+
+              return optionBaseCode == baseCode;
+            },
+          );
+        } catch (_) {
+          gradeBItem = null;
+        }
 
         groupedItems[woItem['greige_item_id']] = {
           'item_id': woItem['greige_item_id'],
@@ -233,12 +285,14 @@ class _SortingSectionState extends State<SortingSection> {
               'code': 'A',
               'qty': 0,
               'notes': null,
-              'semifinished_product_id': woItem['greige_item_id'],
-              'semifinished_product': {
-                'id': woItem['greige_item_id'],
-                'code': woItem['item_code'],
-                'name': woItem['item_name'],
-              },
+              'semifinished_product_id': gradeAItem?['value'],
+              'semifinished_product': gradeAItem != null
+                  ? {
+                      'id': gradeAItem['value'],
+                      'code': gradeAItem['code'],
+                      'name': gradeAItem['label'],
+                    }
+                  : null,
               'finished_product': {
                 'id': woItem['greige_item_id'],
                 'code': woItem['item_code'],

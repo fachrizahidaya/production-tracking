@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, use_build_context_synchronously, deprecated_member_use
+// ignore_for_file: file_names, use_build_context_synchronously, deprecated_member_use, prefer_final_fields
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -299,34 +299,6 @@ class _UpdateProcessState extends State<UpdateProcess>
         '';
   }
 
-  void _recalculateGradeBS() {
-    final totalBs = _defects.fold<int>(
-      0,
-      (int sum, defect) {
-        final qty = int.tryParse(
-                (defect['qty']?.toString() ?? '0').replaceAll(',', '')) ??
-            0;
-        return sum + qty;
-      },
-    );
-
-    final grades = List<Map<String, dynamic>>.from(_grades);
-    final index = grades.indexWhere((g) => g['name'].toString() == 'BS');
-
-    if (index != -1) {
-      grades[index]['qty'] = totalBs;
-      _grades = grades;
-      widget.form['grades'] = _grades;
-
-      if (index < widget.qty.length) {
-        widget.qty[index].text = totalBs.toString();
-      }
-
-      // ✅ UPDATE TOTAL SORTING
-      _updateTotalSorting();
-    }
-  }
-
   double _calculateTotalVermak() {
     final spraying = parseSafe(widget.spraying.text);
     final combing = parseSafe(widget.combing.text);
@@ -439,17 +411,6 @@ class _UpdateProcessState extends State<UpdateProcess>
     return formatter.format(value);
   }
 
-  double parseId(String value) {
-    return double.tryParse(
-          value.replaceAll('.', '').replaceAll(',', '.'),
-        ) ??
-        0;
-  }
-
-  String toApi(num value) {
-    return value.toString();
-  }
-
   void calculateBeratA(Map<String, dynamic> item) {
     final itemId = item['id'];
 
@@ -463,34 +424,6 @@ class _UpdateProcessState extends State<UpdateProcess>
     item['weight_grade_a'] = result;
 
     _weightGradeAControllers[itemId]?.text = formatId(result);
-  }
-
-  double getItemQty(Map<String, dynamic> item) {
-    /// qty input packing/manual
-    final inputQty = parseInput(item['qty']);
-
-    /// ambil WO items
-    final woItems = item['work_orders']?['items'];
-
-    if (woItems is List) {
-      /// cari item WO yang sesuai
-      final matched = woItems.cast<Map<String, dynamic>?>().firstWhere(
-            (woItem) =>
-                woItem?['finished_product_id'] == item['finished_product_id'],
-            orElse: () => null,
-          );
-
-      if (matched != null) {
-        final woQty = parseInput(matched['qty']);
-
-        if (woQty > 0) {
-          return woQty;
-        }
-      }
-    }
-
-    /// fallback lama
-    return inputQty;
   }
 
   void calculateTotalBerat(
@@ -525,7 +458,6 @@ class _UpdateProcessState extends State<UpdateProcess>
       }
     }
 
-    /// fallback
     if (totalQty <= 0) {
       totalQty = parseInput(
         item['qty'],
@@ -610,9 +542,6 @@ class _UpdateProcessState extends State<UpdateProcess>
 
     if (str.isEmpty) return 0;
 
-    // format Indonesia ribuan:
-    // 1.700
-    // 12.500
     final ribuanRegex = RegExp(r'^\d{1,3}(\.\d{3})+$');
 
     if (ribuanRegex.hasMatch(str)) {
@@ -620,8 +549,6 @@ class _UpdateProcessState extends State<UpdateProcess>
       return double.tryParse(str) ?? 0;
     }
 
-    // decimal Indonesia
-    // 1,5
     if (str.contains(',')) {
       str = str.replaceAll('.', '');
       str = str.replaceAll(',', '.');
@@ -789,12 +716,6 @@ class _UpdateProcessState extends State<UpdateProcess>
 
   bool _isDataEmpty() {
     if (_grades.isEmpty) return true;
-
-    return false;
-  }
-
-  bool _isItemEmpty() {
-    if (widget.finishedItemMaterial[0]['code'] == null) return true;
 
     return false;
   }
@@ -1077,11 +998,6 @@ class _UpdateProcessState extends State<UpdateProcess>
                                     length: (widget.form['items'] ?? []).length,
                                     child: Column(
                                       children: [
-                                        // TemplateCard(
-                                        //   title: 'Rincian Sortir',
-                                        //   icon: Icons.sort_outlined,
-                                        //   child: _buildSortingQty(),
-                                        // ),
                                         Container(
                                           height: 48,
                                           decoration: BoxDecoration(
@@ -1134,12 +1050,6 @@ class _UpdateProcessState extends State<UpdateProcess>
                                               final sortingQty =
                                                   getSortingGradeQty(
                                                       item, widget.data);
-                                              final totalSorting = parseInput(
-                                                      sortingQty['grade_a']) +
-                                                  parseInput(
-                                                      sortingQty['grade_b']) +
-                                                  parseInput(
-                                                      sortingQty['grade_bs']);
 
                                               return Container(
                                                 padding: EdgeInsets.all(12),
@@ -1337,8 +1247,6 @@ class _UpdateProcessState extends State<UpdateProcess>
 
                                                                 calculateBeratA(
                                                                     item);
-                                                                // calculateTotalBerat(
-                                                                //     item);
                                                               },
                                                             ),
                                                           ),
@@ -1473,155 +1381,6 @@ class _UpdateProcessState extends State<UpdateProcess>
               ),
             ),
           )),
-    );
-  }
-
-  Widget _buildSortingQty() {
-    final gradesList = widget.data['sorting']?['grades'] ?? [];
-
-    double getTotalAdditionalProcess() {
-      final data = widget.data['sorting'];
-
-      if (data == null) return 0;
-
-      final rework = double.tryParse(
-            data['rework_long_hemming']?.toString() ?? '0',
-          ) ??
-          0;
-
-      final spraying = double.tryParse(
-            data['spraying']?.toString() ?? '0',
-          ) ??
-          0;
-
-      final combing = double.tryParse(
-            data['combing']?.toString() ?? '0',
-          ) ??
-          0;
-
-      return rework + spraying + combing;
-    }
-
-    final total = getTotalAdditionalProcess();
-
-    // Calculate total quantity
-    int totalQty = 0;
-    for (var grade in gradesList) {
-      final qty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
-      totalQty += qty;
-    }
-
-    final grandTotal = totalQty + total;
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Loop through grades
-        ...gradesList.asMap().entries.map((entry) {
-          final grade = entry.value;
-          final gradeName = grade['item_grade']['code']?.toString() ?? '-';
-          final gradeQty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
-          final gradeUnit = grade['unit']?['code']?.toString() ?? '';
-
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8), // 👈 gap
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${gradeName == 'BS' ? 'Tipe' : 'Grade'} $gradeName',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade700,
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
-                    ),
-                    Text(
-                      '${formatNumber(gradeQty.toString())} $gradeUnit',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: CustomTheme().fontWeight('bold'),
-                      ),
-                    ),
-                  ].separatedBy(CustomTheme().vGap('lg')),
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-        SizedBox(width: 12),
-        // Expanded(
-        //   child: Container(
-        //     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-        //     decoration: BoxDecoration(
-        //       color: Colors.white,
-        //       borderRadius: BorderRadius.circular(8),
-        //       border: Border.all(color: Colors.grey.shade200),
-        //     ),
-        //     child: Column(
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       children: [
-        //         Text(
-        //           'Perbaikan',
-        //           style: TextStyle(
-        //             fontSize: 14,
-        //             color: Colors.grey.shade700,
-        //             fontWeight: CustomTheme().fontWeight('semibold'),
-        //           ),
-        //         ),
-        //         Text(
-        //           '${formatNumber(total.toString())} PCS',
-        //           style: TextStyle(
-        //             fontSize: 16,
-        //             fontWeight: CustomTheme().fontWeight('bold'),
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
-        // SizedBox(width: 8),
-        // Total
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Total',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade700,
-                    fontWeight: CustomTheme().fontWeight('bold'),
-                  ),
-                ),
-                Text(
-                  '${formatNumber(grandTotal.toStringAsFixed(0))} PCS',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: CustomTheme().fontWeight('bold'),
-                  ),
-                ),
-              ].separatedBy(CustomTheme().vGap('lg')),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

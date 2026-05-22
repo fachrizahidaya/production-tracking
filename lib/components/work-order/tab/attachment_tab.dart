@@ -64,13 +64,6 @@ class _AttachmentTabState extends State<AttachmentTab> {
 
       final bool isPdf = extension == 'pdf';
 
-      final bool isOffice = [
-        'doc',
-        'docx',
-        'xls',
-        'xlsx',
-      ].contains(extension);
-
       /// detect image
       final bool isImage =
           ['png', 'jpg', 'jpeg', 'gif', 'webp'].contains(extension);

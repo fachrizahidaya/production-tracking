@@ -154,7 +154,6 @@ class _ListFormState extends State<ListForm> {
         .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
         .toList();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // _syncGradesWithOptions();
       _syncDefectsWithOptions();
     });
     super.initState();
@@ -164,41 +163,6 @@ class _ListFormState extends State<ListForm> {
     return double.tryParse(
       widget.processData['work_orders']?['greige_qty']?.toString() ?? '',
     );
-  }
-
-  // @override
-  // void didUpdateWidget(covariant ListForm oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   if (oldWidget.itemGradeOption != widget.itemGradeOption) {
-  //     _syncGradesWithOptions();
-  //   }
-  // }
-
-  void _syncGradesWithOptions() {
-    final List<Map<String, dynamic>> updated = [];
-
-    for (var grade in widget.itemGradeOption ?? []) {
-      final existing = _grades.firstWhere(
-        (g) => g['item_grade_id'].toString() == grade['value'].toString(),
-        orElse: () => {},
-      );
-
-      updated.add({
-        'item_grade_id': grade['value'],
-        'unit_id': existing['unit_id'] ?? 1,
-        'notes': existing['notes'] ?? '',
-        'qty': existing['qty'] ?? '0',
-        'greige_item_id': existing['greige_item_id'],
-        'name': grade['label'] ?? ''
-      });
-    }
-
-    if (mounted) {
-      setState(() {
-        _grades = updated;
-      });
-      widget.handleChangeInput('grades', _grades);
-    }
   }
 
   void _syncDefectsWithOptions() {

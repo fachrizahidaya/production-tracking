@@ -234,14 +234,7 @@ class _CardContentState extends State<CardContent> {
   }
 
   Widget _buildDyeingSection(Map<String, dynamic> data, bool isTablet) {
-    final lot = data['lot_celup_no'];
-    final cycleNo = data['cycle_no'];
-    final isRework = data['rework_dyeing'] == true;
-    final notes = data['notes'];
-
     final List semifinishedProducts = data['semifinished_products'] ?? [];
-
-    final List attachments = data['attachments'] ?? [];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -466,53 +459,6 @@ class _CardContentState extends State<CardContent> {
           ),
         ),
       ].separatedBy(CustomTheme().hGap('lg')),
-    );
-  }
-
-  Widget _buildGradesSection(List<dynamic> grades, bool isTablet) {
-    return Wrap(
-      spacing: isTablet ? 10 : 8,
-      runSpacing: isTablet ? 10 : 8,
-      children: grades.map((grade) {
-        return Container(
-          padding: CustomTheme().padding('process-content'),
-          decoration: BoxDecoration(
-            color: Colors.purple.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: Colors.purple.withOpacity(0.3),
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.grade,
-                size: isTablet ? 14 : 12,
-                color: Colors.purple,
-              ),
-              Text(
-                grade['grade']?.toString() ?? grade.toString(),
-                style: TextStyle(
-                  fontSize: CustomTheme().fontSize(isTablet ? 'sm' : 'xs'),
-                  fontWeight: CustomTheme().fontWeight('semibold'),
-                  color: Colors.purple[700],
-                ),
-              ),
-              if (grade['qty'] != null) ...[
-                Text(
-                  '${formatNumber(grade['qty'])} ${grade['unit_code'] ?? 'PCS'}',
-                  style: TextStyle(
-                    fontSize: CustomTheme().fontSize('xs'),
-                    fontWeight: CustomTheme().fontWeight('bold'),
-                    color: Colors.purple,
-                  ),
-                ),
-              ],
-            ].separatedBy(CustomTheme().hGap('lg')),
-          ),
-        );
-      }).toList(),
     );
   }
 

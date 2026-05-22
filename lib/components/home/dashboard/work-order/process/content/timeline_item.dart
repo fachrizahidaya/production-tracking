@@ -219,8 +219,6 @@ class TimelineItem extends StatelessWidget {
 
     final processNumber = getProcessNumber(processKey, process);
 
-    final rework = getReworkData(rawProcess);
-
     final reworks = getReworkData(rawProcess);
 
     final isSpecial = ['dyeing', 'press', 'tumbler'].contains(processKey);

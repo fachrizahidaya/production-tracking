@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, unnecessary_null_comparison
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -247,8 +247,6 @@ class _FormItemsState extends State<FormItems>
         }
       });
     }
-
-    // final items = widget.form['items'] ?? [];
   }
 
   void _syncGradesWithOptions() {
@@ -492,7 +490,6 @@ class _FormItemsState extends State<FormItems>
       }
     }
 
-    /// fallback
     if (totalQty <= 0) {
       totalQty = parseInput(
         item['qty'],
@@ -522,9 +519,6 @@ class _FormItemsState extends State<FormItems>
 
     if (str.isEmpty) return 0;
 
-    // format Indonesia ribuan:
-    // 1.700
-    // 12.500
     final ribuanRegex = RegExp(r'^\d{1,3}(\.\d{3})+$');
 
     if (ribuanRegex.hasMatch(str)) {
@@ -532,8 +526,6 @@ class _FormItemsState extends State<FormItems>
       return double.tryParse(str) ?? 0;
     }
 
-    // decimal Indonesia
-    // 1,5
     if (str.contains(',')) {
       str = str.replaceAll('.', '');
       str = str.replaceAll(',', '.');
@@ -549,7 +541,6 @@ class _FormItemsState extends State<FormItems>
 
     if (str.isEmpty) return 0;
 
-    // Jika ada koma, anggap format Indonesia (1.000,5)
     if (str.contains(',')) {
       str = str.replaceAll('.', '');
       str = str.replaceAll(',', '.');
@@ -583,31 +574,6 @@ class _FormItemsState extends State<FormItems>
         ),
       );
     });
-  }
-
-  void _recalculateGradeBS() {
-    final totalBs = widget.defects.fold<int>(
-      0,
-      (int sum, defect) {
-        final qty = int.tryParse(
-                (defect['qty']?.toString() ?? '0').replaceAll(',', '')) ??
-            0;
-        return sum + qty;
-      },
-    );
-
-    final grades = List<Map<String, dynamic>>.from(_grades);
-    final index = grades.indexWhere((g) => g['name'].toString() == 'Grade BS');
-
-    if (index != -1) {
-      grades[index]['qty'] = totalBs;
-      _grades = grades;
-      widget.form['grades'] = _grades;
-
-      if (index < widget.qtyItem.length) {
-        widget.qtyItem[index].text = totalBs.toString();
-      }
-    }
   }
 
   void _initializeSemiFinishedTab() {
@@ -1117,11 +1083,6 @@ class _FormItemsState extends State<FormItems>
                   length: (widget.form['items'] ?? []).length,
                   child: Column(
                     children: [
-                      TemplateCard(
-                        title: 'Rincian Sortir',
-                        icon: Icons.sort_outlined,
-                        child: _buildSortingQty(),
-                      ),
                       Container(
                         height: 48,
                         decoration: BoxDecoration(
@@ -1156,7 +1117,6 @@ class _FormItemsState extends State<FormItems>
                           ),
                         ),
                       ),
-                      // SizedBox(height: 16),
                       SizedBox(
                         height: 700,
                         child: TabBarView(
@@ -1280,7 +1240,6 @@ class _FormItemsState extends State<FormItems>
                                             item['qty'] = value;
 
                                             calculateBeratA(item);
-                                            // calculateTotalBerat(item);
                                           },
                                         ),
                                       ),
@@ -1444,152 +1403,4 @@ Rework
 /*
 Qty Sorting
 */
-  Widget _buildSortingQty() {
-    final gradesList = widget.processData['sorting']?['grades'] ?? [];
-
-    double getTotalAdditionalProcess() {
-      final data = widget.processData['sorting'];
-
-      if (data == null) return 0;
-
-      final rework = double.tryParse(
-            data['rework_long_hemming']?.toString() ?? '0',
-          ) ??
-          0;
-
-      final spraying = double.tryParse(
-            data['spraying']?.toString() ?? '0',
-          ) ??
-          0;
-
-      final combing = double.tryParse(
-            data['combing']?.toString() ?? '0',
-          ) ??
-          0;
-
-      return rework + spraying + combing;
-    }
-
-    final total = getTotalAdditionalProcess();
-
-    // Calculate total quantity
-    int totalQty = 0;
-    for (var grade in gradesList) {
-      final qty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
-      totalQty += qty;
-    }
-
-    final grandTotal = totalQty + total;
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Loop through grades
-        ...gradesList.asMap().entries.map((entry) {
-          final grade = entry.value;
-          final gradeName = grade['item_grade']['code']?.toString() ?? '-';
-          final gradeQty = int.tryParse(grade['qty']?.toString() ?? '0') ?? 0;
-          final gradeUnit = grade['unit']?['code']?.toString() ?? '';
-
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8), // 👈 gap
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Grade $gradeName',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade700,
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
-                    ),
-                    Text(
-                      '${formatNumber(gradeQty.toString())} $gradeUnit',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: CustomTheme().fontWeight('bold'),
-                      ),
-                    ),
-                  ].separatedBy(CustomTheme().vGap('lg')),
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-        SizedBox(width: 12),
-        // Expanded(
-        //   child: Container(
-        //     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-        //     decoration: BoxDecoration(
-        //       color: Colors.white,
-        //       borderRadius: BorderRadius.circular(8),
-        //       border: Border.all(color: Colors.grey.shade200),
-        //     ),
-        //     child: Column(
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       children: [
-        //         Text(
-        //           'Perbaikan',
-        //           style: TextStyle(
-        //             fontSize: 14,
-        //             color: Colors.grey.shade700,
-        //             fontWeight: CustomTheme().fontWeight('semibold'),
-        //           ),
-        //         ),
-        //         Text(
-        //           '${formatNumber(total.toString())} PCS',
-        //           style: TextStyle(
-        //             fontSize: 16,
-        //             fontWeight: CustomTheme().fontWeight('bold'),
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
-        // SizedBox(width: 8),
-        // Total
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Total',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade700,
-                    fontWeight: CustomTheme().fontWeight('bold'),
-                  ),
-                ),
-                Text(
-                  '${formatNumber(grandTotal.toStringAsFixed(0))} PCS',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: CustomTheme().fontWeight('bold'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }

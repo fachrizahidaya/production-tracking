@@ -602,45 +602,6 @@ Informasi Proses
   /*
 Grades
 */
-  Widget _buildGradeInfo(bool isTablet) {
-    final items = widget.data['work_orders']?['items'] ?? [];
-    final codeGradeA = widget.data['grades'][0]['greige_item']['code'];
-    final nameGradeA = widget.data['grades'][0]['greige_item']['name'];
-    final codeGradeB = widget.data['grades'][1]['greige_item']['code'];
-    final nameGradeB = widget.data['grades'][1]['greige_item']['name'];
-
-    final gradeItems = [
-      for (int i = 0; i < widget.existingGrades.length; i++)
-        {
-          'label': 'Grade ${widget.existingGrades[i]['item_grade']['code']}',
-          'value': widget.existingGrades[i]['qty'] != null
-              ? '${formatNumber(widget.existingGrades[i]['qty'])} ${widget.existingGrades[i]['unit']['code']}'
-              : '-',
-          'another_value': widget.label == 'Sorting' &&
-                  widget.existingGrades[i]['item_grade']['code'] == 'A'
-              ? codeGradeA
-              : widget.label == 'Sorting' &&
-                      widget.existingGrades[i]['item_grade']['code'] == 'B'
-                  ? codeGradeB
-                  : i < items.length
-                      ? '${items[i]['item_code'] ?? '-'}'
-                      : '',
-          'name_value': widget.label == 'Sorting' &&
-                  widget.existingGrades[i]['item_grade']['code'] == 'A'
-              ? nameGradeA
-              : widget.label == 'Sorting' &&
-                      widget.existingGrades[i]['item_grade']['code'] == 'B'
-                  ? nameGradeB
-                  : i < items.length
-                      ? '${items[i]['item_name'] ?? '-'}'
-                      : '',
-          'icon': Icons.grade_outlined,
-          'isGrade': true,
-        },
-    ];
-
-    return _buildMultiInfoGrid(gradeItems, isTablet);
-  }
 
   /*
 Ringkasan Sorting
@@ -955,149 +916,14 @@ Multi Mesin
 /*
 Perbaikan >> Sorting
 */
-  Widget _buildReworkLongHemming(bool isTablet) {
-    final items = [
-      {
-        'label': 'Semprotan',
-        'value':
-            '${widget.data['spraying'] != null ? formatNumber(widget.data['spraying']) : '0'} ${'PCS'}',
-        'icon': Icons.numbers_outlined,
-      },
-      {
-        'label': 'Permak Long Hemming',
-        'value':
-            '${widget.data['rework_long_hemming'] != null ? formatNumber(widget.data['rework_long_hemming']) : '0'} ${'PCS'}',
-        'icon': Icons.twelve_mp_outlined,
-      },
-      {
-        'label': 'Sisiran',
-        'value':
-            '${widget.data['combing'] != null ? formatNumber(widget.data['combing']) : '0'} ${'PCS'}',
-        'icon': Icons.numbers_outlined,
-      },
-    ];
-
-    return _buildInfoGrid(items, isTablet);
-  }
 
 /*
 Tipe BS
 */
-  Widget _buildTypeBs(bool isTablet) {
-    final itemTypes =
-        List<Map<String, dynamic>>.from(widget.data['defects'] ?? []);
-    if (itemTypes.isEmpty) return NoData();
-
-    final total = itemTypes.fold<int>(
-      0,
-      (int sum, Map<String, dynamic> item) {
-        final qty = int.tryParse(item['qty']?.toString() ?? '0') ?? 0;
-        return sum + qty;
-      },
-    );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final itemWidth = (constraints.maxWidth - 24) / 4;
-
-            return Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              children: itemTypes.map<Widget>((itemType) {
-                return SizedBox(
-                  width: itemWidth,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.shade200),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          (itemType['type']?['name'] ?? '-'),
-                          style: TextStyle(
-                              fontWeight: CustomTheme().fontWeight('semibold')),
-                        ),
-                        SizedBox(height: 4),
-                        Row(
-                          children: [
-                            CustomBadge(
-                              title:
-                                  'Qty: ${formatNumber(itemType['qty'])} PCS',
-                              rework: true,
-                              status: 'Selesai',
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            );
-          },
-        ),
-        SizedBox(height: 8),
-        Align(
-          alignment: Alignment.centerRight,
-          child: Text(
-            'Total BS: ${formatNumber(total)} PCS',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.red,
-            ),
-          ),
-        )
-      ],
-    );
-  }
 
 /*
 Berat >> Packing
 */
-  Widget _buildWeightInfo(bool isTablet) {
-    final items = [
-      {
-        'label': 'Total Packing',
-        'value':
-            '${widget.data['qty'] != null ? formatNumber(widget.data['qty']) : '0'} ${'PCS'}',
-        'icon': Icons.numbers_outlined,
-      },
-      {
-        'label': 'Berat 1 Lusin',
-        'value':
-            '${widget.data['weight_per_dozen'] != null ? formatNumber(widget.data['weight_per_dozen']) : '0'} ${'KG'}',
-        'icon': Icons.twelve_mp_outlined,
-      },
-      {
-        'label': 'Gramasi',
-        'value':
-            '${widget.data['gsm'] != null ? formatNumber(widget.data['gsm']) : '0'} ${'GSM'}',
-        'icon': Icons.numbers_outlined,
-      },
-      {
-        'label': 'Berat Grade A',
-        'value':
-            '${widget.data['weight_grade_a'] != null ? formatNumber(widget.data['weight_grade_a']) : '0'} ${'KG'}',
-        'icon': Icons.numbers_outlined,
-      },
-      {
-        'label': 'Total Berat',
-        'value':
-            '${widget.data['total_weight'] != null ? formatNumber(widget.data['total_weight']) : '0'} ${'KG'}',
-        'icon': Icons.numbers_outlined,
-      },
-    ];
-
-    return _buildInfoGrid(items, isTablet);
-  }
 
   /*
 Timeline
@@ -1265,12 +1091,6 @@ Material WO
   Widget _buildMaterial(bool isTablet) {
     final items = (widget.data['work_orders']['items'] ?? [])
         .cast<Map<String, dynamic>>();
-    final int totalQty = items.fold<int>(
-      0,
-      (sum, item) => sum + (item['qty'] ?? 0) as int,
-    );
-    final totalBerat = widget.data['work_orders']['greige_qty'] ?? 0;
-    final spkNo = widget.data?['work_orders']['items']?[0]?['spk_no'] ?? '-';
 
     if (items.isEmpty) {
       return Center(child: Text('No Data'));
@@ -1330,181 +1150,6 @@ Catatan WO
             ],
           )
         : NoData();
-  }
-
-  Widget _buildWeightPerProduct(bool isTablet) {
-    final items = List<Map<String, dynamic>>.from(
-      widget.data['items'] ?? [],
-    );
-
-    if (items.isEmpty) {
-      return NoData();
-    }
-
-    return Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      children: items.map((item) {
-        final semiFinished = item['semifinished_product'];
-        final finished = item['finished_product'];
-
-        final goodWeight =
-            double.tryParse(item['good_weight']?.toString() ?? '0') ?? 0;
-
-        final bsWeight =
-            double.tryParse(item['bs_weight']?.toString() ?? '0') ?? 0;
-
-        return Container(
-          width: isTablet
-              ? (MediaQuery.of(context).size.width - 80) / 2
-              : double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: Colors.grey.shade200,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// Semi Finished
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.orange.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.orange.shade100,
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Produk Setengah Jadi',
-                      style: TextStyle(
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      semiFinished?['code'] ?? '-',
-                    ),
-                    Text(
-                      semiFinished?['name'] ?? '-',
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              /// Finished Product
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.green.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.green.shade100,
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Produk Jadi',
-                      style: TextStyle(
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      finished?['code'] ?? '-',
-                    ),
-                    Text(
-                      finished?['name'] ?? '-',
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.green.shade50,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Berat Bagus',
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${formatNumber(goodWeight)} KG',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: CustomTheme().fontWeight('bold'),
-                              color: Colors.green.shade700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade50,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Berat BS',
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${formatNumber(bsWeight)} KG',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: CustomTheme().fontWeight('bold'),
-                              color: Colors.red.shade700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ].separatedBy(CustomTheme().vGap('lg')),
-          ),
-        );
-      }).toList(),
-    );
   }
 
   Widget _buildItemResultPerProduct(bool isTablet) {
@@ -2085,12 +1730,6 @@ Catatan WO
             icon: Icons.scale_outlined,
             child: _buildItemResultPerProduct(true),
           ),
-        // if (widget.label == 'Packing')
-        //   _buildInfoCard(
-        //     title: 'Total Sortir',
-        //     icon: Icons.attachment_outlined,
-        //     child: _buildPackingSortingSummary(),
-        //   ),
         _buildInfoCard(
           title: 'Material WO',
           icon: Icons.inventory_2_outlined,
@@ -2168,7 +1807,7 @@ Catatan WO
           ),
         if (widget.label == 'Sorting')
           _buildInfoCard(
-            title: 'Ringkasan Sortir',
+            title: 'Total Sortir',
             icon: Icons.attachment_outlined,
             child: _buildTotalSorting(false),
           ),
@@ -2187,15 +1826,9 @@ Catatan WO
             widget.label == 'Sewing' ||
             widget.label == 'Packing')
           _buildInfoCard(
-            title: 'Detail per Material',
+            title: 'Detail Per Material',
             icon: Icons.scale_outlined,
             child: _buildItemResultPerProduct(false),
-          ),
-        if (widget.label == 'Packing')
-          _buildInfoCard(
-            title: 'Ringkasan Sortir',
-            icon: Icons.attachment_outlined,
-            child: _buildPackingSortingSummary(),
           ),
         _buildInfoCard(
           title: 'Material WO',
@@ -2574,147 +2207,6 @@ Catatan WO
             ),
           ].separatedBy(CustomTheme().hGap('md')),
         ),
-      ),
-    );
-  }
-
-  Widget _buildPackingSortingSummary() {
-    final sorting = widget.data['sorting'];
-
-    if (sorting == null) {
-      return const SizedBox();
-    }
-
-    final grades = sorting['grades'] ?? [];
-
-    int totalRepair = 0;
-
-    int totalGradeA = 0;
-    int totalGradeB = 0;
-    int totalGradeBS = 0;
-
-    final Map<String, int> defectTotals = {};
-
-    for (final grade in grades) {
-      final String code =
-          (grade['item_grade']?['code'] ?? '').toString().toUpperCase();
-
-      final List items = grade['items'] ?? [];
-
-      for (final item in items) {
-        final int qty = parseSafe(
-          item['qty'],
-        ).toInt();
-
-        /// GRADE
-        if (code == 'A') {
-          totalGradeA += qty;
-        } else if (code == 'B') {
-          totalGradeB += qty;
-        } else if (code == 'BS') {
-          final List defects = item['defects'] ?? [];
-
-          final int totalDefects = defects.fold<int>(
-            0,
-            (int sum, defect) {
-              final int defectQty = parseSafe(
-                defect['qty'],
-              ).toInt();
-
-              final String defectName = defect['type']?['name'] ?? 'Unknown';
-
-              defectTotals[defectName] =
-                  (defectTotals[defectName] ?? 0) + defectQty;
-
-              return sum + defectQty;
-            },
-          );
-
-          totalGradeBS += totalDefects;
-        }
-
-        /// PERBAIKAN
-        final int spraying = parseSafe(
-          item['spraying'],
-        ).toInt();
-
-        final int rework = parseSafe(
-          item['rework_long_hemming'],
-        ).toInt();
-
-        final int combing = parseSafe(
-          item['combing'],
-        ).toInt();
-
-        totalRepair += spraying + rework + combing;
-      }
-    }
-
-    final totalSorting = totalGradeA + totalGradeB + totalGradeBS + totalRepair;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            _buildSummaryItem(
-              'Grade A',
-              totalGradeA,
-            ),
-            _buildSummaryItem(
-              'Grade B',
-              totalGradeB,
-            ),
-            _buildSummaryItem(
-              'Tipe BS',
-              totalGradeBS,
-            ),
-            _buildSummaryItem(
-              'Perbaikan',
-              totalRepair,
-            ),
-            _buildSummaryItem(
-              'Hasil Sortir',
-              totalSorting,
-            ),
-          ].separatedBy(
-            SizedBox(width: 12),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSummaryCard(
-    String title,
-    double value,
-    IconData icon,
-    Color color,
-  ) {
-    return Container(
-      width: 180,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withOpacity(0.2),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            formatNumber(value.toInt().toString()),
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: CustomTheme().fontWeight('bold'),
-              color: color,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(title),
-        ],
       ),
     );
   }

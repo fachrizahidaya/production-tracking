@@ -217,8 +217,6 @@ class _PackingItemsSectionState extends State<PackingItemsSection> {
     int index,
     dynamic item,
   ) {
-    final isTablet = MediaQuery.of(context).size.width > 700;
-
     final finished = item['finished_product'];
 
     return SingleChildScrollView(

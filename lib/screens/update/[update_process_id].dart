@@ -187,9 +187,16 @@ class _UpdateProcessState extends State<UpdateProcess>
       );
 
       _totalWeightControllers[itemId] = TextEditingController(
-        text: formatId(
-          parseInput(item['total_weight']),
-        ),
+        text: '0',
+      );
+    }
+
+    for (final item in items) {
+      calculateGsm(item);
+      calculateBeratA(item);
+      calculateTotalBerat(
+        item,
+        widget.data,
       );
     }
 
@@ -405,13 +412,11 @@ class _UpdateProcessState extends State<UpdateProcess>
       if (matched != null) {
         totalQty += parseInput(matched['qty']) +
             parseInput(matched['spraying']) +
-            parseInput(matched['rework_long_hemming']) +
+            parseInput(
+              matched['rework_long_hemming'],
+            ) +
             parseInput(matched['combing']);
       }
-    }
-
-    if (totalQty <= 0) {
-      totalQty = parseInput(item['qty']);
     }
 
     final beratLusin = parseInput(

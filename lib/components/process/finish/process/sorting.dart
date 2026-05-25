@@ -515,6 +515,25 @@ class _SortingSectionState extends State<SortingSection> {
         _items.expand((item) => item['grades'] ?? []).toList();
   }
 
+  double parseSafe(dynamic value) {
+    if (value == null) {
+      return 0;
+    }
+
+    if (value is int) {
+      return value.toDouble();
+    }
+
+    if (value is double) {
+      return value;
+    }
+
+    return double.tryParse(
+          value.toString(),
+        ) ??
+        0;
+  }
+
   void _recalculateGradeBS(
     int itemIndex,
   ) {
@@ -522,10 +541,14 @@ class _SortingSectionState extends State<SortingSection> {
 
     final defects = item['defects'] ?? [];
 
-    double total = 0;
+    int total = 0;
 
     for (final defect in defects) {
-      total += num.tryParse(defect['qty'].toString()) ?? 0;
+      total += (num.tryParse(
+                defect['qty'].toString(),
+              ) ??
+              0)
+          .toInt();
     }
 
     final grades = item['grades'] ?? [];
@@ -537,7 +560,6 @@ class _SortingSectionState extends State<SortingSection> {
     if (bsIndex != -1) {
       grades[bsIndex]['qty'] = total;
 
-      /// UPDATE CONTROLLER AGAR UI LANGSUNG BERUBAH
       final controller = _getGradeController(
         itemIndex,
         bsIndex,
@@ -550,7 +572,10 @@ class _SortingSectionState extends State<SortingSection> {
     }
 
     _syncFormItems();
-    setState(() {});
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -1320,7 +1345,7 @@ class _SortingSectionState extends State<SortingSection> {
                                 .replaceAll('.', '')
                                 .replaceAll(',', '');
 
-                            defect['qty'] = num.tryParse(cleanValue) ?? 0;
+                            defect['qty'] = parseSafe(cleanValue).toInt();
                             _syncFormItems();
 
                             _recalculateGradeBS(

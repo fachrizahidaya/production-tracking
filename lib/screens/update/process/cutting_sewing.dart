@@ -191,65 +191,60 @@ class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
     /// MULTIPLE ITEM
     return DefaultTabController(
       length: widget.items.length,
-      child: TemplateCard(
-        title: 'Qty',
-        icon: Icons.numbers_outlined,
-        child: Column(
-          children: [
-            Container(
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 6),
-                child: TabBar(
-                  isScrollable: false,
-                  dividerColor: Colors.transparent,
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.black,
-                  indicatorColor: Colors.white,
-                  indicator: BoxDecoration(
-                    color: Colors.blue[800],
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  tabs: [
-                    for (final item in widget.items)
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                        child: Tab(
-                          text: item['finished_product']?['code'] ?? '-',
-                        ),
-                      ),
-                  ],
+      child: Column(
+        children: [
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: TabBar(
+                isScrollable: false,
+                dividerColor: Colors.transparent,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.black,
+                indicatorColor: Colors.white,
+                indicator: BoxDecoration(
+                  color: Colors.blue[800],
+                  borderRadius: BorderRadius.circular(6),
                 ),
+                tabs: [
+                  for (final item in widget.items)
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      child: Tab(
+                        text: item['finished_product']?['code'] ?? '-',
+                      ),
+                    ),
+                ],
               ),
             ),
-            SizedBox(
-              height: 320,
-              child: TabBarView(
-                children: widget.items.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final item = entry.value;
-
-                  return SingleChildScrollView(
-                    padding: const EdgeInsets.only(
-                      top: 16,
-                    ),
-                    child: _buildItemContent(
-                      context,
-                      index,
-                      item,
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ].separatedBy(
-            CustomTheme().vGap('lg'),
           ),
+          SizedBox(
+            height: 320,
+            child: TabBarView(
+              children: widget.items.asMap().entries.map((entry) {
+                final index = entry.key;
+                final item = entry.value;
+
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.only(
+                    top: 16,
+                  ),
+                  child: _buildItemContent(
+                    context,
+                    index,
+                    item,
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ].separatedBy(
+          CustomTheme().vGap('lg'),
         ),
       ),
     );

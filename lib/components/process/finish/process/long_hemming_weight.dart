@@ -206,27 +206,38 @@ class _LongHemmingItemsWeightSectionState
       child: Expanded(
         child: TemplateCard(
           title: 'Berat per Produk',
-          icon: Icons.scale_outlined,
+          icon: Icons.inventory_2_outlined,
           child: Column(
             children: [
               Container(
+                height: 50,
                 decoration: BoxDecoration(
                   color: Colors.grey.shade100,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: TabBar(
-                  isScrollable: true,
-                  dividerColor: Colors.transparent,
-                  tabAlignment: TabAlignment.start,
-                  tabs: widget.items.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final item = entry.value;
-
-                    return Tab(
-                      text: item['finished_product']?['code'] ??
-                          'Produk ${index + 1}',
-                    );
-                  }).toList(),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 6),
+                  child: TabBar(
+                    isScrollable: false,
+                    dividerColor: Colors.transparent,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.black,
+                    indicatorColor: Colors.white,
+                    indicator: BoxDecoration(
+                      color: Colors.blue[800],
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    tabs: [
+                      for (final item in widget.items)
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                          child: Tab(
+                            text: item['finished_product']?['code'] ?? '-',
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(

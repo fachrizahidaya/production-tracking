@@ -614,7 +614,7 @@ class _CardContentState extends State<CardContent> {
                   final rawBs = (g['qty'] ?? 0) as num;
 
                   /// BS = qty / 10
-                  gradeBS = rawBs / 10;
+                  gradeBS = rawBs;
                 }
               }
 

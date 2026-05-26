@@ -47,6 +47,7 @@ class _ProcessItemState extends State<ProcessItem> {
   bool shouldSkipProcess(String key) {
     final sortingStatus = getProcessStatus('sorting');
     final printingStatus = getProcessStatus('printing');
+    final longSlittingStatus = getProcessStatus('long_slitting');
 
     final embroideryData = widget.allProcesses.firstWhere(
           (e) => e['key'] == 'embroidery',
@@ -60,14 +61,22 @@ class _ProcessItemState extends State<ProcessItem> {
         )['data'] ??
         [];
 
+    final longSlittingData = widget.allProcesses.firstWhere(
+          (e) => e['key'] == 'long_slitting',
+          orElse: () => <String, dynamic>{},
+        )['data'] ??
+        [];
+
     final bool isSortingDone =
         sortingStatus == 'Diproses' || sortingStatus == 'Selesai';
 
     final bool isPrintingDone =
         printingStatus == 'Diproses' || printingStatus == 'Selesai';
 
-    /// ✅ RULE 1:
-    /// sorting jalan + embroidery & printing kosong → skip keduanya
+    final bool isLongSlittingDone =
+        longSlittingStatus == 'Diproses' || longSlittingStatus == 'Selesai';
+
+    /// ✅ RULE 1
     if ((key == 'embroidery' || key == 'printing') &&
         isSortingDone &&
         embroideryData.isEmpty &&
@@ -75,13 +84,18 @@ class _ProcessItemState extends State<ProcessItem> {
       return true;
     }
 
-    /// ✅ RULE 2:
-    /// printing jalan → embroidery dilewati
+    /// ✅ RULE 2
     if (key == 'embroidery' && isPrintingDone) {
       return true;
     }
 
-    /// (opsional, tetap dari logic kamu sebelumnya)
+    /// ✅ RULE 3
+    /// long slitting jalan → stenter dilewati
+    if (key == 'stenter' && isLongSlittingDone && longSlittingData.isNotEmpty) {
+      return true;
+    }
+
+    /// OPTIONAL
     if (key == 'sorting' && isPrintingDone) {
       return true;
     }

@@ -163,20 +163,6 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                     );
                   },
                 ),
-
-                /// LOAD MORE
-                if (widget.hasMore)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 24,
-                    ),
-                    child: widget.isLoadMore
-                        ? CircularProgressIndicator()
-                        : ElevatedButton(
-                            onPressed: widget.handleLoadMore,
-                            child: Text('Load More'),
-                          ),
-                  ),
               ],
             ),
           ),

@@ -1490,7 +1490,7 @@ class _FormItemsState extends State<FormItems>
               )
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
-      ].separatedBy(CustomTheme().vGap('sm')),
+      ].separatedBy(CustomTheme().vGap('lg')),
     );
   }
 

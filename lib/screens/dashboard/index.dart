@@ -18,6 +18,7 @@ import 'package:textile_tracking/models/dashboard/work_order_chart.dart';
 import 'package:textile_tracking/models/dashboard/work_order_process.dart';
 import 'package:textile_tracking/models/dashboard/work_order_stats.dart';
 import 'package:textile_tracking/models/dashboard/work_order_summary.dart';
+import 'package:textile_tracking/screens/auth/user_menu.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -33,6 +34,7 @@ class _DashboardState extends State<Dashboard> {
   List<dynamic> summaryList = [];
   Map<String, dynamic> machineList = {};
   final List<dynamic> _dataList = [];
+  List<dynamic> menus = [];
 
   String dariTanggalSummary = '';
   String sampaiTanggalSummary = '';
@@ -75,6 +77,42 @@ class _DashboardState extends State<Dashboard> {
     _loadDashboardData();
   }
 
+  bool get shouldHideActiveMachine {
+    bool checkMenus(List<dynamic> menuList) {
+      for (final menu in menuList) {
+        final name = (menu['name'] ?? '').toString().toLowerCase();
+
+        if (name == 'sorting' || name == 'packing') {
+          return true;
+        }
+
+        final children = menu['children'];
+
+        if (children != null && children is List && checkMenus(children)) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    return checkMenus(menus);
+  }
+
+  Future<void> _handleFetchMenu() async {
+    try {
+      final result = await MenuService().handleFetchMenu(context);
+
+      if (!mounted) return;
+
+      setState(() {
+        menus = result;
+      });
+    } catch (e) {
+      debugPrint('Error fetch menu: $e');
+    }
+  }
+
   bool _checkIsFiltered() {
     return params.keys.any(
         (key) => key != 'page' && key != 'search' && params[key]!.isNotEmpty);
@@ -87,6 +125,7 @@ class _DashboardState extends State<Dashboard> {
 
     try {
       await Future.wait([
+        _handleFetchMenu(),
         _handleFetchStats(),
         _handleFetchPie(),
         _handleFetchMachine(),
@@ -280,13 +319,14 @@ class _DashboardState extends State<Dashboard> {
                         params: summaryParams,
                       ),
                     ),
-                    ActiveMachine(
-                      data: machineList,
-                      available: machineList['available'],
-                      unavailable: machineList['unavailable'],
-                      handleRefetch: _handleFetchMachine,
-                      isFetching: isMachineLoading,
-                    ),
+                    if (!shouldHideActiveMachine)
+                      ActiveMachine(
+                        data: machineList,
+                        available: machineList['available'],
+                        unavailable: machineList['unavailable'],
+                        handleRefetch: _handleFetchMachine,
+                        isFetching: isMachineLoading,
+                      ),
                     WorkOrderProcessScreen(
                       data: _dataList,
                       search: _search,

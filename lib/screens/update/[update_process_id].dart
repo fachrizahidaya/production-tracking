@@ -187,9 +187,16 @@ class _UpdateProcessState extends State<UpdateProcess>
       );
 
       _totalWeightControllers[itemId] = TextEditingController(
-        text: formatId(
-          parseInput(item['total_weight']),
-        ),
+        text: '0',
+      );
+    }
+
+    for (final item in items) {
+      calculateGsm(item);
+      calculateBeratA(item);
+      calculateTotalBerat(
+        item,
+        widget.data,
       );
     }
 
@@ -403,16 +410,13 @@ class _UpdateProcessState extends State<UpdateProcess>
       );
 
       if (matched != null) {
-        totalQty += parseInput(
-          matched['qty'],
-        );
+        totalQty += parseInput(matched['qty']) +
+            parseInput(matched['spraying']) +
+            parseInput(
+              matched['rework_long_hemming'],
+            ) +
+            parseInput(matched['combing']);
       }
-    }
-
-    if (totalQty <= 0) {
-      totalQty = parseInput(
-        item['qty'],
-      );
     }
 
     final beratLusin = parseInput(
@@ -635,6 +639,39 @@ class _UpdateProcessState extends State<UpdateProcess>
 
     for (final item in items) {
       total += parseInput(item['total_weight']);
+    }
+
+    return total;
+  }
+
+  double getTotalPerbaikanPerItem(
+    Map<String, dynamic> item,
+    Map<String, dynamic> data,
+  ) {
+    final grades = data['sorting']?['grades'] ?? [];
+
+    final itemCode = item['finished_product']?['code']?.toString().trim();
+
+    double total = 0;
+
+    for (final grade in grades) {
+      final gradeItems = grade['items'] ?? [];
+
+      final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
+        (gradeItem) {
+          final gradeItemCode =
+              gradeItem?['finished_product']?['code']?.toString().trim();
+
+          return gradeItemCode == itemCode;
+        },
+        orElse: () => null,
+      );
+
+      if (matched != null) {
+        total += parseInput(matched['spraying']) +
+            parseInput(matched['rework_long_hemming']) +
+            parseInput(matched['combing']);
+      }
     }
 
     return total;
@@ -1108,6 +1145,11 @@ class _UpdateProcessState extends State<UpdateProcess>
                                               final sortingQty =
                                                   getSortingGradeQty(
                                                       item, widget.data);
+                                              final totalPerbaikan =
+                                                  getTotalPerbaikanPerItem(
+                                                item,
+                                                widget.data,
+                                              );
 
                                               return Container(
                                                 padding: EdgeInsets.all(12),
@@ -1252,6 +1294,36 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                               child: Column(
                                                                 children: [
                                                                   Text(
+                                                                    'Total Perbaikan',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          4),
+                                                                  Text(
+                                                                    formatNumber(
+                                                                        totalPerbaikan),
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .orange,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              child: Column(
+                                                                children: [
+                                                                  Text(
                                                                     'Total Keseluruhan',
                                                                     style:
                                                                         TextStyle(
@@ -1265,15 +1337,12 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                                           4),
                                                                   Text(
                                                                     formatNumber(
-                                                                      parseInput(
-                                                                            sortingQty['grade_a'],
-                                                                          ) +
+                                                                      parseInput(sortingQty['grade_a']) +
+                                                                          parseInput(sortingQty[
+                                                                              'grade_b']) +
                                                                           parseInput(
-                                                                            sortingQty['grade_b'],
-                                                                          ) +
-                                                                          parseInput(
-                                                                            sortingQty['grade_bs'],
-                                                                          ),
+                                                                              sortingQty['grade_bs']) +
+                                                                          totalPerbaikan,
                                                                     ),
                                                                     style:
                                                                         TextStyle(

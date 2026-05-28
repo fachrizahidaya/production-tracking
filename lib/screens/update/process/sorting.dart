@@ -9,6 +9,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 
 class SortingEditSection extends StatefulWidget {
@@ -36,12 +37,19 @@ class SortingEditSection extends StatefulWidget {
 class _SortingEditSectionState extends State<SortingEditSection> {
   final Map<String, TextEditingController> _gradeControllers = {};
   final Map<String, TextEditingController> _repairControllers = {};
+  List itemGradeOption = [];
+
+  bool _isFetchingGrade = false;
 
   @override
   void initState() {
     super.initState();
 
-    _initializeFormFromApi();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _handleFetchItemGrade();
+
+      await _initializeFormFromApi();
+    });
   }
 
   TextEditingController _getGradeController(
@@ -74,6 +82,37 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     }
 
     return _repairControllers[mapKey]!;
+  }
+
+  Future<void> _handleFetchItemGrade() async {
+    setState(() {
+      _isFetchingGrade = true;
+    });
+
+    final service = Provider.of<OptionItemGradeService>(
+      context,
+      listen: false,
+    );
+
+    try {
+      await service.fetchOptions();
+
+      final data = service.dataListOption;
+
+      setState(() {
+        itemGradeOption = data;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("$e"),
+        ),
+      );
+    } finally {
+      setState(() {
+        _isFetchingGrade = false;
+      });
+    }
   }
 
   /*
@@ -174,7 +213,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
       /// FETCH GRADE B
       await semiFinishedService.fetchOptions(
         isInitialLoad: true,
-        process: 'packing',
+        process: 'sorting',
         baseCodes: params['base_codes'] ?? [],
         colorCodes: ['GRB'],
       );
@@ -184,6 +223,34 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         semiFinishedService.dataListOption.map(
           (e) => Map<String, dynamic>.from(e),
         ),
+      );
+
+      final gradeAOption = itemGradeOption.firstWhere(
+        (e) => (e['label'] ?? '').toString().toLowerCase() == 'grade a',
+        orElse: () => {
+          'value': 1,
+          'label': 'Grade A',
+        },
+      );
+
+      final gradeBOption = itemGradeOption.firstWhere(
+        (e) => (e['label'] ?? '').toString().toLowerCase() == 'grade b',
+        orElse: () => {
+          'value': 2,
+          'label': 'Grade B',
+        },
+      );
+
+      final gradeBSOption = itemGradeOption.firstWhere(
+        (e) {
+          final label = (e['label'] ?? '').toString().toLowerCase();
+
+          return label == 'grade bs' || label == 'bs';
+        },
+        orElse: () => {
+          'value': 3,
+          'label': 'Grade BS',
+        },
       );
 
       for (int i = 0; i < woItems.length; i++) {
@@ -245,7 +312,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 |--------------------------------------------------------------------------
 */
             {
-              'item_grade_id': 1,
+              'item_grade_id': gradeAOption['value'],
               'name': 'Grade A',
               'code': 'A',
               'qty': 0,
@@ -274,7 +341,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 |--------------------------------------------------------------------------
 */
             {
-              'item_grade_id': 2,
+              'item_grade_id': gradeBOption['value'],
               'name': 'Grade B',
               'code': 'B',
               'qty': 0,
@@ -303,7 +370,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 |--------------------------------------------------------------------------
 */
             {
-              'item_grade_id': 3,
+              'item_grade_id': gradeBSOption['value'],
               'name': 'BS',
               'code': 'BS',
               'qty': 0,

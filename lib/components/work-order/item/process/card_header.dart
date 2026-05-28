@@ -30,7 +30,9 @@ class CardHeader extends StatelessWidget {
 
     final bool hasProcessData = data != null && data is List && data.isNotEmpty;
 
-    final bool isSkipped = shouldSkipProcess(key);
+    bool isSkipped = shouldSkipProcess(key);
+
+    /// ✅ KHUSUS STENTER
 
     /// ✅ STATUS
     String status = '';

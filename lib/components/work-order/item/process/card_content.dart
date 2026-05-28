@@ -180,7 +180,7 @@ class _CardContentState extends State<CardContent> {
             Expanded(
               child: _buildInfoCard(
                 icon: Icons.check_circle_outline,
-                label: 'Good Weight',
+                label: 'Berat Bagus',
                 value: formatNumber(data['good_weight']),
                 unit: data['good_weight_unit']?['code']?.toString(),
                 color: Colors.green,
@@ -191,7 +191,7 @@ class _CardContentState extends State<CardContent> {
             Expanded(
               child: _buildInfoCard(
                 icon: Icons.cancel_outlined,
-                label: 'BS Weight',
+                label: 'Berat BS',
                 value: formatNumber(data['bs_weight']),
                 unit: data['bs_weight_unit']?['code']?.toString(),
                 color: Colors.red,
@@ -599,19 +599,22 @@ class _CardContentState extends State<CardContent> {
             .map((item) {
               final List itemGrades = item['grades'] ?? [];
 
-              int gradeA = 0;
-              int gradeB = 0;
-              int gradeBS = 0;
+              num gradeA = 0;
+              num gradeB = 0;
+              num gradeBS = 0;
 
               for (final g in itemGrades) {
                 final grade = g['grade'];
 
                 if (grade == 'A') {
-                  gradeA = (g['qty'] ?? 0);
+                  gradeA = (g['qty'] ?? 0) as num;
                 } else if (grade == 'B') {
-                  gradeB = (g['qty'] ?? 0);
+                  gradeB = (g['qty'] ?? 0) as num;
                 } else if (grade == 'BS') {
-                  gradeBS = (g['qty'] ?? 0);
+                  final rawBs = (g['qty'] ?? 0) as num;
+
+                  /// BS = qty / 10
+                  gradeBS = rawBs;
                 }
               }
 
@@ -705,7 +708,7 @@ class _CardContentState extends State<CardContent> {
                           isTablet: isTablet,
                         ),
                         _buildMiniGradeCard(
-                          label: 'BS',
+                          label: 'Tipe BS',
                           value: gradeBS,
                           color: Colors.red,
                           icon: Icons.cancel_outlined,
@@ -1053,7 +1056,7 @@ class _CardContentState extends State<CardContent> {
 
   Widget _buildMiniGradeCard({
     required String label,
-    required int value,
+    required num value,
     required Color color,
     required IconData icon,
     required bool isTablet,

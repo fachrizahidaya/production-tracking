@@ -8,6 +8,7 @@ import 'package:textile_tracking/components/master/form/text_form_grade.dart';
 import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 
 class SortingSection extends StatefulWidget {
@@ -41,15 +42,22 @@ class _SortingSectionState extends State<SortingSection> {
   final Map<String, TextEditingController> _gradeControllers = {};
   final Map<String, TextEditingController> _repairControllers = {};
   late List<Map<String, dynamic>> _items;
+  List itemGradeOption = [];
+
+  bool _isFetchingGrade = false;
 
   @override
   void initState() {
     super.initState();
+
     _items = [];
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _initializeFormFromApi();
-      }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+
+      await _handleFetchItemGrade();
+
+      await _initializeFormFromApi();
     });
   }
 
@@ -85,6 +93,37 @@ class _SortingSectionState extends State<SortingSection> {
     return _repairControllers[mapKey]!;
   }
 
+  Future<void> _handleFetchItemGrade() async {
+    setState(() {
+      _isFetchingGrade = true;
+    });
+
+    final service = Provider.of<OptionItemGradeService>(
+      context,
+      listen: false,
+    );
+
+    try {
+      await service.fetchOptions();
+
+      final data = service.dataListOption;
+
+      setState(() {
+        itemGradeOption = data;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("$e"),
+        ),
+      );
+    } finally {
+      setState(() {
+        _isFetchingGrade = false;
+      });
+    }
+  }
+
   /*
 |--------------------------------------------------------------------------
 | INIT FROM API
@@ -108,10 +147,10 @@ class _SortingSectionState extends State<SortingSection> {
       );
 
       /*
-  |--------------------------------------------------------------------------
-  | SYNC EXISTING DATA
-  |--------------------------------------------------------------------------
-  */
+|--------------------------------------------------------------------------
+| SYNC EXISTING DATA
+|--------------------------------------------------------------------------
+*/
 
       _syncFormItems();
 
@@ -141,6 +180,8 @@ class _SortingSectionState extends State<SortingSection> {
 
       for (final item in gradeItems) {
         final itemId = item['item_id'];
+
+        if (itemId == null) continue;
 
         if (!groupedItems.containsKey(itemId)) {
           groupedItems[itemId] = {
@@ -194,25 +235,109 @@ class _SortingSectionState extends State<SortingSection> {
         woItems,
       );
 
+      /// FETCH GRADE A
       await semiFinishedService.fetchOptions(
         isInitialLoad: true,
-        process: 'sorting',
+        process: 'packing',
         baseCodes: params['base_codes'] ?? [],
         colorCodes: params['color_codes'] ?? [],
       );
 
-      final semiFinishedItems = semiFinishedService.dataListOption;
+      final List<Map<String, dynamic>> semiFinishedItemsGradeA =
+          List<Map<String, dynamic>>.from(
+        semiFinishedService.dataListOption.map(
+          (e) => Map<String, dynamic>.from(e),
+        ),
+      );
+
+      /// FETCH GRADE B
+      await semiFinishedService.fetchOptions(
+        isInitialLoad: true,
+        process: 'sorting',
+        baseCodes: params['base_codes'] ?? [],
+        colorCodes: ['GRB'],
+      );
+
+      final List<Map<String, dynamic>> semiFinishedItemsGradeB =
+          List<Map<String, dynamic>>.from(
+        semiFinishedService.dataListOption.map(
+          (e) => Map<String, dynamic>.from(e),
+        ),
+      );
+
+      final gradeAOption = itemGradeOption.firstWhere(
+        (e) => (e['label'] ?? '').toString().toLowerCase() == 'grade a',
+        orElse: () => {
+          'value': 1,
+          'label': 'Grade A',
+        },
+      );
+
+      final gradeBOption = itemGradeOption.firstWhere(
+        (e) => (e['label'] ?? '').toString().toLowerCase() == 'grade b',
+        orElse: () => {
+          'value': 2,
+          'label': 'Grade B',
+        },
+      );
+
+      final gradeBSOption = itemGradeOption.firstWhere(
+        (e) {
+          final label = (e['label'] ?? '').toString().toLowerCase();
+
+          return label == 'grade bs' || label == 'bs';
+        },
+        orElse: () => {
+          'value': 3,
+          'label': 'Grade BS',
+        },
+      );
 
       for (int i = 0; i < woItems.length; i++) {
         final woItem = woItems[i];
 
-        final gradeBItem =
-            i < semiFinishedItems.length ? semiFinishedItems[i] : null;
+        final itemCode = woItem['item_code']?.toString() ?? '';
 
-        groupedItems[woItem['greige_item_id']] = {
-          'item_id': woItem['greige_item_id'],
+        /// ambil base code sebelum "-"
+        final baseCode = itemCode.split('-').first;
+
+        Map<String, dynamic>? gradeAItem;
+        Map<String, dynamic>? gradeBItem;
+
+        try {
+          gradeAItem = semiFinishedItemsGradeA.firstWhere(
+            (e) {
+              final optionCode = e['code']?.toString() ?? '';
+              final optionBaseCode = optionCode.split('-').first;
+
+              return optionBaseCode == baseCode;
+            },
+          );
+        } catch (_) {
+          gradeAItem = null;
+        }
+
+        try {
+          gradeBItem = semiFinishedItemsGradeB.firstWhere(
+            (e) {
+              final optionCode = e['code']?.toString() ?? '';
+              final optionBaseCode = optionCode.split('-').first;
+
+              return optionBaseCode == baseCode;
+            },
+          );
+        } catch (_) {
+          gradeBItem = null;
+        }
+
+        final itemKey = woItem['greige_item_id'] ??
+            woItem['id'] ??
+            DateTime.now().millisecondsSinceEpoch + i;
+
+        groupedItems[itemKey] = {
+          'item_id': woItem['greige_item_id'] ?? woItem['id'],
           'finished_product': {
-            'id': woItem['greige_item_id'],
+            'id': woItem['greige_item_id'] ?? woItem['id'],
             'code': woItem['item_code'],
             'name': woItem['item_name'],
           },
@@ -228,17 +353,19 @@ class _SortingSectionState extends State<SortingSection> {
 |--------------------------------------------------------------------------
 */
             {
-              'item_grade_id': 1,
+              'item_grade_id': gradeAOption['value'],
               'name': 'Grade A',
               'code': 'A',
               'qty': 0,
               'notes': null,
-              'semifinished_product_id': woItem['greige_item_id'],
-              'semifinished_product': {
-                'id': woItem['greige_item_id'],
-                'code': woItem['item_code'],
-                'name': woItem['item_name'],
-              },
+              'semifinished_product_id': gradeAItem?['value'],
+              'semifinished_product': gradeAItem != null
+                  ? {
+                      'id': gradeAItem['value'],
+                      'code': gradeAItem['code'],
+                      'name': gradeAItem['label'],
+                    }
+                  : null,
               'finished_product': {
                 'id': woItem['greige_item_id'],
                 'code': woItem['item_code'],
@@ -255,7 +382,7 @@ class _SortingSectionState extends State<SortingSection> {
 |--------------------------------------------------------------------------
 */
             {
-              'item_grade_id': 2,
+              'item_grade_id': gradeBOption['value'],
               'name': 'Grade B',
               'code': 'B',
               'qty': 0,
@@ -284,7 +411,7 @@ class _SortingSectionState extends State<SortingSection> {
 |--------------------------------------------------------------------------
 */
             {
-              'item_grade_id': 3,
+              'item_grade_id': gradeBSOption['value'],
               'name': 'BS',
               'code': 'BS',
               'qty': 0,
@@ -381,6 +508,13 @@ class _SortingSectionState extends State<SortingSection> {
 |--------------------------------------------------------------------------
 */
 
+  void _syncFormItems() {
+    widget.form['items'] = List<Map<String, dynamic>>.from(_items);
+
+    widget.form['grades'] =
+        _items.expand((item) => item['grades'] ?? []).toList();
+  }
+
   double parseSafe(dynamic value) {
     if (value == null) {
       return 0;
@@ -400,35 +534,6 @@ class _SortingSectionState extends State<SortingSection> {
         0;
   }
 
-  double parseInput(dynamic value) {
-    if (value == null) return 0;
-
-    String str = value.toString().trim();
-
-    if (str.isEmpty) return 0;
-
-    final ribuanRegex = RegExp(r'^\d{1,3}(\.\d{3})+$');
-
-    if (ribuanRegex.hasMatch(str)) {
-      str = str.replaceAll('.', '');
-      return double.tryParse(str) ?? 0;
-    }
-
-    if (str.contains(',')) {
-      str = str.replaceAll('.', '');
-      str = str.replaceAll(',', '.');
-    }
-
-    return double.tryParse(str) ?? 0;
-  }
-
-  void _syncFormItems() {
-    widget.form['items'] = List<Map<String, dynamic>>.from(_items);
-
-    widget.form['grades'] =
-        _items.expand((item) => item['grades'] ?? []).toList();
-  }
-
   void _recalculateGradeBS(
     int itemIndex,
   ) {
@@ -436,10 +541,14 @@ class _SortingSectionState extends State<SortingSection> {
 
     final defects = item['defects'] ?? [];
 
-    double total = 0;
+    int total = 0;
 
     for (final defect in defects) {
-      total += num.tryParse(defect['qty'].toString()) ?? 0;
+      total += (num.tryParse(
+                defect['qty'].toString(),
+              ) ??
+              0)
+          .toInt();
     }
 
     final grades = item['grades'] ?? [];
@@ -451,7 +560,6 @@ class _SortingSectionState extends State<SortingSection> {
     if (bsIndex != -1) {
       grades[bsIndex]['qty'] = total;
 
-      /// UPDATE CONTROLLER AGAR UI LANGSUNG BERUBAH
       final controller = _getGradeController(
         itemIndex,
         bsIndex,
@@ -464,7 +572,10 @@ class _SortingSectionState extends State<SortingSection> {
     }
 
     _syncFormItems();
-    setState(() {});
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -1234,7 +1345,7 @@ class _SortingSectionState extends State<SortingSection> {
                                 .replaceAll('.', '')
                                 .replaceAll(',', '');
 
-                            defect['qty'] = num.tryParse(cleanValue) ?? 0;
+                            defect['qty'] = parseSafe(cleanValue).toInt();
                             _syncFormItems();
 
                             _recalculateGradeBS(
@@ -1306,7 +1417,7 @@ class _SortingSectionState extends State<SortingSection> {
     final totalSorting = gradeA + gradeB + gradeBS + totalRepair;
 
     return TemplateCard(
-      title: 'Rincian Sortir',
+      title: 'Hasil Sortir',
       icon: Icons.summarize_outlined,
       child: Row(
         children: [
@@ -1414,7 +1525,7 @@ class _SortingSectionState extends State<SortingSection> {
     final totalSorting = totalGradeA + totalGradeB + totalGradeBS + totalRepair;
 
     return TemplateCard(
-      title: 'Rincian Hasil Sortir',
+      title: 'Total Hasil Sortir',
       icon: Icons.analytics_outlined,
       child: Row(
         children: [

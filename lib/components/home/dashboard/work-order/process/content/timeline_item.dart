@@ -635,8 +635,8 @@ class TimelineItem extends StatelessWidget {
             runSpacing: 6,
             children: [
               _buildSimpleChip('Permak Long Hemming', reworkLH),
-              _buildSimpleChip('Spraying', spraying),
-              _buildSimpleChip('Combing', combing),
+              _buildSimpleChip('Semprotan', spraying),
+              _buildSimpleChip('Sisiran', combing),
             ],
           ),
         ].separatedBy(SizedBox(height: 10)),
@@ -986,88 +986,196 @@ class TimelineItem extends StatelessWidget {
     List grades,
     bool isTablet,
   ) {
+    if (grades.isEmpty) return SizedBox.shrink();
+
+    /// GROUPING PER ITEM
+    final Map<String, Map<String, dynamic>> groupedItems = {};
+
+    for (final grade in grades) {
+      final gradeCode = grade['item_grade']?['code'] ?? '-';
+      final items = grade['items'] ?? [];
+
+      for (final item in items) {
+        final finishedProduct = item['finished_product'];
+        final productId = finishedProduct?['id']?.toString() ??
+            item['finished_product']?['code'] ??
+            UniqueKey().toString();
+
+        if (!groupedItems.containsKey(productId)) {
+          groupedItems[productId] = {
+            'product': finishedProduct,
+            'gradeA': 0,
+            'gradeB': 0,
+            'gradeBS': 0,
+            'spraying': 0,
+            'rework_long_hemming': 0,
+            'combing': 0,
+            'defects': <Map<String, dynamic>>[],
+          };
+        }
+
+        final grouped = groupedItems[productId]!;
+
+        final qty = (item['qty'] ?? 0) as num;
+
+        if (gradeCode == 'A') {
+          grouped['gradeA'] = qty;
+        } else if (gradeCode == 'B') {
+          grouped['gradeB'] = qty;
+        } else if (gradeCode == 'BS') {
+          final defects =
+              (item['defects'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+
+          /// TOTAL BS DARI PENJUMLAHAN DEFECT QTY
+          final totalBs = defects.fold<num>(
+            0,
+            (sum, defect) => sum + ((defect['qty'] ?? 0) as num),
+          );
+
+          grouped['gradeBS'] = totalBs;
+
+          grouped['defects'] = defects;
+        }
+        grouped['spraying'] =
+            (grouped['spraying'] ?? 0) + ((item['spraying'] ?? 0) as num);
+
+        grouped['rework_long_hemming'] = (grouped['rework_long_hemming'] ?? 0) +
+            ((item['rework_long_hemming'] ?? 0) as num);
+
+        grouped['combing'] =
+            (grouped['combing'] ?? 0) + ((item['combing'] ?? 0) as num);
+      }
+    }
+
     return Column(
-      children: grades.map<Widget>((grade) {
-        final gradeName = grade['item_grade']?['code'] ?? '-';
-        final items = grade['items'] ?? [];
+      children: groupedItems.values.map<Widget>((item) {
+        final product = item['product'];
+
+        final defects =
+            (item['defects'] as List?)?.cast<Map<String, dynamic>>() ?? [];
 
         return Container(
           margin: EdgeInsets.only(bottom: 12),
           padding: EdgeInsets.all(12),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.purple.shade100),
+            color: Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade200),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              /// PRODUCT
               Text(
-                'Grade $gradeName',
+                product?['name'] ?? '-',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.purple,
+                  fontSize: 14,
                 ),
               ),
-              SizedBox(height: 10),
-              ...items.map<Widget>((item) {
-                final spraying = item['spraying'] ?? 0;
-                final reworkLH = item['rework_long_hemming'] ?? 0;
-                final combing = item['combing'] ?? 0;
 
-                return Container(
-                  margin: EdgeInsets.only(bottom: 10),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: Colors.grey.shade200,
-                    ),
+              SizedBox(height: 4),
+
+              Text(
+                product?['code'] ?? '-',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 12,
+                ),
+              ),
+
+              SizedBox(height: 14),
+
+              /// GRADE SECTION
+              Wrap(
+                spacing: 16,
+                runSpacing: 12,
+                children: [
+                  _buildDetailItem(
+                    icon: Icons.verified,
+                    label: 'Grade A',
+                    value: formatNumber(item['gradeA']),
+                    isTablet: isTablet,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item['finished_product']?['name'] ?? '-',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
+                  _buildDetailItem(
+                    icon: Icons.grade,
+                    label: 'Grade B',
+                    value: formatNumber(item['gradeB']),
+                    isTablet: isTablet,
+                  ),
+                  _buildDetailItem(
+                    icon: Icons.warning_amber_rounded,
+                    label: 'Tipe BS',
+                    value: formatNumber(item['gradeBS']),
+                    isTablet: isTablet,
+                  ),
+                  _buildDetailItem(
+                    icon: Icons.cleaning_services_outlined,
+                    label: 'Semprotan',
+                    value: formatNumber(item['spraying']),
+                    isTablet: isTablet,
+                  ),
+                  _buildDetailItem(
+                    icon: Icons.build_circle_outlined,
+                    label: 'Permak Long Hemming',
+                    value: formatNumber(
+                      item['rework_long_hemming'],
+                    ),
+                    isTablet: isTablet,
+                  ),
+                  _buildDetailItem(
+                    icon: Icons.content_cut_outlined,
+                    label: 'Sisiran',
+                    value: formatNumber(item['combing']),
+                    isTablet: isTablet,
+                  ),
+                ],
+              ),
+
+              /// DEFECTS
+              if (defects.isNotEmpty) ...[
+                SizedBox(height: 14),
+                Divider(),
+                SizedBox(height: 10),
+                Text(
+                  'Defects',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: defects.map((defect) {
+                    final defectName = defect['type']?['name'] ?? '-';
+
+                    final defectQty = defect['qty'] ?? 0;
+
+                    return Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                          color: Colors.red.withOpacity(0.2),
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Wrap(
-                        spacing: 12,
-                        runSpacing: 10,
-                        children: [
-                          _buildDetailItem(
-                            icon: Icons.inventory,
-                            label: 'Qty',
-                            value: formatNumber(item['qty']),
-                            isTablet: isTablet,
-                          ),
-                          _buildDetailItem(
-                            icon: Icons.cleaning_services_outlined,
-                            label: 'Semprotan',
-                            value: formatNumber(spraying),
-                            isTablet: isTablet,
-                          ),
-                          _buildDetailItem(
-                            icon: Icons.build_circle_outlined,
-                            label: 'Permak Long Hemming',
-                            value: formatNumber(reworkLH),
-                            isTablet: isTablet,
-                          ),
-                          _buildDetailItem(
-                            icon: Icons.content_cut_outlined,
-                            label: 'Sisiran',
-                            value: formatNumber(combing),
-                            isTablet: isTablet,
-                          ),
-                        ],
+                      child: Text(
+                        '$defectName : ${formatNumber(defectQty)}',
+                        style: TextStyle(
+                          color: Colors.red.shade700,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                        ),
                       ),
-                    ],
-                  ),
-                );
-              }).toList(),
+                    );
+                  }).toList(),
+                ),
+              ],
             ],
           ),
         );

@@ -69,6 +69,7 @@ class _FinishEmbroideryState extends State<FinishEmbroidery> {
   Widget build(BuildContext context) {
     return FinishProcess(
       title: 'Selesai Embroidery',
+      label: 'Embroidery',
       fetchWorkOrder: (service) async =>
           await service.fetchEmbroideryFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,

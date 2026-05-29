@@ -376,6 +376,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     ValueNotifier<bool> isSubmitting,
   ) async {
     isSubmitting.value = true;
+
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('access_token');
@@ -383,59 +384,42 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       final data = toJson(finishedItem);
       final attachments = data['attachments'];
 
-      if (attachments != null &&
-          attachments is List &&
-          attachments.isNotEmpty) {
-        var uri = Uri.parse('$baseUrl/$endpoint/$id/complete');
-        var request = http.MultipartRequest('POST', uri);
+      final uri = Uri.parse('$baseUrl/$endpoint/$id/complete');
 
-        request.headers.addAll({
-          'Authorization': 'Bearer $token',
-          'Accept': 'application/json',
-        });
+      final request = http.MultipartRequest(
+        'POST',
+        uri,
+      );
 
-        void addFields(dynamic data, String parentKey) {
-          if (data == null) return;
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      });
 
-          if (data is List) {
-            for (int i = 0; i < data.length; i++) {
-              addFields(data[i], '$parentKey[$i]');
-            }
-          } else if (data is Map) {
-            data.forEach((key, value) {
-              addFields(value, '$parentKey[$key]');
-            });
-          } else {
-            request.fields[parentKey] = data.toString();
+      void addFields(dynamic value, String key) {
+        if (value == null) return;
+
+        if (value is List) {
+          for (int i = 0; i < value.length; i++) {
+            addFields(value[i], '$key[$i]');
           }
+        } else if (value is Map) {
+          value.forEach((k, v) {
+            addFields(v, '$key[$k]');
+          });
+        } else {
+          request.fields[key] = value.toString();
         }
+      }
 
-        data.forEach((key, value) {
-          if (key == 'attachments') return;
+      data.forEach((key, value) {
+        if (key == 'attachments') return;
+        addFields(value, key);
+      });
 
-          addFields(value, key);
-        });
+      request.fields['_method'] = 'PATCH';
 
-        final grades = data['grades'];
-
-        if (grades is List) {
-          for (int i = 0; i < grades.length; i++) {
-            final grade = grades[i];
-
-            if (grade is Map) {
-              grade.forEach((key, value) {
-                if (value == null) return;
-
-                if (value is Map || value is List) return;
-
-                request.fields['grades[$i][$key]'] = value.toString();
-              });
-            }
-          }
-        }
-
-        request.fields['_method'] = 'PATCH';
-
+      if (attachments is List) {
         for (var file in attachments) {
           if (file is File) {
             request.files.add(
@@ -444,7 +428,9 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
                 file.path,
               ),
             );
-          } else if (file is Map && file['path'] != null) {
+          } else if (file is Map &&
+              file['path'] != null &&
+              file['path'].toString().isNotEmpty) {
             request.files.add(
               await http.MultipartFile.fromPath(
                 'attachments[]',
@@ -454,42 +440,22 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
             );
           }
         }
-
-        final response = await request.send();
-        final body = await response.stream.bytesToString();
-
-        if (response.statusCode == 200) {
-          await refetchItems(context);
-          return '${jsonDecode(body)['message']}. Proses dapat dilanjutkan atau WO sudah selesai.';
-        } else {
-          throw Exception(
-              jsonDecode(body)['message'] ?? 'Gagal menyelesaikan proses');
-        }
-      } else {
-        final body = {
-          ...data,
-          '_method': 'PATCH',
-        };
-
-        final response = await http.post(
-          Uri.parse('$baseUrl/$endpoint/$id/complete'),
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode(body),
-        );
-
-        if (response.statusCode == 200) {
-          await refetchItems(context);
-          return '${jsonDecode(response.body)['message']}. Proses dapat dilanjutkan atau WO sudah selesai.';
-        } else {
-          final error = jsonDecode(response.body);
-          throw (error['message'] ?? 'Gagal menyelesaikan proses');
-        }
       }
+
+      final response = await request.send();
+      final responseBody = await response.stream.bytesToString();
+
+      if (response.statusCode == 200) {
+        await refetchItems(context);
+
+        return '${jsonDecode(responseBody)['message']}. Proses dapat dilanjutkan atau WO sudah selesai.';
+      }
+
+      final error = jsonDecode(responseBody);
+
+      throw error['message'] ?? 'Gagal menyelesaikan proses';
     } catch (e) {
-      throw ('$e');
+      throw e.toString();
     } finally {
       isSubmitting.value = false;
     }

@@ -69,6 +69,7 @@ class _FinishPrintingState extends State<FinishPrinting> {
   Widget build(BuildContext context) {
     return FinishProcess(
       title: 'Selesai Printing',
+      label: 'Printing',
       fetchWorkOrder: (service) async =>
           await service.fetchPrintingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,

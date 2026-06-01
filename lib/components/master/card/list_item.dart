@@ -64,7 +64,7 @@ class _ListItemState extends State<ListItem> {
               child: _buildProdukJadiInfo(),
             ),
             Expanded(
-              child: _buildItemInfo(true),
+              child: _buildGreigeInfo(),
             ),
           ].separatedBy(CustomTheme().hGap('xl')),
         ),
@@ -80,7 +80,7 @@ class _ListItemState extends State<ListItem> {
       children: [
         _buildQuantitySection(false, withSpk),
         _buildProdukJadiInfo(),
-        _buildItemInfo(false),
+        _buildGreigeInfo(),
         _buildAdditionalInfo(false),
       ].separatedBy(CustomTheme().vGap('xl')),
     );
@@ -182,6 +182,100 @@ class _ListItemState extends State<ListItem> {
               ].separatedBy(CustomTheme().vGap('md')),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGreigeInfo() {
+    final List greigeItems = item['greige_items'] ?? [];
+
+    return Container(
+      width: double.infinity,
+      padding: CustomTheme().padding('card'),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.orange.shade100,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'GREIGE AWAL',
+            style: TextStyle(
+              fontWeight: CustomTheme().fontWeight('bold'),
+              color: Colors.orange.shade700,
+            ),
+          ),
+          if (greigeItems.isEmpty)
+            Text(
+              '-',
+              style: TextStyle(
+                color: Colors.grey[600],
+              ),
+            ),
+          ...greigeItems.map((greige) {
+            final greigeItem = greige['greige_item'];
+
+            return Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.only(top: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: Colors.orange.shade100,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (greige['greige_item_op_no'] != null)
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.confirmation_number_outlined,
+                          size: 16,
+                          color: Colors.orange.shade700,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            'OP No : ${greige['greige_item_op_no']}',
+                            style: TextStyle(
+                              fontWeight: CustomTheme().fontWeight('semibold'),
+                              color: Colors.orange.shade700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  if (greige['greige_item_op_no'] != null)
+                    const SizedBox(height: 8),
+                  Text(
+                    greigeItem?['code']?.toString() ?? '-',
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('lg'),
+                      fontWeight: CustomTheme().fontWeight('semibold'),
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    greigeItem?['name']?.toString() ?? '-',
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('md'),
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
         ],
       ),
     );

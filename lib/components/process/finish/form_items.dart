@@ -906,6 +906,9 @@ class _FormItemsState extends State<FormItems>
                 ),
               ),
             if (widget.data != null &&
+                (widget.label == 'Long Hemming' ||
+                    widget.label == 'Cross Cutting' ||
+                    widget.label == 'Sewing') &&
                 widget.withItemGrade == false &&
                 widget.label == 'Dyeing' &&
                 widget.label != 'Packing' &&

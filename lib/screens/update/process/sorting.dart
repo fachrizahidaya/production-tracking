@@ -113,6 +113,8 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         _isFetchingGrade = false;
       });
     }
+
+    return _repairControllers[mapKey]!;
   }
 
   /*

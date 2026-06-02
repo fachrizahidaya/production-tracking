@@ -282,19 +282,6 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 isTablet: isTablet,
               ),
             ),
-          if (widget.forDyeing == true && widget.data['status'] == 'Selesai')
-            _buildVerticalDivider(false),
-          if (widget.forDyeing == true && widget.data['status'] == 'Selesai')
-            Expanded(
-              child: _buildQuickInfoItem(
-                icon: Icons.invert_colors_on_outlined,
-                label: 'No. Lot Celup',
-                value: widget.data['lot_celup_no'] != null
-                    ? '${widget.data['lot_celup_no']}'
-                    : '-',
-                isTablet: isTablet,
-              ),
-            ),
           if (widget.forDyeing == false &&
               widget.data['status'] == 'Selesai' &&
               !(['Long Hemming', 'Cross Cutting', 'Sewing']
@@ -1300,8 +1287,9 @@ Catatan WO
                       width: double.infinity,
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
+                        color: Colors.grey[50],
                         borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey[200]!),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1309,18 +1297,16 @@ Catatan WO
                           Text(
                             'Qty Hasil',
                             style: TextStyle(
-                              color: Colors.grey.shade600,
+                              color: Colors.grey[600],
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             '${formatNumber(qty)} PCS',
                             style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: CustomTheme().fontWeight(
-                                'bold',
-                              ),
-                              color: Colors.blue.shade700,
+                              fontSize: 18,
+                              fontWeight: CustomTheme().fontWeight('bold'),
+                              color: Colors.grey[800],
                             ),
                           ),
                         ],
@@ -1334,10 +1320,9 @@ Catatan WO
                         12,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(
-                          8,
-                        ),
+                        color: Colors.grey[50],
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey[200]!),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1345,7 +1330,7 @@ Catatan WO
                           Text(
                             'Hasil Packing',
                             style: TextStyle(
-                              color: Colors.grey.shade600,
+                              color: Colors.grey[600],
                             ),
                           ),
                           const SizedBox(
@@ -1355,10 +1340,8 @@ Catatan WO
                             '${formatNumber(qty)} PCS',
                             style: TextStyle(
                               fontSize: 18,
-                              fontWeight: CustomTheme().fontWeight(
-                                'bold',
-                              ),
-                              color: Colors.blue.shade700,
+                              fontWeight: CustomTheme().fontWeight('bold'),
+                              color: Colors.grey[800],
                             ),
                           ),
                         ],
@@ -1372,10 +1355,9 @@ Catatan WO
                         12,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.purple.shade50,
-                        borderRadius: BorderRadius.circular(
-                          8,
-                        ),
+                        color: Colors.grey[50],
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey[200]!),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1383,7 +1365,7 @@ Catatan WO
                           Text(
                             'Gramasi',
                             style: TextStyle(
-                              color: Colors.grey.shade600,
+                              color: Colors.grey[600],
                             ),
                           ),
                           const SizedBox(
@@ -1393,10 +1375,8 @@ Catatan WO
                             '${formatNumber(gsm)} GSM',
                             style: TextStyle(
                               fontSize: 18,
-                              fontWeight: CustomTheme().fontWeight(
-                                'bold',
-                              ),
-                              color: Colors.purple.shade700,
+                              fontWeight: CustomTheme().fontWeight('bold'),
+                              color: Colors.grey[800],
                             ),
                           ),
                         ],
@@ -1414,10 +1394,9 @@ Catatan WO
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.green.shade50,
-                      borderRadius: BorderRadius.circular(
-                        8,
-                      ),
+                      color: Colors.grey[50],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey[200]!),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1425,7 +1404,7 @@ Catatan WO
                         Text(
                           'Berat Bagus',
                           style: TextStyle(
-                            color: Colors.grey.shade600,
+                            color: Colors.grey[600],
                           ),
                         ),
                         const SizedBox(
@@ -1435,10 +1414,8 @@ Catatan WO
                           '${formatNumber(goodWeight)} KG',
                           style: TextStyle(
                             fontSize: 18,
-                            fontWeight: CustomTheme().fontWeight(
-                              'bold',
-                            ),
-                            color: Colors.green.shade700,
+                            fontWeight: CustomTheme().fontWeight('bold'),
+                            color: Colors.grey[800],
                           ),
                         ),
                       ],
@@ -1450,10 +1427,9 @@ Catatan WO
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.red.shade50,
-                      borderRadius: BorderRadius.circular(
-                        8,
-                      ),
+                      color: Colors.grey[50],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey[200]!),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1461,7 +1437,7 @@ Catatan WO
                         Text(
                           'Berat BS',
                           style: TextStyle(
-                            color: Colors.grey.shade600,
+                            color: Colors.grey[600],
                           ),
                         ),
                         const SizedBox(
@@ -1471,10 +1447,8 @@ Catatan WO
                           '${formatNumber(bsWeight)} KG',
                           style: TextStyle(
                             fontSize: 18,
-                            fontWeight: CustomTheme().fontWeight(
-                              'bold',
-                            ),
-                            color: Colors.red.shade700,
+                            fontWeight: CustomTheme().fontWeight('bold'),
+                            color: Colors.grey[800],
                           ),
                         ),
                       ],
@@ -1496,10 +1470,9 @@ Catatan WO
                           12,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.green.shade50,
-                          borderRadius: BorderRadius.circular(
-                            8,
-                          ),
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey[200]!),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1507,7 +1480,7 @@ Catatan WO
                             Text(
                               'Berat per Lusin',
                               style: TextStyle(
-                                color: Colors.grey.shade600,
+                                color: Colors.grey[600],
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -1515,10 +1488,8 @@ Catatan WO
                               '${formatNumber(weightPerDozen)} KG',
                               style: TextStyle(
                                 fontSize: 18,
-                                fontWeight: CustomTheme().fontWeight(
-                                  'bold',
-                                ),
-                                color: Colors.teal.shade700,
+                                fontWeight: CustomTheme().fontWeight('bold'),
+                                color: Colors.grey[800],
                               ),
                             ),
                           ],
@@ -1531,10 +1502,9 @@ Catatan WO
                           12,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.orange.shade50,
-                          borderRadius: BorderRadius.circular(
-                            8,
-                          ),
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey[200]!),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1542,7 +1512,7 @@ Catatan WO
                             Text(
                               'Berat Grade A',
                               style: TextStyle(
-                                color: Colors.grey.shade600,
+                                color: Colors.grey[600],
                               ),
                             ),
                             const SizedBox(
@@ -1552,10 +1522,8 @@ Catatan WO
                               '${formatNumber(weight)} KG',
                               style: TextStyle(
                                 fontSize: 18,
-                                fontWeight: CustomTheme().fontWeight(
-                                  'bold',
-                                ),
-                                color: Colors.orange.shade700,
+                                fontWeight: CustomTheme().fontWeight('bold'),
+                                color: Colors.grey[800],
                               ),
                             ),
                           ],
@@ -1567,8 +1535,9 @@ Catatan WO
                         width: double.infinity,
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.teal.shade50,
+                          color: Colors.grey[50],
                           borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey[200]!),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1576,7 +1545,7 @@ Catatan WO
                             Text(
                               'Total Berat',
                               style: TextStyle(
-                                color: Colors.grey.shade600,
+                                color: Colors.grey[600],
                               ),
                             ),
                             const SizedBox(
@@ -1586,10 +1555,8 @@ Catatan WO
                               '${formatNumber(totalWeight)} KG',
                               style: TextStyle(
                                 fontSize: 18,
-                                fontWeight: CustomTheme().fontWeight(
-                                  'bold',
-                                ),
-                                color: Colors.green.shade700,
+                                fontWeight: CustomTheme().fontWeight('bold'),
+                                color: Colors.grey[800],
                               ),
                             ),
                           ],
@@ -1711,11 +1678,7 @@ Catatan WO
             icon: Icons.attachment_outlined,
             child: _buildTotalSorting(true),
           ),
-        if ((widget.label != 'Long Hemming' &&
-            widget.label != 'Cross Cutting' &&
-            widget.label != 'Sewing' &&
-            widget.label != 'Sorting' &&
-            widget.label != 'Packing'))
+        if ((widget.label == 'Dyeing'))
           _buildInfoCard(
             title: 'Produk Setengah Jadi',
             icon: Icons.inventory_2_outlined,
@@ -1811,18 +1774,16 @@ Catatan WO
             icon: Icons.attachment_outlined,
             child: _buildTotalSorting(false),
           ),
-        if ((widget.label != 'Long Hemming' &&
-            widget.label != 'Cross Cutting' &&
-            widget.label != 'Sewing' &&
-            widget.label != 'Sorting' &&
-            widget.label != 'Packing'))
-          _buildInfoCard(
-            title: widget.label == 'Packing'
-                ? 'Produk Jadi'
-                : 'Produk Setengah Jadi',
-            icon: Icons.inventory_2_outlined,
-            child: _buildMaterialInfo(false),
-          ),
+        // if ((widget.label != 'Long Hemming' &&
+        //     widget.label != 'Cross Cutting' &&
+        //     widget.label != 'Sewing' &&
+        //     widget.label != 'Sorting' &&
+        //     widget.label != 'Packing'))
+        //   _buildInfoCard(
+        //     title: 'Produk Setengah Jadi',
+        //     icon: Icons.inventory_2_outlined,
+        //     child: _buildMaterialInfo(false),
+        //   ),
         if (widget.label == 'Long Hemming' ||
             widget.label == 'Cross Cutting' ||
             widget.label == 'Sewing' ||

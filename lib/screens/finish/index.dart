@@ -158,18 +158,18 @@ class _FinishProcessState extends State<FinishProcess> {
       _form['nama_satuan'] = 'PCS';
     }
 
-    final data = _workOrderService.dataView;
-    final greigeQty = data['greige_qty'];
+    // final data = _workOrderService.dataView;
+    // final greigeQty = data['greige_qty'];
 
-    if (widget.label == 'Dyeing') {
-      _form['qty'] = greigeQty.toString();
-    }
+    // if (widget.label == 'Dyeing') {
+    //   _form['qty'] = greigeQty.toString();
+    // }
 
-    if (widget.label != 'Long Hemming' &&
-        widget.label != 'Sewing' &&
-        widget.label != 'Cross Cutting') {
-      _form['weight'] = greigeQty.toString();
-    }
+    // if (widget.label != 'Long Hemming' &&
+    //     widget.label != 'Sewing' &&
+    //     widget.label != 'Cross Cutting') {
+    //   _form['weight'] = greigeQty.toString();
+    // }
   }
 
   Future<void> _initialize() async {
@@ -177,6 +177,20 @@ class _FinishProcessState extends State<FinishProcess> {
     _form['end_by_id'] = loggedInUser?.id;
     await _handleFetchWorkOrder();
     await _handleFetchItemGrade();
+  }
+
+  double _getTotalItemWeight(Map<String, dynamic> woData) {
+    final items = List<Map<String, dynamic>>.from(
+      woData['items'] ?? [],
+    );
+
+    double totalWeight = 0.0;
+
+    for (final item in items) {
+      totalWeight += double.tryParse(item['weight']?.toString() ?? '0') ?? 0.0;
+    }
+
+    return totalWeight;
   }
 
   Future<void> _handleFetchWorkOrder() async {
@@ -408,9 +422,19 @@ class _FinishProcessState extends State<FinishProcess> {
       final data = _workOrderService.dataView;
       await _handleFetchSemiFinishedItems(data);
       final greigeQty = data['greige_qty'];
+      final totalWeight = _getTotalItemWeight(data);
 
       if (widget.label == 'Dyeing') {
-        _form['qty'] = greigeQty.toString();
+        _form['qty'] = totalWeight.toString();
+      } else if ([
+        'Press',
+        'Tumbler',
+        'Stenter',
+        'Long Slitting',
+      ].contains(widget.label)) {
+        _form['weight'] = totalWeight.toString();
+      } else if (greigeQty != null) {
+        _form['weight'] = greigeQty.toString();
       }
 
       if (widget.label == 'Cross Cutting' || widget.label == 'Sewing') {
@@ -421,11 +445,11 @@ class _FinishProcessState extends State<FinishProcess> {
         _form['nama_satuan_item'] = 'PCS';
       }
 
-      if (widget.label != 'Long Hemming' &&
-          widget.label != 'Sewing' &&
-          widget.label != 'Cross Cutting') {
-        _form['weight'] = greigeQty.toString();
-      }
+      // if (widget.label != 'Long Hemming' &&
+      //     widget.label != 'Sewing' &&
+      //     widget.label != 'Cross Cutting') {
+      //   _form['weight'] = greigeQty.toString();
+      // }
 
       if (widget.label == 'Dyeing' ||
           widget.label == 'Long Hemming' ||

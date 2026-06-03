@@ -37,7 +37,11 @@ class _ItemTabState extends State<ItemTab> {
       0,
       (sum, item) => sum + (item['qty'] ?? 0) as int,
     );
-    final totalBerat = widget.data['greige_qty'] ?? 0;
+
+    final int totalBerat = items.fold<int>(
+      0,
+      (sum, item) => sum + ((item['weight'] ?? 0) as int),
+    );
 
     return TemplateCard(
       title: 'Material',
@@ -83,6 +87,29 @@ class _ItemTabState extends State<ItemTab> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
             children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Total Material',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('md'),
+                        color: Colors.grey[600],
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                    Text(
+                      '${widget.data['items']?.length ?? '-'}',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('lg'),
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

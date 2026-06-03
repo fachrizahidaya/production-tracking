@@ -426,13 +426,22 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
       final greigeQty = woData['greige_qty'];
 
-      if (greigeQty != null && widget.label == 'Dyeing') {
-        _qtyItemController.text = greigeQty.toString();
-        _qtyController.text = greigeQty.toString();
-        widget.form?['qty'] = greigeQty.toString();
-      }
+      if (widget.label == 'Dyeing') {
+        final totalWeight = getTotalItemWeight();
 
-      if (greigeQty != null) {
+        _qtyController.text = totalWeight.toString();
+        widget.form?['qty'] = totalWeight;
+      } else if ([
+        'Press',
+        'Tumbler',
+        'Stenter',
+        'Long Slitting',
+      ].contains(widget.label)) {
+        final totalWeight = getTotalItemWeight();
+
+        _weightController.text = totalWeight.toString();
+        widget.form?['weight'] = totalWeight;
+      } else if (greigeQty != null) {
         _weightController.text = greigeQty.toString();
         widget.form?['weight'] = greigeQty.toString();
       }
@@ -456,12 +465,21 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     setState(() {
       data = widget.processService.dataView;
 
-      if (data['weight'] != null &&
-          (widget.label != 'Sewing' &&
-              widget.label != 'Long Hemming' &&
-              widget.label != 'Cross Cutting')) {
-        _weightController.text = woData['greige_qty'].toString();
-        widget.form?['weight'] = woData['greige_qty'].toString();
+      if (data['weight'] != null) {
+        if ([
+          'Press',
+          'Tumbler',
+          'Stenter',
+          'Long Slitting',
+        ].contains(widget.label)) {
+          _weightController.text = data['weight'].toString();
+          widget.form?['weight'] = data['weight'];
+        } else if (widget.label != 'Sewing' &&
+            widget.label != 'Long Hemming' &&
+            widget.label != 'Cross Cutting') {
+          _weightController.text = woData['greige_qty'].toString();
+          widget.form?['weight'] = woData['greige_qty'];
+        }
       }
       if (data['good_weight'] != null) {
         _weightGoodController.text = data['good_weight'].toString();
@@ -511,8 +529,13 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['qty'] = data['qty'];
       }
       if (data['qty'] != null) {
-        _qtyController.text = woData['greige_qty'].toString();
-        widget.form?['qty'] = woData['greige_qty'];
+        if (widget.label == 'Dyeing') {
+          _qtyController.text = data['qty'].toString();
+          widget.form?['qty'] = data['qty'];
+        } else {
+          _qtyController.text = woData['greige_qty'].toString();
+          widget.form?['qty'] = woData['greige_qty'];
+        }
       }
       if (data['notes'] != null) {
         _noteController.text = data['notes'].toString();
@@ -1028,9 +1051,39 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     });
   }
 
+  double getTotalItemWeight() {
+    final items = List<Map<String, dynamic>>.from(
+      woData['items'] ?? [],
+    );
+
+    double totalWeight = 0.0;
+
+    for (final item in items) {
+      totalWeight += double.tryParse(item['weight']?.toString() ?? '0') ?? 0.0;
+    }
+
+    return totalWeight;
+  }
+
   void _validateWeight(String weight) {
-    final greigeQty = (data['work_orders']['greige_qty']);
+    double referenceWeight;
+
+    if ([
+      'Press',
+      'Tumbler',
+      'Stenter',
+      'Long Slitting',
+    ].contains(widget.label)) {
+      referenceWeight = getTotalItemWeight();
+    } else {
+      referenceWeight = double.tryParse(
+            data['work_orders']?['greige_qty']?.toString() ?? '0',
+          ) ??
+          0;
+    }
+
     final berat = toDouble(weight);
+    final greigeQty = (data['work_orders']['greige_qty']);
 
     if (greigeQty == null || greigeQty <= 0) {
       setState(() {
@@ -1058,9 +1111,27 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+  double getDyeingReferenceQty() {
+    final items = woData['items'] ?? [];
+
+    return items.fold<double>(
+      0.0,
+      (sum, item) => sum + ((item['weight'] as num?)?.toDouble() ?? 0.0),
+    );
+  }
+
   void _validateQty(String woQty) {
-    final qty = widget.label == 'Packing' ? data['qty'] : _getTotalItemQty();
-    final berat = toDouble(woQty);
+    double qty;
+
+    if (widget.label == 'Dyeing') {
+      qty = getDyeingReferenceQty();
+    } else {
+      qty = widget.label == 'Packing'
+          ? toDouble(data['qty'])
+          : _getTotalItemQty();
+    }
+
+    final inputQty = toDouble(woQty);
 
     if (qty <= 0) {
       setState(() {
@@ -1072,12 +1143,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     final lowerLimit = qty * 0.9;
     final upperLimit = qty * 1.1;
 
-    if (berat < lowerLimit || berat > upperLimit) {
-      final diffPercent = ((berat - qty) / qty) * 100;
+    if (inputQty < lowerLimit || inputQty > upperLimit) {
+      final diffPercent = ((inputQty - qty) / qty) * 100;
 
       setState(() {
         _itemWarningValidationMessage =
-            'Qty ${berat < qty ? 'kurang' : 'lebih'} '
+            'Qty ${inputQty < qty ? 'kurang' : 'lebih'} '
             '${diffPercent.abs().toStringAsFixed(2)}% '
             '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
       });

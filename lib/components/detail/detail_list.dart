@@ -284,13 +284,20 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
             ),
           if (widget.forDyeing == false &&
               widget.data['status'] == 'Selesai' &&
-              !(['Long Hemming', 'Cross Cutting', 'Sewing']
-                  .contains(widget.label)))
+              !([
+                'Long Hemming',
+                'Cross Cutting',
+                'Sewing',
+                'Embroidery',
+                'Printing'
+              ].contains(widget.label)))
             _buildVerticalDivider(false),
           if (widget.forDyeing == false &&
               widget.label != 'Long Hemming' &&
               widget.label != 'Cross Cutting' &&
               widget.label != 'Sewing' &&
+              widget.label != 'Embroidery' &&
+              widget.label != 'Printing' &&
               widget.data['status'] == 'Selesai')
             Expanded(
               child: _buildQuickInfoItem(
@@ -1649,7 +1656,9 @@ Catatan WO
             widget.label != 'Long Slitting' &&
             widget.label != 'Long Hemming' &&
             widget.label != 'Cross Cutting' &&
-            widget.label != 'Sewing')
+            widget.label != 'Sewing' &&
+            widget.label != 'Embroidery' &&
+            widget.label != 'Printing')
           _buildInfoCard(
             title: 'Informasi Proses',
             icon: Icons.settings_outlined,
@@ -1745,7 +1754,9 @@ Catatan WO
             widget.label != 'Long Slitting' &&
             widget.label != 'Long Hemming' &&
             widget.label != 'Cross Cutting' &&
-            widget.label != 'Sewing')
+            widget.label != 'Sewing' &&
+            widget.label != 'Embroidery' &&
+            widget.label != 'Printing')
           _buildInfoCard(
             title: 'Informasi Proses',
             icon: Icons.settings_outlined,
@@ -1774,16 +1785,12 @@ Catatan WO
             icon: Icons.attachment_outlined,
             child: _buildTotalSorting(false),
           ),
-        // if ((widget.label != 'Long Hemming' &&
-        //     widget.label != 'Cross Cutting' &&
-        //     widget.label != 'Sewing' &&
-        //     widget.label != 'Sorting' &&
-        //     widget.label != 'Packing'))
-        //   _buildInfoCard(
-        //     title: 'Produk Setengah Jadi',
-        //     icon: Icons.inventory_2_outlined,
-        //     child: _buildMaterialInfo(false),
-        //   ),
+        if ((widget.label == 'Dyeing'))
+          _buildInfoCard(
+            title: 'Produk Setengah Jadi',
+            icon: Icons.inventory_2_outlined,
+            child: _buildMaterialInfo(false),
+          ),
         if (widget.label == 'Long Hemming' ||
             widget.label == 'Cross Cutting' ||
             widget.label == 'Sewing' ||

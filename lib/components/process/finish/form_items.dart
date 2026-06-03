@@ -850,6 +850,8 @@ class _FormItemsState extends State<FormItems>
                 (widget.label != 'Long Hemming' &&
                     widget.label != 'Cross Cutting' &&
                     widget.label != 'Sewing' &&
+                    widget.label != 'Embroidery' &&
+                    widget.label != 'Printing' &&
                     widget.label != 'Sorting' &&
                     widget.label != 'Packing'))
               Expanded(
@@ -890,6 +892,8 @@ class _FormItemsState extends State<FormItems>
                 widget.label != 'Long Hemming' &&
                 widget.label != 'Cross Cutting' &&
                 widget.label != 'Sewing' &&
+                widget.label != 'Embroidery' &&
+                widget.label != 'Printing' &&
                 widget.label != 'Sorting' &&
                 widget.label != 'Packing')
               Expanded(
@@ -959,6 +963,8 @@ class _FormItemsState extends State<FormItems>
                 widget.label != 'Tumbler' &&
                 widget.label != 'Stenter' &&
                 widget.label != 'Long Slitting' &&
+                widget.label != 'Embroidery' &&
+                widget.label != 'Printing' &&
                 widget.label != 'Sorting' &&
                 widget.label != 'Packing')
               if (isLoadingSemiFinished)
@@ -1008,6 +1014,8 @@ class _FormItemsState extends State<FormItems>
                 widget.label != 'Tumbler' &&
                 widget.label != 'Stenter' &&
                 widget.label != 'Long Slitting' &&
+                widget.label != 'Embroidery' &&
+                widget.label != 'Printing' &&
                 widget.label != 'Sorting' &&
                 widget.label != 'Packing')
               if (isLoadingSemiFinished)
@@ -1047,33 +1055,39 @@ class _FormItemsState extends State<FormItems>
                             ),
                           ),
                         const SizedBox(height: 16),
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.grey.shade200,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    color: Colors.grey.shade200,
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      selectedSemiFinishedItem?['code'] ?? '-',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      selectedSemiFinishedItem?['name'] ?? '-',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                selectedSemiFinishedItem?['code'] ?? '-',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                selectedSemiFinishedItem?['name'] ?? '-',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
+                          ],
                         ),
                       ],
                     ),

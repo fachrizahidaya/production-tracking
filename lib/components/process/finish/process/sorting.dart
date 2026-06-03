@@ -124,6 +124,43 @@ class _SortingSectionState extends State<SortingSection> {
     }
   }
 
+  List<Map<String, dynamic>> mapSemiFinishedByBaseColor({
+    required List<dynamic> baseCodes,
+    required List<dynamic> colorCodes,
+    required List<Map<String, dynamic>> options,
+  }) {
+    final List<Map<String, dynamic>> result = [];
+
+    for (int i = 0; i < baseCodes.length; i++) {
+      final baseCode = baseCodes[i].toString();
+
+      final colorCode = i < colorCodes.length ? colorCodes[i].toString() : '';
+
+      Map<String, dynamic>? matched;
+
+      for (final option in options) {
+        final code = option['code']?.toString() ?? '';
+
+        final parts = code.split('-');
+
+        final optionBaseCode = parts.isNotEmpty ? parts.first : '';
+
+        final optionColorCode = parts.isNotEmpty ? parts.last : '';
+
+        if (optionBaseCode == baseCode && optionColorCode == colorCode) {
+          matched = option;
+          break;
+        }
+      }
+
+      if (matched != null) {
+        result.add(Map<String, dynamic>.from(matched));
+      }
+    }
+
+    return result;
+  }
+
   /*
 |--------------------------------------------------------------------------
 | INIT FROM API
@@ -250,6 +287,12 @@ class _SortingSectionState extends State<SortingSection> {
         ),
       );
 
+      final mappedGradeAItems = mapSemiFinishedByBaseColor(
+        baseCodes: params['base_codes'] ?? [],
+        colorCodes: params['color_codes'] ?? [],
+        options: semiFinishedItemsGradeA,
+      );
+
       /// FETCH GRADE B
       await semiFinishedService.fetchOptions(
         isInitialLoad: true,
@@ -263,6 +306,15 @@ class _SortingSectionState extends State<SortingSection> {
         semiFinishedService.dataListOption.map(
           (e) => Map<String, dynamic>.from(e),
         ),
+      );
+
+      final mappedGradeBItems = mapSemiFinishedByBaseColor(
+        baseCodes: params['base_codes'] ?? [],
+        colorCodes: List.generate(
+          (params['base_codes'] ?? []).length,
+          (_) => 'GRB',
+        ),
+        options: semiFinishedItemsGradeB,
       );
 
       final gradeAOption = itemGradeOption.firstWhere(

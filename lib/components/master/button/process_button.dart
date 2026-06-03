@@ -61,9 +61,71 @@ class _ProcessButtonState extends State<ProcessButton> {
 
     final result = widget.isAllMachineDone(widget.data?['machines'] ?? []);
 
+    double parseSafeWeight(dynamic value) {
+      if (value == null) return 0;
+
+      if (value is num) return value.toDouble();
+
+      String str = value.toString().trim();
+
+      if (str.isEmpty) return 0;
+
+      str = str.replaceAll('.', '');
+      str = str.replaceAll(',', '.');
+
+      return double.tryParse(str) ?? 0;
+    }
+
+    bool hasInvalidWeightItems() {
+      final items = widget.form?['items'];
+
+      if (items == null || items is! List || items.isEmpty) {
+        return true;
+      }
+
+      return items.any((item) {
+        final goodWeight = parseSafeWeight(item['good_weight']);
+        final bsWeight = parseSafeWeight(item['bs_weight']);
+
+        return goodWeight == 0 && bsWeight == 0;
+      });
+    }
+
+    double parseSafeQty(dynamic value) {
+      if (value == null) return 0;
+
+      if (value is num) return value.toDouble();
+
+      return double.tryParse(
+            value.toString().replaceAll(',', '').trim(),
+          ) ??
+          0;
+    }
+
+    bool hasInvalidQtyItems() {
+      final items = widget.form?['items'];
+
+      if (items == null || items is! List || items.isEmpty) {
+        return true;
+      }
+
+      return items.any((item) {
+        final qty = parseSafeQty(item['qty']);
+        return qty <= 0;
+      });
+    }
+
+    final bool hasWeightItemError =
+        widget.label == 'Long Hemming' ? hasInvalidWeightItems() : false;
+
+    final bool hasQtyItemError =
+        (widget.label == 'Cross Cutting' || widget.label == 'Sewing')
+            ? hasInvalidQtyItems()
+            : false;
+
     final bool isDisabled = widget.withItemGrade == true
         ? !widget.isQtyFullyDistributed()
-        : hasBasicError;
+        : hasBasicError || hasWeightItemError || hasQtyItemError;
 
     return SafeArea(
       child: Padding(
@@ -89,7 +151,8 @@ class _ProcessButtonState extends State<ProcessButton> {
                   Expanded(
                       child: FormButton(
                     label: widget.labelProcess,
-                    isDisabled: (isNeedMachineValidation && !result),
+                    isDisabled:
+                        isDisabled || (isNeedMachineValidation && !result),
                     customHeight: 56.0,
                     fontSize: CustomTheme().fontSize('xl'),
                     onPressed: () async {
@@ -98,6 +161,7 @@ class _ProcessButtonState extends State<ProcessButton> {
                         if (!widget.formKey.currentState!.validate()) {
                           return;
                         }
+
                         if (widget.processId != null) {
                           await widget.handleSubmit(context);
                         }

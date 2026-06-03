@@ -29,7 +29,10 @@ class _WorkOrderItemTabState extends State<WorkOrderItemTab> {
       0,
       (sum, item) => sum + (item['qty'] ?? 0) as int,
     );
-    final totalBerat = widget.data['greige_qty'] ?? 0;
+    final int totalBerat = items.fold<int>(
+      0,
+      (sum, item) => sum + ((item['weight'] ?? 0) as int),
+    );
     final spkNo = widget.data?['items']?[0]?['spk_no'] ?? '-';
 
     return TemplateCard(
@@ -76,6 +79,29 @@ class _WorkOrderItemTabState extends State<WorkOrderItemTab> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
+                      'Total Material',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('md'),
+                        color: Colors.grey[600],
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                    Text(
+                      '${widget.data['items']?.length ?? '-'}',
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('lg'),
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
                       'Total Qty',
                       style: TextStyle(
                         fontSize: CustomTheme().fontSize('md'),
@@ -99,7 +125,7 @@ class _WorkOrderItemTabState extends State<WorkOrderItemTab> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Berat',
+                      'Total Berat',
                       style: TextStyle(
                         fontSize: CustomTheme().fontSize('md'),
                         color: Colors.grey[600],

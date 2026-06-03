@@ -361,7 +361,6 @@ class _FinishProcessState extends State<FinishProcess> {
   }
 
   Future<void> _handleScan(code) async {
-    print('code: $code');
     setState(() => _isLoading = true);
     try {
       final String woNo = code.toString();
@@ -389,12 +388,9 @@ class _FinishProcessState extends State<FinishProcess> {
       }
 
       final String woId = processResponse['wo_id'].toString();
-      print('wo: $woId');
 
       String? processId;
 
-      print('respons: ${processResponse}');
-      print('respons: ${processResponse['process_id']}');
       if (processResponse['process_id'] != null) {
         processId = processResponse['process_id'].toString();
       } else {

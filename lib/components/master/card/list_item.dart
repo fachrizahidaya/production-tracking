@@ -272,6 +272,24 @@ class _ListItemState extends State<ListItem> {
                       color: Colors.grey[600],
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(
+                        'Qty : ${_formatQuantity(greige['qty'])} PCS',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Text(
+                        'Berat : ${_formatQuantity(greige['weight'])} KG',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             );

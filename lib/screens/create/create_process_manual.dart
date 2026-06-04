@@ -228,21 +228,74 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
 
               final semiFinishedItems = semiFinishedService.dataListOption;
 
+              final woItems = woData['items'] ?? [];
+
               if (widget.label == 'Dyeing') {
-                widget.form?['semifinished_products'] = List.generate(
-                  semiFinishedItems.length,
-                  (index) => {
-                    'item_id': semiFinishedItems[index]['value'],
-                  },
-                );
+                final baseCodes = params['base_codes'] ?? [];
+                final colorCodes = params['color_codes'] ?? [];
+
+                final List<Map<String, dynamic>> items = [];
+
+                for (int i = 0; i < baseCodes.length; i++) {
+                  final baseCode = baseCodes[i].toString();
+                  final colorCode =
+                      i < colorCodes.length ? colorCodes[i].toString() : '';
+
+                  dynamic semiFinishedId;
+
+                  for (final sf in semiFinishedItems) {
+                    final sfCode = sf['code']?.toString() ?? '';
+
+                    final sfParts = sfCode.split('-');
+
+                    final sfBaseCode = sfParts.isNotEmpty ? sfParts.first : '';
+                    final sfColorCode = sfParts.isNotEmpty ? sfParts.last : '';
+
+                    if (sfBaseCode == baseCode && sfColorCode == colorCode) {
+                      semiFinishedId = sf['value'];
+                      break;
+                    }
+                  }
+
+                  items.add({
+                    'item_id': semiFinishedId,
+                  });
+                }
+
+                widget.form?['semifinished_products'] = items;
               } else {
-                widget.form?['items'] = List.generate(
-                  semiFinishedItems.length,
-                  (index) => {
-                    'semifinished_product_id': semiFinishedItems[index]
-                        ['value'],
-                  },
-                );
+                final baseCodes = params['base_codes'] ?? [];
+                final colorCodes = params['color_codes'] ?? [];
+
+                final List<Map<String, dynamic>> items = [];
+
+                for (int i = 0; i < baseCodes.length; i++) {
+                  final baseCode = baseCodes[i].toString();
+                  final colorCode =
+                      i < colorCodes.length ? colorCodes[i].toString() : '';
+
+                  dynamic semiFinishedId;
+
+                  for (final sf in semiFinishedItems) {
+                    final sfCode = sf['code']?.toString() ?? '';
+
+                    final sfParts = sfCode.split('-');
+
+                    final sfBaseCode = sfParts.isNotEmpty ? sfParts.first : '';
+                    final sfColorCode = sfParts.isNotEmpty ? sfParts.last : '';
+
+                    if (sfBaseCode == baseCode && sfColorCode == colorCode) {
+                      semiFinishedId = sf['value'];
+                      break;
+                    }
+                  }
+
+                  items.add({
+                    'semifinished_product_id': semiFinishedId,
+                  });
+                }
+
+                widget.form?['items'] = items;
               }
             }
 

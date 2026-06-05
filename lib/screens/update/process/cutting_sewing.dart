@@ -9,13 +9,14 @@ class CuttingSewingQtySection extends StatefulWidget {
   final String label;
   final List<dynamic> items;
   final Function(int index, String key, dynamic value) onChange;
+  final workOrders;
 
-  const CuttingSewingQtySection({
-    super.key,
-    required this.label,
-    required this.items,
-    required this.onChange,
-  });
+  const CuttingSewingQtySection(
+      {super.key,
+      required this.label,
+      required this.items,
+      required this.onChange,
+      this.workOrders});
 
   @override
   State<CuttingSewingQtySection> createState() =>
@@ -175,6 +176,20 @@ class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
       return NoData();
     }
 
+    final woItems = widget.workOrders;
+
+    String getSpkNo(Map<String, dynamic> item) {
+      final woItemId = item['wo_item_id'];
+      final itemCode = item['finished_product']?['code'];
+
+      final matched = woItems.cast<Map<String, dynamic>?>().firstWhere(
+            (e) => e?['id'] == woItemId && e?['item_code'] == itemCode,
+            orElse: () => null,
+          );
+
+      return matched?['spk_no']?.toString() ?? woItemId.toString();
+    }
+
     /// SINGLE ITEM
     if (widget.items.length == 1) {
       return TemplateCard(
@@ -202,7 +217,7 @@ class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 6),
               child: TabBar(
-                isScrollable: false,
+                isScrollable: true,
                 dividerColor: Colors.transparent,
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black,
@@ -211,12 +226,14 @@ class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
                   color: Colors.blue[800],
                   borderRadius: BorderRadius.circular(6),
                 ),
+                tabAlignment: TabAlignment.start,
                 tabs: [
                   for (final item in widget.items)
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                       child: Tab(
-                        text: item['finished_product']?['code'] ?? '-',
+                        text:
+                            '${item['finished_product']?['code'] ?? '-'} (${getSpkNo(item)})',
                       ),
                     ),
                 ],

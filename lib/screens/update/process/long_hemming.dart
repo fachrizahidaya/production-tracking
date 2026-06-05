@@ -9,13 +9,14 @@ class LongHemmingWeightSection extends StatefulWidget {
   final List<dynamic> items;
   final Function(int index, String key, dynamic value) onChange;
   final VoidCallback onRecalculate;
+  final workOrders;
 
-  const LongHemmingWeightSection({
-    super.key,
-    required this.items,
-    required this.onChange,
-    required this.onRecalculate,
-  });
+  const LongHemmingWeightSection(
+      {super.key,
+      required this.items,
+      required this.onChange,
+      required this.onRecalculate,
+      this.workOrders});
 
   @override
   State<LongHemmingWeightSection> createState() =>
@@ -90,7 +91,7 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
         /// Semi Finished
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Colors.orange.shade50,
             borderRadius: BorderRadius.circular(8),
@@ -107,13 +108,13 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
                   fontWeight: CustomTheme().fontWeight('semibold'),
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 semiFinished?['code'] ?? '-',
               ),
               Text(
                 semiFinished?['name'] ?? '-',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.grey,
                 ),
               ),
@@ -124,7 +125,7 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
         /// Finished Product
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Colors.green.shade50,
             borderRadius: BorderRadius.circular(8),
@@ -141,13 +142,13 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
                   fontWeight: CustomTheme().fontWeight('semibold'),
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 finished?['code'] ?? '-',
               ),
               Text(
                 finished?['name'] ?? '-',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.grey,
                 ),
               ),
@@ -199,6 +200,20 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
       return NoData();
     }
 
+    final woItems = widget.workOrders;
+
+    String getSpkNo(Map<String, dynamic> item) {
+      final woItemId = item['wo_item_id'];
+      final itemCode = item['finished_product']?['code'];
+
+      final matched = woItems.cast<Map<String, dynamic>?>().firstWhere(
+            (e) => e?['id'] == woItemId && e?['item_code'] == itemCode,
+            orElse: () => null,
+          );
+
+      return matched?['spk_no']?.toString() ?? woItemId.toString();
+    }
+
     /// SINGLE ITEM
     if (widget.items.length == 1) {
       return TemplateCard(
@@ -226,7 +241,7 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 6),
               child: TabBar(
-                isScrollable: false,
+                isScrollable: true,
                 dividerColor: Colors.transparent,
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black,
@@ -235,12 +250,14 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
                   color: Colors.blue[800],
                   borderRadius: BorderRadius.circular(6),
                 ),
+                tabAlignment: TabAlignment.start,
                 tabs: [
                   for (final item in widget.items)
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                       child: Tab(
-                        text: item['finished_product']?['code'] ?? '-',
+                        text:
+                            '${item['finished_product']?['code'] ?? '-'} (${getSpkNo(item)})',
                       ),
                     ),
                 ],
@@ -255,7 +272,7 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
                 final item = entry.value;
 
                 return SingleChildScrollView(
-                  padding: const EdgeInsets.only(top: 16),
+                  padding: EdgeInsets.only(top: 16),
                   child: _buildItemContent(
                     context,
                     index,

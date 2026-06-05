@@ -39,8 +39,7 @@ class SortingDetailGradeList extends StatelessWidget {
     if (grades.isEmpty) {
       return const NoData();
     }
-
-    final Map<int, Map<String, dynamic>> groupedItems = {};
+    final Map<String, Map<String, dynamic>> groupedItems = {};
 
     for (final grade in grades) {
       final gradeCode = grade['item_grade']?['code'];
@@ -49,16 +48,19 @@ class SortingDetailGradeList extends StatelessWidget {
 
       for (final item in items) {
         final itemId = item['item_id'];
+        final uniqueKey =
+            '${item['wo_item_id']}_${item['finished_product']?['code']}';
 
-        if (!groupedItems.containsKey(itemId)) {
-          groupedItems[itemId] = {
+        if (!groupedItems.containsKey(uniqueKey)) {
+          groupedItems[uniqueKey] = {
+            'wo_item_id': item['wo_item_id'],
             'finished_product': item['finished_product'],
             'grades': [],
             'defects': item['defects'] ?? [],
           };
         }
 
-        groupedItems[itemId]!['grades'].add({
+        groupedItems[uniqueKey]!['grades'].add({
           'code': gradeCode,
           'qty': item['qty'] ?? 0,
           'defects': item['defects'] ?? [],
@@ -81,6 +83,22 @@ class SortingDetailGradeList extends StatelessWidget {
           child: NoData());
     }
 
+    final woItems = sortingData['work_orders']?['items'] ?? [];
+
+    String getSpkNo(Map<String, dynamic> item) {
+      final woItemId = item['wo_item_id'];
+      final itemCode = item['finished_product']?['code'];
+
+      final woItems = sortingData['work_orders']?['items'] ?? [];
+
+      final matched = woItems.cast<Map<String, dynamic>?>().firstWhere(
+            (e) => e?['id'] == woItemId && e?['item_code'] == itemCode,
+            orElse: () => null,
+          );
+
+      return matched?['spk_no']?.toString() ?? woItemId.toString();
+    }
+
     return DefaultTabController(
       length: items.length,
       child: Column(
@@ -94,9 +112,9 @@ class SortingDetailGradeList extends StatelessWidget {
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
+              padding: EdgeInsets.symmetric(vertical: 8),
               child: TabBar(
-                isScrollable: false,
+                isScrollable: true,
                 dividerColor: Colors.transparent,
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black,
@@ -105,12 +123,14 @@ class SortingDetailGradeList extends StatelessWidget {
                   color: Colors.blue[800],
                   borderRadius: BorderRadius.circular(6),
                 ),
+                tabAlignment: TabAlignment.start,
                 tabs: [
                   for (final item in items)
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                       child: Tab(
-                        text: item['finished_product']?['code'] ?? '-',
+                        text:
+                            '${item['finished_product']?['code'] ?? '-'} (${getSpkNo(item)})',
                       ),
                     ),
                 ],
@@ -118,7 +138,7 @@ class SortingDetailGradeList extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 700,
+            height: 800,
             child: TabBarView(
               children: [
                 for (final item in items)

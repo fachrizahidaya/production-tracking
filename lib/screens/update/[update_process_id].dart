@@ -396,6 +396,8 @@ class _UpdateProcessState extends State<UpdateProcess>
 
     final itemCode = item['finished_product']?['code']?.toString().trim();
 
+    final woItemId = item['wo_item_id'];
+
     for (final grade in grades) {
       final gradeItems = grade['items'] ?? [];
 
@@ -404,7 +406,7 @@ class _UpdateProcessState extends State<UpdateProcess>
           final gradeItemCode =
               gradeItem?['finished_product']?['code']?.toString().trim();
 
-          return gradeItemCode == itemCode;
+          return gradeItem?['wo_item_id'] == woItemId;
         },
         orElse: () => null,
       );
@@ -442,6 +444,7 @@ class _UpdateProcessState extends State<UpdateProcess>
     double gradeBS = 0;
 
     final itemCode = item['finished_product']?['code']?.toString().trim();
+    final woItemId = item['wo_item_id'];
 
     for (final grade in grades) {
       final gradeCode = grade['item_grade']?['code']?.toString().trim();
@@ -453,7 +456,7 @@ class _UpdateProcessState extends State<UpdateProcess>
           final gradeItemCode =
               gradeItem?['finished_product']?['code']?.toString().trim();
 
-          return gradeItemCode == itemCode;
+          return gradeItem?['wo_item_id'] == woItemId;
         },
         orElse: () => null,
       );
@@ -651,6 +654,7 @@ class _UpdateProcessState extends State<UpdateProcess>
     final grades = data['sorting']?['grades'] ?? [];
 
     final itemCode = item['finished_product']?['code']?.toString().trim();
+    final woItemId = item['wo_item_id'];
 
     double total = 0;
 
@@ -662,7 +666,7 @@ class _UpdateProcessState extends State<UpdateProcess>
           final gradeItemCode =
               gradeItem?['finished_product']?['code']?.toString().trim();
 
-          return gradeItemCode == itemCode;
+          return gradeItem?['wo_item_id'] == woItemId;
         },
         orElse: () => null,
       );
@@ -779,6 +783,21 @@ class _UpdateProcessState extends State<UpdateProcess>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    final woItems = widget.data['work_orders']['items'];
+
+    String getSpkNo(Map<String, dynamic> item) {
+      final woItemId = item['wo_item_id'];
+      final itemCode = item['finished_product']?['code'];
+
+      final matched = woItems.cast<Map<String, dynamic>?>().firstWhere(
+            (e) => e?['id'] == woItemId && e?['item_code'] == itemCode,
+            orElse: () => null,
+          );
+
+      return matched?['spk_no']?.toString() ?? woItemId.toString();
+    }
+
     return DefaultTabController(
       length: 2,
       child: GestureDetector(
@@ -1007,6 +1026,9 @@ class _UpdateProcessState extends State<UpdateProcess>
                                 if (widget.label == 'Long Hemming')
                                   LongHemmingWeightSection(
                                     items: widget.form['items'] ?? [],
+                                    workOrders: widget.data['work_orders']
+                                            ?['items'] ??
+                                        [],
                                     onChange: (index, key, value) {
                                       final items =
                                           List<Map<String, dynamic>>.from(
@@ -1023,6 +1045,9 @@ class _UpdateProcessState extends State<UpdateProcess>
                                   CuttingSewingQtySection(
                                     label: widget.label,
                                     items: widget.form['items'] ?? [],
+                                    workOrders: widget.data['work_orders']
+                                            ?['items'] ??
+                                        [],
                                     onChange: (index, key, value) {
                                       final items =
                                           List<Map<String, dynamic>>.from(
@@ -1065,6 +1090,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             padding: EdgeInsets.symmetric(
                                                 vertical: 6),
                                             child: TabBar(
+                                              isScrollable: true,
                                               dividerColor: Colors.transparent,
                                               labelColor: Colors.white,
                                               unselectedLabelColor:
@@ -1075,6 +1101,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                 borderRadius:
                                                     BorderRadius.circular(6),
                                               ),
+                                              tabAlignment: TabAlignment.start,
                                               tabs: [
                                                 for (final item
                                                     in (widget.data['items'] ??
@@ -1087,9 +1114,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                     ),
                                                     child: Tab(
                                                       text:
-                                                          item['finished_product']
-                                                                  ?['code'] ??
-                                                              '-',
+                                                          '${item['finished_product']?['code'] ?? '-'} (${getSpkNo(item)})',
                                                     ),
                                                   ),
                                               ],

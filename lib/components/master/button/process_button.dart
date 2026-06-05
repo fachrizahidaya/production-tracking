@@ -115,44 +115,6 @@ class _ProcessButtonState extends State<ProcessButton> {
       });
     }
 
-    bool hasInvalidSortingItems() {
-      final items = widget.form?['items'];
-
-      if (items == null || items is! List || items.isEmpty) {
-        return true;
-      }
-
-      return items.any((item) {
-        final grades = item['grades'];
-
-        if (grades == null || grades is! List) {
-          return true;
-        }
-
-        double gradeA = 0;
-        double gradeB = 0;
-        double gradeBS = 0;
-
-        for (final grade in grades) {
-          final code = (grade['code'] ?? '').toString().toUpperCase();
-
-          final qty = parseSafeQty(
-            grade['qty'],
-          );
-
-          if (code == 'A') {
-            gradeA = qty;
-          } else if (code == 'B') {
-            gradeB = qty;
-          } else if (code == 'BS') {
-            gradeBS = qty;
-          }
-        }
-
-        return gradeA <= 0 && gradeB <= 0 && gradeBS <= 0;
-      });
-    }
-
     final bool hasWeightItemError =
         widget.label == 'Long Hemming' ? hasInvalidWeightItems() : false;
 
@@ -161,15 +123,9 @@ class _ProcessButtonState extends State<ProcessButton> {
             ? hasInvalidQtyItems()
             : false;
 
-    final bool hasSortingError =
-        widget.label == 'Sorting' ? hasInvalidSortingItems() : false;
-
     final bool isDisabled = widget.withItemGrade == true
         ? !widget.isQtyFullyDistributed()
-        : hasBasicError ||
-            hasWeightItemError ||
-            hasQtyItemError ||
-            hasSortingError;
+        : hasBasicError || hasWeightItemError || hasQtyItemError;
 
     return SafeArea(
       child: Padding(

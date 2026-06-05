@@ -469,45 +469,46 @@ class _ListItemState extends State<ListItem> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            if (withSpk == true)
-              ConstrainedBox(
-                constraints: const BoxConstraints(minWidth: 80),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'SPK',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
+            ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 80),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'SPK',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontWeight: CustomTheme().fontWeight('semibold'),
                     ),
-                    GestureDetector(
-                      onTap: _openSpkDetail,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              item['spk_no']?.toString() ?? '-',
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: CustomTheme().fontSize('xl'),
-                                fontWeight: CustomTheme().fontWeight('bold'),
-                                color: Colors.blue,
-                              ),
+                  ),
+                  GestureDetector(
+                    onTap: withSpk == true ? _openSpkDetail : null,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            item['spk_no']?.toString() ?? '-',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: CustomTheme().fontSize('xl'),
+                              fontWeight: CustomTheme().fontWeight('bold'),
+                              color:
+                                  withSpk == true ? Colors.blue : Colors.black,
                             ),
                           ),
+                        ),
+                        if (withSpk == true)
                           const Icon(
                             Icons.chevron_right_outlined,
                             color: Colors.blue,
                           ),
-                        ],
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

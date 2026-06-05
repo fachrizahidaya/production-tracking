@@ -8,12 +8,10 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 class LongHemmingItemsWeightSection extends StatefulWidget {
   final List<dynamic> items;
   final Function(int index, String key, dynamic value) onChange;
+  final data;
 
-  const LongHemmingItemsWeightSection({
-    super.key,
-    required this.items,
-    required this.onChange,
-  });
+  const LongHemmingItemsWeightSection(
+      {super.key, required this.items, required this.onChange, this.data});
 
   @override
   State<LongHemmingItemsWeightSection> createState() =>
@@ -185,6 +183,20 @@ class _LongHemmingItemsWeightSectionState
       return NoData();
     }
 
+    final woItems = widget.data;
+
+    String getSpkNo(Map<String, dynamic> item) {
+      final woItemId = item['wo_item_id'];
+      final itemCode = item['finished_product']?['code'];
+
+      final matched = woItems.cast<Map<String, dynamic>?>().firstWhere(
+            (e) => e?['id'] == woItemId && e?['item_code'] == itemCode,
+            orElse: () => null,
+          );
+
+      return matched?['spk_no']?.toString() ?? woItemId.toString();
+    }
+
     /// SINGLE ITEM
     if (widget.items.length == 1) {
       return Expanded(
@@ -218,7 +230,7 @@ class _LongHemmingItemsWeightSectionState
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 6),
                   child: TabBar(
-                    isScrollable: false,
+                    isScrollable: true,
                     dividerColor: Colors.transparent,
                     labelColor: Colors.white,
                     unselectedLabelColor: Colors.black,
@@ -227,13 +239,15 @@ class _LongHemmingItemsWeightSectionState
                       color: Colors.blue[800],
                       borderRadius: BorderRadius.circular(6),
                     ),
+                    tabAlignment: TabAlignment.start,
                     tabs: [
                       for (final item in widget.items)
                         Padding(
                           padding:
                               EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                           child: Tab(
-                            text: item['finished_product']?['code'] ?? '-',
+                            text:
+                                '${item['finished_product']?['code'] ?? '-'} (${getSpkNo(item)})',
                           ),
                         ),
                     ],

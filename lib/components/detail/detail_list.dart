@@ -761,6 +761,7 @@ Info Material
           'label': 'Produk Setengah Jadi',
           'value': item['code'] ?? '-',
           'another_value': item['name'] ?? '-',
+          'spk_no': item['spk_no'] ?? '-',
           'icon': Icons.inventory_2_outlined,
           'is_product': true,
         };
@@ -777,6 +778,10 @@ Info Material
       return NoData();
     }
 
+    final woItems = List<Map<String, dynamic>>.from(
+      widget.data['work_orders']?['items'] ?? [],
+    );
+
     final mappedItems = items.map((item) {
       final semiFinished = item['semifinished_product'];
       final finished = item['finished_product'];
@@ -785,10 +790,22 @@ Info Material
 
       final product = isPacking ? finished : semiFinished;
 
+      String spkNo = '-';
+
+      final woItemId = item['wo_item_id'];
+
+      final matchedWo = woItems.cast<Map<String, dynamic>>().firstWhere(
+            (e) => e['id'] == woItemId,
+            orElse: () => <String, dynamic>{},
+          );
+
+      spkNo = matchedWo['spk_no']?.toString() ?? '-';
+
       return {
         'label': isPacking ? 'Produk Jadi' : 'Produk Setengah Jadi',
         'value': product?['code'] ?? '-',
         'another_value': product?['name'] ?? '-',
+        'spk_no': spkNo,
         'icon': Icons.inventory_2_outlined,
         'is_product': true,
       };
@@ -1161,6 +1178,20 @@ Catatan WO
         widget.label == 'Cross Cutting' || widget.label == 'Sewing';
 
     final bool isPacking = widget.label == 'Packing';
+
+    String getSpkNo(Map<String, dynamic> item) {
+      final woItemId = item['wo_item_id'];
+
+      try {
+        final matched = widget.data['work_orders']?['items'].firstWhere(
+          (e) => e['id'] == woItemId,
+        );
+
+        return matched['spk_no']?.toString() ?? '-';
+      } catch (_) {
+        return '-';
+      }
+    }
 
     Widget buildItem(dynamic item) {
       final semiFinished = item['semifinished_product'];
@@ -1597,21 +1628,34 @@ Catatan WO
               color: Colors.grey.shade100,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: TabBar(
-              isScrollable: true,
-              dividerColor: Colors.transparent,
-              tabAlignment: TabAlignment.start,
-              tabs: items.asMap().entries.map(
-                (entry) {
-                  final index = entry.key;
-                  final item = entry.value;
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: TabBar(
+                isScrollable: true,
+                dividerColor: Colors.transparent,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.black,
+                indicatorColor: Colors.white,
+                indicator: BoxDecoration(
+                  color: Colors.blue[800],
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                tabAlignment: TabAlignment.start,
+                tabs: items.asMap().entries.map(
+                  (entry) {
+                    final index = entry.key;
+                    final item = entry.value;
 
-                  return Tab(
-                    text: item['finished_product']?['code'] ??
-                        'Produk ${index + 1}',
-                  );
-                },
-              ).toList(),
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Tab(
+                        text:
+                            '${item['finished_product']?['code'] ?? '-'} (${getSpkNo(item)})',
+                      ),
+                    );
+                  },
+                ).toList(),
+              ),
             ),
           ),
           SizedBox(
@@ -1927,11 +1971,12 @@ Catatan WO
               runSpacing: 16,
               children: items.map((item) {
                 return SizedBox(
-                  width: (MediaQuery.of(context).size.width - 80) / 2,
-                  child: _buildMultiInfoItem(
+                    width: (MediaQuery.of(context).size.width - 80) / 2,
+                    child: _buildMultiInfoItem(
                       label: item['label'],
                       value: item['value'],
                       anotherValue: item['another_value'],
+                      spkNo: item['spk_no'],
                       icon: item['icon'],
                       id: item['id'].toString(),
                       isTablet: isTablet,
@@ -1939,19 +1984,20 @@ Catatan WO
                       rightIcon: item['right-icon'],
                       isProduct: item['is_product'] ?? false,
                       isGrade: item['is_grade'] ?? false,
-                      nameValue: item['name_value']),
-                );
+                      nameValue: item['name_value'],
+                    ));
               }).toList(),
             )
           : Row(
               spacing: 16,
               children: items.map((item) {
                 return SizedBox(
-                  width: (MediaQuery.of(context).size.width - 80) / 2,
-                  child: _buildMultiInfoItem(
+                    width: (MediaQuery.of(context).size.width - 80) / 2,
+                    child: _buildMultiInfoItem(
                       label: item['label'],
                       value: item['value'],
                       anotherValue: item['another_value'],
+                      spkNo: item['spk_no'],
                       icon: item['icon'],
                       id: item['id'].toString(),
                       isTablet: isTablet,
@@ -1959,8 +2005,8 @@ Catatan WO
                       rightIcon: item['right-icon'],
                       isProduct: item['is_product'] ?? false,
                       isGrade: item['is_grade'] ?? false,
-                      nameValue: item['name_value']),
-                );
+                      nameValue: item['name_value'],
+                    ));
               }).toList());
     }
 
@@ -2061,18 +2107,20 @@ Catatan WO
   }
 
   /// Multi Info Item
-  Widget _buildMultiInfoItem(
-      {required String label,
-      required String value,
-      required String anotherValue,
-      required String id,
-      required IconData icon,
-      required bool isTablet,
-      navigateTo,
-      rightIcon,
-      isProduct,
-      isGrade,
-      nameValue}) {
+  Widget _buildMultiInfoItem({
+    required String label,
+    required String value,
+    required String anotherValue,
+    required String id,
+    required IconData icon,
+    required bool isTablet,
+    navigateTo,
+    rightIcon,
+    isProduct,
+    isGrade,
+    nameValue,
+    String? spkNo,
+  }) {
     return GestureDetector(
       onTap: navigateTo,
       child: Container(
@@ -2128,6 +2176,15 @@ Catatan WO
                               maxLines: 3,
                               softWrap: true,
                               overflow: TextOverflow.fade,
+                            ),
+                          if ((spkNo ?? '').isNotEmpty)
+                            Text(
+                              'SPK : $spkNo',
+                              style: TextStyle(
+                                fontSize: isTablet ? 12 : 11,
+                                color: Colors.blueGrey,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                         ],
                       ),
@@ -2274,7 +2331,7 @@ Catatan WO
                     ),
                     const SizedBox(width: 4),
                     Padding(
-                      padding: const EdgeInsets.only(
+                      padding: EdgeInsets.only(
                         bottom: 3,
                       ),
                       child: Text(

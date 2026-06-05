@@ -163,6 +163,10 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     final woItems = widget.data['work_orders']?['items'] ?? [];
 
     final Map<dynamic, Map<String, dynamic>> groupedItems = {};
+    final Map<dynamic, String> spkNoMap = {
+      for (final woItem in woItems)
+        woItem['id']: woItem['spk_no']?.toString() ?? '-',
+    };
 
     /*
 |--------------------------------------------------------------------------
@@ -179,10 +183,13 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         final itemId = item['item_id'] ??
             item['finished_product']?['id'] ??
             DateTime.now().millisecondsSinceEpoch;
+        final itemKey = '${item['wo_item_id']}_${item['item_id']}';
 
-        if (!groupedItems.containsKey(itemId)) {
-          groupedItems[itemId] = {
-            'item_id': itemId,
+        if (!groupedItems.containsKey(itemKey)) {
+          groupedItems[itemKey] = {
+            'wo_item_id': item['wo_item_id'],
+            'spk_no': spkNoMap[item['wo_item_id']],
+            'item_id': item['item_id'],
             'finished_product': item['finished_product'],
             'semifinished_product': item['semifinished_product'],
             'grades': [],
@@ -190,7 +197,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           };
         }
 
-        groupedItems[itemId]!['grades'].add({
+        groupedItems[itemKey]!['grades'].add({
           'item_grade_id': itemGrade['id'],
           'name': itemGrade['name'],
           'code': itemGrade['code'],
@@ -207,7 +214,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         final defects = item['defects'] ?? [];
 
         for (final defect in defects) {
-          groupedItems[itemId]!['defects'].add({
+          groupedItems[itemKey]!['defects'].add({
             'defect_type_id': defect['type']['id'],
             'name': defect['type']['name'],
             'qty': defect['qty'] ?? 0,
@@ -327,6 +334,8 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         final itemKey = woItem['greige_item_id'] ?? woItem['id'];
 
         groupedItems[itemKey] = {
+          'wo_item_id': woItem['id'],
+          'spk_no': woItem['spk_no'],
           'item_id': woItem['greige_item_id'],
           'finished_product': {
             'id': woItem['greige_item_id'],
@@ -522,6 +531,10 @@ class _SortingEditSectionState extends State<SortingEditSection> {
   Widget build(BuildContext context) {
     final items = widget.form['items'] ?? [];
 
+    String getSpkNo(Map<String, dynamic> item) {
+      return item['spk_no']?.toString() ?? '-';
+    }
+
     if (items.isEmpty) {
       return Center(
         child: CircularProgressIndicator(),
@@ -546,7 +559,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 6),
               child: TabBar(
-                isScrollable: false,
+                isScrollable: true,
                 dividerColor: Colors.transparent,
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black,
@@ -555,12 +568,14 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                   color: Colors.blue[800],
                   borderRadius: BorderRadius.circular(6),
                 ),
+                tabAlignment: TabAlignment.start,
                 tabs: [
                   for (final item in items)
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                       child: Tab(
-                        text: item['finished_product']?['code'] ?? '-',
+                        text:
+                            '${item['finished_product']?['code']} (${getSpkNo(item)})',
                       ),
                     ),
                 ],

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
@@ -202,7 +204,11 @@ class _SortingSectionState extends State<SortingSection> {
 
     final woItems = widget.processData['work_orders']?['items'] ?? [];
 
-    final Map<int, Map<String, dynamic>> groupedItems = {};
+    final Map<dynamic, Map<String, dynamic>> groupedItems = {};
+    final Map<dynamic, String> spkNoMap = {
+      for (final woItem in woItems)
+        woItem['id']: woItem['spk_no']?.toString() ?? '-',
+    };
 
     /*
 |--------------------------------------------------------------------------
@@ -217,12 +223,13 @@ class _SortingSectionState extends State<SortingSection> {
 
       for (final item in gradeItems) {
         final itemId = item['item_id'];
+        final itemKey = '${item['wo_item_id']}_${item['item_id']}';
 
-        if (itemId == null) continue;
-
-        if (!groupedItems.containsKey(itemId)) {
-          groupedItems[itemId] = {
-            'item_id': itemId,
+        if (!groupedItems.containsKey(itemKey)) {
+          groupedItems[itemKey] = {
+            'wo_item_id': item['wo_item_id'],
+            'spk_no': spkNoMap[item['wo_item_id']],
+            'item_id': item['item_id'],
             'finished_product': item['finished_product'],
             'semifinished_product': item['semifinished_product'],
             'grades': [],
@@ -230,10 +237,11 @@ class _SortingSectionState extends State<SortingSection> {
           };
         }
 
-        groupedItems[itemId]!['grades'].add({
+        groupedItems[itemKey]!['grades'].add({
           'item_grade_id': itemGrade['id'],
           'name': itemGrade['name'],
           'code': itemGrade['code'],
+          'spk_no': spkNoMap[item['wo_item_id']],
           'qty': item['qty'] ?? 0,
           'notes': grade['notes'],
           'semifinished_product_id': item['semifinished_product_id'],
@@ -247,7 +255,7 @@ class _SortingSectionState extends State<SortingSection> {
         final defects = item['defects'] ?? [];
 
         for (final defect in defects) {
-          groupedItems[itemId]!['defects'].add({
+          groupedItems[itemKey]!['defects'].add({
             'defect_type_id': defect['type']['id'],
             'name': defect['type']['name'],
             'qty': defect['qty'] ?? 0,
@@ -356,40 +364,22 @@ class _SortingSectionState extends State<SortingSection> {
         Map<String, dynamic>? gradeAItem;
         Map<String, dynamic>? gradeBItem;
 
-        try {
-          gradeAItem = semiFinishedItemsGradeA.firstWhere(
-            (e) {
-              final optionCode = e['code']?.toString() ?? '';
-              final optionBaseCode = optionCode.split('-').first;
-
-              return optionBaseCode == baseCode;
-            },
-          );
-        } catch (_) {
-          gradeAItem = null;
+        if (i < mappedGradeAItems.length) {
+          gradeAItem = mappedGradeAItems[i];
         }
 
-        try {
-          gradeBItem = semiFinishedItemsGradeB.firstWhere(
-            (e) {
-              final optionCode = e['code']?.toString() ?? '';
-              final optionBaseCode = optionCode.split('-').first;
-
-              return optionBaseCode == baseCode;
-            },
-          );
-        } catch (_) {
-          gradeBItem = null;
+        if (i < mappedGradeBItems.length) {
+          gradeBItem = mappedGradeBItems[i];
         }
 
-        final itemKey = woItem['greige_item_id'] ??
-            woItem['id'] ??
-            DateTime.now().millisecondsSinceEpoch + i;
+        final itemKey = woItem['greige_item_id'] ?? woItem['id'];
 
         groupedItems[itemKey] = {
-          'item_id': woItem['greige_item_id'] ?? woItem['id'],
+          'wo_item_id': woItem['id'],
+          'spk_no': woItem['spk_no'],
+          'item_id': woItem['greige_item_id'],
           'finished_product': {
-            'id': woItem['greige_item_id'] ?? woItem['id'],
+            'id': woItem['greige_item_id'],
             'code': woItem['item_code'],
             'name': woItem['item_name'],
           },
@@ -408,6 +398,7 @@ class _SortingSectionState extends State<SortingSection> {
               'item_grade_id': gradeAOption['value'],
               'name': 'Grade A',
               'code': 'A',
+              'spk_no': woItem['spk_no'],
               'qty': 0,
               'notes': null,
               'semifinished_product_id': gradeAItem?['value'],
@@ -677,6 +668,10 @@ class _SortingSectionState extends State<SortingSection> {
   Widget build(BuildContext context) {
     final items = _items;
 
+    String getSpkNo(Map<String, dynamic> item) {
+      return item['spk_no']?.toString() ?? '-';
+    }
+
     if (items.isEmpty) {
       return Center(
         child: CircularProgressIndicator(),
@@ -705,7 +700,7 @@ class _SortingSectionState extends State<SortingSection> {
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 6),
               child: TabBar(
-                isScrollable: false,
+                isScrollable: true,
                 dividerColor: Colors.transparent,
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black,
@@ -714,15 +709,19 @@ class _SortingSectionState extends State<SortingSection> {
                   color: Colors.blue[800],
                   borderRadius: BorderRadius.circular(6),
                 ),
-                tabs: [
-                  for (final item in items)
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                      child: Tab(
-                        text: item['finished_product']?['code'] ?? '-',
-                      ),
+                tabAlignment: TabAlignment.start,
+                tabs: List.generate(
+                  items.length,
+                  (index) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4,
+                      horizontal: 8,
                     ),
-                ],
+                    child: Tab(
+                      text: 'Item ${index + 1}',
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -860,9 +859,17 @@ class _SortingSectionState extends State<SortingSection> {
     int itemIndex,
     int gradeIndex,
   ) {
+    final item = _items[itemIndex];
+
     final grade = _items[itemIndex]['grades'][gradeIndex];
 
     final isBS = (grade['code'] ?? '').toString().toUpperCase() == 'BS';
+
+    final items = _items ?? [];
+
+    String getSpkNo(Map<String, dynamic> item) {
+      return item['spk_no']?.toString() ?? '-';
+    }
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -894,6 +901,21 @@ class _SortingSectionState extends State<SortingSection> {
 | PRODUCT INFO
 |--------------------------------------------------------------------------
 */
+          Expanded(
+            flex: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (grade['code'] == 'A')
+                  Text(
+                    getSpkNo(item),
+                    style: const TextStyle(
+                      color: Colors.blue,
+                    ),
+                  ),
+              ],
+            ),
+          ),
           Expanded(
             flex: 2,
             child: Column(

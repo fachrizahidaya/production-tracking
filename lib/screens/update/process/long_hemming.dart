@@ -9,13 +9,14 @@ class LongHemmingWeightSection extends StatefulWidget {
   final List<dynamic> items;
   final Function(int index, String key, dynamic value) onChange;
   final VoidCallback onRecalculate;
+  final workOrders;
 
-  const LongHemmingWeightSection({
-    super.key,
-    required this.items,
-    required this.onChange,
-    required this.onRecalculate,
-  });
+  const LongHemmingWeightSection(
+      {super.key,
+      required this.items,
+      required this.onChange,
+      required this.onRecalculate,
+      this.workOrders});
 
   @override
   State<LongHemmingWeightSection> createState() =>
@@ -84,80 +85,130 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
     final semiFinished = item['semifinished_product'];
     final finished = item['finished_product'];
 
+    final woItems = widget.workOrders;
+
+    String getSpkNo(Map<String, dynamic> item) {
+      final woItemId = item['wo_item_id'];
+      final itemCode = item['finished_product']?['code'];
+
+      final matched = woItems.cast<Map<String, dynamic>?>().firstWhere(
+            (e) => e?['id'] == woItemId && e?['item_code'] == itemCode,
+            orElse: () => null,
+          );
+
+      return matched?['spk_no']?.toString() ?? woItemId.toString();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// Semi Finished
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.orange.shade50,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: Colors.orange.shade100,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.orange.shade100,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Produk Setengah Jadi',
+                      style: TextStyle(
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      semiFinished?['code'] ?? '-',
+                    ),
+                    Text(
+                      semiFinished?['name'] ?? '-',
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Produk Setengah Jadi',
-                style: TextStyle(
-                  fontWeight: CustomTheme().fontWeight('semibold'),
+
+            /// Finished Product
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.green.shade100,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Produk Jadi',
+                      style: TextStyle(
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      finished?['code'] ?? '-',
+                    ),
+                    Text(
+                      finished?['name'] ?? '-',
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                semiFinished?['code'] ?? '-',
-              ),
-              Text(
-                semiFinished?['name'] ?? '-',
-                style: const TextStyle(
-                  color: Colors.grey,
+            ),
+
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.green.shade100,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'No. SPK',
+                      style: TextStyle(
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      getSpkNo(item) ?? '-',
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ].separatedBy(CustomTheme().hGap('xl')),
         ),
 
-        /// Finished Product
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.green.shade50,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: Colors.green.shade100,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Produk Jadi',
-                style: TextStyle(
-                  fontWeight: CustomTheme().fontWeight('semibold'),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                finished?['code'] ?? '-',
-              ),
-              Text(
-                finished?['name'] ?? '-',
-                style: const TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        Wrap(
-          spacing: 16,
-          runSpacing: 16,
+        Row(
           children: [
             SizedBox(
               width: MediaQuery.of(context).size.width > 700
@@ -187,9 +238,9 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
                 handleChange: (value) => _handleBsWeight(index, value),
               ),
             ),
-          ],
+          ].separatedBy(CustomTheme().hGap('xl')),
         ),
-      ].separatedBy(CustomTheme().vGap('lg')),
+      ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
 
@@ -226,7 +277,7 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 6),
               child: TabBar(
-                isScrollable: false,
+                isScrollable: true,
                 dividerColor: Colors.transparent,
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black,
@@ -235,15 +286,21 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
                   color: Colors.blue[800],
                   borderRadius: BorderRadius.circular(6),
                 ),
-                tabs: [
-                  for (final item in widget.items)
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                      child: Tab(
-                        text: item['finished_product']?['code'] ?? '-',
-                      ),
+                tabAlignment: TabAlignment.start,
+                tabs: widget.items.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final item = entry.value;
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4,
+                      horizontal: 8,
                     ),
-                ],
+                    child: Tab(
+                      text: 'Item ${index + 1}',
+                    ),
+                  );
+                }).toList(),
               ),
             ),
           ),
@@ -255,7 +312,7 @@ class _LongHemmingWeightSectionState extends State<LongHemmingWeightSection> {
                 final item = entry.value;
 
                 return SingleChildScrollView(
-                  padding: const EdgeInsets.only(top: 16),
+                  padding: EdgeInsets.only(top: 16),
                   child: _buildItemContent(
                     context,
                     index,

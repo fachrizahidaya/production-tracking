@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/packing_number_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
@@ -396,6 +397,8 @@ class _UpdateProcessState extends State<UpdateProcess>
 
     final itemCode = item['finished_product']?['code']?.toString().trim();
 
+    final woItemId = item['wo_item_id'];
+
     for (final grade in grades) {
       final gradeItems = grade['items'] ?? [];
 
@@ -404,7 +407,7 @@ class _UpdateProcessState extends State<UpdateProcess>
           final gradeItemCode =
               gradeItem?['finished_product']?['code']?.toString().trim();
 
-          return gradeItemCode == itemCode;
+          return gradeItem?['wo_item_id'] == woItemId;
         },
         orElse: () => null,
       );
@@ -442,6 +445,7 @@ class _UpdateProcessState extends State<UpdateProcess>
     double gradeBS = 0;
 
     final itemCode = item['finished_product']?['code']?.toString().trim();
+    final woItemId = item['wo_item_id'];
 
     for (final grade in grades) {
       final gradeCode = grade['item_grade']?['code']?.toString().trim();
@@ -453,7 +457,7 @@ class _UpdateProcessState extends State<UpdateProcess>
           final gradeItemCode =
               gradeItem?['finished_product']?['code']?.toString().trim();
 
-          return gradeItemCode == itemCode;
+          return gradeItem?['wo_item_id'] == woItemId;
         },
         orElse: () => null,
       );
@@ -651,6 +655,7 @@ class _UpdateProcessState extends State<UpdateProcess>
     final grades = data['sorting']?['grades'] ?? [];
 
     final itemCode = item['finished_product']?['code']?.toString().trim();
+    final woItemId = item['wo_item_id'];
 
     double total = 0;
 
@@ -662,7 +667,7 @@ class _UpdateProcessState extends State<UpdateProcess>
           final gradeItemCode =
               gradeItem?['finished_product']?['code']?.toString().trim();
 
-          return gradeItemCode == itemCode;
+          return gradeItem?['wo_item_id'] == woItemId;
         },
         orElse: () => null,
       );
@@ -779,6 +784,21 @@ class _UpdateProcessState extends State<UpdateProcess>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    final woItems = widget.data['work_orders']['items'];
+
+    String getSpkNo(Map<String, dynamic> item) {
+      final woItemId = item['wo_item_id'];
+      final itemCode = item['finished_product']?['code'];
+
+      final matched = woItems.cast<Map<String, dynamic>?>().firstWhere(
+            (e) => e?['id'] == woItemId && e?['item_code'] == itemCode,
+            orElse: () => null,
+          );
+
+      return matched?['spk_no']?.toString() ?? woItemId.toString();
+    }
+
     return DefaultTabController(
       length: 2,
       child: GestureDetector(
@@ -1007,6 +1027,9 @@ class _UpdateProcessState extends State<UpdateProcess>
                                 if (widget.label == 'Long Hemming')
                                   LongHemmingWeightSection(
                                     items: widget.form['items'] ?? [],
+                                    workOrders: widget.data['work_orders']
+                                            ?['items'] ??
+                                        [],
                                     onChange: (index, key, value) {
                                       final items =
                                           List<Map<String, dynamic>>.from(
@@ -1023,6 +1046,9 @@ class _UpdateProcessState extends State<UpdateProcess>
                                   CuttingSewingQtySection(
                                     label: widget.label,
                                     items: widget.form['items'] ?? [],
+                                    workOrders: widget.data['work_orders']
+                                            ?['items'] ??
+                                        [],
                                     onChange: (index, key, value) {
                                       final items =
                                           List<Map<String, dynamic>>.from(
@@ -1065,6 +1091,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             padding: EdgeInsets.symmetric(
                                                 vertical: 6),
                                             child: TabBar(
+                                              isScrollable: true,
                                               dividerColor: Colors.transparent,
                                               labelColor: Colors.white,
                                               unselectedLabelColor:
@@ -1075,10 +1102,14 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                 borderRadius:
                                                     BorderRadius.circular(6),
                                               ),
+                                              tabAlignment: TabAlignment.start,
                                               tabs: [
-                                                for (final item
-                                                    in (widget.data['items'] ??
-                                                        []))
+                                                for (int index = 0;
+                                                    index <
+                                                        (widget.data['items'] ??
+                                                                [])
+                                                            .length;
+                                                    index++)
                                                   Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
@@ -1086,10 +1117,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                       horizontal: 8,
                                                     ),
                                                     child: Tab(
-                                                      text:
-                                                          item['finished_product']
-                                                                  ?['code'] ??
-                                                              '-',
+                                                      text: 'Item ${index + 1}',
                                                     ),
                                                   ),
                                               ],
@@ -1176,28 +1204,46 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                               BorderRadius
                                                                   .circular(8),
                                                         ),
-                                                        child: Column(
+                                                        child: Row(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
                                                                   .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
                                                           children: [
-                                                            Text(
-                                                              item['finished_product']
-                                                                      ?[
-                                                                      'code'] ??
-                                                                  '-',
-                                                              style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  item['finished_product']
+                                                                          ?[
+                                                                          'code'] ??
+                                                                      '-',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                    height: 4),
+                                                                Text(
+                                                                  item['finished_product']
+                                                                          ?[
+                                                                          'name'] ??
+                                                                      '-',
+                                                                ),
+                                                              ],
                                                             ),
-                                                            SizedBox(height: 4),
-                                                            Text(
-                                                              item['finished_product']
-                                                                      ?[
-                                                                      'name'] ??
-                                                                  '-',
+                                                            CustomBadge(
+                                                              status: 'Rework',
+                                                              title: getSpkNo(
+                                                                  item),
+                                                              rework: true,
                                                             ),
                                                           ],
                                                         ),

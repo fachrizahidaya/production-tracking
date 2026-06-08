@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
@@ -759,7 +761,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
               children: [
                 if (grade['code'] == 'A')
                   Text(
-                    '${getSpkNo(item)}',
+                    getSpkNo(item),
                     style: const TextStyle(
                       color: Colors.blue,
                     ),

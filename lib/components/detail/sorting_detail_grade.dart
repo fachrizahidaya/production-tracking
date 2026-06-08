@@ -332,7 +332,7 @@ class SortingDetailGradeList extends StatelessWidget {
               children: [
                 if (grade['code'] == 'A')
                   Text(
-                    '${getSpkNo(item)}',
+                    getSpkNo(item),
                     style: const TextStyle(
                       color: Colors.blue,
                     ),

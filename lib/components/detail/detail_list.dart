@@ -213,6 +213,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 widget.label != 'Cross Cutting' &&
                 widget.label != 'Sewing' &&
                 widget.label != 'Sorting' &&
+                widget.label != 'Embroidery' &&
+                widget.label != 'Printing' &&
                 widget.label != 'Packing')
               _buildQuickInfoRow(isTablet),
           ].separatedBy(CustomTheme().vGap('xl')),

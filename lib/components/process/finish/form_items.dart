@@ -1170,7 +1170,9 @@ class _FormItemsState extends State<FormItems>
                             tabAlignment: TabAlignment.start,
                             tabs: [
                               for (int index = 0;
-                                  index < (widget.data['items'] ?? []).length;
+                                  index <
+                                      ((widget.data?['items'] as List?) ?? [])
+                                          .length;
                                   index++)
                                 Padding(
                                   padding: const EdgeInsets.symmetric(

@@ -887,7 +887,11 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                                                             ? '${widget.data['sewing_no']}'
                                                                                             : widget.label == 'Sorting'
                                                                                                 ? '${widget.data['sorting_no']}'
-                                                                                                : '${widget.data['packing_no']}'
+                                                                                                : widget.label == 'Embroidery'
+                                                                                                    ? '${widget.data['emb_no']}'
+                                                                                                    : widget.label == 'Printing'
+                                                                                                        ? '${widget.data['print_no']}'
+                                                                                                        : '${widget.data['packing_no']}'
                                                             : '-',
                                                       ),
                                                     ),

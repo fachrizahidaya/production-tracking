@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/packing_number_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
@@ -1103,9 +1104,12 @@ class _UpdateProcessState extends State<UpdateProcess>
                                               ),
                                               tabAlignment: TabAlignment.start,
                                               tabs: [
-                                                for (final item
-                                                    in (widget.data['items'] ??
-                                                        []))
+                                                for (int index = 0;
+                                                    index <
+                                                        (widget.data['items'] ??
+                                                                [])
+                                                            .length;
+                                                    index++)
                                                   Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
@@ -1113,8 +1117,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                       horizontal: 8,
                                                     ),
                                                     child: Tab(
-                                                      text:
-                                                          '${item['finished_product']?['code'] ?? '-'} (${getSpkNo(item)})',
+                                                      text: 'Item ${index + 1}',
                                                     ),
                                                   ),
                                               ],
@@ -1201,28 +1204,46 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                               BorderRadius
                                                                   .circular(8),
                                                         ),
-                                                        child: Column(
+                                                        child: Row(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
                                                                   .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
                                                           children: [
-                                                            Text(
-                                                              item['finished_product']
-                                                                      ?[
-                                                                      'code'] ??
-                                                                  '-',
-                                                              style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  item['finished_product']
+                                                                          ?[
+                                                                          'code'] ??
+                                                                      '-',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                    height: 4),
+                                                                Text(
+                                                                  item['finished_product']
+                                                                          ?[
+                                                                          'name'] ??
+                                                                      '-',
+                                                                ),
+                                                              ],
                                                             ),
-                                                            SizedBox(height: 4),
-                                                            Text(
-                                                              item['finished_product']
-                                                                      ?[
-                                                                      'name'] ??
-                                                                  '-',
+                                                            CustomBadge(
+                                                              status: 'Rework',
+                                                              title: getSpkNo(
+                                                                  item),
+                                                              rework: true,
                                                             ),
                                                           ],
                                                         ),

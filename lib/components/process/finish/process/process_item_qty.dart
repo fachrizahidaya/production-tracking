@@ -73,108 +73,6 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
 
     final finished = item['finished_product'];
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// Semi Finished
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.orange.shade50,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: Colors.orange.shade100,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Produk Setengah Jadi',
-                  style: TextStyle(
-                    fontWeight: CustomTheme().fontWeight('semibold'),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  semiFinished?['code'] ?? '-',
-                ),
-                Text(
-                  semiFinished?['name'] ?? '-',
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          /// Finished Product
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.green.shade50,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: Colors.green.shade100,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Produk Jadi',
-                  style: TextStyle(
-                    fontWeight: CustomTheme().fontWeight('semibold'),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  finished?['code'] ?? '-',
-                ),
-                Text(
-                  finished?['name'] ?? '-',
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          SizedBox(
-            width: isTablet
-                ? (MediaQuery.of(context).size.width - 80) / 2
-                : double.infinity,
-            child: TextForm(
-              label: 'Qty Hasil ${widget.label} (PCS)',
-              controller: _qtyControllers[index],
-              initialValue: item['qty']?.toString() ?? '0',
-              req: false,
-              isNumber: true,
-              isSorting: true,
-              handleChange: (value) => _handleQty(
-                index,
-                value,
-              ),
-            ),
-          ),
-        ].separatedBy(
-          CustomTheme().vGap('lg'),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.items.isEmpty) {
-      return NoData();
-    }
-
     final woItems = widget.data;
 
     String getSpkNo(Map<String, dynamic> item) {
@@ -187,6 +85,143 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
           );
 
       return matched?['spk_no']?.toString() ?? woItemId.toString();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// Semi Finished
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.orange.shade100,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Produk Setengah Jadi',
+                      style: TextStyle(
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      semiFinished?['code'] ?? '-',
+                    ),
+                    Text(
+                      semiFinished?['name'] ?? '-',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            /// Finished Product
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.green.shade100,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Produk Jadi',
+                      style: TextStyle(
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      finished?['code'] ?? '-',
+                    ),
+                    Text(
+                      finished?['name'] ?? '-',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.green.shade100,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'No. SPK',
+                      style: TextStyle(
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      getSpkNo(item) ?? '-',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ].separatedBy(CustomTheme().hGap('xl')),
+        ),
+        SizedBox(
+          width: isTablet
+              ? (MediaQuery.of(context).size.width - 80) / 2
+              : double.infinity,
+          child: TextForm(
+            label: 'Qty Hasil ${widget.label} (PCS)',
+            controller: _qtyControllers[index],
+            initialValue: item['qty']?.toString() ?? '0',
+            req: false,
+            isNumber: true,
+            isSorting: true,
+            handleChange: (value) => _handleQty(
+              index,
+              value,
+            ),
+          ),
+        ),
+      ].separatedBy(
+        CustomTheme().vGap('lg'),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.items.isEmpty) {
+      return NoData();
     }
 
     /// SINGLE ITEM
@@ -232,17 +267,20 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     tabAlignment: TabAlignment.start,
-                    tabs: [
-                      for (final item in widget.items)
-                        Padding(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                          child: Tab(
-                            text:
-                                '${item['finished_product']?['code'] ?? '-'} (${getSpkNo(item)})',
-                          ),
+                    tabs: widget.items.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final item = entry.value;
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 4,
+                          horizontal: 8,
                         ),
-                    ],
+                        child: Tab(
+                          text: 'Item ${index + 1}',
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
               ),

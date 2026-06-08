@@ -1318,6 +1318,37 @@ Catatan WO
                     ),
                   ),
 
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.green.shade100,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'No. SPK',
+                          style: TextStyle(
+                            fontWeight: CustomTheme().fontWeight(
+                              'semibold',
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          getSpkNo(item) ?? '-',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
                 /// CROSS CUTTING / SEWING
                 if (isQtyProcess)
                   Expanded(
@@ -1341,76 +1372,6 @@ Catatan WO
                           const SizedBox(height: 4),
                           Text(
                             '${formatNumber(qty)} PCS',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: CustomTheme().fontWeight('bold'),
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (isPacking)
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(
-                        12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[50],
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey[200]!),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Hasil Packing',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            '${formatNumber(qty)} PCS',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: CustomTheme().fontWeight('bold'),
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (isPacking)
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(
-                        12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[50],
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey[200]!),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Gramasi',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            '${formatNumber(gsm)} GSM',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: CustomTheme().fontWeight('bold'),
@@ -1502,6 +1463,76 @@ Catatan WO
               children: [
                 Row(
                   children: [
+                    if (isPacking)
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(
+                            12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Hasil Packing',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                '${formatNumber(qty)} PCS',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: CustomTheme().fontWeight('bold'),
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    if (isPacking)
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(
+                            12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Gramasi',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                '${formatNumber(gsm)} GSM',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: CustomTheme().fontWeight('bold'),
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.all(
@@ -1649,8 +1680,7 @@ Catatan WO
                     return Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8),
                       child: Tab(
-                        text:
-                            '${item['finished_product']?['code'] ?? '-'} (${getSpkNo(item)})',
+                        text: 'Item ${index + 1}',
                       ),
                     );
                   },
@@ -2130,109 +2160,103 @@ Catatan WO
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.grey[200]!),
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: isTablet ? 12 : 11,
-                      color: Colors.grey[600],
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            value,
-                            style: TextStyle(
-                              fontSize: isTablet ? 14 : 13,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey[800],
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          if (widget.label != 'Sorting')
-                            Text(
-                              anotherValue,
-                              style: TextStyle(
-                                fontSize: isTablet ? 14 : 13,
-                                color: isProduct
-                                    ? Colors.grey[600]
-                                    : Colors.grey[800],
-                                fontWeight:
-                                    CustomTheme().fontWeight('semibold'),
-                              ),
-                              maxLines: 3,
-                              softWrap: true,
-                              overflow: TextOverflow.fade,
-                            ),
-                          if ((spkNo ?? '').isNotEmpty)
-                            Text(
-                              'SPK : $spkNo',
-                              style: TextStyle(
-                                fontSize: isTablet ? 12 : 11,
-                                color: Colors.blueGrey,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ].separatedBy(CustomTheme().hGap('sm')),
-                  ),
-                  if (label == 'Grade A' || label == 'Grade B')
-                    Text(
-                      'Produk Jadi',
-                      style: TextStyle(
-                        fontSize: isTablet ? 12 : 11,
-                        color: Colors.grey[600],
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  if (label == 'Grade A' || label == 'Grade B')
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: isTablet ? 12 : 11,
+                color: Colors.grey[600],
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          anotherValue,
+                          value,
                           style: TextStyle(
                             fontSize: isTablet ? 14 : 13,
-                            color:
-                                isProduct ? Colors.grey[600] : Colors.grey[800],
-                            fontWeight: CustomTheme().fontWeight('semibold'),
-                          ),
-                          maxLines: 3,
-                          softWrap: true,
-                          overflow: TextOverflow.fade,
-                        ),
-                        Text(
-                          nameValue,
-                          style: TextStyle(
-                            fontSize: isTablet ? 14 : 13,
-                            color:
-                                isProduct ? Colors.grey[600] : Colors.grey[600],
-                            fontWeight: CustomTheme().fontWeight('semibold'),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[800],
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
+                        if (widget.label != 'Sorting')
+                          Text(
+                            anotherValue,
+                            style: TextStyle(
+                              fontSize: isTablet ? 14 : 13,
+                              color: isProduct
+                                  ? Colors.grey[600]
+                                  : Colors.grey[800],
+                              fontWeight: CustomTheme().fontWeight('semibold'),
+                            ),
+                            maxLines: 3,
+                            softWrap: true,
+                            overflow: TextOverflow.fade,
+                          ),
                       ],
                     ),
-                ].separatedBy(CustomTheme().vGap('sm')),
-              ),
+                    if ((spkNo ?? '').isNotEmpty)
+                      CustomBadge(
+                        status: 'Rework',
+                        title: spkNo.toString(),
+                        rework: true,
+                      ),
+                  ],
+                ),
+              ],
             ),
-          ].separatedBy(CustomTheme().hGap('md')),
+            if (label == 'Grade A' || label == 'Grade B')
+              Text(
+                'Produk Jadi',
+                style: TextStyle(
+                  fontSize: isTablet ? 12 : 11,
+                  color: Colors.grey[600],
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            if (label == 'Grade A' || label == 'Grade B')
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    anotherValue,
+                    style: TextStyle(
+                      fontSize: isTablet ? 14 : 13,
+                      color: isProduct ? Colors.grey[600] : Colors.grey[800],
+                      fontWeight: CustomTheme().fontWeight('semibold'),
+                    ),
+                    maxLines: 3,
+                    softWrap: true,
+                    overflow: TextOverflow.fade,
+                  ),
+                  Text(
+                    nameValue,
+                    style: TextStyle(
+                      fontSize: isTablet ? 14 : 13,
+                      color: isProduct ? Colors.grey[600] : Colors.grey[600],
+                      fontWeight: CustomTheme().fontWeight('semibold'),
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+          ].separatedBy(CustomTheme().vGap('sm')),
         ),
       ),
     );

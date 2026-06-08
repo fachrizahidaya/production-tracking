@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
@@ -239,6 +241,7 @@ class _SortingSectionState extends State<SortingSection> {
           'item_grade_id': itemGrade['id'],
           'name': itemGrade['name'],
           'code': itemGrade['code'],
+          'spk_no': spkNoMap[item['wo_item_id']],
           'qty': item['qty'] ?? 0,
           'notes': grade['notes'],
           'semifinished_product_id': item['semifinished_product_id'],
@@ -395,6 +398,7 @@ class _SortingSectionState extends State<SortingSection> {
               'item_grade_id': gradeAOption['value'],
               'name': 'Grade A',
               'code': 'A',
+              'spk_no': woItem['spk_no'],
               'qty': 0,
               'notes': null,
               'semifinished_product_id': gradeAItem?['value'],
@@ -706,16 +710,18 @@ class _SortingSectionState extends State<SortingSection> {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 tabAlignment: TabAlignment.start,
-                tabs: [
-                  for (final item in items)
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                      child: Tab(
-                        text:
-                            '${item['finished_product']?['code']} (${getSpkNo(item)})',
-                      ),
+                tabs: List.generate(
+                  items.length,
+                  (index) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4,
+                      horizontal: 8,
                     ),
-                ],
+                    child: Tab(
+                      text: 'Item ${index + 1}',
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -853,9 +859,17 @@ class _SortingSectionState extends State<SortingSection> {
     int itemIndex,
     int gradeIndex,
   ) {
+    final item = _items[itemIndex];
+
     final grade = _items[itemIndex]['grades'][gradeIndex];
 
     final isBS = (grade['code'] ?? '').toString().toUpperCase() == 'BS';
+
+    final items = _items ?? [];
+
+    String getSpkNo(Map<String, dynamic> item) {
+      return item['spk_no']?.toString() ?? '-';
+    }
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -887,6 +901,21 @@ class _SortingSectionState extends State<SortingSection> {
 | PRODUCT INFO
 |--------------------------------------------------------------------------
 */
+          Expanded(
+            flex: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (grade['code'] == 'A')
+                  Text(
+                    getSpkNo(item),
+                    style: const TextStyle(
+                      color: Colors.blue,
+                    ),
+                  ),
+              ],
+            ),
+          ),
           Expanded(
             flex: 2,
             child: Column(

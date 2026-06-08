@@ -2,6 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/packing_number_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
@@ -398,19 +399,15 @@ class _FormItemsState extends State<FormItems>
     final grades = processData['sorting']?['grades'] ?? [];
 
     final itemCode = item['finished_product']?['code']?.toString().trim();
+    final woItemId = item['wo_item_id'];
 
     for (final grade in grades) {
       final gradeItems = grade['items'] ?? [];
 
       final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
-        (gradeItem) {
-          final gradeItemCode =
-              gradeItem?['finished_product']?['code']?.toString().trim();
-
-          return gradeItemCode == itemCode;
-        },
-        orElse: () => null,
-      );
+            (gradeItem) => gradeItem?['wo_item_id'] == woItemId,
+            orElse: () => null,
+          );
 
       if (matched != null) {
         totalQty += parseInput(matched['qty']) +
@@ -626,6 +623,7 @@ class _FormItemsState extends State<FormItems>
     double gradeBS = 0;
 
     final itemCode = item['finished_product']?['code']?.toString().trim();
+    final woItemId = item['wo_item_id'];
 
     for (final grade in grades) {
       final gradeCode = grade['item_grade']?['code']?.toString().trim();
@@ -633,14 +631,9 @@ class _FormItemsState extends State<FormItems>
       final gradeItems = grade['items'] ?? [];
 
       final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
-        (gradeItem) {
-          final gradeItemCode =
-              gradeItem?['finished_product']?['code']?.toString().trim();
-
-          return gradeItemCode == itemCode;
-        },
-        orElse: () => null,
-      );
+            (gradeItem) => gradeItem?['wo_item_id'] == woItemId,
+            orElse: () => null,
+          );
 
       if (matched != null) {
         final qty = parseInput(matched['qty']);
@@ -669,6 +662,7 @@ class _FormItemsState extends State<FormItems>
     final grades = data['sorting']?['grades'] ?? [];
 
     final itemCode = item['finished_product']?['code']?.toString().trim();
+    final woItemId = item['wo_item_id'];
 
     double total = 0;
 
@@ -676,14 +670,9 @@ class _FormItemsState extends State<FormItems>
       final gradeItems = grade['items'] ?? [];
 
       final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
-        (gradeItem) {
-          final gradeItemCode =
-              gradeItem?['finished_product']?['code']?.toString().trim();
-
-          return gradeItemCode == itemCode;
-        },
-        orElse: () => null,
-      );
+            (gradeItem) => gradeItem?['wo_item_id'] == woItemId,
+            orElse: () => null,
+          );
 
       if (matched != null) {
         total += parseInput(matched['spraying']) +
@@ -781,6 +770,24 @@ class _FormItemsState extends State<FormItems>
     final semiFinishedProducts = this.semiFinishedProducts;
     final items =
         (widget.form['items'] is List) ? safeItems : <Map<String, dynamic>>[];
+
+    final woItems = widget.processData['work_orders']?['items'];
+
+    String getSpkNo(Map<String, dynamic> item) {
+      final woItemId = item['wo_item_id'];
+      final itemCode = item['finished_product']?['code'];
+
+      if (woItems == null || woItems is! List) {
+        return woItemId?.toString() ?? '-';
+      }
+
+      final matched = woItems.cast<Map<String, dynamic>>().firstWhere(
+            (e) => e['id'] == woItemId && e['item_code'] == itemCode,
+            orElse: () => <String, dynamic>{},
+          );
+
+      return matched['spk_no']?.toString() ?? woItemId?.toString() ?? '-';
+    }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -979,6 +986,7 @@ class _FormItemsState extends State<FormItems>
               else if (widget.label == 'Long Hemming')
                 LongHemmingItemsWeightSection(
                   items: widget.form['items'] ?? [],
+                  data: widget.processData['work_orders']?['items'],
                   onChange: (index, key, value) {
                     final items =
                         List<Map<String, dynamic>>.from(widget.form['items']);
@@ -994,6 +1002,7 @@ class _FormItemsState extends State<FormItems>
                 ProcessItemsQtySection(
                   label: widget.label,
                   items: widget.form['items'] ?? [],
+                  data: widget.processData['work_orders']?['items'],
                   onChange: (index, key, value) {
                     final items = List<Map<String, dynamic>>.from(
                       widget.form['items'],
@@ -1055,39 +1064,47 @@ class _FormItemsState extends State<FormItems>
                             ),
                           ),
                         const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Colors.grey.shade200,
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      selectedSemiFinishedItem?['code'] ?? '-',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      selectedSemiFinishedItem?['name'] ?? '-',
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey.shade200,
                             ),
-                          ],
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    selectedSemiFinishedItem?['code'] ?? '-',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    selectedSemiFinishedItem?['name'] ?? '-',
+                                    style: TextStyle(
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              if ((selectedSemiFinishedItem?['spk_no'] ?? '')
+                                  .toString()
+                                  .isNotEmpty)
+                                CustomBadge(
+                                  status: 'Rework',
+                                  title: selectedSemiFinishedItem?['spk_no'],
+                                  rework: true,
+                                ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -1144,6 +1161,7 @@ class _FormItemsState extends State<FormItems>
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 6),
                           child: TabBar(
+                            isScrollable: true,
                             dividerColor: Colors.transparent,
                             labelColor: Colors.white,
                             unselectedLabelColor: Colors.black,
@@ -1152,17 +1170,18 @@ class _FormItemsState extends State<FormItems>
                               color: Colors.blue[800],
                               borderRadius: BorderRadius.circular(6),
                             ),
+                            tabAlignment: TabAlignment.start,
                             tabs: [
-                              for (final item
-                                  in (widget.processData['items'] ?? []))
+                              for (int index = 0;
+                                  index < (widget.data['items'] ?? []).length;
+                                  index++)
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 4,
                                     horizontal: 8,
                                   ),
                                   child: Tab(
-                                    text: item['finished_product']?['code'] ??
-                                        '-',
+                                    text: 'Item ${index + 1}',
                                   ),
                                 ),
                             ],
@@ -1258,7 +1277,7 @@ class _FormItemsState extends State<FormItems>
                             );
 
                             return TemplateCard(
-                              title: item['finished_product']?['code'] ?? '-',
+                              title: 'Material',
                               icon: Icons.inventory_2_outlined,
                               child: Column(
                                 children: [
@@ -1269,21 +1288,36 @@ class _FormItemsState extends State<FormItems>
                                       color: Colors.grey.shade50,
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: Column(
+                                    child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          item['finished_product']?['code'] ??
-                                              '-',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              item['finished_product']
+                                                      ?['code'] ??
+                                                  '-',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              item['finished_product']
+                                                      ?['name'] ??
+                                                  '-',
+                                            ),
+                                          ],
                                         ),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          item['finished_product']?['name'] ??
-                                              '-',
+                                        CustomBadge(
+                                          status: 'Rework',
+                                          title: getSpkNo(item),
+                                          rework: true,
                                         ),
                                       ],
                                     ),

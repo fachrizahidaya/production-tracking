@@ -761,6 +761,7 @@ Info Material
           'label': 'Produk Setengah Jadi',
           'value': item['code'] ?? '-',
           'another_value': item['name'] ?? '-',
+          'spk_no': item['spk_no'] ?? '-',
           'icon': Icons.inventory_2_outlined,
           'is_product': true,
         };
@@ -777,6 +778,10 @@ Info Material
       return NoData();
     }
 
+    final woItems = List<Map<String, dynamic>>.from(
+      widget.data['work_orders']?['items'] ?? [],
+    );
+
     final mappedItems = items.map((item) {
       final semiFinished = item['semifinished_product'];
       final finished = item['finished_product'];
@@ -785,10 +790,22 @@ Info Material
 
       final product = isPacking ? finished : semiFinished;
 
+      String spkNo = '-';
+
+      final woItemId = item['wo_item_id'];
+
+      final matchedWo = woItems.cast<Map<String, dynamic>>().firstWhere(
+            (e) => e['id'] == woItemId,
+            orElse: () => <String, dynamic>{},
+          );
+
+      spkNo = matchedWo['spk_no']?.toString() ?? '-';
+
       return {
         'label': isPacking ? 'Produk Jadi' : 'Produk Setengah Jadi',
         'value': product?['code'] ?? '-',
         'another_value': product?['name'] ?? '-',
+        'spk_no': spkNo,
         'icon': Icons.inventory_2_outlined,
         'is_product': true,
       };
@@ -1162,6 +1179,20 @@ Catatan WO
 
     final bool isPacking = widget.label == 'Packing';
 
+    String getSpkNo(Map<String, dynamic> item) {
+      final woItemId = item['wo_item_id'];
+
+      try {
+        final matched = widget.data['work_orders']?['items'].firstWhere(
+          (e) => e['id'] == woItemId,
+        );
+
+        return matched['spk_no']?.toString() ?? '-';
+      } catch (_) {
+        return '-';
+      }
+    }
+
     Widget buildItem(dynamic item) {
       final semiFinished = item['semifinished_product'];
 
@@ -1287,6 +1318,37 @@ Catatan WO
                     ),
                   ),
 
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.green.shade100,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'No. SPK',
+                          style: TextStyle(
+                            fontWeight: CustomTheme().fontWeight(
+                              'semibold',
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          getSpkNo(item) ?? '-',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
                 /// CROSS CUTTING / SEWING
                 if (isQtyProcess)
                   Expanded(
@@ -1310,76 +1372,6 @@ Catatan WO
                           const SizedBox(height: 4),
                           Text(
                             '${formatNumber(qty)} PCS',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: CustomTheme().fontWeight('bold'),
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (isPacking)
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(
-                        12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[50],
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey[200]!),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Hasil Packing',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            '${formatNumber(qty)} PCS',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: CustomTheme().fontWeight('bold'),
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (isPacking)
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(
-                        12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[50],
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey[200]!),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Gramasi',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            '${formatNumber(gsm)} GSM',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: CustomTheme().fontWeight('bold'),
@@ -1471,6 +1463,76 @@ Catatan WO
               children: [
                 Row(
                   children: [
+                    if (isPacking)
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(
+                            12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Hasil Packing',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                '${formatNumber(qty)} PCS',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: CustomTheme().fontWeight('bold'),
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    if (isPacking)
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(
+                            12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Gramasi',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                '${formatNumber(gsm)} GSM',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: CustomTheme().fontWeight('bold'),
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.all(
@@ -1597,21 +1659,33 @@ Catatan WO
               color: Colors.grey.shade100,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: TabBar(
-              isScrollable: true,
-              dividerColor: Colors.transparent,
-              tabAlignment: TabAlignment.start,
-              tabs: items.asMap().entries.map(
-                (entry) {
-                  final index = entry.key;
-                  final item = entry.value;
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: TabBar(
+                isScrollable: true,
+                dividerColor: Colors.transparent,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.black,
+                indicatorColor: Colors.white,
+                indicator: BoxDecoration(
+                  color: Colors.blue[800],
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                tabAlignment: TabAlignment.start,
+                tabs: items.asMap().entries.map(
+                  (entry) {
+                    final index = entry.key;
+                    final item = entry.value;
 
-                  return Tab(
-                    text: item['finished_product']?['code'] ??
-                        'Produk ${index + 1}',
-                  );
-                },
-              ).toList(),
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Tab(
+                        text: 'Item ${index + 1}',
+                      ),
+                    );
+                  },
+                ).toList(),
+              ),
             ),
           ),
           SizedBox(
@@ -1927,11 +2001,12 @@ Catatan WO
               runSpacing: 16,
               children: items.map((item) {
                 return SizedBox(
-                  width: (MediaQuery.of(context).size.width - 80) / 2,
-                  child: _buildMultiInfoItem(
+                    width: (MediaQuery.of(context).size.width - 80) / 2,
+                    child: _buildMultiInfoItem(
                       label: item['label'],
                       value: item['value'],
                       anotherValue: item['another_value'],
+                      spkNo: item['spk_no'],
                       icon: item['icon'],
                       id: item['id'].toString(),
                       isTablet: isTablet,
@@ -1939,19 +2014,20 @@ Catatan WO
                       rightIcon: item['right-icon'],
                       isProduct: item['is_product'] ?? false,
                       isGrade: item['is_grade'] ?? false,
-                      nameValue: item['name_value']),
-                );
+                      nameValue: item['name_value'],
+                    ));
               }).toList(),
             )
           : Row(
               spacing: 16,
               children: items.map((item) {
                 return SizedBox(
-                  width: (MediaQuery.of(context).size.width - 80) / 2,
-                  child: _buildMultiInfoItem(
+                    width: (MediaQuery.of(context).size.width - 80) / 2,
+                    child: _buildMultiInfoItem(
                       label: item['label'],
                       value: item['value'],
                       anotherValue: item['another_value'],
+                      spkNo: item['spk_no'],
                       icon: item['icon'],
                       id: item['id'].toString(),
                       isTablet: isTablet,
@@ -1959,8 +2035,8 @@ Catatan WO
                       rightIcon: item['right-icon'],
                       isProduct: item['is_product'] ?? false,
                       isGrade: item['is_grade'] ?? false,
-                      nameValue: item['name_value']),
-                );
+                      nameValue: item['name_value'],
+                    ));
               }).toList());
     }
 
@@ -2061,18 +2137,20 @@ Catatan WO
   }
 
   /// Multi Info Item
-  Widget _buildMultiInfoItem(
-      {required String label,
-      required String value,
-      required String anotherValue,
-      required String id,
-      required IconData icon,
-      required bool isTablet,
-      navigateTo,
-      rightIcon,
-      isProduct,
-      isGrade,
-      nameValue}) {
+  Widget _buildMultiInfoItem({
+    required String label,
+    required String value,
+    required String anotherValue,
+    required String id,
+    required IconData icon,
+    required bool isTablet,
+    navigateTo,
+    rightIcon,
+    isProduct,
+    isGrade,
+    nameValue,
+    String? spkNo,
+  }) {
     return GestureDetector(
       onTap: navigateTo,
       child: Container(
@@ -2082,100 +2160,103 @@ Catatan WO
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.grey[200]!),
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: isTablet ? 12 : 11,
-                      color: Colors.grey[600],
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            value,
-                            style: TextStyle(
-                              fontSize: isTablet ? 14 : 13,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey[800],
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          if (widget.label != 'Sorting')
-                            Text(
-                              anotherValue,
-                              style: TextStyle(
-                                fontSize: isTablet ? 14 : 13,
-                                color: isProduct
-                                    ? Colors.grey[600]
-                                    : Colors.grey[800],
-                                fontWeight:
-                                    CustomTheme().fontWeight('semibold'),
-                              ),
-                              maxLines: 3,
-                              softWrap: true,
-                              overflow: TextOverflow.fade,
-                            ),
-                        ],
-                      ),
-                    ].separatedBy(CustomTheme().hGap('sm')),
-                  ),
-                  if (label == 'Grade A' || label == 'Grade B')
-                    Text(
-                      'Produk Jadi',
-                      style: TextStyle(
-                        fontSize: isTablet ? 12 : 11,
-                        color: Colors.grey[600],
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  if (label == 'Grade A' || label == 'Grade B')
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: isTablet ? 12 : 11,
+                color: Colors.grey[600],
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          anotherValue,
+                          value,
                           style: TextStyle(
                             fontSize: isTablet ? 14 : 13,
-                            color:
-                                isProduct ? Colors.grey[600] : Colors.grey[800],
-                            fontWeight: CustomTheme().fontWeight('semibold'),
-                          ),
-                          maxLines: 3,
-                          softWrap: true,
-                          overflow: TextOverflow.fade,
-                        ),
-                        Text(
-                          nameValue,
-                          style: TextStyle(
-                            fontSize: isTablet ? 14 : 13,
-                            color:
-                                isProduct ? Colors.grey[600] : Colors.grey[600],
-                            fontWeight: CustomTheme().fontWeight('semibold'),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[800],
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
+                        if (widget.label != 'Sorting')
+                          Text(
+                            anotherValue,
+                            style: TextStyle(
+                              fontSize: isTablet ? 14 : 13,
+                              color: isProduct
+                                  ? Colors.grey[600]
+                                  : Colors.grey[800],
+                              fontWeight: CustomTheme().fontWeight('semibold'),
+                            ),
+                            maxLines: 3,
+                            softWrap: true,
+                            overflow: TextOverflow.fade,
+                          ),
                       ],
                     ),
-                ].separatedBy(CustomTheme().vGap('sm')),
-              ),
+                    if ((spkNo ?? '').isNotEmpty)
+                      CustomBadge(
+                        status: 'Rework',
+                        title: spkNo.toString(),
+                        rework: true,
+                      ),
+                  ],
+                ),
+              ],
             ),
-          ].separatedBy(CustomTheme().hGap('md')),
+            if (label == 'Grade A' || label == 'Grade B')
+              Text(
+                'Produk Jadi',
+                style: TextStyle(
+                  fontSize: isTablet ? 12 : 11,
+                  color: Colors.grey[600],
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            if (label == 'Grade A' || label == 'Grade B')
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    anotherValue,
+                    style: TextStyle(
+                      fontSize: isTablet ? 14 : 13,
+                      color: isProduct ? Colors.grey[600] : Colors.grey[800],
+                      fontWeight: CustomTheme().fontWeight('semibold'),
+                    ),
+                    maxLines: 3,
+                    softWrap: true,
+                    overflow: TextOverflow.fade,
+                  ),
+                  Text(
+                    nameValue,
+                    style: TextStyle(
+                      fontSize: isTablet ? 14 : 13,
+                      color: isProduct ? Colors.grey[600] : Colors.grey[600],
+                      fontWeight: CustomTheme().fontWeight('semibold'),
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+          ].separatedBy(CustomTheme().vGap('sm')),
         ),
       ),
     );
@@ -2274,7 +2355,7 @@ Catatan WO
                     ),
                     const SizedBox(width: 4),
                     Padding(
-                      padding: const EdgeInsets.only(
+                      padding: EdgeInsets.only(
                         bottom: 3,
                       ),
                       child: Text(

@@ -2,6 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/packing_number_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
@@ -1060,54 +1061,47 @@ class _FormItemsState extends State<FormItems>
                             ),
                           ),
                         const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Colors.grey.shade200,
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      selectedSemiFinishedItem?['code'] ?? '-',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      selectedSemiFinishedItem?['name'] ?? '-',
-                                      style: TextStyle(
-                                        color: Colors.grey.shade700,
-                                      ),
-                                    ),
-                                    if ((selectedSemiFinishedItem?['spk_no'] ??
-                                            '')
-                                        .toString()
-                                        .isNotEmpty)
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 4),
-                                        child: Text(
-                                          'SPK : ${selectedSemiFinishedItem?['spk_no']}',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.blueGrey.shade700,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey.shade200,
                             ),
-                          ],
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    selectedSemiFinishedItem?['code'] ?? '-',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    selectedSemiFinishedItem?['name'] ?? '-',
+                                    style: TextStyle(
+                                      color: Colors.grey.shade700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              if ((selectedSemiFinishedItem?['spk_no'] ?? '')
+                                  .toString()
+                                  .isNotEmpty)
+                                CustomBadge(
+                                  status: 'Rework',
+                                  title: selectedSemiFinishedItem?['spk_no'],
+                                  rework: true,
+                                ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -1175,16 +1169,16 @@ class _FormItemsState extends State<FormItems>
                             ),
                             tabAlignment: TabAlignment.start,
                             tabs: [
-                              for (final item
-                                  in (widget.processData['items'] ?? []))
+                              for (int index = 0;
+                                  index < (widget.data['items'] ?? []).length;
+                                  index++)
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 4,
                                     horizontal: 8,
                                   ),
                                   child: Tab(
-                                    text:
-                                        '${item['finished_product']?['code'] ?? '-'} (${getSpkNo(item)})',
+                                    text: 'Item ${index + 1}',
                                   ),
                                 ),
                             ],
@@ -1280,7 +1274,7 @@ class _FormItemsState extends State<FormItems>
                             );
 
                             return TemplateCard(
-                              title: item['finished_product']?['code'] ?? '-',
+                              title: 'Material',
                               icon: Icons.inventory_2_outlined,
                               child: Column(
                                 children: [
@@ -1291,21 +1285,36 @@ class _FormItemsState extends State<FormItems>
                                       color: Colors.grey.shade50,
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: Column(
+                                    child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          item['finished_product']?['code'] ??
-                                              '-',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              item['finished_product']
+                                                      ?['code'] ??
+                                                  '-',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              item['finished_product']
+                                                      ?['name'] ??
+                                                  '-',
+                                            ),
+                                          ],
                                         ),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          item['finished_product']?['name'] ??
-                                              '-',
+                                        CustomBadge(
+                                          status: 'Rework',
+                                          title: getSpkNo(item),
+                                          rework: true,
                                         ),
                                       ],
                                     ),

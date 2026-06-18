@@ -186,6 +186,20 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                                 )
                               ].separatedBy(CustomTheme().hGap('md')),
                             ),
+                          if (widget.data['rework_dyeing'] == true &&
+                              (widget.label == 'Press' ||
+                                  widget.label == 'Tumbler'))
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CustomBadge(
+                                  withStatus: true,
+                                  status: 'Rework',
+                                  title: 'Rework',
+                                  rework: true,
+                                ),
+                              ].separatedBy(CustomTheme().hGap('md')),
+                            ),
                         ].separatedBy(CustomTheme().hGap('xl')),
                       ),
                       Row(

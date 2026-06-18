@@ -38,9 +38,9 @@ class _ItemTabState extends State<ItemTab> {
       (sum, item) => sum + (item['qty'] ?? 0) as int,
     );
 
-    final int totalBerat = items.fold<int>(
+    final double totalBerat = items.fold<double>(
       0,
-      (sum, item) => sum + ((item['weight'] ?? 0) as int),
+      (sum, item) => sum + ((item['weight'] ?? 0) as num).toDouble(),
     );
 
     return TemplateCard(

@@ -545,7 +545,9 @@ class _SpkMaterialItem extends StatelessWidget {
         CustomBadge(
           title: item['status']?.toString() ?? '-',
           withStatus: false,
-          status: 'Diproses',
+          status: item['status']?.toString() == 'Belum Diproses'
+              ? 'Menunggu Diproses'
+              : 'Diproses',
         ),
       ].separatedBy(CustomTheme().vGap('sm')),
     );

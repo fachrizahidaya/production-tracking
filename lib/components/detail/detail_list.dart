@@ -519,8 +519,11 @@ Work Order
                         ),
                         SizedBox(height: 4),
                         Text(
-                          DateFormat("dd MMM yyyy").format(DateTime.parse(
-                              widget.data['work_orders']['wo_date'])),
+                          DateFormat('dd MMM yyyy').format(
+                            DateTime.parse(
+                              widget.data['work_orders']['wo_date'],
+                            ).toLocal(),
+                          ),
                           style: TextStyle(
                             fontSize: CustomTheme().fontSize('base'),
                             fontWeight: FontWeight.w600,

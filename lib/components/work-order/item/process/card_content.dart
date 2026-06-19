@@ -66,8 +66,8 @@ class _CardContentState extends State<CardContent> {
           if (widget.processKey == 'sorting')
             _buildSortingSection(mainData, widget.isTablet),
 
-          if (widget.processKey == 'packing')
-            _buildPackingSection(mainData, widget.isTablet),
+          // if (widget.processKey == 'packing')
+          //   _buildPackingSection(mainData, widget.isTablet),
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
@@ -173,34 +173,42 @@ class _CardContentState extends State<CardContent> {
     bool isTablet,
     String processKey,
   ) {
-    if (processKey == 'long_hemming') {
-      return Row(
-        children: [
-          if (data['good_weight'] != null)
-            Expanded(
-              child: _buildInfoCard(
-                icon: Icons.check_circle_outline,
-                label: 'Berat Bagus',
-                value: formatNumber(data['good_weight']),
-                unit: data['good_weight_unit']?['code']?.toString(),
-                color: Colors.green,
-                isTablet: isTablet,
-              ),
-            ),
-          if (data['bs_weight'] != null)
-            Expanded(
-              child: _buildInfoCard(
-                icon: Icons.cancel_outlined,
-                label: 'Berat BS',
-                value: formatNumber(data['bs_weight']),
-                unit: data['bs_weight_unit']?['code']?.toString(),
-                color: Colors.red,
-                isTablet: isTablet,
-              ),
-            ),
-        ].separatedBy(CustomTheme().hGap('lg')),
-      );
-    }
+    // if (processKey == 'long_hemming') {
+    //   final outputs = data['material_outputs'] as List? ?? [];
+
+    //   double goodWeight = 0;
+    //   double bsWeight = 0;
+
+    //   for (final item in outputs) {
+    //     goodWeight += ((item['good_weight'] ?? 0) as num).toDouble();
+    //     bsWeight += ((item['bs_weight'] ?? 0) as num).toDouble();
+    //   }
+
+    //   return Row(
+    //     children: [
+    //       Expanded(
+    //         child: _buildInfoCard(
+    //           icon: Icons.check_circle_outline,
+    //           label: 'Berat Bagus',
+    //           value: formatNumber(goodWeight),
+    //           unit: 'KG',
+    //           color: Colors.green,
+    //           isTablet: isTablet,
+    //         ),
+    //       ),
+    //       Expanded(
+    //         child: _buildInfoCard(
+    //           icon: Icons.cancel_outlined,
+    //           label: 'Berat BS',
+    //           value: formatNumber(bsWeight),
+    //           unit: 'KG',
+    //           color: Colors.red,
+    //           isTablet: isTablet,
+    //         ),
+    //       ),
+    //     ].separatedBy(CustomTheme().hGap('lg')),
+    //   );
+    // }
 
     // 🔹 DEFAULT (existing logic)
     return Row(
@@ -737,6 +745,12 @@ class _CardContentState extends State<CardContent> {
   }
 
   Widget _buildPackingSection(Map<String, dynamic> data, bool isTablet) {
+    final outputs = data['material_outputs'] as List? ?? [];
+
+    if (outputs.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     final qty = data['qty'] ?? 0;
     final unit = data['unit']?['code'] ?? '';
 
@@ -840,7 +854,10 @@ class _CardContentState extends State<CardContent> {
     Map<String, dynamic> data,
     bool isTablet,
   ) {
-    final List items = data['items'] ?? [];
+    final List items = ['long_hemming', 'cross_cutting', 'sewing', 'packing']
+            .contains(widget.processKey)
+        ? (data['material_outputs'] ?? [])
+        : (data['items'] ?? []);
 
     if (items.isEmpty) {
       return SizedBox.shrink();
@@ -859,7 +876,10 @@ class _CardContentState extends State<CardContent> {
               /// ✅ PACKING = finished product
               final productionItem = widget.processKey == 'packing'
                   ? item['finished_product']
-                  : item['semifinished_product'];
+                  : ['long_hemming', 'cross_cutting', 'sewing']
+                          .contains(widget.processKey)
+                      ? item['finished_product']
+                      : item['semifinished_product'];
 
               final goodWeight = item['good_weight'];
               final bsWeight = item['bs_weight'];
@@ -1154,6 +1174,10 @@ class _CardContentState extends State<CardContent> {
         return data['cc_no'];
       case 'sewing':
         return data['sewing_no'];
+      case 'embroidery':
+        return data['emb_no'];
+      case 'printing':
+        return data['print_no'];
       case 'sorting':
         return data['sorting_no'];
       case 'packing':

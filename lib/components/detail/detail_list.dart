@@ -1260,13 +1260,44 @@ Catatan WO
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      // color: Colors.green.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.green.shade100,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'No. SPK',
+                          style: TextStyle(
+                            fontWeight: CustomTheme().fontWeight(
+                              'semibold',
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          getSpkNo(item) ?? '-',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
                 if (widget.label != 'Packing')
                   Expanded(
                     child: Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.orange.shade50,
+                        // color: Colors.orange.shade50,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: Colors.orange.shade100,
@@ -1305,7 +1336,7 @@ Catatan WO
                       width: double.infinity,
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.green.shade50,
+                        // color: Colors.green.shade50,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: Colors.green.shade100,
@@ -1336,72 +1367,39 @@ Catatan WO
                       ),
                     ),
                   ),
-
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade50,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: Colors.green.shade100,
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'No. SPK',
-                          style: TextStyle(
-                            fontWeight: CustomTheme().fontWeight(
-                              'semibold',
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          getSpkNo(item) ?? '-',
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                /// CROSS CUTTING / SEWING
-                if (isQtyProcess)
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[50],
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey[200]!),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Qty Hasil',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${formatNumber(qty)} PCS',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: CustomTheme().fontWeight('bold'),
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
               ].separatedBy(CustomTheme().hGap('xl')),
+            ),
+
+          /// CROSS CUTTING / SEWING
+          if (isQtyProcess)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[200]!),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Qty Hasil',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${formatNumber(qty)} PCS',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: CustomTheme().fontWeight('bold'),
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                ],
+              ),
             ),
 
           /// LONG HEMMING

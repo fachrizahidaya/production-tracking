@@ -6,6 +6,7 @@ import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/process/create/tab_section.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
+import 'package:textile_tracking/models/master/spk.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
@@ -59,6 +60,8 @@ class CreateProcessManual extends StatefulWidget {
 class _CreateProcessManualState extends State<CreateProcessManual> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final WorkOrderService _workOrderService = WorkOrderService();
+  final SpkService _spkService = SpkService();
+
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
   final TextEditingController _maklonNameController = TextEditingController();
 
@@ -67,6 +70,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   bool _isFetchingMachine = false;
   List<dynamic> workOrderOption = [];
   List<dynamic> machineOption = [];
+  List<Map<String, dynamic>> spkDocuments = [];
 
   Map<String, dynamic> data = {};
   Map<String, dynamic> woData = {};
@@ -76,6 +80,10 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   @override
   void initState() {
     super.initState();
+
+    spkDocuments = List<Map<String, dynamic>>.from(
+      widget.form?['spk_documents'] ?? [],
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchWorkOrder();
@@ -172,6 +180,39 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
     });
   }
 
+  Future<void> _fetchSpkDocuments() async {
+    final items = List<Map<String, dynamic>>.from(
+      woData['items'] ?? [],
+    );
+
+    final Map<String, Map<String, dynamic>> docs = {};
+
+    for (final item in items) {
+      final spkId = item['spk_id']?.toString();
+
+      if (spkId == null || docs.containsKey(spkId)) {
+        continue;
+      }
+
+      try {
+        final result = await _spkService.getDocuments(spkId);
+
+        docs[spkId] = {
+          'spk_id': item['spk_id'],
+          'spk_no': result['spk_no'] ?? item['spk_no'],
+          'notes': result['notes'] ?? '',
+          'attachments': List<Map<String, dynamic>>.from(
+            result['attachments'] ?? [],
+          ),
+        };
+      } catch (_) {}
+    }
+
+    setState(() {
+      spkDocuments = docs.values.toList();
+    });
+  }
+
   void _selectWorkOrder() {
     if (_isFetchingWorkOrder) {
       showDialog(
@@ -210,6 +251,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
 
             if (woId != null && woId.isNotEmpty) {
               await _getDataView(woId);
+              await _fetchSpkDocuments();
 
               final params = extractSemiFinishedParams(
                 woData['items'] ?? [],
@@ -383,6 +425,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
       isSubmitting: _isSubmitting,
       selectMachine: _selectMachine,
       selectWorkOrder: _selectWorkOrder,
+      spkDocuments: spkDocuments,
     );
   }
 }

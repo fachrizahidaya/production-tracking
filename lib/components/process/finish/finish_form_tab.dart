@@ -171,11 +171,11 @@ class _FinishFormTabState extends State<FinishFormTab>
   Widget build(BuildContext context) {
     super.build(context);
 
-    if (widget.isLoading) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
+    // if (widget.isLoading) {
+    //   return Center(
+    //     child: CircularProgressIndicator(),
+    //   );
+    // }
 
     return LayoutBuilder(
       builder: (context, constraints) {

@@ -6,6 +6,7 @@ import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/process/create/form_info_tab.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/components/spk/tab/note_attachment_spk.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -27,6 +28,7 @@ class TabSection extends StatefulWidget {
   final isSubmitting;
   final selectMachine;
   final selectWorkOrder;
+  final spkDocuments;
 
   const TabSection(
       {super.key,
@@ -46,7 +48,8 @@ class TabSection extends StatefulWidget {
       this.withOnlyMaklon,
       this.woData,
       this.processData,
-      this.isMaklon});
+      this.isMaklon,
+      this.spkDocuments});
 
   @override
   State<TabSection> createState() => _TabSectionState();
@@ -181,69 +184,100 @@ class _TabSectionState extends State<TabSection> {
           widget.form?['wo_id'] == null || widget.form?['machine_id'] == null;
     }
 
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        backgroundColor: Color(0xFFf9fafc),
-        appBar: CustomAppBar(
-          title: widget.title,
-          onReturn: () => _handleCancel(context),
-        ),
-        body: SafeArea(
-          child: FormInfoTab(
-            data: widget.woData,
-            processData: widget.processData,
-            id: widget.id,
-            isLoading: widget.firstLoading,
-            label: widget.label,
-            form: widget.form,
-            formKey: widget.formKey,
-            handleSelectMachine: widget.selectMachine,
-            handleSelectWorkOrder: widget.selectWorkOrder,
-            maklonName: widget.maklonName,
-            withMaklonOrMachine: widget.withMaklonOrMachine,
-            withOnlyMaklon: widget.withOnlyMaklon,
-            withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
-            isMaklon: widget.isMaklon,
+    return DefaultTabController(
+      length: 2,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          backgroundColor: const Color(0xFFf9fafc),
+          appBar: CustomAppBar(
+            title: widget.title,
+            onReturn: () => _handleCancel(context),
           ),
-        ),
-        bottomNavigationBar: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-              color: Colors.white,
-              child: ValueListenableBuilder<bool>(
-                valueListenable: widget.isSubmitting,
-                builder: (context, isSubmitting, _) {
-                  return Row(
+          body: SafeArea(
+            child: Column(
+              children: [
+                Container(
+                  color: Colors.white,
+                  child: const TabBar(
+                    tabs: [
+                      Tab(text: 'Form'),
+                      Tab(text: 'Catatan & Lampiran SPK'),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(
                     children: [
-                      Expanded(
-                        child: CancelButton(
-                          label: 'Batal',
-                          onPressed: () => _handleCancel(context),
-                          customHeight: 56.0,
-                          fontSize: CustomTheme().fontSize('xl'),
-                        ),
+                      FormInfoTab(
+                        data: widget.woData,
+                        processData: widget.processData,
+                        id: widget.id,
+                        isLoading: widget.firstLoading,
+                        label: widget.label,
+                        form: widget.form,
+                        formKey: widget.formKey,
+                        handleSelectMachine: widget.selectMachine,
+                        handleSelectWorkOrder: widget.selectWorkOrder,
+                        maklonName: widget.maklonName,
+                        withMaklonOrMachine: widget.withMaklonOrMachine,
+                        withOnlyMaklon: widget.withOnlyMaklon,
+                        withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
+                        isMaklon: widget.isMaklon,
                       ),
-                      Expanded(
+                      NoteAttachmentSpk(
+                        documents: widget.spkDocuments,
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          bottomNavigationBar: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 24,
+                ),
+                color: Colors.white,
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: widget.isSubmitting,
+                  builder: (context, isSubmitting, _) {
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: CancelButton(
+                            label: 'Batal',
+                            onPressed: () => _handleCancel(context),
+                            customHeight: 56.0,
+                            fontSize: CustomTheme().fontSize('xl'),
+                          ),
+                        ),
+                        Expanded(
                           child: FormButton(
-                        label: 'Mulai',
-                        isDisabled: isDisabled,
-                        onPressed: () {
-                          _handleSubmit(context);
-                        },
-                        customHeight: 56.0,
-                        fontSize: CustomTheme().fontSize('xl'),
-                      ))
-                    ].separatedBy(CustomTheme().hGap('xl')),
-                  );
-                },
+                            label: 'Mulai',
+                            isDisabled: isDisabled,
+                            onPressed: () {
+                              _handleSubmit(context);
+                            },
+                            customHeight: 56.0,
+                            fontSize: CustomTheme().fontSize('xl'),
+                          ),
+                        ),
+                      ].separatedBy(
+                        CustomTheme().hGap('xl'),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),

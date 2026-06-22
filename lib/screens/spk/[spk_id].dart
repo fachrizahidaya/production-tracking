@@ -60,7 +60,7 @@ class _SpkDetailState extends State<SpkDetail> {
               Container(
                 color: Colors.white,
                 child: TabBar(
-                  isScrollable: true,
+                  isScrollable: false,
                   tabs: [
                     Tab(text: 'Informasi'),
                     Tab(text: 'Catatan'),

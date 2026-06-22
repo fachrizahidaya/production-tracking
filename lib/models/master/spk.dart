@@ -41,4 +41,27 @@ class SpkService extends ChangeNotifier {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>> getDocuments(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final token = prefs.getString('access_token');
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/$id/documents'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    final responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return Map<String, dynamic>.from(
+        responseData['data'] ?? {},
+      );
+    }
+
+    throw responseData['message'];
+  }
 }

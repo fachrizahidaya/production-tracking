@@ -14,15 +14,16 @@ class MachineEditSection extends StatefulWidget {
   final handleSelectMachine;
   final getMachineStatus;
   final newMachines;
+  final withAddMachine;
 
-  const MachineEditSection({
-    super.key,
-    this.data,
-    this.form,
-    this.handleSelectMachine,
-    this.getMachineStatus,
-    this.newMachines,
-  });
+  const MachineEditSection(
+      {super.key,
+      this.data,
+      this.form,
+      this.handleSelectMachine,
+      this.getMachineStatus,
+      this.newMachines,
+      this.withAddMachine = true});
 
   @override
   State<MachineEditSection> createState() => _MachineEditSectionState();
@@ -212,63 +213,64 @@ class _MachineEditSectionState extends State<MachineEditSection> {
         ),
 
         /// TAMBAH MESIN
-        GestureDetector(
-          onTap: () async {
-            final newMachine = await widget.handleSelectMachine();
+        if (widget.withAddMachine == true)
+          GestureDetector(
+            onTap: () async {
+              final newMachine = await widget.handleSelectMachine();
 
-            if (newMachine == null) return;
+              if (newMachine == null) return;
 
-            setState(() {
-              final current = List<Map<String, dynamic>>.from(
-                widget.data['machines'] ?? [],
-              );
-
-              final isDuplicate = current.any((m) {
-                final existingId = m['machine']?['id'];
-
-                final existingStatus = m['status'] ?? 'Tersedia';
-
-                return existingId.toString() == newMachine['id'].toString() &&
-                    existingStatus != 'Selesai';
-              });
-
-              if (!isDuplicate) {
-                final newItem = {
-                  'machine': newMachine,
-                  'status': 'Tersedia',
-                };
-
-                current.add(newItem);
-
-                widget.newMachines.add(newItem);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Mesin ini sudah ada dalam daftar',
-                    ),
-                    backgroundColor: Colors.orange,
-                    duration: Duration(seconds: 2),
-                  ),
+              setState(() {
+                final current = List<Map<String, dynamic>>.from(
+                  widget.data['machines'] ?? [],
                 );
-              }
 
-              widget.data['machines'] = current;
-              widget.form['machines'] = current;
-            });
-          },
-          child: Container(
-            height: 48,
-            margin: EdgeInsets.only(top: 8),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(
-              child: Text('+ Tambah Mesin'),
+                final isDuplicate = current.any((m) {
+                  final existingId = m['machine']?['id'];
+
+                  final existingStatus = m['status'] ?? 'Tersedia';
+
+                  return existingId.toString() == newMachine['id'].toString() &&
+                      existingStatus != 'Selesai';
+                });
+
+                if (!isDuplicate) {
+                  final newItem = {
+                    'machine': newMachine,
+                    'status': 'Tersedia',
+                  };
+
+                  current.add(newItem);
+
+                  widget.newMachines.add(newItem);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Mesin ini sudah ada dalam daftar',
+                      ),
+                      backgroundColor: Colors.orange,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+
+                widget.data['machines'] = current;
+                widget.form['machines'] = current;
+              });
+            },
+            child: Container(
+              height: 48,
+              margin: EdgeInsets.only(top: 8),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: Text('+ Tambah Mesin'),
+              ),
             ),
           ),
-        ),
       ].separatedBy(CustomTheme().vGap('lg')),
     );
   }

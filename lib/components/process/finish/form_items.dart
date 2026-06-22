@@ -18,6 +18,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/screens/update/process/machine.dart';
 
 class FormItems extends StatefulWidget {
   final id;
@@ -81,6 +82,9 @@ class FormItems extends StatefulWidget {
   final finishedItemGood;
   final finishedItemGrb;
   final isInitializing;
+  final getMachineStatus;
+  final handleSelectMachine;
+  final newMachines;
 
   const FormItems(
       {super.key,
@@ -144,7 +148,10 @@ class FormItems extends StatefulWidget {
       this.dyeingQty,
       this.finishedItemGood,
       this.finishedItemGrb,
-      this.isInitializing});
+      this.isInitializing,
+      this.getMachineStatus,
+      this.handleSelectMachine,
+      this.newMachines});
 
   @override
   State<FormItems> createState() => _FormItemsState();
@@ -948,12 +955,17 @@ class _FormItemsState extends State<FormItems>
                 widget.label == 'Cross Cutting' ||
                 widget.label == 'Sewing'))
           TemplateCard(
-              title: 'Mesin',
-              icon: Icons.local_laundry_service_outlined,
-              child: FormHelpers.buildMachine(
-                context: context,
-                machines: widget.processData['machines'] ?? [],
-              )),
+            title: 'Mesin',
+            icon: Icons.local_laundry_service_outlined,
+            child: MachineEditSection(
+              data: widget.processData,
+              form: widget.form,
+              getMachineStatus: widget.getMachineStatus,
+              handleSelectMachine: widget.handleSelectMachine,
+              newMachines: widget.newMachines ?? [],
+              withAddMachine: false,
+            ),
+          ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

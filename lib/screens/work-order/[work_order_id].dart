@@ -64,7 +64,7 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
               children: [
                 Container(
                   color: Colors.white,
-                  child: TabBar(isScrollable: true, tabs: [
+                  child: TabBar(isScrollable: false, tabs: [
                     Tab(
                       text: 'Informasi',
                     ),

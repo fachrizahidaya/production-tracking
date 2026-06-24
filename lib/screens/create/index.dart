@@ -278,6 +278,95 @@ class _CreateProcessState extends State<CreateProcess> {
         _form['items'] = items;
       }
 
+      final semiFinishedService = Provider.of<OptionItemSemiFinishedService>(
+        context,
+        listen: false,
+      );
+
+      final params = extractSemiFinishedParams(
+        data['items'] ?? [],
+      );
+
+      await semiFinishedService.fetchOptions(
+        isInitialLoad: true,
+        process:
+            widget.label.toString().trim().toLowerCase().replaceAll(' ', '_'),
+        baseCodes: params['base_codes'] ?? [],
+        colorCodes: params['color_codes'] ?? [],
+      );
+
+      final semiFinishedItems = semiFinishedService.dataListOption;
+
+      final baseCodes = params['base_codes'] ?? [];
+      final colorCodes = params['color_codes'] ?? [];
+
+      if (widget.label == 'Dyeing' ||
+          widget.label == 'Press' ||
+          widget.label == 'Tumbler' ||
+          widget.label == 'Stenter' ||
+          widget.label == 'Long Slitting' ||
+          widget.label == 'Packing') {
+        final List<Map<String, dynamic>> items = [];
+
+        for (int i = 0; i < baseCodes.length; i++) {
+          final baseCode = baseCodes[i].toString();
+          final colorCode =
+              i < colorCodes.length ? colorCodes[i].toString() : '';
+
+          dynamic semiFinishedId;
+
+          for (final sf in semiFinishedItems) {
+            final sfCode = sf['code']?.toString() ?? '';
+
+            final sfParts = sfCode.split('-');
+
+            final sfBaseCode = sfParts.isNotEmpty ? sfParts.first : '';
+            final sfColorCode = sfParts.isNotEmpty ? sfParts.last : '';
+
+            if (sfBaseCode == baseCode && sfColorCode == colorCode) {
+              semiFinishedId = sf['value'];
+              break;
+            }
+          }
+
+          items.add({
+            'item_id': semiFinishedId,
+          });
+        }
+
+        _form['semifinished_products'] = items;
+      } else {
+        final List<Map<String, dynamic>> items = [];
+
+        for (int i = 0; i < baseCodes.length; i++) {
+          final baseCode = baseCodes[i].toString();
+          final colorCode =
+              i < colorCodes.length ? colorCodes[i].toString() : '';
+
+          dynamic semiFinishedId;
+
+          for (final sf in semiFinishedItems) {
+            final sfCode = sf['code']?.toString() ?? '';
+
+            final sfParts = sfCode.split('-');
+
+            final sfBaseCode = sfParts.isNotEmpty ? sfParts.first : '';
+            final sfColorCode = sfParts.isNotEmpty ? sfParts.last : '';
+
+            if (sfBaseCode == baseCode && sfColorCode == colorCode) {
+              semiFinishedId = sf['value'];
+              break;
+            }
+          }
+
+          items.add({
+            'semifinished_product_id': semiFinishedId,
+          });
+        }
+
+        _form['items'] = items;
+      }
+
       _form['wo_id'] = data['id']?.toString() ?? woId;
       _form['no_wo'] = data['wo_no']?.toString() ?? woNo;
       _form['process_id'] = processId;

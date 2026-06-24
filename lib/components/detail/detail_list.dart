@@ -186,6 +186,20 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                                 )
                               ].separatedBy(CustomTheme().hGap('md')),
                             ),
+                          if (widget.data['rework_dyeing'] == true &&
+                              (widget.label == 'Press' ||
+                                  widget.label == 'Tumbler'))
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CustomBadge(
+                                  withStatus: true,
+                                  status: 'Rework',
+                                  title: 'Rework',
+                                  rework: true,
+                                ),
+                              ].separatedBy(CustomTheme().hGap('md')),
+                            ),
                         ].separatedBy(CustomTheme().hGap('xl')),
                       ),
                       Row(
@@ -213,6 +227,8 @@ class _DetailListState extends State<DetailList> with TickerProviderStateMixin {
                 widget.label != 'Cross Cutting' &&
                 widget.label != 'Sewing' &&
                 widget.label != 'Sorting' &&
+                widget.label != 'Embroidery' &&
+                widget.label != 'Printing' &&
                 widget.label != 'Packing')
               _buildQuickInfoRow(isTablet),
           ].separatedBy(CustomTheme().vGap('xl')),
@@ -503,8 +519,11 @@ Work Order
                         ),
                         SizedBox(height: 4),
                         Text(
-                          DateFormat("dd MMM yyyy").format(DateTime.parse(
-                              widget.data['work_orders']['wo_date'])),
+                          DateFormat('dd MMM yyyy').format(
+                            DateTime.parse(
+                              widget.data['work_orders']['wo_date'],
+                            ).toLocal(),
+                          ),
                           style: TextStyle(
                             fontSize: CustomTheme().fontSize('base'),
                             fontWeight: FontWeight.w600,
@@ -1241,13 +1260,44 @@ Catatan WO
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      // color: Colors.green.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.green.shade100,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'No. SPK',
+                          style: TextStyle(
+                            fontWeight: CustomTheme().fontWeight(
+                              'semibold',
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          getSpkNo(item) ?? '-',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
                 if (widget.label != 'Packing')
                   Expanded(
                     child: Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.orange.shade50,
+                        // color: Colors.orange.shade50,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: Colors.orange.shade100,
@@ -1286,7 +1336,7 @@ Catatan WO
                       width: double.infinity,
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.green.shade50,
+                        // color: Colors.green.shade50,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: Colors.green.shade100,
@@ -1317,72 +1367,39 @@ Catatan WO
                       ),
                     ),
                   ),
-
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade50,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: Colors.green.shade100,
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'No. SPK',
-                          style: TextStyle(
-                            fontWeight: CustomTheme().fontWeight(
-                              'semibold',
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          getSpkNo(item) ?? '-',
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                /// CROSS CUTTING / SEWING
-                if (isQtyProcess)
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[50],
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey[200]!),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Qty Hasil',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${formatNumber(qty)} PCS',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: CustomTheme().fontWeight('bold'),
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
               ].separatedBy(CustomTheme().hGap('xl')),
+            ),
+
+          /// CROSS CUTTING / SEWING
+          if (isQtyProcess)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[200]!),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Qty Hasil',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${formatNumber(qty)} PCS',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: CustomTheme().fontWeight('bold'),
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                ],
+              ),
             ),
 
           /// LONG HEMMING

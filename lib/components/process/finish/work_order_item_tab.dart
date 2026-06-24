@@ -25,13 +25,14 @@ class _WorkOrderItemTabState extends State<WorkOrderItemTab> {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> items =
         (widget.data?['items'] ?? []).cast<Map<String, dynamic>>();
-    final int totalQty = items.fold<int>(
+    final double totalQty = items.fold<double>(
       0,
-      (sum, item) => sum + (item['qty'] ?? 0) as int,
+      (sum, item) => sum + ((item['qty'] ?? 0) as num).toDouble(),
     );
-    final int totalBerat = items.fold<int>(
+
+    final double totalBerat = items.fold<double>(
       0,
-      (sum, item) => sum + ((item['weight'] ?? 0) as int),
+      (sum, item) => sum + ((item['weight'] ?? 0) as num).toDouble(),
     );
     final spkNo = widget.data?['items']?[0]?['spk_no'] ?? '-';
 

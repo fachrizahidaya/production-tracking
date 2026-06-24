@@ -8,6 +8,7 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/process/finish/finish_submit_section.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
+import 'package:textile_tracking/models/master/spk.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
@@ -71,11 +72,13 @@ class FinishProcess extends StatefulWidget {
 class _FinishProcessState extends State<FinishProcess> {
   final MobileScannerController _controller = MobileScannerController();
   final WorkOrderService _workOrderService = WorkOrderService();
+  final SpkService _spkService = SpkService();
 
   final ValueNotifier<bool> _firstLoading = ValueNotifier(false);
   bool _isLoading = false;
   bool _isScannerStopped = false;
 
+  List<Map<String, dynamic>> spkDocuments = [];
   List<dynamic> workOrderOption = [];
   List<dynamic> finishedItemOption = [];
   List<dynamic> finishedItemOptionGrb = [];
@@ -360,6 +363,41 @@ class _FinishProcessState extends State<FinishProcess> {
     });
   }
 
+  Future<void> _fetchSpkDocuments(
+    Map<String, dynamic> woData,
+  ) async {
+    final items = List<Map<String, dynamic>>.from(
+      woData['items'] ?? [],
+    );
+
+    final Map<String, Map<String, dynamic>> docs = {};
+
+    for (final item in items) {
+      final spkId = item['spk_id']?.toString();
+
+      if (spkId == null || docs.containsKey(spkId)) {
+        continue;
+      }
+
+      try {
+        final result = await _spkService.getDocuments(
+          spkId,
+        );
+
+        docs[spkId] = {
+          'spk_id': item['spk_id'],
+          'spk_no': result['spk_no'] ?? item['spk_no'],
+          'notes': result['notes'] ?? '',
+          'attachments': List<Map<String, dynamic>>.from(
+            result['attachments'] ?? [],
+          ),
+        };
+      } catch (_) {}
+    }
+
+    spkDocuments = docs.values.toList();
+  }
+
   Future<void> _handleScan(code) async {
     setState(() => _isLoading = true);
     try {
@@ -421,6 +459,9 @@ class _FinishProcessState extends State<FinishProcess> {
 
       final data = _workOrderService.dataView;
       await _handleFetchSemiFinishedItems(data);
+      await _fetchSpkDocuments(data);
+
+      _form['spk_documents'] = spkDocuments;
       final greigeQty = data['greige_qty'];
       final totalWeight = _getTotalItemWeight(data);
 

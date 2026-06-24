@@ -8,11 +8,13 @@ import 'package:textile_tracking/components/process/finish/work_order_info_tab.d
 import 'package:textile_tracking/components/process/finish/finish_form_tab.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/components/spk/tab/note_attachment_spk.dart';
 import 'package:textile_tracking/helpers/result/safe_to_api.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/helpers/result/to_double.dart';
 import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
+import 'package:textile_tracking/models/master/spk.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
@@ -84,6 +86,7 @@ class FinishProcessManual extends StatefulWidget {
 
 class _FinishProcessManualState extends State<FinishProcessManual> {
   final WorkOrderService _workOrderService = WorkOrderService();
+  final SpkService _spkService = SpkService();
   bool _firstLoading = false;
   bool _isFetchingWorkOrder = false;
   bool _isFetchingFinishedMaterial = false;
@@ -127,6 +130,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   late List<dynamic> unitOption = [];
   late List<dynamic> finishedItemGrb = [];
   late List<dynamic> finishedItemGood = [];
+  List<Map<String, dynamic>> spkDocuments = [];
 
   Map<String, dynamic> woData = {};
   Map<String, dynamic> data = {};
@@ -143,6 +147,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   @override
   void initState() {
     super.initState();
+
+    spkDocuments = List<Map<String, dynamic>>.from(
+      widget.form?['spk_documents'] ?? [],
+    );
 
     _packingQtyController.text = widget.form?['qty']?.toString() ?? '';
     _qtyController.text = widget.form?['qty']?.toString() ?? '';
@@ -818,6 +826,39 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+  Future<void> _fetchSpkDocuments() async {
+    final items = List<Map<String, dynamic>>.from(
+      woData['items'] ?? [],
+    );
+
+    final Map<String, Map<String, dynamic>> docs = {};
+
+    for (final item in items) {
+      final spkId = item['spk_id']?.toString();
+
+      if (spkId == null || docs.containsKey(spkId)) {
+        continue;
+      }
+
+      try {
+        final result = await _spkService.getDocuments(spkId);
+
+        docs[spkId] = {
+          'spk_id': item['spk_id'],
+          'spk_no': result['spk_no'] ?? item['spk_no'],
+          'notes': result['notes'] ?? '',
+          'attachments': List<Map<String, dynamic>>.from(
+            result['attachments'] ?? [],
+          ),
+        };
+      } catch (_) {}
+    }
+
+    setState(() {
+      spkDocuments = docs.values.toList();
+    });
+  }
+
   _selectWorkOrder() {
     showSelectDialog(
       context: context,
@@ -855,6 +896,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         await _getDataView(
           e['value'].toString(),
         );
+
+        await _fetchSpkDocuments();
 
         /*
       |--------------------------------------------------------------------------
@@ -1338,7 +1381,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
@@ -1364,80 +1407,82 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                     Tab(
                       text: 'Info WO',
                     ),
+                    Tab(
+                      text: 'Catatan & Lampiran SPK',
+                    ),
                   ]),
                 ),
                 Expanded(
                   child: TabBarView(
                     children: [
-                      _firstLoading
-                          ? Center(child: CircularProgressIndicator())
-                          : FinishFormTab(
-                              id: widget.id,
-                              isLoading: _firstLoading,
-                              form: widget.form,
-                              formKey: _formKey,
-                              handleSelectMachine: null,
-                              handleSelectLengthUnit: _selectLengthUnit,
-                              handleChangeInput: _handleChangeInput,
-                              handleSelectUnit: _selectUnit,
-                              handleSelectWidthUnit: _selectWidthUnit,
-                              qty: _qtyItemController,
-                              dyeingQty: _qtyController,
-                              packingQty: _packingQtyController,
-                              length: _lengthController,
-                              width: _widthController,
-                              note: _noteController,
-                              qtyItem: _qtyControllers,
-                              weight: _weightController,
-                              gsm: _gsmController,
-                              weightDozen: _weightDozenController,
-                              weightGradeA: _weightGradeAController,
-                              totalWeight: _totalWeightController,
-                              handleSelectWo: _selectWorkOrder,
-                              handleSelectFinishedMaterial:
-                                  _selectFinishedMaterial,
-                              handleSelectQtyUnitItem: _selectQtyItemUnit,
-                              handleSelectQtyUnitDyeing: _selectQtyDyeingUnit,
-                              processId: processId,
-                              processData: data,
-                              withItemGrade: widget.withItemGrade,
-                              itemGradeOption: itemGradeOption,
-                              handleSelectQtyUnit: _selectQtyUnit,
-                              withQtyAndWeight: widget.withQtyAndWeight,
-                              label: widget.label,
-                              forDyeing: widget.forDyeing,
-                              data: data['work_orders'],
-                              forPacking: widget.forPacking,
-                              forHemming: widget.forHemming,
-                              forSewing: widget.forSewing,
-                              validateWeight: _validateWeight,
-                              weightWarning: _weightWarningValidationMessage,
-                              validateQty: _validateQty,
-                              qtyWarning: _itemWarningValidationMessage,
-                              handleRemainingQtyForGrade:
-                                  getRemainingQtyForGrade,
-                              handleTotalItemQty: getTotalItemQty,
-                              onGradeChanged: _onGradeChanged,
-                              dyeingLotNo: _dyeingLotNoController,
-                              weightDefect: _weightDefectController,
-                              combing: _combingController,
-                              spraying: _sprayingController,
-                              reworkLongHemming: _reworkLongHemmingController,
-                              weightGood: _weightGoodController,
-                              woData: woData,
-                              itemTypeOption: itemTypeOption,
-                              defects: _defects,
-                              defectQty: _defectQtyControllers,
-                              handleUpdateDefect: updateDefect,
-                              finishedItem: finishedItemOption,
-                              finishedItemGood: finishedItemGood,
-                              finishedItemGrb: finishedItemGrb,
-                              isInitializing: _isInitializingSorting,
-                            ),
+                      FinishFormTab(
+                        id: widget.id,
+                        isLoading: _firstLoading,
+                        form: widget.form,
+                        formKey: _formKey,
+                        handleSelectMachine: null,
+                        handleSelectLengthUnit: _selectLengthUnit,
+                        handleChangeInput: _handleChangeInput,
+                        handleSelectUnit: _selectUnit,
+                        handleSelectWidthUnit: _selectWidthUnit,
+                        qty: _qtyItemController,
+                        dyeingQty: _qtyController,
+                        packingQty: _packingQtyController,
+                        length: _lengthController,
+                        width: _widthController,
+                        note: _noteController,
+                        qtyItem: _qtyControllers,
+                        weight: _weightController,
+                        gsm: _gsmController,
+                        weightDozen: _weightDozenController,
+                        weightGradeA: _weightGradeAController,
+                        totalWeight: _totalWeightController,
+                        handleSelectWo: _selectWorkOrder,
+                        handleSelectFinishedMaterial: _selectFinishedMaterial,
+                        handleSelectQtyUnitItem: _selectQtyItemUnit,
+                        handleSelectQtyUnitDyeing: _selectQtyDyeingUnit,
+                        processId: processId,
+                        processData: data,
+                        withItemGrade: widget.withItemGrade,
+                        itemGradeOption: itemGradeOption,
+                        handleSelectQtyUnit: _selectQtyUnit,
+                        withQtyAndWeight: widget.withQtyAndWeight,
+                        label: widget.label,
+                        forDyeing: widget.forDyeing,
+                        data: data['work_orders'],
+                        forPacking: widget.forPacking,
+                        forHemming: widget.forHemming,
+                        forSewing: widget.forSewing,
+                        validateWeight: _validateWeight,
+                        weightWarning: _weightWarningValidationMessage,
+                        validateQty: _validateQty,
+                        qtyWarning: _itemWarningValidationMessage,
+                        handleRemainingQtyForGrade: getRemainingQtyForGrade,
+                        handleTotalItemQty: getTotalItemQty,
+                        onGradeChanged: _onGradeChanged,
+                        dyeingLotNo: _dyeingLotNoController,
+                        weightDefect: _weightDefectController,
+                        combing: _combingController,
+                        spraying: _sprayingController,
+                        reworkLongHemming: _reworkLongHemmingController,
+                        weightGood: _weightGoodController,
+                        woData: woData,
+                        itemTypeOption: itemTypeOption,
+                        defects: _defects,
+                        defectQty: _defectQtyControllers,
+                        handleUpdateDefect: updateDefect,
+                        finishedItem: finishedItemOption,
+                        finishedItemGood: finishedItemGood,
+                        finishedItemGrb: finishedItemGrb,
+                        isInitializing: _isInitializingSorting,
+                      ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],
                         label: widget.label,
                       ),
+                      NoteAttachmentSpk(
+                        documents: spkDocuments,
+                      )
                     ],
                   ),
                 )

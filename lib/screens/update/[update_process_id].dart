@@ -10,7 +10,6 @@ import 'package:textile_tracking/components/master/form/packing_number_form.dart
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
-import 'package:textile_tracking/components/process/finish/process/form_helpers.dart';
 import 'package:textile_tracking/components/update/detail_work_order.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/format_idr.dart';
@@ -775,12 +774,6 @@ class _UpdateProcessState extends State<UpdateProcess>
     }
   }
 
-  bool _isDataEmpty() {
-    if (_grades.isEmpty) return true;
-
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -1067,18 +1060,14 @@ class _UpdateProcessState extends State<UpdateProcess>
                                       );
                                     },
                                   ),
-                                if (widget.label == 'Sorting' && _isDataEmpty())
-                                  FormHelpers.buildEmptyState(true)
-                                else ...[
-                                  if (widget.label == 'Sorting')
-                                    SortingEditSection(
-                                      form: widget.form,
-                                      itemGradeOption: widget.itemGradeOption,
-                                      updateTotalSorting: _updateTotalSorting,
-                                      itemTypeOption: widget.itemTypeOption,
-                                      data: widget.data,
-                                    ),
-                                ],
+                                if (widget.label == 'Sorting')
+                                  SortingEditSection(
+                                    form: widget.form,
+                                    itemGradeOption: widget.itemGradeOption,
+                                    updateTotalSorting: _updateTotalSorting,
+                                    itemTypeOption: widget.itemTypeOption,
+                                    data: widget.data,
+                                  ),
                                 if (widget.label == 'Packing')
                                   DefaultTabController(
                                     length: (widget.form['items'] ?? []).length,

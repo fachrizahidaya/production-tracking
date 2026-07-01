@@ -1301,6 +1301,62 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     return machines.every((m) => m?['status'] == 'Selesai');
   }
 
+  List<Map<String, dynamic>> _buildSortingGradesFallbackPayload() {
+    final formGrades = widget.form?['grades'];
+    final hasNestedFormGrades = formGrades is List &&
+        formGrades.any((grade) {
+          final items = grade is Map ? grade['items'] : null;
+          return items is List && items.isNotEmpty;
+        });
+    final rawGrades = hasNestedFormGrades ? formGrades : data['grades'];
+
+    final grades = List<Map<String, dynamic>>.from(
+      rawGrades ?? [],
+    );
+
+    return grades.map<Map<String, dynamic>>((grade) {
+      final itemGrade = grade['item_grade'];
+      final gradeCode = itemGrade?['code'] ?? grade['code'];
+      final gradeId = grade['item_grade_id'] ?? itemGrade?['id'];
+      final items = List<Map<String, dynamic>>.from(
+        grade['items'] ?? [],
+      );
+      final isBS = gradeCode.toString().toUpperCase() == 'BS';
+
+      return {
+        'item_grade_id': gradeId,
+        'notes': grade['notes'] ?? 'Grade ${grade['name'] ?? gradeCode}',
+        'items': items.map<Map<String, dynamic>>((item) {
+          return {
+            'item_id': item['item_id'],
+            'semifinished_product_id': item['semifinished_product_id'],
+            'qty': toDouble(item['qty']),
+            'spraying': toDouble(item['spraying'] ?? 0),
+            'rework_long_hemming': toDouble(
+              item['rework_long_hemming'] ?? 0,
+            ),
+            'combing': toDouble(item['combing'] ?? 0),
+            if (isBS)
+              'defects': List<Map<String, dynamic>>.from(
+                item['defects'] ?? [],
+              ).map((defect) {
+                return {
+                  'defect_type_id':
+                      defect['defect_type_id'] ?? defect['type']?['id'],
+                  'qty': toDouble(defect['qty']),
+                };
+              }).toList(),
+          };
+        }).toList(),
+      };
+    }).where((grade) {
+      final items = grade['items'] as List?;
+      return grade['item_grade_id'] != null &&
+          items != null &&
+          items.isNotEmpty;
+    }).toList();
+  }
+
   List<Map<String, dynamic>> buildGradesPayload() {
     final items = List<Map<String, dynamic>>.from(
       widget.form?['items'] ?? [],
@@ -1358,10 +1414,16 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       }
     }
 
-    return groupedGrades.values.where((e) {
+    final payload = groupedGrades.values.where((e) {
       final items = e['items'] as List?;
       return items != null && items.isNotEmpty;
     }).toList();
+
+    if (payload.isNotEmpty || widget.label != 'Sorting') {
+      return payload;
+    }
+
+    return _buildSortingGradesFallbackPayload();
   }
 
   @override

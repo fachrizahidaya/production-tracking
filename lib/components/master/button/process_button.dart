@@ -123,9 +123,8 @@ class _ProcessButtonState extends State<ProcessButton> {
             ? hasInvalidQtyItems()
             : false;
 
-    final bool isDisabled = widget.withItemGrade == true
-        ? !widget.isQtyFullyDistributed()
-        : hasBasicError || hasWeightItemError || hasQtyItemError;
+    final bool isDisabled =
+        hasBasicError || hasWeightItemError || hasQtyItemError;
 
     return SafeArea(
       child: Padding(

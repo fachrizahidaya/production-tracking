@@ -278,15 +278,6 @@ class _CreateProcessState extends State<CreateProcess> {
         _form['items'] = items;
       }
 
-      final semiFinishedService = Provider.of<OptionItemSemiFinishedService>(
-        context,
-        listen: false,
-      );
-
-      final params = extractSemiFinishedParams(
-        data['items'] ?? [],
-      );
-
       await semiFinishedService.fetchOptions(
         isInitialLoad: true,
         process:
@@ -294,11 +285,6 @@ class _CreateProcessState extends State<CreateProcess> {
         baseCodes: params['base_codes'] ?? [],
         colorCodes: params['color_codes'] ?? [],
       );
-
-      final semiFinishedItems = semiFinishedService.dataListOption;
-
-      final baseCodes = params['base_codes'] ?? [];
-      final colorCodes = params['color_codes'] ?? [];
 
       if (widget.label == 'Dyeing' ||
           widget.label == 'Press' ||

@@ -1414,10 +1414,16 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       }
     }
 
-    return groupedGrades.values.where((e) {
+    final payload = groupedGrades.values.where((e) {
       final items = e['items'] as List?;
       return items != null && items.isNotEmpty;
     }).toList();
+
+    if (payload.isNotEmpty || widget.label != 'Sorting') {
+      return payload;
+    }
+
+    return _buildSortingGradesFallbackPayload();
   }
 
   @override

@@ -40,7 +40,7 @@ class SpkInfoTab extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _SpkHeader(data: data, isTablet: isTablet),
-              _SpkWorkOrderCard(data: data),
+              _SpkDeadlineCard(data: data),
               _SpkMaterialCard(data: data),
               AttachmentTab(existingAttachment: data['attachments'] ?? []),
             ].separatedBy(CustomTheme().vGap('2xl')),
@@ -181,7 +181,9 @@ class _SpkHeader extends StatelessWidget {
     if (value == null || value.toString().isEmpty) return '-';
 
     try {
-      return DateFormat('dd MMM yyyy').format(DateTime.parse(value.toString()));
+      final date = DateTime.parse(value.toString()).toLocal();
+
+      return DateFormat('dd MMM yyyy').format(date);
     } catch (_) {
       return value.toString();
     }
@@ -238,59 +240,6 @@ class _QuickInfoItem extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
       ].separatedBy(CustomTheme().vGap('sm')),
-    );
-  }
-}
-
-class _SpkWorkOrderCard extends StatelessWidget {
-  final Map<String, dynamic> data;
-
-  const _SpkWorkOrderCard({required this.data});
-
-  @override
-  Widget build(BuildContext context) {
-    final workOrders = (data['work_orders'] ?? []) as List<dynamic>;
-
-    return TemplateCard(
-      title: 'Work Order',
-      icon: Icons.assignment_outlined,
-      child: workOrders.isEmpty
-          ? NoData()
-          : Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              runAlignment: WrapAlignment.start,
-              children: workOrders.map((workOrder) {
-                final item = workOrder as Map<String, dynamic>;
-
-                return Container(
-                  padding: CustomTheme().padding('badge-rework'),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[50],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.receipt_long_outlined,
-                        size: CustomTheme().iconSize('md'),
-                        color: CustomTheme().buttonColor('primary'),
-                      ),
-                      Text(
-                        item['wo_no']?.toString() ?? '-',
-                        style: TextStyle(
-                          fontSize: CustomTheme().fontSize('sm'),
-                          fontWeight: CustomTheme().fontWeight('semibold'),
-                          color: Colors.grey[800],
-                        ),
-                      ),
-                    ].separatedBy(CustomTheme().hGap('md')),
-                  ),
-                );
-              }).toList(),
-            ),
     );
   }
 }
@@ -457,6 +406,17 @@ class _SpkMaterialItem extends StatelessWidget {
               ),
               child: _buildQtyColumn(
                 'Qty',
+                item['input_qty'],
+                item['unit']?['code']?.toString() ?? '',
+              ),
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: 90,
+                maxWidth: constraints.maxWidth / 2,
+              ),
+              child: _buildQtyColumn(
+                'Total Qty',
                 item['qty'],
                 item['unit']?['code']?.toString() ?? '',
               ),
@@ -467,7 +427,7 @@ class _SpkMaterialItem extends StatelessWidget {
                 maxWidth: constraints.maxWidth / 2,
               ),
               child: _buildQtyColumn(
-                'Diproses',
+                'Qty Diproses',
                 item['process_qty'],
                 item['unit']?['code']?.toString() ?? '',
               ),
@@ -545,11 +505,61 @@ class _SpkMaterialItem extends StatelessWidget {
         CustomBadge(
           title: item['status']?.toString() ?? '-',
           withStatus: false,
-          status: item['status']?.toString() == 'Belum Diproses'
+          status: item['status']?.toString() == 'Menunggu'
               ? 'Menunggu Diproses'
-              : 'Diproses',
+              : item['status']?.toString() == 'Diproses Sebagian'
+                  ? 'Diproses'
+                  : item['status']?.toString() == 'Belum Diproses'
+                      ? 'Menunggu Diproses'
+                      : 'Selesai',
         ),
       ].separatedBy(CustomTheme().vGap('sm')),
     );
+  }
+}
+
+class _SpkDeadlineCard extends StatelessWidget {
+  final Map<String, dynamic> data;
+
+  const _SpkDeadlineCard({
+    required this.data,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TemplateCard(
+      title: 'Deadline',
+      icon: Icons.event_available_outlined,
+      child: Container(
+        width: double.infinity,
+        padding: CustomTheme().padding('card'),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade50,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Colors.grey.shade200,
+          ),
+        ),
+        child: Text(
+          '${_formatDate(data['deadline_start'])} - ${_formatDate(data['deadline_end'])}',
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('xl'),
+            fontWeight: CustomTheme().fontWeight('bold'),
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(dynamic value) {
+    if (value == null || value.toString().isEmpty) return '-';
+
+    try {
+      return DateFormat('dd MMM yyyy').format(
+        DateTime.parse(value.toString()),
+      );
+    } catch (_) {
+      return value.toString();
+    }
   }
 }

@@ -29,6 +29,18 @@ class _InfoTabState extends State<InfoTab> {
     super.initState();
   }
 
+  String _formatDate(dynamic value) {
+    if (value == null || value.toString().isEmpty) return '-';
+
+    try {
+      final date = DateTime.parse(value.toString()).toLocal();
+
+      return DateFormat('dd MMM yyyy').format(date);
+    } catch (_) {
+      return value.toString();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -124,8 +136,7 @@ class _InfoTabState extends State<InfoTab> {
             child: _buildQuickInfoItem(
               icon: Icons.calendar_month_outlined,
               label: 'Tanggal WO',
-              value: DateFormat("dd MMM yyyy")
-                  .format(DateTime.parse(widget.data['wo_date'])),
+              value: _formatDate(widget.data['wo_date']),
               isTablet: isTablet,
             ),
           ),

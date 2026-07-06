@@ -12,13 +12,15 @@ class SortingDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
+  final bool openUpdateOnStart;
 
   const SortingDetail(
       {super.key,
       required this.id,
       required this.no,
       this.canDelete,
-      this.canUpdate});
+      this.canUpdate,
+      this.openUpdateOnStart = false});
 
   @override
   State<SortingDetail> createState() => _SortingDetailState();
@@ -65,6 +67,7 @@ class _SortingDetailState extends State<SortingDetail> {
           items: form['items'] ?? data['items']),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/sortings',
       withItemGrade: true,
       withMaklon: false,

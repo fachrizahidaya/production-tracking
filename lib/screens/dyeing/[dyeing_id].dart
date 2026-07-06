@@ -12,7 +12,9 @@ class DyeingDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
+  final bool openUpdateOnStart;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -40,11 +42,14 @@ class DyeingDetail extends StatefulWidget {
 >>>>>>> 2187e9a5 (feat: multi mesin dyeing - long slitting)
 =======
 >>>>>>> 7d345bda (fix: card navigate to update)
+=======
+>>>>>>> f10f856a (fix: card navigate to update)
   const DyeingDetail(
       {super.key,
       required this.id,
       required this.no,
       this.canDelete,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -74,6 +79,10 @@ class DyeingDetail extends StatefulWidget {
 >>>>>>> cbfab539 (feat: multi mesin dyeing - long slitting)
 =======
 >>>>>>> 585d6eac (fix: rework dyeing)
+=======
+      this.canUpdate,
+      this.openUpdateOnStart = false});
+>>>>>>> f10f856a (fix: card navigate to update)
 
   @override
   State<DyeingDetail> createState() => _DyeingDetailState();
@@ -198,6 +207,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/dyeings',
       withItemGrade: false,
       withQtyAndWeight: false,

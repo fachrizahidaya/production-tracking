@@ -542,7 +542,10 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       await widget.handleUpdateService(context, id, item, _isLoading);
 
       if (!mounted) return;
+<<<<<<< HEAD
 >>>>>>> 993ef46 (fix: card navigate to update (#16))
+=======
+>>>>>>> 8bc14cd (fix: card navigate to update)
       Navigator.pushNamedAndRemoveUntil(context, widget.route, (_) => false);
     } catch (e) {
       rethrow;
@@ -598,6 +601,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
     if (widget.openUpdateOnStart) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       final navigator = Navigator.of(context);
       if (navigator.canPop()) {
         navigator.pop(result == true);
@@ -605,6 +609,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 =======
       Navigator.pop(context, result == true);
 >>>>>>> 993ef46 (fix: card navigate to update (#16))
+=======
+      Navigator.pop(context, result == true);
+>>>>>>> 8bc14cd (fix: card navigate to update)
       return;
     }
 

@@ -156,6 +156,7 @@ class ItemProcessCard extends StatelessWidget {
                 status: item['status'],
                 withStatus: true,
               ),
+<<<<<<< HEAD
             // if (canShowDelete && onDelete != null)
             //   IconButton(
             //     tooltip: 'Hapus',
@@ -171,6 +172,23 @@ class ItemProcessCard extends StatelessWidget {
             //     ),
             //     onPressed: onDelete,
             //   ),
+=======
+            if (canShowDelete && onDelete != null)
+              IconButton(
+                tooltip: 'Hapus',
+                visualDensity: VisualDensity.compact,
+                constraints: BoxConstraints(
+                  minWidth: 36,
+                  minHeight: 36,
+                ),
+                icon: Icon(
+                  Icons.delete_outline,
+                  size: 20,
+                  color: Colors.red,
+                ),
+                onPressed: onDelete,
+              ),
+>>>>>>> 8bc14cd (fix: card navigate to update)
           ].separatedBy(CustomTheme().hGap('md')),
         ),
       ].separatedBy(CustomTheme().hGap('xl')),

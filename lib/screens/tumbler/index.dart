@@ -45,6 +45,8 @@ class _TumblerScreenState extends State<TumblerScreen> {
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
+  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
+
   final List<dynamic> _dataList = [];
   String _search = '';
   Map<String, String> params = {'search': '', 'page': '0'};
@@ -197,9 +199,13 @@ class _TumblerScreenState extends State<TumblerScreen> {
           canDelete: _canDelete,
           canUpdate: _canUpdate,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
           openUpdateOnStart: openUpdateOnStart,
 >>>>>>> 993ef46 (fix: card navigate to update (#16))
+=======
+          openUpdateOnStart: openUpdateOnStart,
+>>>>>>> 8bc14cd (fix: card navigate to update)
         ),
       ),
     );

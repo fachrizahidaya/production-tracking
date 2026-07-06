@@ -30,7 +30,10 @@ class DyeingDetail extends StatefulWidget {
       this.canDelete,
       this.canUpdate,
       this.openUpdateOnStart = false});
+<<<<<<< HEAD
 >>>>>>> 993ef46 (fix: card navigate to update (#16))
+=======
+>>>>>>> 8bc14cd (fix: card navigate to update)
 
   @override
   State<DyeingDetail> createState() => _DyeingDetailState();

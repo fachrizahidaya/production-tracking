@@ -46,6 +46,8 @@ class _StenterScreenState extends State<StenterScreen> {
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
+  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
+
   final List<dynamic> _dataList = [];
   String _search = '';
   Map<String, String> params = {'search': '', 'page': '0'};
@@ -361,7 +363,10 @@ class _StenterScreenState extends State<StenterScreen> {
                       item,
                       openUpdateOnStart: item['status'] == 'Diproses',
                     );
+<<<<<<< HEAD
 >>>>>>> 993ef46 (fix: card navigate to update (#16))
+=======
+>>>>>>> 8bc14cd (fix: card navigate to update)
                   },
                   child: Column(
                     children: [

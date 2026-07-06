@@ -445,7 +445,8 @@ class _DetailState extends State<Detail> {
           handleUpdate: widget.handleNavigateToUpdate,
           id: widget.data['id'],
           updateStatus: widget.data['can_update'],
-          deleteStatus: widget.data['can_delete'],
+          deleteStatus:
+              widget.canDelete == true && widget.data['can_delete'] == true,
           label: widget.label,
 
           /// TAMBAHAN

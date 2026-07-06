@@ -12,13 +12,15 @@ class StenterDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
+  final bool openUpdateOnStart;
 
   const StenterDetail(
       {super.key,
       required this.id,
       required this.no,
       this.canDelete,
-      this.canUpdate});
+      this.canUpdate,
+      this.openUpdateOnStart = false});
 
   @override
   State<StenterDetail> createState() => _StenterDetailState();
@@ -65,6 +67,7 @@ class _StenterDetailState extends State<StenterDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/stenters',
       fetchMachine: (service, _) => service.fetchOptionsStenter(),
       getMachineOptions: (service) => service.dataListOption,

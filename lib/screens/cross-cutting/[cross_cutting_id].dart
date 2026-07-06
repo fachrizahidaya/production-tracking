@@ -12,13 +12,15 @@ class CrossCuttingDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
+  final bool openUpdateOnStart;
 
   const CrossCuttingDetail(
       {super.key,
       required this.id,
       required this.no,
       this.canDelete,
-      this.canUpdate});
+      this.canUpdate,
+      this.openUpdateOnStart = false});
 
   @override
   State<CrossCuttingDetail> createState() => _CrossCuttingDetailState();
@@ -56,6 +58,7 @@ class _CrossCuttingDetailState extends State<CrossCuttingDetail> {
           items: form['items']),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/cross-cuttings',
       fetchMachine: (service, currentMachineIds) =>
           service.fetchOptionsCrossCutting(

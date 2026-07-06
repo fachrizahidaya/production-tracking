@@ -9,7 +9,6 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
-import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/models/master/machine.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
@@ -63,6 +62,7 @@ class ProcessDetail<T> extends StatefulWidget {
   final forHemming;
   final isMultiMachine;
   final prefix;
+  final bool openUpdateOnStart;
 
   const ProcessDetail(
       {super.key,
@@ -94,7 +94,8 @@ class ProcessDetail<T> extends StatefulWidget {
       this.forHemming,
       this.forSewing,
       this.isMultiMachine = false,
-      this.prefix});
+      this.prefix,
+      this.openUpdateOnStart = false});
 
   @override
   State<ProcessDetail<T>> createState() => _ProcessDetailState<T>();
@@ -112,6 +113,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   final ValueNotifier<bool> _firstSubmitting = ValueNotifier(false);
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
+  bool _hasOpenedInitialUpdate = false;
 
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _lengthController = TextEditingController();
@@ -284,6 +286,15 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     await _handleFetchFinishedGoodMaterial();
     _syncGradesWithOptions();
     _syncDefectsWithOptions();
+
+    if (widget.openUpdateOnStart && !_hasOpenedInitialUpdate && mounted) {
+      if (widget.canUpdate) {
+        _hasOpenedInitialUpdate = true;
+        await _handleNavigateToUpdate();
+      } else {
+        Navigator.pop(context, false);
+      }
+    }
   }
 
   void _handleChangeInput(String fieldName, dynamic value) {
@@ -477,25 +488,17 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   Future<void> _handleUpdate(String id) async {
     try {
       final item = widget.modelBuilder(_form, data);
-      final message =
-          await widget.handleUpdateService(context, id, item, _isLoading);
+      await widget.handleUpdateService(context, id, item, _isLoading);
 
-      Navigator.pop(context, true);
-      Navigator.pop(context, true);
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showAlertDialog(
-            context: context,
-            title: '${widget.label} Diubah',
-            child: buildBoldMessage(message: message, prefix: widget.prefix));
-      });
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, widget.route, (_) => false);
     } catch (e) {
       rethrow;
     }
   }
 
   Future<void> _handleNavigateToUpdate() async {
-    await Navigator.push(
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => UpdateProcess(
@@ -549,6 +552,13 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         ),
       ),
     );
+
+    if (!mounted) return;
+
+    if (widget.openUpdateOnStart) {
+      Navigator.pop(context, result == true);
+      return;
+    }
 
     await _getDataView();
   }
@@ -1188,6 +1198,17 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.openUpdateOnStart) {
+      return Scaffold(
+        backgroundColor: Color(0xFFf9fafc),
+        body: SafeArea(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
+    }
+
     return Detail(
       data: data,
       isLoading: _firstLoading,

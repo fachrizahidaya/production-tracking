@@ -44,6 +44,8 @@ class _StenterScreenState extends State<StenterScreen> {
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
+  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
+
   final List<dynamic> _dataList = [];
   String _search = '';
   Map<String, String> params = {'search': '', 'page': '0'};
@@ -288,6 +290,7 @@ class _StenterScreenState extends State<StenterScreen> {
             }
           },
         ),
+<<<<<<< HEAD
         body: !_menuLoaded
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -308,6 +311,57 @@ class _StenterScreenState extends State<StenterScreen> {
                       }
                     }
                     return false;
+=======
+        body: SafeArea(
+          child: NotificationListener(
+            onNotification: (notification) {
+              if (notification is UserScrollNotification) {
+                if (notification.direction == ScrollDirection.reverse) {
+                  if (_showFab) {
+                    setState(() => _showFab = false);
+                  }
+                } else if (notification.direction == ScrollDirection.forward) {
+                  if (!_showFab) {
+                    setState(() => _showFab = true);
+                  }
+                }
+              }
+              return false;
+            },
+            child: Column(
+              children: [
+                Expanded(
+                    child: ProcessList(
+                  fetchData: (params) async {
+                    final service =
+                        Provider.of<StenterService>(context, listen: false);
+                    await service.getDataList(context, params);
+                    return service.items;
+                  },
+                  canRead: _canRead,
+                  isLoadMore: _isLoadMore,
+                  itemBuilder: (item) => ItemProcessCard(
+                    label: 'No. Stenter',
+                    item: item,
+                    titleKey: 'stenter_no',
+                    subtitleKey: 'work_orders',
+                    subtitleField: 'wo_no',
+                    itemField: ItemField.get,
+                    nestedField: ItemField.nested,
+                    canUpdate: _canUpdate,
+                    canDelete: _canDelete,
+                    onUpdate: () => _openProcessDetail(
+                      item,
+                      openUpdateOnStart: true,
+                    ),
+                    onDelete: () => _handleDeleteItem(item),
+                  ),
+                  onItemTap: (context, item) {
+                    _openProcessDetail(
+                      item,
+                      openUpdateOnStart: item['status'] == 'Diproses',
+                    );
+>>>>>>> 993ef46 (fix: card navigate to update (#16))
                   },
                   child: Column(
                     children: [

@@ -304,6 +304,15 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
     _syncGradesWithOptions();
     _syncDefectsWithOptions();
+
+    if (widget.openUpdateOnStart && !_hasOpenedInitialUpdate && mounted) {
+      if (widget.canUpdate) {
+        _hasOpenedInitialUpdate = true;
+        await _handleNavigateToUpdate();
+      } else {
+        Navigator.pop(context, false);
+      }
+    }
   }
 
   void _handleChangeInput(String fieldName, dynamic value) {
@@ -498,6 +507,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
   Future<void> _handleUpdate(String id) async {
     try {
+<<<<<<< HEAD
       final isDyeingRework = widget.label == 'Dyeing' && data['rework'] == true;
 
       if (isDyeingRework) {
@@ -527,6 +537,12 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         return;
       }
 
+=======
+      final item = widget.modelBuilder(_form, data);
+      await widget.handleUpdateService(context, id, item, _isLoading);
+
+      if (!mounted) return;
+>>>>>>> 993ef46 (fix: card navigate to update (#16))
       Navigator.pushNamedAndRemoveUntil(context, widget.route, (_) => false);
     } catch (e) {
       rethrow;
@@ -581,10 +597,14 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     if (!mounted) return;
 
     if (widget.openUpdateOnStart) {
+<<<<<<< HEAD
       final navigator = Navigator.of(context);
       if (navigator.canPop()) {
         navigator.pop(result == true);
       }
+=======
+      Navigator.pop(context, result == true);
+>>>>>>> 993ef46 (fix: card navigate to update (#16))
       return;
     }
 

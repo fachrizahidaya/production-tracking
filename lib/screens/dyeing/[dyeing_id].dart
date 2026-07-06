@@ -12,7 +12,9 @@ class DyeingDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
+  final bool openUpdateOnStart;
 
+<<<<<<< HEAD
   const DyeingDetail({
     super.key,
     required this.id,
@@ -20,6 +22,15 @@ class DyeingDetail extends StatefulWidget {
     this.canDelete,
     this.canUpdate,
   });
+=======
+  const DyeingDetail(
+      {super.key,
+      required this.id,
+      required this.no,
+      this.canDelete,
+      this.canUpdate,
+      this.openUpdateOnStart = false});
+>>>>>>> 993ef46 (fix: card navigate to update (#16))
 
   @override
   State<DyeingDetail> createState() => _DyeingDetailState();
@@ -124,6 +135,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/dyeings',
       withItemGrade: false,
       withQtyAndWeight: false,

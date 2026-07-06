@@ -43,6 +43,8 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
+  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
+
   final List<dynamic> _dataList = [];
   String _search = '';
   Map<String, String> params = {'search': '', 'page': '0'};
@@ -194,6 +196,10 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
           no: item['ls_no'].toString(),
           canDelete: _canDelete,
           canUpdate: _canUpdate,
+<<<<<<< HEAD
+=======
+          openUpdateOnStart: openUpdateOnStart,
+>>>>>>> 993ef46 (fix: card navigate to update (#16))
         ),
       ),
     );
@@ -276,6 +282,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
             }
           },
         ),
+<<<<<<< HEAD
         body: !_menuLoaded
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -349,6 +356,75 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                   ),
                 ),
               ),
+=======
+        body: SafeArea(
+          child: NotificationListener(
+            onNotification: (notification) {
+              if (notification is UserScrollNotification) {
+                if (notification.direction == ScrollDirection.reverse) {
+                  if (_showFab) {
+                    setState(() => _showFab = false);
+                  }
+                } else if (notification.direction == ScrollDirection.forward) {
+                  if (!_showFab) {
+                    setState(() => _showFab = true);
+                  }
+                }
+              }
+              return false;
+            },
+            child: ProcessList(
+              fetchData: (params) async {
+                final service =
+                    Provider.of<LongSittingService>(context, listen: false);
+                await service.getDataList(context, params);
+                return service.items;
+              },
+              isLoadMore: _isLoadMore,
+              canRead: _canRead,
+              itemBuilder: (item) => ItemProcessCard(
+                label: 'No. Long Slitting',
+                item: item,
+                titleKey: 'ls_no',
+                subtitleKey: 'work_orders',
+                subtitleField: 'wo_no',
+                itemField: ItemField.get,
+                nestedField: ItemField.nested,
+                canUpdate: _canUpdate,
+                canDelete: _canDelete,
+                onUpdate: () => _openProcessDetail(
+                  item,
+                  openUpdateOnStart: true,
+                ),
+                onDelete: () => _handleDeleteItem(item),
+              ),
+              onItemTap: (context, item) {
+                _openProcessDetail(
+                  item,
+                  openUpdateOnStart: item['status'] == 'Diproses',
+                );
+              },
+              filterWidget: ListFilter(
+                title: 'Filter',
+                params: params,
+                onHandleFilter: _handleFilter,
+                onSubmitFilter: () {
+                  _submitFilter();
+                },
+                dariTanggal: dariTanggal,
+                sampaiTanggal: sampaiTanggal,
+              ),
+              firstLoading: _firstLoading,
+              isFiltered: _isFiltered,
+              hasMore: _hasMore,
+              handleLoadMore: _loadMore,
+              handleRefetch: _refetch,
+              handleSearch: _handleSearch,
+              dataList: _dataList,
+            ),
+          ),
+        ),
+>>>>>>> 993ef46 (fix: card navigate to update (#16))
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

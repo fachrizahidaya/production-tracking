@@ -300,6 +300,11 @@ class _PrintingScreenState extends State<PrintingScreen> {
                 titleKey: 'print_no',
                 subtitleKey: 'work_orders',
                 subtitleField: 'wo_no',
+<<<<<<< HEAD
+=======
+                itemField: ItemField.get,
+                nestedField: ItemField.nested,
+>>>>>>> 993ef46 (fix: card navigate to update (#16))
                 canUpdate: _canUpdate,
                 canDelete: _canDelete,
                 onUpdate: () => _openProcessDetail(

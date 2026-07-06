@@ -12,6 +12,7 @@ class DyeingDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
+  final bool openUpdateOnStart;
 
   const DyeingDetail({
     super.key,
@@ -124,6 +125,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/dyeings',
       withItemGrade: false,
       withQtyAndWeight: false,

@@ -12,13 +12,15 @@ class PressTumblerDetail extends StatefulWidget {
   final no;
   final canDelete;
   final canUpdate;
+  final bool openUpdateOnStart;
 
   const PressTumblerDetail(
       {super.key,
       required this.id,
       required this.no,
       this.canDelete,
-      this.canUpdate});
+      this.canUpdate,
+      this.openUpdateOnStart = false});
 
   @override
   State<PressTumblerDetail> createState() => _PressTumblerDetailState();
@@ -67,6 +69,7 @@ class _PressTumblerDetailState extends State<PressTumblerDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/press',
       fetchMachine: (service, currentMachineIds) =>
           service.fetchOptionsPressTumbler(

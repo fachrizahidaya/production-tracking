@@ -12,13 +12,15 @@ class SewingDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
+  final bool openUpdateOnStart;
 
   const SewingDetail(
       {super.key,
       required this.id,
       required this.no,
       this.canDelete,
-      this.canUpdate});
+      this.canUpdate,
+      this.openUpdateOnStart = false});
 
   @override
   State<SewingDetail> createState() => _SewingDetailState();
@@ -76,6 +78,7 @@ class _SewingDetailState extends State<SewingDetail> {
           items: form['items']),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/sewings',
       fetchMachine: (service, currentMachineIds) => service.fetchOptionsSewing(
         currentMachineIds: currentMachineIds,

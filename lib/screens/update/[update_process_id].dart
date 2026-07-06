@@ -754,7 +754,6 @@ class _UpdateProcessState extends State<UpdateProcess>
             widget.form['wo_id'] = widget.data['wo_id'];
 
             await widget.handleUpdate(widget.data['id'].toString());
-            Navigator.pop(context);
           } finally {
             widget.isSubmitting.value = false;
           }

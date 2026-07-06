@@ -12,13 +12,15 @@ class EmbroideryDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
+  final bool openUpdateOnStart;
 
   const EmbroideryDetail(
       {super.key,
       required this.id,
       required this.no,
       this.canDelete,
-      this.canUpdate});
+      this.canUpdate,
+      this.openUpdateOnStart = false});
 
   @override
   State<EmbroideryDetail> createState() => _EmbroideryDetailState();
@@ -68,6 +70,7 @@ class _EmbroideryDetailState extends State<EmbroideryDetail> {
           maklon_name: form['maklon_name']),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/embroideries',
       withItemGrade: false,
       withQtyAndWeight: true,

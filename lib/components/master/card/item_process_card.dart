@@ -13,7 +13,8 @@ class ItemProcessCard extends StatelessWidget {
   final String subtitleKey;
   final String subtitleField;
   final dynamic label;
-
+  final dynamic itemField;
+  final dynamic nestedField;
   final bool canUpdate;
   final bool canDelete;
   final VoidCallback? onUpdate;
@@ -26,6 +27,8 @@ class ItemProcessCard extends StatelessWidget {
     required this.subtitleKey,
     required this.subtitleField,
     this.label,
+    this.itemField,
+    this.nestedField,
     this.canUpdate = false,
     this.canDelete = false,
     this.onUpdate,
@@ -75,6 +78,8 @@ class ItemProcessCard extends StatelessWidget {
 
   /// Header dengan title dan status badge
   Widget _buildHeader(bool isTablet) {
+    final canShowDelete = canDelete && item['can_delete'] != false;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,6 +161,7 @@ class ItemProcessCard extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bfc08f8 (update version 1.2.2 (#21))
 =======
@@ -180,6 +186,8 @@ class ItemProcessCard extends StatelessWidget {
 =======
 =======
 >>>>>>> cec4230 (chore: update app version)
+=======
+>>>>>>> 94db6889 (fix: card navigate to update)
             if (canShowDelete && onDelete != null)
               IconButton(
                 tooltip: 'Hapus',
@@ -196,6 +204,7 @@ class ItemProcessCard extends StatelessWidget {
                 onPressed: onDelete,
               ),
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 8bc14cd (fix: card navigate to update)
 =======
 >>>>>>> bfc08f8 (update version 1.2.2 (#21))
@@ -205,6 +214,8 @@ class ItemProcessCard extends StatelessWidget {
 >>>>>>> 827c1f7 (fix: hilangkan icon delete)
 =======
 >>>>>>> bb29b60 (fix: clear warning)
+=======
+>>>>>>> 94db6889 (fix: card navigate to update)
           ].separatedBy(CustomTheme().hGap('md')),
         ),
       ].separatedBy(CustomTheme().hGap('xl')),

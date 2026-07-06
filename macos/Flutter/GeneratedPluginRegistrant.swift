@@ -6,6 +6,7 @@ import FlutterMacOS
 import Foundation
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import connectivity_plus
 <<<<<<< HEAD
 import device_info_plus
@@ -13,6 +14,9 @@ import device_info_plus
 >>>>>>> b8a5267 (chore: internet checker)
 =======
 >>>>>>> d6bd8c2f (chore: package)
+=======
+import connectivity_plus
+>>>>>>> 94db6889 (fix: card navigate to update)
 import file_picker
 import file_selector_macos
 import firebase_core
@@ -28,6 +32,7 @@ import webview_flutter_wkwebview
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
 <<<<<<< HEAD
+<<<<<<< HEAD
   ConnectivityPlusPlugin.register(with: registry.registrar(forPlugin: "ConnectivityPlusPlugin"))
 <<<<<<< HEAD
   DeviceInfoPlusMacosPlugin.register(with: registry.registrar(forPlugin: "DeviceInfoPlusMacosPlugin"))
@@ -35,6 +40,9 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
 >>>>>>> b8a5267 (chore: internet checker)
 =======
 >>>>>>> d6bd8c2f (chore: package)
+=======
+  ConnectivityPlusPlugin.register(with: registry.registrar(forPlugin: "ConnectivityPlusPlugin"))
+>>>>>>> 94db6889 (fix: card navigate to update)
   FilePickerPlugin.register(with: registry.registrar(forPlugin: "FilePickerPlugin"))
   FileSelectorPlugin.register(with: registry.registrar(forPlugin: "FileSelectorPlugin"))
   FLTFirebaseCorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseCorePlugin"))

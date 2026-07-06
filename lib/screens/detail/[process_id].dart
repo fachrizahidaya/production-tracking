@@ -595,6 +595,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       }
 
       if (!mounted) return;
+<<<<<<< HEAD
       if (widget.openUpdateOnStart) {
         final navigator = Navigator.of(context);
         if (navigator.canPop()) {
@@ -635,6 +636,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 >>>>>>> c473136 (fix: update then to list)
 =======
 >>>>>>> 3653fed (fix: update to list)
+=======
+>>>>>>> 94db6889 (fix: card navigate to update)
       Navigator.pushNamedAndRemoveUntil(context, widget.route, (_) => false);
     } catch (e) {
       rethrow;

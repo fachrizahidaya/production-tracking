@@ -649,23 +649,32 @@ packages:
     source: hosted
     version: "0.2.2"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 94db6889 (fix: card navigate to update)
   internet_connection_checker_plus:
     dependency: "direct main"
     description:
       name: internet_connection_checker_plus
+<<<<<<< HEAD
 <<<<<<< HEAD
       sha256: "43edc904d8b8a9f5a2f871e9317a352ca005641b2f158a8b22732447c9f3994e"
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
 =======
+=======
+>>>>>>> 94db6889 (fix: card navigate to update)
       sha256: "2c39c48ac73c71fcaad25d67a399eaf10bd72e674b754393c1ced09d199979b6"
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+<<<<<<< HEAD
 >>>>>>> b8a5267 (chore: internet checker)
 =======
 >>>>>>> d6bd8c2f (chore: package)
+=======
+>>>>>>> 94db6889 (fix: card navigate to update)
   intl:
     dependency: transitive
     description:
@@ -798,6 +807,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  nm:
+    dependency: transitive
+    description:
+      name: nm
+      sha256: "2c9aae4127bdc8993206464fcc063611e0e36e72018696cd9631023a31b24254"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   path:
     dependency: "direct main"
     description:

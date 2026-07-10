@@ -96,6 +96,10 @@ class _WarpingSectionState extends State<WarpingSection> {
                           tabAlignment: TabAlignment.start,
                           tabs: widget.items.asMap().entries.map((entry) {
                             final index = entry.key;
+<<<<<<< HEAD
+=======
+                            final item = entry.value;
+>>>>>>> 3a0606c (feat: finish, update)
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(
@@ -141,6 +145,13 @@ class _WarpingSectionState extends State<WarpingSection> {
   ) {
     final isTablet = MediaQuery.of(context).size.width > 700;
 
+<<<<<<< HEAD
+=======
+    final semiFinished = item['semifinished_product'];
+
+    final finished = item['finished_product'];
+
+>>>>>>> 3a0606c (feat: finish, update)
     final woItems = widget.data;
 
     String getSpkNo(Map<String, dynamic> item) {
@@ -196,7 +207,11 @@ class _WarpingSectionState extends State<WarpingSection> {
               ? (MediaQuery.of(context).size.width - 80) / 2
               : double.infinity,
           child: TextForm(
+<<<<<<< HEAD
             label: 'Berat Beam (KG)',
+=======
+            label: 'Berat Beam (PCS)',
+>>>>>>> 3a0606c (feat: finish, update)
             controller: _beamWeightControllers[index],
             initialValue: item['beam_weight']?.toString() ?? '0',
             req: false,

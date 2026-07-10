@@ -93,6 +93,10 @@ class _WeavingSectionState extends State<WeavingSection> {
                           tabAlignment: TabAlignment.start,
                           tabs: widget.items.asMap().entries.map((entry) {
                             final index = entry.key;
+<<<<<<< HEAD
+=======
+                            final item = entry.value;
+>>>>>>> 3a0606c (feat: finish, update)
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(

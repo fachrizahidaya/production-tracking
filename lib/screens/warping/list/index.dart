@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously
 
+=======
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -12,11 +15,17 @@ import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/process_list.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/warping/create/create_warping.dart';
 import 'package:textile_tracking/screens/warping/detail/edit_warping.dart';
+=======
+import 'package:textile_tracking/helpers/util/item_field.dart';
+import 'package:textile_tracking/screens/auth/user_menu.dart';
+import 'package:textile_tracking/screens/warping/create/create_warping.dart';
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
 import 'package:textile_tracking/screens/warping/detail/warping_by_id.dart';
 import 'package:textile_tracking/screens/warping/finish/finish_warping.dart';
 import 'package:textile_tracking/screens/warping/model/warping.dart';
@@ -40,9 +49,12 @@ class _WarpingScreenState extends State<WarpingScreen> {
   bool _canUpdate = false;
   bool _isLoadMore = false;
   bool _showFab = true;
+<<<<<<< HEAD
   bool _menuLoaded = false;
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
+=======
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
 
   final List<dynamic> _dataList = [];
   String _search = '';
@@ -57,6 +69,7 @@ class _WarpingScreenState extends State<WarpingScreen> {
   void initState() {
     super.initState();
 
+<<<<<<< HEAD
     params = {
       'search': _search,
       'page': '0',
@@ -64,6 +77,19 @@ class _WarpingScreenState extends State<WarpingScreen> {
       'end_date': '',
     };
 
+=======
+    setState(() {
+      params = {
+        'search': _search,
+        'page': '0',
+        'start_date': '',
+        'end_date': '',
+      };
+    });
+    Future.delayed(Duration.zero, () {
+      _loadMore();
+    });
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
     _intializeMenus();
   }
 
@@ -85,6 +111,7 @@ class _WarpingScreenState extends State<WarpingScreen> {
   }
 
   Future<void> _intializeMenus() async {
+<<<<<<< HEAD
     await _menuService.handleFetchMenu(context);
     await _userMenu.handleLoadMenu();
 
@@ -101,6 +128,20 @@ class _WarpingScreenState extends State<WarpingScreen> {
         _loadMore();
       }
     });
+=======
+    try {
+      await _menuService.handleFetchMenu(context);
+      await _userMenu.handleLoadMenu();
+
+      setState(() {
+        _canRead = _userMenu.checkMenu('Warping', 'read');
+        _canDelete = _userMenu.checkMenu('Warping', 'delete');
+        _canUpdate = _userMenu.checkMenu('Warping', 'update');
+      });
+    } catch (e) {
+      throw Exception('Error initializing menus: $e');
+    }
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
   }
 
   Future<void> _handleSearch(String value) async {
@@ -131,7 +172,21 @@ class _WarpingScreenState extends State<WarpingScreen> {
     _loadMore();
   }
 
+<<<<<<< HEAD
   Future<void> _loadMore() async {
+=======
+  Future<void> _submitFilter() async {
+    Navigator.pop(context);
+    setState(() {
+      _isFiltered = _checkIsFiltered();
+    });
+    _loadMore();
+  }
+
+  Future<void> _loadMore() async {
+    _isLoadMore = true;
+
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
     if (params['page'] == '0') {
       setState(() {
         _dataList.clear();
@@ -154,17 +209,26 @@ class _WarpingScreenState extends State<WarpingScreen> {
     if (loadData.isEmpty) {
       setState(() {
         _firstLoading = false;
+<<<<<<< HEAD
+=======
+        _isLoadMore = false;
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
         _hasMore = false;
       });
     } else {
       setState(() {
         _dataList.addAll(loadData);
         _firstLoading = false;
+<<<<<<< HEAD
+=======
+        _isLoadMore = false;
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
       });
     }
   }
 
   _refetch() {
+<<<<<<< HEAD
     _debounce?.cancel();
     setState(() {
       _search = '';
@@ -262,6 +326,19 @@ class _WarpingScreenState extends State<WarpingScreen> {
     );
   }
 
+=======
+    setState(() {
+      params = {
+        'search': _search,
+        'page': '0',
+        'start_date': dariTanggal,
+        'end_date': sampaiTanggal,
+      };
+    });
+    _loadMore();
+  }
+
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
   @override
   void dispose() {
     super.dispose();
@@ -287,6 +364,7 @@ class _WarpingScreenState extends State<WarpingScreen> {
             }
           },
         ),
+<<<<<<< HEAD
         body: !_menuLoaded
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -358,6 +436,77 @@ class _WarpingScreenState extends State<WarpingScreen> {
                   ),
                 ),
               ),
+=======
+        body: SafeArea(
+          child: NotificationListener(
+            onNotification: (notification) {
+              if (notification is UserScrollNotification) {
+                if (notification.direction == ScrollDirection.reverse) {
+                  if (_showFab) {
+                    setState(() => _showFab = false);
+                  }
+                } else if (notification.direction == ScrollDirection.forward) {
+                  if (!_showFab) {
+                    setState(() => _showFab = true);
+                  }
+                }
+              }
+              return false;
+            },
+            child: ProcessList(
+              fetchData: (params) async {
+                final service =
+                    Provider.of<WarpingService>(context, listen: false);
+                await service.getDataList(context, params);
+                return service.items;
+              },
+              isLoadMore: _isLoadMore,
+              canRead: _canRead,
+              itemBuilder: (item) => ItemProcessCard(
+                label: 'No. Warping',
+                item: item,
+                titleKey: 'warping_no',
+                subtitleKey: 'work_orders',
+                subtitleField: 'wo_no',
+                itemField: ItemField.get,
+                nestedField: ItemField.nested,
+              ),
+              onItemTap: (context, item) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WarpingDetailScreen(
+                        id: item['id'].toString(),
+                      ),
+                    )).then((value) {
+                  if (value == true) {
+                    _refetch();
+                  } else {
+                    return null;
+                  }
+                });
+              },
+              filterWidget: ListFilter(
+                title: 'Filter',
+                params: params,
+                onHandleFilter: _handleFilter,
+                onSubmitFilter: () {
+                  _submitFilter();
+                },
+                dariTanggal: dariTanggal,
+                sampaiTanggal: sampaiTanggal,
+              ),
+              firstLoading: _firstLoading,
+              isFiltered: _isFiltered,
+              hasMore: _hasMore,
+              handleLoadMore: _loadMore,
+              handleRefetch: _refetch,
+              handleSearch: _handleSearch,
+              dataList: _dataList,
+            ),
+          ),
+        ),
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

@@ -1,11 +1,19 @@
+<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously
 
+=======
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/warping/create/create_form.dart';
 import 'package:textile_tracking/screens/warping/create/create_warping_process.dart';
+=======
+import 'package:textile_tracking/screens/create/index.dart';
+import 'package:textile_tracking/screens/warping/create/create_form.dart';
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
 import 'package:textile_tracking/screens/warping/model/warping.dart';
 
 class CreateWarping extends StatelessWidget {
@@ -13,6 +21,7 @@ class CreateWarping extends StatelessWidget {
 
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
+<<<<<<< HEAD
     final isSingle = form['warping_type'] == 'single_warping';
 
     final warping = Warping(
@@ -30,12 +39,22 @@ class CreateWarping extends StatelessWidget {
           .where((e) => e != null)
           .cast<int>()
           .toList(),
+=======
+    final warping = Warping(
+      notes: form['notes'],
+      status: form['status'],
+      attachments: form['attachments'],
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
     );
 
     final message = await Provider.of<WarpingService>(context, listen: false)
         .addItem(context, warping, isLoading);
 
+<<<<<<< HEAD
     Navigator.pushNamedAndRemoveUntil(context, '/warpings', (route) => false);
+=======
+    Navigator.pushNamedAndRemoveUntil(context, '/warping', (route) => false);
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
@@ -43,14 +62,22 @@ class CreateWarping extends StatelessWidget {
           title: 'Warping Dimulai',
           child: buildBoldMessage(
             message: message,
+<<<<<<< HEAD
             prefix: "WRP",
+=======
+            prefix: "WAR",
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
           ));
     });
   }
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return CreateWarpingProcess(
+=======
+    return CreateProcess(
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
       title: 'Mulai Warping',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
@@ -60,8 +87,16 @@ class CreateWarping extends StatelessWidget {
           processId: processId,
           form: form,
           handleSubmit: handleSubmit,
+<<<<<<< HEAD
         );
       },
+=======
+          fetchWorkOrder: (service) => service.fetchWarpingOptions(id),
+        );
+      },
+      fetchWorkOrder: (service) => service.fetchWarpingOptions(),
+      getWorkOrderOptions: (service) => service.dataListOption,
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
     );
   }
 }

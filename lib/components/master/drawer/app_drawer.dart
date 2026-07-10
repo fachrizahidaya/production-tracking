@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/screens/home/index.dart';
+import 'package:textile_tracking/screens/shearing/list/index.dart';
+import 'package:textile_tracking/screens/sizing/list/index.dart';
+import 'package:textile_tracking/screens/warping/list/index.dart';
+import 'package:textile_tracking/screens/weaving/list/index.dart';
 
 class AppDrawer extends StatefulWidget {
   final handleLogout;
@@ -137,6 +141,31 @@ class _AppDrawerState extends State<AppDrawer> {
                         .where((m) => !hiddenMenus.contains(m.title))
                         .toList();
 
+                    // menus.add(
+                    //   MenuItem(
+                    //     title: 'Warping',
+                    //     allowMobile: true,
+                    //   ),
+                    // );
+                    // menus.add(
+                    //   MenuItem(
+                    //     title: 'Sizing',
+                    //     allowMobile: true,
+                    //   ),
+                    // );
+                    // menus.add(
+                    //   MenuItem(
+                    //     title: 'Weaving',
+                    //     allowMobile: true,
+                    //   ),
+                    // );
+                    // menus.add(
+                    //   MenuItem(
+                    //     title: 'Shearing',
+                    //     allowMobile: true,
+                    //   ),
+                    // );
+
                     return ListView.builder(
                       itemCount: menus.length,
                       itemBuilder: (context, index) {
@@ -185,6 +214,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                             : item.title == 'Tumbler'
                                                                                 ? Icons.dry_cleaning_outlined
                                                                                 : item.title == 'Warping'
+<<<<<<< HEAD
                                                                                     ? Icons.join_inner_outlined
                                                                                     : item.title == 'Sizing'
                                                                                         ? Icons.straighten_outlined
@@ -203,10 +233,60 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                                 : item.title == 'Evaluasi GSM'
                                                                                                                     ? Icons.inventory_outlined
                                                                                                                     : Icons.menu,
+=======
+                                                                                    ? Icons.straighten_outlined
+                                                                                    : item.title == 'Sizing'
+                                                                                        ? Icons.straighten_outlined
+                                                                                        : item.title == 'Weaving'
+                                                                                            ? Icons.straighten_outlined
+                                                                                            : item.title == 'Shearing'
+                                                                                                ? Icons.straighten_outlined
+                                                                                                : Icons.menu,
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
                           ),
                           onTap: () {
                             Navigator.pop(context);
 
+<<<<<<< HEAD
+=======
+                            if (item.title == 'Warping') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const WarpingScreen(),
+                                ),
+                              );
+                              return;
+                            }
+                            if (item.title == 'Sizing') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const SizingScreen(),
+                                ),
+                              );
+                              return;
+                            }
+                            if (item.title == 'Weaving') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const WeavingScreen(),
+                                ),
+                              );
+                              return;
+                            }
+                            if (item.title == 'Shearing') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ShearingScreen(),
+                                ),
+                              );
+                              return;
+                            }
+
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
                             if (item.route != null) {
                               Navigator.pushNamed(context, item.route!);
                             }

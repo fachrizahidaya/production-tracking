@@ -70,7 +70,10 @@ import 'package:textile_tracking/screens/tumbler/index.dart';
 import 'package:textile_tracking/screens/warping/list/index.dart';
 import 'package:textile_tracking/screens/warping/model/warping.dart';
 import 'package:textile_tracking/screens/weaving/list/index.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/services/fcm_service.dart';
+=======
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
 import 'package:textile_tracking/screens/weaving/model/weaving.dart';
 
 void main() async {
@@ -103,7 +106,10 @@ void main() async {
     ChangeNotifierProvider(create: (_) => SizingService()),
     ChangeNotifierProvider(create: (_) => WarpingService()),
     ChangeNotifierProvider(create: (_) => ShearingService()),
+<<<<<<< HEAD
     ChangeNotifierProvider(create: (_) => DyeingPreparationService()),
+=======
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
     ChangeNotifierProvider(create: (_) => UnitService()),
     ChangeNotifierProvider(create: (_) => OptionUnitService()),
     ChangeNotifierProvider(create: (_) => OptionMachineService()),
@@ -187,6 +193,37 @@ class MyApp extends StatelessWidget {
           '/dyeing-rework-evaluations': (context) => ReworkList(),
         },
       ),
+<<<<<<< HEAD
+=======
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      routes: {
+        '/': (context) => AuthCheck(),
+        '/dashboard': (context) => Home(),
+        '/profile': (context) => Profile(),
+        '/notification': (context) => NotificationList(),
+        '/dyeings': (context) => DyeingScreen(),
+        '/press': (context) => PressTumblerScreen(),
+        '/tumblers': (context) => TumblerScreen(),
+        '/stenters': (context) => StenterScreen(),
+        '/long-slittings': (context) => LongSittingScreen(),
+        '/long-hemmings': (context) => LongHemmingScreen(),
+        '/cross-cuttings': (context) => CrossCuttingScreen(),
+        '/sewings': (context) => SewingScreen(),
+        '/embroideries': (context) => EmbroideryScreen(),
+        '/sortings': (context) => SortingScreen(),
+        '/packings': (context) => PackingScreen(),
+        '/printings': (context) => PrintingScreen(),
+        '/weaving': (context) => WeavingScreen(),
+        '/sizing': (context) => SizingScreen(),
+        '/warping': (context) => WarpingScreen(),
+        '/shearing': (context) => ShearingScreen(),
+        '/account': (context) => Account(),
+        '/eula': (context) => Eula(),
+        '/privacy-policy': (context) => PrivacyPolicy(),
+        '/terms-conditions': (context) => TermsConditions(),
+      },
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
     );
   }
 }

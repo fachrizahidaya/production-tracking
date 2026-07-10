@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously, unused_element, unused_element_parameter
 
 import 'package:easy_localization/easy_localization.dart';
@@ -11,11 +12,19 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/shearing/detail/edit_shearing.dart';
+=======
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
+import 'package:textile_tracking/screens/detail/%5Bprocess_id%5D.dart';
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
 import 'package:textile_tracking/screens/shearing/model/shearing.dart';
 
 class ShearingDetailScreen extends StatefulWidget {
   final id;
   final no;
+<<<<<<< HEAD
   final canDelete;
   final canUpdate;
   final bool openUpdateOnStart;
@@ -28,12 +37,17 @@ class ShearingDetailScreen extends StatefulWidget {
     this.canUpdate,
     this.openUpdateOnStart = false,
   });
+=======
+
+  const ShearingDetailScreen({super.key, this.id, this.no});
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
 
   @override
   State<ShearingDetailScreen> createState() => _ShearingDetailScreenState();
 }
 
 class _ShearingDetailScreenState extends State<ShearingDetailScreen> {
+<<<<<<< HEAD
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
   bool _isLoading = true;
   String? _errorMessage;
@@ -352,10 +366,68 @@ class _WarpingDetailHeader extends StatelessWidget {
                 )
               : titleContent,
         );
+=======
+  final ShearingService _shearingService = ShearingService();
+
+  @override
+  Widget build(BuildContext context) {
+    return ProcessDetail<Shearing>(
+      id: widget.id,
+      no: widget.no,
+      label: 'Shearing',
+      prefix: 'SHE',
+      isMultiMachine: false,
+      service: Provider.of<ShearingService>(context, listen: false),
+      handleUpdateService: (context, id, item, isLoading) =>
+          Provider.of<ShearingService>(context, listen: false)
+              .updateItem(context, id, item, isLoading),
+      handleDeleteService: (context, id, isLoading) =>
+          Provider.of<ShearingService>(context, listen: false)
+              .deleteItem(context, id, isLoading),
+      modelBuilder: (form, data) => Shearing(
+        notes: form['notes'] ?? data['notes'],
+        attachments: [
+          ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
+          ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
+        ],
+      ),
+      route: '/shearing',
+      fetchMachine: (service, _) => service.fetchOptionsShearing(),
+      getMachineOptions: (service) => service.dataListOption,
+      withItemGrade: false,
+      withMaklon: false,
+      forDyeing: false,
+      idProcess: 'shearing_id',
+      processService: _shearingService,
+      forPacking: false,
+      fetchFinish: (service) => service.fetchShearingFinishOptions(),
+      handleSubmitToService: (context, id, form, isLoading) async {
+        final shearing = Shearing(
+          notes: form['notes'],
+          attachments: form['attachments'],
+        );
+
+        final message =
+            await Provider.of<ShearingService>(context, listen: false)
+                .finishItem(context, id, shearing, isLoading);
+
+        Navigator.pushNamedAndRemoveUntil(context, '/shearing', (_) => false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showAlertDialog(
+              context: context,
+              title: 'Shearing Selesai',
+              child: buildBoldMessage(
+                message: message,
+                prefix: "SHE",
+              ));
+        });
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
       },
     );
   }
 }
+<<<<<<< HEAD
 
 class _WarpingDetailBody extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -1250,3 +1322,5 @@ String _formatType(dynamic value) {
           word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
       .join(' ');
 }
+=======
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)

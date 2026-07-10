@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously
 
+=======
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -14,9 +17,15 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/weaving/create/create_weaving.dart';
 import 'package:textile_tracking/screens/weaving/detail/edit_weaving.dart';
+=======
+import 'package:textile_tracking/helpers/util/item_field.dart';
+import 'package:textile_tracking/screens/auth/user_menu.dart';
+import 'package:textile_tracking/screens/weaving/create/create_weaving.dart';
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
 import 'package:textile_tracking/screens/weaving/detail/weaving_by_id.dart';
 import 'package:textile_tracking/screens/weaving/finish/finish_weaving.dart';
 import 'package:textile_tracking/screens/weaving/model/weaving.dart';
@@ -40,7 +49,10 @@ class _WeavingScreenState extends State<WeavingScreen> {
   bool _canUpdate = false;
   bool _isLoadMore = false;
   bool _showFab = true;
+<<<<<<< HEAD
   bool _menuLoaded = false;
+=======
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
@@ -57,6 +69,7 @@ class _WeavingScreenState extends State<WeavingScreen> {
   void initState() {
     super.initState();
 
+<<<<<<< HEAD
     params = {
       'search': _search,
       'page': '0',
@@ -64,6 +77,19 @@ class _WeavingScreenState extends State<WeavingScreen> {
       'end_date': '',
     };
 
+=======
+    setState(() {
+      params = {
+        'search': _search,
+        'page': '0',
+        'start_date': '',
+        'end_date': '',
+      };
+    });
+    Future.delayed(Duration.zero, () {
+      _loadMore();
+    });
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
     _intializeMenus();
   }
 
@@ -85,6 +111,7 @@ class _WeavingScreenState extends State<WeavingScreen> {
   }
 
   Future<void> _intializeMenus() async {
+<<<<<<< HEAD
     await _menuService.handleFetchMenu(context);
     await _userMenu.handleLoadMenu();
 
@@ -101,6 +128,20 @@ class _WeavingScreenState extends State<WeavingScreen> {
         _loadMore();
       }
     });
+=======
+    try {
+      await _menuService.handleFetchMenu(context);
+      await _userMenu.handleLoadMenu();
+
+      setState(() {
+        _canRead = _userMenu.checkMenu('Weaving', 'read');
+        _canDelete = _userMenu.checkMenu('Weaving', 'delete');
+        _canUpdate = _userMenu.checkMenu('Weaving', 'update');
+      });
+    } catch (e) {
+      throw Exception('Error initializing menus: $e');
+    }
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
   }
 
   Future<void> _handleSearch(String value) async {
@@ -131,7 +172,21 @@ class _WeavingScreenState extends State<WeavingScreen> {
     _loadMore();
   }
 
+<<<<<<< HEAD
   Future<void> _loadMore() async {
+=======
+  Future<void> _submitFilter() async {
+    Navigator.pop(context);
+    setState(() {
+      _isFiltered = _checkIsFiltered();
+    });
+    _loadMore();
+  }
+
+  Future<void> _loadMore() async {
+    _isLoadMore = true;
+
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
     if (params['page'] == '0') {
       setState(() {
         _dataList.clear();
@@ -154,17 +209,26 @@ class _WeavingScreenState extends State<WeavingScreen> {
     if (loadData.isEmpty) {
       setState(() {
         _firstLoading = false;
+<<<<<<< HEAD
+=======
+        _isLoadMore = false;
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
         _hasMore = false;
       });
     } else {
       setState(() {
         _dataList.addAll(loadData);
         _firstLoading = false;
+<<<<<<< HEAD
+=======
+        _isLoadMore = false;
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
       });
     }
   }
 
   _refetch() {
+<<<<<<< HEAD
     _debounce?.cancel();
     setState(() {
       _search = '';
@@ -180,6 +244,16 @@ class _WeavingScreenState extends State<WeavingScreen> {
       };
     });
 
+=======
+    setState(() {
+      params = {
+        'search': _search,
+        'page': '0',
+        'start_date': dariTanggal,
+        'end_date': sampaiTanggal,
+      };
+    });
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
     _loadMore();
   }
 
@@ -187,6 +261,7 @@ class _WeavingScreenState extends State<WeavingScreen> {
     dynamic item, {
     bool openUpdateOnStart = false,
   }) async {
+<<<<<<< HEAD
     final status = item['status']?.toString().toLowerCase() ?? '';
     final isInProgress = status == 'diproses' || status.contains('diproses');
 
@@ -206,6 +281,17 @@ class _WeavingScreenState extends State<WeavingScreen> {
             openUpdateOnStart: openUpdateOnStart,
           );
         },
+=======
+    final value = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WeavingDetailScreen(
+          id: item['id'].toString(),
+          no: item['weaving_no'].toString(),
+          canDelete: _canDelete,
+          canUpdate: _canUpdate,
+        ),
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
       ),
     );
 
@@ -243,7 +329,11 @@ class _WeavingScreenState extends State<WeavingScreen> {
 
           await showAlertDialog(
             context: context,
+<<<<<<< HEAD
             title: 'Weaving Dihapus',
+=======
+            title: 'Sizing Deleted',
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
             message: message,
           );
           _refetch();
@@ -287,6 +377,7 @@ class _WeavingScreenState extends State<WeavingScreen> {
             }
           },
         ),
+<<<<<<< HEAD
         body: !_menuLoaded
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -360,6 +451,82 @@ class _WeavingScreenState extends State<WeavingScreen> {
                   ),
                 ),
               ),
+=======
+        body: SafeArea(
+          child: NotificationListener(
+            onNotification: (notification) {
+              if (notification is UserScrollNotification) {
+                if (notification.direction == ScrollDirection.reverse) {
+                  if (_showFab) {
+                    setState(() => _showFab = false);
+                  }
+                } else if (notification.direction == ScrollDirection.forward) {
+                  if (!_showFab) {
+                    setState(() => _showFab = true);
+                  }
+                }
+              }
+              return false;
+            },
+            child: ProcessList(
+              fetchData: (params) async {
+                final service =
+                    Provider.of<WeavingService>(context, listen: false);
+                await service.getDataList(context, params);
+                return service.items;
+              },
+              isLoadMore: _isLoadMore,
+              canRead: _canRead,
+              itemBuilder: (item) => ItemProcessCard(
+                label: 'No. Weaving',
+                item: item,
+                titleKey: 'weaving_no',
+                subtitleKey: 'work_orders',
+                subtitleField: 'wo_no',
+                itemField: ItemField.get,
+                nestedField: ItemField.nested,
+                canUpdate: _canUpdate,
+                canDelete: _canDelete,
+                onUpdate: () =>
+                    _openProcessDetail(item, openUpdateOnStart: true),
+                onDelete: () => _handleDeleteItem(item),
+              ),
+              onItemTap: (context, item) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WeavingDetailScreen(
+                        id: item['id'].toString(),
+                      ),
+                    )).then((value) {
+                  if (value == true) {
+                    _refetch();
+                  } else {
+                    return null;
+                  }
+                });
+              },
+              filterWidget: ListFilter(
+                title: 'Filter',
+                params: params,
+                onHandleFilter: _handleFilter,
+                onSubmitFilter: () {
+                  _submitFilter();
+                },
+                dariTanggal: dariTanggal,
+                sampaiTanggal: sampaiTanggal,
+              ),
+              firstLoading: _firstLoading,
+              isFiltered: _isFiltered,
+              hasMore: _hasMore,
+              handleLoadMore: _loadMore,
+              handleRefetch: _refetch,
+              handleSearch: _handleSearch,
+              dataList: _dataList,
+            ),
+          ),
+        ),
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

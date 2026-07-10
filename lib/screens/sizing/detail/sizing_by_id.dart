@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously, unused_element, unused_element_parameter
 
 import 'package:easy_localization/easy_localization.dart';
@@ -11,6 +12,14 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/sizing/detail/edit_sizing.dart';
+=======
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/bold_message.dart';
+import 'package:textile_tracking/models/process/press_tumbler.dart';
+import 'package:textile_tracking/screens/detail/%5Bprocess_id%5D.dart';
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 
 class SizingDetailScreen extends StatefulWidget {
@@ -33,6 +42,7 @@ class SizingDetailScreen extends StatefulWidget {
 }
 
 class _SizingDetailScreenState extends State<SizingDetailScreen> {
+<<<<<<< HEAD
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
   bool _isLoading = true;
   String? _errorMessage;
@@ -349,10 +359,71 @@ class _WarpingDetailHeader extends StatelessWidget {
                 )
               : titleContent,
         );
+=======
+  final SizingService _sizingService = SizingService();
+  final PressTumblerService _pressService = PressTumblerService();
+
+  @override
+  Widget build(BuildContext context) {
+    return ProcessDetail<Sizing>(
+      id: widget.id,
+      no: widget.no,
+      label: 'Sizing',
+      prefix: 'SIZ',
+      isMultiMachine: false,
+      service: Provider.of<SizingService>(context, listen: false),
+      handleUpdateService: (context, id, item, isLoading) =>
+          Provider.of<SizingService>(context, listen: false)
+              .updateItem(context, id, item, isLoading),
+      handleDeleteService: (context, id, isLoading) =>
+          Provider.of<SizingService>(context, listen: false)
+              .deleteItem(context, id, isLoading),
+      modelBuilder: (form, data) => Sizing(
+        notes: form['notes'] ?? data['notes'],
+        attachments: [
+          ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
+          ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
+        ],
+      ),
+      route: '/sizing',
+      canDelete: widget.canDelete,
+      canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
+      fetchMachine: (service, _) => service.fetchOptionsSizing(),
+      getMachineOptions: (service) => service.dataListOption,
+      withItemGrade: false,
+      withMaklon: false,
+      forDyeing: false,
+      idProcess: 'sizing_id',
+      processService: _sizingService,
+      forPacking: false,
+      fetchFinish: (service) => service.fetchSizingFinishOptions(),
+      handleSubmitToService: (context, id, form, isLoading) async {
+        final sizing = Sizing(
+          notes: form['notes'],
+          attachments: form['attachments'],
+        );
+
+        final message = await Provider.of<SizingService>(context, listen: false)
+            .finishItem(context, id, sizing, isLoading);
+
+        Navigator.pushNamedAndRemoveUntil(context, '/sizing', (_) => false);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showAlertDialog(
+              context: context,
+              title: 'Sizing Selesai',
+              child: buildBoldMessage(
+                message: message,
+                prefix: "SIZ",
+              ));
+        });
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
       },
     );
   }
 }
+<<<<<<< HEAD
 
 class _WarpingDetailBody extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -1242,3 +1313,5 @@ String _formatType(dynamic value) {
           word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
       .join(' ');
 }
+=======
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)

@@ -184,9 +184,16 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     'total_sorting': '0',
     'semifinished_products': [],
     'items': [],
+<<<<<<< HEAD
     'rework_category': null,
     'rework_type': [],
     'rework_method': [],
+=======
+    /**
+     * Phase 2
+     */
+    'warping_weight': '0'
+>>>>>>> 7fd183d (feat: create and finish warping, weaving)
   };
 
   final fieldConfigs = [

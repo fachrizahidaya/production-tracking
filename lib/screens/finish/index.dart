@@ -123,7 +123,13 @@ class _FinishProcessState extends State<FinishProcess> {
     'nama_greige_item': '',
     'sku_greige_item': '',
     'semifinished_products': [],
-    'items': []
+    'items': [],
+    /**
+     * Phase 2
+     */
+    'beam_weight': '0',
+    'greige_weight': '0',
+    'waste_weight': '0'
   };
 
   @override

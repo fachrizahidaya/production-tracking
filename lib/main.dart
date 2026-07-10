@@ -48,10 +48,18 @@ import 'package:textile_tracking/screens/press-tumbler/index.dart';
 import 'package:textile_tracking/screens/printing/index.dart';
 import 'package:textile_tracking/screens/profile/index.dart';
 import 'package:textile_tracking/screens/sewing/index.dart';
+import 'package:textile_tracking/screens/shearing/list/index.dart';
+import 'package:textile_tracking/screens/shearing/model/shearing.dart';
+import 'package:textile_tracking/screens/sizing/list/index.dart';
+import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 import 'package:textile_tracking/screens/sorting/index.dart';
 import 'package:textile_tracking/screens/stenter/index.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/screens/tumbler/index.dart';
+import 'package:textile_tracking/screens/warping/list/index.dart';
+import 'package:textile_tracking/screens/warping/model/warping.dart';
+import 'package:textile_tracking/screens/weaving/list/index.dart';
+import 'package:textile_tracking/screens/weaving/model/weaving.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -73,6 +81,10 @@ void main() async {
     ChangeNotifierProvider(create: (_) => PrintingService()),
     ChangeNotifierProvider(create: (_) => SortingService()),
     ChangeNotifierProvider(create: (_) => PackingService()),
+    ChangeNotifierProvider(create: (_) => WeavingService()),
+    ChangeNotifierProvider(create: (_) => SizingService()),
+    ChangeNotifierProvider(create: (_) => WarpingService()),
+    ChangeNotifierProvider(create: (_) => ShearingService()),
     ChangeNotifierProvider(create: (_) => UnitService()),
     ChangeNotifierProvider(create: (_) => OptionUnitService()),
     ChangeNotifierProvider(create: (_) => OptionMachineService()),
@@ -141,6 +153,10 @@ class MyApp extends StatelessWidget {
         '/sortings': (context) => SortingScreen(),
         '/packings': (context) => PackingScreen(),
         '/printings': (context) => PrintingScreen(),
+        '/weaving': (context) => WeavingScreen(),
+        '/sizing': (context) => SizingScreen(),
+        '/warping': (context) => WarpingScreen(),
+        '/shearing': (context) => ShearingScreen(),
         '/account': (context) => Account(),
         '/eula': (context) => Eula(),
         '/privacy-policy': (context) => PrivacyPolicy(),

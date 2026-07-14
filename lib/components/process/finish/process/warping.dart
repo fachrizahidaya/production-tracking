@@ -142,10 +142,6 @@ class _WarpingSectionState extends State<WarpingSection> {
   ) {
     final isTablet = MediaQuery.of(context).size.width > 700;
 
-    final semiFinished = item['semifinished_product'];
-
-    final finished = item['finished_product'];
-
     final woItems = widget.data;
 
     String getSpkNo(Map<String, dynamic> item) {

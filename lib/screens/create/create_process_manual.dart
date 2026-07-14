@@ -213,6 +213,12 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
     });
   }
 
+  void _handleChangeInput(String key, dynamic value) {
+    setState(() {
+      widget.form?[key] = value;
+    });
+  }
+
   void _selectWorkOrder() {
     if (_isFetchingWorkOrder) {
       showDialog(
@@ -426,6 +432,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
       selectMachine: _selectMachine,
       selectWorkOrder: _selectWorkOrder,
       spkDocuments: spkDocuments,
+      handleChangeInput: _handleChangeInput,
     );
   }
 }

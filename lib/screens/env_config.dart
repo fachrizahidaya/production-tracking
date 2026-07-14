@@ -13,7 +13,13 @@ class EnvConfig {
     bool includeContentType = true,
   }) async {
     final token = await StorageService.getToken();
+<<<<<<< HEAD
     final headers = <String, String>{'Accept': 'application/json'};
+=======
+    final headers = <String, String>{
+      'Accept': 'application/json',
+    };
+>>>>>>> d47c146 (feat: service tersendiri)
 
     if (includeContentType) {
       headers['Content-Type'] = 'application/json';

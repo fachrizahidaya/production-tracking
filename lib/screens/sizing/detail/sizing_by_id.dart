@@ -1,8 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
-import 'package:textile_tracking/models/process/press_tumbler.dart';
 import 'package:textile_tracking/screens/detail/%5Bprocess_id%5D.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 
@@ -27,7 +28,6 @@ class SizingDetailScreen extends StatefulWidget {
 
 class _SizingDetailScreenState extends State<SizingDetailScreen> {
   final SizingService _sizingService = SizingService();
-  final PressTumblerService _pressService = PressTumblerService();
 
   @override
   Widget build(BuildContext context) {

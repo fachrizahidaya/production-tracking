@@ -17,57 +17,31 @@ import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 class DetailList extends StatefulWidget {
   final dynamic data;
   final no;
-  final String? processType;
   final onRefresh;
   final existingAttachment;
-  final existingGrades;
   final handleBuildAttachment;
   final withItemGrade;
   final withQtyAndWeight;
-  final withMaklon;
   final label;
   final forDyeing;
   final maklon;
-  final handleUpdate;
-  final handleDelete;
-  final idProcess;
-  final processService;
-  final forPacking;
-  final fetchFinish;
-  final handleChangeInput;
-  final form;
-  final handleSubmit;
-  final itemGradeOption;
-  final forSewing;
-  final forHemming;
 
-  const DetailList(
-      {super.key,
-      required this.data,
-      this.processType,
-      this.onRefresh,
-      this.existingAttachment,
-      this.existingGrades,
-      this.handleBuildAttachment,
-      this.no,
-      this.forDyeing = false,
-      this.label,
-      this.withItemGrade = false,
-      this.withQtyAndWeight = false,
-      this.maklon,
-      this.withMaklon,
-      this.handleUpdate,
-      this.handleDelete,
-      this.idProcess,
-      this.processService,
-      this.forPacking,
-      this.fetchFinish,
-      this.handleChangeInput,
-      this.form,
-      this.handleSubmit,
-      this.itemGradeOption,
-      this.forHemming,
-      this.forSewing});
+  final form;
+
+  const DetailList({
+    super.key,
+    required this.data,
+    this.onRefresh,
+    this.existingAttachment,
+    this.handleBuildAttachment,
+    this.no,
+    this.forDyeing = false,
+    this.label,
+    this.withItemGrade = false,
+    this.withQtyAndWeight = false,
+    this.maklon,
+    this.form,
+  });
 
   @override
   State<DetailList> createState() => _DetailListState();
@@ -621,19 +595,6 @@ Ringkasan Sorting
 */
   Widget _buildTotalSorting(bool isTablet) {
     /// 📊 Calculate Total Perbaikan Long Hemming (spraying + combing + rework)
-    int totalVermak = 0;
-    totalVermak += int.tryParse(widget.label == 'Packing'
-            ? widget.data['sorting']['rework_long_hemming']?.toString() ?? '0'
-            : widget.data['rework_long_hemming']?.toString() ?? '0') ??
-        0;
-    totalVermak += int.tryParse(widget.label == 'Packing'
-            ? widget.data['sorting']['combing']?.toString() ?? '0'
-            : widget.data['combing']?.toString() ?? '0') ??
-        0;
-    totalVermak += int.tryParse(widget.label == 'Packing'
-            ? widget.data['sorting']['spraying']?.toString() ?? '0'
-            : widget.data['spraying']?.toString() ?? '0') ??
-        0;
 
     /// 📊 Calculate Total Qty Sorting (sum of all grades + vermak)
     int totalRepair = 0;
@@ -1692,7 +1653,6 @@ Catatan WO
                 tabs: items.asMap().entries.map(
                   (entry) {
                     final index = entry.key;
-                    final item = entry.value;
 
                     return Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8),

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
@@ -8,8 +10,17 @@ import 'package:textile_tracking/screens/warping/model/warping.dart';
 class WarpingDetailScreen extends StatefulWidget {
   final id;
   final no;
+  final canDelete;
+  final canUpdate;
+  final bool openUpdateOnStart;
 
-  const WarpingDetailScreen({super.key, this.id, this.no});
+  const WarpingDetailScreen(
+      {super.key,
+      this.id,
+      this.no,
+      this.canDelete,
+      this.canUpdate,
+      this.openUpdateOnStart = false});
 
   @override
   State<WarpingDetailScreen> createState() => _WarpingDetailScreenState();
@@ -40,6 +51,9 @@ class _WarpingDetailScreenState extends State<WarpingDetailScreen> {
           ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
         ],
       ),
+      canDelete: widget.canDelete,
+      canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/warping',
       fetchMachine: (service, _) => service.fetchOptionsWarping(),
       getMachineOptions: (service) => service.dataListOption,

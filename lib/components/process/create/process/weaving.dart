@@ -5,18 +5,18 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
-class WarpingSection extends StatefulWidget {
+class WeavingSection extends StatefulWidget {
   final items;
   final onChange;
   final data;
 
-  const WarpingSection({super.key, this.items, this.onChange, this.data});
+  const WeavingSection({super.key, this.data, this.items, this.onChange});
 
   @override
-  State<WarpingSection> createState() => _WarpingSectionState();
+  State<WeavingSection> createState() => _WeavingSectionState();
 }
 
-class _WarpingSectionState extends State<WarpingSection> {
+class _WeavingSectionState extends State<WeavingSection> {
   final Map<int, TextEditingController> _beamWeightControllers = {};
 
   @override
@@ -49,7 +49,6 @@ class _WarpingSectionState extends State<WarpingSection> {
     for (final controller in _beamWeightControllers.values) {
       controller.dispose();
     }
-
     super.dispose();
   }
 
@@ -62,7 +61,7 @@ class _WarpingSectionState extends State<WarpingSection> {
     if (widget.items.length == 1) {
       return Expanded(
           child: TemplateCard(
-              title: 'Berat Beam',
+              title: 'Berat Awal',
               icon: Icons.rule,
               child: _buildItemContent(context, 0, widget.items.first)));
     }
@@ -71,7 +70,7 @@ class _WarpingSectionState extends State<WarpingSection> {
         length: widget.items.length,
         child: Expanded(
             child: TemplateCard(
-                title: 'Berat Beam',
+                title: 'Berat Awal',
                 icon: Icons.rule,
                 child: Column(
                   children: [
@@ -197,7 +196,7 @@ class _WarpingSectionState extends State<WarpingSection> {
               ? (MediaQuery.of(context).size.width - 80) / 2
               : double.infinity,
           child: TextForm(
-            label: 'Berat Beam (KG)',
+            label: 'Berat Awal (KG)',
             controller: _beamWeightControllers[index],
             initialValue: item['beam_weight']?.toString() ?? '0',
             req: false,

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously, unused_element, unused_element_parameter
 
 import 'package:easy_localization/easy_localization.dart';
@@ -13,6 +14,10 @@ import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/shearing/detail/edit_shearing.dart';
 =======
+=======
+// ignore_for_file: use_build_context_synchronously
+
+>>>>>>> 12b70b7 (fix: mulai weaving)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
@@ -24,6 +29,7 @@ import 'package:textile_tracking/screens/shearing/model/shearing.dart';
 class ShearingDetailScreen extends StatefulWidget {
   final id;
   final no;
+<<<<<<< HEAD
 <<<<<<< HEAD
   final canDelete;
   final canUpdate;
@@ -41,6 +47,19 @@ class ShearingDetailScreen extends StatefulWidget {
 
   const ShearingDetailScreen({super.key, this.id, this.no});
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+  final canDelete;
+  final canUpdate;
+  final bool openUpdateOnStart;
+
+  const ShearingDetailScreen(
+      {super.key,
+      this.id,
+      this.no,
+      this.canDelete,
+      this.canUpdate,
+      this.openUpdateOnStart = false});
+>>>>>>> 12b70b7 (fix: mulai weaving)
 
   @override
   State<ShearingDetailScreen> createState() => _ShearingDetailScreenState();
@@ -392,6 +411,9 @@ class _WarpingDetailHeader extends StatelessWidget {
         ],
       ),
       route: '/shearing',
+      canDelete: widget.canDelete,
+      canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
       fetchMachine: (service, _) => service.fetchOptionsShearing(),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,

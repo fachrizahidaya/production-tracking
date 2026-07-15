@@ -2044,6 +2044,7 @@ Catatan WO
     /// MULTIPLE ITEMS
     return DefaultTabController(
       length: items.length,
+<<<<<<< HEAD
       child: Builder(
         builder: (context) {
           final tabController = DefaultTabController.of(context);
@@ -2078,6 +2079,36 @@ Catatan WO
                               child: Tab(text: 'Item ${index + 1}'),
                             ),
                         ],
+=======
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: TabBar(
+                isScrollable: true,
+                dividerColor: Colors.transparent,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.black,
+                indicatorColor: Colors.white,
+                indicator: BoxDecoration(
+                  color: Colors.blue[800],
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                tabAlignment: TabAlignment.start,
+                tabs: items.asMap().entries.map(
+                  (entry) {
+                    final index = entry.key;
+
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Tab(
+                        text: 'Item ${index + 1}',
+>>>>>>> 12b70b7 (fix: mulai weaving)
                       ),
                     ),
                   ),

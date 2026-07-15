@@ -4,7 +4,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/detail.dart';
-import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -12,10 +11,12 @@ import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/models/master/machine.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
-import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_master_item_grade.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/models/process/dyeing.dart';
+=======
+>>>>>>> 12b70b7 (fix: mulai weaving)
 import 'package:textile_tracking/screens/update/%5Bupdate_process_id%5D.dart';
 
 class ProcessDetail<T> extends StatefulWidget {
@@ -266,6 +267,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
   Future<void> _postInit() async {
     await _getDataView();
+<<<<<<< HEAD
 
     if (!mounted) return;
 
@@ -273,6 +275,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
     if (!mounted) return;
 
+=======
+    await _handleFetchMachine();
+>>>>>>> 12b70b7 (fix: mulai weaving)
     await _handleFetchItemGrade();
 
     if (!mounted) return;
@@ -607,8 +612,11 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           weightGradeA: _weightGradeAController,
           finishedItemGrb: finishedItemGrb,
           finishedItemGood: finishedItemGood,
+<<<<<<< HEAD
           handleSelectReworkCategory: _selectReworkCategory,
           reworkCategoryOption: reworkCategoryOption,
+=======
+>>>>>>> 12b70b7 (fix: mulai weaving)
         ),
       ),
     );
@@ -769,6 +777,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     }
   }
 
+<<<<<<< HEAD
   Future<void> _handleFetchItemType({String search = ''}) async {
     final service = context.read<OptionItemTypeService>();
 
@@ -780,6 +789,44 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
       setState(() {
         itemTypeOption = service.dataListOption;
+=======
+  String formatProcessLabel(String label) {
+    final trimmed = label.trim().toLowerCase();
+
+    // kalau lebih dari 1 kata → pakai underscore
+    if (trimmed.contains(' ')) {
+      return trimmed.replaceAll(RegExp(r'\s+'), '_');
+    }
+
+    return trimmed;
+  }
+
+  Future<void> _handleFetchFinishedMaterial() async {
+    final service = Provider.of<OptionItemService>(context, listen: false);
+
+    try {
+      String baseCode = '';
+      String colorCode = '';
+
+      final itemCode = woData['items']?[0]?['item_code'] ?? '';
+
+      if (itemCode.isNotEmpty) {
+        final parts = itemCode.split('-');
+        baseCode = parts.first;
+        colorCode = parts.last;
+      }
+
+      await service.fetchOptions(
+        process: formatProcessLabel(widget.label),
+        baseCode: baseCode,
+        colorCode: colorCode,
+      );
+
+      final data = service.dataListOption;
+
+      setState(() {
+        finishedItemMaterial = data;
+>>>>>>> 12b70b7 (fix: mulai weaving)
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -925,6 +972,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     return null;
   }
 
+<<<<<<< HEAD
   void _selectReworkCategory() {
     if (reworkCategoryOption.isEmpty) {
       showAlertDialog(
@@ -933,6 +981,38 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         message: 'Saat ini tidak ada kategori rework yang tersedia.',
       );
       return;
+=======
+  double getTotalItemQty() {
+    final items = data['work_orders']?['items'] as List<dynamic>?;
+
+    if (items == null || items.isEmpty) return 0;
+
+    return items.fold<double>(0, (sum, item) {
+      final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
+      return sum + qty;
+    });
+  }
+
+  double getRemainingQtyForGrade(int index) {
+    final totalQty = getTotalItemQty();
+    if (totalQty == 0) return 0;
+
+    final grades = _form['grades'] as List<dynamic>?;
+
+    if (grades == null) return totalQty;
+
+    double usedQty = 0;
+
+    for (int i = 0; i < grades.length; i++) {
+      if (i == index) continue;
+
+      final qty = double.tryParse(
+            grades[i]?['qty']?.toString() ?? '0',
+          ) ??
+          0;
+
+      usedQty += qty;
+>>>>>>> 12b70b7 (fix: mulai weaving)
     }
 
     showDialog(
@@ -1022,6 +1102,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     });
   }
 
+<<<<<<< HEAD
   Future<void> _handleFetchReworkCategory() async {
     if (widget.label != 'Dyeing') return;
 
@@ -1160,6 +1241,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     return null;
   }
 
+=======
+>>>>>>> 12b70b7 (fix: mulai weaving)
   @override
   Widget build(BuildContext context) {
     if (widget.openUpdateOnStart) {

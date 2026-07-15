@@ -52,6 +52,10 @@ class UpdateProcess extends StatefulWidget {
   final length;
   final width;
   final weight;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12b70b7 (fix: mulai weaving)
   final isSubmitting;
   final forDyeing;
   final grades;
@@ -62,6 +66,10 @@ class UpdateProcess extends StatefulWidget {
   final itemGradeOption;
   final itemTypeOption;
   final defects;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12b70b7 (fix: mulai weaving)
   final reworkLongHemming;
   final combing;
   final spraying;
@@ -73,9 +81,12 @@ class UpdateProcess extends StatefulWidget {
   final weightGradeA;
   final finishedItemGrb;
   final finishedItemGood;
+<<<<<<< HEAD
   final finishedItemMaterial;
   final handleSelectReworkCategory;
   final reworkCategoryOption;
+=======
+>>>>>>> 12b70b7 (fix: mulai weaving)
 
   const UpdateProcess(
       {super.key,
@@ -558,9 +569,21 @@ class _UpdateProcessState extends State<UpdateProcess>
 
       final gradeItems = grade['items'] ?? [];
 
+<<<<<<< HEAD
       for (final gradeItem in gradeItems) {
         if (gradeItem is! Map) continue;
         if (gradeItem['wo_item_id'] != woItemId) continue;
+=======
+      final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
+        (gradeItem) {
+          return gradeItem?['wo_item_id'] == woItemId;
+        },
+        orElse: () => null,
+      );
+
+      if (matched != null) {
+        final qty = parseInput(matched['qty']);
+>>>>>>> 12b70b7 (fix: mulai weaving)
 
         if (gradeCode == 'A') {
           gradeA += _gradeAQty(gradeItem);

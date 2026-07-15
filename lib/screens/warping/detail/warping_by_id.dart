@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously, unused_element, unused_element_parameter
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,10 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/warping/detail/edit_warping.dart';
 =======
+=======
+// ignore_for_file: use_build_context_synchronously
+
+>>>>>>> 12b70b7 (fix: mulai weaving)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
@@ -22,6 +27,7 @@ import 'package:textile_tracking/screens/warping/model/warping.dart';
 class WarpingDetailScreen extends StatefulWidget {
   final id;
   final no;
+<<<<<<< HEAD
 <<<<<<< HEAD
   final canDelete;
   final canUpdate;
@@ -39,6 +45,19 @@ class WarpingDetailScreen extends StatefulWidget {
 
   const WarpingDetailScreen({super.key, this.id, this.no});
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+  final canDelete;
+  final canUpdate;
+  final bool openUpdateOnStart;
+
+  const WarpingDetailScreen(
+      {super.key,
+      this.id,
+      this.no,
+      this.canDelete,
+      this.canUpdate,
+      this.openUpdateOnStart = false});
+>>>>>>> 12b70b7 (fix: mulai weaving)
 
   @override
   State<WarpingDetailScreen> createState() => _WarpingDetailScreenState();
@@ -337,6 +356,9 @@ class _ErrorView extends StatelessWidget {
           ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
         ],
       ),
+      canDelete: widget.canDelete,
+      canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/warping',
       fetchMachine: (service, _) => service.fetchOptionsWarping(),
       getMachineOptions: (service) => service.dataListOption,

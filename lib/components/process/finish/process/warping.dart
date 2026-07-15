@@ -211,10 +211,14 @@ class _WarpingSectionState extends State<WarpingSection> {
               : double.infinity,
           child: TextForm(
 <<<<<<< HEAD
+<<<<<<< HEAD
             label: 'Berat Beam (KG)',
 =======
             label: 'Berat Beam (PCS)',
 >>>>>>> 3a0606c (feat: finish, update)
+=======
+            label: 'Berat Beam (KG)',
+>>>>>>> 12b70b7 (fix: mulai weaving)
             controller: _beamWeightControllers[index],
             initialValue: item['beam_weight']?.toString() ?? '0',
             req: false,

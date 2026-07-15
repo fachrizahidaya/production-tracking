@@ -145,7 +145,6 @@ class _HomeState extends State<Home> {
           return Scaffold(
             appBar: CustomAppBar(
               title: 'TexTrack',
-              isWithNotification: true,
               handleLogout: () => _handleLogout(context),
               isWithAccount: true,
               user: user,

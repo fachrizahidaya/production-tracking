@@ -14,7 +14,6 @@ import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/embroidery.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/embroidery/%5Bembroidery_id%5D.dart';
@@ -123,14 +122,6 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
 
     _isFiltered = _checkIsFiltered();
 
-    _loadMore();
-  }
-
-  Future<void> _submitFilter() async {
-    Navigator.pop(context);
-    setState(() {
-      _isFiltered = _checkIsFiltered();
-    });
     _loadMore();
   }
 
@@ -309,8 +300,6 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
                 titleKey: 'emb_no',
                 subtitleKey: 'work_orders',
                 subtitleField: 'wo_no',
-                itemField: ItemField.get,
-                nestedField: ItemField.nested,
                 canUpdate: _canUpdate,
                 canDelete: _canDelete,
                 onUpdate: () => _openProcessDetail(
@@ -326,12 +315,8 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
                 );
               },
               filterWidget: ListFilter(
-                title: 'Filter',
                 params: params,
                 onHandleFilter: _handleFilter,
-                onSubmitFilter: () {
-                  _submitFilter();
-                },
                 dariTanggal: dariTanggal,
                 sampaiTanggal: sampaiTanggal,
               ),

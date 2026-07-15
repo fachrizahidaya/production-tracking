@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -12,7 +14,6 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
-import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/weaving/create/create_weaving.dart';
 import 'package:textile_tracking/screens/weaving/detail/weaving_by_id.dart';
@@ -38,6 +39,7 @@ class _WeavingScreenState extends State<WeavingScreen> {
   bool _canUpdate = false;
   bool _isLoadMore = false;
   bool _showFab = true;
+  bool _menuLoaded = false;
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
@@ -54,17 +56,13 @@ class _WeavingScreenState extends State<WeavingScreen> {
   void initState() {
     super.initState();
 
-    setState(() {
-      params = {
-        'search': _search,
-        'page': '0',
-        'start_date': '',
-        'end_date': '',
-      };
-    });
-    Future.delayed(Duration.zero, () {
-      _loadMore();
-    });
+    params = {
+      'search': _search,
+      'page': '0',
+      'start_date': '',
+      'end_date': '',
+    };
+
     _intializeMenus();
   }
 
@@ -86,18 +84,22 @@ class _WeavingScreenState extends State<WeavingScreen> {
   }
 
   Future<void> _intializeMenus() async {
-    try {
-      await _menuService.handleFetchMenu(context);
-      await _userMenu.handleLoadMenu();
+    await _menuService.handleFetchMenu(context);
+    await _userMenu.handleLoadMenu();
 
-      setState(() {
-        _canRead = _userMenu.checkMenu('Weaving', 'read');
-        _canDelete = _userMenu.checkMenu('Weaving', 'delete');
-        _canUpdate = _userMenu.checkMenu('Weaving', 'update');
-      });
-    } catch (e) {
-      throw Exception('Error initializing menus: $e');
-    }
+    if (!mounted) return;
+
+    setState(() {
+      _canRead = _userMenu.checkMenu('Weaving', 'read');
+      _canDelete = _userMenu.checkMenu('Weaving', 'delete');
+      _canUpdate = _userMenu.checkMenu('Weaving', 'update');
+
+      _menuLoaded = true;
+
+      if (_canRead) {
+        _loadMore();
+      }
+    });
   }
 
   Future<void> _handleSearch(String value) async {
@@ -128,17 +130,7 @@ class _WeavingScreenState extends State<WeavingScreen> {
     _loadMore();
   }
 
-  Future<void> _submitFilter() async {
-    Navigator.pop(context);
-    setState(() {
-      _isFiltered = _checkIsFiltered();
-    });
-    _loadMore();
-  }
-
   Future<void> _loadMore() async {
-    _isLoadMore = true;
-
     if (params['page'] == '0') {
       setState(() {
         _dataList.clear();
@@ -161,27 +153,32 @@ class _WeavingScreenState extends State<WeavingScreen> {
     if (loadData.isEmpty) {
       setState(() {
         _firstLoading = false;
-        _isLoadMore = false;
         _hasMore = false;
       });
     } else {
       setState(() {
         _dataList.addAll(loadData);
         _firstLoading = false;
-        _isLoadMore = false;
       });
     }
   }
 
   _refetch() {
+    _debounce?.cancel();
     setState(() {
+      _search = '';
+      dariTanggal = '';
+      sampaiTanggal = '';
+      _isFiltered = false;
+
       params = {
-        'search': _search,
+        'search': '',
         'page': '0',
-        'start_date': dariTanggal,
-        'end_date': sampaiTanggal,
+        'start_date': '',
+        'end_date': '',
       };
     });
+
     _loadMore();
   }
 
@@ -235,7 +232,7 @@ class _WeavingScreenState extends State<WeavingScreen> {
 
           await showAlertDialog(
             context: context,
-            title: 'Sizing Deleted',
+            title: 'Weaving Dihapus',
             message: message,
           );
           _refetch();
@@ -279,80 +276,79 @@ class _WeavingScreenState extends State<WeavingScreen> {
             }
           },
         ),
-        body: SafeArea(
-          child: NotificationListener(
-            onNotification: (notification) {
-              if (notification is UserScrollNotification) {
-                if (notification.direction == ScrollDirection.reverse) {
-                  if (_showFab) {
-                    setState(() => _showFab = false);
-                  }
-                } else if (notification.direction == ScrollDirection.forward) {
-                  if (!_showFab) {
-                    setState(() => _showFab = true);
-                  }
-                }
-              }
-              return false;
-            },
-            child: ProcessList(
-              fetchData: (params) async {
-                final service =
-                    Provider.of<WeavingService>(context, listen: false);
-                await service.getDataList(context, params);
-                return service.items;
-              },
-              isLoadMore: _isLoadMore,
-              canRead: _canRead,
-              itemBuilder: (item) => ItemProcessCard(
-                label: 'No. Weaving',
-                item: item,
-                titleKey: 'weaving_no',
-                subtitleKey: 'work_orders',
-                subtitleField: 'wo_no',
-                itemField: ItemField.get,
-                nestedField: ItemField.nested,
-                canUpdate: _canUpdate,
-                canDelete: _canDelete,
-                onUpdate: () =>
-                    _openProcessDetail(item, openUpdateOnStart: true),
-                onDelete: () => _handleDeleteItem(item),
+        body: !_menuLoaded
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : SafeArea(
+                child: NotificationListener(
+                  onNotification: (notification) {
+                    if (notification is UserScrollNotification) {
+                      if (notification.direction == ScrollDirection.reverse) {
+                        if (_showFab) {
+                          setState(() => _showFab = false);
+                        }
+                      } else if (notification.direction ==
+                          ScrollDirection.forward) {
+                        if (!_showFab) {
+                          setState(() => _showFab = true);
+                        }
+                      }
+                    }
+                    return false;
+                  },
+                  child: ProcessList(
+                    fetchData: (params) async {
+                      final service =
+                          Provider.of<WeavingService>(context, listen: false);
+                      await service.getDataList(context, params);
+                      return service.items;
+                    },
+                    isLoadMore: _isLoadMore,
+                    canRead: _canRead,
+                    itemBuilder: (item) => ItemProcessCard(
+                      label: 'No. Weaving',
+                      item: item,
+                      titleKey: 'weaving_no',
+                      subtitleKey: 'work_orders',
+                      subtitleField: 'wo_no',
+                      canUpdate: _canUpdate,
+                      canDelete: _canDelete,
+                      onUpdate: () =>
+                          _openProcessDetail(item, openUpdateOnStart: true),
+                      onDelete: () => _handleDeleteItem(item),
+                    ),
+                    onItemTap: (context, item) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WeavingDetailScreen(
+                              id: item['id'].toString(),
+                            ),
+                          )).then((value) {
+                        if (value == true) {
+                          _refetch();
+                        } else {
+                          return null;
+                        }
+                      });
+                    },
+                    filterWidget: ListFilter(
+                      params: params,
+                      onHandleFilter: _handleFilter,
+                      dariTanggal: dariTanggal,
+                      sampaiTanggal: sampaiTanggal,
+                    ),
+                    firstLoading: _firstLoading,
+                    isFiltered: _isFiltered,
+                    hasMore: _hasMore,
+                    handleLoadMore: _loadMore,
+                    handleRefetch: _refetch,
+                    handleSearch: _handleSearch,
+                    dataList: _dataList,
+                  ),
+                ),
               ),
-              onItemTap: (context, item) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => WeavingDetailScreen(
-                        id: item['id'].toString(),
-                      ),
-                    )).then((value) {
-                  if (value == true) {
-                    _refetch();
-                  } else {
-                    return null;
-                  }
-                });
-              },
-              filterWidget: ListFilter(
-                title: 'Filter',
-                params: params,
-                onHandleFilter: _handleFilter,
-                onSubmitFilter: () {
-                  _submitFilter();
-                },
-                dariTanggal: dariTanggal,
-                sampaiTanggal: sampaiTanggal,
-              ),
-              firstLoading: _firstLoading,
-              isFiltered: _isFiltered,
-              hasMore: _hasMore,
-              handleLoadMore: _loadMore,
-              handleRefetch: _refetch,
-              handleSearch: _handleSearch,
-              dataList: _dataList,
-            ),
-          ),
-        ),
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

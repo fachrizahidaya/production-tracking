@@ -13,8 +13,7 @@ class ItemProcessCard extends StatelessWidget {
   final String subtitleKey;
   final String subtitleField;
   final dynamic label;
-  final dynamic itemField;
-  final dynamic nestedField;
+
   final bool canUpdate;
   final bool canDelete;
   final VoidCallback? onUpdate;
@@ -27,8 +26,6 @@ class ItemProcessCard extends StatelessWidget {
     required this.subtitleKey,
     required this.subtitleField,
     this.label,
-    this.itemField,
-    this.nestedField,
     this.canUpdate = false,
     this.canDelete = false,
     this.onUpdate,

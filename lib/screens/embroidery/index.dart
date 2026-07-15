@@ -301,6 +301,7 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
                 subtitleKey: 'work_orders',
                 subtitleField: 'wo_no',
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 itemField: ItemField.get,
                 nestedField: ItemField.nested,
@@ -308,6 +309,8 @@ class _EmbroideryScreenState extends State<EmbroideryScreen> {
 >>>>>>> 993ef46 (fix: card navigate to update (#16))
 =======
 >>>>>>> 8bc14cd (fix: card navigate to update)
+=======
+>>>>>>> d8439a4 (fix: refactor code)
                 canUpdate: _canUpdate,
                 canDelete: _canDelete,
                 onUpdate: () => _openProcessDetail(

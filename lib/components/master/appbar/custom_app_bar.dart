@@ -7,27 +7,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? onReturn;
   final List<Widget>? actions;
+<<<<<<< HEAD
   final bool isWithNotification;
   final int notificationCount;
   final VoidCallback? onNotifications;
   final String notificationTooltip;
+=======
+>>>>>>> d8439a4 (fix: refactor code)
   final bool isWithAccount;
   final bool showAvatar;
   final bool showNameWithAvatar;
   final tab;
-  final bool? canDelete;
-  final bool? canUpdate;
   final handleDelete;
   final handleUpdate;
-  final handleFinish;
   final handleLogout;
   final id;
   final label;
   final user;
   final deleteStatus;
   final updateStatus;
-  final isTextEditor;
-  final handleSave;
   final name;
   final bool isLoading;
   final bool isDashboardSettingsLoading;
@@ -40,15 +38,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       required this.title,
       this.onReturn,
       this.actions,
+<<<<<<< HEAD
       this.isWithNotification = false,
       this.notificationCount = 0,
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
+=======
+>>>>>>> d8439a4 (fix: refactor code)
       this.isWithAccount = false,
       this.showAvatar = true,
       this.tab,
-      this.canDelete,
-      this.canUpdate,
       this.handleDelete,
       this.handleUpdate,
       this.id,
@@ -57,9 +56,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.user,
       this.deleteStatus,
       this.updateStatus,
-      this.isTextEditor = false,
-      this.handleSave,
       this.name,
+<<<<<<< HEAD
       this.handleFinish,
       this.isLoading = false,
       this.isDashboardSettingsLoading = false,
@@ -67,6 +65,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onReportSettings,
       this.onEdit,
       this.showNameWithAvatar = false});
+=======
+      this.isLoading = false});
+>>>>>>> d8439a4 (fix: refactor code)
 
   @override
   Widget build(BuildContext context) {

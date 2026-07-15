@@ -14,7 +14,6 @@ import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/stenter.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/stenter/%5Bstenter_id%5D.dart';
@@ -41,10 +40,13 @@ class _StenterScreenState extends State<StenterScreen> {
   bool _isLoadMore = false;
   bool _showFab = true;
   bool _menuLoaded = false;
+<<<<<<< HEAD
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
+=======
+>>>>>>> d8439a4 (fix: refactor code)
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
@@ -135,14 +137,6 @@ class _StenterScreenState extends State<StenterScreen> {
     _loadMore();
   }
 
-  Future<void> _submitFilter() async {
-    Navigator.pop(context);
-    setState(() {
-      _isFiltered = _checkIsFiltered();
-    });
-    _loadMore();
-  }
-
   Future<void> _loadMore() async {
     if (params['page'] == '0') {
       setState(() {
@@ -166,14 +160,12 @@ class _StenterScreenState extends State<StenterScreen> {
     if (loadData.isEmpty) {
       setState(() {
         _firstLoading = false;
-        _isLoadMore = false;
         _hasMore = false;
       });
     } else {
       setState(() {
         _dataList.addAll(loadData);
         _firstLoading = false;
-        _isLoadMore = false;
       });
     }
   }
@@ -293,6 +285,9 @@ class _StenterScreenState extends State<StenterScreen> {
           },
         ),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d8439a4 (fix: refactor code)
         body: !_menuLoaded
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -313,6 +308,7 @@ class _StenterScreenState extends State<StenterScreen> {
                       }
                     }
                     return false;
+<<<<<<< HEAD
 =======
         body: SafeArea(
           child: NotificationListener(
@@ -339,25 +335,58 @@ class _StenterScreenState extends State<StenterScreen> {
                         Provider.of<StenterService>(context, listen: false);
                     await service.getDataList(context, params);
                     return service.items;
+=======
+>>>>>>> d8439a4 (fix: refactor code)
                   },
-                  canRead: _canRead,
-                  isLoadMore: _isLoadMore,
-                  itemBuilder: (item) => ItemProcessCard(
-                    label: 'No. Stenter',
-                    item: item,
-                    titleKey: 'stenter_no',
-                    subtitleKey: 'work_orders',
-                    subtitleField: 'wo_no',
-                    itemField: ItemField.get,
-                    nestedField: ItemField.nested,
-                    canUpdate: _canUpdate,
-                    canDelete: _canDelete,
-                    onUpdate: () => _openProcessDetail(
-                      item,
-                      openUpdateOnStart: true,
-                    ),
-                    onDelete: () => _handleDeleteItem(item),
+                  child: Column(
+                    children: [
+                      Expanded(
+                          child: ProcessList(
+                        fetchData: (params) async {
+                          final service = Provider.of<StenterService>(context,
+                              listen: false);
+                          await service.getDataList(context, params);
+                          return service.items;
+                        },
+                        canRead: _canRead,
+                        isLoadMore: _isLoadMore,
+                        itemBuilder: (item) => ItemProcessCard(
+                          label: 'No. Stenter',
+                          item: item,
+                          titleKey: 'stenter_no',
+                          subtitleKey: 'work_orders',
+                          subtitleField: 'wo_no',
+                          canUpdate: _canUpdate,
+                          canDelete: _canDelete,
+                          onUpdate: () => _openProcessDetail(
+                            item,
+                            openUpdateOnStart: true,
+                          ),
+                          onDelete: () => _handleDeleteItem(item),
+                        ),
+                        onItemTap: (context, item) {
+                          _openProcessDetail(
+                            item,
+                            openUpdateOnStart: item['status'] == 'Diproses',
+                          );
+                        },
+                        filterWidget: ListFilter(
+                          params: params,
+                          onHandleFilter: _handleFilter,
+                          dariTanggal: dariTanggal,
+                          sampaiTanggal: sampaiTanggal,
+                        ),
+                        firstLoading: _firstLoading,
+                        isFiltered: _isFiltered,
+                        hasMore: _hasMore,
+                        handleLoadMore: _loadMore,
+                        handleRefetch: _refetch,
+                        handleSearch: _handleSearch,
+                        dataList: _dataList,
+                      ))
+                    ],
                   ),
+<<<<<<< HEAD
                   onItemTap: (context, item) {
                     _openProcessDetail(
                       item,
@@ -423,6 +452,8 @@ class _StenterScreenState extends State<StenterScreen> {
                       ))
                     ],
                   ),
+=======
+>>>>>>> d8439a4 (fix: refactor code)
                 ),
               ),
         floatingActionButton: AnimatedSlide(

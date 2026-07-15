@@ -1,8 +1,13 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously
 
 =======
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+// ignore_for_file: use_build_context_synchronously
+
+>>>>>>> d8439a4 (fix: refactor code)
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -16,6 +21,7 @@ import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/process_list.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
@@ -23,6 +29,10 @@ import 'package:textile_tracking/screens/warping/create/create_warping.dart';
 import 'package:textile_tracking/screens/warping/detail/edit_warping.dart';
 =======
 import 'package:textile_tracking/helpers/util/item_field.dart';
+=======
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+>>>>>>> d8439a4 (fix: refactor code)
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/warping/create/create_warping.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
@@ -50,11 +60,17 @@ class _WarpingScreenState extends State<WarpingScreen> {
   bool _isLoadMore = false;
   bool _showFab = true;
 <<<<<<< HEAD
+<<<<<<< HEAD
   bool _menuLoaded = false;
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 =======
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+  bool _menuLoaded = false;
+
+  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
+>>>>>>> d8439a4 (fix: refactor code)
 
   final List<dynamic> _dataList = [];
   String _search = '';
@@ -70,6 +86,9 @@ class _WarpingScreenState extends State<WarpingScreen> {
     super.initState();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d8439a4 (fix: refactor code)
     params = {
       'search': _search,
       'page': '0',
@@ -77,6 +96,7 @@ class _WarpingScreenState extends State<WarpingScreen> {
       'end_date': '',
     };
 
+<<<<<<< HEAD
 =======
     setState(() {
       params = {
@@ -90,6 +110,8 @@ class _WarpingScreenState extends State<WarpingScreen> {
       _loadMore();
     });
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+>>>>>>> d8439a4 (fix: refactor code)
     _intializeMenus();
   }
 
@@ -111,6 +133,7 @@ class _WarpingScreenState extends State<WarpingScreen> {
   }
 
   Future<void> _intializeMenus() async {
+<<<<<<< HEAD
 <<<<<<< HEAD
     await _menuService.handleFetchMenu(context);
     await _userMenu.handleLoadMenu();
@@ -142,6 +165,24 @@ class _WarpingScreenState extends State<WarpingScreen> {
       throw Exception('Error initializing menus: $e');
     }
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+    await _menuService.handleFetchMenu(context);
+    await _userMenu.handleLoadMenu();
+
+    if (!mounted) return;
+
+    setState(() {
+      _canRead = _userMenu.checkMenu('Warping', 'read');
+      _canDelete = _userMenu.checkMenu('Warping', 'delete');
+      _canUpdate = _userMenu.checkMenu('Warping', 'update');
+
+      _menuLoaded = true;
+
+      if (_canRead) {
+        _loadMore();
+      }
+    });
+>>>>>>> d8439a4 (fix: refactor code)
   }
 
   Future<void> _handleSearch(String value) async {
@@ -173,6 +214,7 @@ class _WarpingScreenState extends State<WarpingScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Future<void> _loadMore() async {
 =======
   Future<void> _submitFilter() async {
@@ -187,6 +229,9 @@ class _WarpingScreenState extends State<WarpingScreen> {
     _isLoadMore = true;
 
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+  Future<void> _loadMore() async {
+>>>>>>> d8439a4 (fix: refactor code)
     if (params['page'] == '0') {
       setState(() {
         _dataList.clear();
@@ -210,9 +255,12 @@ class _WarpingScreenState extends State<WarpingScreen> {
       setState(() {
         _firstLoading = false;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         _isLoadMore = false;
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+>>>>>>> d8439a4 (fix: refactor code)
         _hasMore = false;
       });
     } else {
@@ -220,14 +268,18 @@ class _WarpingScreenState extends State<WarpingScreen> {
         _dataList.addAll(loadData);
         _firstLoading = false;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         _isLoadMore = false;
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+>>>>>>> d8439a4 (fix: refactor code)
       });
     }
   }
 
   _refetch() {
+<<<<<<< HEAD
 <<<<<<< HEAD
     _debounce?.cancel();
     setState(() {
@@ -327,18 +379,100 @@ class _WarpingScreenState extends State<WarpingScreen> {
   }
 
 =======
+=======
+    _debounce?.cancel();
+>>>>>>> d8439a4 (fix: refactor code)
     setState(() {
+      _search = '';
+      dariTanggal = '';
+      sampaiTanggal = '';
+      _isFiltered = false;
+
       params = {
-        'search': _search,
+        'search': '',
         'page': '0',
-        'start_date': dariTanggal,
-        'end_date': sampaiTanggal,
+        'start_date': '',
+        'end_date': '',
       };
     });
+
     _loadMore();
   }
 
+<<<<<<< HEAD
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+  Future<void> _openProcessDetail(
+    dynamic item, {
+    bool openUpdateOnStart = false,
+  }) async {
+    final value = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WarpingDetailScreen(
+          id: item['id'].toString(),
+          no: item['warping_no'].toString(),
+          canDelete: _canDelete,
+          canUpdate: _canUpdate,
+          openUpdateOnStart: openUpdateOnStart,
+        ),
+      ),
+    );
+
+    if (value == true) {
+      _refetch();
+    }
+  }
+
+  Future<void> _handleDeleteItem(dynamic item) async {
+    if (item['can_delete'] == false) {
+      await showAlertDialog(
+        context: context,
+        title: 'Tidak Bisa Hapus',
+        message:
+            'Proses tidak bisa dihapus karena sudah diproses di proses selanjutnya.',
+      );
+      return;
+    }
+
+    showConfirmationDialog(
+      context: context,
+      title: 'Hapus Data',
+      message: 'Apakah Anda yakin ingin menghapus proses?',
+      isLoading: _deleteLoading,
+      buttonBackground: CustomTheme().buttonColor('danger'),
+      onConfirm: () async {
+        try {
+          final message =
+              await Provider.of<WarpingService>(context, listen: false)
+                  .deleteItem(context, item['id'].toString(), _deleteLoading);
+
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+
+          await showAlertDialog(
+            context: context,
+            title: 'Warping Dihapus',
+            message: message,
+          );
+          _refetch();
+        } catch (e) {
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+
+          await showAlertDialog(
+            context: context,
+            title: 'Error',
+            message: e.toString(),
+          );
+        }
+      },
+    );
+  }
+
+>>>>>>> d8439a4 (fix: refactor code)
   @override
   void dispose() {
     super.dispose();
@@ -365,6 +499,9 @@ class _WarpingScreenState extends State<WarpingScreen> {
           },
         ),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d8439a4 (fix: refactor code)
         body: !_menuLoaded
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -399,6 +536,7 @@ class _WarpingScreenState extends State<WarpingScreen> {
                       label: 'No. Warping',
                       item: item,
                       titleKey: 'warping_no',
+<<<<<<< HEAD
                       subtitleKey: 'order_greige',
                       subtitleField: 'og_no',
                     ),
@@ -477,25 +615,48 @@ class _WarpingScreenState extends State<WarpingScreen> {
                     MaterialPageRoute(
                       builder: (context) => WarpingDetailScreen(
                         id: item['id'].toString(),
+=======
+                      subtitleKey: 'work_orders',
+                      subtitleField: 'wo_no',
+                      onUpdate: () => _openProcessDetail(
+                        item,
+                        openUpdateOnStart: true,
+>>>>>>> d8439a4 (fix: refactor code)
                       ),
-                    )).then((value) {
-                  if (value == true) {
-                    _refetch();
-                  } else {
-                    return null;
-                  }
-                });
-              },
-              filterWidget: ListFilter(
-                title: 'Filter',
-                params: params,
-                onHandleFilter: _handleFilter,
-                onSubmitFilter: () {
-                  _submitFilter();
-                },
-                dariTanggal: dariTanggal,
-                sampaiTanggal: sampaiTanggal,
+                      onDelete: () => _handleDeleteItem(item),
+                    ),
+                    onItemTap: (context, item) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WarpingDetailScreen(
+                              id: item['id'].toString(),
+                            ),
+                          )).then((value) {
+                        if (value == true) {
+                          _refetch();
+                        } else {
+                          return null;
+                        }
+                      });
+                    },
+                    filterWidget: ListFilter(
+                      params: params,
+                      onHandleFilter: _handleFilter,
+                      dariTanggal: dariTanggal,
+                      sampaiTanggal: sampaiTanggal,
+                    ),
+                    firstLoading: _firstLoading,
+                    isFiltered: _isFiltered,
+                    hasMore: _hasMore,
+                    handleLoadMore: _loadMore,
+                    handleRefetch: _refetch,
+                    handleSearch: _handleSearch,
+                    dataList: _dataList,
+                  ),
+                ),
               ),
+<<<<<<< HEAD
               firstLoading: _firstLoading,
               isFiltered: _isFiltered,
               hasMore: _hasMore,
@@ -507,6 +668,8 @@ class _WarpingScreenState extends State<WarpingScreen> {
           ),
         ),
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+>>>>>>> d8439a4 (fix: refactor code)
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

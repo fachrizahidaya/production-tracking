@@ -42,10 +42,13 @@ class _DyeingScreenState extends State<DyeingScreen> {
   bool _canUpdate = false;
   bool _showFab = true;
   bool _menuLoaded = false;
+<<<<<<< HEAD
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
+=======
+>>>>>>> d8439a4 (fix: refactor code)
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
@@ -292,6 +295,9 @@ class _DyeingScreenState extends State<DyeingScreen> {
           },
         ),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d8439a4 (fix: refactor code)
         body: !_menuLoaded
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -330,6 +336,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
                       subtitleField: 'wo_no',
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
+<<<<<<< HEAD
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -348,6 +355,19 @@ class _DyeingScreenState extends State<DyeingScreen> {
                           return null;
                         }
                       });
+=======
+                      onUpdate: () => _openProcessDetail(
+                        item,
+                        openUpdateOnStart: true,
+                      ),
+                      onDelete: () => _handleDeleteItem(item),
+                    ),
+                    onItemTap: (context, item) {
+                      _openProcessDetail(
+                        item,
+                        openUpdateOnStart: item['status'] == 'Diproses',
+                      );
+>>>>>>> d8439a4 (fix: refactor code)
                     },
                     filterWidget: ListFilter(
                       params: params,
@@ -363,6 +383,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
                     handleSearch: _handleSearch,
                     dataList: _dataList,
                   ),
+<<<<<<< HEAD
                 ),
               ),
 =======
@@ -404,9 +425,11 @@ class _DyeingScreenState extends State<DyeingScreen> {
                 onUpdate: () => _openProcessDetail(
                   item,
                   openUpdateOnStart: true,
+=======
+>>>>>>> d8439a4 (fix: refactor code)
                 ),
-                onDelete: () => _handleDeleteItem(item),
               ),
+<<<<<<< HEAD
               onItemTap: (context, item) {
                 _openProcessDetail(
                   item,
@@ -434,6 +457,8 @@ class _DyeingScreenState extends State<DyeingScreen> {
           ),
         ),
 >>>>>>> 993ef46 (fix: card navigate to update (#16))
+=======
+>>>>>>> d8439a4 (fix: refactor code)
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

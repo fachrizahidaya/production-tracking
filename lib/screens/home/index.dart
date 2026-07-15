@@ -435,6 +435,7 @@ class _HomeState extends State<Home> {
           return Center(child: Text('Error fetch token'));
         }
 
+<<<<<<< HEAD
         final isMobile = AppLayout.resolveIsMobile(context);
 
         return AppLayout(
@@ -470,6 +471,15 @@ class _HomeState extends State<Home> {
                   onRefreshReworkNotifications: _refreshEvaluationNotifications,
                 ),
               ),
+=======
+          return Scaffold(
+            appBar: CustomAppBar(
+              title: 'TexTrack',
+              handleLogout: () => _handleLogout(context),
+              isWithAccount: true,
+              user: user,
+              name: name,
+>>>>>>> d8439a4 (fix: refactor code)
             ),
           ),
         );

@@ -389,8 +389,6 @@ class _PackingScreenState extends State<PackingScreen> {
                 titleKey: 'packing_no',
                 subtitleKey: 'work_orders',
                 subtitleField: 'wo_no',
-                itemField: ItemField.get,
-                nestedField: ItemField.nested,
                 canUpdate: _canUpdate,
                 canDelete: _canDelete,
                 onUpdate: () => _openProcessDetail(
@@ -406,12 +404,8 @@ class _PackingScreenState extends State<PackingScreen> {
                 );
               },
               filterWidget: ListFilter(
-                title: 'Filter',
                 params: params,
                 onHandleFilter: _handleFilter,
-                onSubmitFilter: () {
-                  _submitFilter();
-                },
                 dariTanggal: dariTanggal,
                 sampaiTanggal: sampaiTanggal,
               ),

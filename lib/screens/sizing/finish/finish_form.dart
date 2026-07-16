@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/sizing/finish/finish_sizing_process_manual.dart';
 =======
 import 'package:textile_tracking/models/process/press_tumbler.dart';
+=======
+>>>>>>> bb29b60 (fix: clear warning)
 import 'package:textile_tracking/screens/finish/%5Bfinish_process_id%5D.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
@@ -40,7 +43,6 @@ class _FinishFormState extends State<FinishForm> {
 <<<<<<< HEAD
 =======
   final SizingService _sizingService = SizingService();
-  final PressTumblerService _pressService = PressTumblerService();
 
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
   @override

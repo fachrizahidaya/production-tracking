@@ -1,7 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously
 
 =======
+=======
+// ignore_for_file: use_build_context_synchronously
+
+>>>>>>> bb29b60 (fix: clear warning)
 import 'package:easy_localization/easy_localization.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
 import 'package:flutter/material.dart';

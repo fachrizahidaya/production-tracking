@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/sizing/create/create_sizing_process_manual.dart';
 =======
 import 'package:textile_tracking/models/process/press_tumbler.dart';
+=======
+>>>>>>> bb29b60 (fix: clear warning)
 import 'package:textile_tracking/screens/create/create_process_manual.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
@@ -41,7 +44,6 @@ class CreateForm extends StatelessWidget {
       handleSubmit: handleSubmit,
 =======
     final SizingService sizingService = SizingService();
-    final PressTumblerService pressService = PressTumblerService();
 
     return CreateProcessManual(
       title: 'Mulai Sizing',

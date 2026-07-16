@@ -1,7 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously
 
 =======
+=======
+// ignore_for_file: use_build_context_synchronously
+
+>>>>>>> bb29b60 (fix: clear warning)
 import 'package:easy_localization/easy_localization.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
 import 'package:flutter/material.dart';
@@ -9,11 +14,14 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/sizing/finish/finish_form.dart';
 import 'package:textile_tracking/screens/sizing/finish/finish_sizing_process.dart';
 =======
 import 'package:textile_tracking/models/process/press_tumbler.dart';
+=======
+>>>>>>> bb29b60 (fix: clear warning)
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/screens/sizing/finish/finish_form.dart';

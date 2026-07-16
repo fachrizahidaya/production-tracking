@@ -97,9 +97,12 @@ class _WarpingSectionState extends State<WarpingSection> {
                           tabs: widget.items.asMap().entries.map((entry) {
                             final index = entry.key;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                             final item = entry.value;
 >>>>>>> 3a0606c (feat: finish, update)
+=======
+>>>>>>> bb29b60 (fix: clear warning)
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(

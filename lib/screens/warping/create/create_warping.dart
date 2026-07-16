@@ -1,8 +1,13 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously
 
 =======
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+// ignore_for_file: use_build_context_synchronously
+
+>>>>>>> bb29b60 (fix: clear warning)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';

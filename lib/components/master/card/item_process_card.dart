@@ -75,8 +75,6 @@ class ItemProcessCard extends StatelessWidget {
 
   /// Header dengan title dan status badge
   Widget _buildHeader(bool isTablet) {
-    final canShowDelete = canDelete && item['can_delete'] != false;
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,6 +155,7 @@ class ItemProcessCard extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bfc08f8 (update version 1.2.2 (#21))
 =======
@@ -204,6 +203,8 @@ class ItemProcessCard extends StatelessWidget {
 >>>>>>> cec4230 (chore: update app version)
 =======
 >>>>>>> 827c1f7 (fix: hilangkan icon delete)
+=======
+>>>>>>> bb29b60 (fix: clear warning)
           ].separatedBy(CustomTheme().hGap('md')),
         ),
       ].separatedBy(CustomTheme().hGap('xl')),

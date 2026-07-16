@@ -75,8 +75,6 @@ class ItemProcessCard extends StatelessWidget {
 
   /// Header dengan title dan status badge
   Widget _buildHeader(bool isTablet) {
-    final canShowDelete = canDelete && item['can_delete'] != false;
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,21 +151,6 @@ class ItemProcessCard extends StatelessWidget {
                 status: item['status'],
                 withStatus: true,
               ),
-            // if (canShowDelete && onDelete != null)
-            //   IconButton(
-            //     tooltip: 'Hapus',
-            //     visualDensity: VisualDensity.compact,
-            //     constraints: BoxConstraints(
-            //       minWidth: 36,
-            //       minHeight: 36,
-            //     ),
-            //     icon: Icon(
-            //       Icons.delete_outline,
-            //       size: 20,
-            //       color: Colors.red,
-            //     ),
-            //     onPressed: onDelete,
-            //   ),
           ].separatedBy(CustomTheme().hGap('md')),
         ),
       ].separatedBy(CustomTheme().hGap('xl')),

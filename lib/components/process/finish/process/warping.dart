@@ -96,7 +96,6 @@ class _WarpingSectionState extends State<WarpingSection> {
                           tabAlignment: TabAlignment.start,
                           tabs: widget.items.asMap().entries.map((entry) {
                             final index = entry.key;
-                            final item = entry.value;
 
                             return Padding(
                               padding: const EdgeInsets.symmetric(

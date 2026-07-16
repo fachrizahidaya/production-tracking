@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/models/process/press_tumbler.dart';
 import 'package:textile_tracking/screens/create/create_process_manual.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 
@@ -23,7 +22,6 @@ class CreateForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SizingService sizingService = SizingService();
-    final PressTumblerService pressService = PressTumblerService();
 
     return CreateProcessManual(
       title: 'Mulai Sizing',

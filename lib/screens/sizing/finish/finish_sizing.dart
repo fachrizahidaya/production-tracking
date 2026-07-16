@@ -1,9 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
-import 'package:textile_tracking/models/process/press_tumbler.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
 import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/screens/sizing/finish/finish_form.dart';

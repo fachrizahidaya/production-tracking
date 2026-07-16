@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/spk/tab/attachment_section.dart';
 import 'package:textile_tracking/components/spk/tab/spk_card_content.dart';
-import 'package:textile_tracking/components/work-order/item/note/card_content.dart';
-import 'package:textile_tracking/helpers/util/format_html.dart';
 
 class SpkDocumentCard extends StatefulWidget {
   final Map<String, dynamic> item;
@@ -18,14 +16,6 @@ class SpkDocumentCard extends StatefulWidget {
 }
 
 class _SpkDocumentCardState extends State<SpkDocumentCard> {
-  bool _isExpanded = false;
-
-  void _toggleExpanded() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final notes = widget.item['notes']?.toString() ?? '';

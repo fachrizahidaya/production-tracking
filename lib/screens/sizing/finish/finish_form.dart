@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/models/process/press_tumbler.dart';
 import 'package:textile_tracking/screens/finish/%5Bfinish_process_id%5D.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 
@@ -34,7 +33,6 @@ class FinishForm extends StatefulWidget {
 
 class _FinishFormState extends State<FinishForm> {
   final SizingService _sizingService = SizingService();
-  final PressTumblerService _pressService = PressTumblerService();
 
   @override
   void initState() {

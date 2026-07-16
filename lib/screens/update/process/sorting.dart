@@ -182,9 +182,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
       final itemGrade = grade['item_grade'];
 
       for (final item in gradeItems) {
-        final itemId = item['item_id'] ??
-            item['finished_product']?['id'] ??
-            DateTime.now().millisecondsSinceEpoch;
         final itemKey = '${item['wo_item_id']}_${item['item_id']}';
 
         if (!groupedItems.containsKey(itemKey)) {
@@ -318,12 +315,9 @@ class _SortingEditSectionState extends State<SortingEditSection> {
       for (int i = 0; i < woItems.length; i++) {
         final woItem = woItems[i];
 
-        final itemCode = woItem['item_code']?.toString() ?? '';
-
         /// ambil base code sebelum "-"
         /// contoh:
         /// HGN187C0-55NN-LYO -> HGN187C0
-        final baseCode = itemCode.split('-').first;
         Map<String, dynamic>? gradeAItem;
         Map<String, dynamic>? gradeBItem;
 

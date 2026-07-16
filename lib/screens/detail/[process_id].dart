@@ -556,17 +556,23 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       if (!mounted) return;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 993ef46 (fix: card navigate to update (#16))
 =======
 >>>>>>> 8bc14cd (fix: card navigate to update)
 =======
+=======
+>>>>>>> 3653fed (fix: update to list)
       if (widget.openUpdateOnStart) {
         Navigator.pop(context);
         Navigator.pop(context, true);
         return;
       }
 
+<<<<<<< HEAD
 >>>>>>> c473136 (fix: update then to list)
+=======
+>>>>>>> 3653fed (fix: update to list)
       Navigator.pushNamedAndRemoveUntil(context, widget.route, (_) => false);
     } catch (e) {
       rethrow;

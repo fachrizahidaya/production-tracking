@@ -498,6 +498,12 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       }
 
       if (!mounted) return;
+      if (widget.openUpdateOnStart) {
+        Navigator.pop(context);
+        Navigator.pop(context, true);
+        return;
+      }
+
       Navigator.pushNamedAndRemoveUntil(context, widget.route, (_) => false);
     } catch (e) {
       rethrow;

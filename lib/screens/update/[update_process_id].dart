@@ -38,19 +38,16 @@ class UpdateProcess extends StatefulWidget {
   final length;
   final width;
   final weight;
-
   final isSubmitting;
   final forDyeing;
   final grades;
   final getMachineStatus;
-  final handleFetchMachine;
   final qty;
   final defectQty;
   final note;
   final itemGradeOption;
   final itemTypeOption;
   final defects;
-
   final reworkLongHemming;
   final combing;
   final spraying;
@@ -82,7 +79,6 @@ class UpdateProcess extends StatefulWidget {
       this.handleSelectMachine,
       this.grades,
       this.getMachineStatus,
-      this.handleFetchMachine,
       this.defectQty,
       this.note,
       this.qty,

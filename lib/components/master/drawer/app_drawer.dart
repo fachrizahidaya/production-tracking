@@ -118,30 +118,30 @@ class _AppDrawerState extends State<AppDrawer> {
                         .where((m) => !hiddenMenus.contains(m.title))
                         .toList();
 
-                    // menus.add(
-                    //   MenuItem(
-                    //     title: 'Warping',
-                    //     allowMobile: true,
-                    //   ),
-                    // );
-                    // menus.add(
-                    //   MenuItem(
-                    //     title: 'Sizing',
-                    //     allowMobile: true,
-                    //   ),
-                    // );
-                    // menus.add(
-                    //   MenuItem(
-                    //     title: 'Weaving',
-                    //     allowMobile: true,
-                    //   ),
-                    // );
-                    // menus.add(
-                    //   MenuItem(
-                    //     title: 'Shearing',
-                    //     allowMobile: true,
-                    //   ),
-                    // );
+                    menus.add(
+                      MenuItem(
+                        title: 'Warping',
+                        allowMobile: true,
+                      ),
+                    );
+                    menus.add(
+                      MenuItem(
+                        title: 'Sizing',
+                        allowMobile: true,
+                      ),
+                    );
+                    menus.add(
+                      MenuItem(
+                        title: 'Weaving',
+                        allowMobile: true,
+                      ),
+                    );
+                    menus.add(
+                      MenuItem(
+                        title: 'Shearing',
+                        allowMobile: true,
+                      ),
+                    );
 
                     return ListView.builder(
                       itemCount: menus.length,

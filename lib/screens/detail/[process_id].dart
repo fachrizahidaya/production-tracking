@@ -132,10 +132,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   final List<TextEditingController> _defectQtyControllers = [];
 
   late List<dynamic> itemGradeOption = [];
-  late List<dynamic> unitOption = [];
   late List<dynamic> machineOption = [];
   late List<dynamic> itemTypeOption = [];
-  late List<dynamic> finishedItemMaterial = [];
   late List<dynamic> finishedItemGrb = [];
   late List<dynamic> finishedItemGood = [];
 
@@ -256,28 +254,10 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     _handleChangeInput('defects', _defects);
   }
 
-  void updateGrade(int index, String key, dynamic value) {
-    setState(() {
-      _grades[index][key] = value;
-    });
-
-    _handleChangeInput('grades', _grades);
-    _onGradeChanged(_grades);
-  }
-
-  void updateDefect(int index, String key, dynamic value) {
-    setState(() {
-      _defects[index][key] = value;
-    });
-
-    _handleChangeInput('defects', _defects);
-  }
-
   Future<void> _postInit() async {
     await _getDataView();
     await _handleFetchMachine();
     await _handleFetchItemGrade();
-    await _handleFetchFinishedMaterial();
     await _handleFetchFinishedGrbMaterial();
     await _handleFetchFinishedGoodMaterial();
     _syncGradesWithOptions();
@@ -520,7 +500,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           isSubmitting: _isSubmitting,
           grades: _grades,
           getMachineStatus: getMachineStatus,
-          handleFetchMachine: _handleFetchMachine,
           qty: _qtyControllers,
           note: _noteController,
           defectQty: _defectQtyControllers,
@@ -670,12 +649,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     return 'Tersedia';
   }
 
-  void _onGradeChanged(List<dynamic> grades) {
-    setState(() {
-      _form['grades'] = grades;
-    });
-  }
-
   Future<void> _handleFetchItemGrade({String search = ''}) async {
     final service = context.read<OptionMasterItemGradeService>();
 
@@ -686,50 +659,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       );
       setState(() {
         itemGradeOption = service.dataListOption;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
-    }
-  }
-
-  String formatProcessLabel(String label) {
-    final trimmed = label.trim().toLowerCase();
-
-    // kalau lebih dari 1 kata → pakai underscore
-    if (trimmed.contains(' ')) {
-      return trimmed.replaceAll(RegExp(r'\s+'), '_');
-    }
-
-    return trimmed;
-  }
-
-  Future<void> _handleFetchFinishedMaterial() async {
-    final service = Provider.of<OptionItemService>(context, listen: false);
-
-    try {
-      String baseCode = '';
-      String colorCode = '';
-
-      final itemCode = woData['items']?[0]?['item_code'] ?? '';
-
-      if (itemCode.isNotEmpty) {
-        final parts = itemCode.split('-');
-        baseCode = parts.first;
-        colorCode = parts.last;
-      }
-
-      await service.fetchOptions(
-        process: formatProcessLabel(widget.label),
-        baseCode: baseCode,
-        colorCode: colorCode,
-      );
-
-      final data = service.dataListOption;
-
-      setState(() {
-        finishedItemMaterial = data;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -869,43 +798,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     );
 
     return null;
-  }
-
-  double getTotalItemQty() {
-    final items = data['work_orders']?['items'] as List<dynamic>?;
-
-    if (items == null || items.isEmpty) return 0;
-
-    return items.fold<double>(0, (sum, item) {
-      final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
-      return sum + qty;
-    });
-  }
-
-  double getRemainingQtyForGrade(int index) {
-    final totalQty = getTotalItemQty();
-    if (totalQty == 0) return 0;
-
-    final grades = _form['grades'] as List<dynamic>?;
-
-    if (grades == null) return totalQty;
-
-    double usedQty = 0;
-
-    for (int i = 0; i < grades.length; i++) {
-      if (i == index) continue;
-
-      final qty = double.tryParse(
-            grades[i]?['qty']?.toString() ?? '0',
-          ) ??
-          0;
-
-      usedQty += qty;
-    }
-
-    final remaining = totalQty - usedQty;
-
-    return remaining < 0 ? 0 : remaining;
   }
 
   double _calculateTotalSortingFromWo() {

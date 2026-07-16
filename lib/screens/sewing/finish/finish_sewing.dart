@@ -77,7 +77,6 @@ class _FinishSewingState extends State<FinishSewing> {
       fetchWorkOrder: (service) async =>
           await service.fetchSewingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
-      fetchFinishedItem: (service) async => await service.fetchOptions(),
       getFinishedItemOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput, finishedItemOption, finishedItemOptionGrb) =>

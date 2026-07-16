@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/process_button.dart';
-import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/process/finish/work_order_info_tab.dart';
 import 'package:textile_tracking/components/process/finish/finish_form_tab.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
@@ -918,168 +917,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     );
   }
 
-  _selectUnit() {
-    showSelectDialog(
-      context: context,
-      title: 'Satuan',
-      isFetching: _isFetchingUnit,
-      option: unitOption,
-      selected: widget.form?['weight_unit_id'].toString() ?? '',
-      handleChangeValue: (e) {
-        setState(() {
-          widget.form?['weight_unit_id'] = e['value'].toString();
-          widget.form?['nama_satuan_berat'] = e['label'].toString();
-        });
-      },
-    );
-  }
-
-  _selectLengthUnit() {
-    showSelectDialog(
-        context: context,
-        title: 'Satuan Panjang',
-        isFetching: _isFetchingUnit,
-        option: unitOption,
-        selected: widget.form?['length_unit_id'].toString() ?? '',
-        handleChangeValue: (e) {
-          setState(() {
-            widget.form?['length_unit_id'] = e['value'].toString();
-            widget.form?['nama_satuan_panjang'] = e['label'].toString();
-          });
-        });
-  }
-
-  _selectWidthUnit() {
-    showSelectDialog(
-      context: context,
-      title: 'Satuan Lebar',
-      isFetching: _isFetchingUnit,
-      option: unitOption,
-      selected: widget.form?['width_unit_id'].toString() ?? '',
-      handleChangeValue: (e) {
-        setState(() {
-          widget.form?['width_unit_id'] = e['value'].toString();
-          widget.form?['nama_satuan_lebar'] = e['label'].toString();
-        });
-      },
-    );
-  }
-
-  _selectQtyUnit(int index) async {
-    if (_isFetchingUnit) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
-
-    final currentUnitName =
-        widget.form?['grades']?[index]?['unit']?['name']?.toString() ?? '';
-
-    await showDialog(
-      context: context,
-      builder: (_) => SelectDialog(
-        label: 'Satuan',
-        options: unitOption,
-        selected: currentUnitName,
-        handleChangeValue: (selected) {
-          setState(() {
-            widget.form?['grades'] ??= [];
-
-            while (widget.form!['grades'].length <= index) {
-              widget.form!['grades'].add({
-                'item_grade_id': '',
-                'unit_id': 1,
-                'unit': {},
-                'qty': '0',
-                'notes': '',
-                'greige_item_id': null,
-              });
-            }
-
-            widget.form!['grades'][index]['unit_id'] =
-                selected['value'].toString();
-
-            widget.form!['grades'][index]
-                ['unit'] = {'name': selected['label'].toString()};
-          });
-        },
-      ),
-    );
-  }
-
-  _selectQtyItemUnit() {
-    showSelectDialog(
-      context: context,
-      title: 'Satuan Qty',
-      isFetching: _isFetchingUnit,
-      option: unitOption,
-      selected: widget.form?['item_unit_id'].toString() ?? '',
-      handleChangeValue: (e) {
-        setState(() {
-          widget.form?['item_unit_id'] = e['value'].toString();
-          widget.form?['nama_satuan'] = e['label'].toString();
-        });
-      },
-    );
-  }
-
-  _selectQtyDyeingUnit() {
-    showSelectDialog(
-      context: context,
-      title: 'Satuan Qty',
-      isFetching: _isFetchingUnit,
-      option: unitOption,
-      selected: widget.form?['unit_id'].toString() ?? '',
-      handleChangeValue: (e) {
-        setState(() {
-          widget.form?['unit_id'] = e['value'].toString();
-          widget.form?['nama_satuan'] = e['label'].toString();
-        });
-      },
-    );
-  }
-
-  _selectFinishedMaterial() {
-    final provider = Provider.of<OptionItemService>(context, listen: false);
-
-    showDialog(
-      context: context,
-      builder: (_) => SelectDialog(
-        label: 'Material Greige',
-        options: (widget.finishedItemOptions != null &&
-                widget.finishedItemOptions!.isNotEmpty)
-            ? widget.finishedItemOptions!
-            : finishedItemOption,
-        selected: widget.form?['greige_item_id']?.toString(),
-        isManyOption: true,
-        isAnyAdditionalData: true,
-        isLoading: provider.isLoading,
-        hasMoreData: provider.hasMoreData,
-        onSearch: (value) {
-          provider.fetchOptions(
-            isInitialLoad: true,
-            searchQuery: value,
-          );
-        },
-        onLoadMore: () {
-          provider.fetchOptions();
-        },
-        handleChangeValue: (e) {
-          setState(() {
-            widget.form?['greige_item_id'] = e?['value']?.toString();
-            widget.form?['nama_greige_item'] = e?['label']?.toString();
-            widget.form?['sku_greige_item'] = e?['code']?.toString();
-          });
-        },
-      ),
-    );
-  }
-
   double _getTotalItemQty() {
     final workOrders = data['work_orders'];
     if (workOrders == null) return 0;
@@ -1109,22 +946,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   void _validateWeight(String weight) {
-    double referenceWeight;
-
-    if ([
-      'Press',
-      'Tumbler',
-      'Stenter',
-      'Long Slitting',
-    ].contains(widget.label)) {
-      referenceWeight = getTotalItemWeight();
-    } else {
-      referenceWeight = double.tryParse(
-            data['work_orders']?['greige_qty']?.toString() ?? '0',
-          ) ??
-          0;
-    }
-
     final berat = toDouble(weight);
     final greigeQty = (data['work_orders']['greige_qty']);
 
@@ -1249,12 +1070,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     return grades.any((g) {
       final qty = double.tryParse(g['qty']?.toString() ?? '0') ?? 0;
       return qty > 0;
-    });
-  }
-
-  void _onGradeChanged(List<dynamic> grades) {
-    setState(() {
-      widget.form!['grades'] = grades;
     });
   }
 
@@ -1484,11 +1299,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               isLoading: _firstLoading,
                               form: widget.form,
                               formKey: _formKey,
-                              handleSelectMachine: null,
-                              handleSelectLengthUnit: _selectLengthUnit,
                               handleChangeInput: _handleChangeInput,
-                              handleSelectUnit: _selectUnit,
-                              handleSelectWidthUnit: _selectWidthUnit,
                               qty: _qtyItemController,
                               dyeingQty: _qtyController,
                               packingQty: _packingQtyController,
@@ -1498,47 +1309,29 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               qtyItem: _qtyControllers,
                               weight: _weightController,
                               gsm: _gsmController,
-                              weightDozen: _weightDozenController,
                               weightGradeA: _weightGradeAController,
                               totalWeight: _totalWeightController,
                               handleSelectWo: _selectWorkOrder,
-                              handleSelectFinishedMaterial:
-                                  _selectFinishedMaterial,
-                              handleSelectQtyUnitItem: _selectQtyItemUnit,
-                              handleSelectQtyUnitDyeing: _selectQtyDyeingUnit,
-                              processId: processId,
                               processData: data,
                               withItemGrade: widget.withItemGrade,
                               itemGradeOption: itemGradeOption,
-                              handleSelectQtyUnit: _selectQtyUnit,
                               withQtyAndWeight: widget.withQtyAndWeight,
                               label: widget.label,
                               forDyeing: widget.forDyeing,
                               data: data['work_orders'],
-                              forPacking: widget.forPacking,
-                              forHemming: widget.forHemming,
-                              forSewing: widget.forSewing,
                               validateWeight: _validateWeight,
                               weightWarning: _weightWarningValidationMessage,
                               validateQty: _validateQty,
                               qtyWarning: _itemWarningValidationMessage,
-                              handleRemainingQtyForGrade:
-                                  getRemainingQtyForGrade,
-                              handleTotalItemQty: getTotalItemQty,
-                              onGradeChanged: _onGradeChanged,
-                              dyeingLotNo: _dyeingLotNoController,
                               weightDefect: _weightDefectController,
                               combing: _combingController,
                               spraying: _sprayingController,
-                              reworkLongHemming: _reworkLongHemmingController,
                               weightGood: _weightGoodController,
                               woData: woData,
                               itemTypeOption: itemTypeOption,
                               defects: _defects,
                               defectQty: _defectQtyControllers,
-                              handleUpdateDefect: updateDefect,
                               finishedItem: finishedItemOption,
-                              finishedItemGood: finishedItemGood,
                               finishedItemGrb: finishedItemGrb,
                               isInitializing: _isInitializingSorting,
                             ),

@@ -7,7 +7,6 @@ import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/packing_number_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
-import 'package:textile_tracking/components/process/finish/process/form_helpers.dart';
 import 'package:textile_tracking/components/process/finish/process/long_hemming_weight.dart';
 import 'package:textile_tracking/components/process/finish/process/process_item_qty.dart';
 import 'package:textile_tracking/components/process/finish/process/qty_weight.dart';
@@ -28,33 +27,21 @@ class FormItems extends StatefulWidget {
   final withItemGrade;
   final withQtyAndWeight;
   final forDyeing;
-  final forPacking;
-  final forSewing;
-  final forHemming;
   final itemGradeOption;
-  final handleSelectQtyUnit;
   final length;
   final width;
   final weight;
-  final weightDozen;
   final gsm;
   final totalWeight;
   final note;
   final handleChangeInput;
-  final handleSelectLengthUnit;
-  final handleSelectWidthUnit;
-  final handleSelectUnit;
   final qty;
   final qtyItem;
   final grades;
   final allAttachments;
   final handleSelectWo;
-  final handleSelectFinishedMaterial;
-  final handleUpdateGrade;
   final handlePickAttachments;
   final handleDeleteAttachment;
-  final handleSelectQtyUnitItem;
-  final handleSelectQtyUnitDyeing;
   final showImageDialog;
   final validateWeight;
   final validateQty;
@@ -63,25 +50,16 @@ class FormItems extends StatefulWidget {
   final label;
   final data;
   final processData;
-  final handleTotalItemQty;
-  final handleRemainingQtyForGrade;
-  final dyeingLotNo;
   final weightGood;
   final weightDefect;
   final woData;
-  final reworkLongHemming;
   final combing;
   final spraying;
   final itemTypeOption;
-  final defects;
-  final defectQty;
-  final handleSelectItemType;
-  final handleUpdateDefect;
   final packingQty;
   final weightGradeA;
   final finishedItem;
   final dyeingQty;
-  final finishedItemGood;
   final finishedItemGrb;
   final isInitializing;
   final getMachineStatus;
@@ -95,13 +73,7 @@ class FormItems extends StatefulWidget {
       this.grades,
       this.handleChangeInput,
       this.handlePickAttachments,
-      this.handleSelectLengthUnit,
-      this.handleSelectQtyUnit,
-      this.handleSelectQtyUnitItem,
-      this.handleSelectUnit,
-      this.handleSelectWidthUnit,
       this.handleSelectWo,
-      this.handleUpdateGrade,
       this.id,
       this.itemGradeOption,
       this.length,
@@ -119,36 +91,21 @@ class FormItems extends StatefulWidget {
       this.qtyWarning,
       this.forDyeing = false,
       this.label,
-      this.handleSelectQtyUnitDyeing,
       this.data,
-      this.forPacking = false,
       this.gsm,
       this.totalWeight,
-      this.weightDozen,
-      this.handleRemainingQtyForGrade,
-      this.handleTotalItemQty,
       this.processData,
       this.qtyItem,
-      this.dyeingLotNo,
-      this.forHemming,
-      this.forSewing,
-      this.handleSelectFinishedMaterial,
       this.weightDefect,
       this.weightGood,
       this.woData,
-      this.reworkLongHemming,
       this.combing,
       this.spraying,
       this.itemTypeOption,
-      this.defects,
-      this.defectQty,
-      this.handleSelectItemType,
-      this.handleUpdateDefect,
       this.packingQty,
       this.weightGradeA,
       this.finishedItem,
       this.dyeingQty,
-      this.finishedItemGood,
       this.finishedItemGrb,
       this.isInitializing,
       this.getMachineStatus,
@@ -407,7 +364,6 @@ class _FormItemsState extends State<FormItems>
 
     final grades = processData['sorting']?['grades'] ?? [];
 
-    final itemCode = item['finished_product']?['code']?.toString().trim();
     final woItemId = item['wo_item_id'];
 
     for (final grade in grades) {
@@ -631,7 +587,6 @@ class _FormItemsState extends State<FormItems>
     double gradeB = 0;
     double gradeBS = 0;
 
-    final itemCode = item['finished_product']?['code']?.toString().trim();
     final woItemId = item['wo_item_id'];
 
     for (final grade in grades) {
@@ -670,7 +625,6 @@ class _FormItemsState extends State<FormItems>
   ) {
     final grades = data['sorting']?['grades'] ?? [];
 
-    final itemCode = item['finished_product']?['code']?.toString().trim();
     final woItemId = item['wo_item_id'];
 
     double total = 0;

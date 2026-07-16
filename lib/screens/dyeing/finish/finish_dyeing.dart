@@ -71,7 +71,6 @@ class _FinishDyeingState extends State<FinishDyeing> {
       title: 'Selesai Dyeing',
       label: 'Dyeing',
       fetchWorkOrder: (service) async => await service.fetchFinishOptions(),
-      fetchFinishedItem: (service) async => await service.fetchOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
       getFinishedItemOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,

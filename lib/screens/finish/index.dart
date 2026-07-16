@@ -46,7 +46,6 @@ class FinishProcess extends StatefulWidget {
   final getItemGradeOptions;
   final String? manualWoId;
   final String? manualProcessId;
-  final fetchFinishedItem;
   final getFinishedItemOptions;
 
   const FinishProcess(
@@ -61,7 +60,6 @@ class FinishProcess extends StatefulWidget {
       this.manualProcessId,
       this.manualWoId,
       this.initialData,
-      this.fetchFinishedItem,
       this.getFinishedItemOptions,
       this.label});
 
@@ -166,19 +164,6 @@ class _FinishProcessState extends State<FinishProcess> {
     if (widget.label == 'Sewing') {
       _form['nama_satuan'] = 'PCS';
     }
-
-    // final data = _workOrderService.dataView;
-    // final greigeQty = data['greige_qty'];
-
-    // if (widget.label == 'Dyeing') {
-    //   _form['qty'] = greigeQty.toString();
-    // }
-
-    // if (widget.label != 'Long Hemming' &&
-    //     widget.label != 'Sewing' &&
-    //     widget.label != 'Cross Cutting') {
-    //   _form['weight'] = greigeQty.toString();
-    // }
   }
 
   Future<void> _initialize() async {

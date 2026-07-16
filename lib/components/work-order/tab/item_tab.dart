@@ -76,10 +76,10 @@ class _ItemTabState extends State<ItemTab> {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(8),
-      ),
+      // decoration: BoxDecoration(
+      //   color: Colors.grey[100],
+      //   borderRadius: BorderRadius.circular(8),
+      // ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -88,75 +88,76 @@ class _ItemTabState extends State<ItemTab> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total Material',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('md'),
-                        color: Colors.grey[600],
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
-                    ),
-                    Text(
-                      '${widget.data['items']?.length ?? '-'}',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                  ],
+                child: _buildSummaryBox(
+                  title: 'Total Material',
+                  value: '${widget.data['items']?.length ?? 0}',
+                  icon: Icons.inventory_2_outlined,
                 ),
               ),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total Qty',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('md'),
-                        color: Colors.grey[600],
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
-                    ),
-                    Text(
+                child: _buildSummaryBox(
+                  title: 'Total Qty',
+                  value:
                       '${formatNumber(totalQty)} ${widget.data['items'][0]['unit']['code'] ?? ''}',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                  ],
+                  icon: Icons.format_list_numbered_outlined,
                 ),
               ),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total Berat',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('md'),
-                        color: Colors.grey[600],
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
-                    ),
-                    Text(
+                child: _buildSummaryBox(
+                  title: 'Total Berat',
+                  value:
                       '${formatNumber(totalBerat)} ${widget.data['greige_unit']['code'] ?? ''}',
-                      style: TextStyle(
-                        fontSize: CustomTheme().fontSize('lg'),
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                  ],
+                  icon: Icons.scale_outlined,
                 ),
               ),
             ].separatedBy(CustomTheme().hGap('xl')),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryBox({
+    required String title,
+    required String value,
+    required IconData icon,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey.shade300,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            icon,
+            size: CustomTheme().iconSize('lg'),
+            color: CustomTheme().buttonColor('primary'),
+          ),
+          SizedBox(height: 12),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('sm'),
+              color: Colors.grey[600],
+              fontWeight: CustomTheme().fontWeight('medium'),
+            ),
+          ),
+          SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('xl'),
+              fontWeight: CustomTheme().fontWeight('bold'),
+              color: Colors.grey[800],
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

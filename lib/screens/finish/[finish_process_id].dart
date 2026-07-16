@@ -1161,6 +1161,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     );
   }
 
+<<<<<<< HEAD
   bool canStartCurrentProcess(
     List<dynamic> processes,
     String currentProcess,
@@ -1190,6 +1191,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     return true;
   }
 
+=======
+>>>>>>> e98896b (fix: finish)
   double _getTotalItemQty() {
     final workOrders = data['work_orders'];
     if (workOrders == null) return 0;
@@ -1624,7 +1627,11 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               validateWeight: _validateWeight,
                               weightWarning: _weightWarningValidationMessage,
                               validateQty: _validateQty,
+<<<<<<< HEAD
                               // qtyWarning: _itemWarningValidationMessage,
+=======
+                              qtyWarning: _itemWarningValidationMessage,
+>>>>>>> e98896b (fix: finish)
                               weightDefect: _weightDefectController,
                               combing: _combingController,
                               spraying: _sprayingController,

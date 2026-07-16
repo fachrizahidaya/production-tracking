@@ -163,12 +163,15 @@ class ItemProcessCard extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bfc08f8 (update version 1.2.2 (#21))
 =======
 >>>>>>> 827c1f7 (fix: hilangkan icon delete)
 =======
 >>>>>>> 25aada69 (update version 1.2.2 (#21))
+=======
+>>>>>>> d0f1b854 (update version 1.2.2 (#21))
             // if (canShowDelete && onDelete != null)
             //   IconButton(
             //     tooltip: 'Hapus',
@@ -184,6 +187,7 @@ class ItemProcessCard extends StatelessWidget {
             //     ),
             //     onPressed: onDelete,
             //   ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -222,6 +226,8 @@ class ItemProcessCard extends StatelessWidget {
 >>>>>>> 94db6889 (fix: card navigate to update)
 =======
 >>>>>>> 25aada69 (update version 1.2.2 (#21))
+=======
+>>>>>>> d0f1b854 (update version 1.2.2 (#21))
           ].separatedBy(CustomTheme().hGap('md')),
         ),
       ].separatedBy(CustomTheme().hGap('xl')),

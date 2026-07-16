@@ -487,6 +487,12 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       await widget.handleUpdateService(context, id, item, _isLoading);
 
       if (!mounted) return;
+      if (widget.openUpdateOnStart) {
+        Navigator.pop(context);
+        Navigator.pop(context, true);
+        return;
+      }
+
       Navigator.pushNamedAndRemoveUntil(context, widget.route, (_) => false);
     } catch (e) {
       rethrow;

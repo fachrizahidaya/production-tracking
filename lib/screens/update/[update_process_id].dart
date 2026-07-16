@@ -53,9 +53,12 @@ class UpdateProcess extends StatefulWidget {
   final width;
   final weight;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+>>>>>>> bf8a2c0 (fix: update process)
   final isSubmitting;
   final forDyeing;
   final grades;
@@ -67,9 +70,12 @@ class UpdateProcess extends StatefulWidget {
   final itemTypeOption;
   final defects;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+>>>>>>> bf8a2c0 (fix: update process)
   final reworkLongHemming;
   final combing;
   final spraying;

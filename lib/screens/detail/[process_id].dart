@@ -279,6 +279,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     await _handleFetchMachine();
 >>>>>>> 12b70b7 (fix: mulai weaving)
     await _handleFetchItemGrade();
+<<<<<<< HEAD
 
     if (!mounted) return;
 
@@ -314,6 +315,10 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       });
     }
 
+=======
+    await _handleFetchFinishedGrbMaterial();
+    await _handleFetchFinishedGoodMaterial();
+>>>>>>> bf8a2c0 (fix: update process)
     _syncGradesWithOptions();
     _syncDefectsWithOptions();
 
@@ -784,6 +789,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Future<void> _handleFetchItemType({String search = ''}) async {
     final service = context.read<OptionItemTypeService>();
 
@@ -841,6 +847,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     }
   }
 
+=======
+>>>>>>> bf8a2c0 (fix: update process)
   Future<void> _handleFetchFinishedGrbMaterial() async {
     final service = Provider.of<OptionItemService>(context, listen: false);
 
@@ -979,6 +987,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   void _selectReworkCategory() {
     if (reworkCategoryOption.isEmpty) {
       showAlertDialog(
@@ -1046,6 +1055,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     );
   }
 
+=======
+>>>>>>> bf8a2c0 (fix: update process)
   double _calculateTotalSortingFromWo() {
     final processes = woData['processes'];
 

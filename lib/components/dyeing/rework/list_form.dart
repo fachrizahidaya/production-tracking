@@ -11,10 +11,9 @@ class ListForm extends StatefulWidget {
   final formKey;
   final id;
   final form;
-  final data;
-  final attachments;
   final selectWorkOrder;
   final selectMachine;
+<<<<<<< HEAD
   final selectReworkCategory;
   final reworkCategoryOption;
   final isSubmitting;
@@ -39,6 +38,17 @@ class ListForm extends StatefulWidget {
       this.handlePickAttachments,
       this.onFormChanged,
       this.attachments});
+=======
+
+  const ListForm({
+    super.key,
+    this.formKey,
+    this.id,
+    this.form,
+    this.selectWorkOrder,
+    this.selectMachine,
+  });
+>>>>>>> dae9522 (fix: rework)
 
   @override
   State<ListForm> createState() => _ListFormState();

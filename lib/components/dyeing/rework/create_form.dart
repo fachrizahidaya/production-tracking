@@ -6,16 +6,14 @@ import 'package:textile_tracking/components/dyeing/rework/list_form.dart';
 class CreateForm extends StatefulWidget {
   final formKey;
   final form;
-  final handleSubmit;
-  final data;
   final selectWorkOrder;
   final selectMachine;
   final selectReworkCategory;
   final reworkCategoryOption;
   final onFormChanged;
   final id;
-  final isLoading;
 
+<<<<<<< HEAD
   const CreateForm(
       {super.key,
       this.formKey,
@@ -29,12 +27,23 @@ class CreateForm extends StatefulWidget {
       this.onFormChanged,
       this.id,
       this.isLoading});
+=======
+  const CreateForm({
+    super.key,
+    this.formKey,
+    this.form,
+    this.selectWorkOrder,
+    this.selectMachine,
+    this.id,
+  });
+>>>>>>> dae9522 (fix: rework)
 
   @override
   State<CreateForm> createState() => _CreateFormState();
 }
 
 class _CreateFormState extends State<CreateForm> {
+<<<<<<< HEAD
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 
   bool get _isFormIncomplete {
@@ -88,12 +97,15 @@ class _CreateFormState extends State<CreateForm> {
     return null;
   }
 
+=======
+>>>>>>> dae9522 (fix: rework)
   @override
   Widget build(BuildContext context) {
     return ListForm(
       formKey: widget.formKey,
       id: widget.id,
       form: widget.form,
+<<<<<<< HEAD
       data: widget.data,
       selectWorkOrder: widget.selectWorkOrder,
       selectMachine: widget.selectMachine,
@@ -104,6 +116,10 @@ class _CreateFormState extends State<CreateForm> {
       handleSubmit: widget.handleSubmit,
       handlePickAttachments: null,
       onFormChanged: widget.onFormChanged,
+=======
+      selectWorkOrder: widget.selectWorkOrder,
+      selectMachine: widget.selectMachine,
+>>>>>>> dae9522 (fix: rework)
     );
   }
 }

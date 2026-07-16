@@ -77,7 +77,6 @@ class _FormInfoTabState extends State<FormInfoTab> {
                 selectWorkOrder: widget.handleSelectWorkOrder,
                 selectMachine: widget.handleSelectMachine,
                 id: widget.id,
-                isLoading: widget.isLoading,
                 withMaklonOrMachine: widget.withMaklonOrMachine,
                 withOnlyMaklon: widget.withOnlyMaklon,
                 withNoMaklonOrMachine: widget.withNoMaklonOrMachine,

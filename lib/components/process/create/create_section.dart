@@ -9,7 +9,6 @@ class CreateSection extends StatefulWidget {
   final selectWorkOrder;
   final selectMachine;
   final id;
-  final isLoading;
   final maklonName;
   final isMaklon;
   final withMaklonOrMachine;
@@ -26,7 +25,6 @@ class CreateSection extends StatefulWidget {
       this.selectWorkOrder,
       this.selectMachine,
       this.id,
-      this.isLoading,
       this.maklonName,
       this.isMaklon,
       this.withMaklonOrMachine,

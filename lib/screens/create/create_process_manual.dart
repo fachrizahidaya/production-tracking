@@ -276,8 +276,6 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
 
               final semiFinishedItems = semiFinishedService.dataListOption;
 
-              final woItems = woData['items'] ?? [];
-
               if (widget.label == 'Dyeing') {
                 final baseCodes = params['base_codes'] ?? [];
                 final colorCodes = params['color_codes'] ?? [];

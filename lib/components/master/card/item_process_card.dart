@@ -158,6 +158,7 @@ class ItemProcessCard extends StatelessWidget {
               ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bfc08f8 (update version 1.2.2 (#21))
             // if (canShowDelete && onDelete != null)
@@ -177,6 +178,8 @@ class ItemProcessCard extends StatelessWidget {
             //   ),
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> cec4230 (chore: update app version)
             if (canShowDelete && onDelete != null)
               IconButton(
                 tooltip: 'Hapus',
@@ -192,9 +195,12 @@ class ItemProcessCard extends StatelessWidget {
                 ),
                 onPressed: onDelete,
               ),
+<<<<<<< HEAD
 >>>>>>> 8bc14cd (fix: card navigate to update)
 =======
 >>>>>>> bfc08f8 (update version 1.2.2 (#21))
+=======
+>>>>>>> cec4230 (chore: update app version)
           ].separatedBy(CustomTheme().hGap('md')),
         ),
       ].separatedBy(CustomTheme().hGap('xl')),

@@ -801,6 +801,22 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   double _calculateTotalSortingFromWo() {
+    final processes = woData['processes'];
+
+    if (processes == null || processes is! List || processes.isEmpty) {
+      return 0;
+    }
+
+    if (processes.length <= 10) {
+      return 0;
+    }
+
+    final dataList = processes[10]['data'];
+
+    if (dataList == null || dataList is! List || dataList.isEmpty) {
+      return 0;
+    }
+
     final processData = woData['processes']?[10]?['data']?[0];
 
     if (processData == null) return 0;

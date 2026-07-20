@@ -77,20 +77,6 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
     }
   }
 
-  double? get _adaptiveHeight {
-    final count = widget.dataList.length;
-
-    if (count == 1) {
-      return 1700;
-    }
-
-    if (_expandedIndex != null) {
-      return 3400;
-    }
-
-    return 1700;
-  }
-
   @override
   Widget build(BuildContext context) {
     MediaQuery.of(context).orientation == Orientation.portrait;

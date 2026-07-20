@@ -134,58 +134,6 @@ class _ListItemState extends State<ListItem> {
   }
 
   /// Item Info (Code + Name)
-  Widget _buildItemInfo(bool isTablet) {
-    return Container(
-      width: double.infinity,
-      padding: CustomTheme().padding('card'),
-      decoration: BoxDecoration(
-        color: Colors.orange.shade50,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: Colors.orange.shade100,
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'GREIGE AWAL',
-                  style: TextStyle(
-                    fontWeight: CustomTheme().fontWeight('bold'),
-                    color: Colors.orange.shade700,
-                  ),
-                ),
-                Text(
-                  item['greige_item']?['code']?.toString() ?? '-',
-                  style: TextStyle(
-                    fontSize: CustomTheme().fontSize('lg'),
-                    fontWeight: CustomTheme().fontWeight('semibold'),
-                    color: Colors.grey[800],
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  item['greige_item']?['name']?.toString() ?? '-',
-                  style: TextStyle(
-                    fontSize: CustomTheme().fontSize('lg'),
-                    fontWeight: CustomTheme().fontWeight('semibold'),
-                    color: Colors.grey[600],
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ].separatedBy(CustomTheme().vGap('md')),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildGreigeInfo() {
     final List greigeItems = item['greige_items'] ?? [];

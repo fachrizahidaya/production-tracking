@@ -7,22 +7,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? onReturn;
   final List<Widget>? actions;
-  final bool isWithNotification;
   final bool isWithAccount;
   final tab;
-  final bool? canDelete;
-  final bool? canUpdate;
   final handleDelete;
   final handleUpdate;
-  final handleFinish;
   final handleLogout;
   final id;
   final label;
   final user;
   final deleteStatus;
   final updateStatus;
-  final isTextEditor;
-  final handleSave;
   final name;
   final bool isLoading;
 
@@ -31,11 +25,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       required this.title,
       this.onReturn,
       this.actions,
-      this.isWithNotification = false,
       this.isWithAccount = false,
       this.tab,
-      this.canDelete,
-      this.canUpdate,
       this.handleDelete,
       this.handleUpdate,
       this.id,
@@ -44,10 +35,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.user,
       this.deleteStatus,
       this.updateStatus,
-      this.isTextEditor = false,
-      this.handleSave,
       this.name,
-      this.handleFinish,
       this.isLoading = false});
 
   @override

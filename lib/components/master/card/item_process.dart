@@ -25,7 +25,6 @@ class ItemProcess extends StatefulWidget {
 
 class _ItemProcessState extends State<ItemProcess> {
   bool _showAllTimeline = false;
-  static const int _collapsedTimelineCount = 3;
 
   @override
   void initState() {

@@ -92,6 +92,7 @@ class _GreigeListFormState extends State<GreigeListForm> {
   @override
   Widget build(BuildContext context) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     final warpingTypeLabel = _formatWarpingType(widget.form?['warping_type']);
 =======
     if (widget.withNoMaklonOrMachine == true) {
@@ -117,6 +118,8 @@ class _GreigeListFormState extends State<GreigeListForm> {
     }
 >>>>>>> a1ea7df (feat: warping)
 
+=======
+>>>>>>> e2c3f0c (fix: warping form)
     return Form(
       child: Column(
         children: [
@@ -192,48 +195,36 @@ class _GreigeListFormState extends State<GreigeListForm> {
                 ].separatedBy(CustomTheme().vGap('xl')),
               ),
             ),
+          TemplateCard(
+            title: 'Mesin',
+            icon: Icons.local_laundry_service_outlined,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (widget.form?['wo_id'] != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [_buildMultiMesin()]
+                        .separatedBy(CustomTheme().vGap('xl')),
+                  )
+                else if (widget.form?['wo_id'] != null)
+                  _buildMultiMesin()
+                else
+                  SelectForm(
+                    label: 'Mesin',
+                    onTap: () => widget.selectMachine(),
+                    selectedLabel: widget.form['nama_mesin'] ?? '',
+                    selectedValue: widget.form['machine_id'].toString(),
+                    required: true,
+                  ),
+              ].separatedBy(CustomTheme().vGap('xl')),
+            ),
+          ),
           WarpingSection(
             data: null,
             items: null,
             onChange: null,
           ),
-          if (widget.form?['wo_id'] != null)
-            TemplateCard(
-              title: 'Mesin',
-              icon: Icons.local_laundry_service_outlined,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (widget.withOnlyMaklon == true &&
-                      widget.form?['wo_id'] != null)
-                    _buildMaklonForm()
-                  else if (widget.withMaklonOrMachine == true &&
-                      widget.form?['wo_id'] != null)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildMaklonSwitch(),
-                        if (_isMaklon)
-                          _buildMaklonNameInput()
-                        else
-                          _buildMultiMesin()
-                      ].separatedBy(CustomTheme().vGap('xl')),
-                    )
-                  else if (widget.form?['wo_id'] != null)
-                    if (widget.label == 'Long Hemming' ||
-                        widget.label == 'Cross Cutting')
-                      _buildMultiMesin()
-                    else
-                      SelectForm(
-                        label: 'Mesin',
-                        onTap: () => widget.selectMachine(),
-                        selectedLabel: widget.form['nama_mesin'] ?? '',
-                        selectedValue: widget.form['machine_id'].toString(),
-                        required: true,
-                      ),
-                ].separatedBy(CustomTheme().vGap('xl')),
-              ),
-            ),
           NoteEditor(
             controller: widget.note,
             formKey: 'notes',
@@ -249,6 +240,7 @@ class _GreigeListFormState extends State<GreigeListForm> {
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   Widget _buildMultiMesin() {
     final machines = widget.form['machines'] as List? ?? [];
@@ -386,6 +378,8 @@ class _GreigeListFormState extends State<GreigeListForm> {
     );
   }
 
+=======
+>>>>>>> e2c3f0c (fix: warping form)
   Widget _buildMultiMesin() {
     final machines = widget.form['machines'] as List? ?? [];
 

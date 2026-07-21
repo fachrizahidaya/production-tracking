@@ -182,10 +182,14 @@ class ShearingService extends BaseCrudService<Shearing> {
   ShearingService()
       : super(
 <<<<<<< HEAD
+<<<<<<< HEAD
           endpoint: 'shearings',
 =======
           endpoint: 'shearing',
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+          endpoint: 'shearings',
+>>>>>>> a1ea7df (feat: warping)
           fromJson: (json) => Shearing.fromJson(json),
           toJson: (item) => item.toJson(),
         );

@@ -13,10 +13,14 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/weaving/create/create_form.dart';
 import 'package:textile_tracking/screens/weaving/create/create_weaving_process.dart';
 =======
 import 'package:textile_tracking/screens/create/index.dart';
+=======
+import 'package:textile_tracking/screens/create/greige_order_index.dart';
+>>>>>>> a1ea7df (feat: warping)
 import 'package:textile_tracking/screens/weaving/create/create_form.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
 import 'package:textile_tracking/screens/weaving/model/weaving.dart';
@@ -71,10 +75,14 @@ class CreateWeavng extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     return CreateWeavingProcess(
 =======
     return CreateProcess(
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+    return CreateGreigeOrderProcess(
+>>>>>>> a1ea7df (feat: warping)
       title: 'Mulai Weaving',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
@@ -85,6 +93,7 @@ class CreateWeavng extends StatelessWidget {
           form: form,
           handleSubmit: handleSubmit,
 <<<<<<< HEAD
+<<<<<<< HEAD
         );
       },
 =======
@@ -94,6 +103,13 @@ class CreateWeavng extends StatelessWidget {
       fetchWorkOrder: (service) => service.fetchWeavingOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+          fetchWorkOrder: (service) => service.fetchWeavingOptions(),
+        );
+      },
+      fetchGreigeOrder: (service) => service.fetchWeavingOptions(),
+      getGreigeOrderOptions: (service) => service.dataListOption,
+>>>>>>> a1ea7df (feat: warping)
     );
   }
 }

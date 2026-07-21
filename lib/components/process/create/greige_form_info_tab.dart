@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
@@ -6,6 +7,11 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/greige_create_section.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
+=======
+import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/components/process/create/greige_create_section.dart';
+>>>>>>> a1ea7df (feat: warping)
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class GreigeFormInfoTab extends StatefulWidget {
@@ -25,10 +31,13 @@ class GreigeFormInfoTab extends StatefulWidget {
   final withNoMaklonOrMachine;
   final handleChangeInput;
   final note;
+<<<<<<< HEAD
   final yarnQty;
   final beamQty;
   final section;
   final onFormChanged;
+=======
+>>>>>>> a1ea7df (feat: warping)
 
   const GreigeFormInfoTab(
       {super.key,
@@ -47,17 +56,22 @@ class GreigeFormInfoTab extends StatefulWidget {
       this.withNoMaklonOrMachine,
       this.withOnlyMaklon,
       this.handleChangeInput,
+<<<<<<< HEAD
       this.note,
       this.yarnQty,
       this.beamQty,
       this.section,
       this.onFormChanged});
+=======
+      this.note});
+>>>>>>> a1ea7df (feat: warping)
 
   @override
   State<GreigeFormInfoTab> createState() => _GreigeFormInfoTabState();
 }
 
 class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
+<<<<<<< HEAD
   Map<String, dynamic> _mapValue(dynamic value) {
     if (value is Map<String, dynamic>) return value;
     if (value is Map) return Map<String, dynamic>.from(value);
@@ -137,6 +151,8 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
     return '-';
   }
 
+=======
+>>>>>>> a1ea7df (feat: warping)
   @override
   Widget build(BuildContext context) {
     if (widget.isLoading) {
@@ -147,6 +163,11 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
+<<<<<<< HEAD
+=======
+        final isTablet = constraints.maxWidth > 600;
+
+>>>>>>> a1ea7df (feat: warping)
         return SingleChildScrollView(
           padding: CustomTheme().padding('content'),
           child: Column(
@@ -155,7 +176,10 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
               GreigeCreateSection(
                 formKey: widget.formKey,
                 form: widget.form,
+<<<<<<< HEAD
                 onFormChanged: widget.onFormChanged,
+=======
+>>>>>>> a1ea7df (feat: warping)
                 maklonName: widget.maklonName,
                 isMaklon: widget.isMaklon,
                 selectGreigeOrder: widget.handleSelectGreigeOrder,
@@ -168,17 +192,22 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
                 data: widget.processData,
                 handleChangeInput: widget.handleChangeInput,
                 note: widget.note,
+<<<<<<< HEAD
                 yarnQty: widget.yarnQty,
                 beamQty: widget.beamQty,
                 section: widget.section,
               ),
               _buildGreigeOrderSummary(),
+=======
+              ),
+>>>>>>> a1ea7df (feat: warping)
             ].separatedBy(CustomTheme().vGap('2xl')),
           ),
         );
       },
     );
   }
+<<<<<<< HEAD
 
   Widget _buildGreigeOrderSummary() {
     final data = _mapValue(widget.data);
@@ -645,4 +674,6 @@ class _StatusPill extends StatelessWidget {
       ),
     );
   }
+=======
+>>>>>>> a1ea7df (feat: warping)
 }

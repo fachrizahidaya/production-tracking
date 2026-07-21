@@ -189,10 +189,14 @@ class SizingService extends BaseCrudService<Sizing> {
   SizingService()
       : super(
 <<<<<<< HEAD
+<<<<<<< HEAD
           endpoint: 'sizings',
 =======
           endpoint: 'sizing',
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+          endpoint: 'sizings',
+>>>>>>> a1ea7df (feat: warping)
           fromJson: (json) => Sizing.fromJson(json),
           toJson: (item) => item.toJson(),
         );

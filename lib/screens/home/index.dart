@@ -394,6 +394,7 @@ class _HomeState extends State<Home> {
       List<dynamic> menuData = userMenu.menus;
 
       final filteredData = menuData
+<<<<<<< HEAD
           .where(
             (menu) =>
                 menu['name'] != 'SPK & Work Order' &&
@@ -408,6 +409,20 @@ class _HomeState extends State<Home> {
                 menu['name'] != 'User Management' &&
                 menu['name'] != 'Persiapan Dyeing',
           )
+=======
+          .where((menu) =>
+              menu['name'] != 'SPK & Work Order' &&
+              menu['name'] != 'Pelanggan' &&
+              menu['name'] != 'Mesin' &&
+              menu['name'] != 'Barang' &&
+              menu['name'] != 'Satuan' &&
+              menu['name'] != 'Grade Barang' &&
+              menu['name'] != 'Material' &&
+              menu['name'] != 'Grade Material' &&
+              menu['name'] != 'Master Data' &&
+              menu['name'] != 'User Management' &&
+              menu['name'] != 'Persiapan Dyeing')
+>>>>>>> a1ea7df (feat: warping)
           .toList();
 
       return filteredData

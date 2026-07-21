@@ -18,10 +18,13 @@ class GreigeCreateSection extends StatefulWidget {
   final data;
   final handleChangeInput;
   final note;
+<<<<<<< HEAD
   final yarnQty;
   final beamQty;
   final section;
   final onFormChanged;
+=======
+>>>>>>> a1ea7df (feat: warping)
 
   const GreigeCreateSection(
       {super.key,
@@ -38,11 +41,15 @@ class GreigeCreateSection extends StatefulWidget {
       this.label,
       this.data,
       this.handleChangeInput,
+<<<<<<< HEAD
       this.note,
       this.yarnQty,
       this.beamQty,
       this.section,
       this.onFormChanged});
+=======
+      this.note});
+>>>>>>> a1ea7df (feat: warping)
 
   @override
   State<GreigeCreateSection> createState() => _GreigeCreateSectionState();
@@ -56,7 +63,10 @@ class _GreigeCreateSectionState extends State<GreigeCreateSection> {
       isMaklon: widget.isMaklon,
       id: widget.id,
       form: widget.form,
+<<<<<<< HEAD
       onFormChanged: widget.onFormChanged,
+=======
+>>>>>>> a1ea7df (feat: warping)
       maklonName: widget.maklonName,
       selectGreigeOrder: widget.selectGreigeOrder,
       selectMachine: widget.selectMachine,
@@ -67,9 +77,12 @@ class _GreigeCreateSectionState extends State<GreigeCreateSection> {
       data: widget.data,
       handleChangeInput: widget.handleChangeInput,
       note: widget.note,
+<<<<<<< HEAD
       yarnQty: widget.yarnQty,
       beamQty: widget.beamQty,
       section: widget.section,
+=======
+>>>>>>> a1ea7df (feat: warping)
     );
   }
 }

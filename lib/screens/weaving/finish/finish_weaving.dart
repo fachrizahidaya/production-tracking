@@ -97,8 +97,7 @@ class _FinishWeavingState extends State<FinishWeaving> {
     return FinishProcess(
       title: 'Selesai Weaving',
       label: 'Weaving',
-      fetchWorkOrder: (service) async =>
-          await service.fetchWeavingFinishOptions(),
+      fetchWorkOrder: (service) async => await null,
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput, finishedItemOption, finishedItemOptionGrb) =>

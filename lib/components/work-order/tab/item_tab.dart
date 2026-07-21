@@ -99,10 +99,14 @@ class _ItemTabState extends State<ItemTab> {
                   title: 'Total Qty',
                   value:
 <<<<<<< HEAD
+<<<<<<< HEAD
                       '${formatNumber(totalQty)} ${widget.data['items'][0]['unit']?['code'] ?? ''}',
 =======
                       '${formatNumber(totalQty)} ${widget.data['items'][0]['unit']['code'] ?? ''}',
 >>>>>>> bfc08f8 (update version 1.2.2 (#21))
+=======
+                      '${formatNumber(totalQty)} ${widget.data['items'][0]['unit']?['code'] ?? ''}',
+>>>>>>> a1ea7df (feat: warping)
                   icon: Icons.format_list_numbered_outlined,
                 ),
               ),
@@ -111,10 +115,14 @@ class _ItemTabState extends State<ItemTab> {
                   title: 'Total Berat',
                   value:
 <<<<<<< HEAD
+<<<<<<< HEAD
                       '${formatNumber(totalBerat)} ${widget.data['greige_unit']?['code'] ?? ''}',
 =======
                       '${formatNumber(totalBerat)} ${widget.data['greige_unit']['code'] ?? ''}',
 >>>>>>> bfc08f8 (update version 1.2.2 (#21))
+=======
+                      '${formatNumber(totalBerat)} ${widget.data['greige_unit']?['code'] ?? ''}',
+>>>>>>> a1ea7df (feat: warping)
                   icon: Icons.scale_outlined,
                 ),
               ),

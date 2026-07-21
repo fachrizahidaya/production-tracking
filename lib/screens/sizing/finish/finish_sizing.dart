@@ -99,8 +99,7 @@ class _FinishSizingState extends State<FinishSizing> {
     return FinishProcess(
       title: 'Selesai Sizing',
       label: 'Sizing',
-      fetchWorkOrder: (service) async =>
-          await service.fetchSizingFinishOptions(),
+      fetchWorkOrder: (service) async => await null,
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput, finishedItemOption, finishedItemOptionGrb) =>

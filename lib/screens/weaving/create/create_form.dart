@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/weaving/create/create_weaving_process_manual.dart';
 =======
 import 'package:textile_tracking/screens/create/create_process_manual.dart';
+=======
+import 'package:textile_tracking/screens/create/create_greige_order_process_manual.dart';
+>>>>>>> a1ea7df (feat: warping)
 import 'package:textile_tracking/screens/weaving/model/weaving.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
 
@@ -41,7 +45,7 @@ class CreateForm extends StatelessWidget {
 =======
     final WeavingService weavingService = WeavingService();
 
-    return CreateProcessManual(
+    return CreateGreigeOrderProcessManual(
       title: 'Mulai Weaving',
       label: 'Weaving',
       id: id,
@@ -51,8 +55,8 @@ class CreateForm extends StatelessWidget {
       processService: weavingService,
       idProcess: 'weaving_id',
       handleSubmit: handleSubmit,
-      fetchWorkOrder: (service) => service.fetchWeavingOptions(),
-      getWorkOrderOptions: (service) => service.dataListOption,
+      fetchGreigeOrder: (service) => service.fetchWeavingOptions(),
+      getGreigeOrderOptions: (service) => service.dataListOption,
       fetchMachine: (service) => service.fetchOptionsWeaving(),
       getMachineOptions: (service) => service.dataListOption,
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)

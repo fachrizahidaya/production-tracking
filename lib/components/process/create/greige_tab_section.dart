@@ -6,7 +6,11 @@ import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/greige_form_info_tab.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/components/process/create/greige_info_tab.dart';
+=======
+import 'package:textile_tracking/components/spk/tab/note_attachment_spk.dart';
+>>>>>>> a1ea7df (feat: warping)
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -31,9 +35,12 @@ class GreigeTabSection extends StatefulWidget {
   final spkDocuments;
   final handleChangeInput;
   final note;
+<<<<<<< HEAD
   final yarnQty;
   final beamQty;
   final section;
+=======
+>>>>>>> a1ea7df (feat: warping)
 
   const GreigeTabSection(
       {super.key,
@@ -56,10 +63,14 @@ class GreigeTabSection extends StatefulWidget {
       this.isMaklon,
       this.spkDocuments,
       this.handleChangeInput,
+<<<<<<< HEAD
       this.note,
       this.yarnQty,
       this.beamQty,
       this.section});
+=======
+      this.note});
+>>>>>>> a1ea7df (feat: warping)
 
   @override
   State<GreigeTabSection> createState() => _GreigeTabSectionState();
@@ -95,7 +106,11 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
     }
 
     if (context.mounted) {
+<<<<<<< HEAD
       if (widget.form?['order_greige_id'] != null) {
+=======
+      if (widget.form?['wo_id'] != null) {
+>>>>>>> a1ea7df (feat: warping)
         showConfirmationDialog(
           context: context,
           isLoading: _isLoading,
@@ -107,11 +122,15 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
           },
           title: 'Batal ${widget.label}',
           buttonBackground: CustomTheme().buttonColor('danger'),
+<<<<<<< HEAD
           child: buildBoldMessage(
             widget.greigeOrderData['wo_no'] ??
                 widget.greigeOrderData['og_no'] ??
                 '-',
           ),
+=======
+          child: buildBoldMessage(widget.greigeOrderData['wo_no'] ?? '-'),
+>>>>>>> a1ea7df (feat: warping)
         );
       } else {
         Navigator.pop(context);
@@ -147,7 +166,11 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
     }
 
     if (context.mounted) {
+<<<<<<< HEAD
       if (widget.form?['order_greige_id'] != null) {
+=======
+      if (widget.form?['wo_id'] != null) {
+>>>>>>> a1ea7df (feat: warping)
         showConfirmationDialog(
           context: context,
           isLoading: widget.isSubmitting,
@@ -162,11 +185,15 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
           },
           title: 'Mulai ${widget.label}',
           buttonBackground: CustomTheme().buttonColor('primary'),
+<<<<<<< HEAD
           child: buildBoldMessage(
             widget.greigeOrderData['wo_no'] ??
                 widget.greigeOrderData['og_no'] ??
                 '-',
           ),
+=======
+          child: buildBoldMessage(widget.greigeOrderData['wo_no'] ?? '-'),
+>>>>>>> a1ea7df (feat: warping)
         );
       } else {
         Navigator.pop(context);
@@ -181,6 +208,7 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
     final List<Map<String, dynamic>> machines = List<Map<String, dynamic>>.from(
       widget.form?['machines'] ?? [],
     );
+<<<<<<< HEAD
     final yarnQty = widget.form?['yarn_qty']?.toString().trim() ?? '';
     final warpingValueKey = widget.form?['warping_type'] == 'single_warping'
         ? 'beam_qty'
@@ -192,6 +220,21 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
         // yarnQty.isEmpty ||
         // warpingValue.isEmpty
         ;
+=======
+
+    if (widget.withOnlyMaklon == true) {
+      isDisabled = widget.form?['wo_id'] == null;
+    } else if (widget.withNoMaklonOrMachine == true) {
+      isDisabled = widget.form?['wo_id'] == null;
+    } else if (widget.label == 'Long Hemming' ||
+        widget.label == 'Cross Cutting' ||
+        widget.label == 'Sewing') {
+      isDisabled = widget.form?['wo_id'] == null || machines.isEmpty;
+    } else {
+      isDisabled =
+          widget.form?['wo_id'] == null || widget.form?['machine_id'] == null;
+    }
+>>>>>>> a1ea7df (feat: warping)
 
     return DefaultTabController(
       length: 2,
@@ -214,7 +257,11 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
                   child: const TabBar(
                     tabs: [
                       Tab(text: 'Form'),
+<<<<<<< HEAD
                       Tab(text: 'Order Greige'),
+=======
+                      Tab(text: 'Greige Order'),
+>>>>>>> a1ea7df (feat: warping)
                     ],
                   ),
                 ),
@@ -224,7 +271,10 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
                       GreigeFormInfoTab(
                         data: widget.greigeOrderData,
                         processData: widget.processData,
+<<<<<<< HEAD
                         onFormChanged: () => setState(() {}),
+=======
+>>>>>>> a1ea7df (feat: warping)
                         id: widget.id,
                         isLoading: widget.firstLoading,
                         label: widget.label,
@@ -239,11 +289,33 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
                         isMaklon: widget.isMaklon,
                         handleChangeInput: widget.handleChangeInput,
                         note: widget.note,
+<<<<<<< HEAD
                         yarnQty: widget.yarnQty,
                         beamQty: widget.beamQty,
                         section: widget.section,
                       ),
                       GreigeInfoTab(data: widget.greigeOrderData)
+=======
+                      ),
+                      GreigeFormInfoTab(
+                        data: widget.greigeOrderData,
+                        processData: widget.processData,
+                        id: widget.id,
+                        isLoading: widget.firstLoading,
+                        label: widget.label,
+                        form: widget.form,
+                        formKey: widget.formKey,
+                        handleSelectMachine: widget.selectMachine,
+                        handleSelectGreigeOrder: widget.selectGreigeOrder,
+                        maklonName: widget.maklonName,
+                        withMaklonOrMachine: widget.withMaklonOrMachine,
+                        withOnlyMaklon: widget.withOnlyMaklon,
+                        withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
+                        isMaklon: widget.isMaklon,
+                        handleChangeInput: widget.handleChangeInput,
+                        note: widget.note,
+                      ),
+>>>>>>> a1ea7df (feat: warping)
                     ],
                   ),
                 ),

@@ -1,5 +1,9 @@
 // ignore_for_file: use_build_context_synchronously, prefer_final_fields
 
+<<<<<<< HEAD
+=======
+import 'package:easy_localization/easy_localization.dart';
+>>>>>>> a1ea7df (feat: warping)
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
@@ -46,6 +50,7 @@ class _CreateGreigeOrderProcessState extends State<CreateGreigeOrderProcess> {
   final ValueNotifier<bool> _firstLoading = ValueNotifier(false);
 
   final Map<String, dynamic> _form = {
+<<<<<<< HEAD
     'order_greige_id': null,
     'machine_id': null,
     'machines': [],
@@ -53,6 +58,34 @@ class _CreateGreigeOrderProcessState extends State<CreateGreigeOrderProcess> {
     'yarn_qty': null,
     'notes': '',
     'skip_shearing': false
+=======
+    'wo_id': null,
+    'machine_id': null,
+    'unit_id': null,
+    'start_by_id': null,
+    'end_by_id': null,
+    'qty': null,
+    'width': null,
+    'length': null,
+    'notes': '',
+    'status': null,
+    'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+    'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+    'attachments': [],
+    'no_wo': '',
+    'no_process': '',
+    'nama_mesin': '',
+    'nama_satuan': '',
+    'maklon': false,
+    'maklon_name': '',
+    'machine_ids': [],
+    'semifinished_products': [],
+    'items': [],
+    'spk_documents': [],
+    'beam_weight': null,
+    'greige_weight': null,
+    'waste_weight': null,
+>>>>>>> a1ea7df (feat: warping)
   };
 
   @override
@@ -73,6 +106,11 @@ class _CreateGreigeOrderProcessState extends State<CreateGreigeOrderProcess> {
 
     if (widget.fetchGreigeOrder != null) {
       await widget.fetchGreigeOrder!(service);
+<<<<<<< HEAD
+=======
+    } else {
+      await service.fetchWarpingOptions();
+>>>>>>> a1ea7df (feat: warping)
     }
 
     final data = widget.getGreigeOrderOptions != null
@@ -94,10 +132,14 @@ class _CreateGreigeOrderProcessState extends State<CreateGreigeOrderProcess> {
     return {
       ...selected,
       'id': selected['id'] ?? selected['value'],
+<<<<<<< HEAD
       'wo_no': selected['wo_no'] ??
           selected['greige_order_no'] ??
           selected['og_no'] ??
           label,
+=======
+      'wo_no': selected['wo_no'] ?? selected['greige_order_no'] ?? label,
+>>>>>>> a1ea7df (feat: warping)
       'items': items,
       'attachments': selected['attachments'] ?? [],
     };
@@ -143,9 +185,14 @@ class _CreateGreigeOrderProcessState extends State<CreateGreigeOrderProcess> {
       );
       final greigeOrderId = data['id']?.toString();
 
+<<<<<<< HEAD
       _form['order_greige_id'] = greigeOrderId;
       _form['no_greige_order'] = data['wo_no']?.toString() ?? greigeOrderNo;
       _form['warping_type'] = data['warping_type'];
+=======
+      _form['wo_id'] = greigeOrderId;
+      _form['no_wo'] = data['wo_no']?.toString() ?? greigeOrderNo;
+>>>>>>> a1ea7df (feat: warping)
 
       setState(() => _isLoading = false);
 

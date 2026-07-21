@@ -191,10 +191,14 @@ class WeavingService extends BaseCrudService<Weaving> {
   WeavingService()
       : super(
 <<<<<<< HEAD
+<<<<<<< HEAD
           endpoint: 'weavings',
 =======
           endpoint: 'weaving',
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+          endpoint: 'weavings',
+>>>>>>> a1ea7df (feat: warping)
           fromJson: (json) => Weaving.fromJson(json),
           toJson: (item) => item.toJson(),
         );

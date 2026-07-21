@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/screens/home/index.dart';
-import 'package:textile_tracking/screens/shearing/list/index.dart';
-import 'package:textile_tracking/screens/sizing/list/index.dart';
-import 'package:textile_tracking/screens/warping/list/index.dart';
-import 'package:textile_tracking/screens/weaving/list/index.dart';
 
 class AppDrawer extends StatefulWidget {
   final handleLogout;
@@ -25,7 +21,10 @@ class _AppDrawerState extends State<AppDrawer> {
     'Sizing',
     'Weaving',
     'Shearing',
+<<<<<<< HEAD
     'Persiapan Dyeing',
+=======
+>>>>>>> a1ea7df (feat: warping)
     'Dyeing',
     'Press',
     'Tumbler',
@@ -48,6 +47,7 @@ class _AppDrawerState extends State<AppDrawer> {
     'SPK',
     'Work Order',
     'Proses Produksi',
+<<<<<<< HEAD
     'Produksi',
     'Pesanan',
     'Order Greige',
@@ -60,6 +60,10 @@ class _AppDrawerState extends State<AppDrawer> {
     'Anomali Data',
     'Desain',
     'Notifikasi'
+=======
+    'Laporan',
+    'Persiapan Dyeing'
+>>>>>>> a1ea7df (feat: warping)
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
@@ -141,31 +145,6 @@ class _AppDrawerState extends State<AppDrawer> {
                         .where((m) => !hiddenMenus.contains(m.title))
                         .toList();
 
-                    menus.add(
-                      MenuItem(
-                        title: 'Warping',
-                        allowMobile: true,
-                      ),
-                    );
-                    menus.add(
-                      MenuItem(
-                        title: 'Sizing',
-                        allowMobile: true,
-                      ),
-                    );
-                    menus.add(
-                      MenuItem(
-                        title: 'Weaving',
-                        allowMobile: true,
-                      ),
-                    );
-                    menus.add(
-                      MenuItem(
-                        title: 'Shearing',
-                        allowMobile: true,
-                      ),
-                    );
-
                     return ListView.builder(
                       itemCount: menus.length,
                       itemBuilder: (context, index) {
@@ -215,6 +194,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                 ? Icons.dry_cleaning_outlined
                                                                                 : item.title == 'Warping'
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                                                     ? Icons.join_inner_outlined
                                                                                     : item.title == 'Sizing'
                                                                                         ? Icons.straighten_outlined
@@ -235,18 +215,22 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                                     : Icons.menu,
 =======
                                                                                     ? Icons.straighten_outlined
+=======
+                                                                                    ? Icons.join_inner_outlined
+>>>>>>> a1ea7df (feat: warping)
                                                                                     : item.title == 'Sizing'
                                                                                         ? Icons.straighten_outlined
                                                                                         : item.title == 'Weaving'
-                                                                                            ? Icons.straighten_outlined
+                                                                                            ? Icons.grid_on
                                                                                             : item.title == 'Shearing'
-                                                                                                ? Icons.straighten_outlined
+                                                                                                ? Icons.content_cut_outlined
                                                                                                 : Icons.menu,
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
                           ),
                           onTap: () {
                             Navigator.pop(context);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
                             if (item.title == 'Warping') {
@@ -287,6 +271,8 @@ class _AppDrawerState extends State<AppDrawer> {
                             }
 
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+>>>>>>> a1ea7df (feat: warping)
                             if (item.route != null) {
                               Navigator.pushNamed(context, item.route!);
                             }

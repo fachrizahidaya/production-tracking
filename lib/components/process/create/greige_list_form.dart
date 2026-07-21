@@ -58,28 +58,6 @@ class _GreigeListFormState extends State<GreigeListForm> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.withNoMaklonOrMachine == true) {
-      return Form(
-        key: widget.formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TemplateCard(
-              icon: Icons.assignment_outlined,
-              title: 'Greige Order',
-              child: SelectForm(
-                label: 'Greige Order',
-                onTap: () => widget.selectGreigeOrder(),
-                selectedLabel: widget.form?['no_wo'] ?? '',
-                selectedValue: widget.form?['wo_id']?.toString() ?? '',
-                required: true,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
     return Form(
       child: Column(
         children: [
@@ -100,48 +78,36 @@ class _GreigeListFormState extends State<GreigeListForm> {
                 ].separatedBy(CustomTheme().vGap('xl')),
               ),
             ),
+          TemplateCard(
+            title: 'Mesin',
+            icon: Icons.local_laundry_service_outlined,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (widget.form?['wo_id'] != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [_buildMultiMesin()]
+                        .separatedBy(CustomTheme().vGap('xl')),
+                  )
+                else if (widget.form?['wo_id'] != null)
+                  _buildMultiMesin()
+                else
+                  SelectForm(
+                    label: 'Mesin',
+                    onTap: () => widget.selectMachine(),
+                    selectedLabel: widget.form['nama_mesin'] ?? '',
+                    selectedValue: widget.form['machine_id'].toString(),
+                    required: true,
+                  ),
+              ].separatedBy(CustomTheme().vGap('xl')),
+            ),
+          ),
           WarpingSection(
             data: null,
             items: null,
             onChange: null,
           ),
-          if (widget.form?['wo_id'] != null)
-            TemplateCard(
-              title: 'Mesin',
-              icon: Icons.local_laundry_service_outlined,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (widget.withOnlyMaklon == true &&
-                      widget.form?['wo_id'] != null)
-                    _buildMaklonForm()
-                  else if (widget.withMaklonOrMachine == true &&
-                      widget.form?['wo_id'] != null)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildMaklonSwitch(),
-                        if (_isMaklon)
-                          _buildMaklonNameInput()
-                        else
-                          _buildMultiMesin()
-                      ].separatedBy(CustomTheme().vGap('xl')),
-                    )
-                  else if (widget.form?['wo_id'] != null)
-                    if (widget.label == 'Long Hemming' ||
-                        widget.label == 'Cross Cutting')
-                      _buildMultiMesin()
-                    else
-                      SelectForm(
-                        label: 'Mesin',
-                        onTap: () => widget.selectMachine(),
-                        selectedLabel: widget.form['nama_mesin'] ?? '',
-                        selectedValue: widget.form['machine_id'].toString(),
-                        required: true,
-                      ),
-                ].separatedBy(CustomTheme().vGap('xl')),
-              ),
-            ),
           NoteEditor(
             controller: widget.note,
             formKey: 'notes',
@@ -153,63 +119,6 @@ class _GreigeListFormState extends State<GreigeListForm> {
           )
         ].separatedBy(CustomTheme().vGap('2xl')),
       ),
-    );
-  }
-
-  Widget _buildMaklonForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildMaklonSwitch(),
-        if (_isMaklon) _buildMaklonNameInput(),
-      ].separatedBy(CustomTheme().hGap('xl')),
-    );
-  }
-
-  Widget _buildMaklonSwitch() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Maklon',
-          style: TextStyle(fontSize: CustomTheme().fontSize('lg')),
-        ),
-        Row(
-          children: [
-            Opacity(
-              opacity: widget.form?['wo_id'] != null ? 1.0 : 0.5,
-              child: Switch(
-                value: _isMaklon,
-                onChanged: widget.form?['wo_id'] != null
-                    ? (value) {
-                        setState(() {
-                          _isMaklon = value;
-                          widget.form['maklon'] = value;
-                        });
-                      }
-                    : null,
-                activeColor: Colors.green,
-                inactiveThumbColor: Colors.redAccent,
-              ),
-            ),
-            Text(_isMaklon ? 'Ya' : 'Tidak'),
-          ].separatedBy(CustomTheme().hGap('lg')),
-        ),
-      ].separatedBy(CustomTheme().vGap('xl')),
-    );
-  }
-
-  Widget _buildMaklonNameInput() {
-    return TextForm(
-      label: 'Nama Maklon',
-      req: false,
-      controller: widget.maklonName,
-      handleChange: (value) {
-        setState(() {
-          widget.maklonName.text = value.toString();
-          widget.form['maklon_name'] = value.toString();
-        });
-      },
     );
   }
 

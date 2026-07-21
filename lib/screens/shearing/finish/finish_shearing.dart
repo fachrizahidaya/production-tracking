@@ -66,8 +66,7 @@ class _FinishShearingState extends State<FinishShearing> {
     return FinishProcess(
       title: 'Selesai Shearing',
       label: 'Shearing',
-      fetchWorkOrder: (service) async =>
-          await service.fetchShearingFinishOptions(),
+      fetchWorkOrder: (service) async => await null,
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput, finishedItemOption, finishedItemOptionGrb) =>

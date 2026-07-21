@@ -131,7 +131,7 @@ class Shearing {
 class ShearingService extends BaseCrudService<Shearing> {
   ShearingService()
       : super(
-          endpoint: 'shearing',
+          endpoint: 'shearings',
           fromJson: (json) => Shearing.fromJson(json),
           toJson: (item) => item.toJson(),
         );

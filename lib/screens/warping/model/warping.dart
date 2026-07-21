@@ -131,7 +131,7 @@ class Warping {
 class WarpingService extends BaseCrudService<Warping> {
   WarpingService()
       : super(
-          endpoint: 'warping',
+          endpoint: 'warpings',
           fromJson: (json) => Warping.fromJson(json),
           toJson: (item) => item.toJson(),
         );

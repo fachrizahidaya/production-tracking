@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
-import 'package:textile_tracking/screens/create/index.dart';
+import 'package:textile_tracking/screens/create/greige_order_index.dart';
 import 'package:textile_tracking/screens/weaving/create/create_form.dart';
 import 'package:textile_tracking/screens/weaving/model/weaving.dart';
 
@@ -37,7 +37,7 @@ class CreateWeavng extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CreateProcess(
+    return CreateGreigeOrderProcess(
       title: 'Mulai Weaving',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
@@ -47,11 +47,11 @@ class CreateWeavng extends StatelessWidget {
           processId: processId,
           form: form,
           handleSubmit: handleSubmit,
-          fetchWorkOrder: (service) => service.fetchWeavingOptions(id),
+          fetchWorkOrder: (service) => service.fetchWeavingOptions(),
         );
       },
-      fetchWorkOrder: (service) => service.fetchWeavingOptions(),
-      getWorkOrderOptions: (service) => service.dataListOption,
+      fetchGreigeOrder: (service) => service.fetchWeavingOptions(),
+      getGreigeOrderOptions: (service) => service.dataListOption,
     );
   }
 }

@@ -131,7 +131,7 @@ class Sizing {
 class SizingService extends BaseCrudService<Sizing> {
   SizingService()
       : super(
-          endpoint: 'sizing',
+          endpoint: 'sizings',
           fromJson: (json) => Sizing.fromJson(json),
           toJson: (item) => item.toJson(),
         );

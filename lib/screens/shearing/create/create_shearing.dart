@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
-import 'package:textile_tracking/screens/create/index.dart';
+import 'package:textile_tracking/screens/create/greige_order_index.dart';
 import 'package:textile_tracking/screens/shearing/create/create_form.dart';
 import 'package:textile_tracking/screens/shearing/model/shearing.dart';
 
@@ -37,7 +37,7 @@ class CreateShearing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CreateProcess(
+    return CreateGreigeOrderProcess(
       title: 'Mulai Shearing',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
@@ -47,11 +47,11 @@ class CreateShearing extends StatelessWidget {
           processId: processId,
           form: form,
           handleSubmit: handleSubmit,
-          fetchWorkOrder: (service) => service.fetchShearingOptions(id),
+          fetchWorkOrder: (service) => service.fetchShearingOptions(),
         );
       },
-      fetchWorkOrder: (service) => service.fetchShearingOptions(),
-      getWorkOrderOptions: (service) => service.dataListOption,
+      fetchGreigeOrder: (service) => service.fetchShearingOptions(),
+      getGreigeOrderOptions: (service) => service.dataListOption,
     );
   }
 }

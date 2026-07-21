@@ -66,8 +66,7 @@ class _FinishWarpingState extends State<FinishWarping> {
     return FinishProcess(
       title: 'Selesai Warping',
       label: 'Warping',
-      fetchWorkOrder: (service) async =>
-          await service.fetchWarpingFinishOptions(),
+      fetchWorkOrder: (service) async => await null,
       getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput, finishedItemOption, finishedItemOptionGrb) =>

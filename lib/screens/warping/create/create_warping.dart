@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
-import 'package:textile_tracking/screens/create/index.dart';
+import 'package:textile_tracking/screens/create/greige_order_index.dart';
 import 'package:textile_tracking/screens/warping/create/create_form.dart';
 import 'package:textile_tracking/screens/warping/model/warping.dart';
 
@@ -37,7 +37,7 @@ class CreateWarping extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CreateProcess(
+    return CreateGreigeOrderProcess(
       title: 'Mulai Warping',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
@@ -47,11 +47,11 @@ class CreateWarping extends StatelessWidget {
           processId: processId,
           form: form,
           handleSubmit: handleSubmit,
-          fetchWorkOrder: (service) => service.fetchWarpingOptions(id),
+          fetchWorkOrder: (service) => service.fetchWarpingOptions(),
         );
       },
-      fetchWorkOrder: (service) => service.fetchWarpingOptions(),
-      getWorkOrderOptions: (service) => service.dataListOption,
+      fetchGreigeOrder: (service) => service.fetchWarpingOptions(),
+      getGreigeOrderOptions: (service) => service.dataListOption,
     );
   }
 }

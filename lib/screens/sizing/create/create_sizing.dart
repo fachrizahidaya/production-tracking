@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
-import 'package:textile_tracking/screens/create/index.dart';
 import 'package:textile_tracking/screens/sizing/create/create_form.dart';
+import 'package:textile_tracking/screens/sizing/create/create_sizing_process.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 
 class CreateSizing extends StatelessWidget {
@@ -15,14 +15,14 @@ class CreateSizing extends StatelessWidget {
       BuildContext context, Map<String, dynamic> form, isLoading) async {
     final sizing = Sizing(
       notes: form['notes'],
-      status: form['status'],
-      attachments: form['attachments'],
+      orderGreigeId: int.tryParse(form['order_greige_id']?.toString() ?? ''),
+      machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
     );
 
     final message = await Provider.of<SizingService>(context, listen: false)
         .addItem(context, sizing, isLoading);
 
-    Navigator.pushNamedAndRemoveUntil(context, '/sizing', (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/sizings', (route) => false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
@@ -30,14 +30,14 @@ class CreateSizing extends StatelessWidget {
           title: 'Sizing Dimulai',
           child: buildBoldMessage(
             message: message,
-            prefix: "SIZ",
+            prefix: "SZG",
           ));
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return CreateProcess(
+    return CreateSizingProcess(
       title: 'Mulai Sizing',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
@@ -47,11 +47,8 @@ class CreateSizing extends StatelessWidget {
           processId: processId,
           form: form,
           handleSubmit: handleSubmit,
-          fetchWorkOrder: (service) => service.fetchSizingOptions(id),
         );
       },
-      fetchWorkOrder: (service) => service.fetchSizingOptions(),
-      getWorkOrderOptions: (service) => service.dataListOption,
     );
   }
 }

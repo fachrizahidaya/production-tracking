@@ -1,13 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
-import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/screens/sizing/finish/finish_form.dart';
+import 'package:textile_tracking/screens/sizing/finish/finish_sizing_process.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 
 class FinishSizing extends StatefulWidget {
@@ -30,29 +29,10 @@ class _FinishSizingState extends State<FinishSizing> {
   }
 
   final Map<String, dynamic> _form = {
-    'wo_id': null,
+    'order_greige_id': null,
     'machine_id': null,
-    'weight_unit_id': null,
-    'width_unit_id': null,
-    'length_unit_id': null,
-    'start_by_id': null,
-    'end_by_id': null,
-    'weight': null,
-    'width': null,
-    'length': null,
+    'roll_length': null,
     'notes': '',
-    'rework': null,
-    'status': null,
-    'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-    'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-    'attachments': [],
-    'no_wo': '',
-    'no_pt': '',
-    'nama_mesin': '',
-    'nama_satuan_berat': '',
-    'nama_satuan_panjang': '',
-    'nama_satuan_lebar': '',
-    'nama_satuan': '',
   };
 
   @override
@@ -63,13 +43,10 @@ class _FinishSizingState extends State<FinishSizing> {
 
   @override
   Widget build(BuildContext context) {
-    return FinishProcess(
+    return FinishSizingProcess(
       title: 'Selesai Sizing',
-      label: 'Sizing',
-      fetchWorkOrder: (service) async => await null,
-      getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput, finishedItemOption, finishedItemOptionGrb) =>
+              handleChangeInput) =>
           FinishForm(
         id: id,
         processId: processId,
@@ -77,20 +54,20 @@ class _FinishSizingState extends State<FinishSizing> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
-        forDyeing: false,
-        withItemGrade: false,
-        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final sizing = Sizing(
           notes: form['notes'],
-          attachments: form['attachments'],
+          panjangGulungan: form['roll_length'],
+          orderGreigeId:
+              int.tryParse(form['order_greige_id']?.toString() ?? ''),
+          machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
         );
 
         final message = await Provider.of<SizingService>(context, listen: false)
             .finishItem(context, id, sizing, isLoading);
 
-        Navigator.pushNamedAndRemoveUntil(context, '/sizing', (_) => false);
+        Navigator.pushNamedAndRemoveUntil(context, '/sizings', (_) => false);
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showAlertDialog(
@@ -98,7 +75,7 @@ class _FinishSizingState extends State<FinishSizing> {
               title: 'Sizing Selesai',
               child: buildBoldMessage(
                 message: message,
-                prefix: "SIZ",
+                prefix: "SZG",
               ));
         });
       },

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
-import 'package:textile_tracking/screens/create/greige_order_index.dart';
 import 'package:textile_tracking/screens/warping/create/create_form.dart';
+import 'package:textile_tracking/screens/warping/create/create_warping_process.dart';
 import 'package:textile_tracking/screens/warping/model/warping.dart';
 
 class CreateWarping extends StatelessWidget {
@@ -14,15 +14,17 @@ class CreateWarping extends StatelessWidget {
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
     final warping = Warping(
-      notes: form['notes'],
-      status: form['status'],
-      attachments: form['attachments'],
+      orderGreigeId: int.tryParse(form['order_greige_id']?.toString() ?? ''),
+      machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
+      notes: form['notes']?.toString() ?? '',
+      warpingType: form['warping_type']?.toString(),
+      yarnQty: num.tryParse(form['yarn_qty']?.toString() ?? '0') ?? 0,
     );
 
     final message = await Provider.of<WarpingService>(context, listen: false)
         .addItem(context, warping, isLoading);
 
-    Navigator.pushNamedAndRemoveUntil(context, '/warping', (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/warpings', (route) => false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
@@ -30,14 +32,14 @@ class CreateWarping extends StatelessWidget {
           title: 'Warping Dimulai',
           child: buildBoldMessage(
             message: message,
-            prefix: "WAR",
+            prefix: "WRP",
           ));
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return CreateGreigeOrderProcess(
+    return CreateWarpingProcess(
       title: 'Mulai Warping',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
@@ -47,11 +49,8 @@ class CreateWarping extends StatelessWidget {
           processId: processId,
           form: form,
           handleSubmit: handleSubmit,
-          fetchWorkOrder: (service) => service.fetchWarpingOptions(),
         );
       },
-      fetchGreigeOrder: (service) => service.fetchWarpingOptions(),
-      getGreigeOrderOptions: (service) => service.dataListOption,
     );
   }
 }

@@ -27,6 +27,7 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/sizing/create/create_sizing.dart';
 import 'package:textile_tracking/screens/sizing/detail/edit_sizing.dart';
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/press_tumbler.dart';
@@ -35,6 +36,8 @@ import 'package:textile_tracking/models/process/press_tumbler.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/sizing/create/create_sizing.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+>>>>>>> 5d1f483f (fix: warping, sizing)
 import 'package:textile_tracking/screens/sizing/detail/sizing_by_id.dart';
 import 'package:textile_tracking/screens/sizing/finish/finish_sizing.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
@@ -323,6 +326,7 @@ class _SizingScreenState extends State<SizingScreen> {
     bool openUpdateOnStart = false,
   }) async {
 <<<<<<< HEAD
+<<<<<<< HEAD
     final status = item['status']?.toString().toLowerCase() ?? '';
     final isInProgress = status == 'diproses' || status.contains('diproses');
 
@@ -355,6 +359,29 @@ class _SizingScreenState extends State<SizingScreen> {
           canUpdate: _canUpdate,
         ),
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+    final status = item['status']?.toString().toLowerCase() ?? '';
+    final isInProgress = status == 'diproses' || status.contains('diproses');
+
+    final value = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          if (isInProgress) {
+            return EditSizingScreen(
+              id: item['id'].toString(),
+            );
+          }
+
+          return SizingDetailScreen(
+            id: item['id'].toString(),
+            no: item['sizing_no'].toString(),
+            canDelete: _canDelete,
+            canUpdate: _canUpdate,
+            openUpdateOnStart: openUpdateOnStart,
+          );
+        },
+>>>>>>> 5d1f483f (fix: warping, sizing)
       ),
     );
 
@@ -483,6 +510,7 @@ class _SizingScreenState extends State<SizingScreen> {
                       item: item,
                       titleKey: 'sizing_no',
 <<<<<<< HEAD
+<<<<<<< HEAD
                       subtitleKey: 'order_greige',
                       subtitleField: 'og_no',
                       canUpdate: _canUpdate,
@@ -490,30 +518,21 @@ class _SizingScreenState extends State<SizingScreen> {
 =======
                       subtitleKey: 'work_orders',
                       subtitleField: 'wo_no',
+=======
+                      subtitleKey: 'order_greige',
+                      subtitleField: 'og_no',
+>>>>>>> 5d1f483f (fix: warping, sizing)
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
-                      onUpdate: () =>
-                          _openProcessDetail(item, openUpdateOnStart: true),
+                      onUpdate: () => _openProcessDetail(
+                        item,
+                        openUpdateOnStart: true,
+                      ),
                       onDelete: () => _handleDeleteItem(item),
 >>>>>>> d8439a4 (fix: refactor code)
                     ),
                     onItemTap: (context, item) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SizingDetailScreen(
-                              id: item['id'].toString(),
-                              no: item['sizing_no'].toString(),
-                              canDelete: _canDelete,
-                              canUpdate: _canUpdate,
-                            ),
-                          )).then((value) {
-                        if (value == true) {
-                          _refetch();
-                        } else {
-                          return null;
-                        }
-                      });
+                      _openProcessDetail(item);
                     },
                     filterWidget: ListFilter(
                       params: params,

@@ -6,12 +6,23 @@ import 'package:textile_tracking/components/detail/greige_process_edit_layout.da
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
+<<<<<<< HEAD
+=======
+import 'package:textile_tracking/components/master/form/select_form.dart';
+import 'package:textile_tracking/components/master/form/text_form.dart';
+>>>>>>> 5d1f483f (fix: warping, sizing)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/screens/update/process/machine.dart';
+=======
+import 'package:textile_tracking/helpers/util/note_editor.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/models/option/option_machine.dart';
+>>>>>>> 5d1f483f (fix: warping, sizing)
 import 'package:textile_tracking/screens/warping/model/warping.dart';
 
 class EditWarpingScreen extends StatefulWidget {
@@ -29,6 +40,12 @@ class EditWarpingScreen extends StatefulWidget {
 class _EditWarpingScreenState extends State<EditWarpingScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
+<<<<<<< HEAD
+=======
+  final TextEditingController _yarnQtyController = TextEditingController();
+  final TextEditingController _warpingTypeController = TextEditingController();
+  final TextEditingController _notesController = TextEditingController();
+>>>>>>> 5d1f483f (fix: warping, sizing)
 
   bool _isLoading = true;
   bool _isFetchingMachine = false;
@@ -37,7 +54,10 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
   Map<String, dynamic> _data = {};
   final Map<String, dynamic> _form = {};
   List<dynamic> _machineOption = [];
+<<<<<<< HEAD
   final List<Map<String, dynamic>> _newMachines = [];
+=======
+>>>>>>> 5d1f483f (fix: warping, sizing)
 
   @override
   void initState() {
@@ -50,6 +70,12 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
   @override
   void dispose() {
     _isSubmitting.dispose();
+<<<<<<< HEAD
+=======
+    _yarnQtyController.dispose();
+    _warpingTypeController.dispose();
+    _notesController.dispose();
+>>>>>>> 5d1f483f (fix: warping, sizing)
     super.dispose();
   }
 
@@ -68,12 +94,18 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
           ? Map<String, dynamic>.from(response['data'])
           : Map<String, dynamic>.from(response);
 
+<<<<<<< HEAD
       final orderGreige = _mapValue(detail['order_greige']);
       final machines = _normalizeMachines(detail['machines']);
+=======
+      final machine = _mapValue(detail['machine']);
+      final orderGreige = _mapValue(detail['order_greige']);
+>>>>>>> 5d1f483f (fix: warping, sizing)
 
       _form
         ..clear()
         ..addAll({
+<<<<<<< HEAD
           'yarn_qty': detail['yarn_qty']?.toString() ?? '',
           'beam_qty': detail['beam_qty']?.toString() ?? '',
           'section': detail['section']?.toString() ?? '',
@@ -91,6 +123,29 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
       });
 
       await _fetchMachine(_machineIds(machines));
+=======
+          'machine_id': detail['machine_id']?.toString(),
+          'nama_mesin': _machineLabel(machine),
+          'yarn_qty': detail['yarn_qty']?.toString() ?? '',
+          'order_greige_id': detail['order_greige_id']?.toString(),
+          'no_greige_order': orderGreige['og_no']?.toString() ?? '',
+
+          // tambahkan ini
+          'warping_type': detail['warping_type']?.toString() ?? '',
+          'notes': detail['notes']?.toString() ?? '',
+        });
+
+      _yarnQtyController.text = detail['yarn_qty']?.toString() ?? '';
+      _warpingTypeController.text = detail['warping_type']?.toString() ?? '';
+
+      _notesController.text = detail['notes']?.toString() ?? '';
+
+      setState(() {
+        _data = detail;
+      });
+
+      await _fetchMachine(detail['machine_id']);
+>>>>>>> 5d1f483f (fix: warping, sizing)
     } catch (e) {
       setState(() => _errorMessage = e.toString());
     } finally {
@@ -100,13 +155,22 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
     }
   }
 
+<<<<<<< HEAD
   Future<void> _fetchMachine(List<dynamic> currentMachineIds) async {
+=======
+  Future<void> _fetchMachine(dynamic currentMachineId) async {
+>>>>>>> 5d1f483f (fix: warping, sizing)
     setState(() => _isFetchingMachine = true);
 
     try {
       final service = Provider.of<OptionMachineService>(context, listen: false);
       await service.fetchOptionsWarping(
+<<<<<<< HEAD
         currentMachineIds: currentMachineIds,
+=======
+        currentMachineIds:
+            currentMachineId == null ? null : [currentMachineId.toString()],
+>>>>>>> 5d1f483f (fix: warping, sizing)
       );
 
       setState(() {
@@ -123,14 +187,20 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
     }
   }
 
+<<<<<<< HEAD
   Future<Map<String, dynamic>?> _selectMachine() async {
     Map<String, dynamic>? result;
 
     await showSelectDialog(
+=======
+  Future<void> _selectMachine() async {
+    showSelectDialog(
+>>>>>>> 5d1f483f (fix: warping, sizing)
       context: context,
       title: 'Mesin',
       isFetching: _isFetchingMachine,
       option: _machineOption,
+<<<<<<< HEAD
       selected: '',
       handleChangeValue: (selected) {
         result = {
@@ -147,11 +217,34 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
 
   bool get _isFormInvalid {
     return (_data['machines'] as List? ?? []).isEmpty;
+=======
+      selected: _form['machine_id']?.toString() ?? '',
+      handleChangeValue: (selected) {
+        setState(() {
+          _form['machine_id'] = selected['value']?.toString();
+          _form['nama_mesin'] = selected['label']?.toString() ?? '';
+        });
+      },
+    );
+  }
+
+  void _handleChangeInput(String key, dynamic value) {
+    setState(() {
+      _form[key] = value;
+    });
+  }
+
+  bool get _isFormInvalid {
+    return (_form['machine_id'] == null ||
+            _form['machine_id'].toString().isEmpty) ||
+        (_form['yarn_qty'] == null || _form['yarn_qty'].toString().isEmpty);
+>>>>>>> 5d1f483f (fix: warping, sizing)
   }
 
   Future<void> _handleSubmit() async {
     if (_isFormInvalid) return;
 
+<<<<<<< HEAD
     final isSingle = _form['warping_type'] == 'single_warping';
 
     final warping = Warping(
@@ -166,6 +259,14 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
           .map((item) => item['machine']?['id'])
           .where((id) => id != null)
           .toList(),
+=======
+    final warping = Warping(
+      machineId: int.tryParse(_form['machine_id']?.toString() ?? ''),
+      yarnQty: num.tryParse(_form['yarn_qty']?.toString() ?? '0') ?? 0,
+      warpingType: _form['warping_type']?.toString(),
+      orderGreigeId: int.tryParse(_form['order_greige_id']?.toString() ?? ''),
+      notes: _form['notes']?.toString(),
+>>>>>>> 5d1f483f (fix: warping, sizing)
     );
 
     try {
@@ -215,27 +316,88 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
       onCancel: _handleCancel,
       formKey: _formKey,
       formSections: [
+<<<<<<< HEAD
         _buildMachineCard(),
+=======
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: _buildSummaryCard()),
+            Expanded(child: _buildGreigeCard()),
+          ].separatedBy(CustomTheme().hGap('xl')),
+        ),
+        Row(
+          children: [
+            Expanded(child: _buildMachineCard()),
+            Expanded(child: _buildYarnCard()),
+          ].separatedBy(CustomTheme().hGap('xl')),
+        ),
+        _buildAdditionalCard(),
+>>>>>>> 5d1f483f (fix: warping, sizing)
       ],
       submitSection: _buildSubmitSection(),
       greigeOrderData: _mapValue(_data['order_greige']),
     );
   }
 
+<<<<<<< HEAD
+=======
+  Widget _buildSummaryCard() {
+    final orderGreige = _mapValue(_data['order_greige']);
+
+    return TemplateCard(
+      title: 'Informasi Warping',
+      icon: Icons.assignment_outlined,
+      child: Column(
+        children: [
+          _InfoLine('No. Warping', _display(_data['warping_no'])),
+          // _InfoLine('Status', _display(_data['status'])),
+          // _InfoLine('Greige Order', _display(orderGreige['og_no'])),
+        ].separatedBy(Divider(height: 18, color: Colors.grey.shade200)),
+      ),
+    );
+  }
+
+  Widget _buildGreigeCard() {
+    return TemplateCard(
+      title: 'Greige Order',
+      icon: Icons.assessment_outlined,
+      child: SelectForm(
+        label: 'Greige Order',
+        onTap: () {},
+        selectedLabel: _form['no_greige_order']?.toString() ?? '',
+        selectedValue: _form['order_greige_id']?.toString() ?? '',
+        required: true,
+        isDisabled: true,
+      ),
+    );
+  }
+
+>>>>>>> 5d1f483f (fix: warping, sizing)
   Widget _buildMachineCard() {
     return TemplateCard(
       title: 'Mesin',
       icon: Icons.local_laundry_service_outlined,
+<<<<<<< HEAD
       child: MachineEditSection(
         data: _data,
         form: _form,
         handleSelectMachine: _selectMachine,
         getMachineStatus: _getMachineStatus,
         newMachines: _newMachines,
+=======
+      child: SelectForm(
+        label: 'Mesin',
+        onTap: _selectMachine,
+        selectedLabel: _form['nama_mesin']?.toString() ?? '',
+        selectedValue: _form['machine_id']?.toString() ?? '',
+        required: true,
+>>>>>>> 5d1f483f (fix: warping, sizing)
       ),
     );
   }
 
+<<<<<<< HEAD
   String _getMachineStatus(dynamic machineId) {
     final option = _machineOption.firstWhere(
       (item) => item['value'].toString() == machineId.toString(),
@@ -261,6 +423,37 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
         'status': machine['status'] ?? 'Tersedia',
       };
     }).toList();
+=======
+  Widget _buildYarnCard() {
+    return TemplateCard(
+      title: 'Benang',
+      icon: Icons.join_inner_outlined,
+      child: TextForm(
+        label: 'Jumlah Benang (KG)',
+        controller: _yarnQtyController,
+        req: false,
+        isNumber: true,
+        isSorting: true,
+        handleChange: (value) => _handleChangeInput('yarn_qty', value),
+      ),
+    );
+  }
+
+  Widget _buildAdditionalCard() {
+    return Column(
+      children: [
+        NoteEditor(
+          controller: _notesController,
+          form: _form,
+          formKey: 'notes',
+          label: 'Catatan',
+          onChanged: (value) {
+            _handleChangeInput('notes', value);
+          },
+        ),
+      ],
+    );
+>>>>>>> 5d1f483f (fix: warping, sizing)
   }
 
   Widget _buildSubmitSection() {
@@ -273,7 +466,11 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
               child: CancelButton(
                 label: 'Batal',
                 onPressed: () => Navigator.pop(context),
+<<<<<<< HEAD
                 customHeight: 56.0,
+=======
+                customHeight: 50.0,
+>>>>>>> 5d1f483f (fix: warping, sizing)
               ),
             ),
             const SizedBox(width: 12),
@@ -282,7 +479,11 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
                 label: 'Simpan',
                 isLoading: isSubmitting,
                 isDisabled: _isFormInvalid,
+<<<<<<< HEAD
                 customHeight: 56.0,
+=======
+                customHeight: 50.0,
+>>>>>>> 5d1f483f (fix: warping, sizing)
                 onPressed: _handleSubmit,
               ),
             ),
@@ -293,8 +494,66 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
   }
 }
 
+<<<<<<< HEAD
+=======
+class _InfoLine extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _InfoLine(this.label, this.value);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: CustomTheme().fontSize('md'),
+              fontWeight: CustomTheme().fontWeight('semibold'),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Flexible(
+          child: Text(
+            value,
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              color: Colors.grey.shade800,
+              fontSize: CustomTheme().fontSize('md'),
+              fontWeight: CustomTheme().fontWeight('bold'),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+>>>>>>> 5d1f483f (fix: warping, sizing)
 Map<String, dynamic> _mapValue(dynamic value) {
   if (value is Map<String, dynamic>) return value;
   if (value is Map) return Map<String, dynamic>.from(value);
   return <String, dynamic>{};
 }
+<<<<<<< HEAD
+=======
+
+String _machineLabel(Map<String, dynamic> machine) {
+  final code = machine['code']?.toString() ?? '';
+  final name = machine['name']?.toString() ?? '';
+
+  if (code.isEmpty && name.isEmpty) return '';
+  if (code.isEmpty) return name;
+  if (name.isEmpty) return code;
+  return '$code - $name';
+}
+
+String _display(dynamic value) {
+  if (value == null || value.toString().isEmpty) return '-';
+  return value.toString();
+}
+>>>>>>> 5d1f483f (fix: warping, sizing)

@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously, unused_element, unused_element_parameter
 
 import 'package:easy_localization/easy_localization.dart';
@@ -18,12 +19,24 @@ import 'package:textile_tracking/screens/sizing/detail/edit_sizing.dart';
 // ignore_for_file: use_build_context_synchronously
 
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+// ignore_for_file: use_build_context_synchronously, unused_element, unused_element_parameter
+
+import 'package:easy_localization/easy_localization.dart';
+>>>>>>> 5d1f483f (fix: warping, sizing)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/detail/greige_process_detail_list.dart';
+import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/screens/detail/%5Bprocess_id%5D.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/helpers/util/format_number.dart';
+>>>>>>> 5d1f483f (fix: warping, sizing)
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 
 class SizingDetailScreen extends StatefulWidget {
@@ -47,6 +60,7 @@ class SizingDetailScreen extends StatefulWidget {
 
 class _SizingDetailScreenState extends State<SizingDetailScreen> {
 <<<<<<< HEAD
+<<<<<<< HEAD
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
   bool _isLoading = true;
   String? _errorMessage;
@@ -56,6 +70,11 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
   Map<String, dynamic> _greigeOrder = {};
 
   Map<String, dynamic> _data = {};
+=======
+  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
+  bool _isLoading = true;
+  String? _errorMessage;
+>>>>>>> 5d1f483f (fix: warping, sizing)
 
   @override
   void initState() {
@@ -78,6 +97,7 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
     });
 
     try {
+<<<<<<< HEAD
       final sizingService = Provider.of<SizingService>(context, listen: false);
 
       await sizingService.getDataView(context, widget.id);
@@ -117,6 +137,15 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
         setState(() {
           _isLoading = false;
         });
+=======
+      await Provider.of<SizingService>(context, listen: false)
+          .getDataView(context, widget.id);
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+>>>>>>> 5d1f483f (fix: warping, sizing)
       }
     }
   }
@@ -127,9 +156,13 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
     return response;
   }
 
+<<<<<<< HEAD
   Future _handleDelete(dynamic _) async {
     final data = _data;
 
+=======
+  Future<void> _handleDelete(Map<String, dynamic> data) async {
+>>>>>>> 5d1f483f (fix: warping, sizing)
     final hasDeletePermission = widget.canDelete == true;
     final canDeleteItem = data['can_delete'] != false;
 
@@ -153,11 +186,15 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
         try {
           final message =
               await Provider.of<SizingService>(context, listen: false)
+<<<<<<< HEAD
                   .deleteItem(
             context,
             widget.id.toString(),
             _deleteLoading,
           );
+=======
+                  .deleteItem(context, widget.id.toString(), _deleteLoading);
+>>>>>>> 5d1f483f (fix: warping, sizing)
 
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
@@ -186,6 +223,7 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
       },
     );
   }
+<<<<<<< HEAD
 
   @override
   Widget build(BuildContext context) {
@@ -365,48 +403,119 @@ class _WarpingDetailHeader extends StatelessWidget {
         );
 =======
   final SizingService _sizingService = SizingService();
+=======
+>>>>>>> 5d1f483f (fix: warping, sizing)
 
   @override
   Widget build(BuildContext context) {
-    return ProcessDetail<Sizing>(
-      id: widget.id,
-      no: widget.no,
-      label: 'Sizing',
-      prefix: 'SIZ',
-      isMultiMachine: false,
-      service: Provider.of<SizingService>(context, listen: false),
-      handleUpdateService: (context, id, item, isLoading) =>
-          Provider.of<SizingService>(context, listen: false)
-              .updateItem(context, id, item, isLoading),
-      handleDeleteService: (context, id, isLoading) =>
-          Provider.of<SizingService>(context, listen: false)
-              .deleteItem(context, id, isLoading),
-      modelBuilder: (form, data) => Sizing(
-        notes: form['notes'] ?? data['notes'],
-        attachments: [
-          ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
-          ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
-        ],
+    return Scaffold(
+      backgroundColor: const Color(0xFFF7F8FA),
+      body: SafeArea(
+        child: Consumer<SizingService>(
+          builder: (context, service, _) {
+            if (_isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (_errorMessage != null) {
+              return _ErrorView(
+                message: _errorMessage!,
+                onRetry: _fetchDetail,
+              );
+            }
+
+            final data = _detailData(service.dataView);
+
+            return GreigeProcessDetailList(
+              data: data,
+              processName: 'Sizing',
+              processNoKey: 'sizing_no',
+              onRefresh: _fetchDetail,
+              canDelete: widget.canDelete == true,
+              onDelete: () => _handleDelete(data),
+            );
+          },
+        ),
       ),
-      route: '/sizing',
-      canDelete: widget.canDelete,
-      canUpdate: widget.canUpdate,
-      openUpdateOnStart: widget.openUpdateOnStart,
-      fetchMachine: (service, _) => service.fetchOptionsSizing(),
-      getMachineOptions: (service) => service.dataListOption,
-      withItemGrade: false,
-      withMaklon: false,
-      forDyeing: false,
-      idProcess: 'sizing_id',
-      processService: _sizingService,
-      forPacking: false,
-      fetchFinish: (service) => service.fetchSizingFinishOptions(),
-      handleSubmitToService: (context, id, form, isLoading) async {
-        final sizing = Sizing(
-          notes: form['notes'],
-          attachments: form['attachments'],
+    );
+  }
+}
+
+class _WarpingDetailHeader extends StatelessWidget {
+  final Map<String, dynamic> data;
+  final bool canDelete;
+  final VoidCallback onDelete;
+
+  const _WarpingDetailHeader({
+    required this.data,
+    required this.canDelete,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isCompact = constraints.maxWidth < 640;
+        final deleteButton = canDelete && data['can_delete'] != false
+            ? ElevatedButton.icon(
+                onPressed: onDelete,
+                icon: const Icon(Icons.delete_outline, color: Colors.white),
+                label: const Text('Hapus Sizing'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CustomTheme().buttonColor('danger'),
+                  foregroundColor: Colors.white,
+                  elevation: 2,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              )
+            : null;
+
+        final titleContent = Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IconButton(
+              tooltip: 'Kembali',
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back, size: 28),
+              color: Colors.grey.shade700,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Detail Proses Sizing',
+                    style: TextStyle(
+                      fontSize: isCompact ? 24 : 28,
+                      height: 1.15,
+                      color: Colors.grey.shade900,
+                      fontWeight: CustomTheme().fontWeight('bold'),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Lihat ringkasan proses Sizing dan item Persiapan Produksi.',
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('md'),
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (!isCompact && deleteButton != null) ...[
+              const SizedBox(width: 16),
+              deleteButton,
+            ],
+          ],
         );
 
+<<<<<<< HEAD
         final message = await Provider.of<SizingService>(context, listen: false)
             .finishItem(context, id, sizing, isLoading);
 
@@ -422,11 +531,32 @@ class _WarpingDetailHeader extends StatelessWidget {
               ));
         });
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(12, 12, 16, 18),
+          child: isCompact && deleteButton != null
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    titleContent,
+                    const SizedBox(height: 14),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 48),
+                      child: deleteButton,
+                    ),
+                  ],
+                )
+              : titleContent,
+        );
+>>>>>>> 5d1f483f (fix: warping, sizing)
       },
     );
   }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5d1f483f (fix: warping, sizing)
 
 class _WarpingDetailBody extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -1316,5 +1446,8 @@ String _formatType(dynamic value) {
           word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
       .join(' ');
 }
+<<<<<<< HEAD
 =======
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+>>>>>>> 5d1f483f (fix: warping, sizing)

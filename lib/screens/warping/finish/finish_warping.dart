@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously
 
+<<<<<<< HEAD
 =======
 =======
 // ignore_for_file: use_build_context_synchronously
@@ -9,11 +10,14 @@
 >>>>>>> bb29b60 (fix: clear warning)
 import 'package:easy_localization/easy_localization.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+>>>>>>> 5d1f483f (fix: warping, sizing)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import 'package:textile_tracking/screens/warping/finish/finish_form.dart';
 import 'package:textile_tracking/screens/warping/finish/finish_warping_process.dart';
@@ -21,6 +25,10 @@ import 'package:textile_tracking/screens/warping/finish/finish_warping_process.d
 import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/screens/warping/finish/finish_form.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+import 'package:textile_tracking/screens/warping/finish/finish_form.dart';
+import 'package:textile_tracking/screens/warping/finish/finish_warping_process.dart';
+>>>>>>> 5d1f483f (fix: warping, sizing)
 import 'package:textile_tracking/screens/warping/model/warping.dart';
 
 class FinishWarping extends StatefulWidget {
@@ -44,6 +52,7 @@ class _FinishWarpingState extends State<FinishWarping> {
 
   final Map<String, dynamic> _form = {
 <<<<<<< HEAD
+<<<<<<< HEAD
     'order_greige_id': null,
     'machine_id': null,
     'yarn_qty': null,
@@ -58,16 +67,13 @@ class _FinishWarpingState extends State<FinishWarping> {
     'attachments': []
 =======
     'wo_id': null,
+=======
+    'order_greige_id': null,
+>>>>>>> 5d1f483f (fix: warping, sizing)
     'machine_id': null,
-    'weight_unit_id': null,
-    'width_unit_id': null,
-    'length_unit_id': null,
-    'start_by_id': null,
-    'end_by_id': null,
-    'weight': null,
-    'width': null,
-    'length': null,
+    'yarn_qty': null,
     'notes': '',
+<<<<<<< HEAD
     'rework': null,
     'status': null,
     'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
@@ -81,6 +87,9 @@ class _FinishWarpingState extends State<FinishWarping> {
     'nama_satuan_lebar': '',
     'nama_satuan': '',
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+    'warping_type': '',
+>>>>>>> 5d1f483f (fix: warping, sizing)
   };
 
   @override
@@ -92,19 +101,24 @@ class _FinishWarpingState extends State<FinishWarping> {
   @override
   Widget build(BuildContext context) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     return FinishWarpingProcess(
       title: 'Selesai Warping',
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput) =>
 =======
     return FinishProcess(
+=======
+    return FinishWarpingProcess(
+>>>>>>> 5d1f483f (fix: warping, sizing)
       title: 'Selesai Warping',
-      label: 'Warping',
-      fetchWorkOrder: (service) async => await null,
-      getWorkOrderOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
+<<<<<<< HEAD
               handleChangeInput, finishedItemOption, finishedItemOptionGrb) =>
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+              handleChangeInput) =>
+>>>>>>> 5d1f483f (fix: warping, sizing)
           FinishForm(
         id: id,
         processId: processId,
@@ -112,6 +126,7 @@ class _FinishWarpingState extends State<FinishWarping> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
+<<<<<<< HEAD
 <<<<<<< HEAD
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
@@ -136,6 +151,19 @@ class _FinishWarpingState extends State<FinishWarping> {
           notes: form['notes'],
           attachments: form['attachments'],
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+      ),
+      handleSubmitToService: (context, id, form, isLoading) async {
+        final warping = Warping(
+          machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
+          warpingType: form['warping_type']?.toString(),
+          yarnQty: num.tryParse(form['yarn_qty']?.toString() ?? '0') ?? 0,
+          length: num.tryParse(form['length']?.toString() ?? '0') ?? 0,
+          section: int.tryParse(form['section']?.toString() ?? '0') ?? 0,
+          notes: form['notes']?.toString() ?? '',
+          orderGreigeId:
+              int.tryParse(form['order_greige_id']?.toString() ?? ''),
+>>>>>>> 5d1f483f (fix: warping, sizing)
         );
 
         final message =
@@ -143,10 +171,14 @@ class _FinishWarpingState extends State<FinishWarping> {
                 .finishItem(context, id, warping, isLoading);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         Navigator.pushNamedAndRemoveUntil(context, '/warpings', (_) => false);
 =======
         Navigator.pushNamedAndRemoveUntil(context, '/warping', (_) => false);
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+        Navigator.pushNamedAndRemoveUntil(context, '/warpings', (_) => false);
+>>>>>>> 5d1f483f (fix: warping, sizing)
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showAlertDialog(
@@ -155,10 +187,14 @@ class _FinishWarpingState extends State<FinishWarping> {
               child: buildBoldMessage(
                 message: message,
 <<<<<<< HEAD
+<<<<<<< HEAD
                 prefix: "WRP",
 =======
                 prefix: "WAR",
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+                prefix: "WRP",
+>>>>>>> 5d1f483f (fix: warping, sizing)
               ));
         });
       },

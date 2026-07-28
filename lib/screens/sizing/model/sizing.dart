@@ -9,6 +9,7 @@ class Sizing {
   final int? id;
   final String? sizingNo;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final int? machineId;
 
   final orderGreigeId;
@@ -36,25 +37,18 @@ class Sizing {
       this.machines});
 =======
   final int? woId;
+=======
+>>>>>>> 5d1f483f (fix: warping, sizing)
   final int? machineId;
-  final String? startTime;
-  final String? endTime;
-  final int? startById;
-  final int? endById;
-  final int? unitId;
-  final dynamic qty;
-  final String? notes;
-  final String? status;
-  final bool? rework;
-  final int? reworkReferenceId;
-  final String? lotCelupNo;
-  final int? greigeItemId;
-  final int? cycleNo;
 
-  final bool? canDelete;
-  final bool? canUpdate;
-  final bool? canRework;
+  final orderGreigeId;
+  final yarnQty;
+  final length;
+  final section;
+  final notes;
+  final panjangGulungan;
 
+<<<<<<< HEAD
   final List<dynamic> attachments;
   final List<dynamic> semifinishedProducts;
 
@@ -140,12 +134,37 @@ class Sizing {
       reworkReference: json['rework_reference'],
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
     );
+=======
+  Sizing(
+      {this.id,
+      this.sizingNo,
+      this.machineId,
+      this.length,
+      this.orderGreigeId,
+      this.section,
+      this.yarnQty,
+      this.notes,
+      this.panjangGulungan});
+
+  factory Sizing.fromJson(Map<String, dynamic> json) {
+    return Sizing(
+        id: json['id'],
+        sizingNo: json['sizing_no'],
+        machineId: json['machine_id'],
+        orderGreigeId: json['order_greige_id'],
+        yarnQty: json['yarn_qty'],
+        notes: json['notes'],
+        length: json['length'],
+        section: json['section'],
+        panjangGulungan: json['roll_length']);
+>>>>>>> 5d1f483f (fix: warping, sizing)
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'sizing_no': sizingNo,
+<<<<<<< HEAD
 <<<<<<< HEAD
       'machine_id': machineId,
       'order_greige_id': orderGreigeId,
@@ -158,14 +177,13 @@ class Sizing {
       'machine_ids': machine_ids,
 =======
       'wo_id': woId,
+=======
+>>>>>>> 5d1f483f (fix: warping, sizing)
       'machine_id': machineId,
-      'start_time': startTime,
-      'end_time': endTime,
-      'start_by_id': startById,
-      'end_by_id': endById,
-      'unit_id': unitId,
-      'qty': qty,
+      'order_greige_id': orderGreigeId,
+      'yarn_qty': yarnQty,
       'notes': notes,
+<<<<<<< HEAD
       'status': status,
       'rework': rework == true ? 1 : 0,
       'rework_reference_id': reworkReferenceId,
@@ -181,6 +199,11 @@ class Sizing {
       'unit': unit,
       'rework_reference': reworkReference,
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+      'length': length,
+      'section': section,
+      'roll_length': panjangGulungan
+>>>>>>> 5d1f483f (fix: warping, sizing)
     };
   }
 }

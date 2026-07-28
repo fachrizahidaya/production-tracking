@@ -46,24 +46,17 @@ class Warping {
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 
 class Warping {
-  final int? id;
-  final String? warpingNo;
-  final int? woId;
-  final int? machineId;
-  final String? startTime;
-  final String? endTime;
-  final int? startById;
-  final int? endById;
-  final int? unitId;
-  final dynamic qty;
-  final String? notes;
-  final String? status;
-  final bool? rework;
-  final int? reworkReferenceId;
-  final String? lotCelupNo;
-  final int? greigeItemId;
-  final int? cycleNo;
+  final id;
+  final warpingNo;
+  final orderGreigeId;
+  final machineId;
+  final warpingType;
+  final notes;
+  final yarnQty;
+  final length;
+  final section;
 
+<<<<<<< HEAD
   final bool? canDelete;
   final bool? canUpdate;
   final bool? canRework;
@@ -187,33 +180,52 @@ class Warping {
     return data;
 =======
     return {
+=======
+  Warping(
+      {this.id,
+      this.warpingNo,
+      this.machineId,
+      this.orderGreigeId,
+      this.warpingType,
+      this.yarnQty,
+      this.notes,
+      this.length,
+      this.section});
+
+  factory Warping.fromJson(Map<String, dynamic> json) {
+    return Warping(
+        id: json['id'],
+        warpingNo: json['warping_no'],
+        machineId: json['machine_id'],
+        orderGreigeId: json['order_greige_id'],
+        warpingType: json['warping_type'],
+        yarnQty: json['yarn_qty'],
+        notes: json['notes'],
+        length: json['length'],
+        section: json['section']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = {
+>>>>>>> 5d1f483f (fix: warping, sizing)
       'id': id,
       'warping_no': warpingNo,
-      'wo_id': woId,
       'machine_id': machineId,
-      'start_time': startTime,
-      'end_time': endTime,
-      'start_by_id': startById,
-      'end_by_id': endById,
-      'unit_id': unitId,
-      'qty': qty,
+      'order_greige_id': orderGreigeId,
+      'warping_type': warpingType,
+      'yarn_qty': yarnQty,
       'notes': notes,
-      'status': status,
-      'rework': rework == true ? 1 : 0,
-      'rework_reference_id': reworkReferenceId,
-      'lot_celup_no': lotCelupNo,
-      'greige_item_id': greigeItemId,
-      'cycle_no': cycleNo,
-      'attachments': attachments,
-      'semifinished_products': semifinishedProducts,
-      'work_orders': workOrders,
-      'machine': machine,
-      'start_by': startBy,
-      'end_by': endBy,
-      'unit': unit,
-      'rework_reference': reworkReference,
+      'length': length,
+      'section': section
     };
+<<<<<<< HEAD
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+
+    data.removeWhere((key, value) => value == null);
+
+    return data;
+>>>>>>> 5d1f483f (fix: warping, sizing)
   }
 }
 

@@ -27,6 +27,7 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/warping/create/create_warping.dart';
 import 'package:textile_tracking/screens/warping/detail/edit_warping.dart';
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/helpers/util/item_field.dart';
 =======
@@ -36,6 +37,8 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/warping/create/create_warping.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+>>>>>>> 5d1f483f (fix: warping, sizing)
 import 'package:textile_tracking/screens/warping/detail/warping_by_id.dart';
 import 'package:textile_tracking/screens/warping/finish/finish_warping.dart';
 import 'package:textile_tracking/screens/warping/model/warping.dart';
@@ -306,6 +309,7 @@ class _WarpingScreenState extends State<WarpingScreen> {
     final status = item['status']?.toString().toLowerCase() ?? '';
     final isInProgress = status == 'diproses' || status.contains('diproses');
 
+<<<<<<< HEAD
     final value = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -406,16 +410,24 @@ class _WarpingScreenState extends State<WarpingScreen> {
     dynamic item, {
     bool openUpdateOnStart = false,
   }) async {
+=======
+>>>>>>> 5d1f483f (fix: warping, sizing)
     final value = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => WarpingDetailScreen(
-          id: item['id'].toString(),
-          no: item['warping_no'].toString(),
-          canDelete: _canDelete,
-          canUpdate: _canUpdate,
-          openUpdateOnStart: openUpdateOnStart,
-        ),
+        builder: (context) {
+          if (isInProgress) {
+            return EditWarpingScreen(id: item['id'].toString());
+          }
+
+          return WarpingDetailScreen(
+            id: item['id'].toString(),
+            no: item['warping_no'].toString(),
+            canDelete: _canDelete,
+            canUpdate: _canUpdate,
+            openUpdateOnStart: openUpdateOnStart,
+          );
+        },
       ),
     );
 
@@ -537,6 +549,7 @@ class _WarpingScreenState extends State<WarpingScreen> {
                       item: item,
                       titleKey: 'warping_no',
 <<<<<<< HEAD
+<<<<<<< HEAD
                       subtitleKey: 'order_greige',
                       subtitleField: 'og_no',
                     ),
@@ -618,6 +631,10 @@ class _WarpingScreenState extends State<WarpingScreen> {
 =======
                       subtitleKey: 'work_orders',
                       subtitleField: 'wo_no',
+=======
+                      subtitleKey: 'order_greige',
+                      subtitleField: 'og_no',
+>>>>>>> 5d1f483f (fix: warping, sizing)
                       onUpdate: () => _openProcessDetail(
                         item,
                         openUpdateOnStart: true,
@@ -626,19 +643,7 @@ class _WarpingScreenState extends State<WarpingScreen> {
                       onDelete: () => _handleDeleteItem(item),
                     ),
                     onItemTap: (context, item) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WarpingDetailScreen(
-                              id: item['id'].toString(),
-                            ),
-                          )).then((value) {
-                        if (value == true) {
-                          _refetch();
-                        } else {
-                          return null;
-                        }
-                      });
+                      _openProcessDetail(item);
                     },
                     filterWidget: ListFilter(
                       params: params,

@@ -14,6 +14,7 @@ import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/warping/create/create_form.dart';
 import 'package:textile_tracking/screens/warping/create/create_warping_process.dart';
 =======
@@ -23,6 +24,10 @@ import 'package:textile_tracking/screens/create/greige_order_index.dart';
 >>>>>>> a1ea7df (feat: warping)
 import 'package:textile_tracking/screens/warping/create/create_form.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+import 'package:textile_tracking/screens/warping/create/create_form.dart';
+import 'package:textile_tracking/screens/warping/create/create_warping_process.dart';
+>>>>>>> 5d1f483f (fix: warping, sizing)
 import 'package:textile_tracking/screens/warping/model/warping.dart';
 
 class CreateWarping extends StatelessWidget {
@@ -50,20 +55,32 @@ class CreateWarping extends StatelessWidget {
           .toList(),
 =======
     final warping = Warping(
+<<<<<<< HEAD
       notes: form['notes'],
       status: form['status'],
       attachments: form['attachments'],
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+      orderGreigeId: int.tryParse(form['order_greige_id']?.toString() ?? ''),
+      machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
+      notes: form['notes']?.toString() ?? '',
+      warpingType: form['warping_type']?.toString(),
+      yarnQty: num.tryParse(form['yarn_qty']?.toString() ?? '0') ?? 0,
+>>>>>>> 5d1f483f (fix: warping, sizing)
     );
 
     final message = await Provider.of<WarpingService>(context, listen: false)
         .addItem(context, warping, isLoading);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     Navigator.pushNamedAndRemoveUntil(context, '/warpings', (route) => false);
 =======
     Navigator.pushNamedAndRemoveUntil(context, '/warping', (route) => false);
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+    Navigator.pushNamedAndRemoveUntil(context, '/warpings', (route) => false);
+>>>>>>> 5d1f483f (fix: warping, sizing)
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
@@ -72,16 +89,21 @@ class CreateWarping extends StatelessWidget {
           child: buildBoldMessage(
             message: message,
 <<<<<<< HEAD
+<<<<<<< HEAD
             prefix: "WRP",
 =======
             prefix: "WAR",
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+            prefix: "WRP",
+>>>>>>> 5d1f483f (fix: warping, sizing)
           ));
     });
   }
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     return CreateWarpingProcess(
@@ -91,6 +113,9 @@ class CreateWarping extends StatelessWidget {
 =======
     return CreateGreigeOrderProcess(
 >>>>>>> a1ea7df (feat: warping)
+=======
+    return CreateWarpingProcess(
+>>>>>>> 5d1f483f (fix: warping, sizing)
       title: 'Mulai Warping',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
@@ -100,6 +125,7 @@ class CreateWarping extends StatelessWidget {
           processId: processId,
           form: form,
           handleSubmit: handleSubmit,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         );
@@ -118,6 +144,10 @@ class CreateWarping extends StatelessWidget {
       fetchGreigeOrder: (service) => service.fetchWarpingOptions(),
       getGreigeOrderOptions: (service) => service.dataListOption,
 >>>>>>> a1ea7df (feat: warping)
+=======
+        );
+      },
+>>>>>>> 5d1f483f (fix: warping, sizing)
     );
   }
 }

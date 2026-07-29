@@ -645,16 +645,22 @@ class _DashboardState extends State<Dashboard> {
       for (final menu in menuList) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 17fd914c (fix: dashboard)
         final name = (menu['name'] ?? '').toString().toLowerCase();
 
         // if (name == 'sorting' || name == 'packing') {
         //   return true;
         // }
 
+<<<<<<< HEAD
 >>>>>>> 6a9e309 (fix: show machine)
 =======
 >>>>>>> 1155687b (fix: widget dashboard)
+=======
+>>>>>>> 17fd914c (fix: dashboard)
         final children = menu['children'];
 
         if (children != null && children is List && checkMenus(children)) {
@@ -735,9 +741,13 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     await _safeFetch(_handleFetchMenu);
 
+=======
+>>>>>>> 17fd914c (fix: dashboard)
     await Future.wait([
+      _safeFetch(_handleFetchMenu),
       _safeFetch(_handleFetchStats),
       _safeFetch(_handleFetchPie),
       _safeFetch(_handleFetchMachine),
@@ -781,6 +791,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     } catch (e) {
       if (mounted) {
         debugPrint('Dashboard request failed: $e');
@@ -805,6 +816,11 @@ class _DashboardState extends State<Dashboard> {
         debugPrint('Dashboard request failed: $e');
       }
 >>>>>>> e30538ab (fix: notification dan evaluasi rework)
+=======
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s);
+>>>>>>> 17fd914c (fix: dashboard)
     }
   }
 
@@ -893,17 +909,19 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
       greigeSummaryList = [];
+=======
+>>>>>>> 17fd914c (fix: dashboard)
     });
 
     try {
-      final service = Provider.of<WorkOrderSummaryService>(
-        context,
-        listen: false,
-      );
+      final service =
+          Provider.of<WorkOrderSummaryService>(context, listen: false);
 
+<<<<<<< HEAD
       await Future.wait([
         service.getDataList(context, summaryParams),
         service.getPreDataList(context, summaryParams),
@@ -936,11 +954,15 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
 =======
 >>>>>>> 04b6e1a6 (fix: filter dashboard data by accessible processes)
+=======
+      await service.getDataList(context, summaryParams);
+>>>>>>> 17fd914c (fix: dashboard)
 
       if (!mounted) return;
 
       setState(() {
         summaryList = service.dataList;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -964,10 +986,18 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
 =======
 >>>>>>> 16778356 (feat: fcm notification)
+=======
+      });
+    } catch (e, s) {
+      debugPrint('Summary Error: $e');
+      debugPrintStack(stackTrace: s);
+
+>>>>>>> 17fd914c (fix: dashboard)
       if (!mounted) return;
 
       setState(() {
         summaryList = [];
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -979,6 +1009,8 @@ class _DashboardState extends State<Dashboard> {
 =======
         greigeSummaryList = [];
 >>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
+=======
+>>>>>>> 17fd914c (fix: dashboard)
       });
     } finally {
       if (!mounted) return;
@@ -1066,13 +1098,17 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (_isLoadMore) return;
 =======
 =======
+=======
+>>>>>>> 17fd914c (fix: dashboard)
 
     setState(() {
       _isLoadMore = true;
     });
+<<<<<<< HEAD
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
 
     setState(() {
@@ -1095,6 +1131,8 @@ class _DashboardState extends State<Dashboard> {
       _isLoadMore = true;
 =======
     if (_isLoadMore) return;
+=======
+>>>>>>> 17fd914c (fix: dashboard)
 
     final isReset = params['page'] == '0';
     if (!isReset && !_hasMore) return;
@@ -1124,6 +1162,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 99705a2c (fix: home, dashboard)
       final service = Provider.of<WorkOrderProcessService>(
@@ -1141,6 +1180,10 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
 =======
 >>>>>>> 99705a2c (fix: home, dashboard)
+=======
+      final service =
+          Provider.of<WorkOrderProcessService>(context, listen: false);
+>>>>>>> 17fd914c (fix: dashboard)
 
       await service.getDataList(context, params);
 
@@ -1157,6 +1200,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         _hasMore = _isMobile ? loadData.length >= 10 : loadData.isNotEmpty;
 =======
         _hasMore = loadData.isNotEmpty;
@@ -1167,6 +1211,9 @@ class _DashboardState extends State<Dashboard> {
 =======
         _hasMore = _isMobile ? loadData.length >= 10 : loadData.isNotEmpty;
 >>>>>>> 025659bb (fix: dashboard mobile)
+=======
+        _hasMore = loadData.isNotEmpty;
+>>>>>>> 17fd914c (fix: dashboard)
       });
     } catch (e) {
       if (!mounted) return;
@@ -1175,6 +1222,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (isReset) {
           _dataList.clear();
         }
@@ -1189,6 +1237,9 @@ class _DashboardState extends State<Dashboard> {
           _dataList.clear();
         }
 >>>>>>> 025659bb (fix: dashboard mobile)
+=======
+        _dataList.clear();
+>>>>>>> 17fd914c (fix: dashboard)
         _hasMore = false;
       });
     } finally {

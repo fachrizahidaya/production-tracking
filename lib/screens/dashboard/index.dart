@@ -333,6 +333,12 @@ class _DashboardState extends State<Dashboard> {
   bool get shouldHideActiveMachine {
     bool checkMenus(List<dynamic> menuList) {
       for (final menu in menuList) {
+        final name = (menu['name'] ?? '').toString().toLowerCase();
+
+        // if (name == 'sorting' || name == 'packing') {
+        //   return true;
+        // }
+
         final children = menu['children'];
 
         if (children != null && children is List && checkMenus(children)) {
@@ -400,9 +406,8 @@ class _DashboardState extends State<Dashboard> {
 
     setState(() => isLoading = true);
 
-    await _safeFetch(_handleFetchMenu);
-
     await Future.wait([
+      _safeFetch(_handleFetchMenu),
       _safeFetch(_handleFetchStats),
       _safeFetch(_handleFetchPie),
       _safeFetch(_handleFetchMachine),
@@ -418,10 +423,9 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _safeFetch(Future<void> Function() callback) async {
     try {
       await callback();
-    } catch (e) {
-      if (mounted) {
-        debugPrint('Dashboard request failed: $e');
-      }
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s);
     }
   }
 
@@ -488,33 +492,27 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       isSummaryLoading = true;
       summaryList = [];
-      greigeSummaryList = [];
     });
 
     try {
-      final service = Provider.of<WorkOrderSummaryService>(
-        context,
-        listen: false,
-      );
+      final service =
+          Provider.of<WorkOrderSummaryService>(context, listen: false);
 
-      await Future.wait([
-        service.getDataList(context, summaryParams),
-        service.getPreDataList(context, summaryParams),
-      ]);
-      service.filterByProcessNames(menuProcessNames);
+      await service.getDataList(context, summaryParams);
 
       if (!mounted) return;
 
       setState(() {
         summaryList = service.dataList;
-        greigeSummaryList = service.preDataList;
       });
-    } catch (e) {
+    } catch (e, s) {
+      debugPrint('Summary Error: $e');
+      debugPrintStack(stackTrace: s);
+
       if (!mounted) return;
 
       setState(() {
         summaryList = [];
-        greigeSummaryList = [];
       });
     } finally {
       if (!mounted) return;
@@ -599,7 +597,10 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> _loadMore() async {
     if (!mounted) return;
-    if (_isLoadMore) return;
+
+    setState(() {
+      _isLoadMore = true;
+    });
 
     final isReset = params['page'] == '0';
     if (!isReset && !_hasMore) return;
@@ -625,10 +626,8 @@ class _DashboardState extends State<Dashboard> {
     params['page'] = (currentPage + 1).toString();
 
     try {
-      final service = Provider.of<WorkOrderProcessService>(
-        context,
-        listen: false,
-      );
+      final service =
+          Provider.of<WorkOrderProcessService>(context, listen: false);
 
       await service.getDataList(context, params);
 
@@ -642,15 +641,13 @@ class _DashboardState extends State<Dashboard> {
         }
 
         _dataList.addAll(loadData);
-        _hasMore = _isMobile ? loadData.length >= 10 : loadData.isNotEmpty;
+        _hasMore = loadData.isNotEmpty;
       });
     } catch (e) {
       if (!mounted) return;
 
       setState(() {
-        if (isReset) {
-          _dataList.clear();
-        }
+        _dataList.clear();
         _hasMore = false;
       });
     } finally {

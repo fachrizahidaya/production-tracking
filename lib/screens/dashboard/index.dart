@@ -409,6 +409,7 @@ class _DashboardState extends State<Dashboard> {
 
     setState(() => isLoading = true);
 
+<<<<<<< HEAD
     await _safeFetch(_handleFetchMenu);
 
     await Future.wait([
@@ -419,6 +420,17 @@ class _DashboardState extends State<Dashboard> {
       _safeFetch(_loadMore),
     ]);
 
+=======
+    await Future.wait([
+      _safeFetch(_handleFetchMenu),
+      _safeFetch(_handleFetchStats),
+      _safeFetch(_handleFetchPie),
+      _safeFetch(_handleFetchMachine),
+      _safeFetch(_handleFetchSummary),
+      _safeFetch(_loadMore),
+    ]);
+
+>>>>>>> 45ea02f (fix: dashboard)
     if (!mounted) return;
 
     setState(() => isLoading = false);
@@ -427,10 +439,16 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _safeFetch(Future<void> Function() callback) async {
     try {
       await callback();
+<<<<<<< HEAD
     } catch (e) {
       if (mounted) {
         debugPrint('Dashboard request failed: $e');
       }
+=======
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s);
+>>>>>>> 45ea02f (fix: dashboard)
     }
   }
 
@@ -497,6 +515,7 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       isSummaryLoading = true;
       summaryList = [];
+<<<<<<< HEAD
       greigeSummaryList = [];
     });
 
@@ -511,19 +530,39 @@ class _DashboardState extends State<Dashboard> {
         service.getPreDataList(context, summaryParams),
       ]);
       service.filterByProcessNames(menuProcessNames);
+=======
+    });
+
+    try {
+      final service =
+          Provider.of<WorkOrderSummaryService>(context, listen: false);
+
+      await service.getDataList(context, summaryParams);
+>>>>>>> 45ea02f (fix: dashboard)
 
       if (!mounted) return;
 
       setState(() {
         summaryList = service.dataList;
+<<<<<<< HEAD
         greigeSummaryList = service.preDataList;
       });
     } catch (e) {
+=======
+      });
+    } catch (e, s) {
+      debugPrint('Summary Error: $e');
+      debugPrintStack(stackTrace: s);
+
+>>>>>>> 45ea02f (fix: dashboard)
       if (!mounted) return;
 
       setState(() {
         summaryList = [];
+<<<<<<< HEAD
         greigeSummaryList = [];
+=======
+>>>>>>> 45ea02f (fix: dashboard)
       });
     } finally {
       if (!mounted) return;
@@ -560,7 +599,7 @@ class _DashboardState extends State<Dashboard> {
       summaryParams['end_date'] = endDate;
     });
 
-    // _handleFetchSummary();
+    _handleFetchSummary();
   }
 
   void _handleProcessFilter(String key, dynamic value) {
@@ -608,7 +647,14 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> _loadMore() async {
     if (!mounted) return;
+<<<<<<< HEAD
     if (_isLoadMore) return;
+=======
+
+    setState(() {
+      _isLoadMore = true;
+    });
+>>>>>>> 45ea02f (fix: dashboard)
 
     final isReset = params['page'] == '0';
     if (!isReset && !_hasMore) return;
@@ -634,10 +680,15 @@ class _DashboardState extends State<Dashboard> {
     params['page'] = (currentPage + 1).toString();
 
     try {
+<<<<<<< HEAD
       final service = Provider.of<WorkOrderProcessService>(
         context,
         listen: false,
       );
+=======
+      final service =
+          Provider.of<WorkOrderProcessService>(context, listen: false);
+>>>>>>> 45ea02f (fix: dashboard)
 
       await service.getDataList(context, params);
 
@@ -651,15 +702,23 @@ class _DashboardState extends State<Dashboard> {
         }
 
         _dataList.addAll(loadData);
+<<<<<<< HEAD
         _hasMore = _isMobile ? loadData.length >= 10 : loadData.isNotEmpty;
+=======
+        _hasMore = loadData.isNotEmpty;
+>>>>>>> 45ea02f (fix: dashboard)
       });
     } catch (e) {
       if (!mounted) return;
 
       setState(() {
+<<<<<<< HEAD
         if (isReset) {
           _dataList.clear();
         }
+=======
+        _dataList.clear();
+>>>>>>> 45ea02f (fix: dashboard)
         _hasMore = false;
       });
     } finally {

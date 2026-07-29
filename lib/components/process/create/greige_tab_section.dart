@@ -6,7 +6,7 @@ import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/greige_form_info_tab.dart';
-import 'package:textile_tracking/components/spk/tab/note_attachment_spk.dart';
+import 'package:textile_tracking/components/process/create/greige_info_tab.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -31,6 +31,7 @@ class GreigeTabSection extends StatefulWidget {
   final spkDocuments;
   final handleChangeInput;
   final note;
+  final yarnQty;
 
   const GreigeTabSection(
       {super.key,
@@ -53,7 +54,8 @@ class GreigeTabSection extends StatefulWidget {
       this.isMaklon,
       this.spkDocuments,
       this.handleChangeInput,
-      this.note});
+      this.note,
+      this.yarnQty});
 
   @override
   State<GreigeTabSection> createState() => _GreigeTabSectionState();
@@ -89,7 +91,7 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
     }
 
     if (context.mounted) {
-      if (widget.form?['wo_id'] != null) {
+      if (widget.form?['order_greige_id'] != null) {
         showConfirmationDialog(
           context: context,
           isLoading: _isLoading,
@@ -101,7 +103,11 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
           },
           title: 'Batal ${widget.label}',
           buttonBackground: CustomTheme().buttonColor('danger'),
-          child: buildBoldMessage(widget.greigeOrderData['wo_no'] ?? '-'),
+          child: buildBoldMessage(
+            widget.greigeOrderData['wo_no'] ??
+                widget.greigeOrderData['og_no'] ??
+                '-',
+          ),
         );
       } else {
         Navigator.pop(context);
@@ -137,7 +143,7 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
     }
 
     if (context.mounted) {
-      if (widget.form?['wo_id'] != null) {
+      if (widget.form?['order_greige_id'] != null) {
         showConfirmationDialog(
           context: context,
           isLoading: widget.isSubmitting,
@@ -152,7 +158,11 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
           },
           title: 'Mulai ${widget.label}',
           buttonBackground: CustomTheme().buttonColor('primary'),
-          child: buildBoldMessage(widget.greigeOrderData['wo_no'] ?? '-'),
+          child: buildBoldMessage(
+            widget.greigeOrderData['wo_no'] ??
+                widget.greigeOrderData['og_no'] ??
+                '-',
+          ),
         );
       } else {
         Navigator.pop(context);
@@ -167,18 +177,20 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
     final List<Map<String, dynamic>> machines = List<Map<String, dynamic>>.from(
       widget.form?['machines'] ?? [],
     );
+    final yarnQty = widget.form?['yarn_qty']?.toString().trim() ?? '';
 
     if (widget.withOnlyMaklon == true) {
-      isDisabled = widget.form?['wo_id'] == null;
+      isDisabled = widget.form?['order_greige_id'] == null;
     } else if (widget.withNoMaklonOrMachine == true) {
-      isDisabled = widget.form?['wo_id'] == null;
+      isDisabled = widget.form?['order_greige_id'] == null;
     } else if (widget.label == 'Long Hemming' ||
         widget.label == 'Cross Cutting' ||
         widget.label == 'Sewing') {
-      isDisabled = widget.form?['wo_id'] == null || machines.isEmpty;
+      isDisabled = widget.form?['order_greige_id'] == null || machines.isEmpty;
     } else {
-      isDisabled =
-          widget.form?['wo_id'] == null || widget.form?['machine_id'] == null;
+      isDisabled = widget.form?['order_greige_id'] == null ||
+          widget.form?['machine_id'] == null ||
+          (widget.label == 'Warping' && yarnQty.isEmpty);
     }
 
     return DefaultTabController(
@@ -226,25 +238,9 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
                         isMaklon: widget.isMaklon,
                         handleChangeInput: widget.handleChangeInput,
                         note: widget.note,
+                        yarnQty: widget.yarnQty,
                       ),
-                      GreigeFormInfoTab(
-                        data: widget.greigeOrderData,
-                        processData: widget.processData,
-                        id: widget.id,
-                        isLoading: widget.firstLoading,
-                        label: widget.label,
-                        form: widget.form,
-                        formKey: widget.formKey,
-                        handleSelectMachine: widget.selectMachine,
-                        handleSelectGreigeOrder: widget.selectGreigeOrder,
-                        maklonName: widget.maklonName,
-                        withMaklonOrMachine: widget.withMaklonOrMachine,
-                        withOnlyMaklon: widget.withOnlyMaklon,
-                        withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
-                        isMaklon: widget.isMaklon,
-                        handleChangeInput: widget.handleChangeInput,
-                        note: widget.note,
-                      ),
+                      GreigeInfoTab(data: widget.greigeOrderData)
                     ],
                   ),
                 ),

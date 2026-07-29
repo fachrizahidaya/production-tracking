@@ -2,9 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
-import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
-import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/process/warping.dart';
 import 'package:textile_tracking/components/process/create/process/weaving.dart';
@@ -26,6 +24,7 @@ class GreigeListForm extends StatefulWidget {
   final data;
   final handleChangeInput;
   final note;
+  final yarnQty;
 
   const GreigeListForm(
       {super.key,
@@ -42,20 +41,14 @@ class GreigeListForm extends StatefulWidget {
       this.label,
       this.data,
       this.handleChangeInput,
-      this.note});
+      this.note,
+      this.yarnQty});
 
   @override
   State<GreigeListForm> createState() => _GreigeListFormState();
 }
 
 class _GreigeListFormState extends State<GreigeListForm> {
-  bool _isMaklon = false;
-
-  String getSelectedMachineLabel(List machines) {
-    if (machines.isEmpty) return '';
-    return machines.map((e) => e['name']).join(', ');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -71,119 +64,80 @@ class _GreigeListFormState extends State<GreigeListForm> {
                   SelectForm(
                     label: 'Greige Order',
                     onTap: () => widget.selectGreigeOrder(),
-                    selectedLabel: widget.form?['no_wo'] ?? '',
-                    selectedValue: widget.form?['wo_id']?.toString() ?? '',
+                    selectedLabel: widget.form?['no_greige_order'] ?? '',
+                    selectedValue:
+                        widget.form?['order_greige_id']?.toString() ?? '',
                     required: true,
                   ),
                 ].separatedBy(CustomTheme().vGap('xl')),
               ),
             ),
-          TemplateCard(
-            title: 'Mesin',
-            icon: Icons.local_laundry_service_outlined,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          if (widget.form?['order_greige_id'] != null)
+            Column(
               children: [
-                if (widget.form?['wo_id'] != null)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [_buildMultiMesin()]
-                        .separatedBy(CustomTheme().vGap('xl')),
-                  )
-                else if (widget.form?['wo_id'] != null)
-                  _buildMultiMesin()
-                else
-                  SelectForm(
-                    label: 'Mesin',
-                    onTap: () => widget.selectMachine(),
-                    selectedLabel: widget.form['nama_mesin'] ?? '',
-                    selectedValue: widget.form['machine_id'].toString(),
-                    required: true,
-                  ),
-              ].separatedBy(CustomTheme().vGap('xl')),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TemplateCard(
+                        title: 'Mesin',
+                        icon: Icons.local_laundry_service_outlined,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // if (widget.form?['wo_id'] != null)
+                            //   Column(
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //     children: [_buildMultiMesin()]
+                            //         .separatedBy(CustomTheme().vGap('xl')),
+                            //   )
+                            // else if (widget.form?['wo_id'] != null)
+                            //   _buildMultiMesin()
+                            // else
+                            SelectForm(
+                              label: 'Mesin',
+                              onTap: () => widget.selectMachine(),
+                              selectedLabel: widget.form['nama_mesin'] ?? '',
+                              selectedValue:
+                                  widget.form['machine_id'].toString(),
+                              required: true,
+                            ),
+                          ].separatedBy(CustomTheme().vGap('xl')),
+                        ),
+                      ),
+                    ),
+                    if (widget.label == 'Warping')
+                      Expanded(
+                        child: WarpingSection(
+                          controller: widget.yarnQty,
+                          onChange: (value) {
+                            widget.handleChangeInput('yarn_qty', value);
+                          },
+                        ),
+                      ),
+                    if (widget.label == 'Weaving')
+                      Expanded(
+                        child: WeavingSection(
+                          skipShearing: widget.form['skip_shearing'] ?? false,
+                          onSkipShearing: (value) {
+                            widget.handleChangeInput('skip_shearing', value);
+                          },
+                        ),
+                      ),
+                  ].separatedBy(CustomTheme().hGap('xl')),
+                ),
+                NoteEditor(
+                  controller: widget.note,
+                  formKey: 'notes',
+                  label: 'Catatan',
+                  form: widget.form,
+                  onChanged: (value) {
+                    widget.handleChangeInput('notes', value);
+                  },
+                )
+              ].separatedBy(CustomTheme().vGap('2xl')),
             ),
-          ),
-          WarpingSection(
-            data: null,
-            items: null,
-            onChange: null,
-          ),
-          NoteEditor(
-            controller: widget.note,
-            formKey: 'notes',
-            label: 'Catatan',
-            form: widget.form,
-            onChanged: (value) {
-              widget.handleChangeInput('notes', value);
-            },
-          )
         ].separatedBy(CustomTheme().vGap('2xl')),
       ),
-    );
-  }
-
-  Widget _buildMultiMesin() {
-    final machines = widget.form['machines'] as List? ?? [];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        GroupForm(
-          label: 'Mesin',
-          req: false,
-          formControl: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: machines
-                      .map<Widget>((machine) => Container(
-                            margin: EdgeInsets.only(right: 8),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: CustomTheme()
-                                  .buttonColor('primary')
-                                  .withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: CustomTheme().buttonColor('primary'),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(machine['label'].toString()),
-                                SizedBox(width: 6),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      machines.remove(machine);
-                                      widget.form['machines'] = machines;
-                                    });
-                                  },
-                                  child: Icon(Icons.close, size: 16),
-                                ),
-                              ],
-                            ),
-                          ))
-                      .toList(),
-                ),
-              ),
-              SelectForm(
-                label: 'Pilih Mesin',
-                onTap: () => widget.selectMachine(),
-                selectedLabel: '',
-                selectedValue: '',
-                required: true,
-              ),
-            ].separatedBy(CustomTheme().vGap('md')),
-          ),
-        ),
-      ],
     );
   }
 }

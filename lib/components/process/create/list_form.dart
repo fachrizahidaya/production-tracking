@@ -6,7 +6,6 @@ import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/components/process/create/process/weaving.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ListForm extends StatefulWidget {
@@ -100,17 +99,6 @@ class _ListFormState extends State<ListForm> {
               ].separatedBy(CustomTheme().vGap('xl')),
             ),
           ),
-        WeavingSection(
-          data: widget.data,
-          items: widget.form['items'] ?? [],
-          onChange: (index, key, value) {
-            final items = List<Map<String, dynamic>>.from(widget.form['items']);
-
-            items[index][key] = value;
-
-            widget.handleChangeInput('items', items);
-          },
-        ),
         if (widget.form?['wo_id'] != null)
           TemplateCard(
             title: _isMaklon

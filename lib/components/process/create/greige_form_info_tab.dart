@@ -20,6 +20,7 @@ class GreigeFormInfoTab extends StatefulWidget {
   final withNoMaklonOrMachine;
   final handleChangeInput;
   final note;
+  final yarnQty;
 
   const GreigeFormInfoTab(
       {super.key,
@@ -38,7 +39,8 @@ class GreigeFormInfoTab extends StatefulWidget {
       this.withNoMaklonOrMachine,
       this.withOnlyMaklon,
       this.handleChangeInput,
-      this.note});
+      this.note,
+      this.yarnQty});
 
   @override
   State<GreigeFormInfoTab> createState() => _GreigeFormInfoTabState();
@@ -55,8 +57,6 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isTablet = constraints.maxWidth > 600;
-
         return SingleChildScrollView(
           padding: CustomTheme().padding('content'),
           child: Column(
@@ -77,6 +77,7 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
                 data: widget.processData,
                 handleChangeInput: widget.handleChangeInput,
                 note: widget.note,
+                yarnQty: widget.yarnQty,
               ),
             ].separatedBy(CustomTheme().vGap('2xl')),
           ),

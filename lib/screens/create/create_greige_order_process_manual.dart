@@ -5,10 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/process/create/greige_tab_section.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
-import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
-import 'package:textile_tracking/models/master/spk.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
-import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 
 class CreateGreigeOrderProcessManual extends StatefulWidget {
@@ -61,12 +58,12 @@ class CreateGreigeOrderProcessManual extends StatefulWidget {
 class _CreateGreigeOrderProcessManualState
     extends State<CreateGreigeOrderProcessManual> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final SpkService _spkService = SpkService();
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
   final TextEditingController _maklonNameController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
+  final TextEditingController _yarnQtyController = TextEditingController();
 
-  final bool _firstLoading = false;
+  bool _firstLoading = false;
   bool _isFetchingGreigeOrder = false;
   bool _isFetchingMachine = false;
   List<dynamic> greigeOrderOption = [];
@@ -81,10 +78,6 @@ class _CreateGreigeOrderProcessManualState
   @override
   void initState() {
     super.initState();
-
-    spkDocuments = List<Map<String, dynamic>>.from(
-      widget.form?['spk_documents'] ?? [],
-    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchGreigeOrder();
@@ -107,8 +100,6 @@ class _CreateGreigeOrderProcessManualState
     try {
       if (widget.fetchGreigeOrder != null) {
         await widget.fetchGreigeOrder!(service);
-      } else {
-        await service.fetchWarpingOptions();
       }
 
       final data = widget.getGreigeOrderOptions != null
@@ -169,39 +160,6 @@ class _CreateGreigeOrderProcessManualState
     });
   }
 
-  Future<void> _fetchSpkDocuments() async {
-    final items = List<Map<String, dynamic>>.from(
-      greigeOrderData['items'] ?? [],
-    );
-
-    final Map<String, Map<String, dynamic>> docs = {};
-
-    for (final item in items) {
-      final spkId = item['spk_id']?.toString();
-
-      if (spkId == null || docs.containsKey(spkId)) {
-        continue;
-      }
-
-      try {
-        final result = await _spkService.getDocuments(spkId);
-
-        docs[spkId] = {
-          'spk_id': item['spk_id'],
-          'spk_no': result['spk_no'] ?? item['spk_no'],
-          'notes': result['notes'] ?? '',
-          'attachments': List<Map<String, dynamic>>.from(
-            result['attachments'] ?? [],
-          ),
-        };
-      } catch (_) {}
-    }
-
-    setState(() {
-      spkDocuments = docs.values.toList();
-    });
-  }
-
   void _handleChangeInput(String key, dynamic value) {
     setState(() {
       widget.form?[key] = value;
@@ -213,15 +171,62 @@ class _CreateGreigeOrderProcessManualState
     final label = selected['label']?.toString() ?? '';
     final items = selected['items'] ??
         selected['details'] ??
-        (selected['item_code'] != null ? [selected] : []);
+        (selected['item_code'] != null
+            ? [selected]
+            : selected['article'] != null
+                ? [
+                    {
+                      'item_code': selected['article'],
+                    }
+                  ]
+                : []);
 
     return {
       ...selected,
       'id': selected['id'] ?? selected['value'],
-      'wo_no': selected['wo_no'] ?? selected['greige_order_no'] ?? label,
+      'wo_no': selected['wo_no'] ??
+          selected['greige_order_no'] ??
+          selected['og_no'] ??
+          label,
       'items': items,
       'attachments': selected['attachments'] ?? [],
     };
+  }
+
+  Future<void> _getGreigeOrderView(
+    dynamic id,
+    Map<String, dynamic> selectedData,
+  ) async {
+    setState(() {
+      _firstLoading = true;
+    });
+
+    final service =
+        Provider.of<OptionGreigeOrderService>(context, listen: false);
+
+    try {
+      await service.getDataView(id);
+
+      final detailData = _normalizeGreigeOrderData({
+        ...selectedData,
+        ...service.dataView,
+        'items': service.dataView['items'] ?? selectedData['items'] ?? [],
+      });
+
+      setState(() {
+        greigeOrderData = detailData;
+        widget.form?['no_greige_order'] = detailData['wo_no']?.toString();
+        widget.form?['warping_type'] = detailData['warping_type'];
+      });
+    } catch (_) {
+      setState(() {
+        greigeOrderData = selectedData;
+      });
+    } finally {
+      setState(() {
+        _firstLoading = false;
+      });
+    }
   }
 
   Future<void> _selectGreigeOrder() async {
@@ -244,14 +249,8 @@ class _CreateGreigeOrderProcessManualState
         return SelectDialog(
           label: 'Greige Order',
           options: greigeOrderOption,
-          selected: widget.form?['wo_id']?.toString() ?? '',
+          selected: widget.form?['order_greige_id']?.toString() ?? '',
           handleChangeValue: (selected) async {
-            final semiFinishedService =
-                Provider.of<OptionItemSemiFinishedService>(
-              context,
-              listen: false,
-            );
-
             final greigeOrderId = selected['value']?.toString();
             final processValue = selected[widget.idProcess];
             final selectedData = _normalizeGreigeOrderData(
@@ -259,58 +258,16 @@ class _CreateGreigeOrderProcessManualState
             );
 
             setState(() {
-              widget.form?['wo_id'] = greigeOrderId;
-              widget.form?['no_wo'] = selectedData['wo_no']?.toString();
+              widget.form?['order_greige_id'] = greigeOrderId;
+              widget.form?['no_greige_order'] =
+                  selectedData['wo_no']?.toString();
+              widget.form?['warping_type'] = selectedData['warping_type'];
               greigeOrderData = selectedData;
             });
 
-            await _fetchSpkDocuments();
-
-            final params = extractSemiFinishedParams(
-              greigeOrderData['items'] ?? [],
-            );
-
-            await semiFinishedService.fetchOptions(
-              isInitialLoad: true,
-              process: widget.label
-                  .toString()
-                  .trim()
-                  .toLowerCase()
-                  .replaceAll(' ', '_'),
-              baseCodes: params['base_codes'] ?? [],
-              colorCodes: params['color_codes'] ?? [],
-            );
-
-            final semiFinishedItems = semiFinishedService.dataListOption;
-            final baseCodes = params['base_codes'] ?? [];
-            final colorCodes = params['color_codes'] ?? [];
-            final List<Map<String, dynamic>> items = [];
-
-            for (int i = 0; i < baseCodes.length; i++) {
-              final baseCode = baseCodes[i].toString();
-              final colorCode =
-                  i < colorCodes.length ? colorCodes[i].toString() : '';
-
-              dynamic semiFinishedId;
-
-              for (final sf in semiFinishedItems) {
-                final sfCode = sf['code']?.toString() ?? '';
-                final sfParts = sfCode.split('-');
-                final sfBaseCode = sfParts.isNotEmpty ? sfParts.first : '';
-                final sfColorCode = sfParts.isNotEmpty ? sfParts.last : '';
-
-                if (sfBaseCode == baseCode && sfColorCode == colorCode) {
-                  semiFinishedId = sf['value'];
-                  break;
-                }
-              }
-
-              items.add({
-                'semifinished_product_id': semiFinishedId,
-              });
+            if (greigeOrderId != null && greigeOrderId.isNotEmpty) {
+              await _getGreigeOrderView(greigeOrderId, selectedData);
             }
-
-            widget.form?['items'] = items;
 
             if (processValue != null && processValue.toString().isNotEmpty) {
               processId = processValue.toString();
@@ -342,6 +299,8 @@ class _CreateGreigeOrderProcessManualState
   void dispose() {
     widget.form?.clear();
     _maklonNameController.dispose();
+    _noteController.dispose();
+    _yarnQtyController.dispose();
     super.dispose();
   }
 
@@ -370,6 +329,7 @@ class _CreateGreigeOrderProcessManualState
       spkDocuments: spkDocuments,
       handleChangeInput: _handleChangeInput,
       note: _noteController,
+      yarnQty: _yarnQtyController,
     );
   }
 }

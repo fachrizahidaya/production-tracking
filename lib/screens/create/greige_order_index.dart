@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously, prefer_final_fields
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
@@ -47,32 +46,12 @@ class _CreateGreigeOrderProcessState extends State<CreateGreigeOrderProcess> {
   final ValueNotifier<bool> _firstLoading = ValueNotifier(false);
 
   final Map<String, dynamic> _form = {
-    'wo_id': null,
+    'order_greige_id': null,
     'machine_id': null,
-    'unit_id': null,
-    'start_by_id': null,
-    'end_by_id': null,
-    'qty': null,
-    'width': null,
-    'length': null,
+    'warping_type': '',
+    'yarn_qty': null,
     'notes': '',
-    'status': null,
-    'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-    'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-    'attachments': [],
-    'no_wo': '',
-    'no_process': '',
-    'nama_mesin': '',
-    'nama_satuan': '',
-    'maklon': false,
-    'maklon_name': '',
-    'machine_ids': [],
-    'semifinished_products': [],
-    'items': [],
-    'spk_documents': [],
-    'beam_weight': null,
-    'greige_weight': null,
-    'waste_weight': null,
+    'skip_shearing': false
   };
 
   @override
@@ -93,8 +72,6 @@ class _CreateGreigeOrderProcessState extends State<CreateGreigeOrderProcess> {
 
     if (widget.fetchGreigeOrder != null) {
       await widget.fetchGreigeOrder!(service);
-    } else {
-      await service.fetchWarpingOptions();
     }
 
     final data = widget.getGreigeOrderOptions != null
@@ -116,7 +93,10 @@ class _CreateGreigeOrderProcessState extends State<CreateGreigeOrderProcess> {
     return {
       ...selected,
       'id': selected['id'] ?? selected['value'],
-      'wo_no': selected['wo_no'] ?? selected['greige_order_no'] ?? label,
+      'wo_no': selected['wo_no'] ??
+          selected['greige_order_no'] ??
+          selected['og_no'] ??
+          label,
       'items': items,
       'attachments': selected['attachments'] ?? [],
     };
@@ -162,8 +142,9 @@ class _CreateGreigeOrderProcessState extends State<CreateGreigeOrderProcess> {
       );
       final greigeOrderId = data['id']?.toString();
 
-      _form['wo_id'] = greigeOrderId;
-      _form['no_wo'] = data['wo_no']?.toString() ?? greigeOrderNo;
+      _form['order_greige_id'] = greigeOrderId;
+      _form['no_greige_order'] = data['wo_no']?.toString() ?? greigeOrderNo;
+      _form['warping_type'] = data['warping_type'];
 
       setState(() => _isLoading = false);
 

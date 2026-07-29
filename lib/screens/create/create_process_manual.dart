@@ -374,11 +374,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
       return;
     }
 
-    if (widget.label == 'Dyeing' ||
-        widget.label == 'Press' ||
-        widget.label == 'Tumbler' ||
-        widget.label == 'Long Slitting' ||
-        widget.label == 'Long Hemming' ||
+    if (widget.label == 'Long Hemming' ||
         widget.label == 'Cross Cutting' ||
         widget.label == 'Sewing') {
       showSelectDialog(

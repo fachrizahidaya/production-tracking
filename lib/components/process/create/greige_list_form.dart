@@ -2,13 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
-import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/process/weaving.dart';
 =======
 import 'package:textile_tracking/components/master/form/text_form.dart';
+=======
+>>>>>>> 1e3750ac (fix: create process)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/process/warping.dart';
 import 'package:textile_tracking/components/process/create/process/weaving.dart';
@@ -32,12 +34,16 @@ class GreigeListForm extends StatefulWidget {
   final handleChangeInput;
   final note;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final yarnQty;
   final beamQty;
   final section;
   final onFormChanged;
 =======
 >>>>>>> a1ea7df (feat: warping)
+=======
+  final yarnQty;
+>>>>>>> 1e3750ac (fix: create process)
 
   const GreigeListForm(
       {super.key,
@@ -55,6 +61,7 @@ class GreigeListForm extends StatefulWidget {
       this.data,
       this.handleChangeInput,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.note,
       this.yarnQty,
       this.beamQty,
@@ -63,12 +70,17 @@ class GreigeListForm extends StatefulWidget {
 =======
       this.note});
 >>>>>>> a1ea7df (feat: warping)
+=======
+      this.note,
+      this.yarnQty});
+>>>>>>> 1e3750ac (fix: create process)
 
   @override
   State<GreigeListForm> createState() => _GreigeListFormState();
 }
 
 class _GreigeListFormState extends State<GreigeListForm> {
+<<<<<<< HEAD
 <<<<<<< HEAD
   String _formatWarpingType(dynamic value) {
     if (value == null || value.toString().trim().isEmpty) return '';
@@ -89,6 +101,8 @@ class _GreigeListFormState extends State<GreigeListForm> {
 >>>>>>> a1ea7df (feat: warping)
   }
 
+=======
+>>>>>>> 1e3750ac (fix: create process)
   @override
   Widget build(BuildContext context) {
 <<<<<<< HEAD
@@ -188,37 +202,79 @@ class _GreigeListFormState extends State<GreigeListForm> {
                   SelectForm(
                     label: 'Greige Order',
                     onTap: () => widget.selectGreigeOrder(),
-                    selectedLabel: widget.form?['no_wo'] ?? '',
-                    selectedValue: widget.form?['wo_id']?.toString() ?? '',
+                    selectedLabel: widget.form?['no_greige_order'] ?? '',
+                    selectedValue:
+                        widget.form?['order_greige_id']?.toString() ?? '',
                     required: true,
                   ),
                 ].separatedBy(CustomTheme().vGap('xl')),
               ),
             ),
-          TemplateCard(
-            title: 'Mesin',
-            icon: Icons.local_laundry_service_outlined,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          if (widget.form?['order_greige_id'] != null)
+            Column(
               children: [
-                if (widget.form?['wo_id'] != null)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [_buildMultiMesin()]
-                        .separatedBy(CustomTheme().vGap('xl')),
-                  )
-                else if (widget.form?['wo_id'] != null)
-                  _buildMultiMesin()
-                else
-                  SelectForm(
-                    label: 'Mesin',
-                    onTap: () => widget.selectMachine(),
-                    selectedLabel: widget.form['nama_mesin'] ?? '',
-                    selectedValue: widget.form['machine_id'].toString(),
-                    required: true,
-                  ),
-              ].separatedBy(CustomTheme().vGap('xl')),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TemplateCard(
+                        title: 'Mesin',
+                        icon: Icons.local_laundry_service_outlined,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // if (widget.form?['wo_id'] != null)
+                            //   Column(
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //     children: [_buildMultiMesin()]
+                            //         .separatedBy(CustomTheme().vGap('xl')),
+                            //   )
+                            // else if (widget.form?['wo_id'] != null)
+                            //   _buildMultiMesin()
+                            // else
+                            SelectForm(
+                              label: 'Mesin',
+                              onTap: () => widget.selectMachine(),
+                              selectedLabel: widget.form['nama_mesin'] ?? '',
+                              selectedValue:
+                                  widget.form['machine_id'].toString(),
+                              required: true,
+                            ),
+                          ].separatedBy(CustomTheme().vGap('xl')),
+                        ),
+                      ),
+                    ),
+                    if (widget.label == 'Warping')
+                      Expanded(
+                        child: WarpingSection(
+                          controller: widget.yarnQty,
+                          onChange: (value) {
+                            widget.handleChangeInput('yarn_qty', value);
+                          },
+                        ),
+                      ),
+                    if (widget.label == 'Weaving')
+                      Expanded(
+                        child: WeavingSection(
+                          skipShearing: widget.form['skip_shearing'] ?? false,
+                          onSkipShearing: (value) {
+                            widget.handleChangeInput('skip_shearing', value);
+                          },
+                        ),
+                      ),
+                  ].separatedBy(CustomTheme().hGap('xl')),
+                ),
+                NoteEditor(
+                  controller: widget.note,
+                  formKey: 'notes',
+                  label: 'Catatan',
+                  form: widget.form,
+                  onChanged: (value) {
+                    widget.handleChangeInput('notes', value);
+                  },
+                )
+              ].separatedBy(CustomTheme().vGap('2xl')),
             ),
+<<<<<<< HEAD
           ),
           WarpingSection(
             data: null,
@@ -235,10 +291,13 @@ class _GreigeListFormState extends State<GreigeListForm> {
             },
           )
 >>>>>>> a1ea7df (feat: warping)
+=======
+>>>>>>> 1e3750ac (fix: create process)
         ].separatedBy(CustomTheme().vGap('2xl')),
       ),
     );
   }
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -445,4 +504,6 @@ class _GreigeListFormState extends State<GreigeListForm> {
 >>>>>>> a1ea7df (feat: warping)
     );
   }
+=======
+>>>>>>> 1e3750ac (fix: create process)
 }

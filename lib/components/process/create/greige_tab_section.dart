@@ -7,10 +7,14 @@ import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/greige_form_info_tab.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/components/process/create/greige_info_tab.dart';
 =======
 import 'package:textile_tracking/components/spk/tab/note_attachment_spk.dart';
 >>>>>>> a1ea7df (feat: warping)
+=======
+import 'package:textile_tracking/components/process/create/greige_info_tab.dart';
+>>>>>>> 1e3750ac (fix: create process)
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -36,11 +40,15 @@ class GreigeTabSection extends StatefulWidget {
   final handleChangeInput;
   final note;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final yarnQty;
   final beamQty;
   final section;
 =======
 >>>>>>> a1ea7df (feat: warping)
+=======
+  final yarnQty;
+>>>>>>> 1e3750ac (fix: create process)
 
   const GreigeTabSection(
       {super.key,
@@ -64,6 +72,7 @@ class GreigeTabSection extends StatefulWidget {
       this.spkDocuments,
       this.handleChangeInput,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.note,
       this.yarnQty,
       this.beamQty,
@@ -71,6 +80,10 @@ class GreigeTabSection extends StatefulWidget {
 =======
       this.note});
 >>>>>>> a1ea7df (feat: warping)
+=======
+      this.note,
+      this.yarnQty});
+>>>>>>> 1e3750ac (fix: create process)
 
   @override
   State<GreigeTabSection> createState() => _GreigeTabSectionState();
@@ -107,10 +120,14 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
 
     if (context.mounted) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       if (widget.form?['order_greige_id'] != null) {
 =======
       if (widget.form?['wo_id'] != null) {
 >>>>>>> a1ea7df (feat: warping)
+=======
+      if (widget.form?['order_greige_id'] != null) {
+>>>>>>> 1e3750ac (fix: create process)
         showConfirmationDialog(
           context: context,
           isLoading: _isLoading,
@@ -123,14 +140,20 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
           title: 'Batal ${widget.label}',
           buttonBackground: CustomTheme().buttonColor('danger'),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1e3750ac (fix: create process)
           child: buildBoldMessage(
             widget.greigeOrderData['wo_no'] ??
                 widget.greigeOrderData['og_no'] ??
                 '-',
           ),
+<<<<<<< HEAD
 =======
           child: buildBoldMessage(widget.greigeOrderData['wo_no'] ?? '-'),
 >>>>>>> a1ea7df (feat: warping)
+=======
+>>>>>>> 1e3750ac (fix: create process)
         );
       } else {
         Navigator.pop(context);
@@ -167,10 +190,14 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
 
     if (context.mounted) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       if (widget.form?['order_greige_id'] != null) {
 =======
       if (widget.form?['wo_id'] != null) {
 >>>>>>> a1ea7df (feat: warping)
+=======
+      if (widget.form?['order_greige_id'] != null) {
+>>>>>>> 1e3750ac (fix: create process)
         showConfirmationDialog(
           context: context,
           isLoading: widget.isSubmitting,
@@ -186,14 +213,20 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
           title: 'Mulai ${widget.label}',
           buttonBackground: CustomTheme().buttonColor('primary'),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1e3750ac (fix: create process)
           child: buildBoldMessage(
             widget.greigeOrderData['wo_no'] ??
                 widget.greigeOrderData['og_no'] ??
                 '-',
           ),
+<<<<<<< HEAD
 =======
           child: buildBoldMessage(widget.greigeOrderData['wo_no'] ?? '-'),
 >>>>>>> a1ea7df (feat: warping)
+=======
+>>>>>>> 1e3750ac (fix: create process)
         );
       } else {
         Navigator.pop(context);
@@ -209,6 +242,7 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
       widget.form?['machines'] ?? [],
     );
 <<<<<<< HEAD
+<<<<<<< HEAD
     final yarnQty = widget.form?['yarn_qty']?.toString().trim() ?? '';
     final warpingValueKey = widget.form?['warping_type'] == 'single_warping'
         ? 'beam_qty'
@@ -221,18 +255,22 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
         // warpingValue.isEmpty
         ;
 =======
+=======
+    final yarnQty = widget.form?['yarn_qty']?.toString().trim() ?? '';
+>>>>>>> 1e3750ac (fix: create process)
 
     if (widget.withOnlyMaklon == true) {
-      isDisabled = widget.form?['wo_id'] == null;
+      isDisabled = widget.form?['order_greige_id'] == null;
     } else if (widget.withNoMaklonOrMachine == true) {
-      isDisabled = widget.form?['wo_id'] == null;
+      isDisabled = widget.form?['order_greige_id'] == null;
     } else if (widget.label == 'Long Hemming' ||
         widget.label == 'Cross Cutting' ||
         widget.label == 'Sewing') {
-      isDisabled = widget.form?['wo_id'] == null || machines.isEmpty;
+      isDisabled = widget.form?['order_greige_id'] == null || machines.isEmpty;
     } else {
-      isDisabled =
-          widget.form?['wo_id'] == null || widget.form?['machine_id'] == null;
+      isDisabled = widget.form?['order_greige_id'] == null ||
+          widget.form?['machine_id'] == null ||
+          (widget.label == 'Warping' && yarnQty.isEmpty);
     }
 >>>>>>> a1ea7df (feat: warping)
 
@@ -290,6 +328,7 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
                         handleChangeInput: widget.handleChangeInput,
                         note: widget.note,
 <<<<<<< HEAD
+<<<<<<< HEAD
                         yarnQty: widget.yarnQty,
                         beamQty: widget.beamQty,
                         section: widget.section,
@@ -316,6 +355,11 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
                         note: widget.note,
                       ),
 >>>>>>> a1ea7df (feat: warping)
+=======
+                        yarnQty: widget.yarnQty,
+                      ),
+                      GreigeInfoTab(data: widget.greigeOrderData)
+>>>>>>> 1e3750ac (fix: create process)
                     ],
                   ),
                 ),

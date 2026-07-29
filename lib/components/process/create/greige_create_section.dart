@@ -19,12 +19,16 @@ class GreigeCreateSection extends StatefulWidget {
   final handleChangeInput;
   final note;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final yarnQty;
   final beamQty;
   final section;
   final onFormChanged;
 =======
 >>>>>>> a1ea7df (feat: warping)
+=======
+  final yarnQty;
+>>>>>>> 1e3750ac (fix: create process)
 
   const GreigeCreateSection(
       {super.key,
@@ -42,6 +46,7 @@ class GreigeCreateSection extends StatefulWidget {
       this.data,
       this.handleChangeInput,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.note,
       this.yarnQty,
       this.beamQty,
@@ -50,6 +55,10 @@ class GreigeCreateSection extends StatefulWidget {
 =======
       this.note});
 >>>>>>> a1ea7df (feat: warping)
+=======
+      this.note,
+      this.yarnQty});
+>>>>>>> 1e3750ac (fix: create process)
 
   @override
   State<GreigeCreateSection> createState() => _GreigeCreateSectionState();
@@ -78,11 +87,15 @@ class _GreigeCreateSectionState extends State<GreigeCreateSection> {
       handleChangeInput: widget.handleChangeInput,
       note: widget.note,
 <<<<<<< HEAD
+<<<<<<< HEAD
       yarnQty: widget.yarnQty,
       beamQty: widget.beamQty,
       section: widget.section,
 =======
 >>>>>>> a1ea7df (feat: warping)
+=======
+      yarnQty: widget.yarnQty,
+>>>>>>> 1e3750ac (fix: create process)
     );
   }
 }

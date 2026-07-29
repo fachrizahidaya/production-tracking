@@ -32,12 +32,16 @@ class GreigeFormInfoTab extends StatefulWidget {
   final handleChangeInput;
   final note;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final yarnQty;
   final beamQty;
   final section;
   final onFormChanged;
 =======
 >>>>>>> a1ea7df (feat: warping)
+=======
+  final yarnQty;
+>>>>>>> 1e3750ac (fix: create process)
 
   const GreigeFormInfoTab(
       {super.key,
@@ -57,6 +61,7 @@ class GreigeFormInfoTab extends StatefulWidget {
       this.withOnlyMaklon,
       this.handleChangeInput,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.note,
       this.yarnQty,
       this.beamQty,
@@ -65,6 +70,10 @@ class GreigeFormInfoTab extends StatefulWidget {
 =======
       this.note});
 >>>>>>> a1ea7df (feat: warping)
+=======
+      this.note,
+      this.yarnQty});
+>>>>>>> 1e3750ac (fix: create process)
 
   @override
   State<GreigeFormInfoTab> createState() => _GreigeFormInfoTabState();
@@ -164,10 +173,13 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
     return LayoutBuilder(
       builder: (context, constraints) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         final isTablet = constraints.maxWidth > 600;
 
 >>>>>>> a1ea7df (feat: warping)
+=======
+>>>>>>> 1e3750ac (fix: create process)
         return SingleChildScrollView(
           padding: CustomTheme().padding('content'),
           child: Column(
@@ -193,9 +205,13 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
                 handleChangeInput: widget.handleChangeInput,
                 note: widget.note,
 <<<<<<< HEAD
+<<<<<<< HEAD
                 yarnQty: widget.yarnQty,
                 beamQty: widget.beamQty,
                 section: widget.section,
+=======
+                yarnQty: widget.yarnQty,
+>>>>>>> 1e3750ac (fix: create process)
               ),
               _buildGreigeOrderSummary(),
 =======

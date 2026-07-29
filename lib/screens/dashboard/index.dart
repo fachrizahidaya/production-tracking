@@ -333,6 +333,15 @@ class _DashboardState extends State<Dashboard> {
   bool get shouldHideActiveMachine {
     bool checkMenus(List<dynamic> menuList) {
       for (final menu in menuList) {
+<<<<<<< HEAD
+=======
+        final name = (menu['name'] ?? '').toString().toLowerCase();
+
+        // if (name == 'sorting' || name == 'packing') {
+        //   return true;
+        // }
+
+>>>>>>> 6a9e309 (fix: show machine)
         final children = menu['children'];
 
         if (children != null && children is List && checkMenus(children)) {
@@ -551,7 +560,7 @@ class _DashboardState extends State<Dashboard> {
       summaryParams['end_date'] = endDate;
     });
 
-    _handleFetchSummary();
+    // _handleFetchSummary();
   }
 
   void _handleProcessFilter(String key, dynamic value) {

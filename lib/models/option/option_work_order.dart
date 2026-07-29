@@ -408,4 +408,15 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       searchQuery: searchQuery,
     );
   }
+
+  Future<void> fetchWarpingFinishOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'warping_finish',
+      searchQuery: searchQuery,
+    );
+  }
 }

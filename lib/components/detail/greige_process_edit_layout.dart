@@ -59,8 +59,13 @@ class GreigeProcessEditLayout extends StatelessWidget {
                             color: Colors.white,
                             child: const TabBar(
                               tabs: [
+<<<<<<< HEAD
                                 Tab(text: 'Mesin'),
                                 Tab(text: 'Info Order Greige'),
+=======
+                                Tab(text: 'Form Edit'),
+                                Tab(text: 'Info Greige Order'),
+>>>>>>> 230afad3 (feat: greige order detail)
                               ],
                             ),
                           ),
@@ -101,7 +106,11 @@ class GreigeProcessEditLayout extends StatelessWidget {
               : SafeArea(
                   top: false,
                   child: Container(
+<<<<<<< HEAD
                     padding: CustomTheme().padding('content'),
+=======
+                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
+>>>>>>> 230afad3 (feat: greige order detail)
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border(

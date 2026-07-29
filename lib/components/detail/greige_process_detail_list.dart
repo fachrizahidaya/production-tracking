@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+<<<<<<< HEAD
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -18,6 +19,17 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
 import 'package:textile_tracking/screens/greige-order/%5Bgreige_order_id%5D.dart';
 import 'package:url_launcher/url_launcher.dart';
+=======
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/format_html.dart';
+import 'package:textile_tracking/helpers/util/format_number.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/screens/greige-order/%5Bgreige_order_id%5D.dart';
+>>>>>>> 230afad3 (feat: greige order detail)
 
 class GreigeProcessDetailList extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -25,6 +37,7 @@ class GreigeProcessDetailList extends StatelessWidget {
   final String processNoKey;
   final Future<void> Function() onRefresh;
   final bool canDelete;
+<<<<<<< HEAD
   final bool canUpdate;
   final VoidCallback onDelete;
   final VoidCallback onEdit;
@@ -45,6 +58,19 @@ class GreigeProcessDetailList extends StatelessWidget {
       this.withMultiMachine = false,
       this.withBrokenYarns = false,
       this.withAttachments = false});
+=======
+  final VoidCallback onDelete;
+
+  const GreigeProcessDetailList({
+    super.key,
+    required this.data,
+    required this.processName,
+    required this.processNoKey,
+    required this.onRefresh,
+    required this.canDelete,
+    required this.onDelete,
+  });
+>>>>>>> 230afad3 (feat: greige order detail)
 
   @override
   Widget build(BuildContext context) {
@@ -60,12 +86,21 @@ class GreigeProcessDetailList extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+<<<<<<< HEAD
                 // _buildTopBar(context, isTablet),
                 _buildOrderGreigeInfo(context, isTablet),
                 if (isTablet)
                   _buildTabletLayout(context, isLargeTablet)
                 else
                   _buildMobileLayout(context),
+=======
+                _buildTopBar(context, isTablet),
+                _buildOrderGreigeInfo(context, isTablet),
+                if (isTablet)
+                  _buildTabletLayout(isLargeTablet)
+                else
+                  _buildMobileLayout(),
+>>>>>>> 230afad3 (feat: greige order detail)
               ],
             ),
           ),
@@ -77,10 +112,13 @@ class GreigeProcessDetailList extends StatelessWidget {
   Widget _buildTopBar(BuildContext context, bool isTablet) {
     final canShowDelete = canDelete && data['can_delete'] != false;
 
+<<<<<<< HEAD
     final status = data['status']?.toString().toLowerCase() ?? '';
     final canShowEdit =
         canUpdate && (status == 'diproses' || status.contains('diproses'));
 
+=======
+>>>>>>> 230afad3 (feat: greige order detail)
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
       child: Row(
@@ -88,14 +126,20 @@ class GreigeProcessDetailList extends StatelessWidget {
           IconButton(
             tooltip: 'Kembali',
             onPressed: () => Navigator.pop(context),
+<<<<<<< HEAD
             icon: const Icon(
               Icons.chevron_left_outlined,
             ),
+=======
+            icon: const Icon(Icons.chevron_left_outlined, size: 28),
+            color: Colors.grey.shade700,
+>>>>>>> 230afad3 (feat: greige order detail)
           ),
           Expanded(
             child: Text(
               'Detail Proses $processName',
               style: TextStyle(
+<<<<<<< HEAD
                 fontSize: CustomTheme().fontSize('xl'),
               ),
             ),
@@ -112,6 +156,29 @@ class GreigeProcessDetailList extends StatelessWidget {
               textColor: Colors.red,
               borderColor: Colors.red,
               onPressed: onDelete,
+=======
+                fontSize: isTablet ? 22 : 18,
+                color: Colors.grey.shade900,
+              ),
+            ),
+          ),
+          if (canShowDelete)
+            ElevatedButton(
+              onPressed: onDelete,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: CustomTheme().buttonColor('danger'),
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text('Hapus $processName'),
+>>>>>>> 230afad3 (feat: greige order detail)
             ),
         ],
       ),
@@ -148,7 +215,11 @@ class GreigeProcessDetailList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
+<<<<<<< HEAD
               'No. OG',
+=======
+              'No. Order Greige',
+>>>>>>> 230afad3 (feat: greige order detail)
               style: TextStyle(
                 fontSize: CustomTheme().fontSize('lg'),
                 fontWeight: CustomTheme().fontWeight('semibold'),
@@ -246,12 +317,17 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildMobileLayout(BuildContext context) {
+=======
+  Widget _buildMobileLayout() {
+>>>>>>> 230afad3 (feat: greige order detail)
     return Padding(
       padding: CustomTheme().padding('card-detail'),
       child: Column(
         children: [
           _buildHeaderSection(false),
+<<<<<<< HEAD
           if (withMultiMachine)
             _buildSectionCard(
               title: 'Informasi Mesin',
@@ -262,6 +338,12 @@ class GreigeProcessDetailList extends StatelessWidget {
             title: 'Informasi Proses',
             icon: Icons.info_outline,
             child: _buildProcessInfo(),
+=======
+          _buildSectionCard(
+            title: 'Informasi Proses',
+            icon: Icons.info_outline,
+            child: _buildProcessInfo(false),
+>>>>>>> 230afad3 (feat: greige order detail)
           ),
           _buildSectionCard(
             title: 'Timeline Proses',
@@ -271,6 +353,7 @@ class GreigeProcessDetailList extends StatelessWidget {
           _buildSectionCard(
             title: 'Hasil $processName',
             icon: Icons.account_tree_outlined,
+<<<<<<< HEAD
             child: _buildResultInfo(),
           ),
           if (withBrokenYarns)
@@ -286,6 +369,10 @@ class GreigeProcessDetailList extends StatelessWidget {
               child: _buildAttachmentList(context),
             ),
           _buildPasangSection(false),
+=======
+            child: _buildResultInfo(false),
+          ),
+>>>>>>> 230afad3 (feat: greige order detail)
           _buildSectionCard(
             title: 'Kebutuhan Benang',
             icon: Icons.layers_outlined,
@@ -311,28 +398,40 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildTabletLayout(BuildContext context, bool isLargeTablet) {
+=======
+  Widget _buildTabletLayout(bool isLargeTablet) {
+>>>>>>> 230afad3 (feat: greige order detail)
     return Padding(
       padding: CustomTheme().padding('card-detail'),
       child: Column(
         children: [
           _buildHeaderSection(true),
+<<<<<<< HEAD
           if (withMultiMachine)
             _buildSectionCard(
               title: 'Informasi Mesin',
               icon: Icons.local_laundry_service_outlined,
               child: _buildMachine(context, true),
             ),
+=======
+>>>>>>> 230afad3 (feat: greige order detail)
           Column(
             children: [
               // _buildSectionCard(
               //   title: 'Informasi Proses',
               //   icon: Icons.info_outline,
+<<<<<<< HEAD
               //   child: _buildProcessInfo(),
+=======
+              //   child: _buildProcessInfo(true),
+>>>>>>> 230afad3 (feat: greige order detail)
               // ),
               _buildSectionCard(
                 title: 'Hasil $processName',
                 icon: Icons.account_tree_outlined,
+<<<<<<< HEAD
                 child: _buildResultInfo(),
               ),
               if (withBrokenYarns)
@@ -348,6 +447,10 @@ class GreigeProcessDetailList extends StatelessWidget {
                   child: _buildAttachmentList(context),
                 ),
               _buildPasangSection(true),
+=======
+                child: _buildResultInfo(true),
+              ),
+>>>>>>> 230afad3 (feat: greige order detail)
               _buildSectionCard(
                 title: 'Timeline Proses',
                 icon: Icons.timeline_outlined,
@@ -360,6 +463,7 @@ class GreigeProcessDetailList extends StatelessWidget {
               ),
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
+<<<<<<< HEAD
           Column(
             children: [
               _buildSectionCard(
@@ -379,6 +483,29 @@ class GreigeProcessDetailList extends StatelessWidget {
               ),
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
+=======
+          // Column(
+          //   children: [
+
+          // _buildSectionCard(
+          //   title: 'Kebutuhan Benang',
+          //   icon: Icons.layers_outlined,
+          //   child: _buildYarnItems(true),
+          // ),
+          // _buildSectionCard(
+          //   title: 'Kebutuhan Loom Beam',
+          //   icon: Icons.inventory_2_outlined,
+          //   child: _buildLoomBeams(true),
+          // ),
+          // _buildSectionCard(
+          //   title: 'Catatan Order Greige',
+          //   icon: Icons.note_alt_outlined,
+          //   child:
+          //       _buildNote(_mapValue(data['order_greige'])['notes']),
+          // ),
+          // ].separatedBy(CustomTheme().vGap('xl')),
+          // ),
+>>>>>>> 230afad3 (feat: greige order detail)
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
@@ -430,7 +557,11 @@ class GreigeProcessDetailList extends StatelessWidget {
               ),
             ],
           ),
+<<<<<<< HEAD
           if (!withMultiMachine) _buildQuickInfoRow(isTablet),
+=======
+          _buildQuickInfoRow(isTablet),
+>>>>>>> 230afad3 (feat: greige order detail)
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
@@ -516,6 +647,7 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildMachine(BuildContext context, bool isTablet) {
     final machines = data['machines'] as List? ?? [];
 
@@ -725,24 +857,69 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
+=======
+>>>>>>> 230afad3 (feat: greige order detail)
   Widget _buildSectionCard({
     required String title,
     required IconData icon,
     required Widget child,
   }) {
+<<<<<<< HEAD
     return TemplateCard(
       icon: icon,
       title: title,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+=======
+    return Container(
+      width: double.infinity,
+      padding: CustomTheme().padding('card'),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: CustomTheme().colors('primary').withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  icon,
+                  size: 20,
+                  color: CustomTheme().colors('primary'),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('lg'),
+                    fontWeight: CustomTheme().fontWeight('bold'),
+                    color: Colors.grey[800],
+                  ),
+                ),
+              ),
+            ].separatedBy(CustomTheme().hGap('md')),
+          ),
+>>>>>>> 230afad3 (feat: greige order detail)
           child,
         ].separatedBy(CustomTheme().vGap('lg')),
       ),
     );
   }
 
+<<<<<<< HEAD
   Widget _buildProcessInfo() {
+=======
+  Widget _buildProcessInfo(bool isTablet) {
+>>>>>>> 230afad3 (feat: greige order detail)
     final items = [
       {
         'label': 'No. Proses',
@@ -766,16 +943,24 @@ class GreigeProcessDetailList extends StatelessWidget {
       },
     ];
 
+<<<<<<< HEAD
     return _buildInfoGrid(items);
   }
 
   Widget _buildResultInfo() {
+=======
+    return _buildInfoGrid(items, isTablet);
+  }
+
+  Widget _buildResultInfo(bool isTablet) {
+>>>>>>> 230afad3 (feat: greige order detail)
     final rows = _resultRows();
 
     if (rows.isEmpty) {
       return NoData();
     }
 
+<<<<<<< HEAD
     return _buildInfoGrid(rows);
   }
 
@@ -855,10 +1040,17 @@ class GreigeProcessDetailList extends StatelessWidget {
     List<Map<String, dynamic>> items, {
     bool showIcon = true,
   }) {
+=======
+    return _buildInfoGrid(rows, isTablet);
+  }
+
+  Widget _buildInfoGrid(List<Map<String, dynamic>> items, bool isTablet) {
+>>>>>>> 230afad3 (feat: greige order detail)
     if (items.isEmpty) {
       return NoData();
     }
 
+<<<<<<< HEAD
     final children = items
         .map((item) {
           final infoColumn = Column(
@@ -912,6 +1104,57 @@ class GreigeProcessDetailList extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
+=======
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
+      children: items.map((item) {
+        final width = isTablet ? 220.0 : double.infinity;
+
+        return Container(
+          width: width,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey[200]!),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                item['icon'] as IconData,
+                size: 20,
+                color: CustomTheme().colors('primary'),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item['label'].toString(),
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('sm'),
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    Text(
+                      item['value'].toString(),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('base'),
+                        fontWeight: CustomTheme().fontWeight('bold'),
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                  ].separatedBy(CustomTheme().vGap('xs')),
+                ),
+              ),
+            ].separatedBy(CustomTheme().hGap('md')),
+          ),
+        );
+      }).toList(),
+>>>>>>> 230afad3 (feat: greige order detail)
     );
   }
 
@@ -1032,18 +1275,25 @@ class GreigeProcessDetailList extends StatelessWidget {
   }
 
   Widget _buildYarnItems(bool isTablet) {
+<<<<<<< HEAD
     final orderGreige = _mapValue(data['order_greige']);
     final design = _mapValue(orderGreige['design']);
     final yarnItems = _listValue(orderGreige['yarn_items']);
+=======
+    final yarnItems = _listValue(_mapValue(data['order_greige'])['yarn_items']);
+>>>>>>> 230afad3 (feat: greige order detail)
 
     if (yarnItems.isEmpty) {
       return NoData();
     }
 
+<<<<<<< HEAD
     final warpingTypeLabel = _formatWarpingType(
       design['warping_type'] ?? orderGreige['warping_type'],
     );
 
+=======
+>>>>>>> 230afad3 (feat: greige order detail)
     return Column(
       children: yarnItems
           .map((item) {
@@ -1051,6 +1301,7 @@ class GreigeProcessDetailList extends StatelessWidget {
               children: [
                 _buildInfoLine('Kode Warna', _display(item['color_code'])),
                 _buildInfoLine(
+<<<<<<< HEAD
                     'Jml. Bng', _withUnit(item['yarn_qty'], 'Helai')),
                 if (item['ne'] != null)
                   _buildInfoLine(
@@ -1064,6 +1315,13 @@ class GreigeProcessDetailList extends StatelessWidget {
                   'Lot Benang',
                   _formatYarnLot(design['yarn_lot']),
                 ),
+=======
+                    'Jumlah Benang', _withUnit(item['yarn_qty'], 'PCS')),
+                if (item['ne'] != null)
+                  _buildInfoLine('Ne', _display(item['ne'])),
+                if (item['lot'] != null)
+                  _buildInfoLine('Lot', _display(item['lot'])),
+>>>>>>> 230afad3 (feat: greige order detail)
               ],
             );
           })
@@ -1073,9 +1331,13 @@ class GreigeProcessDetailList extends StatelessWidget {
   }
 
   Widget _buildLoomBeams(bool isTablet) {
+<<<<<<< HEAD
     final orderGreige = _mapValue(data['order_greige']);
     final design = _mapValue(orderGreige['design']);
     final loomBeams = _listValue(orderGreige['loom_beams']);
+=======
+    final loomBeams = _listValue(_mapValue(data['order_greige'])['loom_beams']);
+>>>>>>> 230afad3 (feat: greige order detail)
 
     if (loomBeams.isEmpty) {
       return NoData();
@@ -1086,6 +1348,7 @@ class GreigeProcessDetailList extends StatelessWidget {
           .map((item) {
             return _buildDataBox(
               children: [
+<<<<<<< HEAD
                 _buildInfoLine('Benang', _withUnit(item['yarn_qty'], 'Helai')),
                 _buildInfoLine('Panjang', _withUnit(item['length'], 'M')),
                 _buildInfoLine(
@@ -1095,6 +1358,17 @@ class GreigeProcessDetailList extends StatelessWidget {
                 // _buildInfoLine('Berat', _withUnit(item['weight'], 'KG')),
                 // _buildInfoLine('Majun', _withUnit(item['majun'], 'KG')),
                 // _buildInfoLine('Gempor', _withUnit(item['gempor'], 'CNS')),
+=======
+                _buildInfoLine('Benang', _withUnit(item['yarn_qty'], 'PCS')),
+                _buildInfoLine(
+                    'Lebar Beam', _withUnit(item['beam_width'], 'M')),
+                _buildInfoLine('Beam A/B', _display(item['beam_ab'])),
+                _buildInfoLine('Panjang', _withUnit(item['length'], 'M')),
+                _buildInfoLine('No. MC', _display(item['machine_no'])),
+                _buildInfoLine('Berat', _withUnit(item['weight'], 'KG')),
+                _buildInfoLine('Majun', _withUnit(item['majun'], 'KG')),
+                _buildInfoLine('Gempor', _withUnit(item['gempor'], 'CNS')),
+>>>>>>> 230afad3 (feat: greige order detail)
               ],
             );
           })
@@ -1119,6 +1393,7 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildInfoLine(String label, String value, {Widget? trailing}) {
     final valueChildren = <Widget>[
       Flexible(
@@ -1141,6 +1416,9 @@ class GreigeProcessDetailList extends StatelessWidget {
       valueChildren.add(trailing);
     }
 
+=======
+  Widget _buildInfoLine(String label, String value) {
+>>>>>>> 230afad3 (feat: greige order detail)
     return Row(
       children: [
         Expanded(
@@ -1154,16 +1432,30 @@ class GreigeProcessDetailList extends StatelessWidget {
           ),
         ),
         Flexible(
+<<<<<<< HEAD
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
             children: valueChildren,
+=======
+          child: Text(
+            value,
+            textAlign: TextAlign.right,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('sm'),
+              color: Colors.grey[800],
+              fontWeight: CustomTheme().fontWeight('bold'),
+            ),
+>>>>>>> 230afad3 (feat: greige order detail)
           ),
         ),
       ].separatedBy(CustomTheme().hGap('md')),
     );
   }
 
+<<<<<<< HEAD
   String _formatYarnLot(dynamic value) {
     if (value == null || value.toString().trim().isEmpty) return '-';
     return formatNumber(value);
@@ -1206,6 +1498,8 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
+=======
+>>>>>>> 230afad3 (feat: greige order detail)
   Widget _buildNote(dynamic value) {
     if (value == null || value.toString().isEmpty) {
       return NoData();
@@ -1251,12 +1545,26 @@ class GreigeProcessDetailList extends StatelessWidget {
       return [
         {
           'label': 'Jenis Warping',
+<<<<<<< HEAD
           'value': _formatType(data['order_greige']['warping_type']),
           'icon': Icons.category_outlined
         },
         {
           'label': 'Jumlah Panjang',
           'value': _withUnit(data['length'], ''),
+=======
+          'value': _formatType(data['warping_type']),
+          'icon': Icons.category_outlined
+        },
+        {
+          'label': 'Qty Benang',
+          'value': _withUnit(data['yarn_qty'], 'KG'),
+          'icon': Icons.layers_outlined
+        },
+        {
+          'label': 'Panjang',
+          'value': _withUnit(data['length'], 'M'),
+>>>>>>> 230afad3 (feat: greige order detail)
           'icon': Icons.straighten_outlined
         },
         {
@@ -1264,11 +1572,14 @@ class GreigeProcessDetailList extends StatelessWidget {
           'value': _withUnit(data['section'], ''),
           'icon': Icons.view_column_outlined
         },
+<<<<<<< HEAD
         {
           'label': 'Jumlah Berat',
           'value': _withUnit(data['weight'], 'KG'),
           'icon': Icons.layers_outlined
         },
+=======
+>>>>>>> 230afad3 (feat: greige order detail)
       ];
     }
 
@@ -1315,6 +1626,7 @@ class GreigeProcessDetailList extends StatelessWidget {
       },
     ];
   }
+<<<<<<< HEAD
 
   Widget _buildPasangSection(bool isTablet) {
     final pasangs = _listValue(data['pasangs']);
@@ -1395,6 +1707,8 @@ class GreigeProcessDetailList extends StatelessWidget {
       }).toList(),
     );
   }
+=======
+>>>>>>> 230afad3 (feat: greige order detail)
 }
 
 Map<String, dynamic> _mapValue(dynamic value) {

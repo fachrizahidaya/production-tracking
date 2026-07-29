@@ -70,7 +70,11 @@ class _GreigeOrderDetailState extends State<GreigeOrderDetail> {
       child: Scaffold(
         backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
+<<<<<<< HEAD
           title: 'Detail Order Greige',
+=======
+          title: 'Greige Order Detail',
+>>>>>>> 230afad3 (feat: greige order detail)
           onReturn: () {
             Navigator.pop(context);
           },
@@ -97,7 +101,11 @@ class _GreigeOrderDetailState extends State<GreigeOrderDetail> {
                       )
                     : TabBarView(
                         children: [
+<<<<<<< HEAD
                           GreigeInfoTab(
+=======
+                          _GreigeOrderInfoTab(
+>>>>>>> 230afad3 (feat: greige order detail)
                             data: data,
                             isLoading: _firstLoading,
                           ),
@@ -120,6 +128,32 @@ class _GreigeOrderDetailState extends State<GreigeOrderDetail> {
   }
 }
 
+<<<<<<< HEAD
+=======
+class _GreigeOrderInfoTab extends StatelessWidget {
+  final Map<String, dynamic> data;
+  final bool isLoading;
+
+  const _GreigeOrderInfoTab({
+    required this.data,
+    required this.isLoading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (data.isEmpty) {
+      return NoData();
+    }
+
+    return GreigeInfoTab(data: data);
+  }
+}
+
+>>>>>>> 230afad3 (feat: greige order detail)
 class _GreigeOrderProcessTab extends StatelessWidget {
   final Map<String, dynamic> data;
   final bool isLoading;

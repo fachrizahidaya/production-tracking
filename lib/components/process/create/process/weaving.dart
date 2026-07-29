@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+>>>>>>> d91efd4f (fix: form warping, weaving)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WeavingSection extends StatefulWidget {
+<<<<<<< HEAD
 <<<<<<< HEAD
   final bool? skipShearing;
   final Function(bool value)? onSkipShearing;
@@ -25,12 +29,23 @@ class WeavingSection extends StatefulWidget {
 
   const WeavingSection({super.key, this.data, this.items, this.onChange});
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+  final bool? skipShearing;
+  final Function(bool value)? onSkipShearing;
+
+  const WeavingSection({
+    super.key,
+    this.onSkipShearing,
+    this.skipShearing,
+  });
+>>>>>>> d91efd4f (fix: form warping, weaving)
 
   @override
   State<WeavingSection> createState() => _WeavingSectionState();
 }
 
 class _WeavingSectionState extends State<WeavingSection> {
+<<<<<<< HEAD
 <<<<<<< HEAD
   @override
   void initState() {
@@ -62,26 +77,38 @@ class _WeavingSectionState extends State<WeavingSection> {
       safeValue,
     );
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+  @override
+  void initState() {
+    super.initState();
+>>>>>>> d91efd4f (fix: form warping, weaving)
   }
 
   @override
   void dispose() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     for (final controller in _beamWeightControllers.values) {
       controller.dispose();
     }
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+>>>>>>> d91efd4f (fix: form warping, weaving)
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d91efd4f (fix: form warping, weaving)
     return TemplateCard(
         title: 'Shearing',
         icon: Icons.cut_outlined,
         child: _buildItemContent(context, 0));
+<<<<<<< HEAD
 =======
     if (widget.items.isEmpty) {
       return NoData();
@@ -161,11 +188,14 @@ class _WeavingSectionState extends State<WeavingSection> {
                   ],
                 ))));
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+>>>>>>> d91efd4f (fix: form warping, weaving)
   }
 
   Widget _buildItemContent(
     BuildContext context,
     int index,
+<<<<<<< HEAD
 <<<<<<< HEAD
   ) {
     return Column(
@@ -190,75 +220,32 @@ class _WeavingSectionState extends State<WeavingSection> {
             },
 =======
     dynamic item,
+=======
+>>>>>>> d91efd4f (fix: form warping, weaving)
   ) {
-    final isTablet = MediaQuery.of(context).size.width > 700;
-
-    final woItems = widget.data;
-
-    String getSpkNo(Map<String, dynamic> item) {
-      final woItemId = item['wo_item_id'];
-      final itemCode = item['finished_product']?['code'];
-
-      final matched = woItems.cast<Map<String, dynamic>?>().firstWhere(
-            (e) => e?['id'] == woItemId && e?['item_code'] == itemCode,
-            orElse: () => null,
-          );
-
-      return matched?['spk_no']?.toString() ?? woItemId.toString();
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.green.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.green.shade100,
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'No. SPK',
-                      style: TextStyle(
-                        fontWeight: CustomTheme().fontWeight('semibold'),
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      getSpkNo(item) ?? '-',
-                    ),
-                  ],
-                ),
-              ),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: SwitchListTile(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            title: const Text('Skip Shearing'),
+            subtitle: Text(
+              widget.skipShearing == true ? 'Ya' : 'Tidak',
             ),
-          ].separatedBy(CustomTheme().hGap('xl')),
-        ),
-        SizedBox(
-          width: isTablet
-              ? (MediaQuery.of(context).size.width - 80) / 2
-              : double.infinity,
-          child: TextForm(
-            label: 'Berat Awal (KG)',
-            controller: _beamWeightControllers[index],
-            initialValue: item['beam_weight']?.toString() ?? '0',
-            req: false,
-            isNumber: true,
-            isSorting: true,
-            handleChange: (value) => _handleQty(
-              index,
-              value,
-            ),
+<<<<<<< HEAD
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+            value: widget.skipShearing ?? false,
+            onChanged: (value) {
+              widget.onSkipShearing?.call(value);
+            },
+>>>>>>> d91efd4f (fix: form warping, weaving)
           ),
         ),
       ].separatedBy(

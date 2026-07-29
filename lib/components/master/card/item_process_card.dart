@@ -130,7 +130,7 @@ class ItemProcessCard extends StatelessWidget {
                         color: Colors.grey[600],
                       ),
                     ),
-                    if (item['work_orders']['urgent'] == true)
+                    if (item[subtitleKey]['urgent'] == true)
                       Icon(
                         Icons.warning_amber,
                         color: Colors.red,

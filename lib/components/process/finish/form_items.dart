@@ -11,8 +11,6 @@ import 'package:textile_tracking/components/process/finish/process/long_hemming_
 import 'package:textile_tracking/components/process/finish/process/process_item_qty.dart';
 import 'package:textile_tracking/components/process/finish/process/qty_weight.dart';
 import 'package:textile_tracking/components/process/finish/process/sorting.dart';
-import 'package:textile_tracking/components/process/finish/process/warping.dart';
-import 'package:textile_tracking/components/process/finish/process/weaving.dart';
 import 'package:textile_tracking/components/process/finish/process/weight.dart';
 import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/components/master/theme.dart';
@@ -966,32 +964,6 @@ class _FormItemsState extends State<FormItems>
                     widget.handleChangeInput('items', items);
 
                     calculateLongHemmingWeight();
-                  },
-                )
-              else if (widget.label == 'Warping')
-                WarpingSection(
-                  items: widget.form['items'] ?? [],
-                  onChange: (index, key, value) {
-                    final items =
-                        List<Map<String, dynamic>>.from(widget.form['items']);
-
-                    items[index][key] = value;
-
-                    widget.handleChangeInput('items', items);
-                  },
-                  data: widget.processData['work_orders']?['items'],
-                )
-              else if (widget.label == 'Weaving')
-                WeavingSection(
-                  data: widget.processData['work_orders']?['items'],
-                  items: widget.form['items'] ?? [],
-                  onChange: (index, key, value) {
-                    final items =
-                        List<Map<String, dynamic>>.from(widget.form['items']);
-
-                    items[index][key] = value;
-
-                    widget.handleChangeInput('items', items);
                   },
                 )
               else

@@ -9,6 +9,7 @@ class Shearing {
   final int? id;
   final String? shearingNo;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final int? orderGreigeId;
   final int? machineId;
   final qty;
@@ -31,21 +32,15 @@ class Shearing {
       this.attachments});
 =======
   final int? woId;
+=======
+  final int? orderGreigeId;
+>>>>>>> 95d1a035 (fix: weaving, shearing)
   final int? machineId;
-  final String? startTime;
-  final String? endTime;
-  final int? startById;
-  final int? endById;
-  final int? unitId;
-  final dynamic qty;
+  final qty;
+  final weight;
   final String? notes;
-  final String? status;
-  final bool? rework;
-  final int? reworkReferenceId;
-  final String? lotCelupNo;
-  final int? greigeItemId;
-  final int? cycleNo;
 
+<<<<<<< HEAD
   final bool? canDelete;
   final bool? canUpdate;
   final bool? canRework;
@@ -91,11 +86,22 @@ class Shearing {
     this.reworkReference,
   });
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+  Shearing(
+      {this.id,
+      this.shearingNo,
+      this.machineId,
+      this.orderGreigeId,
+      this.notes,
+      this.qty,
+      this.weight});
+>>>>>>> 95d1a035 (fix: weaving, shearing)
 
   factory Shearing.fromJson(Map<String, dynamic> json) {
     return Shearing(
       id: json['id'],
       shearingNo: json['shearing_no'],
+<<<<<<< HEAD
 <<<<<<< HEAD
       machineId: json['machine_id'],
       notes: json['notes'],
@@ -107,14 +113,11 @@ class Shearing {
       attachments: json['attachments'] ?? [],
 =======
       woId: json['wo_id'],
+=======
+>>>>>>> 95d1a035 (fix: weaving, shearing)
       machineId: json['machine_id'],
-      startTime: json['start_time'],
-      endTime: json['end_time'],
-      startById: json['start_by_id'],
-      endById: json['end_by_id'],
-      unitId: json['unit_id'],
-      qty: json['qty'],
       notes: json['notes'],
+<<<<<<< HEAD
       status: json['status'],
       rework: json['rework'],
       reworkReferenceId: json['rework_reference_id'],
@@ -133,6 +136,11 @@ class Shearing {
       unit: json['unit'],
       reworkReference: json['rework_reference'],
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+      orderGreigeId: json['order_greige_id'],
+      qty: json['qty'],
+      weight: json['weight'],
+>>>>>>> 95d1a035 (fix: weaving, shearing)
     );
   }
 
@@ -140,6 +148,7 @@ class Shearing {
     return {
       'id': id,
       'shearing_no': shearingNo,
+<<<<<<< HEAD
 <<<<<<< HEAD
       'machine_id': machineId,
       'notes': notes,
@@ -151,14 +160,11 @@ class Shearing {
       'attachments': attachments,
 =======
       'wo_id': woId,
+=======
+>>>>>>> 95d1a035 (fix: weaving, shearing)
       'machine_id': machineId,
-      'start_time': startTime,
-      'end_time': endTime,
-      'start_by_id': startById,
-      'end_by_id': endById,
-      'unit_id': unitId,
-      'qty': qty,
       'notes': notes,
+<<<<<<< HEAD
       'status': status,
       'rework': rework == true ? 1 : 0,
       'rework_reference_id': reworkReferenceId,
@@ -174,6 +180,11 @@ class Shearing {
       'unit': unit,
       'rework_reference': reworkReference,
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+      'order_greige_id': orderGreigeId,
+      'qty': qty,
+      'weight': weight
+>>>>>>> 95d1a035 (fix: weaving, shearing)
     };
   }
 }

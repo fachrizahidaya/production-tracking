@@ -34,7 +34,10 @@ class CreateShearingProcessManual extends StatelessWidget {
       handleSubmit: handleSubmit,
       fetchGreigeOrder: (service) => service.fetchShearingOptions(),
       getGreigeOrderOptions: (service) => service.dataListOption,
+<<<<<<< HEAD
       optionBadgeKey: 'warping_type',
+=======
+>>>>>>> 95d1a035 (fix: weaving, shearing)
       fetchMachine: (service) => service.fetchOptionsShearing(),
       getMachineOptions: (service) => service.dataListOption,
     );

@@ -27,6 +27,7 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/weaving/create/create_weaving.dart';
 import 'package:textile_tracking/screens/weaving/detail/edit_weaving.dart';
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/helpers/util/item_field.dart';
 =======
@@ -34,6 +35,8 @@ import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/weaving/create/create_weaving.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+>>>>>>> 95d1a035 (fix: weaving, shearing)
 import 'package:textile_tracking/screens/weaving/detail/weaving_by_id.dart';
 import 'package:textile_tracking/screens/weaving/finish/finish_weaving.dart';
 import 'package:textile_tracking/screens/weaving/model/weaving.dart';
@@ -322,6 +325,7 @@ class _WeavingScreenState extends State<WeavingScreen> {
     bool openUpdateOnStart = false,
   }) async {
 <<<<<<< HEAD
+<<<<<<< HEAD
     final status = item['status']?.toString().toLowerCase() ?? '';
     final isInProgress = status == 'diproses' || status.contains('diproses');
 
@@ -352,6 +356,27 @@ class _WeavingScreenState extends State<WeavingScreen> {
           canUpdate: _canUpdate,
         ),
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+    final status = item['status']?.toString().toLowerCase() ?? '';
+    final isInProgress = status == 'diproses' || status.contains('diproses');
+
+    final value = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          if (isInProgress) {
+            return EditWeavingScreen(id: item['id'].toString());
+          }
+
+          return WeavingDetailScreen(
+            id: item['id'].toString(),
+            no: item['weaving_no'].toString(),
+            canDelete: _canDelete,
+            canUpdate: _canUpdate,
+            openUpdateOnStart: openUpdateOnStart,
+          );
+        },
+>>>>>>> 95d1a035 (fix: weaving, shearing)
       ),
     );
 
@@ -480,6 +505,7 @@ class _WeavingScreenState extends State<WeavingScreen> {
                       item: item,
                       titleKey: 'weaving_no',
 <<<<<<< HEAD
+<<<<<<< HEAD
                       subtitleKey: 'order_greige',
                       subtitleField: 'og_no',
                       canUpdate: _canUpdate,
@@ -487,6 +513,10 @@ class _WeavingScreenState extends State<WeavingScreen> {
 =======
                       subtitleKey: 'work_orders',
                       subtitleField: 'wo_no',
+=======
+                      subtitleKey: 'order_greige',
+                      subtitleField: 'og_no',
+>>>>>>> 95d1a035 (fix: weaving, shearing)
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
                       onUpdate: () =>
@@ -495,6 +525,7 @@ class _WeavingScreenState extends State<WeavingScreen> {
 >>>>>>> d8439a4 (fix: refactor code)
                     ),
                     onItemTap: (context, item) {
+<<<<<<< HEAD
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -514,6 +545,9 @@ class _WeavingScreenState extends State<WeavingScreen> {
                           return null;
                         }
                       });
+=======
+                      _openProcessDetail(item);
+>>>>>>> 95d1a035 (fix: weaving, shearing)
                     },
                     filterWidget: ListFilter(
                       params: params,

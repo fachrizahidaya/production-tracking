@@ -9,6 +9,7 @@ class Weaving {
   final int? id;
   final String? weavingNo;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final int? orderGreigeId;
   final int? machineId;
 
@@ -36,64 +37,27 @@ class Weaving {
       this.attachments});
 =======
   final int? woId;
+=======
+  final int? orderGreigeId;
+>>>>>>> 95d1a035 (fix: weaving, shearing)
   final int? machineId;
-  final String? startTime;
-  final String? endTime;
-  final int? startById;
-  final int? endById;
-  final int? unitId;
+
   final dynamic qty;
+  final dynamic weight;
+  final dynamic waste;
   final String? notes;
-  final String? status;
-  final bool? rework;
-  final int? reworkReferenceId;
-  final String? lotCelupNo;
-  final int? greigeItemId;
-  final int? cycleNo;
-
-  final bool? canDelete;
-  final bool? canUpdate;
-  final bool? canRework;
-
-  final List<dynamic> attachments;
-  final List<dynamic> semifinishedProducts;
-
-  final dynamic workOrders;
-  final dynamic machine;
-  final dynamic startBy;
-  final dynamic endBy;
-  final dynamic unit;
-  final dynamic reworkReference;
+  final skipShearing;
 
   Weaving({
     this.id,
     this.weavingNo,
-    this.woId,
     this.machineId,
-    this.startTime,
-    this.endTime,
-    this.startById,
-    this.endById,
-    this.unitId,
     this.qty,
     this.notes,
-    this.status,
-    this.rework,
-    this.reworkReferenceId,
-    this.lotCelupNo,
-    this.greigeItemId,
-    this.cycleNo,
-    this.canDelete,
-    this.canUpdate,
-    this.canRework,
-    this.attachments = const [],
-    this.semifinishedProducts = const [],
-    this.workOrders,
-    this.machine,
-    this.startBy,
-    this.endBy,
-    this.unit,
-    this.reworkReference,
+    this.orderGreigeId,
+    this.skipShearing,
+    this.waste,
+    this.weight,
   });
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
 
@@ -101,6 +65,7 @@ class Weaving {
     return Weaving(
       id: json['id'],
       weavingNo: json['weaving_no'],
+<<<<<<< HEAD
 <<<<<<< HEAD
       machineId: json['machine_id'],
       qty: json['qty'],
@@ -114,14 +79,12 @@ class Weaving {
       attachments: json['attachments'] ?? [],
 =======
       woId: json['wo_id'],
+=======
+>>>>>>> 95d1a035 (fix: weaving, shearing)
       machineId: json['machine_id'],
-      startTime: json['start_time'],
-      endTime: json['end_time'],
-      startById: json['start_by_id'],
-      endById: json['end_by_id'],
-      unitId: json['unit_id'],
       qty: json['qty'],
       notes: json['notes'],
+<<<<<<< HEAD
       status: json['status'],
       rework: json['rework'],
       reworkReferenceId: json['rework_reference_id'],
@@ -140,6 +103,12 @@ class Weaving {
       unit: json['unit'],
       reworkReference: json['rework_reference'],
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+      orderGreigeId: json['order_greige_id'],
+      skipShearing: json['skip_shearing'],
+      waste: json['waste'],
+      weight: json['weight'],
+>>>>>>> 95d1a035 (fix: weaving, shearing)
     );
   }
 
@@ -147,6 +116,7 @@ class Weaving {
     return {
       'id': id,
       'weaving_no': weavingNo,
+<<<<<<< HEAD
 <<<<<<< HEAD
       'machine_id': machineId,
       'qty': qty,
@@ -160,14 +130,12 @@ class Weaving {
       'attachments': attachments,
 =======
       'wo_id': woId,
+=======
+>>>>>>> 95d1a035 (fix: weaving, shearing)
       'machine_id': machineId,
-      'start_time': startTime,
-      'end_time': endTime,
-      'start_by_id': startById,
-      'end_by_id': endById,
-      'unit_id': unitId,
       'qty': qty,
       'notes': notes,
+<<<<<<< HEAD
       'status': status,
       'rework': rework == true ? 1 : 0,
       'rework_reference_id': reworkReferenceId,
@@ -183,6 +151,12 @@ class Weaving {
       'unit': unit,
       'rework_reference': reworkReference,
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+      'order_greige_id': orderGreigeId,
+      'skip_shearing': skipShearing,
+      'waste': waste,
+      'weight': weight
+>>>>>>> 95d1a035 (fix: weaving, shearing)
     };
   }
 }

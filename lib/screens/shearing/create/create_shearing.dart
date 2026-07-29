@@ -14,6 +14,7 @@ import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/shearing/create/create_form.dart';
 import 'package:textile_tracking/screens/shearing/create/create_shearing_process.dart';
 =======
@@ -23,6 +24,10 @@ import 'package:textile_tracking/screens/create/greige_order_index.dart';
 >>>>>>> a1ea7df (feat: warping)
 import 'package:textile_tracking/screens/shearing/create/create_form.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+import 'package:textile_tracking/screens/shearing/create/create_form.dart';
+import 'package:textile_tracking/screens/shearing/create/create_shearing_process.dart';
+>>>>>>> 95d1a035 (fix: weaving, shearing)
 import 'package:textile_tracking/screens/shearing/model/shearing.dart';
 
 class CreateShearing extends StatelessWidget {
@@ -32,6 +37,7 @@ class CreateShearing extends StatelessWidget {
       BuildContext context, Map<String, dynamic> form, isLoading) async {
     final shearing = Shearing(
       notes: form['notes'],
+<<<<<<< HEAD
 <<<<<<< HEAD
       orderGreigeId: int.tryParse(form['order_greige_id']?.toString() ?? ''),
       machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
@@ -44,16 +50,24 @@ class CreateShearing extends StatelessWidget {
       status: form['status'],
       attachments: form['attachments'],
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+      orderGreigeId: int.tryParse(form['order_greige_id']?.toString() ?? ''),
+      machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
+>>>>>>> 95d1a035 (fix: weaving, shearing)
     );
 
     final message = await Provider.of<ShearingService>(context, listen: false)
         .addItem(context, shearing, isLoading);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     Navigator.pushNamedAndRemoveUntil(context, '/shearings', (route) => false);
 =======
     Navigator.pushNamedAndRemoveUntil(context, '/shearing', (route) => false);
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+    Navigator.pushNamedAndRemoveUntil(context, '/shearings', (route) => false);
+>>>>>>> 95d1a035 (fix: weaving, shearing)
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
@@ -62,16 +76,21 @@ class CreateShearing extends StatelessWidget {
           child: buildBoldMessage(
             message: message,
 <<<<<<< HEAD
+<<<<<<< HEAD
             prefix: "SHR",
 =======
             prefix: "SHE",
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+            prefix: "SHR",
+>>>>>>> 95d1a035 (fix: weaving, shearing)
           ));
     });
   }
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     return CreateShearingProcess(
@@ -81,6 +100,9 @@ class CreateShearing extends StatelessWidget {
 =======
     return CreateGreigeOrderProcess(
 >>>>>>> a1ea7df (feat: warping)
+=======
+    return CreateShearingProcess(
+>>>>>>> 95d1a035 (fix: weaving, shearing)
       title: 'Mulai Shearing',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
@@ -90,6 +112,7 @@ class CreateShearing extends StatelessWidget {
           processId: processId,
           form: form,
           handleSubmit: handleSubmit,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         );
@@ -108,6 +131,10 @@ class CreateShearing extends StatelessWidget {
       fetchGreigeOrder: (service) => service.fetchShearingOptions(),
       getGreigeOrderOptions: (service) => service.dataListOption,
 >>>>>>> a1ea7df (feat: warping)
+=======
+        );
+      },
+>>>>>>> 95d1a035 (fix: weaving, shearing)
     );
   }
 }

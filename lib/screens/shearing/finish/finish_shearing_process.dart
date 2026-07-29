@@ -54,8 +54,11 @@ class _FinishShearingProcessState extends State<FinishShearingProcess> {
     'qty': null,
     'weight': null,
     'notes': '',
+<<<<<<< HEAD
     'machines': [],
     'attachments': [],
+=======
+>>>>>>> 95d1a035 (fix: weaving, shearing)
   };
 
   @override

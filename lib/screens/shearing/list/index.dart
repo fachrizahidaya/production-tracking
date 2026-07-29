@@ -27,6 +27,7 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/shearing/create/create_shearing.dart';
 import 'package:textile_tracking/screens/shearing/detail/edit_shearing.dart';
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/helpers/util/item_field.dart';
 =======
@@ -36,6 +37,8 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/shearing/create/create_shearing.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+>>>>>>> 95d1a035 (fix: weaving, shearing)
 import 'package:textile_tracking/screens/shearing/detail/shearing_by_id.dart';
 import 'package:textile_tracking/screens/shearing/finish/finish_shearing.dart';
 import 'package:textile_tracking/screens/shearing/model/shearing.dart';
@@ -306,6 +309,7 @@ class _ShearingScreenState extends State<ShearingScreen> {
     final status = item['status']?.toString().toLowerCase() ?? '';
     final isInProgress = status == 'diproses' || status.contains('diproses');
 
+<<<<<<< HEAD
     final value = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -406,15 +410,24 @@ class _ShearingScreenState extends State<ShearingScreen> {
     dynamic item, {
     bool openUpdateOnStart = false,
   }) async {
+=======
+>>>>>>> 95d1a035 (fix: weaving, shearing)
     final value = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ShearingDetailScreen(
-          id: item['id'].toString(),
-          no: item['shearing_no'].toString(),
-          canDelete: _canDelete,
-          canUpdate: _canUpdate,
-        ),
+        builder: (context) {
+          if (isInProgress) {
+            return EditShearingScreen(id: item['id'].toString());
+          }
+
+          return ShearingDetailScreen(
+            id: item['id'].toString(),
+            no: item['shearing_no'].toString(),
+            canDelete: _canDelete,
+            canUpdate: _canUpdate,
+            openUpdateOnStart: openUpdateOnStart,
+          );
+        },
       ),
     );
 
@@ -536,6 +549,7 @@ class _ShearingScreenState extends State<ShearingScreen> {
                       item: item,
                       titleKey: 'shearing_no',
 <<<<<<< HEAD
+<<<<<<< HEAD
                       subtitleKey: 'order_greige',
                       subtitleField: 'og_no',
                       canUpdate: _canUpdate,
@@ -543,6 +557,10 @@ class _ShearingScreenState extends State<ShearingScreen> {
 =======
                       subtitleKey: 'work_orders',
                       subtitleField: 'wo_no',
+=======
+                      subtitleKey: 'order_greige',
+                      subtitleField: 'og_no',
+>>>>>>> 95d1a035 (fix: weaving, shearing)
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
                       onUpdate: () =>
@@ -551,6 +569,7 @@ class _ShearingScreenState extends State<ShearingScreen> {
 >>>>>>> d8439a4 (fix: refactor code)
                     ),
                     onItemTap: (context, item) {
+<<<<<<< HEAD
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -570,6 +589,9 @@ class _ShearingScreenState extends State<ShearingScreen> {
                           return null;
                         }
                       });
+=======
+                      _openProcessDetail(item);
+>>>>>>> 95d1a035 (fix: weaving, shearing)
                     },
                     filterWidget: ListFilter(
                       params: params,

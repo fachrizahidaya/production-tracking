@@ -82,9 +82,9 @@ class _DashboardState extends State<Dashboard> {
       for (final menu in menuList) {
         final name = (menu['name'] ?? '').toString().toLowerCase();
 
-        if (name == 'sorting' || name == 'packing') {
-          return true;
-        }
+        // if (name == 'sorting' || name == 'packing') {
+        //   return true;
+        // }
 
         final children = menu['children'];
 
@@ -201,7 +201,7 @@ class _DashboardState extends State<Dashboard> {
       }
     });
 
-    _handleFetchSummary();
+    // _handleFetchSummary();
   }
 
   void _handleProcessFilter(String key, dynamic value) {

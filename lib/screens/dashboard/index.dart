@@ -612,7 +612,7 @@ class _DashboardState extends State<Dashboard> {
       summaryParams['end_date'] = endDate;
     });
 
-    _handleFetchSummary();
+    // _handleFetchSummary();
   }
 
   void _handleProcessFilter(String key, dynamic value) {

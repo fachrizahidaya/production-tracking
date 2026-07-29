@@ -36,6 +36,7 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
   bool _hasMoreData = true;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
+  Map<String, dynamic> _dataView = {};
 
   final List<OptionGreigeOrder> _wo = [];
 
@@ -43,6 +44,7 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
   bool get hasMoreData => _hasMoreData;
   List<dynamic> get listOption => _listOption;
   List<dynamic> get dataListOption => _dataListOption;
+  Map<String, dynamic> get dataView => _dataView;
 
   List<OptionGreigeOrder> get options => _wo;
 
@@ -67,6 +69,37 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
 
+  Future<void> getDataView(dynamic id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    if (token == null) throw Exception('Access token is missing');
+
+    final uri = Uri.parse('${dotenv.env['API_URL']}/order-greiges/$id');
+
+    try {
+      _dataView = {};
+      notifyListeners();
+
+      final response = await http.get(uri, headers: {
+        'Authorization': 'Bearer $token',
+      });
+
+      final decoded = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final responseData = decoded['data'];
+        _dataView = responseData is Map<String, dynamic>
+            ? Map<String, dynamic>.from(responseData)
+            : Map<String, dynamic>.from(decoded);
+        notifyListeners();
+      } else {
+        throw decoded['message'] ?? 'Failed to load greige order';
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> _fetchOptionsGeneric(
       {bool isInitialLoad = false,
       String searchQuery = '',
@@ -87,10 +120,11 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       if (token == null) throw Exception('Access token is missing');
 
       final uri = Uri.parse(
-        '${dotenv.env['API_URL']}/order-greiges/$endpoint',
+        '${dotenv.env['API_URL']}/order-greige/option',
       ).replace(
         queryParameters: {
           'per_page': '100',
+          'type': endpoint,
           if (searchQuery.isNotEmpty) 'search': searchQuery,
         },
       );
@@ -130,7 +164,17 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       _fetchOptionsGeneric(
         isInitialLoad: isInitialLoad,
         searchQuery: searchQuery,
-        endpoint: 'warping-option',
+        endpoint: 'warping',
+      );
+
+  Future<void> fetchWarpingFinishOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) =>
+      _fetchOptionsGeneric(
+        isInitialLoad: isInitialLoad,
+        searchQuery: searchQuery,
+        endpoint: 'warping_finish',
       );
 
   Future<void> fetchWeavingOptions({
@@ -140,7 +184,35 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       _fetchOptionsGeneric(
         isInitialLoad: isInitialLoad,
         searchQuery: searchQuery,
-        endpoint: 'weaving-option',
+        endpoint: 'weaving',
+      );
+  Future<void> fetchWeavingFinishOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) =>
+      _fetchOptionsGeneric(
+        isInitialLoad: isInitialLoad,
+        searchQuery: searchQuery,
+        endpoint: 'weaving_finish',
+      );
+
+  Future<void> fetchSizingOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) =>
+      _fetchOptionsGeneric(
+        isInitialLoad: isInitialLoad,
+        searchQuery: searchQuery,
+        endpoint: 'sizing',
+      );
+  Future<void> fetchSizingFinishOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) =>
+      _fetchOptionsGeneric(
+        isInitialLoad: isInitialLoad,
+        searchQuery: searchQuery,
+        endpoint: 'sizing_finish',
       );
 
   Future<void> fetchShearingOptions({
@@ -150,6 +222,15 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       _fetchOptionsGeneric(
         isInitialLoad: isInitialLoad,
         searchQuery: searchQuery,
-        endpoint: 'shearing-option',
+        endpoint: 'shearing',
+      );
+  Future<void> fetchShearingFinishOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) =>
+      _fetchOptionsGeneric(
+        isInitialLoad: isInitialLoad,
+        searchQuery: searchQuery,
+        endpoint: 'shearing_finish',
       );
 }

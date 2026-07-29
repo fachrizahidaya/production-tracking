@@ -16,6 +16,7 @@ import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/weaving/create/create_weaving.dart';
+import 'package:textile_tracking/screens/weaving/detail/edit_weaving.dart';
 import 'package:textile_tracking/screens/weaving/detail/weaving_by_id.dart';
 import 'package:textile_tracking/screens/weaving/finish/finish_weaving.dart';
 import 'package:textile_tracking/screens/weaving/model/weaving.dart';
@@ -186,15 +187,25 @@ class _WeavingScreenState extends State<WeavingScreen> {
     dynamic item, {
     bool openUpdateOnStart = false,
   }) async {
+    final status = item['status']?.toString().toLowerCase() ?? '';
+    final isInProgress = status == 'diproses' || status.contains('diproses');
+
     final value = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => WeavingDetailScreen(
-          id: item['id'].toString(),
-          no: item['weaving_no'].toString(),
-          canDelete: _canDelete,
-          canUpdate: _canUpdate,
-        ),
+        builder: (context) {
+          if (isInProgress) {
+            return EditWeavingScreen(id: item['id'].toString());
+          }
+
+          return WeavingDetailScreen(
+            id: item['id'].toString(),
+            no: item['weaving_no'].toString(),
+            canDelete: _canDelete,
+            canUpdate: _canUpdate,
+            openUpdateOnStart: openUpdateOnStart,
+          );
+        },
       ),
     );
 
@@ -310,8 +321,8 @@ class _WeavingScreenState extends State<WeavingScreen> {
                       label: 'No. Weaving',
                       item: item,
                       titleKey: 'weaving_no',
-                      subtitleKey: 'work_orders',
-                      subtitleField: 'wo_no',
+                      subtitleKey: 'order_greige',
+                      subtitleField: 'og_no',
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
                       onUpdate: () =>
@@ -319,19 +330,7 @@ class _WeavingScreenState extends State<WeavingScreen> {
                       onDelete: () => _handleDeleteItem(item),
                     ),
                     onItemTap: (context, item) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WeavingDetailScreen(
-                              id: item['id'].toString(),
-                            ),
-                          )).then((value) {
-                        if (value == true) {
-                          _refetch();
-                        } else {
-                          return null;
-                        }
-                      });
+                      _openProcessDetail(item);
                     },
                     filterWidget: ListFilter(
                       params: params,

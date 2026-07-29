@@ -16,6 +16,7 @@ import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/shearing/create/create_shearing.dart';
+import 'package:textile_tracking/screens/shearing/detail/edit_shearing.dart';
 import 'package:textile_tracking/screens/shearing/detail/shearing_by_id.dart';
 import 'package:textile_tracking/screens/shearing/finish/finish_shearing.dart';
 import 'package:textile_tracking/screens/shearing/model/shearing.dart';
@@ -186,15 +187,25 @@ class _ShearingScreenState extends State<ShearingScreen> {
     dynamic item, {
     bool openUpdateOnStart = false,
   }) async {
+    final status = item['status']?.toString().toLowerCase() ?? '';
+    final isInProgress = status == 'diproses' || status.contains('diproses');
+
     final value = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ShearingDetailScreen(
-          id: item['id'].toString(),
-          no: item['shearing_no'].toString(),
-          canDelete: _canDelete,
-          canUpdate: _canUpdate,
-        ),
+        builder: (context) {
+          if (isInProgress) {
+            return EditShearingScreen(id: item['id'].toString());
+          }
+
+          return ShearingDetailScreen(
+            id: item['id'].toString(),
+            no: item['shearing_no'].toString(),
+            canDelete: _canDelete,
+            canUpdate: _canUpdate,
+            openUpdateOnStart: openUpdateOnStart,
+          );
+        },
       ),
     );
 
@@ -310,8 +321,8 @@ class _ShearingScreenState extends State<ShearingScreen> {
                       label: 'No. Shearing',
                       item: item,
                       titleKey: 'shearing_no',
-                      subtitleKey: 'work_orders',
-                      subtitleField: 'wo_no',
+                      subtitleKey: 'order_greige',
+                      subtitleField: 'og_no',
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
                       onUpdate: () =>
@@ -319,19 +330,7 @@ class _ShearingScreenState extends State<ShearingScreen> {
                       onDelete: () => _handleDeleteItem(item),
                     ),
                     onItemTap: (context, item) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ShearingDetailScreen(
-                              id: item['id'].toString(),
-                            ),
-                          )).then((value) {
-                        if (value == true) {
-                          _refetch();
-                        } else {
-                          return null;
-                        }
-                      });
+                      _openProcessDetail(item);
                     },
                     filterWidget: ListFilter(
                       params: params,

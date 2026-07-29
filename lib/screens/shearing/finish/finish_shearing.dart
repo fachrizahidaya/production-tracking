@@ -1,13 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
 import 'package:textile_tracking/providers/user_provider.dart';
-import 'package:textile_tracking/screens/finish/index.dart';
 import 'package:textile_tracking/screens/shearing/finish/finish_form.dart';
+import 'package:textile_tracking/screens/shearing/finish/finish_shearing_process.dart';
 import 'package:textile_tracking/screens/shearing/model/shearing.dart';
 
 class FinishShearing extends StatefulWidget {
@@ -30,29 +29,11 @@ class _FinishShearingState extends State<FinishShearing> {
   }
 
   final Map<String, dynamic> _form = {
-    'wo_id': null,
+    'order_greige_id': null,
     'machine_id': null,
-    'weight_unit_id': null,
-    'width_unit_id': null,
-    'length_unit_id': null,
-    'start_by_id': null,
-    'end_by_id': null,
+    'qty': null,
     'weight': null,
-    'width': null,
-    'length': null,
     'notes': '',
-    'rework': null,
-    'status': null,
-    'start_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-    'end_time': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-    'attachments': [],
-    'no_wo': '',
-    'no_pt': '',
-    'nama_mesin': '',
-    'nama_satuan_berat': '',
-    'nama_satuan_panjang': '',
-    'nama_satuan_lebar': '',
-    'nama_satuan': '',
   };
 
   @override
@@ -63,13 +44,17 @@ class _FinishShearingState extends State<FinishShearing> {
 
   @override
   Widget build(BuildContext context) {
-    return FinishProcess(
+    return FinishShearingProcess(
       title: 'Selesai Shearing',
-      label: 'Shearing',
-      fetchWorkOrder: (service) async => await null,
-      getWorkOrderOptions: (service) => service.dataListOption,
-      formPageBuilder: (context, id, processId, data, form, handleSubmit,
-              handleChangeInput, finishedItemOption, finishedItemOptionGrb) =>
+      formPageBuilder: (
+        context,
+        id,
+        processId,
+        data,
+        form,
+        handleSubmit,
+        handleChangeInput,
+      ) =>
           FinishForm(
         id: id,
         processId: processId,
@@ -77,21 +62,22 @@ class _FinishShearingState extends State<FinishShearing> {
         form: form,
         handleSubmit: handleSubmit,
         handleChangeInput: handleChangeInput,
-        forDyeing: false,
-        withItemGrade: false,
-        withQtyAndWeight: false,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final shearing = Shearing(
-          notes: form['notes'],
-          attachments: form['attachments'],
+          machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
+          notes: form['notes']?.toString() ?? '',
+          qty: num.tryParse(form['qty']?.toString() ?? '0') ?? 0,
+          weight: num.tryParse(form['weight']?.toString() ?? '0') ?? 0,
+          orderGreigeId:
+              int.tryParse(form['order_greige_id']?.toString() ?? ''),
         );
 
         final message =
             await Provider.of<ShearingService>(context, listen: false)
                 .finishItem(context, id, shearing, isLoading);
 
-        Navigator.pushNamedAndRemoveUntil(context, '/shearing', (_) => false);
+        Navigator.pushNamedAndRemoveUntil(context, '/shearings', (_) => false);
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showAlertDialog(
@@ -99,7 +85,7 @@ class _FinishShearingState extends State<FinishShearing> {
               title: 'Shearing Selesai',
               child: buildBoldMessage(
                 message: message,
-                prefix: "SHE",
+                prefix: "SHR",
               ));
         });
       },

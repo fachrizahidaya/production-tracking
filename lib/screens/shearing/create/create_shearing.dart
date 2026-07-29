@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/bold_message.dart';
-import 'package:textile_tracking/screens/create/greige_order_index.dart';
 import 'package:textile_tracking/screens/shearing/create/create_form.dart';
+import 'package:textile_tracking/screens/shearing/create/create_shearing_process.dart';
 import 'package:textile_tracking/screens/shearing/model/shearing.dart';
 
 class CreateShearing extends StatelessWidget {
@@ -15,14 +15,14 @@ class CreateShearing extends StatelessWidget {
       BuildContext context, Map<String, dynamic> form, isLoading) async {
     final shearing = Shearing(
       notes: form['notes'],
-      status: form['status'],
-      attachments: form['attachments'],
+      orderGreigeId: int.tryParse(form['order_greige_id']?.toString() ?? ''),
+      machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
     );
 
     final message = await Provider.of<ShearingService>(context, listen: false)
         .addItem(context, shearing, isLoading);
 
-    Navigator.pushNamedAndRemoveUntil(context, '/shearing', (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/shearings', (route) => false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showAlertDialog(
@@ -30,14 +30,14 @@ class CreateShearing extends StatelessWidget {
           title: 'Shearing Dimulai',
           child: buildBoldMessage(
             message: message,
-            prefix: "SHE",
+            prefix: "SHR",
           ));
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return CreateGreigeOrderProcess(
+    return CreateShearingProcess(
       title: 'Mulai Shearing',
       handleSubmitToService: _submitToService,
       formPageBuilder: (context, id, processId, data, form, handleSubmit) {
@@ -47,11 +47,8 @@ class CreateShearing extends StatelessWidget {
           processId: processId,
           form: form,
           handleSubmit: handleSubmit,
-          fetchWorkOrder: (service) => service.fetchShearingOptions(),
         );
       },
-      fetchGreigeOrder: (service) => service.fetchShearingOptions(),
-      getGreigeOrderOptions: (service) => service.dataListOption,
     );
   }
 }

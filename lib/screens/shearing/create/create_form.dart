@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/screens/create/create_greige_order_process_manual.dart';
-import 'package:textile_tracking/screens/shearing/model/shearing.dart';
+import 'package:textile_tracking/screens/shearing/create/create_shearing_process_manual.dart';
 
 class CreateForm extends StatelessWidget {
   final dynamic id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
   final handleSubmit;
-  final fetchWorkOrder;
   final processId;
 
   const CreateForm(
@@ -16,27 +14,16 @@ class CreateForm extends StatelessWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.fetchWorkOrder,
       this.processId});
 
   @override
   Widget build(BuildContext context) {
-    final ShearingService shearingService = ShearingService();
-
-    return CreateGreigeOrderProcessManual(
-      title: 'Mulai Shearing',
-      label: 'Shearing',
+    return CreateShearingProcessManual(
       id: id,
       data: data,
-      form: form,
       processId: processId,
-      processService: shearingService,
-      idProcess: 'shearing_id',
+      form: form,
       handleSubmit: handleSubmit,
-      fetchGreigeOrder: (service) => service.fetchShearingOptions(),
-      getGreigeOrderOptions: (service) => service.dataListOption,
-      fetchMachine: (service) => service.fetchOptionsShearing(),
-      getMachineOptions: (service) => service.dataListOption,
     );
   }
 }

@@ -74,7 +74,11 @@ class _DashboardState extends State<Dashboard> {
       'end_date': sampaiTanggalSummary,
     };
 
-    _loadDashboardData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _loadDashboardData();
+      }
+    });
   }
 
   bool get shouldHideActiveMachine {
@@ -147,9 +151,11 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _handleFetchStats() async {
-    final service = Provider.of<WorkOrderStatsService>(context, listen: false);
+    final service = context.read<WorkOrderStatsService>();
 
     await service.getDataList();
+
+    if (!mounted) return;
 
     setState(() {
       statsList = service.dataList;
@@ -158,26 +164,49 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> _handleFetchMachine() async {
     if (!mounted) return;
-    setState(() => isMachineLoading = true);
 
-    await Provider.of<MachineService>(context, listen: false).getDataList();
-
-    if (!mounted) return;
     setState(() {
-      machineList =
-          Provider.of<MachineService>(context, listen: false).dataList;
-      isMachineLoading = false;
+      isMachineLoading = true;
+      machineList = {};
     });
+
+    try {
+      final service = context.read<MachineService>();
+
+      await service.getDataList();
+
+      if (!mounted) return;
+
+      setState(() {
+        machineList = service.dataList;
+      });
+    } catch (e, s) {
+      debugPrint('Machine Error: $e');
+      debugPrintStack(stackTrace: s);
+
+      if (!mounted) return;
+
+      setState(() {
+        machineList = {};
+      });
+    } finally {
+      if (!mounted) return;
+
+      setState(() {
+        isMachineLoading = false;
+      });
+    }
   }
 
   Future<void> _handleFetchPie() async {
-    await Provider.of<WorkOrderChartService>(context, listen: false)
-        .getDataPie();
+    final service = context.read<WorkOrderChartService>();
+
+    await service.getDataPie();
 
     if (!mounted) return;
+
     setState(() {
-      pieList =
-          Provider.of<WorkOrderChartService>(context, listen: false).dataPie;
+      pieList = service.dataPie;
     });
   }
 

@@ -11,6 +11,7 @@ import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/models/master/machine.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
+import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_master_item_grade.dart';
 import 'package:textile_tracking/screens/update/%5Bupdate_process_id%5D.dart';
@@ -252,21 +253,25 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
   Future<void> _postInit() async {
     await _getDataView();
+    if (!mounted) return;
+
     await _handleFetchMachine();
+    if (!mounted) return;
+
     await _handleFetchItemGrade();
+    if (!mounted) return;
+
+    await _handleFetchItemType();
+    if (!mounted) return;
+
     await _handleFetchFinishedGrbMaterial();
+    if (!mounted) return;
+
     await _handleFetchFinishedGoodMaterial();
+    if (!mounted) return;
+
     _syncGradesWithOptions();
     _syncDefectsWithOptions();
-
-    if (widget.openUpdateOnStart && !_hasOpenedInitialUpdate && mounted) {
-      if (widget.canUpdate) {
-        _hasOpenedInitialUpdate = true;
-        await _handleNavigateToUpdate();
-      } else {
-        Navigator.pop(context, false);
-      }
-    }
   }
 
   void _handleChangeInput(String fieldName, dynamic value) {
@@ -655,6 +660,25 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       );
       setState(() {
         itemGradeOption = service.dataListOption;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
+    }
+  }
+
+  Future<void> _handleFetchItemType({String search = ''}) async {
+    final service = context.read<OptionItemTypeService>();
+
+    try {
+      await service.fetchOptions(
+        isInitialLoad: true,
+        searchQuery: search,
+      );
+
+      setState(() {
+        itemTypeOption = service.dataListOption;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

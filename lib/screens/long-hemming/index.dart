@@ -39,6 +39,7 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
   bool _canUpdate = false;
   bool _isLoadMore = false;
   bool _showFab = true;
+  bool _menuLoaded = false;
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
@@ -55,17 +56,13 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
   void initState() {
     super.initState();
 
-    setState(() {
-      params = {
-        'search': _search,
-        'page': '0',
-        'start_date': '',
-        'end_date': '',
-      };
-    });
-    Future.delayed(Duration.zero, () {
-      _loadMore();
-    });
+    params = {
+      'search': _search,
+      'page': '0',
+      'start_date': '',
+      'end_date': '',
+    };
+
     _intializeMenus();
   }
 
@@ -90,10 +87,18 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
     await _menuService.handleFetchMenu(context);
     await _userMenu.handleLoadMenu();
 
+    if (!mounted) return;
+
     setState(() {
       _canRead = _userMenu.checkMenu('Long Hemming', 'read');
       _canDelete = _userMenu.checkMenu('Long Hemming', 'delete');
       _canUpdate = _userMenu.checkMenu('Long Hemming', 'update');
+
+      _menuLoaded = true;
+
+      if (_canRead) {
+        _loadMore();
+      }
     });
   }
 
@@ -126,8 +131,6 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
   }
 
   Future<void> _loadMore() async {
-    _isLoadMore = true;
-
     if (params['page'] == '0') {
       setState(() {
         _dataList.clear();
@@ -163,14 +166,21 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
   }
 
   _refetch() {
+    _debounce?.cancel();
     setState(() {
+      _search = '';
+      dariTanggal = '';
+      sampaiTanggal = '';
+      _isFiltered = false;
+
       params = {
-        'search': _search,
+        'search': '',
         'page': '0',
-        'start_date': dariTanggal,
-        'end_date': sampaiTanggal,
+        'start_date': '',
+        'end_date': '',
       };
     });
+
     _loadMore();
   }
 
@@ -269,67 +279,79 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
             }
           },
         ),
-        body: SafeArea(
-          child: NotificationListener(
-            onNotification: (notification) {
-              if (notification is UserScrollNotification) {
-                if (notification.direction == ScrollDirection.reverse) {
-                  if (_showFab) {
-                    setState(() => _showFab = false);
-                  }
-                } else if (notification.direction == ScrollDirection.forward) {
-                  if (!_showFab) {
-                    setState(() => _showFab = true);
-                  }
-                }
-              }
-              return false;
-            },
-            child: ProcessList(
-              fetchData: (params) async {
-                final service =
-                    Provider.of<LongHemmingService>(context, listen: false);
-                await service.getDataList(context, params);
-                return service.items;
-              },
-              canRead: _canRead,
-              isLoadMore: _isLoadMore,
-              itemBuilder: (item) => ItemProcessCard(
-                label: 'No. Long Hemming',
-                item: item,
-                titleKey: 'lh_no',
-                subtitleKey: 'work_orders',
-                subtitleField: 'wo_no',
-                canUpdate: _canUpdate,
-                canDelete: _canDelete,
-                onUpdate: () => _openProcessDetail(
-                  item,
-                  openUpdateOnStart: true,
+        body: !_menuLoaded
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : SafeArea(
+                child: NotificationListener(
+                  onNotification: (notification) {
+                    if (notification is UserScrollNotification) {
+                      if (notification.direction == ScrollDirection.reverse) {
+                        if (_showFab) {
+                          setState(() => _showFab = false);
+                        }
+                      } else if (notification.direction ==
+                          ScrollDirection.forward) {
+                        if (!_showFab) {
+                          setState(() => _showFab = true);
+                        }
+                      }
+                    }
+                    return false;
+                  },
+                  child: ProcessList(
+                    fetchData: (params) async {
+                      final service = Provider.of<LongHemmingService>(context,
+                          listen: false);
+                      await service.getDataList(context, params);
+                      return service.items;
+                    },
+                    canRead: _canRead,
+                    isLoadMore: _isLoadMore,
+                    itemBuilder: (item) => ItemProcessCard(
+                      label: 'No. Long Hemming',
+                      item: item,
+                      titleKey: 'lh_no',
+                      subtitleKey: 'work_orders',
+                      subtitleField: 'wo_no',
+                      canUpdate: _canUpdate,
+                      canDelete: _canDelete,
+                    ),
+                    onItemTap: (context, item) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LongHemmingDetail(
+                              id: item['id'].toString(),
+                              no: item['lh_no'].toString(),
+                              canDelete: _canDelete,
+                              canUpdate: _canUpdate,
+                            ),
+                          )).then((value) {
+                        if (value == true) {
+                          _refetch();
+                        } else {
+                          return null;
+                        }
+                      });
+                    },
+                    filterWidget: ListFilter(
+                      params: params,
+                      onHandleFilter: _handleFilter,
+                      dariTanggal: dariTanggal,
+                      sampaiTanggal: sampaiTanggal,
+                    ),
+                    firstLoading: _firstLoading,
+                    isFiltered: _isFiltered,
+                    hasMore: _hasMore,
+                    handleLoadMore: _loadMore,
+                    handleRefetch: _refetch,
+                    handleSearch: _handleSearch,
+                    dataList: _dataList,
+                  ),
                 ),
-                onDelete: () => _handleDeleteItem(item),
               ),
-              onItemTap: (context, item) {
-                _openProcessDetail(
-                  item,
-                  openUpdateOnStart: item['status'] == 'Diproses',
-                );
-              },
-              filterWidget: ListFilter(
-                params: params,
-                onHandleFilter: _handleFilter,
-                dariTanggal: dariTanggal,
-                sampaiTanggal: sampaiTanggal,
-              ),
-              firstLoading: _firstLoading,
-              isFiltered: _isFiltered,
-              hasMore: _hasMore,
-              handleLoadMore: _loadMore,
-              handleRefetch: _refetch,
-              handleSearch: _handleSearch,
-              dataList: _dataList,
-            ),
-          ),
-        ),
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

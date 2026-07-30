@@ -101,12 +101,6 @@ class _FinishFormTabState extends State<FinishFormTab>
   Widget build(BuildContext context) {
     super.build(context);
 
-    // if (widget.isLoading) {
-    //   return Center(
-    //     child: CircularProgressIndicator(),
-    //   );
-    // }
-
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
@@ -126,7 +120,6 @@ class _FinishFormTabState extends State<FinishFormTab>
                   handleChangeInput: widget.handleChangeInput,
                   id: widget.id,
                   processData: widget.processData,
-                  isLoading: widget.isLoading,
                   withItemGrade: widget.withItemGrade,
                   itemGradeOption: widget.itemGradeOption,
                   qty: widget.qty,

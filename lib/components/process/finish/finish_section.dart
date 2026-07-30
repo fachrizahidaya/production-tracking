@@ -24,7 +24,6 @@ class FinishSection extends StatefulWidget {
   final handleChangeInput;
   final id;
   final processData;
-  final isLoading;
   final withItemGrade;
   final itemGradeOption;
   final qty;
@@ -65,7 +64,6 @@ class FinishSection extends StatefulWidget {
       this.handleChangeInput,
       this.id,
       this.processData,
-      this.isLoading,
       this.withItemGrade,
       this.itemGradeOption,
       this.qty,

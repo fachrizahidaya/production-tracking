@@ -863,9 +863,7 @@ class _FormItemsState extends State<FormItems>
                 widget.label != 'Embroidery' &&
                 widget.label != 'Printing' &&
                 widget.label != 'Sorting' &&
-                widget.label != 'Packing' &&
-                widget.label != 'Warping' &&
-                widget.label != 'Weaving')
+                widget.label != 'Packing')
               Expanded(
                 child: WeightSection(
                   form: widget.form,
@@ -937,11 +935,7 @@ class _FormItemsState extends State<FormItems>
                 widget.label != 'Long Slitting' &&
                 widget.label != 'Embroidery' &&
                 widget.label != 'Printing' &&
-                widget.label != 'Sorting' &&
-                widget.label != 'Warping' &&
-                widget.label != 'Sizing' &&
-                widget.label != 'Weaving' &&
-                widget.label != 'Shearing')
+                widget.label != 'Sorting')
               if (isLoadingSemiFinished)
                 Expanded(
                   child: SizedBox(
@@ -994,10 +988,7 @@ class _FormItemsState extends State<FormItems>
                 widget.label != 'Embroidery' &&
                 widget.label != 'Printing' &&
                 widget.label != 'Sorting' &&
-                widget.label != 'Packing' &&
-                widget.label != 'Sizing' &&
-                widget.label != 'Weaving' &&
-                widget.label != 'Shearing')
+                widget.label != 'Packing')
               if (isLoadingSemiFinished)
                 Expanded(
                   child: SizedBox(
@@ -1626,8 +1617,4 @@ Rework
       ),
     );
   }
-
-/*
-Qty Sorting
-*/
 }

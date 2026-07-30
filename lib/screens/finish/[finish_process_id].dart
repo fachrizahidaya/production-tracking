@@ -449,6 +449,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+<<<<<<< HEAD
   Future<void> _handleFetchReworkCategory() async {
     if (widget.label != 'Dyeing') return;
 
@@ -471,6 +472,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+=======
+>>>>>>> ca871cd (fix: loading finish)
   void _setNumberControllerText(
     TextEditingController controller,
     dynamic value,

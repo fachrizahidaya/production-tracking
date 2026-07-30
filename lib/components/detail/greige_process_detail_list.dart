@@ -734,7 +734,6 @@ class GreigeProcessDetailList extends StatelessWidget {
       icon: icon,
       title: title,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           child,
         ].separatedBy(CustomTheme().vGap('lg')),

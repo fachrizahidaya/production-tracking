@@ -112,6 +112,7 @@ packages:
     source: hosted
     version: "2.1.0"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     version: "1.19.0"
 <<<<<<< HEAD
@@ -134,6 +135,8 @@ packages:
     source: hosted
     version: "2.1.0"
 >>>>>>> b8a5267 (chore: internet checker)
+=======
+>>>>>>> 0992ab27 (fix: user name di appbar)
   convert:
     dependency: transitive
     description:
@@ -142,8 +145,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
+<<<<<<< HEAD
 =======
 >>>>>>> f1fbda3e (chore: install package)
+=======
+>>>>>>> 0992ab27 (fix: user name di appbar)
   cross_file:
     dependency: transitive
     description:

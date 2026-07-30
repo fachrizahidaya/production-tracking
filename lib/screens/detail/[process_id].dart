@@ -188,6 +188,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     'items': [],
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     'rework_category': null,
     'rework_type': [],
     'rework_method': [],
@@ -199,6 +200,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
 =======
 >>>>>>> e03dd57 (chore: remove unnecessary)
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
   };
 
   final fieldConfigs = [

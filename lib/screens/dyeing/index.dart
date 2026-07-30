@@ -338,6 +338,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
                       canDelete: _canDelete,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -372,6 +373,10 @@ class _DyeingScreenState extends State<DyeingScreen> {
 =======
                     ),
                     onItemTap: (context, item) {
+=======
+                    ),
+                    onItemTap: (context, item) {
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -388,7 +393,10 @@ class _DyeingScreenState extends State<DyeingScreen> {
                           return null;
                         }
                       });
+<<<<<<< HEAD
 >>>>>>> 56d6598 (fix: loading dan cta to detail proses)
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
                     },
                     filterWidget: ListFilter(
                       params: params,

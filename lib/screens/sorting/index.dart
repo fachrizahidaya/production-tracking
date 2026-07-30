@@ -41,12 +41,15 @@ class _SortingScreenState extends State<SortingScreen> {
   bool _showFab = true;
   bool _menuLoaded = false;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 =======
 >>>>>>> 56d6598 (fix: loading dan cta to detail proses)
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
@@ -288,8 +291,11 @@ class _SortingScreenState extends State<SortingScreen> {
         ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 56d6598 (fix: loading dan cta to detail proses)
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
         body: !_menuLoaded
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -362,6 +368,7 @@ class _SortingScreenState extends State<SortingScreen> {
                     dataList: _dataList,
                   ),
 <<<<<<< HEAD
+<<<<<<< HEAD
                 ),
               ),
 =======
@@ -431,6 +438,10 @@ class _SortingScreenState extends State<SortingScreen> {
 >>>>>>> 993ef46 (fix: card navigate to update (#16))
 =======
 >>>>>>> 56d6598 (fix: loading dan cta to detail proses)
+=======
+                ),
+              ),
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

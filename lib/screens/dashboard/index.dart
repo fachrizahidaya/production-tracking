@@ -127,6 +127,7 @@ class _DashboardState extends State<Dashboard> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       if (!mounted) return;
 
       setState(() {
@@ -140,10 +141,13 @@ class _DashboardState extends State<Dashboard> {
       _fetchDashboardWidgets();
 =======
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
       if (mounted) {
         _loadDashboardData();
       }
     });
+<<<<<<< HEAD
 <<<<<<< HEAD
   }
 
@@ -334,6 +338,8 @@ class _DashboardState extends State<Dashboard> {
     );
 =======
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
   }
 
   bool get shouldHideActiveMachine {
@@ -416,6 +422,7 @@ class _DashboardState extends State<Dashboard> {
     setState(() => isLoading = true);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     await _safeFetch(_handleFetchMenu);
 
     await Future.wait([
@@ -437,6 +444,17 @@ class _DashboardState extends State<Dashboard> {
     ]);
 
 >>>>>>> 45ea02f (fix: dashboard)
+=======
+    await Future.wait([
+      _safeFetch(_handleFetchMenu),
+      _safeFetch(_handleFetchStats),
+      _safeFetch(_handleFetchPie),
+      _safeFetch(_handleFetchMachine),
+      _safeFetch(_handleFetchSummary),
+      _safeFetch(_loadMore),
+    ]);
+
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
     if (!mounted) return;
 
     setState(() => isLoading = false);
@@ -445,6 +463,7 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _safeFetch(Future<void> Function() callback) async {
     try {
       await callback();
+<<<<<<< HEAD
 <<<<<<< HEAD
     } catch (e) {
       if (mounted) {
@@ -455,6 +474,11 @@ class _DashboardState extends State<Dashboard> {
       debugPrint(e.toString());
       debugPrintStack(stackTrace: s);
 >>>>>>> 45ea02f (fix: dashboard)
+=======
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s);
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
     }
   }
 
@@ -489,13 +513,19 @@ class _DashboardState extends State<Dashboard> {
         machineList = service.dataList;
       });
 <<<<<<< HEAD
+<<<<<<< HEAD
     } catch (e) {
 =======
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
     } catch (e, s) {
       debugPrint('Machine Error: $e');
       debugPrintStack(stackTrace: s);
 
+<<<<<<< HEAD
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
       if (!mounted) return;
 
       setState(() {
@@ -529,6 +559,7 @@ class _DashboardState extends State<Dashboard> {
       isSummaryLoading = true;
       summaryList = [];
 <<<<<<< HEAD
+<<<<<<< HEAD
       greigeSummaryList = [];
     });
 
@@ -547,35 +578,52 @@ class _DashboardState extends State<Dashboard> {
     });
 
     try {
+=======
+    });
+
+    try {
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
       final service =
           Provider.of<WorkOrderSummaryService>(context, listen: false);
 
       await service.getDataList(context, summaryParams);
+<<<<<<< HEAD
 >>>>>>> 45ea02f (fix: dashboard)
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
 
       if (!mounted) return;
 
       setState(() {
         summaryList = service.dataList;
 <<<<<<< HEAD
+<<<<<<< HEAD
         greigeSummaryList = service.preDataList;
       });
     } catch (e) {
 =======
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
       });
     } catch (e, s) {
       debugPrint('Summary Error: $e');
       debugPrintStack(stackTrace: s);
 
+<<<<<<< HEAD
 >>>>>>> 45ea02f (fix: dashboard)
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
       if (!mounted) return;
 
       setState(() {
         summaryList = [];
 <<<<<<< HEAD
+<<<<<<< HEAD
         greigeSummaryList = [];
 =======
 >>>>>>> 45ea02f (fix: dashboard)
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
       });
     } finally {
       if (!mounted) return;
@@ -661,8 +709,15 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _loadMore() async {
     if (!mounted) return;
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (_isLoadMore) return;
 =======
+=======
+
+    setState(() {
+      _isLoadMore = true;
+    });
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
 
     setState(() {
       _isLoadMore = true;
@@ -694,6 +749,7 @@ class _DashboardState extends State<Dashboard> {
 
     try {
 <<<<<<< HEAD
+<<<<<<< HEAD
       final service = Provider.of<WorkOrderProcessService>(
         context,
         listen: false,
@@ -702,6 +758,10 @@ class _DashboardState extends State<Dashboard> {
       final service =
           Provider.of<WorkOrderProcessService>(context, listen: false);
 >>>>>>> 45ea02f (fix: dashboard)
+=======
+      final service =
+          Provider.of<WorkOrderProcessService>(context, listen: false);
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
 
       await service.getDataList(context, params);
 
@@ -716,15 +776,20 @@ class _DashboardState extends State<Dashboard> {
 
         _dataList.addAll(loadData);
 <<<<<<< HEAD
+<<<<<<< HEAD
         _hasMore = _isMobile ? loadData.length >= 10 : loadData.isNotEmpty;
 =======
         _hasMore = loadData.isNotEmpty;
 >>>>>>> 45ea02f (fix: dashboard)
+=======
+        _hasMore = loadData.isNotEmpty;
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
       });
     } catch (e) {
       if (!mounted) return;
 
       setState(() {
+<<<<<<< HEAD
 <<<<<<< HEAD
         if (isReset) {
           _dataList.clear();
@@ -732,6 +797,9 @@ class _DashboardState extends State<Dashboard> {
 =======
         _dataList.clear();
 >>>>>>> 45ea02f (fix: dashboard)
+=======
+        _dataList.clear();
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
         _hasMore = false;
       });
     } finally {

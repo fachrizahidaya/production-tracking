@@ -33,12 +33,15 @@ import 'package:textile_tracking/screens/update/process/machine.dart';
 import 'package:textile_tracking/screens/update/process/sorting.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/update/process/packing_grade_a_source.dart';
 =======
 import 'package:textile_tracking/screens/update/process/warping.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
 =======
 >>>>>>> e03dd57 (chore: remove unnecessary)
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
 
 class UpdateProcess extends StatefulWidget {
   final id;
@@ -1434,6 +1437,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                     updateTotalSorting: _updateTotalSorting,
                                     itemTypeOption: widget.itemTypeOption,
                                     data: widget.data,
+<<<<<<< HEAD
                                     onSourceQtyInvalid: (invalid) {
                                       if (_gradeASourceInvalid == invalid) {
                                         return;
@@ -1481,6 +1485,8 @@ class _UpdateProcessState extends State<UpdateProcess>
                                         ),
                                       ],
                                     ),
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
                                   ),
                                 if (widget.label == 'Packing')
                                   DefaultTabController(

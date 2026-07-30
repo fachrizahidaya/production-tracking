@@ -335,6 +335,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                       canDelete: _canDelete,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -369,6 +370,10 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
 =======
                     ),
                     onItemTap: (context, item) {
+=======
+                    ),
+                    onItemTap: (context, item) {
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -385,7 +390,10 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                           return null;
                         }
                       });
+<<<<<<< HEAD
 >>>>>>> 56d6598 (fix: loading dan cta to detail proses)
+=======
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
                     },
                     filterWidget: ListFilter(
                       params: params,

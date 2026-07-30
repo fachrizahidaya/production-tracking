@@ -496,10 +496,14 @@ class _HomeState extends State<Home> {
               user: user,
               name: name,
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> d8439a4 (fix: refactor code)
 =======
               showNameWithAvatar: true,
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
+=======
+              showNameWithAvatar: true,
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
             ),
           ),
         );

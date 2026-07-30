@@ -1451,6 +1451,7 @@ class _FormItemsState extends State<FormItems>
                 widget.label != 'Printing' &&
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 widget.label != 'Sorting')
 =======
                 widget.label != 'Sorting' &&
@@ -1462,6 +1463,9 @@ class _FormItemsState extends State<FormItems>
 =======
                 widget.label != 'Sorting')
 >>>>>>> e03dd57 (chore: remove unnecessary)
+=======
+                widget.label != 'Sorting')
+>>>>>>> 6f05bd35 (merge to fase 2  (#27))
               if (isLoadingSemiFinished)
                 Expanded(
                   child: SizedBox(

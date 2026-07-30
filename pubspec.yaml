@@ -84,6 +84,7 @@ dependencies:
   flutter_pdfview: ^1.4.4
   dart_jsonwebtoken: ^2.17.0
 <<<<<<< HEAD
+<<<<<<< HEAD
   connectivity_plus: ^6.0.5
   internet_connection_checker_plus: ^3.1.1
   firebase_core: ^4.1.1
@@ -93,6 +94,10 @@ dependencies:
   flutter_local_notifications: ^19.4.0
 =======
 >>>>>>> 25f3ec5 (fix: create)
+=======
+  connectivity_plus: ^6.0.5
+  internet_connection_checker_plus: ^3.1.1
+>>>>>>> b8a5267 (chore: internet checker)
 
 dev_dependencies:
   flutter_test:

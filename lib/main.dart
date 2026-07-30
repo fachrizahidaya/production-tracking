@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+<<<<<<< HEAD
 import 'package:firebase_core/firebase_core.dart';
+=======
+>>>>>>> b8a5267 (chore: internet checker)
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/auth/auth_check.dart';
@@ -180,15 +183,23 @@ class MyApp extends StatelessWidget {
           '/sortings': (context) => SortingScreen(),
           '/packings': (context) => PackingScreen(),
           '/printings': (context) => PrintingScreen(),
+<<<<<<< HEAD
           '/weavings': (context) => WeavingScreen(),
           '/sizings': (context) => SizingScreen(),
           '/warpings': (context) => WarpingScreen(),
           '/shearings': (context) => ShearingScreen(),
           '/dyeing-preparations': (context) => DyeingPreparationScreen(),
+=======
+          '/weaving': (context) => WeavingScreen(),
+          '/sizing': (context) => SizingScreen(),
+          '/warping': (context) => WarpingScreen(),
+          '/shearing': (context) => ShearingScreen(),
+>>>>>>> b8a5267 (chore: internet checker)
           '/account': (context) => Account(),
           '/eula': (context) => Eula(),
           '/privacy-policy': (context) => PrivacyPolicy(),
           '/terms-conditions': (context) => TermsConditions(),
+<<<<<<< HEAD
           '/report-production': (context) => ReportScreen(),
           '/dyeing-rework-evaluations': (context) => ReworkList(),
         },
@@ -224,6 +235,10 @@ class MyApp extends StatelessWidget {
         '/terms-conditions': (context) => TermsConditions(),
       },
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+        },
+      ),
+>>>>>>> b8a5267 (chore: internet checker)
     );
   }
 }

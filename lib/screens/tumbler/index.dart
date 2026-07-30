@@ -334,6 +334,7 @@ class _TumblerScreenState extends State<TumblerScreen> {
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
 <<<<<<< HEAD
+<<<<<<< HEAD
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -365,6 +366,26 @@ class _TumblerScreenState extends State<TumblerScreen> {
                         openUpdateOnStart: item['status'] == 'Diproses',
                       );
 >>>>>>> d8439a4 (fix: refactor code)
+=======
+                    ),
+                    onItemTap: (context, item) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TumblerDetail(
+                              id: item['id'].toString(),
+                              no: item['tumbler_no'].toString(),
+                              canDelete: _canDelete,
+                              canUpdate: _canUpdate,
+                            ),
+                          )).then((value) {
+                        if (value == true) {
+                          _refetch();
+                        } else {
+                          return null;
+                        }
+                      });
+>>>>>>> 56d6598 (fix: loading dan cta to detail proses)
                     },
                     filterWidget: ListFilter(
                       params: params,

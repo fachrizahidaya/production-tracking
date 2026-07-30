@@ -337,6 +337,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
 <<<<<<< HEAD
+<<<<<<< HEAD
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -368,6 +369,26 @@ class _DyeingScreenState extends State<DyeingScreen> {
                         openUpdateOnStart: item['status'] == 'Diproses',
                       );
 >>>>>>> d8439a4 (fix: refactor code)
+=======
+                    ),
+                    onItemTap: (context, item) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DyeingDetail(
+                              id: item['id'].toString(),
+                              no: item['dyeing_no'].toString(),
+                              canDelete: _canDelete,
+                              canUpdate: _canUpdate,
+                            ),
+                          )).then((value) {
+                        if (value == true) {
+                          _refetch();
+                        } else {
+                          return null;
+                        }
+                      });
+>>>>>>> 56d6598 (fix: loading dan cta to detail proses)
                     },
                     filterWidget: ListFilter(
                       params: params,

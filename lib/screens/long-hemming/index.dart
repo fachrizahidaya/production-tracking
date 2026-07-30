@@ -40,10 +40,13 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
   bool _isLoadMore = false;
   bool _showFab = true;
   bool _menuLoaded = false;
+<<<<<<< HEAD
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
+=======
+>>>>>>> 56d6598 (fix: loading dan cta to detail proses)
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
@@ -284,6 +287,9 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
           },
         ),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 56d6598 (fix: loading dan cta to detail proses)
         body: !_menuLoaded
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -355,6 +361,7 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
                     handleSearch: _handleSearch,
                     dataList: _dataList,
                   ),
+<<<<<<< HEAD
                 ),
               ),
 =======
@@ -394,9 +401,11 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
                 onUpdate: () => _openProcessDetail(
                   item,
                   openUpdateOnStart: true,
+=======
+>>>>>>> 56d6598 (fix: loading dan cta to detail proses)
                 ),
-                onDelete: () => _handleDeleteItem(item),
               ),
+<<<<<<< HEAD
               onItemTap: (context, item) {
                 _openProcessDetail(
                   item,
@@ -420,6 +429,8 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
           ),
         ),
 >>>>>>> 993ef46 (fix: card navigate to update (#16))
+=======
+>>>>>>> 56d6598 (fix: loading dan cta to detail proses)
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

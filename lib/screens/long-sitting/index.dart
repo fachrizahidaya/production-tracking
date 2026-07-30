@@ -334,6 +334,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
 <<<<<<< HEAD
+<<<<<<< HEAD
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -365,6 +366,26 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
                         openUpdateOnStart: item['status'] == 'Diproses',
                       );
 >>>>>>> d8439a4 (fix: refactor code)
+=======
+                    ),
+                    onItemTap: (context, item) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LongSittingDetail(
+                              id: item['id'].toString(),
+                              no: item['ls_no'].toString(),
+                              canDelete: _canDelete,
+                              canUpdate: _canUpdate,
+                            ),
+                          )).then((value) {
+                        if (value == true) {
+                          _refetch();
+                        } else {
+                          return null;
+                        }
+                      });
+>>>>>>> 56d6598 (fix: loading dan cta to detail proses)
                     },
                     filterWidget: ListFilter(
                       params: params,

@@ -69,9 +69,12 @@ class FinishSection extends StatefulWidget {
       this.id,
       this.processData,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       this.isLoading,
 >>>>>>> e98896b (fix: finish)
+=======
+>>>>>>> e03dd57 (chore: remove unnecessary)
       this.withItemGrade,
       this.itemGradeOption,
       this.qty,

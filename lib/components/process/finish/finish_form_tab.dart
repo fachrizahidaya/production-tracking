@@ -129,9 +129,12 @@ class _FinishFormTabState extends State<FinishFormTab>
                   id: widget.id,
                   processData: widget.processData,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                   isLoading: widget.isLoading,
 >>>>>>> e98896b (fix: finish)
+=======
+>>>>>>> e03dd57 (chore: remove unnecessary)
                   withItemGrade: widget.withItemGrade,
                   itemGradeOption: widget.itemGradeOption,
                   qty: widget.qty,

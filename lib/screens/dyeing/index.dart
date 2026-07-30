@@ -318,17 +318,24 @@ class _DyeingScreenState extends State<DyeingScreen> {
                       subtitleField: 'wo_no',
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
-                      onUpdate: () => _openProcessDetail(
-                        item,
-                        openUpdateOnStart: true,
-                      ),
-                      onDelete: () => _handleDeleteItem(item),
                     ),
                     onItemTap: (context, item) {
-                      _openProcessDetail(
-                        item,
-                        openUpdateOnStart: item['status'] == 'Diproses',
-                      );
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DyeingDetail(
+                              id: item['id'].toString(),
+                              no: item['dyeing_no'].toString(),
+                              canDelete: _canDelete,
+                              canUpdate: _canUpdate,
+                            ),
+                          )).then((value) {
+                        if (value == true) {
+                          _refetch();
+                        } else {
+                          return null;
+                        }
+                      });
                     },
                     filterWidget: ListFilter(
                       params: params,

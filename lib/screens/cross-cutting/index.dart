@@ -38,6 +38,7 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
   bool _canUpdate = false;
   bool _isLoadMore = false;
   bool _showFab = true;
+  bool _menuLoaded = false;
 
   final List<dynamic> _dataList = [];
   String _search = '';
@@ -52,17 +53,13 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
   void initState() {
     super.initState();
 
-    setState(() {
-      params = {
-        'search': _search,
-        'page': '0',
-        'start_date': '',
-        'end_date': '',
-      };
-    });
-    Future.delayed(Duration.zero, () {
-      _loadMore();
-    });
+    params = {
+      'search': _search,
+      'page': '0',
+      'start_date': '',
+      'end_date': '',
+    };
+
     _intializeMenus();
   }
 
@@ -87,10 +84,18 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
     await _menuService.handleFetchMenu(context);
     await _userMenu.handleLoadMenu();
 
+    if (!mounted) return;
+
     setState(() {
       _canRead = _userMenu.checkMenu('Cross Cutting', 'read');
       _canDelete = _userMenu.checkMenu('Cross Cutting', 'delete');
       _canUpdate = _userMenu.checkMenu('Cross Cutting', 'update');
+
+      _menuLoaded = true;
+
+      if (_canRead) {
+        _loadMore();
+      }
     });
   }
 
@@ -131,8 +136,6 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
   }
 
   Future<void> _loadMore() async {
-    _isLoadMore = true;
-
     if (params['page'] == '0') {
       setState(() {
         _dataList.clear();
@@ -168,14 +171,21 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
   }
 
   _refetch() {
+    _debounce?.cancel();
     setState(() {
+      _search = '';
+      dariTanggal = '';
+      sampaiTanggal = '';
+      _isFiltered = false;
+
       params = {
-        'search': _search,
+        'search': '',
         'page': '0',
-        'start_date': dariTanggal,
-        'end_date': sampaiTanggal,
+        'start_date': '',
+        'end_date': '',
       };
     });
+
     _loadMore();
   }
 
@@ -204,78 +214,83 @@ class _CrossCuttingScreenState extends State<CrossCuttingScreen> {
             }
           },
         ),
-        body: SafeArea(
-          child: NotificationListener(
-            onNotification: (notification) {
-              if (notification is UserScrollNotification) {
-                if (notification.direction == ScrollDirection.reverse) {
-                  if (_showFab) {
-                    setState(() => _showFab = false);
-                  }
-                } else if (notification.direction == ScrollDirection.forward) {
-                  if (!_showFab) {
-                    setState(() => _showFab = true);
-                  }
-                }
-              }
-              return false;
-            },
-            child: ProcessList(
-              fetchData: (params) async {
-                final service =
-                    Provider.of<CrossCuttingService>(context, listen: false);
-                await service.getDataList(context, params);
-                return service.items;
-              },
-              canRead: _canRead,
-              isLoadMore: _isLoadMore,
-              itemBuilder: (item) => ItemProcessCard(
-                label: 'No. Cross Cutting',
-                item: item,
-                titleKey: 'cc_no',
-                subtitleKey: 'work_orders',
-                subtitleField: 'wo_no',
-                itemField: ItemField.get,
-                nestedField: ItemField.nested,
+        body: !_menuLoaded
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : SafeArea(
+                child: NotificationListener(
+                  onNotification: (notification) {
+                    if (notification is UserScrollNotification) {
+                      if (notification.direction == ScrollDirection.reverse) {
+                        if (_showFab) {
+                          setState(() => _showFab = false);
+                        }
+                      } else if (notification.direction ==
+                          ScrollDirection.forward) {
+                        if (!_showFab) {
+                          setState(() => _showFab = true);
+                        }
+                      }
+                    }
+                    return false;
+                  },
+                  child: ProcessList(
+                    fetchData: (params) async {
+                      final service = Provider.of<CrossCuttingService>(context,
+                          listen: false);
+                      await service.getDataList(context, params);
+                      return service.items;
+                    },
+                    canRead: _canRead,
+                    isLoadMore: _isLoadMore,
+                    itemBuilder: (item) => ItemProcessCard(
+                      label: 'No. Cross Cutting',
+                      item: item,
+                      titleKey: 'cc_no',
+                      subtitleKey: 'work_orders',
+                      subtitleField: 'wo_no',
+                      itemField: ItemField.get,
+                      nestedField: ItemField.nested,
+                    ),
+                    onItemTap: (context, item) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CrossCuttingDetail(
+                              id: item['id'].toString(),
+                              no: item['cc_no'].toString(),
+                              canDelete: _canDelete,
+                              canUpdate: _canUpdate,
+                            ),
+                          )).then((value) {
+                        if (value == true) {
+                          _refetch();
+                        } else {
+                          return null;
+                        }
+                      });
+                    },
+                    filterWidget: ListFilter(
+                      title: 'Filter',
+                      params: params,
+                      onHandleFilter: _handleFilter,
+                      onSubmitFilter: () {
+                        _submitFilter();
+                      },
+                      dariTanggal: dariTanggal,
+                      sampaiTanggal: sampaiTanggal,
+                    ),
+                    firstLoading: _firstLoading,
+                    isFiltered: _isFiltered,
+                    hasMore: _hasMore,
+                    handleLoadMore: _loadMore,
+                    handleRefetch: _refetch,
+                    handleSearch: _handleSearch,
+                    dataList: _dataList,
+                  ),
+                ),
               ),
-              onItemTap: (context, item) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CrossCuttingDetail(
-                        id: item['id'].toString(),
-                        no: item['cc_no'].toString(),
-                        canDelete: _canDelete,
-                        canUpdate: _canUpdate,
-                      ),
-                    )).then((value) {
-                  if (value == true) {
-                    _refetch();
-                  } else {
-                    return null;
-                  }
-                });
-              },
-              filterWidget: ListFilter(
-                title: 'Filter',
-                params: params,
-                onHandleFilter: _handleFilter,
-                onSubmitFilter: () {
-                  _submitFilter();
-                },
-                dariTanggal: dariTanggal,
-                sampaiTanggal: sampaiTanggal,
-              ),
-              firstLoading: _firstLoading,
-              isFiltered: _isFiltered,
-              hasMore: _hasMore,
-              handleLoadMore: _loadMore,
-              handleRefetch: _refetch,
-              handleSearch: _handleSearch,
-              dataList: _dataList,
-            ),
-          ),
-        ),
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

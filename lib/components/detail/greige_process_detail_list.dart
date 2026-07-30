@@ -1037,7 +1037,6 @@ class GreigeProcessDetailList extends StatelessWidget {
       icon: icon,
       title: title,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 =======
     return Container(

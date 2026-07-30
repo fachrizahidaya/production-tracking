@@ -20,8 +20,11 @@ import 'package:textile_tracking/screens/warping/detail/edit_warping.dart';
 =======
 // ignore_for_file: use_build_context_synchronously, unused_element, unused_element_parameter
 
+<<<<<<< HEAD
 import 'package:easy_localization/easy_localization.dart';
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 5afc921a (fix: detail proses)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/greige_process_detail_list.dart';
@@ -33,8 +36,13 @@ import 'package:textile_tracking/screens/detail/%5Bprocess_id%5D.dart';
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
 =======
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/util/format_number.dart';
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+import 'package:textile_tracking/models/option/option_greige_order.dart';
+import 'package:textile_tracking/screens/warping/detail/edit_warping.dart';
+>>>>>>> 5afc921a (fix: detail proses)
 import 'package:textile_tracking/screens/warping/model/warping.dart';
 
 class WarpingDetailScreen extends StatefulWidget {
@@ -97,12 +105,15 @@ class _WarpingDetailScreenState extends State<WarpingDetailScreen> {
       OptionGreigeOrderService();
 
   Map<String, dynamic> _greigeOrder = {};
+<<<<<<< HEAD
   Map<String, dynamic> _data = {};
 =======
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
   bool _isLoading = true;
   String? _errorMessage;
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 5afc921a (fix: detail proses)
 
   @override
   void initState() {
@@ -126,6 +137,9 @@ class _WarpingDetailScreenState extends State<WarpingDetailScreen> {
 
     try {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5afc921a (fix: detail proses)
       final warpingService =
           Provider.of<WarpingService>(context, listen: false);
 
@@ -150,6 +164,7 @@ class _WarpingDetailScreenState extends State<WarpingDetailScreen> {
       } else {
         _greigeOrder = {};
       }
+<<<<<<< HEAD
       setState(() {
         _data = detail;
 
@@ -169,12 +184,20 @@ class _WarpingDetailScreenState extends State<WarpingDetailScreen> {
 =======
       await Provider.of<WarpingService>(context, listen: false)
           .getDataView(context, widget.id);
+=======
+>>>>>>> 5afc921a (fix: detail proses)
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
       if (mounted) {
+<<<<<<< HEAD
         setState(() => _isLoading = false);
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+        setState(() {
+          _isLoading = false;
+        });
+>>>>>>> 5afc921a (fix: detail proses)
       }
     }
   }
@@ -403,15 +426,37 @@ class _ErrorView extends StatelessWidget {
               );
             }
 
-            final data = _detailData(service.dataView);
+            final data = Map<String, dynamic>.from(
+              _detailData(service.dataView),
+            );
 
+            if (_greigeOrder.isNotEmpty) {
+              data['order_greige'] = _greigeOrder;
+            }
             return GreigeProcessDetailList(
               data: data,
               processName: 'Warping',
               processNoKey: 'warping_no',
               onRefresh: _fetchDetail,
-              canDelete: widget.canDelete == true,
+              canDelete: widget.canDelete,
+              canUpdate: widget.canUpdate,
               onDelete: () => _handleDelete(data),
+              onEdit: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditWarpingScreen(
+                      id: widget.id,
+                    ),
+                  ),
+                );
+
+                if (!mounted) return;
+
+                if (result == true) {
+                  Navigator.pop(context, true);
+                }
+              },
             );
           },
         ),
@@ -420,6 +465,7 @@ class _ErrorView extends StatelessWidget {
   }
 }
 
+<<<<<<< HEAD
 class _WarpingDetailHeader extends StatelessWidget {
   final Map<String, dynamic> data;
   final bool canDelete;
@@ -1316,6 +1362,8 @@ class _EmptyText extends StatelessWidget {
   }
 }
 
+=======
+>>>>>>> 5afc921a (fix: detail proses)
 class _ErrorView extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
@@ -1350,77 +1398,4 @@ class _ErrorView extends StatelessWidget {
       ),
     );
   }
-}
-
-extension _SeparatedWidgets on List<Widget> {
-  List<Widget> separatedBy(Widget separator) {
-    if (isEmpty) return this;
-
-    final widgets = <Widget>[];
-    for (var i = 0; i < length; i++) {
-      widgets.add(this[i]);
-      if (i != length - 1) widgets.add(separator);
-    }
-    return widgets;
-  }
-}
-
-Map<String, dynamic> _mapValue(dynamic value) {
-  if (value is Map<String, dynamic>) return value;
-  if (value is Map) return Map<String, dynamic>.from(value);
-  return <String, dynamic>{};
-}
-
-List<Map<String, dynamic>> _listValue(dynamic value) {
-  if (value is List) {
-    return value
-        .whereType<Map>()
-        .map((item) => Map<String, dynamic>.from(item))
-        .toList();
-  }
-  return <Map<String, dynamic>>[];
-}
-
-String _display(dynamic value) {
-  if (value == null || value.toString().isEmpty) return '-';
-  return value.toString();
-}
-
-String _withUnit(dynamic value, String unit) {
-  if (value == null || value.toString().isEmpty) return '-';
-  final formatted = formatNumber(value);
-  if (unit.isEmpty) return formatted;
-  return '$formatted $unit';
-}
-
-String _formatDate(dynamic value) {
-  if (value == null || value.toString().isEmpty) return '-';
-
-  try {
-    return DateFormat('dd MMM yyyy').format(DateTime.parse(value.toString()));
-  } catch (_) {
-    return value.toString();
-  }
-}
-
-String _formatDateTime(dynamic value) {
-  if (value == null || value.toString().isEmpty) return '-';
-
-  try {
-    return DateFormat('dd MMM yyyy, HH.mm')
-        .format(DateTime.parse(value.toString()));
-  } catch (_) {
-    return value.toString();
-  }
-}
-
-String _formatType(dynamic value) {
-  if (value == null || value.toString().isEmpty) return '-';
-
-  return value
-      .toString()
-      .split('_')
-      .map((word) =>
-          word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
-      .join(' ');
 }

@@ -552,6 +552,7 @@ class _WarpingScreenState extends State<WarpingScreen> {
 <<<<<<< HEAD
                       subtitleKey: 'order_greige',
                       subtitleField: 'og_no',
+<<<<<<< HEAD
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -641,9 +642,26 @@ class _WarpingScreenState extends State<WarpingScreen> {
 >>>>>>> d8439a4 (fix: refactor code)
                       ),
                       onDelete: () => _handleDeleteItem(item),
+=======
+>>>>>>> 5afc921a (fix: detail proses)
                     ),
                     onItemTap: (context, item) {
-                      _openProcessDetail(item);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WarpingDetailScreen(
+                              id: item['id'].toString(),
+                              no: item['warping_no'].toString(),
+                              canDelete: _canDelete,
+                              canUpdate: _canUpdate,
+                            ),
+                          )).then((value) {
+                        if (value == true) {
+                          _refetch();
+                        } else {
+                          return null;
+                        }
+                      });
                     },
                     filterWidget: ListFilter(
                       params: params,

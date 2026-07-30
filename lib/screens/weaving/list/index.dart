@@ -510,6 +510,7 @@ class _WeavingScreenState extends State<WeavingScreen> {
                       subtitleField: 'og_no',
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
+<<<<<<< HEAD
 =======
                       subtitleKey: 'work_orders',
                       subtitleField: 'wo_no',
@@ -526,17 +527,27 @@ class _WeavingScreenState extends State<WeavingScreen> {
                     ),
                     onItemTap: (context, item) {
 <<<<<<< HEAD
+=======
+                    ),
+                    onItemTap: (context, item) {
+>>>>>>> 5afc921a (fix: detail proses)
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => WeavingDetailScreen(
                               id: item['id'].toString(),
 <<<<<<< HEAD
+<<<<<<< HEAD
                               no: item['weaving_no'].toString(),
                               canDelete: _canDelete,
                               canUpdate: _canUpdate,
 =======
 >>>>>>> d8439a4 (fix: refactor code)
+=======
+                              no: item['weaving_no'].toString(),
+                              canDelete: _canDelete,
+                              canUpdate: _canUpdate,
+>>>>>>> 5afc921a (fix: detail proses)
                             ),
                           )).then((value) {
                         if (value == true) {
@@ -545,9 +556,12 @@ class _WeavingScreenState extends State<WeavingScreen> {
                           return null;
                         }
                       });
+<<<<<<< HEAD
 =======
                       _openProcessDetail(item);
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> 5afc921a (fix: detail proses)
                     },
                     filterWidget: ListFilter(
                       params: params,

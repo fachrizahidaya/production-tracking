@@ -22,7 +22,9 @@ import 'package:url_launcher/url_launcher.dart';
 =======
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/button/action_button.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_html.dart';
@@ -37,6 +39,7 @@ class GreigeProcessDetailList extends StatelessWidget {
   final String processNoKey;
   final Future<void> Function() onRefresh;
   final bool canDelete;
+<<<<<<< HEAD
 <<<<<<< HEAD
   final bool canUpdate;
   final VoidCallback onDelete;
@@ -59,8 +62,13 @@ class GreigeProcessDetailList extends StatelessWidget {
       this.withBrokenYarns = false,
       this.withAttachments = false});
 =======
+=======
+  final bool canUpdate;
+>>>>>>> 5afc921a (fix: detail proses)
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
+<<<<<<< HEAD
   const GreigeProcessDetailList({
     super.key,
     required this.data,
@@ -71,6 +79,18 @@ class GreigeProcessDetailList extends StatelessWidget {
     required this.onDelete,
   });
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+  const GreigeProcessDetailList(
+      {super.key,
+      required this.data,
+      required this.processName,
+      required this.processNoKey,
+      required this.onRefresh,
+      required this.canDelete,
+      required this.onDelete,
+      required this.onEdit,
+      required this.canUpdate});
+>>>>>>> 5afc921a (fix: detail proses)
 
   @override
   Widget build(BuildContext context) {
@@ -113,12 +133,18 @@ class GreigeProcessDetailList extends StatelessWidget {
     final canShowDelete = canDelete && data['can_delete'] != false;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5afc921a (fix: detail proses)
     final status = data['status']?.toString().toLowerCase() ?? '';
     final canShowEdit =
         canUpdate && (status == 'diproses' || status.contains('diproses'));
 
+<<<<<<< HEAD
 =======
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+>>>>>>> 5afc921a (fix: detail proses)
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
       child: Row(
@@ -127,6 +153,7 @@ class GreigeProcessDetailList extends StatelessWidget {
             tooltip: 'Kembali',
             onPressed: () => Navigator.pop(context),
 <<<<<<< HEAD
+<<<<<<< HEAD
             icon: const Icon(
               Icons.chevron_left_outlined,
             ),
@@ -134,11 +161,17 @@ class GreigeProcessDetailList extends StatelessWidget {
             icon: const Icon(Icons.chevron_left_outlined, size: 28),
             color: Colors.grey.shade700,
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+            icon: const Icon(
+              Icons.chevron_left_outlined,
+            ),
+>>>>>>> 5afc921a (fix: detail proses)
           ),
           Expanded(
             child: Text(
               'Detail Proses $processName',
               style: TextStyle(
+<<<<<<< HEAD
 <<<<<<< HEAD
                 fontSize: CustomTheme().fontSize('xl'),
               ),
@@ -159,12 +192,25 @@ class GreigeProcessDetailList extends StatelessWidget {
 =======
                 fontSize: isTablet ? 22 : 18,
                 color: Colors.grey.shade900,
+=======
+                fontSize: CustomTheme().fontSize('xl'),
+>>>>>>> 5afc921a (fix: detail proses)
               ),
             ),
           ),
+          if (canShowEdit) ...[
+            ActionTextButton(
+              label: 'Edit',
+              onPressed: onEdit,
+            ),
+          ],
           if (canShowDelete)
-            ElevatedButton(
+            ActionTextButton(
+              label: 'Hapus',
+              textColor: Colors.red,
+              borderColor: Colors.red,
               onPressed: onDelete,
+<<<<<<< HEAD
               style: ElevatedButton.styleFrom(
                 backgroundColor: CustomTheme().buttonColor('danger'),
                 foregroundColor: Colors.white,
@@ -179,6 +225,8 @@ class GreigeProcessDetailList extends StatelessWidget {
               ),
               child: Text('Hapus $processName'),
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+>>>>>>> 5afc921a (fix: detail proses)
             ),
         ],
       ),
@@ -216,10 +264,14 @@ class GreigeProcessDetailList extends StatelessWidget {
           children: [
             Text(
 <<<<<<< HEAD
+<<<<<<< HEAD
               'No. OG',
 =======
               'No. Order Greige',
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+              'No. OG',
+>>>>>>> 5afc921a (fix: detail proses)
               style: TextStyle(
                 fontSize: CustomTheme().fontSize('lg'),
                 fontWeight: CustomTheme().fontWeight('semibold'),
@@ -464,6 +516,9 @@ class GreigeProcessDetailList extends StatelessWidget {
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5afc921a (fix: detail proses)
           Column(
             children: [
               _buildSectionCard(
@@ -483,6 +538,7 @@ class GreigeProcessDetailList extends StatelessWidget {
               ),
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
+<<<<<<< HEAD
 =======
           // Column(
           //   children: [
@@ -506,6 +562,8 @@ class GreigeProcessDetailList extends StatelessWidget {
           // ].separatedBy(CustomTheme().vGap('xl')),
           // ),
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+>>>>>>> 5afc921a (fix: detail proses)
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
@@ -865,6 +923,7 @@ class GreigeProcessDetailList extends StatelessWidget {
     required Widget child,
   }) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     return TemplateCard(
       icon: icon,
       title: title,
@@ -879,9 +938,14 @@ class GreigeProcessDetailList extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
+=======
+    return TemplateCard(
+      icon: icon,
+      title: title,
+>>>>>>> 5afc921a (fix: detail proses)
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+<<<<<<< HEAD
           Row(
             children: [
               Container(
@@ -909,6 +973,8 @@ class GreigeProcessDetailList extends StatelessWidget {
             ].separatedBy(CustomTheme().hGap('md')),
           ),
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+>>>>>>> 5afc921a (fix: detail proses)
           child,
         ].separatedBy(CustomTheme().vGap('lg')),
       ),

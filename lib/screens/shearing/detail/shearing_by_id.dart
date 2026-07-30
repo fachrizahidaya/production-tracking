@@ -12,6 +12,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/shearing/detail/edit_shearing.dart';
 =======
@@ -37,6 +38,9 @@ import 'package:textile_tracking/screens/detail/%5Bprocess_id%5D.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+import 'package:textile_tracking/screens/shearing/detail/edit_shearing.dart';
+>>>>>>> 5afc921a (fix: detail proses)
 import 'package:textile_tracking/screens/shearing/model/shearing.dart';
 
 class ShearingDetailScreen extends StatefulWidget {
@@ -464,8 +468,25 @@ class _WarpingDetailHeader extends StatelessWidget {
               processName: 'Shearing',
               processNoKey: 'shearing_no',
               onRefresh: _fetchDetail,
-              canDelete: widget.canDelete == true,
+              canDelete: widget.canDelete,
+              canUpdate: widget.canUpdate,
               onDelete: () => _handleDelete(data),
+              onEdit: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditShearingScreen(
+                      id: widget.id,
+                    ),
+                  ),
+                );
+
+                if (!mounted) return;
+
+                if (result == true) {
+                  Navigator.pop(context, true);
+                }
+              },
             );
           },
         ),

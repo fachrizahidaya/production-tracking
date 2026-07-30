@@ -554,6 +554,7 @@ class _ShearingScreenState extends State<ShearingScreen> {
                       subtitleField: 'og_no',
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
+<<<<<<< HEAD
 =======
                       subtitleKey: 'work_orders',
                       subtitleField: 'wo_no',
@@ -570,17 +571,27 @@ class _ShearingScreenState extends State<ShearingScreen> {
                     ),
                     onItemTap: (context, item) {
 <<<<<<< HEAD
+=======
+                    ),
+                    onItemTap: (context, item) {
+>>>>>>> 5afc921a (fix: detail proses)
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ShearingDetailScreen(
                               id: item['id'].toString(),
 <<<<<<< HEAD
+<<<<<<< HEAD
                               no: item['shearing_no'].toString(),
                               canDelete: _canDelete,
                               canUpdate: _canUpdate,
 =======
 >>>>>>> d8439a4 (fix: refactor code)
+=======
+                              no: item['shearing_no'].toString(),
+                              canDelete: _canDelete,
+                              canUpdate: _canUpdate,
+>>>>>>> 5afc921a (fix: detail proses)
                             ),
                           )).then((value) {
                         if (value == true) {
@@ -589,9 +600,12 @@ class _ShearingScreenState extends State<ShearingScreen> {
                           return null;
                         }
                       });
+<<<<<<< HEAD
 =======
                       _openProcessDetail(item);
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> 5afc921a (fix: detail proses)
                     },
                     filterWidget: ListFilter(
                       params: params,

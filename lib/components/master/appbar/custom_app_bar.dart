@@ -12,7 +12,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onNotifications;
   final String notificationTooltip;
   final bool isWithAccount;
-  final bool showAvatar;
   final bool showNameWithAvatar;
   final tab;
   final bool? canDelete;
@@ -62,10 +61,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.name,
       this.handleFinish,
       this.isLoading = false,
-      this.isDashboardSettingsLoading = false,
-      this.onDashboardSettings,
-      this.onReportSettings,
-      this.onEdit,
       this.showNameWithAvatar = false});
 
   @override
@@ -138,21 +133,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                  if (showAvatar)
-                    CircleAvatar(
-                      radius: 16,
-                      backgroundColor: CustomTheme().colors('primary'),
-                      child: Text(
-                        getInitial(name),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: CustomTheme().fontSize('sm'),
-                        ),
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundColor: CustomTheme().colors('primary'),
+                    child: Text(
+                      getInitial(name),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: CustomTheme().fontSize('sm'),
                       ),
-                    )
-                  else
-                    const Icon(Icons.account_circle_outlined),
+                    ),
+                  ),
                 ].separatedBy(CustomTheme().hGap('xl'))),
             color: Colors.white,
             offset: Offset(0, 40),

@@ -2,7 +2,9 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/button/action_button.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_html.dart';
@@ -16,17 +18,20 @@ class GreigeProcessDetailList extends StatelessWidget {
   final String processNoKey;
   final Future<void> Function() onRefresh;
   final bool canDelete;
+  final bool canUpdate;
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
-  const GreigeProcessDetailList({
-    super.key,
-    required this.data,
-    required this.processName,
-    required this.processNoKey,
-    required this.onRefresh,
-    required this.canDelete,
-    required this.onDelete,
-  });
+  const GreigeProcessDetailList(
+      {super.key,
+      required this.data,
+      required this.processName,
+      required this.processNoKey,
+      required this.onRefresh,
+      required this.canDelete,
+      required this.onDelete,
+      required this.onEdit,
+      required this.canUpdate});
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +64,10 @@ class GreigeProcessDetailList extends StatelessWidget {
   Widget _buildTopBar(BuildContext context, bool isTablet) {
     final canShowDelete = canDelete && data['can_delete'] != false;
 
+    final status = data['status']?.toString().toLowerCase() ?? '';
+    final canShowEdit =
+        canUpdate && (status == 'diproses' || status.contains('diproses'));
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
       child: Row(
@@ -66,34 +75,30 @@ class GreigeProcessDetailList extends StatelessWidget {
           IconButton(
             tooltip: 'Kembali',
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.chevron_left_outlined, size: 28),
-            color: Colors.grey.shade700,
+            icon: const Icon(
+              Icons.chevron_left_outlined,
+            ),
           ),
           Expanded(
             child: Text(
               'Detail Proses $processName',
               style: TextStyle(
-                fontSize: isTablet ? 22 : 18,
-                color: Colors.grey.shade900,
+                fontSize: CustomTheme().fontSize('xl'),
               ),
             ),
           ),
+          if (canShowEdit) ...[
+            ActionTextButton(
+              label: 'Edit',
+              onPressed: onEdit,
+            ),
+          ],
           if (canShowDelete)
-            ElevatedButton(
+            ActionTextButton(
+              label: 'Hapus',
+              textColor: Colors.red,
+              borderColor: Colors.red,
               onPressed: onDelete,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CustomTheme().buttonColor('danger'),
-                foregroundColor: Colors.white,
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text('Hapus $processName'),
             ),
         ],
       ),
@@ -130,7 +135,7 @@ class GreigeProcessDetailList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'No. Order Greige',
+              'No. OG',
               style: TextStyle(
                 fontSize: CustomTheme().fontSize('lg'),
                 fontWeight: CustomTheme().fontWeight('semibold'),
@@ -304,27 +309,25 @@ class GreigeProcessDetailList extends StatelessWidget {
               ),
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
-          // Column(
-          //   children: [
-
-          // _buildSectionCard(
-          //   title: 'Kebutuhan Benang',
-          //   icon: Icons.layers_outlined,
-          //   child: _buildYarnItems(true),
-          // ),
-          // _buildSectionCard(
-          //   title: 'Kebutuhan Loom Beam',
-          //   icon: Icons.inventory_2_outlined,
-          //   child: _buildLoomBeams(true),
-          // ),
-          // _buildSectionCard(
-          //   title: 'Catatan Order Greige',
-          //   icon: Icons.note_alt_outlined,
-          //   child:
-          //       _buildNote(_mapValue(data['order_greige'])['notes']),
-          // ),
-          // ].separatedBy(CustomTheme().vGap('xl')),
-          // ),
+          Column(
+            children: [
+              _buildSectionCard(
+                title: 'Kebutuhan Benang',
+                icon: Icons.layers_outlined,
+                child: _buildYarnItems(true),
+              ),
+              _buildSectionCard(
+                title: 'Kebutuhan Loom Beam',
+                icon: Icons.inventory_2_outlined,
+                child: _buildLoomBeams(true),
+              ),
+              _buildSectionCard(
+                title: 'Catatan Order Greige',
+                icon: Icons.note_alt_outlined,
+                child: _buildNote(_mapValue(data['order_greige'])['notes']),
+              ),
+            ].separatedBy(CustomTheme().vGap('xl')),
+          ),
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
@@ -467,42 +470,11 @@ class GreigeProcessDetailList extends StatelessWidget {
     required IconData icon,
     required Widget child,
   }) {
-    return Container(
-      width: double.infinity,
-      padding: CustomTheme().padding('card'),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
+    return TemplateCard(
+      icon: icon,
+      title: title,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: CustomTheme().colors('primary').withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  icon,
-                  size: 20,
-                  color: CustomTheme().colors('primary'),
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: CustomTheme().fontSize('lg'),
-                    fontWeight: CustomTheme().fontWeight('bold'),
-                    color: Colors.grey[800],
-                  ),
-                ),
-              ),
-            ].separatedBy(CustomTheme().hGap('md')),
-          ),
           child,
         ].separatedBy(CustomTheme().vGap('lg')),
       ),

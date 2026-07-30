@@ -323,14 +323,24 @@ class _WarpingScreenState extends State<WarpingScreen> {
                       titleKey: 'warping_no',
                       subtitleKey: 'order_greige',
                       subtitleField: 'og_no',
-                      onUpdate: () => _openProcessDetail(
-                        item,
-                        openUpdateOnStart: true,
-                      ),
-                      onDelete: () => _handleDeleteItem(item),
                     ),
                     onItemTap: (context, item) {
-                      _openProcessDetail(item);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WarpingDetailScreen(
+                              id: item['id'].toString(),
+                              no: item['warping_no'].toString(),
+                              canDelete: _canDelete,
+                              canUpdate: _canUpdate,
+                            ),
+                          )).then((value) {
+                        if (value == true) {
+                          _refetch();
+                        } else {
+                          return null;
+                        }
+                      });
                     },
                     filterWidget: ListFilter(
                       params: params,

@@ -8,6 +8,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
+import 'package:textile_tracking/screens/sizing/detail/edit_sizing.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 
 class SizingDetailScreen extends StatefulWidget {
@@ -151,8 +152,25 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
               processName: 'Sizing',
               processNoKey: 'sizing_no',
               onRefresh: _fetchDetail,
-              canDelete: widget.canDelete == true,
+              canDelete: widget.canDelete,
+              canUpdate: widget.canUpdate,
               onDelete: () => _handleDelete(data),
+              onEdit: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditSizingScreen(
+                      id: widget.id,
+                    ),
+                  ),
+                );
+
+                if (!mounted) return;
+
+                if (result == true) {
+                  Navigator.pop(context, true);
+                }
+              },
             );
           },
         ),

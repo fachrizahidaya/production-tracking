@@ -325,12 +325,24 @@ class _WeavingScreenState extends State<WeavingScreen> {
                       subtitleField: 'og_no',
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
-                      onUpdate: () =>
-                          _openProcessDetail(item, openUpdateOnStart: true),
-                      onDelete: () => _handleDeleteItem(item),
                     ),
                     onItemTap: (context, item) {
-                      _openProcessDetail(item);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WeavingDetailScreen(
+                              id: item['id'].toString(),
+                              no: item['weaving_no'].toString(),
+                              canDelete: _canDelete,
+                              canUpdate: _canUpdate,
+                            ),
+                          )).then((value) {
+                        if (value == true) {
+                          _refetch();
+                        } else {
+                          return null;
+                        }
+                      });
                     },
                     filterWidget: ListFilter(
                       params: params,

@@ -325,12 +325,24 @@ class _ShearingScreenState extends State<ShearingScreen> {
                       subtitleField: 'og_no',
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
-                      onUpdate: () =>
-                          _openProcessDetail(item, openUpdateOnStart: true),
-                      onDelete: () => _handleDeleteItem(item),
                     ),
                     onItemTap: (context, item) {
-                      _openProcessDetail(item);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ShearingDetailScreen(
+                              id: item['id'].toString(),
+                              no: item['shearing_no'].toString(),
+                              canDelete: _canDelete,
+                              canUpdate: _canUpdate,
+                            ),
+                          )).then((value) {
+                        if (value == true) {
+                          _refetch();
+                        } else {
+                          return null;
+                        }
+                      });
                     },
                     filterWidget: ListFilter(
                       params: params,

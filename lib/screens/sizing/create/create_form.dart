@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/screens/create/create_process_manual.dart';
-import 'package:textile_tracking/screens/sizing/model/sizing.dart';
+import 'package:textile_tracking/screens/sizing/create/create_sizing_process_manual.dart';
 
 class CreateForm extends StatelessWidget {
   final dynamic id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
   final handleSubmit;
-  final fetchWorkOrder;
   final processId;
 
   const CreateForm(
@@ -16,27 +14,16 @@ class CreateForm extends StatelessWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.fetchWorkOrder,
       this.processId});
 
   @override
   Widget build(BuildContext context) {
-    final SizingService sizingService = SizingService();
-
-    return CreateProcessManual(
-      title: 'Mulai Sizing',
-      label: 'Sizing',
+    return CreateSizingProcessManual(
       id: id,
       data: data,
-      form: form,
       processId: processId,
-      processService: sizingService,
-      idProcess: 'sizing_id',
+      form: form,
       handleSubmit: handleSubmit,
-      fetchWorkOrder: (service) => service.fetchSizingOptions(),
-      getWorkOrderOptions: (service) => service.dataListOption,
-      fetchMachine: (service) => service.fetchOptionsSizing(),
-      getMachineOptions: (service) => service.dataListOption,
     );
   }
 }

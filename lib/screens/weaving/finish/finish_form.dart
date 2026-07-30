@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/screens/finish/%5Bfinish_process_id%5D.dart';
-import 'package:textile_tracking/screens/weaving/model/weaving.dart';
+import 'package:textile_tracking/screens/weaving/finish/finish_weaving_process_manual.dart';
 
 class FinishForm extends StatefulWidget {
   final id;
@@ -32,8 +31,6 @@ class FinishForm extends StatefulWidget {
 }
 
 class _FinishFormState extends State<FinishForm> {
-  final WeavingService _weavingService = WeavingService();
-
   @override
   void initState() {
     super.initState();
@@ -49,22 +46,13 @@ class _FinishFormState extends State<FinishForm> {
 
   @override
   Widget build(BuildContext context) {
-    return FinishProcessManual(
-      title: 'Selesai Weaving',
+    return FinishWeavingProcessManual(
       id: widget.id,
+      processId: widget.processId,
       data: widget.data,
-      label: 'Weaving',
       form: widget.form,
       handleSubmit: widget.handleSubmit,
-      fetchWorkOrder: (service) => service.fetchWeavingFinishOptions(),
-      getWorkOrderOptions: (service) => service.dataListOption,
-      processService: _weavingService,
       handleChangeInput: widget.handleChangeInput,
-      idProcess: 'weaving_id',
-      processId: widget.processId,
-      forDyeing: widget.forDyeing,
-      withItemGrade: widget.withItemGrade,
-      withQtyAndWeight: widget.withQtyAndWeight,
     );
   }
 }

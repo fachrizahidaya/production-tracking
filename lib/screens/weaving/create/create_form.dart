@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/screens/create/create_process_manual.dart';
-import 'package:textile_tracking/screens/weaving/model/weaving.dart';
+import 'package:textile_tracking/screens/weaving/create/create_weaving_process_manual.dart';
 
 class CreateForm extends StatelessWidget {
   final dynamic id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
   final handleSubmit;
-  final fetchWorkOrder;
   final processId;
 
   const CreateForm(
@@ -16,27 +14,16 @@ class CreateForm extends StatelessWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.fetchWorkOrder,
       this.processId});
 
   @override
   Widget build(BuildContext context) {
-    final WeavingService weavingService = WeavingService();
-
-    return CreateProcessManual(
-      title: 'Mulai Weaving',
-      label: 'Weaving',
+    return CreateWeavingProcessManual(
       id: id,
       data: data,
-      form: form,
       processId: processId,
-      processService: weavingService,
-      idProcess: 'weaving_id',
+      form: form,
       handleSubmit: handleSubmit,
-      fetchWorkOrder: (service) => service.fetchWeavingOptions(),
-      getWorkOrderOptions: (service) => service.dataListOption,
-      fetchMachine: (service) => service.fetchOptionsWeaving(),
-      getMachineOptions: (service) => service.dataListOption,
     );
   }
 }

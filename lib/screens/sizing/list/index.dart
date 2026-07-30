@@ -16,6 +16,7 @@ import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/sizing/create/create_sizing.dart';
+import 'package:textile_tracking/screens/sizing/detail/edit_sizing.dart';
 import 'package:textile_tracking/screens/sizing/detail/sizing_by_id.dart';
 import 'package:textile_tracking/screens/sizing/finish/finish_sizing.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
@@ -186,15 +187,27 @@ class _SizingScreenState extends State<SizingScreen> {
     dynamic item, {
     bool openUpdateOnStart = false,
   }) async {
+    final status = item['status']?.toString().toLowerCase() ?? '';
+    final isInProgress = status == 'diproses' || status.contains('diproses');
+
     final value = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SizingDetailScreen(
-          id: item['id'].toString(),
-          no: item['sizing_no'].toString(),
-          canDelete: _canDelete,
-          canUpdate: _canUpdate,
-        ),
+        builder: (context) {
+          if (isInProgress) {
+            return EditSizingScreen(
+              id: item['id'].toString(),
+            );
+          }
+
+          return SizingDetailScreen(
+            id: item['id'].toString(),
+            no: item['sizing_no'].toString(),
+            canDelete: _canDelete,
+            canUpdate: _canUpdate,
+            openUpdateOnStart: openUpdateOnStart,
+          );
+        },
       ),
     );
 
@@ -310,31 +323,18 @@ class _SizingScreenState extends State<SizingScreen> {
                       label: 'No. Sizing',
                       item: item,
                       titleKey: 'sizing_no',
-                      subtitleKey: 'work_orders',
-                      subtitleField: 'wo_no',
+                      subtitleKey: 'order_greige',
+                      subtitleField: 'og_no',
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
-                      onUpdate: () =>
-                          _openProcessDetail(item, openUpdateOnStart: true),
+                      onUpdate: () => _openProcessDetail(
+                        item,
+                        openUpdateOnStart: true,
+                      ),
                       onDelete: () => _handleDeleteItem(item),
                     ),
                     onItemTap: (context, item) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SizingDetailScreen(
-                              id: item['id'].toString(),
-                              no: item['sizing_no'].toString(),
-                              canDelete: _canDelete,
-                              canUpdate: _canUpdate,
-                            ),
-                          )).then((value) {
-                        if (value == true) {
-                          _refetch();
-                        } else {
-                          return null;
-                        }
-                      });
+                      _openProcessDetail(item);
                     },
                     filterWidget: ListFilter(
                       params: params,

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/screens/create/create_process_manual.dart';
-import 'package:textile_tracking/screens/warping/model/warping.dart';
+import 'package:textile_tracking/screens/warping/create/create_warping_process_manual.dart';
 
 class CreateForm extends StatelessWidget {
   final dynamic id;
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
   final handleSubmit;
-  final fetchWorkOrder;
   final processId;
 
   const CreateForm(
@@ -16,27 +14,16 @@ class CreateForm extends StatelessWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.fetchWorkOrder,
       this.processId});
 
   @override
   Widget build(BuildContext context) {
-    final WarpingService warpingService = WarpingService();
-
-    return CreateProcessManual(
-      title: 'Mulai Warping',
-      label: 'Warping',
+    return CreateWarpingProcessManual(
       id: id,
       data: data,
-      form: form,
       processId: processId,
-      processService: warpingService,
-      idProcess: 'warping_id',
+      form: form,
       handleSubmit: handleSubmit,
-      fetchWorkOrder: (service) => service.fetchWarpingOptions(),
-      getWorkOrderOptions: (service) => service.dataListOption,
-      fetchMachine: (service) => service.fetchOptionsWarping(),
-      getMachineOptions: (service) => service.dataListOption,
     );
   }
 }

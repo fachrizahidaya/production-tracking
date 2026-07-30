@@ -168,6 +168,7 @@ dependencies:
 >>>>>>> 759c55ce (chore: update version)
   android_id: ^0.4.0
   flutter_local_notifications: ^19.4.0
+<<<<<<< HEAD
 =======
 >>>>>>> 25f3ec5 (fix: create)
 =======
@@ -177,6 +178,10 @@ dependencies:
 =======
   flutter_local_notifications: ^19.4.0
 >>>>>>> 16778356 (feat: fcm notification)
+=======
+  connectivity_plus: ^6.0.5
+  internet_connection_checker_plus: ^3.1.1
+>>>>>>> 7731bab3 (chore: install package)
 
 dev_dependencies:
   flutter_test:

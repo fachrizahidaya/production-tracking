@@ -98,6 +98,7 @@ packages:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ef28ba96 (chore: update necessary)
     version: "1.19.1"
@@ -119,6 +120,9 @@ packages:
 =======
     version: "1.19.1"
 >>>>>>> 6664a0f3 (chore: update version)
+=======
+    version: "1.19.0"
+>>>>>>> 7731bab3 (chore: install package)
   connectivity_plus:
     dependency: "direct main"
     description:
@@ -135,6 +139,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -174,6 +179,8 @@ packages:
 >>>>>>> f1fbda3e (chore: install package)
 =======
 >>>>>>> 0992ab27 (fix: user name di appbar)
+=======
+>>>>>>> 7731bab3 (chore: install package)
   cross_file:
     dependency: transitive
     description:
@@ -692,6 +699,7 @@ packages:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: "43edc904d8b8a9f5a2f871e9317a352ca005641b2f158a8b22732447c9f3994e"
       url: "https://pub.dev"
     source: hosted
@@ -715,6 +723,12 @@ packages:
     source: hosted
     version: "3.1.2"
 >>>>>>> 593bbd5e (chore: for iOS)
+=======
+      sha256: "2c39c48ac73c71fcaad25d67a399eaf10bd72e674b754393c1ced09d199979b6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
+>>>>>>> 7731bab3 (chore: install package)
   intl:
     dependency: transitive
     description:

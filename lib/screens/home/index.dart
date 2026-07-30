@@ -475,11 +475,16 @@ class _HomeState extends State<Home> {
           return Scaffold(
             appBar: CustomAppBar(
               title: 'TexTrack',
+              isWithNotification: true,
               handleLogout: () => _handleLogout(context),
               isWithAccount: true,
               user: user,
               name: name,
+<<<<<<< HEAD
 >>>>>>> d8439a4 (fix: refactor code)
+=======
+              showNameWithAvatar: true,
+>>>>>>> 632c9e3 (fix: show logged in name di appbar)
             ),
           ),
         );

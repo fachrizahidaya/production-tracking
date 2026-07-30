@@ -126,6 +126,7 @@ class _DashboardState extends State<Dashboard> {
     };
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+<<<<<<< HEAD
       if (!mounted) return;
 
       setState(() {
@@ -137,10 +138,13 @@ class _DashboardState extends State<Dashboard> {
       });
 
       _fetchDashboardWidgets();
+=======
+>>>>>>> 632c9e3 (fix: show logged in name di appbar)
       if (mounted) {
         _loadDashboardData();
       }
     });
+<<<<<<< HEAD
   }
 
   @override
@@ -328,6 +332,8 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
     );
+=======
+>>>>>>> 632c9e3 (fix: show logged in name di appbar)
   }
 
   bool get shouldHideActiveMachine {
@@ -482,7 +488,14 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         machineList = service.dataList;
       });
+<<<<<<< HEAD
     } catch (e) {
+=======
+    } catch (e, s) {
+      debugPrint('Machine Error: $e');
+      debugPrintStack(stackTrace: s);
+
+>>>>>>> 632c9e3 (fix: show logged in name di appbar)
       if (!mounted) return;
 
       setState(() {

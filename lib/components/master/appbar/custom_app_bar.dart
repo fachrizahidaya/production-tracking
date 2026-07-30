@@ -8,6 +8,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onReturn;
   final List<Widget>? actions;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final bool isWithNotification;
   final int notificationCount;
   final VoidCallback? onNotifications;
@@ -16,16 +17,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 >>>>>>> d8439a4 (fix: refactor code)
   final bool isWithAccount;
   final bool showAvatar;
+=======
+  final bool isWithNotification;
+  final bool isWithAccount;
+>>>>>>> 632c9e3 (fix: show logged in name di appbar)
   final bool showNameWithAvatar;
   final tab;
+  final bool? canDelete;
+  final bool? canUpdate;
   final handleDelete;
   final handleUpdate;
+  final handleFinish;
   final handleLogout;
   final id;
   final label;
   final user;
   final deleteStatus;
   final updateStatus;
+  final isTextEditor;
+  final handleSave;
   final name;
   final bool isLoading;
   final bool isDashboardSettingsLoading;
@@ -39,15 +49,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onReturn,
       this.actions,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.isWithNotification = false,
       this.notificationCount = 0,
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
 =======
 >>>>>>> d8439a4 (fix: refactor code)
+=======
+      this.isWithNotification = false,
+>>>>>>> 632c9e3 (fix: show logged in name di appbar)
       this.isWithAccount = false,
       this.showAvatar = true,
       this.tab,
+      this.canDelete,
+      this.canUpdate,
       this.handleDelete,
       this.handleUpdate,
       this.id,
@@ -56,7 +72,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.user,
       this.deleteStatus,
       this.updateStatus,
+      this.isTextEditor = false,
+      this.handleSave,
       this.name,
+<<<<<<< HEAD
 <<<<<<< HEAD
       this.handleFinish,
       this.isLoading = false,
@@ -68,6 +87,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 =======
       this.isLoading = false});
 >>>>>>> d8439a4 (fix: refactor code)
+=======
+      this.handleFinish,
+      this.isLoading = false,
+      this.showNameWithAvatar = false});
+>>>>>>> 632c9e3 (fix: show logged in name di appbar)
 
   @override
   Widget build(BuildContext context) {
@@ -139,6 +163,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+<<<<<<< HEAD
                   if (showAvatar)
                     CircleAvatar(
                       radius: 16,
@@ -154,6 +179,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     )
                   else
                     const Icon(Icons.account_circle_outlined),
+=======
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundColor: CustomTheme().colors('primary'),
+                    child: Text(
+                      getInitial(name),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: CustomTheme().fontSize('sm'),
+                      ),
+                    ),
+                  ),
+>>>>>>> 632c9e3 (fix: show logged in name di appbar)
                 ].separatedBy(CustomTheme().hGap('xl'))),
             color: Colors.white,
             offset: Offset(0, 40),

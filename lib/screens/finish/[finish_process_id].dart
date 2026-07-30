@@ -1162,6 +1162,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5de4d29 (fix: alert jika ada proses sebelumnya belum selesai)
   bool canStartCurrentProcess(
     List<dynamic> processes,
     String currentProcess,
@@ -1191,8 +1194,11 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     return true;
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> e98896b (fix: finish)
+=======
+>>>>>>> 5de4d29 (fix: alert jika ada proses sebelumnya belum selesai)
   double _getTotalItemQty() {
     final workOrders = data['work_orders'];
     if (workOrders == null) return 0;

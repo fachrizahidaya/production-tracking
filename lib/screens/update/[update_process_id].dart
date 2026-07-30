@@ -21,7 +21,6 @@ import 'package:textile_tracking/screens/update/process/cutting_sewing.dart';
 import 'package:textile_tracking/screens/update/process/long_hemming.dart';
 import 'package:textile_tracking/screens/update/process/machine.dart';
 import 'package:textile_tracking/screens/update/process/sorting.dart';
-import 'package:textile_tracking/screens/update/process/warping.dart';
 
 class UpdateProcess extends StatefulWidget {
   final id;
@@ -506,33 +505,6 @@ class _UpdateProcessState extends State<UpdateProcess>
     });
   }
 
-  void calculateWeavingWeight() {
-    final items = List<Map<String, dynamic>>.from(widget.form['items'] ?? []);
-
-    double total = 0;
-
-    for (final item in items) {
-      final good = parseSafe(item['greige_weight']);
-      final defect = parseSafe(item['waste_weight']);
-
-      total += good + defect;
-    }
-
-    setState(() {
-      widget.handleChangeInput(
-        'weight',
-        total.toStringAsFixed(2),
-      );
-
-      widget.weight.value = TextEditingValue(
-        text: total.toStringAsFixed(2),
-        selection: TextSelection.collapsed(
-          offset: total.toStringAsFixed(2).length,
-        ),
-      );
-    });
-  }
-
   List<Map<String, dynamic>> buildGradesPayload() {
     final items = widget.form['items'] ?? [];
 
@@ -982,11 +954,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                       children: [
                                         if (widget.label == 'Long Hemming' ||
                                             widget.label == 'Cross Cutting' ||
-                                            widget.label == 'Sewing' ||
-                                            widget.label == 'Warping' ||
-                                            widget.label == 'Sizing' ||
-                                            widget.label == 'Weaving' ||
-                                            widget.label == 'Shearing')
+                                            widget.label == 'Sewing')
                                           MachineEditSection(
                                             data: widget.data,
                                             form: widget.form,
@@ -1057,43 +1025,6 @@ class _UpdateProcessState extends State<UpdateProcess>
                                     updateTotalSorting: _updateTotalSorting,
                                     itemTypeOption: widget.itemTypeOption,
                                     data: widget.data,
-                                  ),
-                                if (widget.label == 'Warping')
-                                  WarpingSection(
-                                    items: widget.form['items'] ?? [],
-                                    onChange: (index, key, value) {
-                                      final items =
-                                          List<Map<String, dynamic>>.from(
-                                        widget.form['items'],
-                                      );
-
-                                      items[index][key] = value;
-
-                                      widget.handleChangeInput(
-                                        'items',
-                                        items,
-                                      );
-                                    },
-                                    workOrders: widget.data['work_orders']
-                                            ?['items'] ??
-                                        [],
-                                  ),
-                                if (widget.label == 'Weaving')
-                                  LongHemmingWeightSection(
-                                    items: widget.form['items'] ?? [],
-                                    workOrders: widget.data['work_orders']
-                                            ?['items'] ??
-                                        [],
-                                    onChange: (index, key, value) {
-                                      final items =
-                                          List<Map<String, dynamic>>.from(
-                                              widget.form['items']);
-
-                                      items[index][key] = value;
-
-                                      widget.handleChangeInput('items', items);
-                                    },
-                                    onRecalculate: calculateWeavingWeight,
                                   ),
                                 if (widget.label == 'Packing')
                                   DefaultTabController(

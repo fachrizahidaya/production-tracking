@@ -180,10 +180,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     'total_sorting': '0',
     'semifinished_products': [],
     'items': [],
-    /**
-     * Phase 2
-     */
-    'warping_weight': '0'
   };
 
   final fieldConfigs = [

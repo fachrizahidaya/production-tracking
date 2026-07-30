@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/auth/auth_check.dart';
 import 'package:textile_tracking/models/dashboard/machine.dart';
@@ -111,57 +114,128 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'TexTrack',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        appBarTheme: AppBarTheme(
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
-            titleTextStyle: TextStyle(
-                color: CustomTheme().colors('text-primary'),
-                fontSize: CustomTheme().fontSize('xl'))),
-        drawerTheme: DrawerThemeData(backgroundColor: Colors.white),
-        bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.white),
-        scaffoldBackgroundColor: Colors.white,
-        cardTheme: CardThemeData(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12))),
-          margin: EdgeInsets.all(0),
-          elevation: 0,
+    return InternetListener(
+      child: MaterialApp(
+        title: 'TexTrack',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          appBarTheme: AppBarTheme(
+              backgroundColor: Colors.white,
+              surfaceTintColor: Colors.white,
+              titleTextStyle: TextStyle(
+                  color: CustomTheme().colors('text-primary'),
+                  fontSize: CustomTheme().fontSize('xl'))),
+          drawerTheme: DrawerThemeData(backgroundColor: Colors.white),
+          bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.white),
+          scaffoldBackgroundColor: Colors.white,
+          cardTheme: CardThemeData(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12))),
+            margin: EdgeInsets.all(0),
+            elevation: 0,
+          ),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+          useMaterial3: true,
         ),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-        useMaterial3: true,
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/',
+        routes: {
+          '/': (context) => AuthCheck(),
+          '/dashboard': (context) => Home(),
+          '/profile': (context) => Profile(),
+          '/notification': (context) => NotificationList(),
+          '/dyeings': (context) => DyeingScreen(),
+          '/press': (context) => PressTumblerScreen(),
+          '/tumblers': (context) => TumblerScreen(),
+          '/stenters': (context) => StenterScreen(),
+          '/long-slittings': (context) => LongSittingScreen(),
+          '/long-hemmings': (context) => LongHemmingScreen(),
+          '/cross-cuttings': (context) => CrossCuttingScreen(),
+          '/sewings': (context) => SewingScreen(),
+          '/embroideries': (context) => EmbroideryScreen(),
+          '/sortings': (context) => SortingScreen(),
+          '/packings': (context) => PackingScreen(),
+          '/printings': (context) => PrintingScreen(),
+          '/weaving': (context) => WeavingScreen(),
+          '/sizing': (context) => SizingScreen(),
+          '/warping': (context) => WarpingScreen(),
+          '/shearing': (context) => ShearingScreen(),
+          '/account': (context) => Account(),
+          '/eula': (context) => Eula(),
+          '/privacy-policy': (context) => PrivacyPolicy(),
+          '/terms-conditions': (context) => TermsConditions(),
+        },
       ),
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        '/': (context) => AuthCheck(),
-        '/dashboard': (context) => Home(),
-        '/profile': (context) => Profile(),
-        '/notification': (context) => NotificationList(),
-        '/dyeings': (context) => DyeingScreen(),
-        '/press': (context) => PressTumblerScreen(),
-        '/tumblers': (context) => TumblerScreen(),
-        '/stenters': (context) => StenterScreen(),
-        '/long-slittings': (context) => LongSittingScreen(),
-        '/long-hemmings': (context) => LongHemmingScreen(),
-        '/cross-cuttings': (context) => CrossCuttingScreen(),
-        '/sewings': (context) => SewingScreen(),
-        '/embroideries': (context) => EmbroideryScreen(),
-        '/sortings': (context) => SortingScreen(),
-        '/packings': (context) => PackingScreen(),
-        '/printings': (context) => PrintingScreen(),
-        '/weaving': (context) => WeavingScreen(),
-        '/sizing': (context) => SizingScreen(),
-        '/warping': (context) => WarpingScreen(),
-        '/shearing': (context) => ShearingScreen(),
-        '/account': (context) => Account(),
-        '/eula': (context) => Eula(),
-        '/privacy-policy': (context) => PrivacyPolicy(),
-        '/terms-conditions': (context) => TermsConditions(),
-      },
     );
+  }
+}
+
+class InternetListener extends StatefulWidget {
+  final Widget child;
+
+  const InternetListener({
+    super.key,
+    required this.child,
+  });
+
+  @override
+  State<InternetListener> createState() => _InternetListenerState();
+}
+
+class _InternetListenerState extends State<InternetListener> {
+  StreamSubscription? _subscription;
+  bool _dialogShowing = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _subscription = InternetConnection().onStatusChange.listen((status) {
+      if (!mounted) return;
+
+      if (status == InternetStatus.disconnected) {
+        _showNoInternetDialog();
+      } else {
+        if (_dialogShowing && Navigator.canPop(context)) {
+          Navigator.pop(context);
+          _dialogShowing = false;
+        }
+      }
+    });
+  }
+
+  void _showNoInternetDialog() {
+    if (_dialogShowing) return;
+
+    _dialogShowing = true;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        title: const Text("Tidak ada koneksi"),
+        content: const Text(
+          "Pastikan perangkat terhubung ke internet.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {},
+            child: const Text("Menunggu..."),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }

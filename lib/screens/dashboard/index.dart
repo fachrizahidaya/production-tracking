@@ -234,6 +234,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
       if (!mounted) return;
@@ -254,6 +255,8 @@ class _DashboardState extends State<Dashboard> {
 =======
       _fetchDashboardWidgets();
 >>>>>>> 1155687b (fix: widget dashboard)
+=======
+>>>>>>> b1c3b09b (fix: user name di appbar)
       if (mounted) {
         _loadDashboardData();
       }
@@ -451,193 +454,6 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
-  }
-
-  @override
-  void didUpdateWidget(covariant Dashboard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.isMobile == widget.isMobile) return;
-
-    setState(() {
-      if (_isMobile) {
-        _applyMobileProcessParams();
-      } else {
-        _applyTabletProcessParams();
-      }
-    });
-    _loadMore();
-  }
-
-  Future<Map<String, String>> _getAuthHeaders() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token');
-
-    if (token == null) throw Exception('Unauthenticated');
-
-    return {
-      'Authorization': 'Bearer $token',
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    };
-  }
-
-  Future<void> _fetchDashboardWidgets() async {
-    if (mounted) setState(() => _isDashboardWidgetsLoading = true);
-
-    try {
-      final baseUrl = dotenv.env['API_URL'] ?? '';
-      final headers = await _getAuthHeaders();
-      final keysResponse = await http.get(
-        Uri.parse('$baseUrl/dashboard/widget-keys'),
-        headers: headers,
-      );
-      final widgetsResponse = await http.get(
-        Uri.parse('$baseUrl/dashboard/widgets'),
-        headers: headers,
-      );
-
-      if (keysResponse.statusCode != 200 || widgetsResponse.statusCode != 200) {
-        throw Exception('Gagal mengambil pengaturan widget dashboard');
-      }
-
-      final keyData = List<Map<String, dynamic>>.from(
-        jsonDecode(keysResponse.body)['data'] ?? [],
-      );
-      final widgetData = List<Map<String, dynamic>>.from(
-        jsonDecode(widgetsResponse.body)['data'] ?? [],
-      );
-      final visibilityByValue = {
-        for (final widget in widgetData)
-          widget['value']?.toString() ?? '': widget['is_visible'] == true,
-      };
-      final supportedOptions = keyData
-          .where(
-            (widget) => _supportedDashboardWidgets.contains(
-              widget['value']?.toString(),
-            ),
-          )
-          .toList();
-
-      if (!mounted) return;
-      setState(() {
-        _dashboardWidgetOptions = supportedOptions;
-        for (final option in supportedOptions) {
-          final value = option['value']?.toString();
-          if (value != null) {
-            _dashboardWidgets[value] = visibilityByValue[value] ?? false;
-          }
-        }
-      });
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
-    } finally {
-      if (mounted) setState(() => _isDashboardWidgetsLoading = false);
-    }
-  }
-
-  Future<void> _updateDashboardWidget(
-    String widgetValue,
-    bool isVisible,
-  ) async {
-    final baseUrl = dotenv.env['API_URL'] ?? '';
-    final response = await http.patch(
-      Uri.parse('$baseUrl/dashboard/widgets'),
-      headers: await _getAuthHeaders(),
-      body: jsonEncode({
-        'widgets': [
-          {'value': widgetValue, 'is_visible': isVisible},
-        ],
-      }),
-    );
-
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      dynamic responseData;
-      try {
-        responseData = jsonDecode(response.body);
-      } catch (_) {
-        responseData = null;
-      }
-      throw Exception(
-        responseData is Map
-            ? responseData['message'] ?? 'Gagal mengubah widget dashboard'
-            : 'Gagal mengubah widget dashboard',
-      );
-    }
-  }
-
-  void _showDashboardWidgetSettings() {
-    if (_dashboardWidgetOptions.isEmpty) {
-      _fetchDashboardWidgets();
-      return;
-    }
-
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      builder: (modalContext) => StatefulBuilder(
-        builder: (modalContext, setModalState) => SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    'Widget Dashboard',
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('lg'),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                ..._dashboardWidgetOptions.map((option) {
-                  final value = option['value']?.toString() ?? '';
-                  return SwitchListTile(
-                    title: Text(option['label']?.toString() ?? ''),
-                    value: _dashboardWidgets[value] ?? false,
-                    onChanged: _isDashboardWidgetsUpdating
-                        ? null
-                        : (isVisible) async {
-                            final previousValue =
-                                _dashboardWidgets[value] ?? false;
-                            setState(() {
-                              _dashboardWidgets[value] = isVisible;
-                              _isDashboardWidgetsUpdating = true;
-                            });
-                            setModalState(() {});
-                            try {
-                              await _updateDashboardWidget(value, isVisible);
-                            } catch (e) {
-                              if (!mounted) return;
-                              setState(
-                                () => _dashboardWidgets[value] = previousValue,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(e.toString())),
-                              );
-                            } finally {
-                              if (mounted) {
-                                setState(
-                                  () => _isDashboardWidgetsUpdating = false,
-                                );
-                                if (modalContext.mounted) setModalState(() {});
-                              }
-                            }
-                          },
-                  );
-                }),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   bool get shouldHideActiveMachine {
@@ -857,6 +673,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     } catch (e) {
 <<<<<<< HEAD
 =======
@@ -874,6 +691,12 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
 =======
 >>>>>>> 16778356 (feat: fcm notification)
+=======
+    } catch (e, s) {
+      debugPrint('Machine Error: $e');
+      debugPrintStack(stackTrace: s);
+
+>>>>>>> b1c3b09b (fix: user name di appbar)
       if (!mounted) return;
 
       setState(() {

@@ -25,6 +25,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String notificationTooltip;
   final bool isWithAccount;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
 =======
   final bool isWithNotification;
@@ -33,6 +34,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 =======
   final bool showAvatar;
 >>>>>>> 9dacc402 (fix: responsive UI to mobile)
+=======
+>>>>>>> b1c3b09b (fix: user name di appbar)
   final bool showNameWithAvatar;
   final tab;
   final bool? canDelete;
@@ -127,10 +130,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 <<<<<<< HEAD
       this.handleFinish,
       this.isLoading = false,
-      this.isDashboardSettingsLoading = false,
-      this.onDashboardSettings,
-      this.onReportSettings,
-      this.onEdit,
       this.showNameWithAvatar = false});
 =======
       this.isLoading = false});
@@ -264,6 +263,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 9dacc402 (fix: responsive UI to mobile)
                   if (showAvatar)
@@ -307,6 +307,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   else
                     const Icon(Icons.account_circle_outlined),
 >>>>>>> 9dacc402 (fix: responsive UI to mobile)
+=======
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundColor: CustomTheme().colors('primary'),
+                    child: Text(
+                      getInitial(name),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: CustomTheme().fontSize('sm'),
+                      ),
+                    ),
+                  ),
+>>>>>>> b1c3b09b (fix: user name di appbar)
                 ].separatedBy(CustomTheme().hGap('xl'))),
             color: Colors.white,
             offset: Offset(0, 40),

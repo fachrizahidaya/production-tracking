@@ -11,6 +11,7 @@ import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/models/master/machine.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
+import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_master_item_grade.dart';
 <<<<<<< HEAD
@@ -271,6 +272,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   Future<void> _postInit() async {
     await _getDataView();
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     if (!mounted) return;
 
@@ -319,20 +321,31 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     }
 
 =======
+=======
+    if (!mounted) return;
+
+    await _handleFetchMachine();
+    if (!mounted) return;
+
+    await _handleFetchItemGrade();
+    if (!mounted) return;
+
+    await _handleFetchItemType();
+    if (!mounted) return;
+
+>>>>>>> 60e98a5 (fix: tipe bs di update)
     await _handleFetchFinishedGrbMaterial();
+    if (!mounted) return;
+
     await _handleFetchFinishedGoodMaterial();
+<<<<<<< HEAD
 >>>>>>> bf8a2c0 (fix: update process)
+=======
+    if (!mounted) return;
+
+>>>>>>> 60e98a5 (fix: tipe bs di update)
     _syncGradesWithOptions();
     _syncDefectsWithOptions();
-
-    if (widget.openUpdateOnStart && !_hasOpenedInitialUpdate && mounted) {
-      if (widget.canUpdate) {
-        _hasOpenedInitialUpdate = true;
-        await _handleNavigateToUpdate();
-      } else {
-        Navigator.pop(context, false);
-      }
-    }
   }
 
   void _handleChangeInput(String fieldName, dynamic value) {
@@ -793,6 +806,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 60e98a5 (fix: tipe bs di update)
   Future<void> _handleFetchItemType({String search = ''}) async {
     final service = context.read<OptionItemTypeService>();
 
@@ -804,6 +820,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
       setState(() {
         itemTypeOption = service.dataListOption;
+<<<<<<< HEAD
 =======
   String formatProcessLabel(String label) {
     final trimmed = label.trim().toLowerCase();
@@ -842,6 +859,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       setState(() {
         finishedItemMaterial = data;
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+>>>>>>> 60e98a5 (fix: tipe bs di update)
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -850,8 +869,11 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     }
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> bf8a2c0 (fix: update process)
+=======
+>>>>>>> 60e98a5 (fix: tipe bs di update)
   Future<void> _handleFetchFinishedGrbMaterial() async {
     final service = Provider.of<OptionItemService>(context, listen: false);
 

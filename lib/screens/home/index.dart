@@ -150,6 +150,7 @@ class _HomeState extends State<Home> {
               isWithAccount: true,
               user: user,
               name: name,
+              showNameWithAvatar: true,
             ),
             drawer: AppDrawer(
               handleLogout: () => _handleLogout(context),

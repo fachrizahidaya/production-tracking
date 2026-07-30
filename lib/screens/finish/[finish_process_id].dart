@@ -9,6 +9,7 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/spk/tab/note_attachment_spk.dart';
 import 'package:textile_tracking/helpers/result/safe_to_api.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/helpers/result/to_double.dart';
@@ -896,6 +897,25 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
           e['value'].toString(),
         );
 
+        final processKey =
+            widget.label.toString().trim().toLowerCase().replaceAll(' ', '_');
+
+        final canContinue = canStartCurrentProcess(
+          woData['processes'] ?? [],
+          processKey,
+        );
+
+        if (!canContinue) {
+          showAlertDialog(
+            context: context,
+            title: 'Proses Sebelumnya Belum Selesai',
+            message: 'Proses sebelumnya masih berstatus Diproses. '
+                'Silakan selesaikan terlebih dahulu sebelum melakukan proses ${widget.label}.',
+          );
+
+          return;
+        }
+
         await _fetchSpkDocuments();
 
         /*
@@ -915,6 +935,35 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       option: workOrderOption,
       selected: widget.form?['wo_id'].toString() ?? '',
     );
+  }
+
+  bool canStartCurrentProcess(
+    List<dynamic> processes,
+    String currentProcess,
+  ) {
+    final currentIndex = processes.indexWhere(
+      (e) => e['key'] == currentProcess,
+    );
+
+    if (currentIndex <= 0) return true;
+
+    for (int i = 0; i < currentIndex; i++) {
+      final process = processes[i];
+
+      final data = process['data'] as List? ?? [];
+
+      if (data.isEmpty) {
+        continue;
+      }
+
+      final status = data.first['status']?.toString();
+
+      if (status == 'Diproses') {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   double _getTotalItemQty() {

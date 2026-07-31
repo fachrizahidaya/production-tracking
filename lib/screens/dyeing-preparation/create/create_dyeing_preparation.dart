@@ -11,30 +11,15 @@ import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_prepara
 class CreateDyeingPreparation extends StatelessWidget {
   const CreateDyeingPreparation({super.key});
 
-  List<Map<String, dynamic>> _mapCreateItems(dynamic items) {
-    return List<dynamic>.from(items ?? []).map<Map<String, dynamic>>((rawItem) {
-      final item = Map<String, dynamic>.from(rawItem);
-      final workOrderItemId = item.remove('work_order_item_id');
-
-      return {
-        ...item,
-        'wo_item_id': item['wo_item_id'] ?? workOrderItemId,
-      };
-    }).toList();
-  }
-
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
     final dyeingPreparation = DyeingPreparation(
       woId: int.tryParse(form['wo_id']?.toString() ?? ''),
-      items: _mapCreateItems(form['items']),
-      notes: form['notes']?.toString() ?? '',
-      attachments: form['attachments'],
     );
 
     final message =
         await Provider.of<DyeingPreparationService>(context, listen: false)
-            .createPreparation(context, dyeingPreparation, isLoading);
+            .addItem(context, dyeingPreparation, isLoading);
 
     Navigator.pushNamedAndRemoveUntil(
         context, '/dyeing-preparations', (route) => false);
@@ -45,7 +30,7 @@ class CreateDyeingPreparation extends StatelessWidget {
           title: 'Persiapan Dyeing Dimulai',
           child: buildBoldMessage(
             message: message,
-            prefix: "PD",
+            prefix: "PDP",
           ));
     });
   }

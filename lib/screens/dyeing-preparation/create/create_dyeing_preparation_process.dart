@@ -127,7 +127,8 @@ class _CreateDyeingPreparationProcessState
         return;
       }
 
-      final data = await _workOrderService.getFormInfo(woId);
+      await _workOrderService.getDataView(woId);
+      final data = _workOrderService.dataView;
 
       _form['wo_id'] = data['id']?.toString() ?? woId;
       _form['no_wo'] =

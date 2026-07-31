@@ -7,7 +7,8 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
-import 'package:textile_tracking/components/master/card/item_dyeing_preparation_card.dart';
+import 'package:textile_tracking/components/master/card/item_process_card.dart';
+import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/process_list.dart';
@@ -144,11 +145,11 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
       params['page'] = newPage;
     });
 
-    final service =
-        Provider.of<DyeingPreparationService>(context, listen: false);
-    await service.fetchPreparationList(context, params);
+    await Provider.of<DyeingPreparationService>(context, listen: false)
+        .getDataList(context, params);
 
-    List<dynamic> loadData = service.items;
+    List<dynamic> loadData =
+        Provider.of<DyeingPreparationService>(context, listen: false).items;
 
     if (loadData.isEmpty) {
       setState(() {
@@ -312,13 +313,17 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
                       final service = Provider.of<DyeingPreparationService>(
                           context,
                           listen: false);
-                      await service.fetchPreparationList(context, params);
+                      await service.getDataList(context, params);
                       return service.items;
                     },
                     isLoadMore: _isLoadMore,
                     canRead: _canRead,
-                    itemBuilder: (item) => ItemDyeingPreparationCard(
+                    itemBuilder: (item) => ItemProcessCard(
+                      label: 'No. Persiapan Dyeing',
                       item: item,
+                      titleKey: 'prep_no',
+                      subtitleKey: 'work_orders',
+                      subtitleField: 'wo_no',
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -355,30 +360,39 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
                 ),
               ),
         floatingActionButton: AnimatedSlide(
-          duration: const Duration(milliseconds: 200),
-          offset: _showFab ? Offset.zero : const Offset(0, 1),
+          duration: Duration(milliseconds: 200),
+          offset: _showFab ? Offset.zero : Offset(0, 1),
           child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 200),
             opacity: _showFab ? 1 : 0,
             child: CustomFloatingButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const CreateDyeingPreparation(),
-                  ),
-                ).then((value) {
-                  if (value == true) {
-                    _refetch();
-                  }
-                });
-              },
-              icon: const Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 72,
-              ),
-            ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      final actions = [
+                        DialogActionItem(
+                          icon: Icons.add,
+                          iconColor: CustomTheme().buttonColor('primary'),
+                          title: 'Buat Persiapan Dyeing',
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => CreateDyeingPreparation(),
+                              ),
+                            );
+                          },
+                        ),
+                      ];
+                      return ActionDialog(actions: actions);
+                    },
+                  );
+                },
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 72,
+                )),
           ),
         ),
       ),

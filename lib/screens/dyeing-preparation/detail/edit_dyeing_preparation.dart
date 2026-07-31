@@ -1,28 +1,27 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:textile_tracking/components/detail/greige_process_edit_layout.dart';
+import 'package:textile_tracking/components/master/button/cancel_button.dart';
+import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
+import 'package:textile_tracking/components/master/form/select_form.dart';
+import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
-import 'package:textile_tracking/screens/dyeing-preparation/create/dyeing_preparation_form_section.dart';
+import 'package:textile_tracking/helpers/util/note_editor.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
 
 class EditDyeingPreparationScreen extends StatefulWidget {
   final dynamic id;
 
-  const EditDyeingPreparationScreen({super.key, required this.id});
+  const EditDyeingPreparationScreen({
+    super.key,
+    required this.id,
+  });
 
   @override
   State<EditDyeingPreparationScreen> createState() =>
@@ -36,7 +35,6 @@ class _EditDyeingPreparationScreenState
   final TextEditingController _yarnQtyController = TextEditingController();
   final TextEditingController _warpingTypeController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
-  final String baseUrl = dotenv.env['API_URL'] ?? '';
 
   bool _isLoading = true;
   bool _isFetchingMachine = false;
@@ -45,31 +43,10 @@ class _EditDyeingPreparationScreenState
   Map<String, dynamic> _data = {};
   final Map<String, dynamic> _form = {};
   List<dynamic> _machineOption = [];
-  final List<Map<String, dynamic>> _greigeForms = [];
-  List<Map<String, dynamic>> existingItems = [];
-  List<Map<String, dynamic>> itemOptions = [];
-  Map<String, dynamic> woData = {};
-  late List<Map<String, dynamic>> allAttachments;
-  final ValueNotifier<bool> _attachmentLoading = ValueNotifier(false);
-
-  void _syncAttachmentsToForm() {
-    final attachments =
-        allAttachments.where((e) => e['is_add_button'] != true).toList();
-
-    _form['attachments'] = attachments;
-    _form['attachment_ids'] = attachments
-        .where((e) => e['isNew'] != true && e['id'] != null)
-        .map((e) => e['id'])
-        .toList();
-  }
 
   @override
   void initState() {
     super.initState();
-    allAttachments = [
-      {'is_add_button': true},
-    ];
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
     });
@@ -77,187 +54,11 @@ class _EditDyeingPreparationScreenState
 
   @override
   void dispose() {
-    _disposeGreigeForms();
     _isSubmitting.dispose();
-    _attachmentLoading.dispose();
     _yarnQtyController.dispose();
     _warpingTypeController.dispose();
     _notesController.dispose();
     super.dispose();
-  }
-
-  String _baseCode(String? code) {
-    if (code == null || code.isEmpty) return '';
-
-    return code.split('-').first;
-  }
-
-  Map<String, dynamic> _spkItem(Map<String, dynamic> item) {
-    return item["spk_item"] is Map
-        ? Map<String, dynamic>.from(item["spk_item"])
-        : <String, dynamic>{};
-  }
-
-  Map<String, dynamic> _spkProduct(Map<String, dynamic> item) {
-    final spkItem = _spkItem(item);
-
-    return spkItem["item"] is Map
-        ? Map<String, dynamic>.from(spkItem["item"])
-        : <String, dynamic>{};
-  }
-
-  dynamic _workOrderItemId(Map<String, dynamic> item) {
-    return item["item_id"] ?? _spkProduct(item)["id"];
-  }
-
-  String _workOrderItemCode(Map<String, dynamic> item) {
-    return item["item_code"]?.toString() ??
-        _spkProduct(item)["code"]?.toString() ??
-        '';
-  }
-
-  String _workOrderItemName(Map<String, dynamic> item) {
-    return item["item_name"]?.toString() ??
-        _spkProduct(item)["name"]?.toString() ??
-        '';
-  }
-
-  Future<List<Map<String, dynamic>>> _fetchGreigeItemOptions(
-    List<dynamic> items,
-  ) async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token');
-    final options = <Map<String, dynamic>>[];
-    final optionCache = <String, List<dynamic>>{};
-
-    for (final rawItem in items) {
-      final item = Map<String, dynamic>.from(rawItem);
-      final baseCode = _baseCode(_workOrderItemCode(item));
-
-      if (baseCode.isEmpty) {
-        continue;
-      }
-
-      if (!optionCache.containsKey(baseCode)) {
-        final uri = Uri.parse('$baseUrl/item/option').replace(
-          queryParameters: {
-            'type': 'greige_item',
-            'base_code': baseCode,
-            'process': 'work_order',
-          },
-        );
-
-        final response = await http.get(
-          uri,
-          headers: {'Authorization': 'Bearer $token'},
-        );
-
-        final responseData = jsonDecode(response.body);
-
-        if (response.statusCode != 200) {
-          throw responseData['message'] ?? 'Gagal mengambil opsi greige item.';
-        }
-
-        optionCache[baseCode] = List<dynamic>.from(responseData['data'] ?? []);
-      }
-
-      final data = optionCache[baseCode] ?? [];
-
-      options.addAll(
-        data.map<Map<String, dynamic>>((rawOption) {
-          final option = Map<String, dynamic>.from(rawOption);
-
-          return {
-            "work_order_item_id": item["id"],
-            "spk_item_id": item["spk_item_id"],
-            "source_item_id": _workOrderItemId(item),
-            "item_id": option["value"],
-            "item_code": option["code"],
-            "item_name": option["label"],
-            "spk_no": null,
-            "qty": item["qty"],
-            "weight": item["weight"],
-            "qty_tolerance": 0,
-            "unit_id": item["unit_id"] ?? item["unit"]?["id"] ?? 1,
-            "weight_unit_id":
-                item["weight_unit_id"] ?? item["weight_unit"]?["id"] ?? 2,
-          };
-        }),
-      );
-    }
-
-    return options;
-  }
-
-  Map<String, dynamic> _resolveGreigeItem(
-    Map<String, dynamic> item,
-    List<Map<String, dynamic>> options,
-    Map<String, dynamic>? greige,
-  ) {
-    final greigeItem = greige?["greige_item"] is Map
-        ? Map<String, dynamic>.from(greige?["greige_item"])
-        : <String, dynamic>{};
-
-    final greigeItemId = greige?["greige_item_id"] ?? _workOrderItemId(item);
-    final matchedOption = options.cast<Map<String, dynamic>?>().firstWhere(
-          (option) =>
-              option?["work_order_item_id"] == item["id"] &&
-              option?["item_id"]?.toString() == greigeItemId?.toString(),
-          orElse: () => null,
-        );
-
-    final fallbackOption = options.cast<Map<String, dynamic>?>().firstWhere(
-          (option) => option?["work_order_item_id"] == item["id"],
-          orElse: () => null,
-        );
-
-    final option = matchedOption ?? fallbackOption;
-
-    return {
-      "item_id": option?["item_id"] ?? greigeItemId,
-      "item_code": option?["item_code"] ??
-          greigeItem["code"] ??
-          _workOrderItemCode(item),
-      "item_name": option?["item_name"] ??
-          greigeItem["name"] ??
-          _workOrderItemName(item),
-    };
-  }
-
-  List<Map<String, dynamic>> _mapExistingItems(
-    List<dynamic> items,
-    List<Map<String, dynamic>> options,
-  ) {
-    return items.expand<Map<String, dynamic>>((e) {
-      final item = Map<String, dynamic>.from(e);
-      final greigeItems = List<dynamic>.from(item["greige_items"] ?? []);
-
-      if (greigeItems.isEmpty) {
-        return const <Map<String, dynamic>>[];
-      }
-
-      return greigeItems.map<Map<String, dynamic>>((rawGreige) {
-        final greige = Map<String, dynamic>.from(rawGreige);
-        final greigeItem = _resolveGreigeItem(item, options, greige);
-
-        return {
-          "id": greige["id"],
-          "work_order_item_id": item["id"],
-          "item_id": greigeItem["item_id"],
-          "spk_item_id": item["spk_item_id"],
-          "item_code": greigeItem["item_code"],
-          "item_name": greigeItem["item_name"],
-          "spk_no": greige["greige_item_op_no"],
-          "qty": greige["qty"] ?? item["qty"],
-          "weight": greige["weight"] ?? item["weight"],
-          "source_qty": item["source_qty"] ?? item["qty"],
-          "source_weight": item["source_weight"] ?? item["weight"],
-          "qty_tolerance": greige["qty_tolerance"] ?? 0,
-          "unit_id": greige["unit_id"] ?? 1,
-          "weight_unit_id": greige["weight_unit_id"] ?? 2,
-        };
-      });
-    }).toList();
   }
 
   Future<void> _loadData() async {
@@ -267,44 +68,30 @@ class _EditDyeingPreparationScreenState
     });
 
     try {
-      final service = Provider.of<DyeingPreparationService>(
-        context,
-        listen: false,
-      );
-      await service.fetchPreparationDetail(context, widget.id);
+      final service =
+          Provider.of<DyeingPreparationService>(context, listen: false);
+      await service.getDataView(context, widget.id);
 
       final response = service.dataView;
       final detail = response['data'] is Map<String, dynamic>
           ? Map<String, dynamic>.from(response['data'])
           : Map<String, dynamic>.from(response);
 
-      woData = Map<String, dynamic>.from(detail["work_orders"] ?? {});
+      final machine = _mapValue(detail['machine']);
+      final orderGreige = _mapValue(detail['order_greige']);
 
       _form
         ..clear()
         ..addAll({
-          "wo_id": detail["wo_id"],
-          "no_wo": woData["wo_no"] ?? detail["wo_no"] ?? "",
-          "notes": detail["notes"] ?? "",
-          "attachments": List<Map<String, dynamic>>.from(
-            detail["attachments"] ?? [],
-          ),
-          "attachment_ids": List<Map<String, dynamic>>.from(
-            detail["attachments"] ?? [],
-          ).map((e) => e["id"]).where((id) => id != null).toList(),
+          'machine_id': detail['machine_id']?.toString(),
+          'yarn_qty': detail['yarn_qty']?.toString() ?? '',
+          'order_greige_id': detail['order_greige_id']?.toString(),
+          'no_greige_order': orderGreige['og_no']?.toString() ?? '',
+
+          // tambahkan ini
+          'warping_type': detail['warping_type']?.toString() ?? '',
+          'notes': detail['notes']?.toString() ?? '',
         });
-
-      allAttachments = [
-        ...List<Map<String, dynamic>>.from(detail["attachments"] ?? []),
-        {'is_add_button': true},
-      ];
-      _syncAttachmentsToForm();
-
-      final workOrderItems = List<dynamic>.from(woData["items"] ?? []);
-      final options = await _fetchGreigeItemOptions(workOrderItems);
-
-      existingItems = _mapExistingItems(workOrderItems, options);
-      itemOptions = options;
 
       _yarnQtyController.text = detail['yarn_qty']?.toString() ?? '';
       _warpingTypeController.text = detail['warping_type']?.toString() ?? '';
@@ -329,123 +116,10 @@ class _EditDyeingPreparationScreenState
     });
   }
 
-  Future<File?> compressImage(String path) async {
-    if (kIsWeb) {
-      return File(path);
-    }
-
-    final dir = await getTemporaryDirectory();
-    final targetPath =
-        '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
-
-    final result = await FlutterImageCompress.compressAndGetFile(
-      path,
-      targetPath,
-      quality: 70,
-    );
-
-    return result != null ? File(result.path) : null;
-  }
-
-  Future<void> _pickAttachments(ImageSource source) async {
-    try {
-      final picker = ImagePicker();
-      final XFile? image = await picker.pickImage(source: source);
-
-      if (image == null) return;
-
-      final compressedFile = await compressImage(image.path);
-
-      if (compressedFile == null) return;
-
-      setState(() {
-        allAttachments.removeWhere((e) => e['is_add_button'] == true);
-
-        allAttachments.add({
-          'name': compressedFile.path.split('/').last,
-          'path': compressedFile.path,
-          'extension': compressedFile.path.split('.').last,
-          'isNew': true,
-        });
-
-        allAttachments.add({'is_add_button': true});
-
-        _syncAttachmentsToForm();
-      });
-    } catch (e) {
-      if (!mounted) return;
-
-      await showAlertDialog(
-        context: context,
-        title: 'Error',
-        message: e.toString(),
-      );
-    }
-  }
-
-  void showImageDialog(BuildContext context, bool isNew, String filePath) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          insetPadding: CustomTheme().padding('content'),
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.6,
-            padding: CustomTheme().padding('process-content'),
-            child: InteractiveViewer(
-              minScale: 1,
-              maxScale: 4,
-              child: isNew
-                  ? Image.file(File(filePath), fit: BoxFit.contain)
-                  : Image.network(filePath, fit: BoxFit.contain),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<bool?> _handleDeleteAttachment(Map item) async {
-    if (!context.mounted) return false;
-
-    final completer = Completer<bool?>();
-
-    showConfirmationDialog(
-      context: context,
-      isLoading: _attachmentLoading,
-      title: 'Hapus Lampiran',
-      message: 'Apakah Anda yakin ingin menghapus lampiran ini?',
-      buttonBackground: CustomTheme().buttonColor('danger'),
-      onConfirm: () async {
-        await Future.delayed(const Duration(milliseconds: 200));
-
-        if (!mounted) {
-          completer.complete(false);
-          return;
-        }
-
-        setState(() {
-          allAttachments.remove(item);
-
-          _syncAttachmentsToForm();
-        });
-
-        Navigator.pop(context);
-
-        completer.complete(true);
-      },
-    );
-
-    return completer.future;
-  }
-
   bool get _isFormInvalid {
-    return _form['wo_id'] == null || _form['wo_id'].toString().isEmpty;
+    return (_form['machine_id'] == null ||
+            _form['machine_id'].toString().isEmpty) ||
+        (_form['yarn_qty'] == null || _form['yarn_qty'].toString().isEmpty);
   }
 
   Future<void> _handleSubmit() async {
@@ -453,22 +127,13 @@ class _EditDyeingPreparationScreenState
 
     final dyeingPreparation = DyeingPreparation(
       woId: int.tryParse(_form['wo_id']?.toString() ?? ''),
-      items: _form['items'] ?? [],
-      notes: _form['notes']?.toString(),
-      attachments: _form['attachments'],
-      attachmentIds: _form['attachment_ids'],
     );
 
     try {
-      final message = await Provider.of<DyeingPreparationService>(
-        context,
-        listen: false,
-      ).updatePreparation(
-        context,
-        widget.id.toString(),
-        dyeingPreparation,
-        _isSubmitting,
-      );
+      final message = await Provider.of<DyeingPreparationService>(context,
+              listen: false)
+          .updateItem(
+              context, widget.id.toString(), dyeingPreparation, _isSubmitting);
 
       await showAlertDialog(
         context: context,
@@ -476,13 +141,9 @@ class _EditDyeingPreparationScreenState
         message: message,
       );
 
-      if (!mounted) return;
-
-      // keluar dari Edit
-      Navigator.pop(context, true);
-
-      // keluar dari Detail
-      Navigator.pop(context, true);
+      if (mounted) {
+        Navigator.pop(context, true);
+      }
     } catch (e) {
       await showAlertDialog(
         context: context,
@@ -492,42 +153,139 @@ class _EditDyeingPreparationScreenState
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return DyeingPreparationFormSection(
-      id: widget.id,
-      title: 'Edit Persiapan Dyeing',
-      form: _form,
-      formKey: _formKey,
-      woData: woData,
-      handleSubmit: _handleSubmit,
-      isSubmitting: _isSubmitting,
-      selectWorkOrder: () {},
-      firstLoading: _isLoading,
-      existingItems: existingItems,
-      itemOptions: itemOptions,
-      greigeInfoMessage: null,
-      greigeReady: existingItems.isNotEmpty,
-      handleChangeInput: _handleChangeInput,
-      note: _notesController,
-      isEdit: true,
-      disableWorkOrder: true,
-      attachments: allAttachments,
-      onAddAttachment: _pickAttachments,
-      onDeleteAttachment: _handleDeleteAttachment,
-      onPreviewImage: (isNew, filePath) {
-        showImageDialog(context, isNew, filePath);
+  Future<void> _handleCancel() async {
+    showConfirmationDialog(
+      context: context,
+      isLoading: _isSubmitting,
+      onConfirm: () async {
+        Navigator.pop(context);
+        Navigator.pop(context);
       },
+      title: 'Batal Edit Proses Persiapan Dyeing',
+      message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
+      buttonBackground: CustomTheme().buttonColor('danger'),
     );
   }
 
-  void _disposeGreigeForms() {
-    for (final item in _greigeForms) {
-      (item['spk_no'] as TextEditingController?)?.dispose();
-      (item['qty'] as TextEditingController?)?.dispose();
-      (item['weight'] as TextEditingController?)?.dispose();
-    }
-    _greigeForms.clear();
+  @override
+  Widget build(BuildContext context) {
+    return GreigeProcessEditLayout(
+      title: 'Edit Persiapan Dyeing',
+      id: widget.id,
+      isLoading: _isLoading,
+      errorMessage: _errorMessage,
+      onRetry: _loadData,
+      onCancel: _handleCancel,
+      formKey: _formKey,
+      formSections: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: _buildSummaryCard()),
+            Expanded(child: _buildGreigeCard()),
+          ].separatedBy(CustomTheme().hGap('xl')),
+        ),
+        Row(
+          children: [
+            Expanded(child: _buildYarnCard()),
+          ].separatedBy(CustomTheme().hGap('xl')),
+        ),
+        _buildAdditionalCard(),
+      ],
+      submitSection: _buildSubmitSection(),
+      greigeOrderData: _mapValue(_data['order_greige']),
+    );
+  }
+
+  Widget _buildSummaryCard() {
+    final orderGreige = _mapValue(_data['order_greige']);
+
+    return TemplateCard(
+      title: 'Informasi Persiapan Dyeing',
+      icon: Icons.assignment_outlined,
+      child: Column(
+        children: [
+          _InfoLine('No. Persiapan Dyeing', _display(_data['warping_no'])),
+          // _InfoLine('Status', _display(_data['status'])),
+          // _InfoLine('Greige Order', _display(orderGreige['og_no'])),
+        ].separatedBy(Divider(height: 18, color: Colors.grey.shade200)),
+      ),
+    );
+  }
+
+  Widget _buildGreigeCard() {
+    return TemplateCard(
+      title: 'Greige Order',
+      icon: Icons.assessment_outlined,
+      child: SelectForm(
+        label: 'Greige Order',
+        onTap: () {},
+        selectedLabel: _form['no_greige_order']?.toString() ?? '',
+        selectedValue: _form['order_greige_id']?.toString() ?? '',
+        required: true,
+        isDisabled: true,
+      ),
+    );
+  }
+
+  Widget _buildYarnCard() {
+    return TemplateCard(
+      title: 'Benang',
+      icon: Icons.join_inner_outlined,
+      child: TextForm(
+        label: 'Jumlah Benang (KG)',
+        controller: _yarnQtyController,
+        req: false,
+        isNumber: true,
+        isSorting: true,
+        handleChange: (value) => _handleChangeInput('yarn_qty', value),
+      ),
+    );
+  }
+
+  Widget _buildAdditionalCard() {
+    return Column(
+      children: [
+        NoteEditor(
+          controller: _notesController,
+          form: _form,
+          formKey: 'notes',
+          label: 'Catatan',
+          onChanged: (value) {
+            _handleChangeInput('notes', value);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSubmitSection() {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _isSubmitting,
+      builder: (context, isSubmitting, _) {
+        return Row(
+          children: [
+            Expanded(
+              child: CancelButton(
+                label: 'Batal',
+                onPressed: () => Navigator.pop(context),
+                customHeight: 50.0,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: FormButton(
+                label: 'Simpan',
+                isLoading: isSubmitting,
+                isDisabled: _isFormInvalid,
+                customHeight: 50.0,
+                onPressed: _handleSubmit,
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

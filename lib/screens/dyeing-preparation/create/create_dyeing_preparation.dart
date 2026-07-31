@@ -13,6 +13,7 @@ class CreateDyeingPreparation extends StatelessWidget {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
   List<Map<String, dynamic>> _mapCreateItems(dynamic items) {
@@ -32,10 +33,13 @@ class CreateDyeingPreparation extends StatelessWidget {
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
     final dyeingPreparation = DyeingPreparation(
       woId: int.tryParse(form['wo_id']?.toString() ?? ''),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -54,10 +58,13 @@ class CreateDyeingPreparation extends StatelessWidget {
 =======
       attachments: form['attachments'],
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
     );
 
     final message =
         await Provider.of<DyeingPreparationService>(context, listen: false)
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             .createPreparation(context, dyeingPreparation, isLoading);
@@ -67,6 +74,9 @@ class CreateDyeingPreparation extends StatelessWidget {
 =======
             .createPreparation(context, dyeingPreparation, isLoading);
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+            .addItem(context, dyeingPreparation, isLoading);
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 
     Navigator.pushNamedAndRemoveUntil(
         context, '/dyeing-preparations', (route) => false);
@@ -80,6 +90,7 @@ class CreateDyeingPreparation extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             prefix: "PD",
 =======
             prefix: "PDP",
@@ -90,6 +101,9 @@ class CreateDyeingPreparation extends StatelessWidget {
 =======
             prefix: "PD",
 >>>>>>> eb21d940 (fix: buat persiapan dyeing)
+=======
+            prefix: "PDP",
+>>>>>>> b70754b7 (feat: persiapan dyeing)
           ));
     });
   }

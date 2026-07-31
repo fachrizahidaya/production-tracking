@@ -3,22 +3,26 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:textile_tracking/components/detail/greige_process_edit_layout.dart';
+import 'package:textile_tracking/components/master/button/cancel_button.dart';
+import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
+import 'package:textile_tracking/components/master/form/select_form.dart';
+import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/dyeing-preparation/create/dyeing_preparation_form_section.dart';
 =======
 =======
@@ -55,6 +59,10 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 import 'package:textile_tracking/screens/dyeing-preparation/create/dyeing_preparation_form_section.dart';
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
+=======
+import 'package:textile_tracking/helpers/util/note_editor.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
 
 class EditDyeingPreparationScreen extends StatefulWidget {
@@ -62,16 +70,22 @@ class EditDyeingPreparationScreen extends StatefulWidget {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   const EditDyeingPreparationScreen({super.key, required this.id});
 =======
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
   const EditDyeingPreparationScreen({
     super.key,
     required this.id,
   });
+<<<<<<< HEAD
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
   const EditDyeingPreparationScreen({super.key, required this.id});
 >>>>>>> ae89df7c (fix: persiapan dyeing)
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 
   @override
   State<EditDyeingPreparationScreen> createState() =>
@@ -87,12 +101,15 @@ class _EditDyeingPreparationScreenState
   final TextEditingController _notesController = TextEditingController();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   final String baseUrl = dotenv.env['API_URL'] ?? '';
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
   final String baseUrl = dotenv.env['API_URL'] ?? '';
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 
   bool _isLoading = true;
   bool _isFetchingMachine = false;
@@ -101,6 +118,7 @@ class _EditDyeingPreparationScreenState
   Map<String, dynamic> _data = {};
   final Map<String, dynamic> _form = {};
   List<dynamic> _machineOption = [];
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -150,10 +168,13 @@ class _EditDyeingPreparationScreenState
         .toList();
   }
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 
   @override
   void initState() {
     super.initState();
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -167,6 +188,8 @@ class _EditDyeingPreparationScreenState
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
     });
@@ -174,6 +197,7 @@ class _EditDyeingPreparationScreenState
 
   @override
   void dispose() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -187,12 +211,16 @@ class _EditDyeingPreparationScreenState
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+    _isSubmitting.dispose();
+>>>>>>> b70754b7 (feat: persiapan dyeing)
     _yarnQtyController.dispose();
     _warpingTypeController.dispose();
     _notesController.dispose();
     super.dispose();
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -440,6 +468,8 @@ class _EditDyeingPreparationScreenState
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
   Future<void> _loadData() async {
     setState(() {
       _isLoading = true;
@@ -447,6 +477,7 @@ class _EditDyeingPreparationScreenState
     });
 
     try {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -468,12 +499,18 @@ class _EditDyeingPreparationScreenState
 >>>>>>> ae89df7c (fix: persiapan dyeing)
       await service.fetchPreparationDetail(context, widget.id);
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+      final service =
+          Provider.of<DyeingPreparationService>(context, listen: false);
+      await service.getDataView(context, widget.id);
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 
       final response = service.dataView;
       final detail = response['data'] is Map<String, dynamic>
           ? Map<String, dynamic>.from(response['data'])
           : Map<String, dynamic>.from(response);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -490,10 +527,15 @@ class _EditDyeingPreparationScreenState
 =======
       woData = Map<String, dynamic>.from(detail["work_orders"] ?? {});
 >>>>>>> ae89df7c (fix: persiapan dyeing)
+=======
+      final machine = _mapValue(detail['machine']);
+      final orderGreige = _mapValue(detail['order_greige']);
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 
       _form
         ..clear()
         ..addAll({
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
           "wo_id": detail["wo_id"],
@@ -559,6 +601,18 @@ class _EditDyeingPreparationScreenState
       itemOptions = options;
 
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
+=======
+          'machine_id': detail['machine_id']?.toString(),
+          'yarn_qty': detail['yarn_qty']?.toString() ?? '',
+          'order_greige_id': detail['order_greige_id']?.toString(),
+          'no_greige_order': orderGreige['og_no']?.toString() ?? '',
+
+          // tambahkan ini
+          'warping_type': detail['warping_type']?.toString() ?? '',
+          'notes': detail['notes']?.toString() ?? '',
+        });
+
+>>>>>>> b70754b7 (feat: persiapan dyeing)
       _yarnQtyController.text = detail['yarn_qty']?.toString() ?? '';
       _warpingTypeController.text = detail['warping_type']?.toString() ?? '';
 
@@ -582,6 +636,7 @@ class _EditDyeingPreparationScreenState
     });
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -787,6 +842,12 @@ class _EditDyeingPreparationScreenState
 =======
     return _form['wo_id'] == null || _form['wo_id'].toString().isEmpty;
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
+=======
+  bool get _isFormInvalid {
+    return (_form['machine_id'] == null ||
+            _form['machine_id'].toString().isEmpty) ||
+        (_form['yarn_qty'] == null || _form['yarn_qty'].toString().isEmpty);
+>>>>>>> b70754b7 (feat: persiapan dyeing)
   }
 
   Future<void> _handleSubmit() async {
@@ -794,6 +855,7 @@ class _EditDyeingPreparationScreenState
 
     final dyeingPreparation = DyeingPreparation(
       woId: int.tryParse(_form['wo_id']?.toString() ?? ''),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       items: _form['items'] ?? [],
@@ -821,10 +883,16 @@ class _EditDyeingPreparationScreenState
     );
 
     try {
+=======
+    );
+
+    try {
+>>>>>>> b70754b7 (feat: persiapan dyeing)
       final message = await Provider.of<DyeingPreparationService>(context,
               listen: false)
           .updateItem(
               context, widget.id.toString(), dyeingPreparation, _isSubmitting);
+<<<<<<< HEAD
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
     );
@@ -840,6 +908,8 @@ class _EditDyeingPreparationScreenState
         _isSubmitting,
       );
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 
       await showAlertDialog(
         context: context,
@@ -847,6 +917,7 @@ class _EditDyeingPreparationScreenState
         message: message,
       );
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       if (!mounted) return;
@@ -870,6 +941,11 @@ class _EditDyeingPreparationScreenState
       // keluar dari Detail
       Navigator.pop(context, true);
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
+=======
+      if (mounted) {
+        Navigator.pop(context, true);
+      }
+>>>>>>> b70754b7 (feat: persiapan dyeing)
     } catch (e) {
       await showAlertDialog(
         context: context,
@@ -879,6 +955,7 @@ class _EditDyeingPreparationScreenState
     }
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   @override
@@ -906,10 +983,23 @@ class _EditDyeingPreparationScreenState
       onDeleteAttachment: _handleDeleteAttachment,
       onPreviewImage: (isNew, filePath) {
         showImageDialog(context, isNew, filePath);
+=======
+  Future<void> _handleCancel() async {
+    showConfirmationDialog(
+      context: context,
+      isLoading: _isSubmitting,
+      onConfirm: () async {
+        Navigator.pop(context);
+        Navigator.pop(context);
+>>>>>>> b70754b7 (feat: persiapan dyeing)
       },
+      title: 'Batal Edit Proses Persiapan Dyeing',
+      message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
+      buttonBackground: CustomTheme().buttonColor('danger'),
     );
   }
 
+<<<<<<< HEAD
   void _disposeGreigeForms() {
     for (final item in _greigeForms) {
       (item['spk_no'] as TextEditingController?)?.dispose();
@@ -964,6 +1054,38 @@ class _EditDyeingPreparationScreenState
   }
 
 <<<<<<< HEAD
+=======
+  @override
+  Widget build(BuildContext context) {
+    return GreigeProcessEditLayout(
+      title: 'Edit Persiapan Dyeing',
+      id: widget.id,
+      isLoading: _isLoading,
+      errorMessage: _errorMessage,
+      onRetry: _loadData,
+      onCancel: _handleCancel,
+      formKey: _formKey,
+      formSections: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: _buildSummaryCard()),
+            Expanded(child: _buildGreigeCard()),
+          ].separatedBy(CustomTheme().hGap('xl')),
+        ),
+        Row(
+          children: [
+            Expanded(child: _buildYarnCard()),
+          ].separatedBy(CustomTheme().hGap('xl')),
+        ),
+        _buildAdditionalCard(),
+      ],
+      submitSection: _buildSubmitSection(),
+      greigeOrderData: _mapValue(_data['order_greige']),
+    );
+  }
+
+>>>>>>> b70754b7 (feat: persiapan dyeing)
   Widget _buildSummaryCard() {
     final orderGreige = _mapValue(_data['order_greige']);
 
@@ -1053,6 +1175,7 @@ class _EditDyeingPreparationScreenState
         );
       },
     );
+<<<<<<< HEAD
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
   void _disposeGreigeForms() {
@@ -1063,6 +1186,8 @@ class _EditDyeingPreparationScreenState
     }
     _greigeForms.clear();
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
   }
 }
 

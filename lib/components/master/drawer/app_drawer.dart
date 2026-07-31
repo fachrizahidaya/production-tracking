@@ -67,6 +67,7 @@ class _AppDrawerState extends State<AppDrawer> {
     'Proses Produksi',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     'Produksi',
     'Pesanan',
     'Order Greige',
@@ -103,6 +104,9 @@ class _AppDrawerState extends State<AppDrawer> {
     'Anomali Data',
     'Notifikasi'
 >>>>>>> 7a6aa3b1 (feat: model for report)
+=======
+    'Laporan',
+>>>>>>> b70754b7 (feat: persiapan dyeing)
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {

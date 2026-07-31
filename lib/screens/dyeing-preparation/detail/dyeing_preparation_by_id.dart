@@ -2,21 +2,27 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:io';
 
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 <<<<<<< HEAD
+=======
+import 'package:textile_tracking/components/detail/greige_process_detail_list.dart';
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
-import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
-import 'package:textile_tracking/helpers/util/format_bytes.dart';
+import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/detail/edit_dyeing_preparation.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 =======
@@ -45,6 +51,8 @@ import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_prepara
 import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 
 class DyeingPreparationDetailScreen extends StatefulWidget {
   final id;
@@ -75,18 +83,24 @@ class _DyeingPreparationDetailScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   Map<String, dynamic> _data = {};
 =======
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
   final OptionGreigeOrderService _greigeOrderService =
       OptionGreigeOrderService();
 
   Map<String, dynamic> _greigeOrder = {};
+<<<<<<< HEAD
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
 =======
   Map<String, dynamic> _data = {};
 >>>>>>> 27570e76 (fix: detail persiapan dyeing)
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 
   @override
   void initState() {
@@ -116,6 +130,7 @@ class _DyeingPreparationDetailScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
       await dyeingPreparationService.fetchPreparationDetail(
@@ -123,6 +138,9 @@ class _DyeingPreparationDetailScreenState
         widget.id,
       );
 <<<<<<< HEAD
+=======
+      await dyeingPreparationService.getDataView(context, widget.id);
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 
       final detail = _detailData(dyeingPreparationService.dataView);
 =======
@@ -135,9 +153,11 @@ class _DyeingPreparationDetailScreenState
       final detail = _detailData(dyeingPreparationService.dataView);
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 
-      setState(() {
-        _data = detail;
+      final orderGreige = detail['order_greige'] is Map
+          ? Map<String, dynamic>.from(detail['order_greige'])
+          : <String, dynamic>{};
 
+<<<<<<< HEAD
         _isLoading = false;
       });
 <<<<<<< HEAD
@@ -181,6 +201,25 @@ class _DyeingPreparationDetailScreenState
     } finally {
       if (mounted && _isLoading) {
 >>>>>>> 27570e76 (fix: detail persiapan dyeing)
+=======
+      final orderGreigeId = orderGreige['id'];
+
+      if (orderGreigeId != null) {
+        await _greigeOrderService.getDataView(orderGreigeId.toString());
+
+        final response = _greigeOrderService.dataView;
+
+        _greigeOrder = response['data'] is Map<String, dynamic>
+            ? Map<String, dynamic>.from(response['data'])
+            : Map<String, dynamic>.from(response);
+      } else {
+        _greigeOrder = {};
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      if (mounted) {
+>>>>>>> b70754b7 (feat: persiapan dyeing)
         setState(() {
           _isLoading = false;
         });
@@ -194,6 +233,7 @@ class _DyeingPreparationDetailScreenState
     return response;
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -394,6 +434,9 @@ class _DyeingPreparationDetailScreenState
     final data = _data;
 
 >>>>>>> 27570e76 (fix: detail persiapan dyeing)
+=======
+  Future<void> _handleDelete(Map<String, dynamic> data) async {
+>>>>>>> b70754b7 (feat: persiapan dyeing)
     final hasDeletePermission = widget.canDelete == true;
     final canDeleteItem = data['can_delete'] != false;
 
@@ -412,6 +455,7 @@ class _DyeingPreparationDetailScreenState
       title: 'Hapus Data',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       message: 'Apakah Anda yakin ingin menghapus proses Persiapan Dyeing?',
 =======
       message: 'Apakah Anda yakin ingin menghapus proses persiapan dyeing?',
@@ -419,12 +463,16 @@ class _DyeingPreparationDetailScreenState
 =======
       message: 'Apakah Anda yakin ingin menghapus proses Persiapan Dyeing?',
 >>>>>>> 27570e76 (fix: detail persiapan dyeing)
+=======
+      message: 'Apakah Anda yakin ingin menghapus proses persiapan dyeing?',
+>>>>>>> b70754b7 (feat: persiapan dyeing)
       isLoading: _deleteLoading,
       buttonBackground: CustomTheme().buttonColor('danger'),
       onConfirm: () async {
         try {
           final message = await Provider.of<DyeingPreparationService>(context,
                   listen: false)
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -440,6 +488,9 @@ class _DyeingPreparationDetailScreenState
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
 >>>>>>> 27570e76 (fix: detail persiapan dyeing)
+=======
+              .deleteItem(context, widget.id.toString(), _deleteLoading);
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
@@ -473,6 +524,7 @@ class _DyeingPreparationDetailScreenState
   Widget build(BuildContext context) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 27570e76 (fix: detail persiapan dyeing)
     return GestureDetector(
@@ -494,13 +546,32 @@ class _DyeingPreparationDetailScreenState
                 ),
               ),
 <<<<<<< HEAD
+=======
+    return Scaffold(
+      backgroundColor: const Color(0xFFF7F8FA),
+      body: SafeArea(
+        child: Consumer<DyeingPreparationService>(
+          builder: (context, service, _) {
+            if (_isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (_errorMessage != null) {
+              return _ErrorView(
+                message: _errorMessage!,
+                onRetry: _fetchDetail,
+              );
+            }
+
+            final data = Map<String, dynamic>.from(
+              _detailData(service.dataView),
+>>>>>>> b70754b7 (feat: persiapan dyeing)
             );
 
-            if (!mounted) return;
-
-            if (result == true) {
-              Navigator.pop(context, true);
+            if (_greigeOrder.isNotEmpty) {
+              data['order_greige'] = _greigeOrder;
             }
+<<<<<<< HEAD
           },
           id: widget.id,
           updateStatus:
@@ -652,6 +723,34 @@ class _DyeingPreparationDetailScreenState
             },
           ),
 >>>>>>> 27570e76 (fix: detail persiapan dyeing)
+=======
+            return GreigeProcessDetailList(
+              data: data,
+              processName: 'Persiapan Dyeing',
+              processNoKey: 'warping_no',
+              onRefresh: _fetchDetail,
+              canDelete: widget.canDelete,
+              canUpdate: widget.canUpdate,
+              onDelete: () => _handleDelete(data),
+              onEdit: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditDyeingPreparationScreen(
+                      id: widget.id,
+                    ),
+                  ),
+                );
+
+                if (!mounted) return;
+
+                if (result == true) {
+                  Navigator.pop(context, true);
+                }
+              },
+            );
+          },
+>>>>>>> b70754b7 (feat: persiapan dyeing)
         ),
       ),
     );

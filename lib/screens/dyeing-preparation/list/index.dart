@@ -9,6 +9,7 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/components/master/card/item_dyeing_preparation_card.dart';
 =======
 import 'package:textile_tracking/components/master/card/item_process_card.dart';
@@ -17,6 +18,10 @@ import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
 =======
 import 'package:textile_tracking/components/master/card/item_dyeing_preparation_card.dart';
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+import 'package:textile_tracking/components/master/card/item_process_card.dart';
+import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/process_list.dart';
@@ -155,6 +160,7 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final service =
         Provider.of<DyeingPreparationService>(context, listen: false);
     await service.fetchPreparationList(context, params);
@@ -174,6 +180,13 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
 
     List<dynamic> loadData = service.items;
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+    await Provider.of<DyeingPreparationService>(context, listen: false)
+        .getDataList(context, params);
+
+    List<dynamic> loadData =
+        Provider.of<DyeingPreparationService>(context, listen: false).items;
+>>>>>>> b70754b7 (feat: persiapan dyeing)
 
     if (loadData.isEmpty) {
       setState(() {
@@ -339,6 +352,7 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
                           listen: false);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                       await service.fetchPreparationList(context, params);
 =======
                       await service.getDataList(context, params);
@@ -346,10 +360,14 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
 =======
                       await service.fetchPreparationList(context, params);
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+                      await service.getDataList(context, params);
+>>>>>>> b70754b7 (feat: persiapan dyeing)
                       return service.items;
                     },
                     isLoadMore: _isLoadMore,
                     canRead: _canRead,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                     itemBuilder: (item) => ItemDyeingPreparationCard(
@@ -366,6 +384,14 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
                     itemBuilder: (item) => ItemDyeingPreparationCard(
                       item: item,
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+                    itemBuilder: (item) => ItemProcessCard(
+                      label: 'No. Persiapan Dyeing',
+                      item: item,
+                      titleKey: 'prep_no',
+                      subtitleKey: 'work_orders',
+                      subtitleField: 'wo_no',
+>>>>>>> b70754b7 (feat: persiapan dyeing)
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -404,12 +430,18 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
         floatingActionButton: AnimatedSlide(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           duration: const Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : const Offset(0, 1),
+=======
+          duration: Duration(milliseconds: 200),
+          offset: _showFab ? Offset.zero : Offset(0, 1),
+>>>>>>> b70754b7 (feat: persiapan dyeing)
           child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 200),
             opacity: _showFab ? 1 : 0,
             child: CustomFloatingButton(
+<<<<<<< HEAD
               onPressed: () {
                 Navigator.push(
                   context,
@@ -440,6 +472,8 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
             opacity: _showFab ? 1 : 0,
             child: CustomFloatingButton(
 <<<<<<< HEAD
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
                 onPressed: () {
                   showDialog(
                     context: context,
@@ -467,6 +501,7 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
                   color: Colors.white,
                   size: 72,
                 )),
+<<<<<<< HEAD
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
               onPressed: () {
@@ -488,6 +523,8 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
               ),
             ),
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+>>>>>>> b70754b7 (feat: persiapan dyeing)
           ),
         ),
       ),

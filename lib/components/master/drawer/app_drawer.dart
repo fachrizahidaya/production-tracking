@@ -21,6 +21,7 @@ class _AppDrawerState extends State<AppDrawer> {
     'Sizing',
     'Weaving',
     'Shearing',
+    'Persiapan Dyeing',
     'Dyeing',
     'Press',
     'Tumbler',
@@ -40,7 +41,6 @@ class _AppDrawerState extends State<AppDrawer> {
     'Work Order',
     'Proses Produksi',
     'Laporan',
-    'Persiapan Dyeing'
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
@@ -174,7 +174,9 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                             ? Icons.grid_on
                                                                                             : item.title == 'Shearing'
                                                                                                 ? Icons.content_cut_outlined
-                                                                                                : Icons.menu,
+                                                                                                : item.title == 'Persiapan Dyeing'
+                                                                                                    ? Icons.format_color_fill_outlined
+                                                                                                    : Icons.menu,
                           ),
                           onTap: () {
                             Navigator.pop(context);

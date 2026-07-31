@@ -41,6 +41,8 @@ import 'package:textile_tracking/screens/account/eula.dart';
 import 'package:textile_tracking/screens/account/privacy_policy.dart';
 import 'package:textile_tracking/screens/account/terms_conditions.dart';
 import 'package:textile_tracking/screens/cross-cutting/index.dart';
+import 'package:textile_tracking/screens/dyeing-preparation/list/index.dart';
+import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
 import 'package:textile_tracking/screens/dyeing/index.dart';
 import 'package:textile_tracking/screens/embroidery/index.dart';
 import 'package:textile_tracking/screens/home/index.dart';
@@ -90,6 +92,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => SizingService()),
     ChangeNotifierProvider(create: (_) => WarpingService()),
     ChangeNotifierProvider(create: (_) => ShearingService()),
+    ChangeNotifierProvider(create: (_) => DyeingPreparationService()),
     ChangeNotifierProvider(create: (_) => UnitService()),
     ChangeNotifierProvider(create: (_) => OptionUnitService()),
     ChangeNotifierProvider(create: (_) => OptionMachineService()),

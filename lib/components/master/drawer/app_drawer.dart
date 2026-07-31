@@ -21,6 +21,7 @@ class _AppDrawerState extends State<AppDrawer> {
     'Sizing',
     'Weaving',
     'Shearing',
+    'Persiapan Dyeing',
     'Dyeing',
     'Press',
     'Tumbler',
@@ -186,7 +187,9 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                 ? Icons.content_cut_outlined
                                                                                                 : item.title == 'Laporan Produksi'
                                                                                                     ? Icons.file_copy_outlined
-                                                                                                    : Icons.menu,
+                                                                                                    : item.title == 'Persiapan Dyeing'
+                                                                                                        ? Icons.format_color_fill_outlined
+                                                                                                        : Icons.menu,
                           ),
                           onTap: () {
                             Navigator.pop(context);

@@ -5,6 +5,7 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
@@ -14,6 +15,15 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/note_editor.dart';
+=======
+import 'package:textile_tracking/components/master/form/select_form.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/components/process/create/note_item.dart';
+import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/info_tab.dart';
+import 'package:textile_tracking/components/work-order/tab/item_tab.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class DyeingPreparationFormSection extends StatefulWidget {
@@ -26,6 +36,7 @@ class DyeingPreparationFormSection extends StatefulWidget {
   final ValueNotifier<bool> isSubmitting;
   final VoidCallback selectWorkOrder;
   final bool firstLoading;
+<<<<<<< HEAD
   final List<Map<String, dynamic>> existingItems;
   final List<Map<String, dynamic>>? itemOptions;
   final greigeInfoMessage;
@@ -38,6 +49,8 @@ class DyeingPreparationFormSection extends StatefulWidget {
   final onDeleteAttachment;
   final onPreviewImage;
   final greigeReady;
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
   const DyeingPreparationFormSection({
     super.key,
@@ -50,6 +63,7 @@ class DyeingPreparationFormSection extends StatefulWidget {
     required this.isSubmitting,
     required this.selectWorkOrder,
     required this.firstLoading,
+<<<<<<< HEAD
     this.existingItems = const [],
     this.itemOptions,
     this.greigeInfoMessage,
@@ -62,6 +76,8 @@ class DyeingPreparationFormSection extends StatefulWidget {
     this.onDeleteAttachment,
     this.onPreviewImage,
     this.greigeReady = false,
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
   });
 
   @override
@@ -73,6 +89,7 @@ class _DyeingPreparationFormSectionState
     extends State<DyeingPreparationFormSection> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
+<<<<<<< HEAD
   final List<Map<String, dynamic>> greigeForms = [];
 
   @override
@@ -422,6 +439,8 @@ class _DyeingPreparationFormSectionState
     });
   }
 
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
   Future<void> _handleCancel(BuildContext context) async {
     Widget buildBoldMessage(String woNo) {
       return RichText(
@@ -440,7 +459,11 @@ class _DyeingPreparationFormSectionState
               ),
             ),
             const TextSpan(
+<<<<<<< HEAD
               text: ' tidak dibuat dan semua perubahan tidak disimpan!',
+=======
+              text: ' tidak dimulai dan semua perubahan tidak disimpan!',
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
             ),
           ],
         ),
@@ -459,9 +482,13 @@ class _DyeingPreparationFormSectionState
           Navigator.pop(context);
           Navigator.pop(context);
         },
+<<<<<<< HEAD
         title: widget.isEdit
             ? 'Batal Edit Persiapan Dyeing'
             : 'Batal Buat Persiapan Dyeing',
+=======
+        title: 'Batal Persiapan Dyeing',
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
         buttonBackground: CustomTheme().buttonColor('danger'),
         child: buildBoldMessage(widget.woData['wo_no']?.toString() ?? '-'),
       );
@@ -482,7 +509,11 @@ class _DyeingPreparationFormSectionState
           ),
           children: [
             const TextSpan(
+<<<<<<< HEAD
               text: 'Anda yakin ingin membuat Persiapan Dyeing untuk ',
+=======
+              text: 'Anda yakin ingin memulai Persiapan Dyeing untuk ',
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
             ),
             TextSpan(
               text: woNo,
@@ -503,6 +534,7 @@ class _DyeingPreparationFormSectionState
       return;
     }
 
+<<<<<<< HEAD
     final attachments = widget.attachments is List
         ? List<dynamic>.from(widget.attachments)
         : <dynamic>[];
@@ -519,6 +551,8 @@ class _DyeingPreparationFormSectionState
       return;
     }
 
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
     showConfirmationDialog(
       context: context,
       isLoading: widget.isSubmitting,
@@ -526,13 +560,20 @@ class _DyeingPreparationFormSectionState
         await Future.delayed(const Duration(milliseconds: 200));
         widget.isSubmitting.value = true;
         try {
+<<<<<<< HEAD
           _syncGreigeItemsToForm();
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
           await widget.handleSubmit();
         } finally {
           widget.isSubmitting.value = false;
         }
       },
+<<<<<<< HEAD
       title: widget.isEdit ? 'Edit Persiapan Dyeing' : 'Buat Persiapan Dyeing',
+=======
+      title: 'Mulai Persiapan Dyeing',
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
       buttonBackground: CustomTheme().buttonColor('primary'),
       child: buildBoldMessage(widget.woData['wo_no']?.toString() ?? '-'),
     );
@@ -540,7 +581,11 @@ class _DyeingPreparationFormSectionState
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     final isDisabled = widget.form?['wo_id'] == null || !widget.greigeReady;
+=======
+    final isDisabled = widget.form?['wo_id'] == null;
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -560,6 +605,7 @@ class _DyeingPreparationFormSectionState
 
                     return SingleChildScrollView(
                       padding: CustomTheme().padding('content'),
+<<<<<<< HEAD
                       child: Form(
                         key: widget.formKey,
                         child: Column(
@@ -597,6 +643,33 @@ class _DyeingPreparationFormSectionState
                             ]
                           ].separatedBy(CustomTheme().vGap('2xl')),
                         ),
+=======
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildWorkOrderForm(),
+                          // if (widget.form?['wo_id'] != null) ...[
+                          // InfoTab(
+                          //   data: widget.woData,
+                          //   label: 'Persiapan Dyeing',
+                          //   isTablet: isTablet,
+                          // ),
+                          // ItemTab(
+                          //   data: widget.woData,
+                          //   label: 'Persiapan Dyeing',
+                          //   withSpk: false,
+                          // ),
+                          // NoteItem(
+                          //   data: widget.woData,
+                          //   label: 'Persiapan Dyeing',
+                          // ),
+                          // AttachmentTab(
+                          //   existingAttachment:
+                          //       widget.woData['attachments'] ?? [],
+                          // ),
+                          // ],
+                        ].separatedBy(CustomTheme().vGap('2xl')),
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
                       ),
                     );
                   },
@@ -628,7 +701,11 @@ class _DyeingPreparationFormSectionState
                       ),
                       Expanded(
                         child: FormButton(
+<<<<<<< HEAD
                           label: widget.isEdit ? 'Simpan' : 'Buat',
+=======
+                          label: 'Mulai',
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
                           isDisabled: isDisabled,
                           onPressed: () => _handleSubmit(context),
                           customHeight: 56.0,
@@ -647,6 +724,7 @@ class _DyeingPreparationFormSectionState
   }
 
   Widget _buildWorkOrderForm() {
+<<<<<<< HEAD
     return TemplateCard(
       icon: Icons.assignment_outlined,
       title: 'Work Order',
@@ -843,6 +921,19 @@ class _DyeingPreparationFormSectionState
               ),
             ),
           ],
+=======
+    return Form(
+      key: widget.formKey,
+      child: TemplateCard(
+        icon: Icons.assignment_outlined,
+        title: 'Work Order',
+        child: SelectForm(
+          label: 'Work Order',
+          onTap: widget.selectWorkOrder,
+          selectedLabel: widget.form?['no_wo'] ?? '',
+          selectedValue: widget.form?['wo_id']?.toString() ?? '',
+          required: true,
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
         ),
       ),
     );

@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, unused_element, unused_element_parameter
 
+<<<<<<< HEAD
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -16,6 +17,17 @@ import 'package:textile_tracking/screens/dyeing-preparation/detail/edit_dyeing_p
 import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
 import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+=======
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/detail/greige_process_detail_list.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/models/option/option_greige_order.dart';
+import 'package:textile_tracking/screens/dyeing-preparation/detail/edit_dyeing_preparation.dart';
+import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
 class DyeingPreparationDetailScreen extends StatefulWidget {
   final id;
@@ -43,7 +55,14 @@ class _DyeingPreparationDetailScreenState
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
   bool _isLoading = true;
   String? _errorMessage;
+<<<<<<< HEAD
   Map<String, dynamic> _data = {};
+=======
+  final OptionGreigeOrderService _greigeOrderService =
+      OptionGreigeOrderService();
+
+  Map<String, dynamic> _greigeOrder = {};
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
   @override
   void initState() {
@@ -69,6 +88,7 @@ class _DyeingPreparationDetailScreenState
       final dyeingPreparationService =
           Provider.of<DyeingPreparationService>(context, listen: false);
 
+<<<<<<< HEAD
       await dyeingPreparationService.fetchPreparationDetail(
         context,
         widget.id,
@@ -85,6 +105,33 @@ class _DyeingPreparationDetailScreenState
       _errorMessage = e.toString();
     } finally {
       if (mounted && _isLoading) {
+=======
+      await dyeingPreparationService.getDataView(context, widget.id);
+
+      final detail = _detailData(dyeingPreparationService.dataView);
+
+      final orderGreige = detail['order_greige'] is Map
+          ? Map<String, dynamic>.from(detail['order_greige'])
+          : <String, dynamic>{};
+
+      final orderGreigeId = orderGreige['id'];
+
+      if (orderGreigeId != null) {
+        await _greigeOrderService.getDataView(orderGreigeId.toString());
+
+        final response = _greigeOrderService.dataView;
+
+        _greigeOrder = response['data'] is Map<String, dynamic>
+            ? Map<String, dynamic>.from(response['data'])
+            : Map<String, dynamic>.from(response);
+      } else {
+        _greigeOrder = {};
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      if (mounted) {
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
         setState(() {
           _isLoading = false;
         });
@@ -98,6 +145,7 @@ class _DyeingPreparationDetailScreenState
     return response;
   }
 
+<<<<<<< HEAD
   int _fileSize(dynamic value) {
     if (value is int) return value;
     if (value is num) return value.toInt();
@@ -255,6 +303,9 @@ class _DyeingPreparationDetailScreenState
   Future _handleDelete(dynamic _) async {
     final data = _data;
 
+=======
+  Future<void> _handleDelete(Map<String, dynamic> data) async {
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
     final hasDeletePermission = widget.canDelete == true;
     final canDeleteItem = data['can_delete'] != false;
 
@@ -271,18 +322,26 @@ class _DyeingPreparationDetailScreenState
     showConfirmationDialog(
       context: context,
       title: 'Hapus Data',
+<<<<<<< HEAD
       message: 'Apakah Anda yakin ingin menghapus proses Persiapan Dyeing?',
+=======
+      message: 'Apakah Anda yakin ingin menghapus proses persiapan dyeing?',
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
       isLoading: _deleteLoading,
       buttonBackground: CustomTheme().buttonColor('danger'),
       onConfirm: () async {
         try {
           final message = await Provider.of<DyeingPreparationService>(context,
                   listen: false)
+<<<<<<< HEAD
               .deleteItem(
             context,
             widget.id.toString(),
             _deleteLoading,
           );
+=======
+              .deleteItem(context, widget.id.toString(), _deleteLoading);
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
@@ -314,6 +373,7 @@ class _DyeingPreparationDetailScreenState
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -400,6 +460,57 @@ class _DyeingPreparationDetailScreenState
               );
             },
           ),
+=======
+    return Scaffold(
+      backgroundColor: const Color(0xFFF7F8FA),
+      body: SafeArea(
+        child: Consumer<DyeingPreparationService>(
+          builder: (context, service, _) {
+            if (_isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (_errorMessage != null) {
+              return _ErrorView(
+                message: _errorMessage!,
+                onRetry: _fetchDetail,
+              );
+            }
+
+            final data = Map<String, dynamic>.from(
+              _detailData(service.dataView),
+            );
+
+            if (_greigeOrder.isNotEmpty) {
+              data['order_greige'] = _greigeOrder;
+            }
+            return GreigeProcessDetailList(
+              data: data,
+              processName: 'Persiapan Dyeing',
+              processNoKey: 'warping_no',
+              onRefresh: _fetchDetail,
+              canDelete: widget.canDelete,
+              canUpdate: widget.canUpdate,
+              onDelete: () => _handleDelete(data),
+              onEdit: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditDyeingPreparationScreen(
+                      id: widget.id,
+                    ),
+                  ),
+                );
+
+                if (!mounted) return;
+
+                if (result == true) {
+                  Navigator.pop(context, true);
+                }
+              },
+            );
+          },
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
         ),
       ),
     );

@@ -11,6 +11,7 @@ import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_prepara
 class CreateDyeingPreparation extends StatelessWidget {
   const CreateDyeingPreparation({super.key});
 
+<<<<<<< HEAD
   List<Map<String, dynamic>> _mapCreateItems(dynamic items) {
     return List<dynamic>.from(items ?? []).map<Map<String, dynamic>>((rawItem) {
       final item = Map<String, dynamic>.from(rawItem);
@@ -23,18 +24,27 @@ class CreateDyeingPreparation extends StatelessWidget {
     }).toList();
   }
 
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
     final dyeingPreparation = DyeingPreparation(
       woId: int.tryParse(form['wo_id']?.toString() ?? ''),
+<<<<<<< HEAD
       items: _mapCreateItems(form['items']),
       notes: form['notes']?.toString() ?? '',
       attachments: form['attachments'],
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
     );
 
     final message =
         await Provider.of<DyeingPreparationService>(context, listen: false)
+<<<<<<< HEAD
             .createPreparation(context, dyeingPreparation, isLoading);
+=======
+            .addItem(context, dyeingPreparation, isLoading);
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
     Navigator.pushNamedAndRemoveUntil(
         context, '/dyeing-preparations', (route) => false);
@@ -45,7 +55,11 @@ class CreateDyeingPreparation extends StatelessWidget {
           title: 'Persiapan Dyeing Dimulai',
           child: buildBoldMessage(
             message: message,
+<<<<<<< HEAD
             prefix: "PD",
+=======
+            prefix: "PDP",
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
           ));
     });
   }

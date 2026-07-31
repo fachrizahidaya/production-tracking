@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+<<<<<<< HEAD
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
@@ -20,6 +21,14 @@ import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
+=======
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
+import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/models/option/option_work_order.dart';
+import 'package:textile_tracking/screens/dyeing-preparation/create/dyeing_preparation_form_section.dart';
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
 class CreateDyeingPreparationProcessManual extends StatefulWidget {
   final dynamic id;
@@ -45,14 +54,18 @@ class _CreateDyeingPreparationProcessManualState
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final WorkOrderService _workOrderService = WorkOrderService();
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
+<<<<<<< HEAD
   final String baseUrl = dotenv.env['API_URL'] ?? '';
   final TextEditingController _noteController = TextEditingController();
   late List<Map<String, dynamic>> allAttachments;
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
   bool _firstLoading = false;
   bool _isFetchingWorkOrder = false;
   List<dynamic> workOrderOption = [];
   Map<String, dynamic> woData = {};
+<<<<<<< HEAD
   List<Map<String, dynamic>> existingItems = [];
   List<Map<String, dynamic>> greigeItemOptions = [];
   String? greigeInfoMessage;
@@ -246,6 +259,8 @@ class _CreateDyeingPreparationProcessManualState
       }).toList();
     }).toList();
   }
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
   @override
   void initState() {
@@ -255,6 +270,7 @@ class _CreateDyeingPreparationProcessManualState
       woData = widget.data!;
     }
 
+<<<<<<< HEAD
     _noteController.text = widget.form?['notes']?.toString() ?? '';
 
     final existing = List<Map<String, dynamic>>.from(
@@ -313,6 +329,13 @@ class _CreateDyeingPreparationProcessManualState
     }
   }
 
+=======
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchWorkOrder();
+    });
+  }
+
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
   Future<void> _fetchWorkOrder() async {
     setState(() {
       _isFetchingWorkOrder = true;
@@ -327,7 +350,13 @@ class _CreateDyeingPreparationProcessManualState
         workOrderOption = service.dataListOption;
       });
     } catch (e) {
+<<<<<<< HEAD
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
+=======
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
     } finally {
       setState(() {
         _isFetchingWorkOrder = false;
@@ -341,6 +370,7 @@ class _CreateDyeingPreparationProcessManualState
     });
 
     try {
+<<<<<<< HEAD
       final data = await _workOrderService.getFormInfo(id);
 
       final List<dynamic> items = List<dynamic>.from(data['items'] ?? []);
@@ -381,6 +411,17 @@ class _CreateDyeingPreparationProcessManualState
           _firstLoading = false;
         });
       }
+=======
+      await _workOrderService.getDataView(id);
+
+      setState(() {
+        woData = _workOrderService.dataView;
+      });
+    } finally {
+      setState(() {
+        _firstLoading = false;
+      });
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
     }
   }
 
@@ -389,7 +430,13 @@ class _CreateDyeingPreparationProcessManualState
       showDialog(
         context: context,
         barrierDismissible: false,
+<<<<<<< HEAD
         builder: (context) => const Center(child: CircularProgressIndicator()),
+=======
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
       );
       return;
     }
@@ -404,6 +451,7 @@ class _CreateDyeingPreparationProcessManualState
           options: workOrderOption,
           selected: widget.form?['wo_id']?.toString() ?? '',
           handleChangeValue: (selected) async {
+<<<<<<< HEAD
             if (selected == null) {
               setState(() {
                 widget.form?['wo_id'] = null;
@@ -415,6 +463,8 @@ class _CreateDyeingPreparationProcessManualState
               return;
             }
 
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
             final woId = selected['value']?.toString();
 
             setState(() {
@@ -431,6 +481,7 @@ class _CreateDyeingPreparationProcessManualState
     );
   }
 
+<<<<<<< HEAD
   void _handleChangeInput(String key, dynamic value) {
     setState(() {
       widget.form?[key] = value;
@@ -558,12 +609,17 @@ class _CreateDyeingPreparationProcessManualState
     return completer.future;
   }
 
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
   @override
   void dispose() {
     widget.form?.clear();
     _isSubmitting.dispose();
+<<<<<<< HEAD
     _noteController.dispose();
     _isLoading.dispose();
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
     super.dispose();
   }
 
@@ -575,12 +631,17 @@ class _CreateDyeingPreparationProcessManualState
       form: widget.form,
       formKey: _formKey,
       woData: widget.data != null && widget.data!.isNotEmpty
+<<<<<<< HEAD
           ? (woData.isNotEmpty ? woData : widget.data!)
+=======
+          ? widget.data!
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
           : woData,
       handleSubmit: widget.handleSubmit ?? () async {},
       isSubmitting: _isSubmitting,
       selectWorkOrder: _selectWorkOrder,
       firstLoading: _firstLoading,
+<<<<<<< HEAD
       existingItems: existingItems,
       itemOptions: greigeItemOptions.isEmpty ? null : greigeItemOptions,
       greigeInfoMessage: greigeInfoMessage,
@@ -595,6 +656,8 @@ class _CreateDyeingPreparationProcessManualState
       onPreviewImage: (isNew, filePath) {
         showImageDialog(context, isNew, filePath);
       },
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
     );
   }
 }

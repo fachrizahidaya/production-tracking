@@ -1,9 +1,13 @@
+<<<<<<< HEAD
 import 'package:flutter/material.dart';
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 
 class DyeingPreparation {
   final id;
   final woId;
+<<<<<<< HEAD
   final items;
   final notes;
   final attachments;
@@ -37,6 +41,17 @@ class DyeingPreparation {
       'attachments': attachments,
       'attachment_ids': attachmentIds,
     };
+=======
+
+  DyeingPreparation({this.id, this.woId});
+
+  factory DyeingPreparation.fromJson(Map<String, dynamic> json) {
+    return DyeingPreparation(id: json['id'], woId: json['wo_id']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = {'id': id, 'wo_id': woId};
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
     data.removeWhere((key, value) => value == null);
 
@@ -51,6 +66,7 @@ class DyeingPreparationService extends BaseCrudService<DyeingPreparation> {
           fromJson: (json) => DyeingPreparation.fromJson(json),
           toJson: (item) => item.toJson(),
         );
+<<<<<<< HEAD
 
   Future<void> fetchPreparationList(
     BuildContext context,
@@ -97,4 +113,6 @@ class DyeingPreparationService extends BaseCrudService<DyeingPreparation> {
       isSubmitting,
     );
   }
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 }

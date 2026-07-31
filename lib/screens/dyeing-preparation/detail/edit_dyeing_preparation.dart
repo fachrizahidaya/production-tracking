@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+<<<<<<< HEAD
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -17,12 +18,34 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/create/dyeing_preparation_form_section.dart';
+=======
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/detail/greige_process_edit_layout.dart';
+import 'package:textile_tracking/components/master/button/cancel_button.dart';
+import 'package:textile_tracking/components/master/button/form_button.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
+import 'package:textile_tracking/components/master/form/select_form.dart';
+import 'package:textile_tracking/components/master/form/text_form.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/helpers/util/note_editor.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
 
 class EditDyeingPreparationScreen extends StatefulWidget {
   final dynamic id;
 
+<<<<<<< HEAD
   const EditDyeingPreparationScreen({super.key, required this.id});
+=======
+  const EditDyeingPreparationScreen({
+    super.key,
+    required this.id,
+  });
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
   @override
   State<EditDyeingPreparationScreen> createState() =>
@@ -36,7 +59,10 @@ class _EditDyeingPreparationScreenState
   final TextEditingController _yarnQtyController = TextEditingController();
   final TextEditingController _warpingTypeController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
+<<<<<<< HEAD
   final String baseUrl = dotenv.env['API_URL'] ?? '';
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
   bool _isLoading = true;
   bool _isFetchingMachine = false;
@@ -45,6 +71,7 @@ class _EditDyeingPreparationScreenState
   Map<String, dynamic> _data = {};
   final Map<String, dynamic> _form = {};
   List<dynamic> _machineOption = [];
+<<<<<<< HEAD
   final List<Map<String, dynamic>> _greigeForms = [];
   List<Map<String, dynamic>> existingItems = [];
   List<Map<String, dynamic>> itemOptions = [];
@@ -62,14 +89,19 @@ class _EditDyeingPreparationScreenState
         .map((e) => e['id'])
         .toList();
   }
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
   @override
   void initState() {
     super.initState();
+<<<<<<< HEAD
     allAttachments = [
       {'is_add_button': true},
     ];
 
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
     });
@@ -77,15 +109,20 @@ class _EditDyeingPreparationScreenState
 
   @override
   void dispose() {
+<<<<<<< HEAD
     _disposeGreigeForms();
     _isSubmitting.dispose();
     _attachmentLoading.dispose();
+=======
+    _isSubmitting.dispose();
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
     _yarnQtyController.dispose();
     _warpingTypeController.dispose();
     _notesController.dispose();
     super.dispose();
   }
 
+<<<<<<< HEAD
   String _baseCode(String? code) {
     if (code == null || code.isEmpty) return '';
 
@@ -260,6 +297,8 @@ class _EditDyeingPreparationScreenState
     }).toList();
   }
 
+=======
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
   Future<void> _loadData() async {
     setState(() {
       _isLoading = true;
@@ -267,22 +306,34 @@ class _EditDyeingPreparationScreenState
     });
 
     try {
+<<<<<<< HEAD
       final service = Provider.of<DyeingPreparationService>(
         context,
         listen: false,
       );
       await service.fetchPreparationDetail(context, widget.id);
+=======
+      final service =
+          Provider.of<DyeingPreparationService>(context, listen: false);
+      await service.getDataView(context, widget.id);
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
       final response = service.dataView;
       final detail = response['data'] is Map<String, dynamic>
           ? Map<String, dynamic>.from(response['data'])
           : Map<String, dynamic>.from(response);
 
+<<<<<<< HEAD
       woData = Map<String, dynamic>.from(detail["work_orders"] ?? {});
+=======
+      final machine = _mapValue(detail['machine']);
+      final orderGreige = _mapValue(detail['order_greige']);
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
       _form
         ..clear()
         ..addAll({
+<<<<<<< HEAD
           "wo_id": detail["wo_id"],
           "no_wo": woData["wo_no"] ?? detail["wo_no"] ?? "",
           "notes": detail["notes"] ?? "",
@@ -306,6 +357,18 @@ class _EditDyeingPreparationScreenState
       existingItems = _mapExistingItems(workOrderItems, options);
       itemOptions = options;
 
+=======
+          'machine_id': detail['machine_id']?.toString(),
+          'yarn_qty': detail['yarn_qty']?.toString() ?? '',
+          'order_greige_id': detail['order_greige_id']?.toString(),
+          'no_greige_order': orderGreige['og_no']?.toString() ?? '',
+
+          // tambahkan ini
+          'warping_type': detail['warping_type']?.toString() ?? '',
+          'notes': detail['notes']?.toString() ?? '',
+        });
+
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
       _yarnQtyController.text = detail['yarn_qty']?.toString() ?? '';
       _warpingTypeController.text = detail['warping_type']?.toString() ?? '';
 
@@ -329,6 +392,7 @@ class _EditDyeingPreparationScreenState
     });
   }
 
+<<<<<<< HEAD
   Future<File?> compressImage(String path) async {
     if (kIsWeb) {
       return File(path);
@@ -446,6 +510,12 @@ class _EditDyeingPreparationScreenState
 
   bool get _isFormInvalid {
     return _form['wo_id'] == null || _form['wo_id'].toString().isEmpty;
+=======
+  bool get _isFormInvalid {
+    return (_form['machine_id'] == null ||
+            _form['machine_id'].toString().isEmpty) ||
+        (_form['yarn_qty'] == null || _form['yarn_qty'].toString().isEmpty);
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
   }
 
   Future<void> _handleSubmit() async {
@@ -453,6 +523,7 @@ class _EditDyeingPreparationScreenState
 
     final dyeingPreparation = DyeingPreparation(
       woId: int.tryParse(_form['wo_id']?.toString() ?? ''),
+<<<<<<< HEAD
       items: _form['items'] ?? [],
       notes: _form['notes']?.toString(),
       attachments: _form['attachments'],
@@ -469,6 +540,15 @@ class _EditDyeingPreparationScreenState
         dyeingPreparation,
         _isSubmitting,
       );
+=======
+    );
+
+    try {
+      final message = await Provider.of<DyeingPreparationService>(context,
+              listen: false)
+          .updateItem(
+              context, widget.id.toString(), dyeingPreparation, _isSubmitting);
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
 
       await showAlertDialog(
         context: context,
@@ -476,6 +556,7 @@ class _EditDyeingPreparationScreenState
         message: message,
       );
 
+<<<<<<< HEAD
       if (!mounted) return;
 
       // keluar dari Edit
@@ -483,6 +564,11 @@ class _EditDyeingPreparationScreenState
 
       // keluar dari Detail
       Navigator.pop(context, true);
+=======
+      if (mounted) {
+        Navigator.pop(context, true);
+      }
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
     } catch (e) {
       await showAlertDialog(
         context: context,
@@ -492,6 +578,7 @@ class _EditDyeingPreparationScreenState
     }
   }
 
+<<<<<<< HEAD
   @override
   Widget build(BuildContext context) {
     return DyeingPreparationFormSection(
@@ -528,6 +615,141 @@ class _EditDyeingPreparationScreenState
       (item['weight'] as TextEditingController?)?.dispose();
     }
     _greigeForms.clear();
+=======
+  Future<void> _handleCancel() async {
+    showConfirmationDialog(
+      context: context,
+      isLoading: _isSubmitting,
+      onConfirm: () async {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+      title: 'Batal Edit Proses Persiapan Dyeing',
+      message: 'Anda yakin ingin kembali? Semua perubahan tidak disimpan',
+      buttonBackground: CustomTheme().buttonColor('danger'),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GreigeProcessEditLayout(
+      title: 'Edit Persiapan Dyeing',
+      id: widget.id,
+      isLoading: _isLoading,
+      errorMessage: _errorMessage,
+      onRetry: _loadData,
+      onCancel: _handleCancel,
+      formKey: _formKey,
+      formSections: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: _buildSummaryCard()),
+            Expanded(child: _buildGreigeCard()),
+          ].separatedBy(CustomTheme().hGap('xl')),
+        ),
+        Row(
+          children: [
+            Expanded(child: _buildYarnCard()),
+          ].separatedBy(CustomTheme().hGap('xl')),
+        ),
+        _buildAdditionalCard(),
+      ],
+      submitSection: _buildSubmitSection(),
+      greigeOrderData: _mapValue(_data['order_greige']),
+    );
+  }
+
+  Widget _buildSummaryCard() {
+    final orderGreige = _mapValue(_data['order_greige']);
+
+    return TemplateCard(
+      title: 'Informasi Persiapan Dyeing',
+      icon: Icons.assignment_outlined,
+      child: Column(
+        children: [
+          _InfoLine('No. Persiapan Dyeing', _display(_data['warping_no'])),
+          // _InfoLine('Status', _display(_data['status'])),
+          // _InfoLine('Greige Order', _display(orderGreige['og_no'])),
+        ].separatedBy(Divider(height: 18, color: Colors.grey.shade200)),
+      ),
+    );
+  }
+
+  Widget _buildGreigeCard() {
+    return TemplateCard(
+      title: 'Greige Order',
+      icon: Icons.assessment_outlined,
+      child: SelectForm(
+        label: 'Greige Order',
+        onTap: () {},
+        selectedLabel: _form['no_greige_order']?.toString() ?? '',
+        selectedValue: _form['order_greige_id']?.toString() ?? '',
+        required: true,
+        isDisabled: true,
+      ),
+    );
+  }
+
+  Widget _buildYarnCard() {
+    return TemplateCard(
+      title: 'Benang',
+      icon: Icons.join_inner_outlined,
+      child: TextForm(
+        label: 'Jumlah Benang (KG)',
+        controller: _yarnQtyController,
+        req: false,
+        isNumber: true,
+        isSorting: true,
+        handleChange: (value) => _handleChangeInput('yarn_qty', value),
+      ),
+    );
+  }
+
+  Widget _buildAdditionalCard() {
+    return Column(
+      children: [
+        NoteEditor(
+          controller: _notesController,
+          form: _form,
+          formKey: 'notes',
+          label: 'Catatan',
+          onChanged: (value) {
+            _handleChangeInput('notes', value);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSubmitSection() {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _isSubmitting,
+      builder: (context, isSubmitting, _) {
+        return Row(
+          children: [
+            Expanded(
+              child: CancelButton(
+                label: 'Batal',
+                onPressed: () => Navigator.pop(context),
+                customHeight: 50.0,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: FormButton(
+                label: 'Simpan',
+                isLoading: isSubmitting,
+                isDisabled: _isFormInvalid,
+                customHeight: 50.0,
+                onPressed: _handleSubmit,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
   }
 }
 

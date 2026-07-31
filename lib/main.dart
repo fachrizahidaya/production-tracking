@@ -114,9 +114,13 @@ void main() async {
     ChangeNotifierProvider(create: (_) => WarpingService()),
     ChangeNotifierProvider(create: (_) => ShearingService()),
 <<<<<<< HEAD
+<<<<<<< HEAD
     ChangeNotifierProvider(create: (_) => DyeingPreparationService()),
 =======
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+    ChangeNotifierProvider(create: (_) => DyeingPreparationService()),
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
     ChangeNotifierProvider(create: (_) => UnitService()),
     ChangeNotifierProvider(create: (_) => OptionUnitService()),
     ChangeNotifierProvider(create: (_) => OptionMachineService()),

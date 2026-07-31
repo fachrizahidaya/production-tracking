@@ -22,9 +22,13 @@ class _AppDrawerState extends State<AppDrawer> {
     'Weaving',
     'Shearing',
 <<<<<<< HEAD
+<<<<<<< HEAD
     'Persiapan Dyeing',
 =======
 >>>>>>> a1ea7df (feat: warping)
+=======
+    'Persiapan Dyeing',
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
     'Dyeing',
     'Press',
     'Tumbler',
@@ -254,8 +258,14 @@ class _AppDrawerState extends State<AppDrawer> {
 =======
                                                                                                 : item.title == 'Laporan Produksi'
                                                                                                     ? Icons.file_copy_outlined
+<<<<<<< HEAD
                                                                                                     : Icons.menu,
 >>>>>>> 7a6aa3b1 (feat: model for report)
+=======
+                                                                                                    : item.title == 'Persiapan Dyeing'
+                                                                                                        ? Icons.format_color_fill_outlined
+                                                                                                        : Icons.menu,
+>>>>>>> 57f45d55 (feat: persiapan dyeing)
                           ),
                           onTap: () {
                             Navigator.pop(context);

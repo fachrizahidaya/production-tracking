@@ -23,8 +23,10 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
 =======
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
+import 'package:textile_tracking/models/master/spk.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/create/dyeing_preparation_form_section.dart';
@@ -53,18 +55,24 @@ class _CreateDyeingPreparationProcessManualState
     extends State<CreateDyeingPreparationProcessManual> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final WorkOrderService _workOrderService = WorkOrderService();
+  final SpkService _spkService = SpkService();
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
+<<<<<<< HEAD
 <<<<<<< HEAD
   final String baseUrl = dotenv.env['API_URL'] ?? '';
   final TextEditingController _noteController = TextEditingController();
   late List<Map<String, dynamic>> allAttachments;
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+  final String baseUrl = dotenv.env['API_URL'] ?? '';
+>>>>>>> 4281d8b4 (feat: persiapan dyeing)
 
   bool _firstLoading = false;
   bool _isFetchingWorkOrder = false;
   List<dynamic> workOrderOption = [];
   Map<String, dynamic> woData = {};
+<<<<<<< HEAD
 <<<<<<< HEAD
   List<Map<String, dynamic>> existingItems = [];
   List<Map<String, dynamic>> greigeItemOptions = [];
@@ -261,6 +269,32 @@ class _CreateDyeingPreparationProcessManualState
   }
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+  List<Map<String, dynamic>> existingItems = [];
+
+  int? _toInt(dynamic value) {
+    if (value is int) return value;
+    if (value is String) return int.tryParse(value);
+
+    return null;
+  }
+
+  List<Map<String, dynamic>> _mapExistingItems(List<dynamic> items) {
+    return items.where((e) => e != null).map<Map<String, dynamic>>((e) {
+      final item = Map<String, dynamic>.from(e);
+
+      return {
+        "item_id": item["item_id"],
+        "spk_item_id": item["spk_item_id"],
+        "item_code": item["item_code"] ?? "",
+        "item_name": item["item_name"] ?? "",
+        "spk_no": item["spk_no"] ?? "",
+        "qty": item["qty"] ?? 0,
+        "weight": item["weight"] ?? 0,
+      };
+    }).toList();
+  }
+>>>>>>> 4281d8b4 (feat: persiapan dyeing)
 
   @override
   void initState() {
@@ -268,6 +302,9 @@ class _CreateDyeingPreparationProcessManualState
 
     if (widget.data != null && widget.data!.isNotEmpty) {
       woData = widget.data!;
+      existingItems = _mapExistingItems(
+        List<dynamic>.from(widget.data!['items'] ?? []),
+      );
     }
 
 <<<<<<< HEAD
@@ -414,14 +451,71 @@ class _CreateDyeingPreparationProcessManualState
 =======
       await _workOrderService.getDataView(id);
 
+      final data = _workOrderService.dataView;
+
+      final List<dynamic> items = List<dynamic>.from(data['items'] ?? []);
+
+      if (items.isEmpty) {
+        throw 'Item tidak ditemukan.';
+      }
+
+      if (items.isEmpty) {
+        throw Exception('Work Order tidak memiliki item');
+      }
+
+      final firstItem = Map<String, dynamic>.from(items.first);
+
+      final spkItemId = _toInt(firstItem['spk_item_id']);
+
+      if (spkItemId == null) {
+        throw 'Item Work Order tidak memiliki SPK item yang valid.';
+      }
+
+      final stock = await _spkService.checkStock(spkItemId: spkItemId);
+
+      final stockData = Map<String, dynamic>.from(
+        stock['data'] ?? stock,
+      );
+
+      if (stockData['available'] != true) {
+        throw stockData['message']?.toString() ?? 'Stok greige tidak tersedia.';
+      }
+
+      final spkItemResponse = await _spkService.getSpkItem(spkItemId);
+      final spkItem = Map<String, dynamic>.from(
+        spkItemResponse['data'] ?? spkItemResponse,
+      );
+
+      if (spkItem['pipeline'] != null) {
+        throw 'Greige sedang berada pada proses lain.';
+      }
+
       setState(() {
-        woData = _workOrderService.dataView;
+        woData = data;
+
+        existingItems = _mapExistingItems(items);
       });
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
     } finally {
+<<<<<<< HEAD
       setState(() {
         _firstLoading = false;
       });
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+      if (mounted) {
+        setState(() {
+          _firstLoading = false;
+        });
+      }
+>>>>>>> 4281d8b4 (feat: persiapan dyeing)
     }
   }
 
@@ -452,19 +546,28 @@ class _CreateDyeingPreparationProcessManualState
           selected: widget.form?['wo_id']?.toString() ?? '',
           handleChangeValue: (selected) async {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4281d8b4 (feat: persiapan dyeing)
             if (selected == null) {
               setState(() {
                 widget.form?['wo_id'] = null;
                 widget.form?['no_wo'] = '';
                 woData = {};
                 existingItems = [];
+<<<<<<< HEAD
                 greigeItemOptions = [];
+=======
+>>>>>>> 4281d8b4 (feat: persiapan dyeing)
               });
               return;
             }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+>>>>>>> 4281d8b4 (feat: persiapan dyeing)
             final woId = selected['value']?.toString();
 
             setState(() {
@@ -642,6 +745,7 @@ class _CreateDyeingPreparationProcessManualState
       selectWorkOrder: _selectWorkOrder,
       firstLoading: _firstLoading,
 <<<<<<< HEAD
+<<<<<<< HEAD
       existingItems: existingItems,
       itemOptions: greigeItemOptions.isEmpty ? null : greigeItemOptions,
       greigeInfoMessage: greigeInfoMessage,
@@ -658,6 +762,9 @@ class _CreateDyeingPreparationProcessManualState
       },
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+      existingItems: existingItems,
+>>>>>>> 4281d8b4 (feat: persiapan dyeing)
     );
   }
 }

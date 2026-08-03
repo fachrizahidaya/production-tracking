@@ -86,6 +86,7 @@ class _CreateDyeingPreparationProcessManualState
   final TextEditingController _noteController = TextEditingController();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   late List<Map<String, dynamic>> allAttachments;
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
@@ -102,6 +103,8 @@ class _CreateDyeingPreparationProcessManualState
 =======
   final String baseUrl = dotenv.env['API_URL'] ?? '';
 >>>>>>> 514dc398 (feat: persiapan dyeing)
+=======
+>>>>>>> c0b3008b (feat: buat persiapan dyeing)
 
   bool _firstLoading = false;
   bool _isFetchingWorkOrder = false;
@@ -505,6 +508,7 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> b70754b7 (feat: persiapan dyeing)
 =======
   List<Map<String, dynamic>> existingItems = [];
+  String? greigeInfoMessage;
 
   int? _toInt(dynamic value) {
     if (value is int) return value;
@@ -514,17 +518,26 @@ class _CreateDyeingPreparationProcessManualState
   }
 
   List<Map<String, dynamic>> _mapExistingItems(List<dynamic> items) {
-    return items.where((e) => e != null).map<Map<String, dynamic>>((e) {
+    return items.map<Map<String, dynamic>>((e) {
       final item = Map<String, dynamic>.from(e);
 
+      final greige = (item["greige_items"] as List?)?.isNotEmpty == true
+          ? Map<String, dynamic>.from(item["greige_items"][0])
+          : {};
+
       return {
-        "item_id": item["item_id"],
+        "id": greige["id"],
+        "work_order_item_id": item["id"],
+        "item_id": greige["greige_item_id"] ?? item["item_id"],
         "spk_item_id": item["spk_item_id"],
-        "item_code": item["item_code"] ?? "",
-        "item_name": item["item_name"] ?? "",
-        "spk_no": item["spk_no"] ?? "",
-        "qty": item["qty"] ?? 0,
-        "weight": item["weight"] ?? 0,
+        "item_code": item["item_code"],
+        "item_name": item["item_name"],
+        "spk_no": greige["greige_item_op_no"],
+        "qty": greige["qty"] ?? item["qty"],
+        "weight": greige["weight"] ?? item["weight"],
+        "qty_tolerance": greige["qty_tolerance"] ?? 0,
+        "unit_id": greige["unit_id"] ?? 1,
+        "weight_unit_id": greige["weight_unit_id"] ?? 2,
       };
     }).toList();
   }
@@ -744,35 +757,32 @@ class _CreateDyeingPreparationProcessManualState
         throw 'Item tidak ditemukan.';
       }
 
-      if (items.isEmpty) {
-        throw Exception('Work Order tidak memiliki item');
-      }
+      final List<Map<String, dynamic>> availableItems = [];
 
-      final firstItem = Map<String, dynamic>.from(items.first);
+      for (final rawItem in items) {
+        final item = Map<String, dynamic>.from(rawItem);
 
-      final spkItemId = _toInt(firstItem['spk_item_id']);
+        final spkItemId = _toInt(item['spk_item_id']);
 
-      if (spkItemId == null) {
-        throw 'Item Work Order tidak memiliki SPK item yang valid.';
-      }
+        if (spkItemId == null) {
+          continue;
+        }
 
-      final stock = await _spkService.checkStock(spkItemId: spkItemId);
+        final stock = await _spkService.checkStock(
+          spkItemId: spkItemId,
+        );
 
-      final stockData = Map<String, dynamic>.from(
-        stock['data'] ?? stock,
-      );
+        final stockData = Map<String, dynamic>.from(
+          stock['data'] ?? stock,
+        );
 
-      if (stockData['available'] != true) {
-        throw stockData['message']?.toString() ?? 'Stok greige tidak tersedia.';
-      }
+        final bool available = stockData['available'] == true;
 
-      final spkItemResponse = await _spkService.getSpkItem(spkItemId);
-      final spkItem = Map<String, dynamic>.from(
-        spkItemResponse['data'] ?? spkItemResponse,
-      );
+        final bool greigeAvailable = item['greige_available'] == true;
 
-      if (spkItem['pipeline'] != null) {
-        throw 'Greige sedang berada pada proses lain.';
+        if (available && greigeAvailable) {
+          availableItems.add(item);
+        }
       }
 
       setState(() {
@@ -782,8 +792,18 @@ class _CreateDyeingPreparationProcessManualState
 =======
         woData = data;
 
+<<<<<<< HEAD
         existingItems = _mapExistingItems(items);
 >>>>>>> 514dc398 (feat: persiapan dyeing)
+=======
+        if (availableItems.isEmpty) {
+          existingItems = [];
+          greigeInfoMessage = 'Masih diproses atau greige tidak tersedia.';
+        } else {
+          existingItems = _mapExistingItems(availableItems);
+          greigeInfoMessage = null;
+        }
+>>>>>>> c0b3008b (feat: buat persiapan dyeing)
       });
     } catch (e) {
       if (!mounted) return;
@@ -963,14 +983,18 @@ class _CreateDyeingPreparationProcessManualState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+>>>>>>> c0b3008b (feat: buat persiapan dyeing)
   void _handleChangeInput(String key, dynamic value) {
     setState(() {
       widget.form?[key] = value;
     });
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -1202,6 +1226,8 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+>>>>>>> c0b3008b (feat: buat persiapan dyeing)
   @override
   void dispose() {
     widget.form?.clear();
@@ -1253,6 +1279,7 @@ class _CreateDyeingPreparationProcessManualState
 <<<<<<< HEAD
 <<<<<<< HEAD
       existingItems: existingItems,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       itemOptions: greigeItemOptions.isEmpty ? null : greigeItemOptions,
@@ -1308,6 +1335,11 @@ class _CreateDyeingPreparationProcessManualState
 =======
       existingItems: existingItems,
 >>>>>>> 514dc398 (feat: persiapan dyeing)
+=======
+      greigeInfoMessage: greigeInfoMessage,
+      handleChangeInput: _handleChangeInput,
+      note: _noteController,
+>>>>>>> c0b3008b (feat: buat persiapan dyeing)
     );
   }
 }

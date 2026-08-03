@@ -43,6 +43,7 @@ class CreateDyeingPreparation extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
       items: _mapCreateItems(form['items']),
@@ -60,6 +61,10 @@ class CreateDyeingPreparation extends StatelessWidget {
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+      items: form['items'] ?? [],
+      notes: form['notes']?.toString() ?? '',
+>>>>>>> c0b3008b (feat: buat persiapan dyeing)
     );
 
     final message =
@@ -91,6 +96,7 @@ class CreateDyeingPreparation extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             prefix: "PD",
 =======
             prefix: "PDP",
@@ -104,6 +110,9 @@ class CreateDyeingPreparation extends StatelessWidget {
 =======
             prefix: "PDP",
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+            prefix: "PRE",
+>>>>>>> c0b3008b (feat: buat persiapan dyeing)
           ));
     });
   }

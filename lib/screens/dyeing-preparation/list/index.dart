@@ -10,6 +10,7 @@ import 'package:textile_tracking/components/master/button/custom_floating_button
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/components/master/card/item_dyeing_preparation_card.dart';
 =======
 import 'package:textile_tracking/components/master/card/item_process_card.dart';
@@ -22,6 +23,9 @@ import 'package:textile_tracking/components/master/card/item_dyeing_preparation_
 import 'package:textile_tracking/components/master/card/item_process_card.dart';
 import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+import 'package:textile_tracking/components/master/card/item_dyeing_preparation_card.dart';
+>>>>>>> c0b3008b (feat: buat persiapan dyeing)
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/process_list.dart';
@@ -370,6 +374,7 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     itemBuilder: (item) => ItemDyeingPreparationCard(
                       item: item,
 =======
@@ -392,6 +397,10 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
                       subtitleKey: 'work_orders',
                       subtitleField: 'wo_no',
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+                    itemBuilder: (item) => ItemDyeingPreparationCard(
+                      item: item,
+>>>>>>> c0b3008b (feat: buat persiapan dyeing)
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -431,17 +440,25 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           duration: const Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : const Offset(0, 1),
 =======
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+          duration: const Duration(milliseconds: 200),
+          offset: _showFab ? Offset.zero : const Offset(0, 1),
+>>>>>>> c0b3008b (feat: buat persiapan dyeing)
           child: AnimatedOpacity(
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             opacity: _showFab ? 1 : 0,
             child: CustomFloatingButton(
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c0b3008b (feat: buat persiapan dyeing)
               onPressed: () {
                 Navigator.push(
                   context,
@@ -460,6 +477,7 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
                 size: 72,
               ),
             ),
+<<<<<<< HEAD
 =======
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),
@@ -525,6 +543,8 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+>>>>>>> c0b3008b (feat: buat persiapan dyeing)
           ),
         ),
       ),

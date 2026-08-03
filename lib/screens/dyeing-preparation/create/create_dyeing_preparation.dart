@@ -31,11 +31,16 @@ class CreateDyeingPreparation extends StatelessWidget {
     final dyeingPreparation = DyeingPreparation(
       woId: int.tryParse(form['wo_id']?.toString() ?? ''),
 <<<<<<< HEAD
+<<<<<<< HEAD
       items: _mapCreateItems(form['items']),
       notes: form['notes']?.toString() ?? '',
       attachments: form['attachments'],
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+      items: form['items'] ?? [],
+      notes: form['notes']?.toString() ?? '',
+>>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
     );
 
     final message =
@@ -56,10 +61,14 @@ class CreateDyeingPreparation extends StatelessWidget {
           child: buildBoldMessage(
             message: message,
 <<<<<<< HEAD
+<<<<<<< HEAD
             prefix: "PD",
 =======
             prefix: "PDP",
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+            prefix: "PRE",
+>>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
           ));
     });
   }

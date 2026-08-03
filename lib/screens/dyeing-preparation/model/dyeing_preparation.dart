@@ -8,6 +8,7 @@ class DyeingPreparation {
   final id;
   final woId;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final items;
   final notes;
   final attachments;
@@ -42,16 +43,28 @@ class DyeingPreparation {
       'attachment_ids': attachmentIds,
     };
 =======
+=======
+  final items;
+  final notes;
+>>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
 
-  DyeingPreparation({this.id, this.woId});
+  DyeingPreparation({this.id, this.woId, this.items, this.notes});
 
   factory DyeingPreparation.fromJson(Map<String, dynamic> json) {
-    return DyeingPreparation(id: json['id'], woId: json['wo_id']);
+    return DyeingPreparation(
+        id: json['id'],
+        woId: json['wo_id'],
+        items: json['items'] ?? [],
+        notes: json['notes']);
   }
 
   Map<String, dynamic> toJson() {
+<<<<<<< HEAD
     final data = {'id': id, 'wo_id': woId};
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+    final data = {'id': id, 'wo_id': woId, 'items': items, 'notes': notes};
+>>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
 
     data.removeWhere((key, value) => value == null);
 

@@ -8,15 +8,16 @@ import 'package:textile_tracking/components/master/container/template.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
+>>>>>>> 514dc398 (feat: persiapan dyeing)
 import 'package:textile_tracking/components/master/form/select_form.dart';
+import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/components/process/create/note_item.dart';
-import 'package:textile_tracking/components/work-order/tab/attachment_tab.dart';
-import 'package:textile_tracking/components/work-order/tab/info_tab.dart';
-import 'package:textile_tracking/components/work-order/tab/item_tab.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -56,6 +57,7 @@ class DyeingPreparationFormSection extends StatefulWidget {
   final ValueNotifier<bool> isSubmitting;
   final VoidCallback selectWorkOrder;
   final bool firstLoading;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -159,6 +161,9 @@ class DyeingPreparationFormSection extends StatefulWidget {
   final greigeReady;
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+  final List<Map<String, dynamic>> existingItems;
+>>>>>>> 514dc398 (feat: persiapan dyeing)
 
   const DyeingPreparationFormSection({
     super.key,
@@ -171,6 +176,7 @@ class DyeingPreparationFormSection extends StatefulWidget {
     required this.isSubmitting,
     required this.selectWorkOrder,
     required this.firstLoading,
+    this.existingItems = const [],
   });
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 
@@ -186,8 +192,11 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
   final List<Map<String, dynamic>> greigeForms = [];
 
   @override
@@ -199,6 +208,7 @@ class _DyeingPreparationFormSectionState
   @override
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   void didUpdateWidget(
     covariant DyeingPreparationFormSection oldWidget,
   ) {
@@ -207,10 +217,13 @@ class _DyeingPreparationFormSectionState
     if (oldWidget.existingItems != widget.existingItems ||
         oldWidget.greigeReady != widget.greigeReady) {
 =======
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
   void didUpdateWidget(covariant DyeingPreparationFormSection oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.existingItems != widget.existingItems) {
+<<<<<<< HEAD
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
 =======
   void didUpdateWidget(
@@ -221,6 +234,8 @@ class _DyeingPreparationFormSectionState
     if (oldWidget.existingItems != widget.existingItems ||
         oldWidget.greigeReady != widget.greigeReady) {
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
       _setGreigeForms(widget.existingItems);
     }
   }
@@ -233,6 +248,7 @@ class _DyeingPreparationFormSectionState
   }
 
   String _itemValue(Map<String, dynamic> item, int index) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -280,6 +296,9 @@ class _DyeingPreparationFormSectionState
 
     final number = _parseSourceNumber(value);
     return number == null ? value.toString() : formatNumber(number);
+=======
+    return (item['spk_item_id'] ?? item['item_id'] ?? index).toString();
+>>>>>>> 514dc398 (feat: persiapan dyeing)
   }
 
   Map<String, dynamic> _createGreigeForm(
@@ -287,6 +306,7 @@ class _DyeingPreparationFormSectionState
     int index,
   ) {
     return {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       "id": item["id"],
@@ -412,6 +432,20 @@ class _DyeingPreparationFormSectionState
   }
 
 >>>>>>> 9170cdf8 (fix: rumus otomatis berat greige persiapan dyeing)
+=======
+      "item_id": item["item_id"],
+      "spk_item_id": item["spk_item_id"],
+      "source_index": index,
+      "item_value": _itemValue(item, index),
+      "item_code": item["item_code"]?.toString() ?? "",
+      "item_name": item["item_name"]?.toString() ?? "",
+      "spk_no": TextEditingController(text: item["spk_no"]?.toString() ?? ""),
+      "qty": TextEditingController(text: item["qty"]?.toString() ?? ""),
+      "weight": TextEditingController(text: item["weight"]?.toString() ?? ""),
+    };
+  }
+
+>>>>>>> 514dc398 (feat: persiapan dyeing)
   void _disposeGreigeForms() {
     for (final item in greigeForms) {
       (item["spk_no"] as TextEditingController?)?.dispose();
@@ -424,6 +458,7 @@ class _DyeingPreparationFormSectionState
   void _setGreigeForms(List<Map<String, dynamic>> items) {
     _disposeGreigeForms();
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -454,12 +489,17 @@ class _DyeingPreparationFormSectionState
         ),
       );
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+    for (var index = 0; index < items.length; index++) {
+      greigeForms.add(_createGreigeForm(items[index], index));
+>>>>>>> 514dc398 (feat: persiapan dyeing)
     }
 
     _syncGreigeItemsToForm();
   }
 
   void _syncGreigeItemsToForm() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -579,6 +619,23 @@ class _DyeingPreparationFormSectionState
 
     return options.asMap().entries.map((entry) {
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
+=======
+    widget.form?['items'] = greigeForms.map((item) {
+      return {
+        "item_id": item["item_id"],
+        "spk_item_id": item["spk_item_id"],
+        "item_code": item["item_code"],
+        "item_name": item["item_name"],
+        "spk_no": (item["spk_no"] as TextEditingController).text,
+        "qty": (item["qty"] as TextEditingController).text,
+        "weight": (item["weight"] as TextEditingController).text,
+      };
+    }).toList();
+  }
+
+  List<Map<String, dynamic>> get _itemOptions {
+    return widget.existingItems.asMap().entries.map((entry) {
+>>>>>>> 514dc398 (feat: persiapan dyeing)
       final index = entry.key;
       final item = entry.value;
 
@@ -599,6 +656,7 @@ class _DyeingPreparationFormSectionState
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   void _handleAddGreigeItem(Map<String, dynamic> sourceItem) {
     final options = widget.itemOptions?.isNotEmpty == true
         ? widget.itemOptions!
@@ -617,11 +675,16 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
     if (greigeForms.length >= widget.existingItems.length) {
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
+=======
+  void _handleAddGreigeItem() {
+    if (greigeForms.length >= widget.existingItems.length) {
+>>>>>>> 514dc398 (feat: persiapan dyeing)
       _showStockMoreWarning();
       return;
     }
 
     setState(() {
+<<<<<<< HEAD
 <<<<<<< HEAD
       greigeForms.add(
         _createGreigeForm(matchingOptions.first, greigeForms.length),
@@ -678,6 +741,10 @@ class _DyeingPreparationFormSectionState
         _createGreigeForm(matchingOptions.first, greigeForms.length),
       );
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
+=======
+      final index = greigeForms.length;
+      greigeForms.add(_createGreigeForm(widget.existingItems[index], index));
+>>>>>>> 514dc398 (feat: persiapan dyeing)
       _syncGreigeItemsToForm();
     });
   }
@@ -694,6 +761,7 @@ class _DyeingPreparationFormSectionState
           label: 'Greige Awal',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           options: _itemOptions(formItem["work_order_item_id"]),
 =======
           options: _itemOptions,
@@ -701,6 +769,9 @@ class _DyeingPreparationFormSectionState
 =======
           options: _itemOptions(formItem["work_order_item_id"]),
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
+=======
+          options: _itemOptions,
+>>>>>>> 514dc398 (feat: persiapan dyeing)
           selected: formItem["item_value"]?.toString() ?? '',
           isAnyAdditionalData: true,
           handleChangeValue: (selected) {
@@ -708,6 +779,7 @@ class _DyeingPreparationFormSectionState
               setState(() {
                 formItem["item_id"] = null;
                 formItem["spk_item_id"] = null;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -721,6 +793,8 @@ class _DyeingPreparationFormSectionState
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
 =======
 >>>>>>> eb21d940 (fix: buat persiapan dyeing)
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
                 formItem["source_index"] = null;
                 formItem["item_value"] = "";
                 formItem["item_code"] = "";
@@ -734,6 +808,7 @@ class _DyeingPreparationFormSectionState
             }
 
             final sourceIndex = selected["source_index"] as int;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -804,12 +879,31 @@ class _DyeingPreparationFormSectionState
               formItem["unit_id"] = selectedItem["unit_id"];
               formItem["weight_unit_id"] = selectedItem["weight_unit_id"];
 >>>>>>> eb21d940 (fix: buat persiapan dyeing)
+=======
+            final selectedItem = widget.existingItems[sourceIndex];
+            final selectedValue = selected["value"]?.toString() ?? "";
+            final isSelectedInAnotherForm = greigeForms.asMap().entries.any(
+                  (entry) =>
+                      entry.key != formIndex &&
+                      entry.value["item_value"]?.toString() == selectedValue,
+                );
+
+            if (isSelectedInAnotherForm) {
+              _showStockMoreWarning();
+              return;
+            }
+
+            setState(() {
+              formItem["item_id"] = selectedItem["item_id"];
+              formItem["spk_item_id"] = selectedItem["spk_item_id"];
+>>>>>>> 514dc398 (feat: persiapan dyeing)
               formItem["source_index"] = sourceIndex;
               formItem["item_value"] = selectedValue;
               formItem["item_code"] =
                   selectedItem["item_code"]?.toString() ?? "";
               formItem["item_name"] =
                   selectedItem["item_name"]?.toString() ?? "";
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -825,12 +919,15 @@ class _DyeingPreparationFormSectionState
 =======
 
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
               (formItem["spk_no"] as TextEditingController).text =
                   selectedItem["spk_no"]?.toString() ?? "";
               (formItem["qty"] as TextEditingController).text =
                   selectedItem["qty"]?.toString() ?? "";
               (formItem["weight"] as TextEditingController).text =
                   selectedItem["weight"]?.toString() ?? "";
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
 =======
@@ -840,6 +937,8 @@ class _DyeingPreparationFormSectionState
 >>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
 
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
               _syncGreigeItemsToForm();
             });
           },
@@ -848,6 +947,7 @@ class _DyeingPreparationFormSectionState
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   void _removeGreigeItem(int index) {
@@ -889,6 +989,8 @@ class _DyeingPreparationFormSectionState
 >>>>>>> eb21d940 (fix: buat persiapan dyeing)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
   Future<void> _handleCancel(BuildContext context) async {
     Widget buildBoldMessage(String woNo) {
       return RichText(
@@ -1118,14 +1220,18 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
                       child: Form(
                         key: widget.formKey,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildWorkOrderForm(),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1236,6 +1342,12 @@ class _DyeingPreparationFormSectionState
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+                            if (widget.existingItems.isNotEmpty)
+                              _buildGreigeItemsForm(isTablet),
+                          ].separatedBy(CustomTheme().vGap('2xl')),
+                        ),
+>>>>>>> 514dc398 (feat: persiapan dyeing)
                       ),
                     );
                   },
@@ -1305,8 +1417,11 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
     return TemplateCard(
       icon: Icons.assignment_outlined,
       title: 'Work Order',
@@ -1318,17 +1433,21 @@ class _DyeingPreparationFormSectionState
         required: true,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         isDisabled: widget.disableWorkOrder,
 =======
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
 =======
         isDisabled: widget.disableWorkOrder,
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
       ),
     );
   }
 
   Widget _buildGreigeItemsForm(bool isTablet) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -1363,6 +1482,13 @@ class _DyeingPreparationFormSectionState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
 <<<<<<< HEAD
+=======
+    return TemplateCard(
+      icon: Icons.inventory_2_outlined,
+      title: "Greige Awal",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+>>>>>>> 514dc398 (feat: persiapan dyeing)
         children: [
           ...greigeForms.asMap().entries.map((entry) {
             return _buildGreigeItem(entry.key, isTablet);
@@ -1376,6 +1502,7 @@ class _DyeingPreparationFormSectionState
             ),
           ),
         ].separatedBy(CustomTheme().vGap('xl')),
+<<<<<<< HEAD
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
 =======
         children: groupedIndexes.values
@@ -1383,10 +1510,13 @@ class _DyeingPreparationFormSectionState
             .toList()
             .separatedBy(CustomTheme().vGap('xl')),
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
       ),
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -1399,15 +1529,22 @@ class _DyeingPreparationFormSectionState
         item["source_item_name"]?.toString() ?? item["item_name"]?.toString();
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
   Widget _buildGreigeItem(int index, bool isTablet) {
     final item = greigeForms[index];
     final fields = [
       TextForm(
+<<<<<<< HEAD
         label: "No. OP",
+=======
+        label: "OP",
+>>>>>>> 514dc398 (feat: persiapan dyeing)
         controller: item["spk_no"],
         handleChange: (_) => _syncGreigeItemsToForm(),
       ),
       TextForm(
+<<<<<<< HEAD
         label: "Qty Greige",
         controller: item["qty"],
         isNumber: true,
@@ -1418,14 +1555,26 @@ class _DyeingPreparationFormSectionState
       ),
       TextForm(
         label: "Berat Greige",
+=======
+        label: "Qty",
+        controller: item["qty"],
+        isNumber: true,
+        handleChange: (_) => _syncGreigeItemsToForm(),
+      ),
+      TextForm(
+        label: "Weight",
+>>>>>>> 514dc398 (feat: persiapan dyeing)
         controller: item["weight"],
         isNumber: true,
         handleChange: (_) => _syncGreigeItemsToForm(),
       ),
     ];
+<<<<<<< HEAD
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
 =======
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -1436,6 +1585,7 @@ class _DyeingPreparationFormSectionState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
           Text(
@@ -1452,10 +1602,15 @@ class _DyeingPreparationFormSectionState
                 .where((value) => value != null && value.isNotEmpty)
                 .join(' - '),
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
+=======
+          Text(
+            "Item ${index + 1}",
+>>>>>>> 514dc398 (feat: persiapan dyeing)
             style: TextStyle(
               fontSize: CustomTheme().fontSize('lg'),
               fontWeight: CustomTheme().fontWeight('semibold'),
             ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
           Row(
@@ -1646,6 +1801,11 @@ class _DyeingPreparationFormSectionState
 =======
             label: "Greige Awal",
 >>>>>>> eb21d940 (fix: buat persiapan dyeing)
+=======
+          ),
+          SelectForm(
+            label: "Item",
+>>>>>>> 514dc398 (feat: persiapan dyeing)
             selectedValue: item["item_value"]?.toString() ?? "",
             selectedCode: item["item_code"]?.toString() ?? "",
             selectedLabel: item["item_name"]?.toString() ?? "",
@@ -1666,6 +1826,7 @@ class _DyeingPreparationFormSectionState
               children: fields,
             ),
         ].separatedBy(CustomTheme().vGap('xl')),
+<<<<<<< HEAD
 <<<<<<< HEAD
       ),
     );
@@ -1757,6 +1918,8 @@ class _DyeingPreparationFormSectionState
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
         ),
+=======
+>>>>>>> 514dc398 (feat: persiapan dyeing)
       ),
     );
   }

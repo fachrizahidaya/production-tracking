@@ -15,6 +15,8 @@ class CreateDyeingPreparation extends StatelessWidget {
       BuildContext context, Map<String, dynamic> form, isLoading) async {
     final dyeingPreparation = DyeingPreparation(
       woId: int.tryParse(form['wo_id']?.toString() ?? ''),
+      items: form['items'] ?? [],
+      notes: form['notes']?.toString() ?? '',
     );
 
     final message =
@@ -30,7 +32,7 @@ class CreateDyeingPreparation extends StatelessWidget {
           title: 'Persiapan Dyeing Dimulai',
           child: buildBoldMessage(
             message: message,
-            prefix: "PDP",
+            prefix: "PRE",
           ));
     });
   }

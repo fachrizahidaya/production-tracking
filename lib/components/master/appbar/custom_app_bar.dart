@@ -33,6 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onDashboardSettings;
   final VoidCallback? onReportSettings;
   final VoidCallback? onEdit;
+  final showAvatar;
 
   const CustomAppBar(
       {super.key,
@@ -61,7 +62,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.name,
       this.handleFinish,
       this.isLoading = false,
-      this.showNameWithAvatar = false});
+      this.showNameWithAvatar = false,
+      this.onDashboardSettings,
+      this.onEdit,
+      this.onReportSettings,
+      this.isDashboardSettingsLoading = false});
 
   @override
   Widget build(BuildContext context) {

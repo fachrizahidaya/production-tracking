@@ -4,7 +4,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/detail.dart';
-import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -24,6 +23,7 @@ import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 >>>>>>> ae9b2985 (fix: rework dyeing)
 import 'package:textile_tracking/screens/update/%5Bupdate_process_id%5D.dart';
+import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 
 class ProcessDetail<T> extends StatefulWidget {
   final String id;

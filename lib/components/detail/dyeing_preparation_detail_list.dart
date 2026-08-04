@@ -12,6 +12,7 @@ import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 =======
 import 'package:textile_tracking/screens/greige-order/%5Bgreige_order_id%5D.dart';
@@ -19,6 +20,9 @@ import 'package:textile_tracking/screens/greige-order/%5Bgreige_order_id%5D.dart
 =======
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+import 'package:textile_tracking/screens/greige-order/%5Bgreige_order_id%5D.dart';
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
 
 class DyeingPreparationDetailList extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -27,6 +31,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
   final bool canUpdate;
   final VoidCallback onDelete;
   final VoidCallback onEdit;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   final processName;
@@ -46,6 +51,9 @@ class DyeingPreparationDetailList extends StatelessWidget {
       this.handleBuildAttachment});
 =======
 
+=======
+
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
   const DyeingPreparationDetailList({
     super.key,
     required this.data,
@@ -55,6 +63,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
     required this.onDelete,
     required this.onEdit,
   });
+<<<<<<< HEAD
 >>>>>>> 252dc540 (feat: persiapan dyeing detail)
 =======
   final processName;
@@ -77,6 +86,8 @@ class DyeingPreparationDetailList extends StatelessWidget {
       this.processNoKey,
       this.handleBuildAttachment});
 >>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +103,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                 // _buildTopBar(context, isTablet),
@@ -110,6 +122,12 @@ class DyeingPreparationDetailList extends StatelessWidget {
 >>>>>>> 252dc540 (feat: persiapan dyeing detail)
 =======
 >>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
+=======
+                _buildTopBar(context, isTablet),
+                _buildOrderGreigeInfo(context, isTablet),
+                if (isTablet)
+                  _buildTabletLayout(isLargeTablet)
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
                 else
                   _buildMobileLayout(),
               ],
@@ -140,6 +158,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
           ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
           Expanded(
@@ -155,6 +174,8 @@ class DyeingPreparationDetailList extends StatelessWidget {
 >>>>>>> 252dc540 (feat: persiapan dyeing detail)
 =======
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
           if (canShowEdit) ...[
             ActionTextButton(
               label: 'Edit',
@@ -176,6 +197,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
   Widget _buildOrderGreigeInfo(BuildContext context, bool isTablet) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final orderGreige = _mapValue(data['work_orders']);
 =======
     final orderGreige = _mapValue(data['order_greige']);
@@ -183,6 +205,9 @@ class DyeingPreparationDetailList extends StatelessWidget {
 =======
     final orderGreige = _mapValue(data['work_orders']);
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+    final orderGreige = _mapValue(data['order_greige']);
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
 
     return Padding(
       padding: CustomTheme().padding('content'),
@@ -213,6 +238,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
             Text(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
               'No. WO',
 =======
               'No. OG',
@@ -220,6 +246,9 @@ class DyeingPreparationDetailList extends StatelessWidget {
 =======
               'No. WO',
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+              'No. OG',
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
               style: TextStyle(
                 fontSize: CustomTheme().fontSize('lg'),
                 fontWeight: CustomTheme().fontWeight('semibold'),
@@ -235,6 +264,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
                     child: Text(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                       _display(orderGreige['wo_no'] ?? '-'),
 =======
                       _display(orderGreige['og_no'] ?? orderGreige['pp_no']),
@@ -242,6 +272,9 @@ class DyeingPreparationDetailList extends StatelessWidget {
 =======
                       _display(orderGreige['wo_no'] ?? '-'),
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+                      _display(orderGreige['og_no'] ?? orderGreige['pp_no']),
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -267,6 +300,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
               ),
               child: Row(
                 children: [
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -309,6 +343,22 @@ class DyeingPreparationDetailList extends StatelessWidget {
                       label: 'Tanggal WO',
                       value: _formatDate(orderGreige['wo_date']),
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+                  Expanded(
+                    child: _buildOrderInfoItem(
+                      icon: Icons.scale_outlined,
+                      label: 'Jumlah Order',
+                      value: _withUnit(orderGreige['order_qty'], 'KG'),
+                      isTablet: isTablet,
+                    ),
+                  ),
+                  _buildVerticalDivider(true),
+                  Expanded(
+                    child: _buildOrderInfoItem(
+                      icon: Icons.calendar_today_outlined,
+                      label: 'Tanggal OG',
+                      value: _formatDate(orderGreige['og_date']),
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
                       isTablet: isTablet,
                     ),
                   ),
@@ -386,6 +436,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   Widget _buildTabletLayout(BuildContext context, bool isLargeTablet) {
 =======
   Widget _buildTabletLayout(bool isLargeTablet) {
@@ -393,6 +444,9 @@ class DyeingPreparationDetailList extends StatelessWidget {
 =======
   Widget _buildTabletLayout(BuildContext context, bool isLargeTablet) {
 >>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
+=======
+  Widget _buildTabletLayout(bool isLargeTablet) {
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
     return Padding(
       padding: CustomTheme().padding('card-detail'),
       child: Column(
@@ -410,6 +464,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
 =======
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
               _buildSectionCard(
+<<<<<<< HEAD
                 title: 'Item Work Order',
                 icon: Icons.inventory_2_outlined,
                 child: _buildWorkOrderItems(true),
@@ -421,10 +476,13 @@ class DyeingPreparationDetailList extends StatelessWidget {
 =======
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
               _buildSectionCard(
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
                 title: 'Timeline Proses',
                 icon: Icons.timeline_outlined,
                 child: _buildTimelineInfo(true),
               ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -438,13 +496,30 @@ class DyeingPreparationDetailList extends StatelessWidget {
                     children: handleBuildAttachment?.call(context) ?? [],
                   ),
                 ),
+=======
+            ].separatedBy(CustomTheme().vGap('xl')),
+          ),
+          Column(
+            children: [
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
               _buildSectionCard(
-                title: 'Catatan $processName',
-                icon: Icons.note_outlined,
-                child: _buildNote(data['notes']),
+                title: 'Kebutuhan Benang',
+                icon: Icons.layers_outlined,
+                child: _buildYarnItems(true),
+              ),
+              _buildSectionCard(
+                title: 'Kebutuhan Loom Beam',
+                icon: Icons.inventory_2_outlined,
+                child: _buildLoomBeams(true),
+              ),
+              _buildSectionCard(
+                title: 'Catatan Order Greige',
+                icon: Icons.note_alt_outlined,
+                child: _buildNote(_mapValue(data['order_greige'])['notes']),
               ),
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
+<<<<<<< HEAD
           // Column(
           //   children: [
           // _buildSectionCard(
@@ -501,6 +576,8 @@ class DyeingPreparationDetailList extends StatelessWidget {
           //   ].separatedBy(CustomTheme().vGap('xl')),
           // ),
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
@@ -527,6 +604,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
                     Text(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
                       _display(data[processNoKey]),
@@ -542,6 +620,8 @@ class DyeingPreparationDetailList extends StatelessWidget {
 >>>>>>> 252dc540 (feat: persiapan dyeing detail)
 =======
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
                       data['created_at'] != null
                           ? 'Dibuat pada ${_formatDateTime(data['created_at'])}'
                           : '-',
@@ -563,6 +643,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
           ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           // _buildQuickInfoRow(isTablet),
 =======
           _buildQuickInfoRow(isTablet),
@@ -570,6 +651,9 @@ class DyeingPreparationDetailList extends StatelessWidget {
 =======
           // _buildQuickInfoRow(isTablet),
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+          _buildQuickInfoRow(isTablet),
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
@@ -577,7 +661,10 @@ class DyeingPreparationDetailList extends StatelessWidget {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
   Widget _buildQuickInfoRow(bool isTablet) {
     final machine = _mapValue(data['machine']);
 
@@ -658,9 +745,12 @@ class DyeingPreparationDetailList extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
 >>>>>>> 252dc540 (feat: persiapan dyeing detail)
 =======
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
   Widget _buildSectionCard({
     required String title,
     required IconData icon,
@@ -679,7 +769,10 @@ class DyeingPreparationDetailList extends StatelessWidget {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
   Widget _buildResultInfo(bool isTablet) {
     return Text('tes');
   }
@@ -741,15 +834,19 @@ class DyeingPreparationDetailList extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
 >>>>>>> 252dc540 (feat: persiapan dyeing detail)
 =======
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
   Widget _buildTimelineInfo(bool isTablet) {
     return Column(
       children: [
         _buildTimelineItem(
           icon: Icons.access_time_outlined,
           iconColor: Colors.blue,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
           title: 'Proses Dibuat',
@@ -772,6 +869,13 @@ class DyeingPreparationDetailList extends StatelessWidget {
           user: _mapValue(data['start_by'])['name'],
           isLast: data['end_time'] == null,
         ),
+=======
+          title: 'Mulai Proses',
+          time: data['start_time'],
+          user: _mapValue(data['start_by'])['name'],
+          isLast: data['end_time'] == null,
+        ),
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
         if (data['end_time'] != null)
           _buildTimelineItem(
             icon: Icons.task_alt_outlined,
@@ -781,6 +885,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
             user: _mapValue(data['end_by'])['name'],
             isLast: true,
           ),
+<<<<<<< HEAD
 >>>>>>> 252dc540 (feat: persiapan dyeing detail)
 =======
           title: 'Proses Dibuat',
@@ -798,6 +903,8 @@ class DyeingPreparationDetailList extends StatelessWidget {
         //     isLast: true,
         //   ),
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
       ],
     );
   }
@@ -1009,6 +1116,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
   Widget _buildWorkOrderItems(bool isTablet) {
@@ -1077,6 +1185,8 @@ class DyeingPreparationDetailList extends StatelessWidget {
           ),
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
   Widget _buildVerticalDivider(bool isOrder) {
     return Container(
       width: 1,
@@ -1085,9 +1195,12 @@ class DyeingPreparationDetailList extends StatelessWidget {
       color: isOrder
           ? Colors.white.withOpacity(0.2)
           : Colors.grey.withOpacity(0.2),
+<<<<<<< HEAD
 >>>>>>> 252dc540 (feat: persiapan dyeing detail)
 =======
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
     );
   }
 
@@ -1106,6 +1219,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
       MaterialPageRoute(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         builder: (context) => WorkOrderDetail(
           id: data['work_orders']?['id'].toString() ?? '-',
         ),
@@ -1117,6 +1231,9 @@ class DyeingPreparationDetailList extends StatelessWidget {
           id: data['work_orders']?['id'].toString() ?? '-',
         ),
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+        builder: (context) => GreigeOrderDetail(id: id.toString()),
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
       ),
     );
   }
@@ -1174,7 +1291,10 @@ String _formatDateTime(dynamic value) {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
 
 String _formatType(dynamic value) {
   if (value == null || value.toString().isEmpty) return '-';
@@ -1186,6 +1306,9 @@ String _formatType(dynamic value) {
           word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
       .join(' ');
 }
+<<<<<<< HEAD
 >>>>>>> 252dc540 (feat: persiapan dyeing detail)
 =======
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)

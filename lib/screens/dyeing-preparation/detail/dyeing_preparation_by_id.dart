@@ -10,10 +10,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 <<<<<<< HEAD
 =======
+=======
+import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
 import 'package:textile_tracking/components/detail/greige_process_detail_list.dart';
 >>>>>>> b70754b7 (feat: persiapan dyeing)
 import 'package:textile_tracking/components/master/theme.dart';
@@ -123,9 +127,10 @@ class _DyeingPreparationDetailScreenState
     });
 
     try {
-      final dyeingPreparationService =
+      final service =
           Provider.of<DyeingPreparationService>(context, listen: false);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -190,6 +195,9 @@ class _DyeingPreparationDetailScreenState
 =======
       await service.getDataView(context, widget.id);
 >>>>>>> 252dc540 (feat: persiapan dyeing detail)
+=======
+      await service.getDataView(context, widget.id);
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
@@ -568,6 +576,7 @@ class _DyeingPreparationDetailScreenState
 >>>>>>> b70754b7 (feat: persiapan dyeing)
             );
 
+<<<<<<< HEAD
             if (_greigeOrder.isNotEmpty) {
               data['order_greige'] = _greigeOrder;
             }
@@ -725,9 +734,10 @@ class _DyeingPreparationDetailScreenState
 >>>>>>> 27570e76 (fix: detail persiapan dyeing)
 =======
             return GreigeProcessDetailList(
+=======
+            return DyeingPreparationDetailList(
+>>>>>>> 96e137ef (feat: persiapan dyeing detail)
               data: data,
-              processName: 'Persiapan Dyeing',
-              processNoKey: 'warping_no',
               onRefresh: _fetchDetail,
               canDelete: widget.canDelete,
               canUpdate: widget.canUpdate,

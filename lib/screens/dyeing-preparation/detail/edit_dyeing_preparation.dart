@@ -334,6 +334,7 @@ class _EditDyeingPreparationScreenState
         ..clear()
         ..addAll({
 <<<<<<< HEAD
+<<<<<<< HEAD
           "wo_id": detail["wo_id"],
           "no_wo": woData["wo_no"] ?? detail["wo_no"] ?? "",
           "notes": detail["notes"] ?? "",
@@ -366,6 +367,14 @@ class _EditDyeingPreparationScreenState
           // tambahkan ini
           'warping_type': detail['warping_type']?.toString() ?? '',
           'notes': detail['notes']?.toString() ?? '',
+=======
+          "wo_id": detail["wo_id"],
+          "no_wo": detail["wo_no"],
+          "notes": detail["notes"] ?? "",
+          "items": List<Map<String, dynamic>>.from(
+            detail["items"] ?? [],
+          ),
+>>>>>>> 0225cb3d (feat: edit persiapan dyeing)
         });
 
 >>>>>>> 57f45d55 (feat: persiapan dyeing)

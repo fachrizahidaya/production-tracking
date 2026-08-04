@@ -83,14 +83,12 @@ class _EditDyeingPreparationScreenState
       _form
         ..clear()
         ..addAll({
-          'machine_id': detail['machine_id']?.toString(),
-          'yarn_qty': detail['yarn_qty']?.toString() ?? '',
-          'order_greige_id': detail['order_greige_id']?.toString(),
-          'no_greige_order': orderGreige['og_no']?.toString() ?? '',
-
-          // tambahkan ini
-          'warping_type': detail['warping_type']?.toString() ?? '',
-          'notes': detail['notes']?.toString() ?? '',
+          "wo_id": detail["wo_id"],
+          "no_wo": detail["wo_no"],
+          "notes": detail["notes"] ?? "",
+          "items": List<Map<String, dynamic>>.from(
+            detail["items"] ?? [],
+          ),
         });
 
       _yarnQtyController.text = detail['yarn_qty']?.toString() ?? '';

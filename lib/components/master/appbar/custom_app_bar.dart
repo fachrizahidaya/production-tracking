@@ -61,6 +61,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
   final VoidCallback? onEdit;
+<<<<<<< HEAD
 =======
 >>>>>>> 7a6aa3b1 (feat: model for report)
 =======
@@ -71,6 +72,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 =======
   final VoidCallback? onEdit;
 >>>>>>> 41ded02d (fix: rework)
+=======
+  final showAvatar;
+>>>>>>> 0721b7ab (chore: update version)
 
   const CustomAppBar(
       {super.key,
@@ -130,6 +134,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 <<<<<<< HEAD
       this.handleFinish,
       this.isLoading = false,
+<<<<<<< HEAD
       this.showNameWithAvatar = false});
 =======
       this.isLoading = false});
@@ -148,6 +153,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.isLoading = false,
       this.showNameWithAvatar = false});
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+      this.showNameWithAvatar = false,
+      this.onDashboardSettings,
+      this.onEdit,
+      this.onReportSettings,
+      this.isDashboardSettingsLoading = false});
+>>>>>>> 0721b7ab (chore: update version)
 
   @override
   Widget build(BuildContext context) {

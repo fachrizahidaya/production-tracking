@@ -12,13 +12,14 @@ class LoginForm extends StatefulWidget {
   final bool isDisabled;
   final bool isLoading;
 
-  const LoginForm(
-      {super.key,
-      required this.username,
-      required this.password,
-      required this.handlePress,
-      this.isDisabled = false,
-      this.isLoading = false});
+  const LoginForm({
+    super.key,
+    required this.username,
+    required this.password,
+    required this.handlePress,
+    this.isDisabled = false,
+    this.isLoading = false,
+  });
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -27,66 +28,82 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 480,
-      height: 480,
-      padding: CustomTheme().padding('content'),
-      decoration: CustomTheme().containerCardDecoration(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final bool isMobile = constraints.maxWidth < 600;
+
+        return Container(
+          width: isMobile ? double.infinity : 480,
+          constraints: BoxConstraints(
+            maxWidth: 480,
+            minHeight: isMobile ? 0 : 480,
+          ),
+          margin: EdgeInsets.symmetric(
+            horizontal: isMobile ? 20 : 0,
+            vertical: isMobile ? 24 : 0,
+          ),
+          padding: EdgeInsets.all(isMobile ? 24 : 32),
+          decoration: CustomTheme().containerCardDecoration(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
                 'assets/images/ic_launcher.png',
-                height: 100,
-                width: 100,
-                fit: BoxFit.contain,
+                width: isMobile ? 80 : 100,
+                height: isMobile ? 80 : 100,
               ),
+              SizedBox(height: isMobile ? 20 : 32),
               Text(
                 'Textile Automation Tracking',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: CustomTheme().fontSize('lg'),
-                    color: CustomTheme().colors('text-primary')),
+                  fontSize: isMobile
+                      ? CustomTheme().fontSize('lg')
+                      : CustomTheme().fontSize('xl'),
+                  color: CustomTheme().colors('text-primary'),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ].separatedBy(CustomTheme().vGap('2xl')),
-          ),
-          Column(
-            children: [
-              CustomForm(hintText: 'Username', controller: widget.username),
+              SizedBox(height: isMobile ? 28 : 40),
+              CustomForm(
+                hintText: 'Username',
+                controller: widget.username,
+              ),
+              SizedBox(height: 16),
               CustomForm(
                 hintText: 'Password',
                 controller: widget.password,
                 isPassword: true,
               ),
-              Row(
-                children: [
-                  Expanded(
-                      flex: 1,
-                      child: FormButton(
-                        label: 'LOG IN',
-                        onPressed: widget.handlePress,
-                        isDisabled: widget.isDisabled,
-                        isLoading: widget.isLoading,
-                        backgroundColor: CustomTheme().buttonColor('primary'),
-                        customHeight: 56.0,
-                        fontSize: CustomTheme().fontSize('xl'),
-                      ))
-                ],
+              SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: FormButton(
+                  label: 'LOG IN',
+                  onPressed: widget.handlePress,
+                  isDisabled: widget.isDisabled,
+                  isLoading: widget.isLoading,
+                  backgroundColor: CustomTheme().buttonColor('primary'),
+                  customHeight: isMobile ? null : 56,
+                  fontSize: isMobile
+                      ? CustomTheme().fontSize('lg')
+                      : CustomTheme().fontSize('xl'),
+                ),
               ),
-            ].separatedBy(CustomTheme().vGap('2xl')),
+              SizedBox(height: isMobile ? 24 : 40),
+              Text(
+                'Version ${dotenv.env['APP_VERSION']!}',
+                style: TextStyle(
+                  fontSize: isMobile
+                      ? CustomTheme().fontSize('sm')
+                      : CustomTheme().fontSize('lg'),
+                  color: CustomTheme().colors('text-secondary'),
+                ),
+              ),
+            ],
           ),
-          Text(
-            'Version ${dotenv.env['APP_VERSION']!}',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: CustomTheme().fontSize('lg'),
-                color: CustomTheme().colors('text-secondary')),
-          ),
-        ].separatedBy(CustomTheme().vGap('2xl')),
-      ),
+        );
+      },
     );
   }
 }

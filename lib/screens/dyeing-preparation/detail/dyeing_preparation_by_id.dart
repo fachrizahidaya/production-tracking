@@ -20,6 +20,7 @@ import 'package:url_launcher/url_launcher.dart';
 =======
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
 import 'package:textile_tracking/components/detail/greige_process_detail_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
@@ -85,9 +86,10 @@ class _DyeingPreparationDetailScreenState
     });
 
     try {
-      final dyeingPreparationService =
+      final service =
           Provider.of<DyeingPreparationService>(context, listen: false);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
       await dyeingPreparationService.fetchPreparationDetail(
         context,
@@ -127,6 +129,9 @@ class _DyeingPreparationDetailScreenState
       } else {
         _greigeOrder = {};
       }
+=======
+      await service.getDataView(context, widget.id);
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
@@ -481,13 +486,8 @@ class _DyeingPreparationDetailScreenState
               _detailData(service.dataView),
             );
 
-            if (_greigeOrder.isNotEmpty) {
-              data['order_greige'] = _greigeOrder;
-            }
-            return GreigeProcessDetailList(
+            return DyeingPreparationDetailList(
               data: data,
-              processName: 'Persiapan Dyeing',
-              processNoKey: 'warping_no',
               onRefresh: _fetchDetail,
               canDelete: widget.canDelete,
               canUpdate: widget.canUpdate,

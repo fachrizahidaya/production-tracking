@@ -10,7 +10,11 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_html.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
+=======
+import 'package:textile_tracking/screens/greige-order/%5Bgreige_order_id%5D.dart';
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
 
 class DyeingPreparationDetailList extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -19,6 +23,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
   final bool canUpdate;
   final VoidCallback onDelete;
   final VoidCallback onEdit;
+<<<<<<< HEAD
   final processName;
   final processNoKey;
   final List<Widget> Function(BuildContext)? handleBuildAttachment;
@@ -34,6 +39,18 @@ class DyeingPreparationDetailList extends StatelessWidget {
       this.processName,
       this.processNoKey,
       this.handleBuildAttachment});
+=======
+
+  const DyeingPreparationDetailList({
+    super.key,
+    required this.data,
+    required this.onRefresh,
+    required this.canDelete,
+    required this.canUpdate,
+    required this.onDelete,
+    required this.onEdit,
+  });
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +66,17 @@ class DyeingPreparationDetailList extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+<<<<<<< HEAD
                 // _buildTopBar(context, isTablet),
                 _buildOrderGreigeInfo(context, isTablet),
                 if (isTablet)
                   _buildTabletLayout(context, isLargeTablet)
+=======
+                _buildTopBar(context, isTablet),
+                _buildOrderGreigeInfo(context, isTablet),
+                if (isTablet)
+                  _buildTabletLayout(isLargeTablet)
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
                 else
                   _buildMobileLayout(),
               ],
@@ -81,6 +105,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
               Icons.chevron_left_outlined,
             ),
           ),
+<<<<<<< HEAD
           Expanded(
             child: Text(
               'Detail Proses $processName',
@@ -89,6 +114,8 @@ class DyeingPreparationDetailList extends StatelessWidget {
               ),
             ),
           ),
+=======
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
           if (canShowEdit) ...[
             ActionTextButton(
               label: 'Edit',
@@ -108,7 +135,11 @@ class DyeingPreparationDetailList extends StatelessWidget {
   }
 
   Widget _buildOrderGreigeInfo(BuildContext context, bool isTablet) {
+<<<<<<< HEAD
     final orderGreige = _mapValue(data['work_orders']);
+=======
+    final orderGreige = _mapValue(data['order_greige']);
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
 
     return Padding(
       padding: CustomTheme().padding('content'),
@@ -137,7 +168,11 @@ class DyeingPreparationDetailList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
+<<<<<<< HEAD
               'No. WO',
+=======
+              'No. OG',
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
               style: TextStyle(
                 fontSize: CustomTheme().fontSize('lg'),
                 fontWeight: CustomTheme().fontWeight('semibold'),
@@ -151,7 +186,11 @@ class DyeingPreparationDetailList extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
+<<<<<<< HEAD
                       _display(orderGreige['wo_no'] ?? '-'),
+=======
+                      _display(orderGreige['og_no'] ?? orderGreige['pp_no']),
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -177,6 +216,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
               ),
               child: Row(
                 children: [
+<<<<<<< HEAD
                   // Expanded(
                   //   child: _buildOrderInfoItem(
                   //     icon: Icons.scale_outlined,
@@ -191,6 +231,22 @@ class DyeingPreparationDetailList extends StatelessWidget {
                       icon: Icons.calendar_today_outlined,
                       label: 'Tanggal WO',
                       value: _formatDate(orderGreige['wo_date']),
+=======
+                  Expanded(
+                    child: _buildOrderInfoItem(
+                      icon: Icons.scale_outlined,
+                      label: 'Jumlah Order',
+                      value: _withUnit(orderGreige['order_qty'], 'KG'),
+                      isTablet: isTablet,
+                    ),
+                  ),
+                  _buildVerticalDivider(true),
+                  Expanded(
+                    child: _buildOrderInfoItem(
+                      icon: Icons.calendar_today_outlined,
+                      label: 'Tanggal OG',
+                      value: _formatDate(orderGreige['og_date']),
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
                       isTablet: isTablet,
                     ),
                   ),
@@ -266,7 +322,11 @@ class DyeingPreparationDetailList extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildTabletLayout(BuildContext context, bool isLargeTablet) {
+=======
+  Widget _buildTabletLayout(bool isLargeTablet) {
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
     return Padding(
       padding: CustomTheme().padding('card-detail'),
       child: Column(
@@ -279,16 +339,21 @@ class DyeingPreparationDetailList extends StatelessWidget {
               //   icon: Icons.info_outline,
               //   child: _buildProcessInfo(true),
               // ),
+<<<<<<< HEAD
               _buildSectionCard(
                 title: 'Item Work Order',
                 icon: Icons.inventory_2_outlined,
                 child: _buildWorkOrderItems(true),
               ),
+=======
+
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
               _buildSectionCard(
                 title: 'Timeline Proses',
                 icon: Icons.timeline_outlined,
                 child: _buildTimelineInfo(true),
               ),
+<<<<<<< HEAD
               if ((data['attachments'] as List? ?? []).isNotEmpty)
                 _buildSectionCard(
                   title: 'Lampiran',
@@ -323,6 +388,29 @@ class DyeingPreparationDetailList extends StatelessWidget {
           // ),
           //   ].separatedBy(CustomTheme().vGap('xl')),
           // ),
+=======
+            ].separatedBy(CustomTheme().vGap('xl')),
+          ),
+          Column(
+            children: [
+              _buildSectionCard(
+                title: 'Kebutuhan Benang',
+                icon: Icons.layers_outlined,
+                child: _buildYarnItems(true),
+              ),
+              _buildSectionCard(
+                title: 'Kebutuhan Loom Beam',
+                icon: Icons.inventory_2_outlined,
+                child: _buildLoomBeams(true),
+              ),
+              _buildSectionCard(
+                title: 'Catatan Order Greige',
+                icon: Icons.note_alt_outlined,
+                child: _buildNote(_mapValue(data['order_greige'])['notes']),
+              ),
+            ].separatedBy(CustomTheme().vGap('xl')),
+          ),
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
@@ -347,6 +435,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
+<<<<<<< HEAD
                       _display(data[processNoKey]),
                       style: TextStyle(
                         fontSize: isTablet ? 24 : 20,
@@ -355,6 +444,8 @@ class DyeingPreparationDetailList extends StatelessWidget {
                       ),
                     ),
                     Text(
+=======
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
                       data['created_at'] != null
                           ? 'Dibuat pada ${_formatDateTime(data['created_at'])}'
                           : '-',
@@ -374,12 +465,99 @@ class DyeingPreparationDetailList extends StatelessWidget {
               ),
             ],
           ),
+<<<<<<< HEAD
           // _buildQuickInfoRow(isTablet),
+=======
+          _buildQuickInfoRow(isTablet),
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
   }
 
+<<<<<<< HEAD
+=======
+  Widget _buildQuickInfoRow(bool isTablet) {
+    final machine = _mapValue(data['machine']);
+
+    return Container(
+      padding: EdgeInsets.all(isTablet ? 16 : 12),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildQuickInfoItem(
+              icon: Icons.local_laundry_service_outlined,
+              label: 'Mesin',
+              value:
+                  '${_display(machine['code'])} - ${_display(machine['name'])}',
+              isTablet: isTablet,
+            ),
+          ),
+          _buildVerticalDivider(false),
+          Expanded(
+            child: _buildQuickInfoItem(
+              icon: Icons.location_on_outlined,
+              label: 'Lokasi',
+              value: _display(machine['location']),
+              isTablet: isTablet,
+            ),
+          ),
+          // if (_mainResultValue() != '-') _buildVerticalDivider(false),
+          // if (_mainResultValue() != '-')
+          //   Expanded(
+          //     child: _buildQuickInfoItem(
+          //       icon: Icons.scale_outlined,
+          //       label: 'Hasil',
+          //       value: _mainResultValue(),
+          //       isTablet: isTablet,
+          //     ),
+          //   ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickInfoItem({
+    required IconData icon,
+    required String label,
+    required String value,
+    required bool isTablet,
+  }) {
+    return Column(
+      children: [
+        Icon(
+          icon,
+          size: isTablet ? 20 : 18,
+          color: CustomTheme().colors('primary'),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('sm'),
+            color: Colors.grey[800],
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: isTablet ? 13 : 12,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey[800],
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ].separatedBy(CustomTheme().vGap('sm')),
+    );
+  }
+
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
   Widget _buildSectionCard({
     required String title,
     required IconData icon,
@@ -396,12 +574,77 @@ class DyeingPreparationDetailList extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
+=======
+  Widget _buildResultInfo(bool isTablet) {
+    return Text('tes');
+  }
+
+  Widget _buildInfoGrid(List<Map<String, dynamic>> items, bool isTablet) {
+    if (items.isEmpty) {
+      return NoData();
+    }
+
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
+      children: items.map((item) {
+        final width = isTablet ? 220.0 : double.infinity;
+
+        return Container(
+          width: width,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey[200]!),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                item['icon'] as IconData,
+                size: 20,
+                color: CustomTheme().colors('primary'),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item['label'].toString(),
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('sm'),
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    Text(
+                      item['value'].toString(),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('base'),
+                        fontWeight: CustomTheme().fontWeight('bold'),
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                  ].separatedBy(CustomTheme().vGap('xs')),
+                ),
+              ),
+            ].separatedBy(CustomTheme().hGap('md')),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
   Widget _buildTimelineInfo(bool isTablet) {
     return Column(
       children: [
         _buildTimelineItem(
           icon: Icons.access_time_outlined,
           iconColor: Colors.blue,
+<<<<<<< HEAD
           title: 'Proses Dibuat',
           time: data['created_at'],
           user: _mapValue(data['start_by'])['name'],
@@ -416,6 +659,22 @@ class DyeingPreparationDetailList extends StatelessWidget {
         //     user: _mapValue(data['end_by'])['name'],
         //     isLast: true,
         //   ),
+=======
+          title: 'Mulai Proses',
+          time: data['start_time'],
+          user: _mapValue(data['start_by'])['name'],
+          isLast: data['end_time'] == null,
+        ),
+        if (data['end_time'] != null)
+          _buildTimelineItem(
+            icon: Icons.task_alt_outlined,
+            iconColor: Colors.green,
+            title: 'Selesai Proses',
+            time: data['end_time'],
+            user: _mapValue(data['end_by'])['name'],
+            isLast: true,
+          ),
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
       ],
     );
   }
@@ -625,6 +884,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildWorkOrderItems(bool isTablet) {
     final workOrderItems = _listValue(
       _mapValue(data['work_orders'])['items'],
@@ -689,6 +949,16 @@ class DyeingPreparationDetailList extends StatelessWidget {
           .separatedBy(
             CustomTheme().vGap('xl'),
           ),
+=======
+  Widget _buildVerticalDivider(bool isOrder) {
+    return Container(
+      width: 1,
+      height: 40,
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      color: isOrder
+          ? Colors.white.withOpacity(0.2)
+          : Colors.grey.withOpacity(0.2),
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
     );
   }
 
@@ -705,9 +975,13 @@ class DyeingPreparationDetailList extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
+<<<<<<< HEAD
         builder: (context) => WorkOrderDetail(
           id: data['work_orders']?['id'].toString() ?? '-',
         ),
+=======
+        builder: (context) => GreigeOrderDetail(id: id.toString()),
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)
       ),
     );
   }
@@ -763,3 +1037,17 @@ String _formatDateTime(dynamic value) {
     return value.toString();
   }
 }
+<<<<<<< HEAD
+=======
+
+String _formatType(dynamic value) {
+  if (value == null || value.toString().isEmpty) return '-';
+
+  return value
+      .toString()
+      .split('_')
+      .map((word) =>
+          word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
+      .join(' ');
+}
+>>>>>>> 252dc540 (feat: persiapan dyeing detail)

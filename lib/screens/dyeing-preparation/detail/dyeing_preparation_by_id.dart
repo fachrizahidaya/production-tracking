@@ -3,11 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
-import 'package:textile_tracking/components/detail/greige_process_detail_list.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
-import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/detail/edit_dyeing_preparation.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
 
@@ -37,10 +35,6 @@ class _DyeingPreparationDetailScreenState
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
   bool _isLoading = true;
   String? _errorMessage;
-  final OptionGreigeOrderService _greigeOrderService =
-      OptionGreigeOrderService();
-
-  Map<String, dynamic> _greigeOrder = {};
 
   @override
   void initState() {
@@ -162,6 +156,8 @@ class _DyeingPreparationDetailScreenState
 
             return DyeingPreparationDetailList(
               data: data,
+              processName: 'Persiapan Dyeing',
+              processNoKey: 'prep_no',
               onRefresh: _fetchDetail,
               canDelete: widget.canDelete,
               canUpdate: widget.canUpdate,

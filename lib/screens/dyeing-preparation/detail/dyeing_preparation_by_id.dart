@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
 import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 <<<<<<< HEAD
 =======
@@ -20,10 +21,11 @@ import 'package:textile_tracking/components/detail/dyeing_preparation_detail_lis
 >>>>>>> 96e137ef (feat: persiapan dyeing detail)
 import 'package:textile_tracking/components/detail/greige_process_detail_list.dart';
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+>>>>>>> fa574d36 (fix: detail persiapan dyeing)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
-import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/detail/edit_dyeing_preparation.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
 <<<<<<< HEAD
@@ -88,6 +90,7 @@ class _DyeingPreparationDetailScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   Map<String, dynamic> _data = {};
 =======
 =======
@@ -105,6 +108,8 @@ class _DyeingPreparationDetailScreenState
 >>>>>>> 27570e76 (fix: detail persiapan dyeing)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+>>>>>>> fa574d36 (fix: detail persiapan dyeing)
 
   @override
   void initState() {
@@ -738,6 +743,8 @@ class _DyeingPreparationDetailScreenState
             return DyeingPreparationDetailList(
 >>>>>>> 96e137ef (feat: persiapan dyeing detail)
               data: data,
+              processName: 'Persiapan Dyeing',
+              processNoKey: 'prep_no',
               onRefresh: _fetchDetail,
               canDelete: widget.canDelete,
               canUpdate: widget.canUpdate,

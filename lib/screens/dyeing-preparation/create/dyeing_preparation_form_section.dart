@@ -78,7 +78,15 @@ class _DyeingPreparationFormSectionState
   }
 
   String _itemValue(Map<String, dynamic> item, int index) {
-    return (item['spk_item_id'] ?? item['item_id'] ?? index).toString();
+    return [
+      item['work_order_item_id'],
+      item['item_id'],
+      item['id'] ?? index,
+    ].where((value) => value != null).join('-');
+  }
+
+  String _normalizeNumber(String value) {
+    return value.replaceAll(".", "").replaceAll(",", ".");
   }
 
   Map<String, dynamic> _createGreigeForm(
@@ -129,37 +137,46 @@ class _DyeingPreparationFormSectionState
   }
 
   void _syncGreigeItemsToForm() {
-    widget.form?['items'] = greigeForms.map((item) {
-      return {
-        "work_order_item_id": item["work_order_item_id"],
-        "notes": null,
-        "greige_items": [
-          {
-            "id": item["id"],
-            "greige_item_id": item["item_id"],
-            "greige_item_op_no":
-                (item["spk_no"] as TextEditingController).text.isEmpty
-                    ? null
-                    : (item["spk_no"] as TextEditingController).text,
-            "qty": int.tryParse(
-                  (item["qty"] as TextEditingController)
-                      .text
-                      .replaceAll('.', ''),
-                ) ??
-                0,
-            "qty_tolerance": item["qty_tolerance"] ?? 0,
-            "weight": double.tryParse(
-                  (item["weight"] as TextEditingController)
-                      .text
-                      .replaceAll('.', ''),
-                ) ??
-                0,
-            "unit_id": item["unit_id"],
-            "weight_unit_id": item["weight_unit_id"],
-          }
-        ]
-      };
-    }).toList();
+    final Map<dynamic, Map<String, dynamic>> groupedItems = {};
+
+    for (final item in greigeForms) {
+      final workOrderItemId = item["work_order_item_id"];
+
+      if (workOrderItemId == null) continue;
+
+      groupedItems.putIfAbsent(
+        workOrderItemId,
+        () => {
+          "work_order_item_id": workOrderItemId,
+          "notes": null,
+          "greige_items": <Map<String, dynamic>>[],
+        },
+      );
+
+      groupedItems[workOrderItemId]!["greige_items"].add({
+        if (item["id"] != null) "id": item["id"],
+        "greige_item_id": item["item_id"],
+        "greige_item_op_no":
+            (item["spk_no"] as TextEditingController).text.isEmpty
+                ? null
+                : (item["spk_no"] as TextEditingController).text,
+        "qty": int.tryParse(
+              _normalizeNumber((item["qty"] as TextEditingController).text),
+            ) ??
+            0,
+        "qty_tolerance": item["qty_tolerance"] ?? 0,
+        "weight": double.tryParse(
+              _normalizeNumber(
+                (item["weight"] as TextEditingController).text,
+              ),
+            ) ??
+            0,
+        "unit_id": item["unit_id"],
+        "weight_unit_id": item["weight_unit_id"],
+      });
+    }
+
+    widget.form?["items"] = groupedItems.values.toList();
   }
 
   List<Map<String, dynamic>> get _itemOptions {
@@ -185,8 +202,13 @@ class _DyeingPreparationFormSectionState
   void _handleAddGreigeItem() {
     setState(() {
       greigeForms.add({
+        "id": null,
+        "work_order_item_id": null,
         "item_id": null,
         "spk_item_id": null,
+        "qty_tolerance": 0,
+        "unit_id": null,
+        "weight_unit_id": null,
         "source_index": null,
         "item_value": "",
         "item_code": "",
@@ -218,6 +240,10 @@ class _DyeingPreparationFormSectionState
               setState(() {
                 formItem["item_id"] = null;
                 formItem["spk_item_id"] = null;
+                formItem["work_order_item_id"] = null;
+                formItem["qty_tolerance"] = 0;
+                formItem["unit_id"] = null;
+                formItem["weight_unit_id"] = null;
                 formItem["source_index"] = null;
                 formItem["item_value"] = "";
                 formItem["item_code"] = "";
@@ -245,8 +271,14 @@ class _DyeingPreparationFormSectionState
             // }
 
             setState(() {
+              formItem["id"] = selectedItem["id"];
+              formItem["work_order_item_id"] =
+                  selectedItem["work_order_item_id"];
               formItem["item_id"] = selectedItem["item_id"];
               formItem["spk_item_id"] = selectedItem["spk_item_id"];
+              formItem["qty_tolerance"] = selectedItem["qty_tolerance"];
+              formItem["unit_id"] = selectedItem["unit_id"];
+              formItem["weight_unit_id"] = selectedItem["weight_unit_id"];
               formItem["source_index"] = sourceIndex;
               formItem["item_value"] = selectedValue;
               formItem["item_code"] =
@@ -267,6 +299,20 @@ class _DyeingPreparationFormSectionState
         );
       },
     );
+  }
+
+  void _removeGreigeItem(int index) {
+    if (greigeForms.length <= 1) return;
+
+    setState(() {
+      final item = greigeForms.removeAt(index);
+
+      (item["spk_no"] as TextEditingController?)?.dispose();
+      (item["qty"] as TextEditingController?)?.dispose();
+      (item["weight"] as TextEditingController?)?.dispose();
+
+      _syncGreigeItemsToForm();
+    });
   }
 
   Future<void> _handleCancel(BuildContext context) async {
@@ -355,6 +401,7 @@ class _DyeingPreparationFormSectionState
         await Future.delayed(const Duration(milliseconds: 200));
         widget.isSubmitting.value = true;
         try {
+          _syncGreigeItemsToForm();
           await widget.handleSubmit();
         } finally {
           widget.isSubmitting.value = false;
@@ -475,7 +522,7 @@ class _DyeingPreparationFormSectionState
   Widget _buildGreigeItemsForm(bool isTablet) {
     return TemplateCard(
       icon: Icons.inventory_2_outlined,
-      title: "Greige Awal",
+      title: "Item",
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -499,18 +546,18 @@ class _DyeingPreparationFormSectionState
     final item = greigeForms[index];
     final fields = [
       TextForm(
-        label: "OP",
-        controller: null,
+        label: "No. OP",
+        controller: item["spk_no"],
         handleChange: (_) => _syncGreigeItemsToForm(),
       ),
       TextForm(
-        label: "Qty",
+        label: "Qty Greige",
         controller: item["qty"],
         isNumber: true,
         handleChange: (_) => _syncGreigeItemsToForm(),
       ),
       TextForm(
-        label: "Weight",
+        label: "Berat Greige",
         controller: item["weight"],
         isNumber: true,
         handleChange: (_) => _syncGreigeItemsToForm(),
@@ -526,15 +573,30 @@ class _DyeingPreparationFormSectionState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Item ${index + 1}",
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('lg'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Item ${index + 1}",
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('lg'),
+                    fontWeight: CustomTheme().fontWeight('semibold'),
+                  ),
+                ),
+              ),
+              if (greigeForms.length > 1)
+                IconButton(
+                  tooltip: 'Hapus Item',
+                  onPressed: () => _removeGreigeItem(index),
+                  icon: const Icon(
+                    Icons.delete_outline_rounded,
+                    color: Colors.red,
+                  ),
+                ),
+            ],
           ),
           SelectForm(
-            label: "Item",
+            label: "Greige Awal",
             selectedValue: item["item_value"]?.toString() ?? "",
             selectedCode: item["item_code"]?.toString() ?? "",
             selectedLabel: item["item_name"]?.toString() ?? "",

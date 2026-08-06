@@ -52,27 +52,50 @@ class _CreateDyeingPreparationProcessManualState
   }
 
   List<Map<String, dynamic>> _mapExistingItems(List<dynamic> items) {
-    return items.map<Map<String, dynamic>>((e) {
+    return items.expand<Map<String, dynamic>>((e) {
       final item = Map<String, dynamic>.from(e);
+      final greigeItems = List<dynamic>.from(item["greige_items"] ?? []);
 
-      final greige = (item["greige_items"] as List?)?.isNotEmpty == true
-          ? Map<String, dynamic>.from(item["greige_items"][0])
-          : {};
+      if (greigeItems.isEmpty) {
+        return [
+          {
+            "id": null,
+            "work_order_item_id": item["id"],
+            "item_id": item["item_id"],
+            "spk_item_id": item["spk_item_id"],
+            "item_code": item["item_code"],
+            "item_name": item["item_name"],
+            "spk_no": null,
+            "qty": item["qty"],
+            "weight": item["weight"],
+            "qty_tolerance": 0,
+            "unit_id": 1,
+            "weight_unit_id": 2,
+          }
+        ];
+      }
 
-      return {
-        "id": greige["id"],
-        "work_order_item_id": item["id"],
-        "item_id": greige["greige_item_id"] ?? item["item_id"],
-        "spk_item_id": item["spk_item_id"],
-        "item_code": item["item_code"],
-        "item_name": item["item_name"],
-        "spk_no": greige["greige_item_op_no"],
-        "qty": greige["qty"] ?? item["qty"],
-        "weight": greige["weight"] ?? item["weight"],
-        "qty_tolerance": greige["qty_tolerance"] ?? 0,
-        "unit_id": greige["unit_id"] ?? 1,
-        "weight_unit_id": greige["weight_unit_id"] ?? 2,
-      };
+      return greigeItems.map<Map<String, dynamic>>((rawGreige) {
+        final greige = Map<String, dynamic>.from(rawGreige);
+        final greigeItem = greige["greige_item"] is Map
+            ? Map<String, dynamic>.from(greige["greige_item"])
+            : <String, dynamic>{};
+
+        return {
+          "id": greige["id"],
+          "work_order_item_id": item["id"],
+          "item_id": greige["greige_item_id"] ?? item["item_id"],
+          "spk_item_id": item["spk_item_id"],
+          "item_code": greigeItem["code"] ?? item["item_code"],
+          "item_name": greigeItem["name"] ?? item["item_name"],
+          "spk_no": greige["greige_item_op_no"],
+          "qty": greige["qty"] ?? item["qty"],
+          "weight": greige["weight"] ?? item["weight"],
+          "qty_tolerance": greige["qty_tolerance"] ?? 0,
+          "unit_id": greige["unit_id"] ?? 1,
+          "weight_unit_id": greige["weight_unit_id"] ?? 2,
+        };
+      });
     }).toList();
   }
 

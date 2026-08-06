@@ -32,7 +32,7 @@ class CreateDyeingPreparation extends StatelessWidget {
           title: 'Persiapan Dyeing Dimulai',
           child: buildBoldMessage(
             message: message,
-            prefix: "PRE",
+            prefix: "PD",
           ));
     });
   }

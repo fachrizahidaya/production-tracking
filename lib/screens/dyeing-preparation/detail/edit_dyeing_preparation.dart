@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -11,16 +12,18 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+import 'dart:convert';
+
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/detail/greige_process_edit_layout.dart';
-import 'package:textile_tracking/components/master/button/cancel_button.dart';
-import 'package:textile_tracking/components/master/button/form_button.dart';
-import 'package:textile_tracking/components/master/container/template.dart';
-import 'package:textile_tracking/components/master/form/select_form.dart';
-import 'package:textile_tracking/components/master/form/text_form.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 <<<<<<< HEAD
 import 'package:textile_tracking/screens/dyeing-preparation/create/dyeing_preparation_form_section.dart';
@@ -63,6 +66,9 @@ import 'package:textile_tracking/screens/dyeing-preparation/create/dyeing_prepar
 import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+import 'package:textile_tracking/screens/dyeing-preparation/create/dyeing_preparation_form_section.dart';
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
 import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
 
 class EditDyeingPreparationScreen extends StatefulWidget {
@@ -102,6 +108,7 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   final String baseUrl = dotenv.env['API_URL'] ?? '';
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
@@ -110,6 +117,9 @@ class _EditDyeingPreparationScreenState
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+  final String baseUrl = dotenv.env['API_URL'] ?? '';
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
 
   bool _isLoading = true;
   bool _isFetchingMachine = false;
@@ -121,12 +131,16 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
   final List<Map<String, dynamic>> _greigeForms = [];
   List<Map<String, dynamic>> existingItems = [];
   List<Map<String, dynamic>> itemOptions = [];
   Map<String, dynamic> woData = {};
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -170,6 +184,8 @@ class _EditDyeingPreparationScreenState
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
 
   @override
   void initState() {
@@ -200,8 +216,11 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
     _disposeGreigeForms();
     _isSubmitting.dispose();
     _attachmentLoading.dispose();
@@ -223,8 +242,11 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
   String _baseCode(String? code) {
     if (code == null || code.isEmpty) return '';
 
@@ -290,6 +312,7 @@ class _EditDyeingPreparationScreenState
           uri,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           headers: {'Authorization': 'Bearer $token'},
 =======
           headers: {
@@ -299,6 +322,11 @@ class _EditDyeingPreparationScreenState
 =======
           headers: {'Authorization': 'Bearer $token'},
 >>>>>>> ae89df7c (fix: persiapan dyeing)
+=======
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
         );
 
         final responseData = jsonDecode(response.body);
@@ -312,6 +340,7 @@ class _EditDyeingPreparationScreenState
 
       final data = optionCache[baseCode] ?? [];
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       options.addAll(
@@ -336,6 +365,8 @@ class _EditDyeingPreparationScreenState
         }),
       );
 =======
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
       options.addAll(data.map<Map<String, dynamic>>((rawOption) {
         final option = Map<String, dynamic>.from(rawOption);
 
@@ -355,6 +386,7 @@ class _EditDyeingPreparationScreenState
               item["weight_unit_id"] ?? item["weight_unit"]?["id"] ?? 2,
         };
       }));
+<<<<<<< HEAD
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
 =======
       options.addAll(
@@ -379,6 +411,8 @@ class _EditDyeingPreparationScreenState
         }),
       );
 >>>>>>> ae89df7c (fix: persiapan dyeing)
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
     }
 
     return options;
@@ -447,6 +481,7 @@ class _EditDyeingPreparationScreenState
           "weight": greige["weight"] ?? item["weight"],
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           "source_qty": item["source_qty"] ?? item["qty"],
           "source_weight": item["source_weight"] ?? item["weight"],
 =======
@@ -455,6 +490,8 @@ class _EditDyeingPreparationScreenState
           "source_qty": item["source_qty"] ?? item["qty"],
           "source_weight": item["source_weight"] ?? item["weight"],
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
           "qty_tolerance": greige["qty_tolerance"] ?? 0,
           "unit_id": greige["unit_id"] ?? 1,
           "weight_unit_id": greige["weight_unit_id"] ?? 2,
@@ -464,12 +501,15 @@ class _EditDyeingPreparationScreenState
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
   Future<void> _loadData() async {
     setState(() {
       _isLoading = true;
@@ -514,6 +554,7 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       woData = Map<String, dynamic>.from(detail["work_orders"] ?? {});
 =======
       final machine = _mapValue(detail['machine']);
@@ -531,6 +572,11 @@ class _EditDyeingPreparationScreenState
       final machine = _mapValue(detail['machine']);
       final orderGreige = _mapValue(detail['order_greige']);
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+      woData = Map<String, dynamic>.from(
+        detail["work_orders"] ?? {},
+      );
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
 
       _form
         ..clear()
@@ -613,8 +659,9 @@ class _EditDyeingPreparationScreenState
           'notes': detail['notes']?.toString() ?? '',
 =======
           "wo_id": detail["wo_id"],
-          "no_wo": detail["wo_no"],
+          "no_wo": woData["wo_no"] ?? detail["wo_no"] ?? "",
           "notes": detail["notes"] ?? "",
+<<<<<<< HEAD
           "items": List<Map<String, dynamic>>.from(
             detail["items"] ?? [],
           ),
@@ -622,6 +669,16 @@ class _EditDyeingPreparationScreenState
         });
 
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+        });
+
+      final workOrderItems = List<dynamic>.from(woData["items"] ?? []);
+      final options = await _fetchGreigeItemOptions(workOrderItems);
+
+      existingItems = _mapExistingItems(workOrderItems, options);
+      itemOptions = options;
+
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
       _yarnQtyController.text = detail['yarn_qty']?.toString() ?? '';
       _warpingTypeController.text = detail['warping_type']?.toString() ?? '';
 
@@ -853,10 +910,14 @@ class _EditDyeingPreparationScreenState
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
 =======
   bool get _isFormInvalid {
+<<<<<<< HEAD
     return (_form['machine_id'] == null ||
             _form['machine_id'].toString().isEmpty) ||
         (_form['yarn_qty'] == null || _form['yarn_qty'].toString().isEmpty);
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+    return _form['wo_id'] == null || _form['wo_id'].toString().isEmpty;
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
   }
 
   Future<void> _handleSubmit() async {
@@ -867,11 +928,16 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       items: _form['items'] ?? [],
       notes: _form['notes']?.toString(),
       attachments: _form['attachments'],
       attachmentIds: _form['attachment_ids'],
 <<<<<<< HEAD
+=======
+      items: _form['items'] ?? [],
+      notes: _form['notes']?.toString(),
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
     );
 
     try {
@@ -929,6 +995,7 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       if (!mounted) return;
 
       // keluar dari Edit
@@ -955,6 +1022,15 @@ class _EditDyeingPreparationScreenState
         Navigator.pop(context, true);
       }
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+      if (!mounted) return;
+
+// keluar dari Edit
+      Navigator.pop(context, true);
+
+// keluar dari Detail
+      Navigator.pop(context, true);
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
     } catch (e) {
       await showAlertDialog(
         context: context,
@@ -964,6 +1040,7 @@ class _EditDyeingPreparationScreenState
     }
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1064,36 +1141,31 @@ class _EditDyeingPreparationScreenState
 
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
   @override
   Widget build(BuildContext context) {
-    return GreigeProcessEditLayout(
-      title: 'Edit Persiapan Dyeing',
+    return DyeingPreparationFormSection(
       id: widget.id,
-      isLoading: _isLoading,
-      errorMessage: _errorMessage,
-      onRetry: _loadData,
-      onCancel: _handleCancel,
+      title: 'Edit Persiapan Dyeing',
+      form: _form,
       formKey: _formKey,
-      formSections: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: _buildSummaryCard()),
-            Expanded(child: _buildGreigeCard()),
-          ].separatedBy(CustomTheme().hGap('xl')),
-        ),
-        Row(
-          children: [
-            Expanded(child: _buildYarnCard()),
-          ].separatedBy(CustomTheme().hGap('xl')),
-        ),
-        _buildAdditionalCard(),
-      ],
-      submitSection: _buildSubmitSection(),
-      greigeOrderData: _mapValue(_data['order_greige']),
+      woData: woData,
+      handleSubmit: _handleSubmit,
+      isSubmitting: _isSubmitting,
+      selectWorkOrder: () {},
+      firstLoading: _isLoading,
+      existingItems: existingItems,
+      itemOptions: itemOptions,
+      greigeInfoMessage: null,
+      handleChangeInput: _handleChangeInput,
+      note: _notesController,
+      isEdit: true,
+      disableWorkOrder: true,
     );
   }
 
+<<<<<<< HEAD
 >>>>>>> b70754b7 (feat: persiapan dyeing)
   Widget _buildSummaryCard() {
     final orderGreige = _mapValue(_data['order_greige']);
@@ -1187,6 +1259,8 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
   void _disposeGreigeForms() {
     for (final item in _greigeForms) {
       (item['spk_no'] as TextEditingController?)?.dispose();
@@ -1194,9 +1268,12 @@ class _EditDyeingPreparationScreenState
       (item['weight'] as TextEditingController?)?.dispose();
     }
     _greigeForms.clear();
+<<<<<<< HEAD
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
   }
 }
 

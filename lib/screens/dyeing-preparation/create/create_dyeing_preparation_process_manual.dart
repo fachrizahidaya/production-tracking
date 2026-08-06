@@ -3,15 +3,22 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
 
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+import 'dart:convert';
+
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/models/master/spk.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
@@ -508,6 +515,7 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> b70754b7 (feat: persiapan dyeing)
 =======
   List<Map<String, dynamic>> existingItems = [];
+  List<Map<String, dynamic>> greigeItemOptions = [];
   String? greigeInfoMessage;
 
   int? _toInt(dynamic value) {
@@ -517,43 +525,151 @@ class _CreateDyeingPreparationProcessManualState
     return null;
   }
 
-  List<Map<String, dynamic>> _mapExistingItems(List<dynamic> items) {
+  String _baseCode(String? code) {
+    if (code == null || code.isEmpty) return '';
+
+    return code.split('-').first;
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchGreigeItemOptions(
+    List<dynamic> items,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final options = <Map<String, dynamic>>[];
+    final optionCache = <String, List<dynamic>>{};
+
+    for (final rawItem in items) {
+      final item = Map<String, dynamic>.from(rawItem);
+      final baseCode = _baseCode(item['item_code']?.toString());
+
+      if (baseCode.isEmpty) {
+        continue;
+      }
+
+      if (!optionCache.containsKey(baseCode)) {
+        final uri = Uri.parse('$baseUrl/item/option').replace(
+          queryParameters: {
+            'type': 'greige_item',
+            'base_code': baseCode,
+            'process': 'work_order',
+          },
+        );
+
+        final response = await http.get(
+          uri,
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        );
+
+        final responseData = jsonDecode(response.body);
+
+        if (response.statusCode != 200) {
+          throw responseData['message'] ?? 'Gagal mengambil opsi greige item.';
+        }
+
+        optionCache[baseCode] = List<dynamic>.from(responseData['data'] ?? []);
+      }
+
+      final data = optionCache[baseCode] ?? [];
+
+      options.addAll(data.map<Map<String, dynamic>>((rawOption) {
+        final option = Map<String, dynamic>.from(rawOption);
+
+        return {
+          "work_order_item_id": item["id"],
+          "spk_item_id": item["spk_item_id"],
+          "source_item_id": item["item_id"],
+          "item_id": option["value"],
+          "item_code": option["code"],
+          "item_name": option["label"],
+          "spk_no": null,
+          "qty": item["qty"],
+          "weight": item["weight"],
+          "qty_tolerance": 0,
+          "unit_id": item["unit"]?["id"] ?? 1,
+          "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
+        };
+      }));
+    }
+
+    return options;
+  }
+
+  Map<String, dynamic> _resolveGreigeItem(
+    Map<String, dynamic> item,
+    List<Map<String, dynamic>> options,
+    Map<String, dynamic>? greige,
+  ) {
+    final greigeItem = greige?["greige_item"] is Map
+        ? Map<String, dynamic>.from(greige?["greige_item"])
+        : <String, dynamic>{};
+
+    final greigeItemId = greige?["greige_item_id"] ?? item["item_id"];
+    final matchedOption = options.cast<Map<String, dynamic>?>().firstWhere(
+          (option) =>
+              option?["work_order_item_id"] == item["id"] &&
+              option?["item_id"]?.toString() == greigeItemId?.toString(),
+          orElse: () => null,
+        );
+
+    final fallbackOption = options.cast<Map<String, dynamic>?>().firstWhere(
+          (option) => option?["work_order_item_id"] == item["id"],
+          orElse: () => null,
+        );
+
+    final option = matchedOption ?? fallbackOption;
+
+    return {
+      "item_id": option?["item_id"] ?? greigeItemId,
+      "item_code":
+          option?["item_code"] ?? greigeItem["code"] ?? item["item_code"],
+      "item_name":
+          option?["item_name"] ?? greigeItem["name"] ?? item["item_name"],
+    };
+  }
+
+  List<Map<String, dynamic>> _mapExistingItems(
+    List<dynamic> items,
+    List<Map<String, dynamic>> options,
+  ) {
     return items.expand<Map<String, dynamic>>((e) {
       final item = Map<String, dynamic>.from(e);
       final greigeItems = List<dynamic>.from(item["greige_items"] ?? []);
 
       if (greigeItems.isEmpty) {
+        final greigeItem = _resolveGreigeItem(item, options, null);
+
         return [
           {
             "id": null,
             "work_order_item_id": item["id"],
-            "item_id": item["item_id"],
+            "item_id": greigeItem["item_id"],
             "spk_item_id": item["spk_item_id"],
-            "item_code": item["item_code"],
-            "item_name": item["item_name"],
+            "item_code": greigeItem["item_code"],
+            "item_name": greigeItem["item_name"],
             "spk_no": null,
             "qty": item["qty"],
             "weight": item["weight"],
             "qty_tolerance": 0,
-            "unit_id": 1,
-            "weight_unit_id": 2,
+            "unit_id": item["unit"]?["id"] ?? 1,
+            "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
           }
         ];
       }
 
       return greigeItems.map<Map<String, dynamic>>((rawGreige) {
         final greige = Map<String, dynamic>.from(rawGreige);
-        final greigeItem = greige["greige_item"] is Map
-            ? Map<String, dynamic>.from(greige["greige_item"])
-            : <String, dynamic>{};
+        final greigeItem = _resolveGreigeItem(item, options, greige);
 
         return {
           "id": greige["id"],
           "work_order_item_id": item["id"],
-          "item_id": greige["greige_item_id"] ?? item["item_id"],
+          "item_id": greigeItem["item_id"],
           "spk_item_id": item["spk_item_id"],
-          "item_code": greigeItem["code"] ?? item["item_code"],
-          "item_name": greigeItem["name"] ?? item["item_name"],
+          "item_code": greigeItem["item_code"],
+          "item_name": greigeItem["item_name"],
           "spk_no": greige["greige_item_op_no"],
           "qty": greige["qty"] ?? item["qty"],
           "weight": greige["weight"] ?? item["weight"],
@@ -572,9 +688,6 @@ class _CreateDyeingPreparationProcessManualState
 
     if (widget.data != null && widget.data!.isNotEmpty) {
       woData = widget.data!;
-      existingItems = _mapExistingItems(
-        List<dynamic>.from(widget.data!['items'] ?? []),
-      );
     }
 
 <<<<<<< HEAD
@@ -597,9 +710,11 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> b70754b7 (feat: persiapan dyeing)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchWorkOrder();
+      _hydrateInitialData();
     });
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   Future<void> _hydrateInitialData() async {
     if (widget.data == null || widget.data!.isEmpty) return;
@@ -653,6 +768,8 @@ class _CreateDyeingPreparationProcessManualState
 <<<<<<< HEAD
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
   Future<void> _hydrateInitialData() async {
     if (widget.data == null || widget.data!.isEmpty) return;
 
@@ -662,6 +779,7 @@ class _CreateDyeingPreparationProcessManualState
 
     try {
       final items = List<dynamic>.from(widget.data!['items'] ?? []);
+<<<<<<< HEAD
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
       final options = await _fetchGreigeItemOptions(items);
@@ -680,6 +798,20 @@ class _CreateDyeingPreparationProcessManualState
         greigeItemOptions = [];
         greigeInfoMessage =
             'Order Greige ${woData['items'][0]['order_greige']['og_no']} sudah selesai. Stok SAP belum ter-update WO bisa lanjut ke Persiapan Dyeing setelah stok greige mencukupi.';
+=======
+      final options = await _fetchGreigeItemOptions(items);
+
+      setState(() {
+        greigeItemOptions = options;
+        existingItems = _mapExistingItems(items, options);
+      });
+    } catch (e) {
+      setState(() {
+        existingItems = _mapExistingItems(
+          List<dynamic>.from(widget.data!['items'] ?? []),
+          const [],
+        );
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
       });
     } finally {
       if (mounted) {
@@ -690,9 +822,12 @@ class _CreateDyeingPreparationProcessManualState
     }
   }
 
+<<<<<<< HEAD
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
   Future<void> _fetchWorkOrder() async {
     setState(() {
       _isFetchingWorkOrder = true;
@@ -808,6 +943,8 @@ class _CreateDyeingPreparationProcessManualState
         }
       }
 
+      final options = await _fetchGreigeItemOptions(availableItems);
+
       setState(() {
 <<<<<<< HEAD
         woData = _workOrderService.dataView;
@@ -821,9 +958,11 @@ class _CreateDyeingPreparationProcessManualState
 =======
         if (availableItems.isEmpty) {
           existingItems = [];
+          greigeItemOptions = [];
           greigeInfoMessage = 'Masih diproses atau greige tidak tersedia.';
         } else {
-          existingItems = _mapExistingItems(availableItems);
+          greigeItemOptions = options;
+          existingItems = _mapExistingItems(availableItems, options);
           greigeInfoMessage = null;
         }
 >>>>>>> c0b3008b (feat: buat persiapan dyeing)
@@ -965,6 +1104,7 @@ class _CreateDyeingPreparationProcessManualState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 greigeItemOptions = [];
 =======
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
@@ -973,6 +1113,9 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
 =======
 >>>>>>> 514dc398 (feat: persiapan dyeing)
+=======
+                greigeItemOptions = [];
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
               });
               return;
             }
@@ -1305,6 +1448,7 @@ class _CreateDyeingPreparationProcessManualState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       itemOptions: greigeItemOptions.isEmpty ? null : greigeItemOptions,
       greigeInfoMessage: greigeInfoMessage,
       greigeReady: existingItems.isNotEmpty,
@@ -1363,6 +1507,14 @@ class _CreateDyeingPreparationProcessManualState
       handleChangeInput: _handleChangeInput,
       note: _noteController,
 >>>>>>> c0b3008b (feat: buat persiapan dyeing)
+=======
+      itemOptions: greigeItemOptions.isEmpty ? null : greigeItemOptions,
+      greigeInfoMessage: greigeInfoMessage,
+      handleChangeInput: _handleChangeInput,
+      note: _noteController,
+      isEdit: false,
+      disableWorkOrder: false,
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
     );
   }
 }

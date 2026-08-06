@@ -69,6 +69,7 @@ class DyeingPreparationFormSection extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   final List<Map<String, dynamic>>? itemOptions;
   final greigeInfoMessage;
   final note;
@@ -185,9 +186,14 @@ class DyeingPreparationFormSection extends StatefulWidget {
   });
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 =======
+=======
+  final List<Map<String, dynamic>>? itemOptions;
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
   final greigeInfoMessage;
   final note;
   final handleChangeInput;
+  final isEdit;
+  final disableWorkOrder;
 
   const DyeingPreparationFormSection(
       {super.key,
@@ -201,10 +207,17 @@ class DyeingPreparationFormSection extends StatefulWidget {
       required this.selectWorkOrder,
       required this.firstLoading,
       this.existingItems = const [],
+      this.itemOptions,
       this.greigeInfoMessage,
       this.handleChangeInput,
+<<<<<<< HEAD
       this.note});
 >>>>>>> c0b3008b (feat: buat persiapan dyeing)
+=======
+      this.note,
+      this.disableWorkOrder,
+      this.isEdit});
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
 
   @override
   State<DyeingPreparationFormSection> createState() =>
@@ -710,8 +723,16 @@ class _DyeingPreparationFormSectionState
   }
 
   List<Map<String, dynamic>> get _itemOptions {
+<<<<<<< HEAD
     return widget.existingItems.asMap().entries.map((entry) {
 >>>>>>> 514dc398 (feat: persiapan dyeing)
+=======
+    final options = widget.itemOptions?.isNotEmpty == true
+        ? widget.itemOptions!
+        : widget.existingItems;
+
+    return options.asMap().entries.map((entry) {
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
       final index = entry.key;
       final item = entry.value;
 
@@ -747,6 +768,7 @@ class _DyeingPreparationFormSectionState
     if (matchingOptions.isEmpty) {
 =======
   void _handleAddGreigeItem() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     if (greigeForms.length >= widget.existingItems.length) {
@@ -820,11 +842,19 @@ class _DyeingPreparationFormSectionState
         .toList();
 
     if (matchingOptions.isEmpty) {
+=======
+    final options = widget.itemOptions?.isNotEmpty == true
+        ? widget.itemOptions!
+        : widget.existingItems;
+
+    if (options.isEmpty) {
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
       _showStockMoreWarning();
       return;
     }
 
     setState(() {
+<<<<<<< HEAD
 <<<<<<< HEAD
       greigeForms.add(_createGreigeForm(options.first, greigeForms.length));
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
@@ -839,6 +869,9 @@ class _DyeingPreparationFormSectionState
 >>>>>>> 514dc398 (feat: persiapan dyeing)
 =======
 >>>>>>> c0b3008b (feat: buat persiapan dyeing)
+=======
+      greigeForms.add(_createGreigeForm(options.first, greigeForms.length));
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
       _syncGreigeItemsToForm();
     });
   }
@@ -912,6 +945,7 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
             final allOptions = widget.itemOptions?.isNotEmpty == true
@@ -950,10 +984,13 @@ class _DyeingPreparationFormSectionState
 =======
             final selectedItem = widget.existingItems[sourceIndex];
 =======
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
             final options = widget.itemOptions?.isNotEmpty == true
                 ? widget.itemOptions!
                 : widget.existingItems;
             final selectedItem = options[sourceIndex];
+<<<<<<< HEAD
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
             final selectedValue = selected["value"]?.toString() ?? "";
             // final isSelectedInAnotherForm = greigeForms.asMap().entries.any(
@@ -981,6 +1018,8 @@ class _DyeingPreparationFormSectionState
 >>>>>>> eb21d940 (fix: buat persiapan dyeing)
 =======
             final selectedItem = widget.existingItems[sourceIndex];
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
             final selectedValue = selected["value"]?.toString() ?? "";
             // final isSelectedInAnotherForm = greigeForms.asMap().entries.any(
             //       (entry) =>
@@ -994,7 +1033,6 @@ class _DyeingPreparationFormSectionState
             // }
 
             setState(() {
-              formItem["id"] = selectedItem["id"];
               formItem["work_order_item_id"] =
                   selectedItem["work_order_item_id"];
               formItem["item_id"] = selectedItem["item_id"];
@@ -1088,8 +1126,12 @@ class _DyeingPreparationFormSectionState
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
 =======
   void _removeGreigeItem(int index) {
+<<<<<<< HEAD
     if (greigeForms.length <= 1) return;
 >>>>>>> cc9a0d2c (fix: buat persiapan dyeing)
+=======
+    if (index == 0 || greigeForms.length <= 1) return;
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
 
     setState(() {
       final item = greigeForms.removeAt(index);
@@ -1172,6 +1214,7 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         title: widget.isEdit
             ? 'Batal Edit Persiapan Dyeing'
             : 'Batal Buat Persiapan Dyeing',
@@ -1186,6 +1229,11 @@ class _DyeingPreparationFormSectionState
 =======
         title: 'Batal Persiapan Dyeing',
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+        title: widget.isEdit
+            ? 'Batal Edit Persiapan Dyeing'
+            : 'Batal Buat Persiapan Dyeing',
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
         buttonBackground: CustomTheme().buttonColor('danger'),
         child: buildBoldMessage(widget.woData['wo_no']?.toString() ?? '-'),
       );
@@ -1303,6 +1351,7 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       title: widget.isEdit ? 'Edit Persiapan Dyeing' : 'Buat Persiapan Dyeing',
 =======
       title: 'Mulai Persiapan Dyeing',
@@ -1319,6 +1368,9 @@ class _DyeingPreparationFormSectionState
 =======
       title: 'Buat Persiapan Dyeing',
 >>>>>>> c0b3008b (feat: buat persiapan dyeing)
+=======
+      title: widget.isEdit ? 'Edit Persiapan Dyeing' : 'Buat Persiapan Dyeing',
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
       buttonBackground: CustomTheme().buttonColor('primary'),
       child: buildBoldMessage(widget.woData['wo_no']?.toString() ?? '-'),
     );
@@ -1372,6 +1424,7 @@ class _DyeingPreparationFormSectionState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildWorkOrderForm(),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1441,10 +1494,13 @@ class _DyeingPreparationFormSectionState
 =======
                             if (widget.existingItems.isNotEmpty)
 =======
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
                             if ((widget.itemOptions?.isNotEmpty == true
                                     ? widget.itemOptions!
                                     : widget.existingItems)
                                 .isNotEmpty)
+<<<<<<< HEAD
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
 =======
                             if (widget.greigeReady)
@@ -1485,6 +1541,8 @@ class _DyeingPreparationFormSectionState
 >>>>>>> b70754b7 (feat: persiapan dyeing)
 =======
                             if (widget.existingItems.isNotEmpty)
+=======
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
                               _buildGreigeItemsForm(isTablet)
                             else if (widget.greigeInfoMessage != null)
                               _buildGreigeInfo(),
@@ -1536,6 +1594,7 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                           label: widget.isEdit ? 'Simpan' : 'Buat',
 =======
                           label: 'Mulai',
@@ -1552,6 +1611,9 @@ class _DyeingPreparationFormSectionState
 =======
                           label: 'Buat',
 >>>>>>> c0b3008b (feat: buat persiapan dyeing)
+=======
+                          label: widget.isEdit ? 'Simpan' : 'Buat',
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
                           isDisabled: isDisabled,
                           onPressed: () => _handleSubmit(context),
                           customHeight: 56.0,
@@ -1590,6 +1652,7 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         isDisabled: widget.disableWorkOrder,
 =======
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
@@ -1598,6 +1661,9 @@ class _DyeingPreparationFormSectionState
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
 =======
 >>>>>>> 514dc398 (feat: persiapan dyeing)
+=======
+        isDisabled: widget.disableWorkOrder,
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
       ),
     );
   }
@@ -1801,10 +1867,14 @@ class _DyeingPreparationFormSectionState
                 ),
               ),
 <<<<<<< HEAD
+<<<<<<< HEAD
               if (index != 0 && greigeForms.length > 1)
 =======
               if (greigeForms.length > 1)
 >>>>>>> cc9a0d2c (fix: buat persiapan dyeing)
+=======
+              if (index != 0 && greigeForms.length > 1)
+>>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
                 IconButton(
                   tooltip: 'Hapus Item',
                   onPressed: () => _removeGreigeItem(index),

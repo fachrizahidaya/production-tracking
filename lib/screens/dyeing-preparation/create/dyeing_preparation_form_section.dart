@@ -24,9 +24,12 @@ class DyeingPreparationFormSection extends StatefulWidget {
   final VoidCallback selectWorkOrder;
   final bool firstLoading;
   final List<Map<String, dynamic>> existingItems;
+  final List<Map<String, dynamic>>? itemOptions;
   final greigeInfoMessage;
   final note;
   final handleChangeInput;
+  final isEdit;
+  final disableWorkOrder;
 
   const DyeingPreparationFormSection(
       {super.key,
@@ -40,9 +43,12 @@ class DyeingPreparationFormSection extends StatefulWidget {
       required this.selectWorkOrder,
       required this.firstLoading,
       this.existingItems = const [],
+      this.itemOptions,
       this.greigeInfoMessage,
       this.handleChangeInput,
-      this.note});
+      this.note,
+      this.disableWorkOrder,
+      this.isEdit});
 
   @override
   State<DyeingPreparationFormSection> createState() =>
@@ -180,7 +186,11 @@ class _DyeingPreparationFormSectionState
   }
 
   List<Map<String, dynamic>> get _itemOptions {
-    return widget.existingItems.asMap().entries.map((entry) {
+    final options = widget.itemOptions?.isNotEmpty == true
+        ? widget.itemOptions!
+        : widget.existingItems;
+
+    return options.asMap().entries.map((entry) {
       final index = entry.key;
       final item = entry.value;
 
@@ -200,24 +210,17 @@ class _DyeingPreparationFormSectionState
   }
 
   void _handleAddGreigeItem() {
-    setState(() {
-      greigeForms.add({
-        "id": null,
-        "work_order_item_id": null,
-        "item_id": null,
-        "spk_item_id": null,
-        "qty_tolerance": 0,
-        "unit_id": null,
-        "weight_unit_id": null,
-        "source_index": null,
-        "item_value": "",
-        "item_code": "",
-        "item_name": "",
-        "spk_no": TextEditingController(),
-        "qty": TextEditingController(),
-        "weight": TextEditingController(),
-      });
+    final options = widget.itemOptions?.isNotEmpty == true
+        ? widget.itemOptions!
+        : widget.existingItems;
 
+    if (options.isEmpty) {
+      _showStockMoreWarning();
+      return;
+    }
+
+    setState(() {
+      greigeForms.add(_createGreigeForm(options.first, greigeForms.length));
       _syncGreigeItemsToForm();
     });
   }
@@ -257,7 +260,10 @@ class _DyeingPreparationFormSectionState
             }
 
             final sourceIndex = selected["source_index"] as int;
-            final selectedItem = widget.existingItems[sourceIndex];
+            final options = widget.itemOptions?.isNotEmpty == true
+                ? widget.itemOptions!
+                : widget.existingItems;
+            final selectedItem = options[sourceIndex];
             final selectedValue = selected["value"]?.toString() ?? "";
             // final isSelectedInAnotherForm = greigeForms.asMap().entries.any(
             //       (entry) =>
@@ -271,7 +277,6 @@ class _DyeingPreparationFormSectionState
             // }
 
             setState(() {
-              formItem["id"] = selectedItem["id"];
               formItem["work_order_item_id"] =
                   selectedItem["work_order_item_id"];
               formItem["item_id"] = selectedItem["item_id"];
@@ -302,7 +307,7 @@ class _DyeingPreparationFormSectionState
   }
 
   void _removeGreigeItem(int index) {
-    if (greigeForms.length <= 1) return;
+    if (index == 0 || greigeForms.length <= 1) return;
 
     setState(() {
       final item = greigeForms.removeAt(index);
@@ -352,7 +357,9 @@ class _DyeingPreparationFormSectionState
           Navigator.pop(context);
           Navigator.pop(context);
         },
-        title: 'Batal Persiapan Dyeing',
+        title: widget.isEdit
+            ? 'Batal Edit Persiapan Dyeing'
+            : 'Batal Buat Persiapan Dyeing',
         buttonBackground: CustomTheme().buttonColor('danger'),
         child: buildBoldMessage(widget.woData['wo_no']?.toString() ?? '-'),
       );
@@ -407,7 +414,7 @@ class _DyeingPreparationFormSectionState
           widget.isSubmitting.value = false;
         }
       },
-      title: 'Buat Persiapan Dyeing',
+      title: widget.isEdit ? 'Edit Persiapan Dyeing' : 'Buat Persiapan Dyeing',
       buttonBackground: CustomTheme().buttonColor('primary'),
       child: buildBoldMessage(widget.woData['wo_no']?.toString() ?? '-'),
     );
@@ -441,7 +448,10 @@ class _DyeingPreparationFormSectionState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildWorkOrderForm(),
-                            if (widget.existingItems.isNotEmpty)
+                            if ((widget.itemOptions?.isNotEmpty == true
+                                    ? widget.itemOptions!
+                                    : widget.existingItems)
+                                .isNotEmpty)
                               _buildGreigeItemsForm(isTablet)
                             else if (widget.greigeInfoMessage != null)
                               _buildGreigeInfo(),
@@ -487,7 +497,7 @@ class _DyeingPreparationFormSectionState
                       ),
                       Expanded(
                         child: FormButton(
-                          label: 'Buat',
+                          label: widget.isEdit ? 'Simpan' : 'Buat',
                           isDisabled: isDisabled,
                           onPressed: () => _handleSubmit(context),
                           customHeight: 56.0,
@@ -515,6 +525,7 @@ class _DyeingPreparationFormSectionState
         selectedLabel: widget.form?['no_wo'] ?? '',
         selectedValue: widget.form?['wo_id']?.toString() ?? '',
         required: true,
+        isDisabled: widget.disableWorkOrder,
       ),
     );
   }
@@ -584,7 +595,7 @@ class _DyeingPreparationFormSectionState
                   ),
                 ),
               ),
-              if (greigeForms.length > 1)
+              if (index != 0 && greigeForms.length > 1)
                 IconButton(
                   tooltip: 'Hapus Item',
                   onPressed: () => _removeGreigeItem(index),

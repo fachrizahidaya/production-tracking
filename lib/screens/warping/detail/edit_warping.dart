@@ -9,8 +9,11 @@ import 'package:textile_tracking/components/master/container/template.dart';
 <<<<<<< HEAD
 =======
 import 'package:textile_tracking/components/master/form/select_form.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/components/master/form/text_form.dart';
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 877fb015 (fix: edit warping)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -22,7 +25,11 @@ import 'package:textile_tracking/screens/update/process/machine.dart';
 import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
+<<<<<<< HEAD
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+import 'package:textile_tracking/screens/update/process/warping.dart';
+>>>>>>> 877fb015 (fix: edit warping)
 import 'package:textile_tracking/screens/warping/model/warping.dart';
 
 class EditWarpingScreen extends StatefulWidget {
@@ -45,10 +52,16 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
   final TextEditingController _yarnQtyController = TextEditingController();
   final TextEditingController _warpingTypeController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
+<<<<<<< HEAD
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+  final TextEditingController _beamQtyController = TextEditingController();
+  final TextEditingController _sectionController = TextEditingController();
+>>>>>>> 877fb015 (fix: edit warping)
 
   bool _isLoading = true;
   bool _isFetchingMachine = false;
+  bool get _isSingleWarping => _form['warping_type'] == 'single_warping';
   String? _errorMessage;
 
   Map<String, dynamic> _data = {};
@@ -75,7 +88,12 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
     _yarnQtyController.dispose();
     _warpingTypeController.dispose();
     _notesController.dispose();
+<<<<<<< HEAD
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+    _beamQtyController.dispose();
+    _sectionController.dispose();
+>>>>>>> 877fb015 (fix: edit warping)
     super.dispose();
   }
 
@@ -127,16 +145,18 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
           'machine_id': detail['machine_id']?.toString(),
           'nama_mesin': _machineLabel(machine),
           'yarn_qty': detail['yarn_qty']?.toString() ?? '',
+          'beam_qty': detail['beam_qty']?.toString() ?? '',
+          'section': detail['section']?.toString() ?? '',
           'order_greige_id': detail['order_greige_id']?.toString(),
           'no_greige_order': orderGreige['og_no']?.toString() ?? '',
-
-          // tambahkan ini
           'warping_type': detail['warping_type']?.toString() ?? '',
           'notes': detail['notes']?.toString() ?? '',
         });
 
       _yarnQtyController.text = detail['yarn_qty']?.toString() ?? '';
-      _warpingTypeController.text = detail['warping_type']?.toString() ?? '';
+      _beamQtyController.text = detail['beam_qty']?.toString() ?? '';
+      _sectionController.text = detail['section']?.toString() ?? '';
+      _notesController.text = detail['notes']?.toString() ?? '';
 
       _notesController.text = detail['notes']?.toString() ?? '';
 
@@ -235,15 +255,32 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
   }
 
   bool get _isFormInvalid {
+<<<<<<< HEAD
     return (_form['machine_id'] == null ||
             _form['machine_id'].toString().isEmpty) ||
         (_form['yarn_qty'] == null || _form['yarn_qty'].toString().isEmpty);
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+    if (_form['machine_id'] == null || _form['machine_id'].toString().isEmpty) {
+      return true;
+    }
+
+    if (_form['yarn_qty'] == null || _form['yarn_qty'].toString().isEmpty) {
+      return true;
+    }
+
+    if (_isSingleWarping) {
+      return _form['beam_qty'] == null || _form['beam_qty'].toString().isEmpty;
+    }
+
+    return _form['section'] == null || _form['section'].toString().isEmpty;
+>>>>>>> 877fb015 (fix: edit warping)
   }
 
   Future<void> _handleSubmit() async {
     if (_isFormInvalid) return;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     final isSingle = _form['warping_type'] == 'single_warping';
 
@@ -267,6 +304,18 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
       orderGreigeId: int.tryParse(_form['order_greige_id']?.toString() ?? ''),
       notes: _form['notes']?.toString(),
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+    final isSingle = _form['warping_type'] == 'single_warping';
+
+    final warping = Warping(
+      machineId: int.tryParse(_form['machine_id']),
+      orderGreigeId: int.tryParse(_form['order_greige_id']),
+      warpingType: _form['warping_type'],
+      notes: _form['notes'],
+      yarnQty: num.tryParse(_form['yarn_qty'] ?? ''),
+      beamQty: isSingle ? num.tryParse(_form['beam_qty'] ?? '') : null,
+      section: !isSingle ? num.tryParse(_form['section'] ?? '') : null,
+>>>>>>> 877fb015 (fix: edit warping)
     );
 
     try {
@@ -425,17 +474,22 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
     }).toList();
 =======
   Widget _buildYarnCard() {
-    return TemplateCard(
-      title: 'Benang',
-      icon: Icons.join_inner_outlined,
-      child: TextForm(
-        label: 'Jumlah Benang (KG)',
-        controller: _yarnQtyController,
-        req: false,
-        isNumber: true,
-        isSorting: true,
-        handleChange: (value) => _handleChangeInput('yarn_qty', value),
-      ),
+    final isSingle = _form['warping_type'] == 'single_warping';
+
+    return WarpingSection(
+      controller: _yarnQtyController,
+      form: _form,
+      onChange: (value) {
+        _handleChangeInput('yarn_qty', value);
+      },
+      valueController: isSingle ? _beamQtyController : _sectionController,
+      onValueChange: (value) {
+        _handleChangeInput(
+          isSingle ? 'beam_qty' : 'section',
+          value,
+        );
+      },
+      extraTitle: isSingle ? 'Beam' : 'Section',
     );
   }
 

@@ -107,10 +107,14 @@ class GreigeProcessEditLayout extends StatelessWidget {
                   top: false,
                   child: Container(
 <<<<<<< HEAD
+<<<<<<< HEAD
                     padding: CustomTheme().padding('content'),
 =======
                     padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+                    padding: CustomTheme().padding('content'),
+>>>>>>> 877fb015 (fix: edit warping)
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border(

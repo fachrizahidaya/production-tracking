@@ -36,11 +36,7 @@ class _FinishWarpingState extends State<FinishWarping> {
     'warping_type': '',
     'beam_qty': null,
     'section': null,
-    'length': null,
-    'weight': null,
-    'broken_yarns': [],
-    'machines': [],
-    'attachments': []
+    'lengths': [],
   };
 
   @override
@@ -65,16 +61,18 @@ class _FinishWarpingState extends State<FinishWarping> {
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final warping = Warping(
-          section: form['section'] == null
-              ? null
-              : int.tryParse(form['section'].toString()),
+          machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
+          warpingType: form['warping_type']?.toString(),
+          yarnQty: num.tryParse(form['yarn_qty']?.toString() ?? '0') ?? 0,
+          section: int.tryParse(form['section']?.toString() ?? '0') ?? 0,
           notes: form['notes']?.toString() ?? '',
-          length: num.tryParse(form['length']?.toString() ?? ''),
-          brokenYarns: List<Map<String, dynamic>>.from(
-            form['broken_yarns'] ?? [],
-          ),
-          attachments: form['attachments'],
-          weight: num.tryParse(form['weight']?.toString() ?? '0') ?? 0,
+          orderGreigeId:
+              int.tryParse(form['order_greige_id']?.toString() ?? ''),
+          beamQty: int.tryParse(form['beam_qty']?.toString() ?? '0') ?? 0,
+          lengths: (form['lengths'] as List?)
+                  ?.map((e) => num.tryParse(e.toString()) ?? 0)
+                  .toList() ??
+              [],
         );
 
         final message =

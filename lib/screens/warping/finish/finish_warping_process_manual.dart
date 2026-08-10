@@ -683,7 +683,8 @@ class _FinishWarpingProcessManualState
                                           ?.toString() ??
                                       '',
                                   badge: _formatWarpingType(
-                                    _readWarpingType(widget.form?['warping_type']) ??
+                                    _readWarpingType(
+                                            widget.form?['warping_type']) ??
                                         _readWarpingType(woData) ??
                                         _readWarpingType(processData),
                                   ),

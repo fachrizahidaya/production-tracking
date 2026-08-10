@@ -34,7 +34,13 @@ class Warping {
       this.notes,
       this.lengths,
       this.section,
-      this.beamQty});
+      this.beamQty,
+      this.brokenYarns,
+      this.attachments,
+      this.length,
+      this.machine_ids,
+      this.machines,
+      this.weight});
 
   factory Warping.fromJson(Map<String, dynamic> json) {
     return Warping(

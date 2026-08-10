@@ -107,6 +107,7 @@ class GreigeProcessDetailList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 <<<<<<< HEAD
+<<<<<<< HEAD
                 // _buildTopBar(context, isTablet),
                 _buildOrderGreigeInfo(context, isTablet),
                 if (isTablet)
@@ -115,6 +116,9 @@ class GreigeProcessDetailList extends StatelessWidget {
                   _buildMobileLayout(context),
 =======
                 _buildTopBar(context, isTablet),
+=======
+                // _buildTopBar(context, isTablet),
+>>>>>>> f7a54b43 (fix: detail list)
                 _buildOrderGreigeInfo(context, isTablet),
                 if (isTablet)
                   _buildTabletLayout(isLargeTablet)

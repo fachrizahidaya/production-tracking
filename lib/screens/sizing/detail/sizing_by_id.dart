@@ -13,6 +13,9 @@ import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f7a54b43 (fix: detail list)
 import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/sizing/detail/edit_sizing.dart';
 =======
@@ -74,11 +77,14 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
   Map<String, dynamic> _greigeOrder = {};
 
   Map<String, dynamic> _data = {};
+<<<<<<< HEAD
 =======
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
   bool _isLoading = true;
   String? _errorMessage;
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> f7a54b43 (fix: detail list)
 
   @override
   void initState() {
@@ -102,6 +108,9 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
 
     try {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f7a54b43 (fix: detail list)
       final sizingService = Provider.of<SizingService>(context, listen: false);
 
       await sizingService.getDataView(context, widget.id);
@@ -134,6 +143,7 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
 
         _isLoading = false;
       });
+<<<<<<< HEAD
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
@@ -150,6 +160,15 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
       if (mounted) {
         setState(() => _isLoading = false);
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      if (mounted && _isLoading) {
+        setState(() {
+          _isLoading = false;
+        });
+>>>>>>> f7a54b43 (fix: detail list)
       }
     }
   }
@@ -161,12 +180,18 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Future _handleDelete(dynamic _) async {
     final data = _data;
 
 =======
   Future<void> _handleDelete(Map<String, dynamic> data) async {
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+  Future _handleDelete(dynamic _) async {
+    final data = _data;
+
+>>>>>>> f7a54b43 (fix: detail list)
     final hasDeletePermission = widget.canDelete == true;
     final canDeleteItem = data['can_delete'] != false;
 
@@ -191,14 +216,20 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
           final message =
               await Provider.of<SizingService>(context, listen: false)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f7a54b43 (fix: detail list)
                   .deleteItem(
             context,
             widget.id.toString(),
             _deleteLoading,
           );
+<<<<<<< HEAD
 =======
                   .deleteItem(context, widget.id.toString(), _deleteLoading);
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> f7a54b43 (fix: detail list)
 
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
@@ -412,50 +443,83 @@ class _WarpingDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
-      body: SafeArea(
-        child: Consumer<SizingService>(
-          builder: (context, service, _) {
-            if (_isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (_errorMessage != null) {
-              return _ErrorView(
-                message: _errorMessage!,
-                onRetry: _fetchDetail,
-              );
-            }
-
-            final data = _detailData(service.dataView);
-
-            return GreigeProcessDetailList(
-              data: data,
-              processName: 'Sizing',
-              processNoKey: 'sizing_no',
-              onRefresh: _fetchDetail,
-              canDelete: widget.canDelete,
-              canUpdate: widget.canUpdate,
-              onDelete: () => _handleDelete(data),
-              onEdit: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => EditSizingScreen(
-                      id: widget.id,
-                    ),
-                  ),
-                );
-
-                if (!mounted) return;
-
-                if (result == true) {
-                  Navigator.pop(context, true);
-                }
-              },
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF7F8FA),
+        appBar: CustomAppBar(
+          title: 'Detail Proses Sizing',
+          onReturn: () => Navigator.pop(context),
+          handleDelete: _handleDelete,
+          handleUpdate: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => EditSizingScreen(
+                  id: widget.id,
+                ),
+              ),
             );
+
+            if (!mounted) return;
+
+            if (result == true) {
+              Navigator.pop(context, true);
+            }
           },
+          id: widget.id,
+          updateStatus:
+              widget.canUpdate == true && (_data['can_update'] != false),
+          deleteStatus:
+              widget.canDelete == true && (_data['can_delete'] != false),
+          label: 'Sizing',
+        ),
+        body: SafeArea(
+          child: Consumer<SizingService>(
+            builder: (context, service, _) {
+              if (_isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (_errorMessage != null) {
+                return _ErrorView(
+                  message: _errorMessage!,
+                  onRetry: _fetchDetail,
+                );
+              }
+
+              final data = _detailData(service.dataView);
+
+              return GreigeProcessDetailList(
+                data: data,
+                processName: 'Sizing',
+                processNoKey: 'sizing_no',
+                onRefresh: _fetchDetail,
+                canDelete: widget.canDelete,
+                canUpdate: widget.canUpdate,
+                onDelete: () => _handleDelete(data),
+                onEdit: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => EditSizingScreen(
+                        id: widget.id,
+                      ),
+                    ),
+                  );
+
+                  if (!mounted) return;
+
+                  if (result == true) {
+                    Navigator.pop(context, true);
+                  }
+                },
+              );
+            },
+          ),
         ),
       ),
     );

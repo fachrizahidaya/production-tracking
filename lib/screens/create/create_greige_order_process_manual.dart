@@ -59,9 +59,10 @@ class _CreateGreigeOrderProcessManualState
     extends State<CreateGreigeOrderProcessManual> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
-  final TextEditingController _maklonNameController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _yarnQtyController = TextEditingController();
+  final TextEditingController _beamQtyController = TextEditingController();
+  final TextEditingController _sectionController = TextEditingController();
 
   bool _firstLoading = false;
   bool _isFetchingGreigeOrder = false;
@@ -80,6 +81,13 @@ class _CreateGreigeOrderProcessManualState
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.data != null && widget.data!.isNotEmpty) {
+        setState(() {
+          greigeOrderData = _normalizeGreigeOrderData(widget.data!);
+          _applyWarpingInitialData(greigeOrderData);
+        });
+      }
+
       _fetchGreigeOrder();
       _fetchMachine();
 
@@ -166,6 +174,35 @@ class _CreateGreigeOrderProcessManualState
     });
   }
 
+  void _applyWarpingInitialData(Map<String, dynamic> source) {
+    if (widget.label != 'Warping') return;
+
+    final isSingle = source['warping_type'] == 'single_warping';
+
+    final yarnQty = source['yarn_qty'];
+
+    widget.form?['yarn_qty'] = yarnQty;
+    _yarnQtyController.text = yarnQty?.toString() ?? '';
+
+    if (isSingle) {
+      final beamQty = source['beam_qty'] ?? source['beam'];
+
+      widget.form?['beam_qty'] = beamQty;
+      widget.form?.remove('section');
+
+      _beamQtyController.text = beamQty?.toString() ?? '';
+      _sectionController.clear();
+    } else {
+      final section = source['section_qty'] ?? source['section'];
+
+      widget.form?['section'] = section;
+      widget.form?.remove('beam_qty');
+
+      _sectionController.text = section?.toString() ?? '';
+      _beamQtyController.clear();
+    }
+  }
+
   Map<String, dynamic> _normalizeGreigeOrderData(
       Map<String, dynamic> selected) {
     final label = selected['label']?.toString() ?? '';
@@ -217,6 +254,7 @@ class _CreateGreigeOrderProcessManualState
         greigeOrderData = detailData;
         widget.form?['no_greige_order'] = detailData['wo_no']?.toString();
         widget.form?['warping_type'] = detailData['warping_type'];
+        _applyWarpingInitialData(detailData);
       });
     } catch (_) {
       setState(() {
@@ -263,6 +301,7 @@ class _CreateGreigeOrderProcessManualState
                   selectedData['wo_no']?.toString();
               widget.form?['warping_type'] = selectedData['warping_type'];
               greigeOrderData = selectedData;
+              _applyWarpingInitialData(selectedData);
             });
 
             if (greigeOrderId != null && greigeOrderId.isNotEmpty) {
@@ -298,9 +337,10 @@ class _CreateGreigeOrderProcessManualState
   @override
   void dispose() {
     widget.form?.clear();
-    _maklonNameController.dispose();
     _noteController.dispose();
     _yarnQtyController.dispose();
+    _beamQtyController.dispose();
+    _sectionController.dispose();
     super.dispose();
   }
 
@@ -309,8 +349,6 @@ class _CreateGreigeOrderProcessManualState
     return GreigeTabSection(
       id: widget.id,
       title: widget.title,
-      maklonName: _maklonNameController,
-      isMaklon: widget.isMaklon,
       form: widget.form,
       label: widget.label,
       formKey: _formKey,
@@ -318,9 +356,6 @@ class _CreateGreigeOrderProcessManualState
           ? widget.data!
           : greigeOrderData,
       processData: data,
-      withMaklonOrMachine: widget.withMaklonOrMachine,
-      withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
-      withOnlyMaklon: widget.withOnlyMaklon,
       handleSubmit: widget.handleSubmit,
       firstLoading: _firstLoading,
       isSubmitting: _isSubmitting,
@@ -330,6 +365,8 @@ class _CreateGreigeOrderProcessManualState
       handleChangeInput: _handleChangeInput,
       note: _noteController,
       yarnQty: _yarnQtyController,
+      beamQty: _beamQtyController,
+      section: _sectionController,
     );
   }
 }

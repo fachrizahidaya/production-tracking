@@ -25,6 +25,8 @@ class GreigeListForm extends StatefulWidget {
   final handleChangeInput;
   final note;
   final yarnQty;
+  final beamQty;
+  final section;
 
   const GreigeListForm(
       {super.key,
@@ -42,15 +44,68 @@ class GreigeListForm extends StatefulWidget {
       this.data,
       this.handleChangeInput,
       this.note,
-      this.yarnQty});
+      this.yarnQty,
+      this.beamQty,
+      this.section});
 
   @override
   State<GreigeListForm> createState() => _GreigeListFormState();
 }
 
 class _GreigeListFormState extends State<GreigeListForm> {
+  String _formatWarpingType(dynamic value) {
+    if (value == null || value.toString().trim().isEmpty) return '';
+
+    final text = value.toString().toLowerCase();
+    if (text.contains('double')) return 'Double Sectional';
+    if (text.contains('single')) return 'Single Warping';
+
+    return value
+        .toString()
+        .split('_')
+        .map((word) => word.isEmpty
+            ? word
+            : '${word[0].toUpperCase()}${word.substring(1)}')
+        .join(' ');
+  }
+
+  Widget _buildWarpingTypeBadge(String label) {
+    return Container(
+      height: 56,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: CustomTheme().buttonColor('primary').withOpacity(0.08),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: CustomTheme().buttonColor('primary').withOpacity(0.18),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.account_tree_outlined,
+            size: 18,
+            color: CustomTheme().buttonColor('primary'),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              color: CustomTheme().buttonColor('primary'),
+              fontSize: CustomTheme().fontSize('sm'),
+              fontWeight: CustomTheme().fontWeight('bold'),
+            ),
+          ),
+        ].separatedBy(CustomTheme().hGap('sm')),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final warpingTypeLabel = _formatWarpingType(widget.form?['warping_type']);
+    final isSingleWarping = widget.form?['warping_type'] == 'single_warping';
+
     return Form(
       child: Column(
         children: [
@@ -61,13 +116,23 @@ class _GreigeListFormState extends State<GreigeListForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SelectForm(
-                    label: 'Greige Order',
-                    onTap: () => widget.selectGreigeOrder(),
-                    selectedLabel: widget.form?['no_greige_order'] ?? '',
-                    selectedValue:
-                        widget.form?['order_greige_id']?.toString() ?? '',
-                    required: true,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: SelectForm(
+                          label: 'Greige Order',
+                          onTap: () => widget.selectGreigeOrder(),
+                          selectedLabel: widget.form?['no_greige_order'] ?? '',
+                          selectedValue:
+                              widget.form?['order_greige_id']?.toString() ?? '',
+                          required: true,
+                        ),
+                      ),
+                      if (widget.label == 'Warping' &&
+                          warpingTypeLabel.isNotEmpty)
+                        _buildWarpingTypeBadge(warpingTypeLabel),
+                    ].separatedBy(CustomTheme().hGap('lg')),
                   ),
                 ].separatedBy(CustomTheme().vGap('xl')),
               ),
@@ -112,6 +177,16 @@ class _GreigeListFormState extends State<GreigeListForm> {
                           onChange: (value) {
                             widget.handleChangeInput('yarn_qty', value);
                           },
+                          form: widget.form,
+                          valueController:
+                              isSingleWarping ? widget.beamQty : widget.section,
+                          onValueChange: (value) {
+                            widget.handleChangeInput(
+                              isSingleWarping ? 'beam_qty' : 'section',
+                              value,
+                            );
+                          },
+                          extraTitle: isSingleWarping ? 'Beam' : 'Section',
                         ),
                       ),
                     if (widget.label == 'Weaving')

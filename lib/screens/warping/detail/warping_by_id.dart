@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/greige_process_detail_list.dart';
+import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -38,6 +39,7 @@ class _WarpingDetailScreenState extends State<WarpingDetailScreen> {
       OptionGreigeOrderService();
 
   Map<String, dynamic> _greigeOrder = {};
+  Map<String, dynamic> _data = {};
 
   @override
   void initState() {
@@ -84,10 +86,19 @@ class _WarpingDetailScreenState extends State<WarpingDetailScreen> {
       } else {
         _greigeOrder = {};
       }
+      setState(() {
+        _data = detail;
+
+        if (_greigeOrder.isNotEmpty) {
+          _data['order_greige'] = _greigeOrder;
+        }
+
+        _isLoading = false;
+      });
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
-      if (mounted) {
+      if (mounted && _isLoading) {
         setState(() {
           _isLoading = false;
         });
@@ -101,7 +112,9 @@ class _WarpingDetailScreenState extends State<WarpingDetailScreen> {
     return response;
   }
 
-  Future<void> _handleDelete(Map<String, dynamic> data) async {
+  Future _handleDelete(dynamic _) async {
+    final data = _data;
+
     final hasDeletePermission = widget.canDelete == true;
     final canDeleteItem = data['can_delete'] != false;
 
@@ -125,7 +138,11 @@ class _WarpingDetailScreenState extends State<WarpingDetailScreen> {
         try {
           final message =
               await Provider.of<WarpingService>(context, listen: false)
-                  .deleteItem(context, widget.id.toString(), _deleteLoading);
+                  .deleteItem(
+            context,
+            widget.id.toString(),
+            _deleteLoading,
+          );
 
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
@@ -157,55 +174,88 @@ class _WarpingDetailScreenState extends State<WarpingDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
-      body: SafeArea(
-        child: Consumer<WarpingService>(
-          builder: (context, service, _) {
-            if (_isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (_errorMessage != null) {
-              return _ErrorView(
-                message: _errorMessage!,
-                onRetry: _fetchDetail,
-              );
-            }
-
-            final data = Map<String, dynamic>.from(
-              _detailData(service.dataView),
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: 'Detail Proses Warping',
+          onReturn: () => Navigator.pop(context),
+          handleDelete: _handleDelete,
+          handleUpdate: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => EditWarpingScreen(
+                  id: widget.id,
+                ),
+              ),
             );
 
-            if (_greigeOrder.isNotEmpty) {
-              data['order_greige'] = _greigeOrder;
+            if (!mounted) return;
+
+            if (result == true) {
+              Navigator.pop(context, true);
             }
-            return GreigeProcessDetailList(
-              data: data,
-              processName: 'Warping',
-              processNoKey: 'warping_no',
-              onRefresh: _fetchDetail,
-              canDelete: widget.canDelete,
-              canUpdate: widget.canUpdate,
-              onDelete: () => _handleDelete(data),
-              onEdit: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => EditWarpingScreen(
-                      id: widget.id,
-                    ),
-                  ),
-                );
-
-                if (!mounted) return;
-
-                if (result == true) {
-                  Navigator.pop(context, true);
-                }
-              },
-            );
           },
+          id: widget.id,
+          updateStatus:
+              widget.canUpdate == true && (_data['can_update'] != false),
+          deleteStatus:
+              widget.canDelete == true && (_data['can_delete'] != false),
+          label: 'Warping',
+        ),
+        backgroundColor: const Color(0xFFF7F8FA),
+        body: SafeArea(
+          child: Consumer<WarpingService>(
+            builder: (context, service, _) {
+              if (_isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (_errorMessage != null) {
+                return _ErrorView(
+                  message: _errorMessage!,
+                  onRetry: _fetchDetail,
+                );
+              }
+
+              final data = Map<String, dynamic>.from(
+                _detailData(service.dataView),
+              );
+
+              if (_greigeOrder.isNotEmpty) {
+                data['order_greige'] = _greigeOrder;
+              }
+              return GreigeProcessDetailList(
+                data: data,
+                processName: 'Warping',
+                processNoKey: 'warping_no',
+                onRefresh: _fetchDetail,
+                canDelete: widget.canDelete,
+                canUpdate: widget.canUpdate,
+                onDelete: () => _handleDelete(data),
+                onEdit: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => EditWarpingScreen(
+                        id: widget.id,
+                      ),
+                    ),
+                  );
+
+                  if (!mounted) return;
+
+                  if (result == true) {
+                    Navigator.pop(context, true);
+                  }
+                },
+              );
+            },
+          ),
         ),
       ),
     );

@@ -55,6 +55,7 @@ class _FinishWarpingProcessState extends State<FinishWarpingProcess> {
     'notes': '',
     'warping_type': '',
 <<<<<<< HEAD
+<<<<<<< HEAD
     'beam_qty': null,
     'section': null,
     'length': null,
@@ -63,6 +64,11 @@ class _FinishWarpingProcessState extends State<FinishWarpingProcess> {
     'machines': [],
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+    'beam_qty': null,
+    'section': null,
+    'lengths': [],
+>>>>>>> e02e3ffb (fix: finish warping)
   };
 
   @override

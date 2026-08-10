@@ -48,8 +48,9 @@ class _FinishWarpingProcessManualState
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _yarnQtyController = TextEditingController();
-  final TextEditingController _lengthController = TextEditingController();
+  List<TextEditingController> _lengthControllers = [];
   final TextEditingController _sectionController = TextEditingController();
+  final TextEditingController _beamQtyController = TextEditingController();
 
   bool _firstLoading = false;
   bool _isFetchingWorkOrder = false;
@@ -109,8 +110,25 @@ class _FinishWarpingProcessManualState
   Future<void> _getWorkOrderView(dynamic id) async {
     await _greigeOrderService.getDataView(id);
 
+    final data = _greigeOrderService.dataView;
+
+    final int pasangQty =
+        int.tryParse((data['pasang_qty'] ?? 1).toString()) ?? 1;
+
     setState(() {
-      woData = _greigeOrderService.dataView;
+      woData = data;
+
+      // dispose controller lama
+      for (final c in _lengthControllers) {
+        c.dispose();
+      }
+
+      _lengthControllers = List.generate(
+        pasangQty,
+        (_) => TextEditingController(),
+      );
+
+      widget.form?['lengths'] = List.generate(pasangQty, (_) => '');
     });
   }
 
@@ -120,25 +138,66 @@ class _FinishWarpingProcessManualState
     try {
       await _warpingService.getDataView(context, id);
 
-      setState(() {
-        processData = _warpingService.dataView['data'];
-        widget.form?['process_id'] = processData['id']?.toString();
-        widget.form?['machine_id'] = processData['machine']['id'];
-        widget.form?['warping_type'] = processData['warping_type'];
-        widget.form?['yarn_qty'] = processData['yarn_qty'];
-        widget.form?['length'] = processData['length'];
-        widget.form?['section'] = processData['section'];
-        widget.form?['order_greige_id'] = processData['order_greige_id'];
-        widget.form?['no_og'] =
-            processData['order_greige']?['og_no'] ?? widget.form?['no_og'];
-        widget.form?['notes'] = processData['notes']?.toString() ?? '';
+      final data = _warpingService.dataView['data'];
 
-        _yarnQtyController.text = processData['yarn_qty']?.toString() ?? '';
-        _lengthController.text = processData['length']?.toString() ?? '';
-        _sectionController.text = processData['section']?.toString() ?? '';
-        _noteController.text = processData['notes']?.toString() ??
-            widget.form?['notes']?.toString() ??
-            '';
+      // ambil jumlah form dari WO
+      final int pasangQty =
+          int.tryParse((woData['pasang_qty'] ?? 1).toString()) ?? 1;
+
+      // length dari process
+      final dynamic rawLength = data['length'];
+
+      List<dynamic> lengths = [];
+
+      if (rawLength is List) {
+        lengths = rawLength;
+      } else if (rawLength != null) {
+        lengths = [rawLength];
+      }
+
+      // kalau belum ada length, tetap buat controller sebanyak pasang_qty
+      if (lengths.isEmpty) {
+        lengths = List.generate(pasangQty, (_) => '');
+      }
+
+      setState(() {
+        processData = data;
+
+        widget.form?['process_id'] = data['id']?.toString();
+        widget.form?['machine_id'] = data['machine']['id'];
+        widget.form?['warping_type'] = data['warping_type'];
+        widget.form?['yarn_qty'] = data['yarn_qty'];
+        widget.form?['beam_qty'] = data['beam_qty'];
+        widget.form?['section'] = data['section'];
+        widget.form?['order_greige_id'] = data['order_greige_id'];
+        widget.form?['no_og'] =
+            data['order_greige']?['og_no'] ?? widget.form?['no_og'];
+        widget.form?['notes'] = data['notes']?.toString() ?? '';
+
+        // simpan list length ke form
+        widget.form?['lengths'] =
+            List.generate(lengths.length, (i) => lengths[i]);
+
+        _yarnQtyController.text = data['yarn_qty']?.toString() ?? '';
+
+        _beamQtyController.text = data['beam_qty']?.toString() ?? '';
+
+        _sectionController.text = data['section']?.toString() ?? '';
+
+        _noteController.text = data['notes']?.toString() ?? '';
+
+        // dispose controller lama
+        for (final c in _lengthControllers) {
+          c.dispose();
+        }
+
+        // buat controller baru
+        _lengthControllers = List.generate(
+          lengths.length,
+          (index) => TextEditingController(
+            text: lengths[index].toString(),
+          ),
+        );
       });
     } finally {
       setState(() => _firstLoading = false);
@@ -226,7 +285,9 @@ class _FinishWarpingProcessManualState
 
     _noteController.dispose();
     _yarnQtyController.dispose();
-    _lengthController.dispose();
+    for (final controller in _lengthControllers) {
+      controller.dispose();
+    }
     _sectionController.dispose();
     super.dispose();
   }
@@ -234,11 +295,16 @@ class _FinishWarpingProcessManualState
   @override
   Widget build(BuildContext context) {
     final isDisabled = widget.form?['order_greige_id'] == null ||
-        widget.form?['machine_id'] == null ||
-        widget.form?['warping_type'] == null ||
-        widget.form?['yarn_qty'] == null ||
-        widget.form?['length'] == null ||
-        widget.form?['section'] == null;
+            widget.form?['machine_id'] == null ||
+            widget.form?['warping_type'] == null ||
+            widget.form?['yarn_qty'] == null
+        // ||
+        // widget.form?['length'] == null
+        // ||
+        // widget.form?['section'] == null
+        //  ||
+        // widget.form?['beam_qty'] == null
+        ;
 
     return DefaultTabController(
       length: 2,
@@ -289,6 +355,7 @@ class _FinishWarpingProcessManualState
                               ),
                               if (widget.form?['order_greige_id'] != null) ...[
                                 _buildBeamWeightSection(),
+                                _buildPanjangSection(),
                                 NoteEditor(
                                   controller: _noteController,
                                   formKey: 'notes',
@@ -346,46 +413,71 @@ class _FinishWarpingProcessManualState
     return TemplateCard(
       title: 'Benang',
       icon: Icons.rule,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
         children: [
-          Expanded(
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: TextForm(
+                  label: 'Jumlah Benang (KG)',
+                  controller: _yarnQtyController,
+                  req: false,
+                  isNumber: true,
+                  isSorting: true,
+                  handleChange: (value) {
+                    _handleChangeInput('yarn_qty', value);
+                  },
+                ),
+              ),
+              Expanded(
+                child: TextForm(
+                  label: widget.form?['warping_type'] == 'single_warping'
+                      ? 'Jumlah Beam'
+                      : 'Jumlah Section',
+                  controller: widget.form?['warping_type'] == 'single_warping'
+                      ? _beamQtyController
+                      : _sectionController,
+                  req: false,
+                  isNumber: true,
+                  isSorting: true,
+                  handleChange: (value) {
+                    _handleChangeInput(
+                        widget.form?['warping_type'] == 'single_warping'
+                            ? 'beam_qty'
+                            : 'section',
+                        value);
+                  },
+                ),
+              ),
+            ].separatedBy(CustomTheme().hGap('xl')),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPanjangSection() {
+    return TemplateCard(
+      title: 'Panjang',
+      icon: Icons.rule,
+      child: Column(
+        children: List.generate(
+          _lengthControllers.length,
+          (index) => Padding(
+            padding: const EdgeInsets.only(bottom: 16),
             child: TextForm(
-              label: 'Jumlah Benang (KG)',
-              controller: _yarnQtyController,
+              label: 'Jumlah Panjang ${index + 1} (M)',
+              controller: _lengthControllers[index],
               req: false,
               isNumber: true,
               isSorting: true,
               handleChange: (value) {
-                _handleChangeInput('yarn_qty', value);
+                widget.form?['lengths'][index] = value;
               },
             ),
           ),
-          Expanded(
-            child: TextForm(
-              label: 'Jumlah Panjang (M)',
-              controller: _lengthController,
-              req: false,
-              isNumber: true,
-              isSorting: true,
-              handleChange: (value) {
-                _handleChangeInput('length', value);
-              },
-            ),
-          ),
-          Expanded(
-            child: TextForm(
-              label: 'Jumlah Section (PCS)',
-              controller: _sectionController,
-              req: false,
-              isNumber: true,
-              isSorting: true,
-              handleChange: (value) {
-                _handleChangeInput('section', value);
-              },
-            ),
-          ),
-        ].separatedBy(CustomTheme().hGap('xl')),
+        ),
       ),
     );
   }

@@ -101,7 +101,7 @@ class GreigeProcessEditLayout extends StatelessWidget {
               : SafeArea(
                   top: false,
                   child: Container(
-                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
+                    padding: CustomTheme().padding('content'),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border(

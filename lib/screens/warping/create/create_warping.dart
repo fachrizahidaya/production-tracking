@@ -53,6 +53,7 @@ class CreateWarping extends StatelessWidget {
           !isSingle ? num.tryParse(form['section']?.toString() ?? '') : null,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d0509dba (fix: mulai warping - shearing)
       machine_ids: (form['machines'] as List?)
@@ -79,6 +80,8 @@ class CreateWarping extends StatelessWidget {
 >>>>>>> 6aaef7aa (fix: create warping)
 =======
 >>>>>>> d0509dba (fix: mulai warping - shearing)
+=======
+>>>>>>> a0d8b327 (fix: create warping)
     );
 
     final message = await Provider.of<WarpingService>(context, listen: false)

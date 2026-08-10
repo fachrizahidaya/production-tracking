@@ -34,34 +34,22 @@ class Warping {
       this.notes,
       this.lengths,
       this.section,
-      this.beamQty,
-      this.attachments,
-      this.machine_ids,
-      this.machines,
-      this.length,
-      this.weight,
-      this.brokenYarns});
+      this.beamQty});
 
   factory Warping.fromJson(Map<String, dynamic> json) {
     return Warping(
-      id: json['id'],
-      warpingNo: json['warping_no'],
-      machineId: json['machine_id'],
-      orderGreigeId: json['order_greige_id'],
-      warpingType: json['warping_type'],
-      yarnQty: json['yarn_qty'],
-      notes: json['notes'],
-      lengths:
-          json['lengths'] != null ? List<dynamic>.from(json['lengths']) : null,
-      section: json['section'],
-      beamQty: json['beam_qty'],
-      attachments: json['attachments'] ?? [],
-      machines: json['machines'] ?? [],
-      machine_ids: json['machine_ids'] ?? [],
-      length: json['length'],
-      weight: json['weight'],
-      brokenYarns: json['broken_yarns'] ?? [],
-    );
+        id: json['id'],
+        warpingNo: json['warping_no'],
+        machineId: json['machine_id'],
+        orderGreigeId: json['order_greige_id'],
+        warpingType: json['warping_type'],
+        yarnQty: json['yarn_qty'],
+        notes: json['notes'],
+        lengths: json['lengths'] != null
+            ? List<dynamic>.from(json['lengths'])
+            : null,
+        section: json['section'],
+        beamQty: json['beam_qty']);
   }
 
   Map<String, dynamic> toJson() {
@@ -75,13 +63,7 @@ class Warping {
       'notes': notes,
       'lengths': lengths,
       'section': section,
-      'beam_qty': beamQty,
-      'attachments': attachments,
-      'machines': machines,
-      'machine_ids': machine_ids,
-      'length': length,
-      'weight': weight,
-      'broken_yarns': brokenYarns,
+      'beam_qty': beamQty
     };
 
     data.removeWhere((key, value) => value == null);

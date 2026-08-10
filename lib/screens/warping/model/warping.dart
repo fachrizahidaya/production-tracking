@@ -8,7 +8,8 @@ class Warping {
   final warpingType;
   final notes;
   final yarnQty;
-  final length;
+  final beamQty;
+  final lengths;
   final section;
 
   Warping(
@@ -19,8 +20,9 @@ class Warping {
       this.warpingType,
       this.yarnQty,
       this.notes,
-      this.length,
-      this.section});
+      this.lengths,
+      this.section,
+      this.beamQty});
 
   factory Warping.fromJson(Map<String, dynamic> json) {
     return Warping(
@@ -31,8 +33,11 @@ class Warping {
         warpingType: json['warping_type'],
         yarnQty: json['yarn_qty'],
         notes: json['notes'],
-        length: json['length'],
-        section: json['section']);
+        lengths: json['lengths'] != null
+            ? List<dynamic>.from(json['lengths'])
+            : null,
+        section: json['section'],
+        beamQty: json['beam_qty']);
   }
 
   Map<String, dynamic> toJson() {
@@ -44,8 +49,9 @@ class Warping {
       'warping_type': warpingType,
       'yarn_qty': yarnQty,
       'notes': notes,
-      'length': length,
-      'section': section
+      'lengths': lengths,
+      'section': section,
+      'beam_qty': beamQty
     };
 
     data.removeWhere((key, value) => value == null);

@@ -21,6 +21,8 @@ class GreigeFormInfoTab extends StatefulWidget {
   final handleChangeInput;
   final note;
   final yarnQty;
+  final beamQty;
+  final section;
 
   const GreigeFormInfoTab(
       {super.key,
@@ -40,7 +42,9 @@ class GreigeFormInfoTab extends StatefulWidget {
       this.withOnlyMaklon,
       this.handleChangeInput,
       this.note,
-      this.yarnQty});
+      this.yarnQty,
+      this.beamQty,
+      this.section});
 
   @override
   State<GreigeFormInfoTab> createState() => _GreigeFormInfoTabState();
@@ -78,6 +82,8 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
                 handleChangeInput: widget.handleChangeInput,
                 note: widget.note,
                 yarnQty: widget.yarnQty,
+                beamQty: widget.beamQty,
+                section: widget.section,
               ),
             ].separatedBy(CustomTheme().vGap('2xl')),
           ),

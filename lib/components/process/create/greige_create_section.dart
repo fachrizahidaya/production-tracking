@@ -19,6 +19,8 @@ class GreigeCreateSection extends StatefulWidget {
   final handleChangeInput;
   final note;
   final yarnQty;
+  final beamQty;
+  final section;
 
   const GreigeCreateSection(
       {super.key,
@@ -36,7 +38,9 @@ class GreigeCreateSection extends StatefulWidget {
       this.data,
       this.handleChangeInput,
       this.note,
-      this.yarnQty});
+      this.yarnQty,
+      this.beamQty,
+      this.section});
 
   @override
   State<GreigeCreateSection> createState() => _GreigeCreateSectionState();
@@ -61,6 +65,8 @@ class _GreigeCreateSectionState extends State<GreigeCreateSection> {
       handleChangeInput: widget.handleChangeInput,
       note: widget.note,
       yarnQty: widget.yarnQty,
+      beamQty: widget.beamQty,
+      section: widget.section,
     );
   }
 }

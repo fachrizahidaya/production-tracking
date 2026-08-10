@@ -32,6 +32,8 @@ class GreigeTabSection extends StatefulWidget {
   final handleChangeInput;
   final note;
   final yarnQty;
+  final beamQty;
+  final section;
 
   const GreigeTabSection(
       {super.key,
@@ -55,7 +57,9 @@ class GreigeTabSection extends StatefulWidget {
       this.spkDocuments,
       this.handleChangeInput,
       this.note,
-      this.yarnQty});
+      this.yarnQty,
+      this.beamQty,
+      this.section});
 
   @override
   State<GreigeTabSection> createState() => _GreigeTabSectionState();
@@ -178,6 +182,10 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
       widget.form?['machines'] ?? [],
     );
     final yarnQty = widget.form?['yarn_qty']?.toString().trim() ?? '';
+    final warpingValueKey = widget.form?['warping_type'] == 'single_warping'
+        ? 'beam_qty'
+        : 'section';
+    final warpingValue = widget.form?[warpingValueKey]?.toString().trim() ?? '';
 
     if (widget.withOnlyMaklon == true) {
       isDisabled = widget.form?['order_greige_id'] == null;
@@ -190,7 +198,8 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
     } else {
       isDisabled = widget.form?['order_greige_id'] == null ||
           widget.form?['machine_id'] == null ||
-          (widget.label == 'Warping' && yarnQty.isEmpty);
+          (widget.label == 'Warping' &&
+              (yarnQty.isEmpty || warpingValue.isEmpty));
     }
 
     return DefaultTabController(
@@ -239,6 +248,8 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
                         handleChangeInput: widget.handleChangeInput,
                         note: widget.note,
                         yarnQty: widget.yarnQty,
+                        beamQty: widget.beamQty,
+                        section: widget.section,
                       ),
                       GreigeInfoTab(data: widget.greigeOrderData)
                     ],

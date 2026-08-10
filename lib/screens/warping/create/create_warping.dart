@@ -13,12 +13,18 @@ class CreateWarping extends StatelessWidget {
 
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
+    final isSingle = form['warping_type'] == 'single_warping';
+
     final warping = Warping(
       orderGreigeId: int.tryParse(form['order_greige_id']?.toString() ?? ''),
       machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
       notes: form['notes']?.toString() ?? '',
       warpingType: form['warping_type']?.toString(),
-      yarnQty: num.tryParse(form['yarn_qty']?.toString() ?? '0') ?? 0,
+      yarnQty: num.tryParse(form['yarn_qty']?.toString() ?? ''),
+      beamQty:
+          isSingle ? num.tryParse(form['beam_qty']?.toString() ?? '') : null,
+      section:
+          !isSingle ? num.tryParse(form['section']?.toString() ?? '') : null,
     );
 
     final message = await Provider.of<WarpingService>(context, listen: false)

@@ -36,12 +36,15 @@ class GreigeFormInfoTab extends StatefulWidget {
   final yarnQty;
   final beamQty;
   final section;
+<<<<<<< HEAD
   final onFormChanged;
 =======
 >>>>>>> a1ea7df (feat: warping)
 =======
   final yarnQty;
 >>>>>>> 1e3750ac (fix: create process)
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
 
   const GreigeFormInfoTab(
       {super.key,
@@ -72,8 +75,14 @@ class GreigeFormInfoTab extends StatefulWidget {
 >>>>>>> a1ea7df (feat: warping)
 =======
       this.note,
+<<<<<<< HEAD
       this.yarnQty});
 >>>>>>> 1e3750ac (fix: create process)
+=======
+      this.yarnQty,
+      this.beamQty,
+      this.section});
+>>>>>>> 6aaef7aa (fix: create warping)
 
   @override
   State<GreigeFormInfoTab> createState() => _GreigeFormInfoTabState();
@@ -209,9 +218,12 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
                 yarnQty: widget.yarnQty,
                 beamQty: widget.beamQty,
                 section: widget.section,
+<<<<<<< HEAD
 =======
                 yarnQty: widget.yarnQty,
 >>>>>>> 1e3750ac (fix: create process)
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
               ),
               _buildGreigeOrderSummary(),
 =======

@@ -1,10 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 =======
 >>>>>>> 1e3750ac (fix: create process)
 import 'package:textile_tracking/components/master/container/template.dart';
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
@@ -12,11 +15,15 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class GreigeInfoTab extends StatelessWidget {
 <<<<<<< HEAD
+<<<<<<< HEAD
   final Map<String, dynamic> data;
   final bool isLoading;
 =======
   final data;
 >>>>>>> 1e3750ac (fix: create process)
+=======
+  final Map<String, dynamic> data;
+>>>>>>> 6aaef7aa (fix: create warping)
 
   const GreigeInfoTab({
     super.key,
@@ -48,10 +55,13 @@ class GreigeInfoTab extends StatelessWidget {
     return text;
   }
 
+<<<<<<< HEAD
 =======
   });
 
 >>>>>>> 1e3750ac (fix: create process)
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
   String _formatDate(dynamic value) {
     if (value == null || value.toString().isEmpty) return '-';
 
@@ -81,11 +91,14 @@ class GreigeInfoTab extends StatelessWidget {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   String _formatYarnLot(dynamic value) {
     if (value == null || value.toString().trim().isEmpty) return '-';
     return formatNumber(value);
   }
 
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
   String _productCode() {
     final spkItem = _mapValue(_mapValue(data['work_order_item'])['spk_item']);
     final item = _mapValue(spkItem['item']);
@@ -107,6 +120,7 @@ class GreigeInfoTab extends StatelessWidget {
   }
 
   String _pasangText() {
+<<<<<<< HEAD
     final design = _mapValue(data['design']);
     final pasangQty = design['pasang_qty'] ?? data['pasang_qty'];
     final sectionQty = design['section_qty'] ?? data['section_qty'];
@@ -131,19 +145,36 @@ class GreigeInfoTab extends StatelessWidget {
     final yarnItems = _listValue(data['yarn_items']);
     final loomBeams = _listValue(data['loom_beams']);
 =======
+=======
+    final pasangQty = data['pasang_qty'];
+    final sectionQty = data['section_qty'];
+    final beamQty = data['beam_qty'];
+
+    if (pasangQty != null && sectionQty != null) {
+      return '${formatNumber(pasangQty)} x Pasang = ${formatNumber(sectionQty)} Section';
+    }
+
+    if (pasangQty != null && beamQty != null) {
+      return '${formatNumber(pasangQty)} x Pasang = ${formatNumber(beamQty)} Beam';
+    }
+
+    if (pasangQty != null) return '${formatNumber(pasangQty)} Pasang';
+    if (sectionQty != null) return '${formatNumber(sectionQty)} Section';
+    if (beamQty != null) return '${formatNumber(beamQty)} Beam';
+    return '-';
+  }
+
+>>>>>>> 6aaef7aa (fix: create warping)
   @override
   Widget build(BuildContext context) {
     if (data.isEmpty) {
       return SingleChildScrollView(
         padding: CustomTheme().padding('content'),
-        child: TemplateCard(
-          title: 'Greige Order',
-          icon: Icons.assignment_outlined,
-          child: NoData(),
-        ),
+        child: NoData(),
       );
     }
 
+<<<<<<< HEAD
     final yarnItems = List<Map<String, dynamic>>.from(
       data['yarn_items'] ?? [],
     );
@@ -191,10 +222,52 @@ class GreigeInfoTab extends StatelessWidget {
           _buildNotesSection(),
 >>>>>>> 1e3750ac (fix: create process)
         ].separatedBy(CustomTheme().vGap('2xl')),
+=======
+    final yarnItems = _listValue(data['yarn_items']);
+    final loomBeams = _listValue(data['loom_beams']);
+
+    return SingleChildScrollView(
+      padding: CustomTheme().padding('content'),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey.shade200),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            _buildWorkOrderBox(),
+            _buildDetailGrid(),
+            _buildTableSection(
+              icon: Icons.layers_outlined,
+              title: 'Kebutuhan Benang',
+              child: _buildYarnTable(yarnItems),
+            ),
+            _buildTableSection(
+              icon: Icons.inventory_2_outlined,
+              title: 'Kebutuhan Loom Beam',
+              child: _buildLoomBeamTable(loomBeams),
+            ),
+            _buildNotesSection(),
+          ].separatedBy(CustomTheme().vGap('2xl')),
+        ),
+>>>>>>> 6aaef7aa (fix: create warping)
       ),
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   Widget _buildHeader(BuildContext context) {
     return LayoutBuilder(
@@ -250,13 +323,165 @@ class GreigeInfoTab extends StatelessWidget {
           ),
 =======
   Widget _buildSummary(BuildContext context) {
+=======
+  Widget _buildHeader() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            _display(data['og_no'] ?? data['pp_no']),
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+        _StatusPill(status: _display(data['status'])),
+      ].separatedBy(CustomTheme().hGap('lg')),
+    );
+  }
+
+  Widget _buildWorkOrderBox() {
+    final workOrder = _mapValue(data['work_order']);
+    final productName = _productName();
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFCFDFF),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth > 720;
+              final children = [
+                _buildBlockInfo(
+                  'Referensi Work Order / Lot',
+                  _display(workOrder['wo_no'] ?? data['wo_no']),
+                  isLink: true,
+                ),
+                _buildBlockInfo(
+                  'Kekurangan Greige',
+                  _withUnit(data['greige_shortage_weight'] ?? data['weight'],
+                      _orderQtyUnit()),
+                ),
+              ];
+
+              if (!isWide) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: children.separatedBy(CustomTheme().vGap('lg')),
+                );
+              }
+
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: children
+                    .map((child) => Expanded(child: child))
+                    .toList()
+                    .separatedBy(CustomTheme().hGap('2xl')),
+              );
+            },
+          ),
+          _buildProductInfo(_productCode(), productName),
+        ].separatedBy(CustomTheme().vGap('xl')),
+      ),
+    );
+  }
+
+  Widget _buildProductInfo(String code, String name) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Produk Jadi',
+          style: _labelStyle(),
+        ),
+        Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: CustomTheme().buttonColor('primary').withValues(
+                      alpha: 0.1,
+                    ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                Icons.inventory_2_outlined,
+                color: CustomTheme().buttonColor('primary'),
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    code,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: _valueStyle(fontSize: 'md'),
+                  ),
+                  if (name.isNotEmpty)
+                    Text(
+                      name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: CustomTheme().fontSize('md'),
+                        fontWeight: CustomTheme().fontWeight('semibold'),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ].separatedBy(CustomTheme().hGap('lg')),
+        ),
+      ].separatedBy(CustomTheme().vGap('sm')),
+    );
+  }
+
+  Widget _buildDetailGrid() {
+    final user = _mapValue(data['user']);
+    final items = [
+      _DetailItem('Tanggal', _formatDate(data['og_date'] ?? data['pp_date'])),
+      _DetailItem('No. SO', _display(data['so_no'])),
+      _DetailItem('No. OB', _display(data['ob_no'])),
+      _DetailItem('No. OP', _display(data['op_no'])),
+      _DetailItem('Nama Design', _display(data['design_name'])),
+      _DetailItem('Desain Warna', _display(data['design_color'])),
+      _DetailItem('Article', _productCode()),
+      _DetailItem(
+          'Jumlah Order', _withUnit(data['order_qty'], _orderQtyUnit())),
+      _DetailItem('Warping Type', _formatType(data['warping_type']),
+          chip: true),
+      _DetailItem('Dibuat oleh', _display(user['name'])),
+      _DetailItem('Pasang', _pasangText()),
+    ];
+
+>>>>>>> 6aaef7aa (fix: create warping)
     return LayoutBuilder(
       builder: (context, constraints) {
-        final itemWidth = constraints.maxWidth > 720
-            ? (constraints.maxWidth - 32) / 3
-            : constraints.maxWidth;
+        final columns = constraints.maxWidth >= 1100
+            ? 4
+            : constraints.maxWidth >= 720
+                ? 2
+                : 1;
+        final spacing = 24.0;
+        final width =
+            (constraints.maxWidth - (spacing * (columns - 1))) / columns;
 
         return Wrap(
+<<<<<<< HEAD
           spacing: 16,
           runSpacing: 16,
           children: [
@@ -278,11 +503,22 @@ class GreigeInfoTab extends StatelessWidget {
             ),
           ],
 >>>>>>> 1e3750ac (fix: create process)
+=======
+          spacing: spacing,
+          runSpacing: 22,
+          children: items
+              .map((item) => SizedBox(
+                    width: width,
+                    child: _buildDetailItem(item),
+                  ))
+              .toList(),
+>>>>>>> 6aaef7aa (fix: create warping)
         );
       },
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   Widget _buildQuickInfoRow(bool isTablet) {
     final user = _mapValue(data['user']);
@@ -597,6 +833,33 @@ class GreigeInfoTab extends StatelessWidget {
     String value, {
     bool isLink = false,
   }) {
+=======
+  Widget _buildDetailItem(_DetailItem item) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(item.label, style: _labelStyle()),
+        item.chip
+            ? Align(
+                alignment: Alignment.centerLeft,
+                child: _buildChip(item.value),
+              )
+            : Text(
+                item.value,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: _valueStyle(fontSize: 'md'),
+              ),
+      ].separatedBy(CustomTheme().vGap('sm')),
+    );
+  }
+
+  Widget _buildBlockInfo(
+    String label,
+    String value, {
+    bool isLink = false,
+  }) {
+>>>>>>> 6aaef7aa (fix: create warping)
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -610,6 +873,7 @@ class GreigeInfoTab extends StatelessWidget {
             color: isLink
                 ? CustomTheme().buttonColor('primary')
                 : Colors.grey.shade800,
+<<<<<<< HEAD
           ),
         ),
       ].separatedBy(CustomTheme().vGap('xs')),
@@ -997,94 +1261,286 @@ class _DetailItem {
 }
 =======
   Widget _buildSection({
+=======
+          ),
+        ),
+      ].separatedBy(CustomTheme().vGap('xs')),
+    );
+  }
+
+  Widget _buildTableSection({
+>>>>>>> 6aaef7aa (fix: create warping)
     required IconData icon,
     required String title,
     required Widget child,
   }) {
-    return TemplateCard(
-      title: title,
-      icon: icon,
-      child: child,
-    );
-  }
-
-  Widget _buildBorderBox({required Widget child}) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: child,
-    );
-  }
-
-  Widget _buildInfoRow(
-    String label,
-    dynamic value, {
-    Widget? trailing,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
+        Row(
+          children: [
+            Icon(icon, size: 20, color: Colors.grey.shade900),
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.grey.shade900,
+                fontSize: CustomTheme().fontSize('lg'),
+                fontWeight: CustomTheme().fontWeight('bold'),
+              ),
+            ),
+          ].separatedBy(CustomTheme().hGap('sm')),
+        ),
+        child,
+      ].separatedBy(CustomTheme().vGap('lg')),
+    );
+  }
+
+  Widget _buildYarnTable(List<Map<String, dynamic>> items) {
+    if (items.isEmpty) return NoData();
+
+    return _buildDataTable(
+      columns: const [
+        DataColumn(label: Text('KODE WARNA')),
+        DataColumn(label: Text('JML. BNG')),
+        DataColumn(label: Text('NE')),
+        DataColumn(label: Text('LOT')),
+      ],
+      rows: items
+          .map(
+            (item) => DataRow(
+              cells: [
+                DataCell(Text(_display(item['color_code']))),
+                DataCell(_richUnit(item['yarn_qty'], 'PCS')),
+                DataCell(Text(_display(item['ne']))),
+                DataCell(Text(_display(item['lot']))),
+              ],
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Widget _buildLoomBeamTable(List<Map<String, dynamic>> items) {
+    if (items.isEmpty) return NoData();
+
+    return _buildDataTable(
+      columns: const [
+        DataColumn(label: Text('BENANG')),
+        DataColumn(label: Text('PANJANG')),
+        DataColumn(label: Text('LEBAR BEAM')),
+        DataColumn(label: Text('NO. MC')),
+        DataColumn(label: Text('BEAM A/B')),
+        DataColumn(label: Text('ATRIBUT TAMBAHAN')),
+      ],
+      rows: items
+          .map(
+            (item) => DataRow(
+              cells: [
+                DataCell(_richUnit(item['yarn_qty'], 'PCS')),
+                DataCell(_richUnit(item['length'], 'M')),
+                DataCell(_richUnit(item['beam_width'], 'M')),
+                DataCell(Text(_display(item['machine_no']))),
+                DataCell(Text(_display(item['beam_ab']))),
+                DataCell(Text(_display(item['extra_attributes']))),
+              ],
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Widget _buildDataTable({
+    required List<DataColumn> columns,
+    required List<DataRow> rows,
+  }) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: constraints.maxWidth),
+            child: DataTable(
+              headingRowColor: WidgetStatePropertyAll(Colors.grey.shade50),
+              headingTextStyle: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: CustomTheme().fontSize('sm'),
+                fontWeight: CustomTheme().fontWeight('bold'),
+              ),
+              dataTextStyle: TextStyle(
+                color: Colors.grey.shade900,
+                fontSize: CustomTheme().fontSize('md'),
+              ),
+              columnSpacing: 48,
+              horizontalMargin: 18,
+              dividerThickness: 0.8,
+              columns: columns,
+              rows: rows,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildNotesSection() {
+    final notes = _display(data['notes'], fallback: 'Tidak ada catatan');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.assignment_outlined,
+                size: 20, color: Colors.grey.shade900),
+            Text(
+              'Catatan',
+              style: TextStyle(
+                color: Colors.grey.shade900,
+                fontSize: CustomTheme().fontSize('lg'),
+                fontWeight: CustomTheme().fontWeight('bold'),
+              ),
+            ),
+          ].separatedBy(CustomTheme().hGap('sm')),
+        ),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF5F7FB),
+            border: Border(
+              left: BorderSide(
+                color: Colors.blueGrey.shade300,
+                width: 4,
+              ),
+            ),
+            borderRadius: BorderRadius.circular(4),
+          ),
           child: Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            notes,
             style: TextStyle(
-              color: Colors.grey.shade600,
-              fontWeight: CustomTheme().fontWeight('semibold'),
               fontSize: CustomTheme().fontSize('md'),
+              color: notes == 'Tidak ada catatan'
+                  ? Colors.grey.shade500
+                  : Colors.grey.shade800,
+              fontStyle: notes == 'Tidak ada catatan' ? FontStyle.italic : null,
+              height: 1.5,
             ),
           ),
         ),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Flexible(
-                child: Text(
-                  value?.toString() ?? '-',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    color: Colors.grey.shade800,
-                    fontWeight: CustomTheme().fontWeight('bold'),
-                    fontSize: CustomTheme().fontSize('md'),
-                  ),
-                ),
-              ),
-              if (trailing != null) ...[
-                const SizedBox(width: 8),
-                trailing,
-              ],
-            ],
-          ),
+      ].separatedBy(CustomTheme().vGap('lg')),
+    );
+  }
+
+  Widget _richUnit(dynamic value, String unit) {
+    if (value == null || value.toString().isEmpty) {
+      return const Text('-');
+    }
+
+    return RichText(
+      text: TextSpan(
+        text: formatNumber(value),
+        style: TextStyle(
+          color: Colors.grey.shade900,
+          fontSize: CustomTheme().fontSize('md'),
+          fontWeight: CustomTheme().fontWeight('bold'),
         ),
-      ],
+        children: [
+          TextSpan(
+            text: ' $unit',
+            style: TextStyle(
+              color: Colors.grey.shade500,
+              fontSize: CustomTheme().fontSize('xs'),
+              fontWeight: CustomTheme().fontWeight('bold'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildChip(String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(16),
+        color: CustomTheme().buttonColor('primary').withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: CustomTheme().buttonColor('primary').withValues(alpha: 0.12),
+        ),
       ),
       child: Text(
         label,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
-          color: Colors.grey.shade800,
+          color: CustomTheme().buttonColor('primary'),
           fontSize: CustomTheme().fontSize('xs'),
           fontWeight: CustomTheme().fontWeight('bold'),
         ),
+      ),
+    );
+  }
+
+  TextStyle _labelStyle() {
+    return TextStyle(
+      color: Colors.grey.shade600,
+      fontWeight: CustomTheme().fontWeight('semibold'),
+      fontSize: CustomTheme().fontSize('sm'),
+    );
+  }
+
+  TextStyle _valueStyle({
+    String fontSize = 'md',
+    Color? color,
+  }) {
+    return TextStyle(
+      color: color ?? Colors.grey.shade800,
+      fontWeight: CustomTheme().fontWeight('bold'),
+      fontSize: CustomTheme().fontSize(fontSize),
+    );
+  }
+}
+
+class _DetailItem {
+  final String label;
+  final String value;
+  final bool chip;
+
+  const _DetailItem(
+    this.label,
+    this.value, {
+    this.chip = false,
+  });
+}
+
+class _StatusPill extends StatelessWidget {
+  final String status;
+
+  const _StatusPill({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.info_outline, size: 16, color: Colors.grey.shade800),
+          Text(
+            status,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.grey.shade800,
+              fontSize: CustomTheme().fontSize('sm'),
+              fontWeight: CustomTheme().fontWeight('bold'),
+            ),
+          ),
+        ].separatedBy(CustomTheme().hGap('xs')),
       ),
     );
   }

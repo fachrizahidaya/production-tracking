@@ -44,11 +44,14 @@ class GreigeTabSection extends StatefulWidget {
   final yarnQty;
   final beamQty;
   final section;
+<<<<<<< HEAD
 =======
 >>>>>>> a1ea7df (feat: warping)
 =======
   final yarnQty;
 >>>>>>> 1e3750ac (fix: create process)
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
 
   const GreigeTabSection(
       {super.key,
@@ -82,8 +85,14 @@ class GreigeTabSection extends StatefulWidget {
 >>>>>>> a1ea7df (feat: warping)
 =======
       this.note,
+<<<<<<< HEAD
       this.yarnQty});
 >>>>>>> 1e3750ac (fix: create process)
+=======
+      this.yarnQty,
+      this.beamQty,
+      this.section});
+>>>>>>> 6aaef7aa (fix: create warping)
 
   @override
   State<GreigeTabSection> createState() => _GreigeTabSectionState();
@@ -248,6 +257,7 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
         ? 'beam_qty'
         : 'section';
     final warpingValue = widget.form?[warpingValueKey]?.toString().trim() ?? '';
+<<<<<<< HEAD
 
     isDisabled = widget.form?['order_greige_id'] == null || machines.isEmpty
         // ||
@@ -258,6 +268,8 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
 =======
     final yarnQty = widget.form?['yarn_qty']?.toString().trim() ?? '';
 >>>>>>> 1e3750ac (fix: create process)
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
 
     if (widget.withOnlyMaklon == true) {
       isDisabled = widget.form?['order_greige_id'] == null;
@@ -270,7 +282,8 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
     } else {
       isDisabled = widget.form?['order_greige_id'] == null ||
           widget.form?['machine_id'] == null ||
-          (widget.label == 'Warping' && yarnQty.isEmpty);
+          (widget.label == 'Warping' &&
+              (yarnQty.isEmpty || warpingValue.isEmpty));
     }
 >>>>>>> a1ea7df (feat: warping)
 
@@ -357,6 +370,8 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
 >>>>>>> a1ea7df (feat: warping)
 =======
                         yarnQty: widget.yarnQty,
+                        beamQty: widget.beamQty,
+                        section: widget.section,
                       ),
                       GreigeInfoTab(data: widget.greigeOrderData)
 >>>>>>> 1e3750ac (fix: create process)

@@ -6,9 +6,20 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WarpingSection extends StatefulWidget {
   final onChange;
+  final onValueChange;
   final controller;
+  final valueController;
+  final form;
+  final extraTitle;
 
-  const WarpingSection({super.key, this.onChange, this.controller});
+  const WarpingSection(
+      {super.key,
+      this.onChange,
+      this.onValueChange,
+      this.controller,
+      this.valueController,
+      this.form,
+      this.extraTitle});
 
   @override
   State<WarpingSection> createState() => _WarpingSectionState();
@@ -28,7 +39,7 @@ class _WarpingSectionState extends State<WarpingSection> {
   @override
   Widget build(BuildContext context) {
     return TemplateCard(
-        title: 'Jumlah Benang',
+        title: 'Benang',
         icon: Icons.join_inner_outlined,
         child: _buildItemContent(context, 0));
   }
@@ -37,24 +48,40 @@ class _WarpingSectionState extends State<WarpingSection> {
     BuildContext context,
     int index,
   ) {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        TextForm(
-          label: 'Jumlah Benang (KG)',
-          controller: widget.controller,
-          req: false,
-          isNumber: true,
-          isSorting: true,
-          handleChange: (value) {
-            if (widget.onChange != null) {
-              widget.onChange(value);
-            }
-          },
+        Expanded(
+          child: TextForm(
+            label: 'Qty Benang (KG)',
+            controller: widget.controller,
+            req: false,
+            isNumber: true,
+            isSorting: true,
+            handleChange: (value) {
+              if (widget.onChange != null) {
+                widget.onChange(value);
+              }
+            },
+          ),
+        ),
+        Expanded(
+          child: TextForm(
+            label: widget.extraTitle,
+            controller: widget.valueController,
+            req: false,
+            isNumber: true,
+            isSorting: true,
+            handleChange: (value) {
+              if (widget.onValueChange != null) {
+                widget.onValueChange(value);
+              }
+            },
+          ),
         ),
       ].separatedBy(
-        CustomTheme().vGap('lg'),
+        CustomTheme().hGap('xl'),
       ),
     );
   }

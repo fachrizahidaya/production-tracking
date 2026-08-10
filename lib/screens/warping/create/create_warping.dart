@@ -36,6 +36,9 @@ class CreateWarping extends StatelessWidget {
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
     final isSingle = form['warping_type'] == 'single_warping';
 
     final warping = Warping(
@@ -48,6 +51,7 @@ class CreateWarping extends StatelessWidget {
           isSingle ? num.tryParse(form['beam_qty']?.toString() ?? '') : null,
       section:
           !isSingle ? num.tryParse(form['section']?.toString() ?? '') : null,
+<<<<<<< HEAD
       machine_ids: (form['machines'] as List?)
           ?.map((e) => int.tryParse(e['value'].toString()))
           .where((e) => e != null)
@@ -67,6 +71,8 @@ class CreateWarping extends StatelessWidget {
       warpingType: form['warping_type']?.toString(),
       yarnQty: num.tryParse(form['yarn_qty']?.toString() ?? '0') ?? 0,
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
     );
 
     final message = await Provider.of<WarpingService>(context, listen: false)

@@ -90,9 +90,10 @@ class _CreateGreigeOrderProcessManualState
 =======
 >>>>>>> 1e3750ac (fix: create process)
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
-  final TextEditingController _maklonNameController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _yarnQtyController = TextEditingController();
+  final TextEditingController _beamQtyController = TextEditingController();
+  final TextEditingController _sectionController = TextEditingController();
 
 <<<<<<< HEAD
   final bool _firstLoading = false;
@@ -125,6 +126,7 @@ class _CreateGreigeOrderProcessManualState
         });
       }
 
+<<<<<<< HEAD
 =======
     spkDocuments = List<Map<String, dynamic>>.from(
       widget.form?['spk_documents'] ?? [],
@@ -134,6 +136,8 @@ class _CreateGreigeOrderProcessManualState
 >>>>>>> 1e3750ac (fix: create process)
     WidgetsBinding.instance.addPostFrameCallback((_) {
 >>>>>>> a1ea7df (feat: warping)
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
       _fetchGreigeOrder();
       _fetchMachine();
 
@@ -268,6 +272,7 @@ class _CreateGreigeOrderProcessManualState
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   dynamic _readWarpingType(dynamic source, [int depth = 0]) {
     if (source == null) return null;
 
@@ -295,6 +300,8 @@ class _CreateGreigeOrderProcessManualState
     return null;
   }
 
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
   void _applyWarpingInitialData(Map<String, dynamic> source) {
     if (widget.label != 'Warping') return;
 
@@ -324,8 +331,11 @@ class _CreateGreigeOrderProcessManualState
     }
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> a1ea7df (feat: warping)
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
   Map<String, dynamic> _normalizeGreigeOrderData(
       Map<String, dynamic> selected) {
     final label = selected['label']?.toString() ?? '';
@@ -406,7 +416,11 @@ class _CreateGreigeOrderProcessManualState
         _applyWarpingInitialData(detailData);
 =======
         widget.form?['warping_type'] = detailData['warping_type'];
+<<<<<<< HEAD
 >>>>>>> 1e3750ac (fix: create process)
+=======
+        _applyWarpingInitialData(detailData);
+>>>>>>> 6aaef7aa (fix: create warping)
       });
     } catch (_) {
       setState(() {
@@ -494,6 +508,7 @@ class _CreateGreigeOrderProcessManualState
               widget.form?['warping_type'] = selectedData['warping_type'];
 >>>>>>> 1e3750ac (fix: create process)
               greigeOrderData = selectedData;
+              _applyWarpingInitialData(selectedData);
             });
 
             if (greigeOrderId != null && greigeOrderId.isNotEmpty) {
@@ -571,10 +586,14 @@ class _CreateGreigeOrderProcessManualState
   void dispose() {
     widget.form?.clear();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
     _noteController.dispose();
     _yarnQtyController.dispose();
     _beamQtyController.dispose();
     _sectionController.dispose();
+<<<<<<< HEAD
 =======
     _maklonNameController.dispose();
 <<<<<<< HEAD
@@ -583,6 +602,8 @@ class _CreateGreigeOrderProcessManualState
     _noteController.dispose();
     _yarnQtyController.dispose();
 >>>>>>> 1e3750ac (fix: create process)
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
     super.dispose();
   }
 
@@ -592,10 +613,13 @@ class _CreateGreigeOrderProcessManualState
       id: widget.id,
       title: widget.title,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       maklonName: _maklonNameController,
       isMaklon: widget.isMaklon,
 >>>>>>> a1ea7df (feat: warping)
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
       form: widget.form,
       label: widget.label,
       formKey: _formKey,
@@ -604,11 +628,14 @@ class _CreateGreigeOrderProcessManualState
           : greigeOrderData,
       processData: data,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       withMaklonOrMachine: widget.withMaklonOrMachine,
       withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
       withOnlyMaklon: widget.withOnlyMaklon,
 >>>>>>> a1ea7df (feat: warping)
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
       handleSubmit: widget.handleSubmit,
       firstLoading: _firstLoading,
       isSubmitting: _isSubmitting,
@@ -622,11 +649,14 @@ class _CreateGreigeOrderProcessManualState
       yarnQty: _yarnQtyController,
       beamQty: _beamQtyController,
       section: _sectionController,
+<<<<<<< HEAD
 =======
 >>>>>>> a1ea7df (feat: warping)
 =======
       yarnQty: _yarnQtyController,
 >>>>>>> 1e3750ac (fix: create process)
+=======
+>>>>>>> 6aaef7aa (fix: create warping)
     );
   }
 }

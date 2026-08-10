@@ -58,14 +58,16 @@ class _FinishWarpingState extends State<FinishWarping> {
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final warping = Warping(
-          machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
-          warpingType: form['warping_type']?.toString(),
-          yarnQty: num.tryParse(form['yarn_qty']?.toString() ?? '0') ?? 0,
-          length: num.tryParse(form['length']?.toString() ?? '0') ?? 0,
-          section: int.tryParse(form['section']?.toString() ?? '0') ?? 0,
-          notes: form['notes']?.toString() ?? '',
-          orderGreigeId:
-              int.tryParse(form['order_greige_id']?.toString() ?? ''),
+          machineId: int.tryParse(form['machine_id'].toString()),
+          warpingType: form['warping_type'],
+          yarnQty: num.tryParse(form['yarn_qty'].toString()) ?? 0,
+          beamQty: int.tryParse(form['beam_qty'].toString()) ?? 0,
+          section: int.tryParse(form['section'].toString()) ?? 0,
+          notes: form['notes'],
+          orderGreigeId: int.tryParse(form['order_greige_id'].toString()),
+          lengths: List<dynamic>.from(
+            form['lengths'] ?? [],
+          ),
         );
 
         final message =

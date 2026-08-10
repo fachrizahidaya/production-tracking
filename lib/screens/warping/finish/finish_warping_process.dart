@@ -58,6 +58,7 @@ class _FinishWarpingProcessState extends State<FinishWarpingProcess> {
 <<<<<<< HEAD
     'beam_qty': null,
     'section': null,
+<<<<<<< HEAD
     'length': null,
     'weight': null,
     'broken_yarns': [],
@@ -76,6 +77,9 @@ class _FinishWarpingProcessState extends State<FinishWarpingProcess> {
     'broken_yarns': [],
     'machines': [],
 >>>>>>> 3562ec45 (fix: selesai warping - shearing)
+=======
+    'lengths': [],
+>>>>>>> 11f11e32 (fix: finish warping)
   };
 
   @override

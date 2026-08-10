@@ -40,6 +40,7 @@ class Warping {
       this.lengths,
       this.section,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.beamQty,
       this.attachments,
       this.machine_ids,
@@ -216,6 +217,15 @@ class Warping {
 =======
       this.beamQty});
 >>>>>>> a0d8b327 (fix: create warping)
+=======
+      this.beamQty,
+      this.brokenYarns,
+      this.attachments,
+      this.length,
+      this.machine_ids,
+      this.machines,
+      this.weight});
+>>>>>>> 11f11e32 (fix: finish warping)
 
   factory Warping.fromJson(Map<String, dynamic> json) {
     return Warping(

@@ -1045,7 +1045,8 @@ class _FinishWarpingProcessManualState
 =======
 >>>>>>> c940e94a (fix:)
                                   badge: _formatWarpingType(
-                                    _readWarpingType(widget.form?['warping_type']) ??
+                                    _readWarpingType(
+                                            widget.form?['warping_type']) ??
                                         _readWarpingType(woData) ??
                                         _readWarpingType(processData),
                                   ),

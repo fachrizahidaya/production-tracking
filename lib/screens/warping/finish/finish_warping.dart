@@ -62,6 +62,7 @@ class _FinishWarpingState extends State<FinishWarping> {
     'section': null,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 3562ec45 (fix: selesai warping - shearing)
     'length': null,
@@ -101,6 +102,9 @@ class _FinishWarpingState extends State<FinishWarping> {
 =======
     'attachments': []
 >>>>>>> 64274789 (fix: selesai warping-shearing)
+=======
+    'lengths': [],
+>>>>>>> 11f11e32 (fix: finish warping)
   };
 
   @override
@@ -142,10 +146,12 @@ class _FinishWarpingState extends State<FinishWarping> {
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final warping = Warping(
-          section: form['section'] == null
-              ? null
-              : int.tryParse(form['section'].toString()),
+          machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
+          warpingType: form['warping_type']?.toString(),
+          yarnQty: num.tryParse(form['yarn_qty']?.toString() ?? '0') ?? 0,
+          section: int.tryParse(form['section']?.toString() ?? '0') ?? 0,
           notes: form['notes']?.toString() ?? '',
+<<<<<<< HEAD
           length: num.tryParse(form['length']?.toString() ?? ''),
           brokenYarns: List<Map<String, dynamic>>.from(
             form['broken_yarns'] ?? [],
@@ -183,10 +189,16 @@ class _FinishWarpingState extends State<FinishWarping> {
               ? null
               : int.tryParse(form['beam_qty'].toString()),
 >>>>>>> 64274789 (fix: selesai warping-shearing)
+=======
+          orderGreigeId:
+              int.tryParse(form['order_greige_id']?.toString() ?? ''),
+          beamQty: int.tryParse(form['beam_qty']?.toString() ?? '0') ?? 0,
+>>>>>>> 11f11e32 (fix: finish warping)
           lengths: (form['lengths'] as List?)
                   ?.map((e) => num.tryParse(e.toString()) ?? 0)
                   .toList() ??
               [],
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> e02e3ffb (fix: finish warping)
 =======
@@ -200,6 +212,8 @@ class _FinishWarpingState extends State<FinishWarping> {
           attachments: form['attachments'],
           weight: num.tryParse(form['weight']?.toString() ?? '0') ?? 0,
 >>>>>>> 3562ec45 (fix: selesai warping - shearing)
+=======
+>>>>>>> 11f11e32 (fix: finish warping)
         );
 
         final message =

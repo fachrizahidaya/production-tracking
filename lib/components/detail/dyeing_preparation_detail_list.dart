@@ -87,12 +87,16 @@ class DyeingPreparationDetailList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 <<<<<<< HEAD
+<<<<<<< HEAD
                 // _buildTopBar(context, isTablet),
                 _buildOrderGreigeInfo(context, isTablet),
                 if (isTablet)
                   _buildTabletLayout(context, isLargeTablet)
 =======
                 _buildTopBar(context, isTablet),
+=======
+                // _buildTopBar(context, isTablet),
+>>>>>>> 27570e76 (fix: detail persiapan dyeing)
                 _buildOrderGreigeInfo(context, isTablet),
                 if (isTablet)
                   _buildTabletLayout(isLargeTablet)

@@ -119,6 +119,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 // _buildTopBar(context, isTablet),
                 _buildOrderGreigeInfo(context, isTablet),
                 if (isTablet)
@@ -137,6 +138,9 @@ class DyeingPreparationDetailList extends StatelessWidget {
 >>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
 =======
                 _buildTopBar(context, isTablet),
+=======
+                // _buildTopBar(context, isTablet),
+>>>>>>> f93a876f (fix: detail persiapan dyeing)
                 _buildOrderGreigeInfo(context, isTablet),
                 if (isTablet)
                   _buildTabletLayout(isLargeTablet)

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
+import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -35,6 +36,7 @@ class _DyeingPreparationDetailScreenState
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
   bool _isLoading = true;
   String? _errorMessage;
+  Map<String, dynamic> _data = {};
 
   @override
   void initState() {
@@ -57,14 +59,22 @@ class _DyeingPreparationDetailScreenState
     });
 
     try {
-      final service =
+      final warpingService =
           Provider.of<DyeingPreparationService>(context, listen: false);
 
-      await service.getDataView(context, widget.id);
+      await warpingService.getDataView(context, widget.id);
+
+      final detail = _detailData(warpingService.dataView);
+
+      setState(() {
+        _data = detail;
+
+        _isLoading = false;
+      });
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
-      if (mounted) {
+      if (mounted && _isLoading) {
         setState(() {
           _isLoading = false;
         });
@@ -78,7 +88,9 @@ class _DyeingPreparationDetailScreenState
     return response;
   }
 
-  Future<void> _handleDelete(Map<String, dynamic> data) async {
+  Future _handleDelete(dynamic _) async {
+    final data = _data;
+
     final hasDeletePermission = widget.canDelete == true;
     final canDeleteItem = data['can_delete'] != false;
 
@@ -95,14 +107,18 @@ class _DyeingPreparationDetailScreenState
     showConfirmationDialog(
       context: context,
       title: 'Hapus Data',
-      message: 'Apakah Anda yakin ingin menghapus proses persiapan dyeing?',
+      message: 'Apakah Anda yakin ingin menghapus proses Persiapan Dyeing?',
       isLoading: _deleteLoading,
       buttonBackground: CustomTheme().buttonColor('danger'),
       onConfirm: () async {
         try {
           final message = await Provider.of<DyeingPreparationService>(context,
                   listen: false)
-              .deleteItem(context, widget.id.toString(), _deleteLoading);
+              .deleteItem(
+            context,
+            widget.id.toString(),
+            _deleteLoading,
+          );
 
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
@@ -134,52 +150,85 @@ class _DyeingPreparationDetailScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
-      body: SafeArea(
-        child: Consumer<DyeingPreparationService>(
-          builder: (context, service, _) {
-            if (_isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (_errorMessage != null) {
-              return _ErrorView(
-                message: _errorMessage!,
-                onRetry: _fetchDetail,
-              );
-            }
-
-            final data = Map<String, dynamic>.from(
-              _detailData(service.dataView),
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: 'Detail Proses Persiapan Dyeing',
+          onReturn: () => Navigator.pop(context),
+          handleDelete: _handleDelete,
+          handleUpdate: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => EditDyeingPreparationScreen(
+                  id: widget.id,
+                ),
+              ),
             );
 
-            return DyeingPreparationDetailList(
-              data: data,
-              processName: 'Persiapan Dyeing',
-              processNoKey: 'prep_no',
-              onRefresh: _fetchDetail,
-              canDelete: widget.canDelete,
-              canUpdate: widget.canUpdate,
-              onDelete: () => _handleDelete(data),
-              onEdit: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => EditDyeingPreparationScreen(
-                      id: widget.id,
-                    ),
-                  ),
-                );
+            if (!mounted) return;
 
-                if (!mounted) return;
-
-                if (result == true) {
-                  Navigator.pop(context, true);
-                }
-              },
-            );
+            if (result == true) {
+              Navigator.pop(context, true);
+            }
           },
+          id: widget.id,
+          updateStatus:
+              widget.canUpdate == true && (_data['can_update'] != false),
+          deleteStatus:
+              widget.canDelete == true && (_data['can_delete'] != false),
+          label: 'Persiapan Dyeing',
+        ),
+        backgroundColor: const Color(0xFFF7F8FA),
+        body: SafeArea(
+          child: Consumer<DyeingPreparationService>(
+            builder: (context, service, _) {
+              if (_isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (_errorMessage != null) {
+                return _ErrorView(
+                  message: _errorMessage!,
+                  onRetry: _fetchDetail,
+                );
+              }
+
+              final data = Map<String, dynamic>.from(
+                _detailData(service.dataView),
+              );
+
+              return DyeingPreparationDetailList(
+                data: data,
+                processName: 'Persiapan Dyeing',
+                processNoKey: 'prep_no',
+                onRefresh: _fetchDetail,
+                canDelete: widget.canDelete,
+                canUpdate: widget.canUpdate,
+                onDelete: () => _handleDelete(data),
+                onEdit: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => EditDyeingPreparationScreen(
+                        id: widget.id,
+                      ),
+                    ),
+                  );
+
+                  if (!mounted) return;
+
+                  if (result == true) {
+                    Navigator.pop(context, true);
+                  }
+                },
+              );
+            },
+          ),
         ),
       ),
     );

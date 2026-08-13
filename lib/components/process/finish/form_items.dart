@@ -7,6 +7,7 @@ import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/packing_number_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/process/finish/process/form_helpers.dart';
 import 'package:textile_tracking/components/process/finish/process/long_hemming_weight.dart';
 import 'package:textile_tracking/components/process/finish/process/process_item_qty.dart';
@@ -568,19 +569,20 @@ class _FormItemsState extends State<FormItems>
   Map<String, dynamic>? get selectedSemiFinishedItem {
     final semiFinishedProducts = this.semiFinishedProducts;
 
-    if (semiFinishedProducts == null || semiFinishedProducts.isEmpty) {
+    if (semiFinishedProducts.isEmpty) {
       return null;
     }
 
-    return semiFinishedProducts[_selectedSemiFinishedIndex];
+    final selectedIndex =
+        _selectedSemiFinishedIndex >= semiFinishedProducts.length
+            ? 0
+            : _selectedSemiFinishedIndex;
+
+    return semiFinishedProducts[selectedIndex];
   }
 
   bool get isLoadingSemiFinished {
-    final hasSelectedWO = widget.form['wo_id'] != null;
-
-    final semiFinishedProducts = this.semiFinishedProducts;
-
-    return hasSelectedWO && semiFinishedProducts.isEmpty;
+    return widget.isInitializing == true;
   }
 
   List<dynamic> get semiFinishedProducts {
@@ -1117,6 +1119,14 @@ class _FormItemsState extends State<FormItems>
                         ),
                       ],
                     ),
+                  ),
+                )
+              else if (widget.form['wo_id'] != null || widget.data != null)
+                Expanded(
+                  child: TemplateCard(
+                    title: 'Produk Setengah Jadi',
+                    icon: Icons.inventory_2_outlined,
+                    child: const NoData(),
                   ),
                 ),
           ].separatedBy(CustomTheme().hGap('xl')),

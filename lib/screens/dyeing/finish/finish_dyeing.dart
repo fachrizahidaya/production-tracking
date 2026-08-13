@@ -91,36 +91,20 @@ class _FinishDyeingState extends State<FinishDyeing> {
         finishedItemOptionGrb: finishedItemOptionGrb,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
-        final dyeing = Dyeing(
-          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-          unit_id: int.tryParse(form['unit_id']?.toString() ?? ''),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? ''),
-          length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? ''),
-          qty: form['qty'],
-          width: _form['width'] =
-              (_form['width'] == null || _form['width'].toString().isEmpty)
-                  ? '0'
-                  : _form['width'],
-          length: form['length'] =
-              (_form['length'] == null || _form['length'].toString().isEmpty)
-                  ? '0'
-                  : _form['length'],
-          notes: form['notes'],
-          start_time: form['start_time'],
-          end_time: form['end_time'],
-          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
-          attachments: form['attachments'],
-          dyeingLotNo: form['lot_celup_no'],
-          greige_item_id:
-              int.tryParse(form['greige_item_id']?.toString() ?? ''),
-          semifinished_products: form['semifinished_products'] ?? [],
-        );
+        final dyeing = {
+          'wo_id': form['wo_id'],
+          'machine_id': form['machine_id'],
+          'lot_celup_no': form['lot_celup_no'] ?? '',
+          'unit_id': form['unit_id'],
+          'qty': form['qty'],
+          'notes': form['notes'] ?? '',
+          'rework': form['rework'] == true ? 1 : 0,
+          '_method': 'PATCH',
+          'attachments': form['attachments'],
+        };
 
         final message = await Provider.of<DyeingService>(context, listen: false)
-            .finishItem(context, id, dyeing, isLoading);
+            .finishDyeingItem(context, id, dyeing, isLoading);
 
         Navigator.pushNamedAndRemoveUntil(context, '/dyeings', (_) => false);
 

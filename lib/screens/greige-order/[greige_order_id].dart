@@ -97,7 +97,7 @@ class _GreigeOrderDetailState extends State<GreigeOrderDetail> {
                       )
                     : TabBarView(
                         children: [
-                          _GreigeOrderInfoTab(
+                          GreigeInfoTab(
                             data: data,
                             isLoading: _firstLoading,
                           ),
@@ -117,29 +117,6 @@ class _GreigeOrderDetailState extends State<GreigeOrderDetail> {
         ),
       ),
     );
-  }
-}
-
-class _GreigeOrderInfoTab extends StatelessWidget {
-  final Map<String, dynamic> data;
-  final bool isLoading;
-
-  const _GreigeOrderInfoTab({
-    required this.data,
-    required this.isLoading,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (data.isEmpty) {
-      return NoData();
-    }
-
-    return GreigeInfoTab(data: data);
   }
 }
 

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
@@ -7,10 +8,12 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class GreigeInfoTab extends StatelessWidget {
   final Map<String, dynamic> data;
+  final bool isLoading;
 
   const GreigeInfoTab({
     super.key,
     required this.data,
+    this.isLoading = false,
   });
 
   Map<String, dynamic> _mapValue(dynamic value) {
@@ -105,11 +108,14 @@ class GreigeInfoTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (data.isEmpty) {
-      return SingleChildScrollView(
-        padding: CustomTheme().padding('content'),
-        child: NoData(),
+    if (isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
       );
+    }
+
+    if (data.isEmpty) {
+      return NoData();
     }
 
     final yarnItems = _listValue(data['yarn_items']);
@@ -117,60 +123,215 @@ class GreigeInfoTab extends StatelessWidget {
 
     return SingleChildScrollView(
       padding: CustomTheme().padding('content'),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.shade200),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            _buildWorkOrderBox(),
-            _buildDetailGrid(),
-            _buildTableSection(
-              icon: Icons.layers_outlined,
-              title: 'Kebutuhan Benang',
-              child: _buildYarnTable(yarnItems),
-            ),
-            _buildTableSection(
-              icon: Icons.inventory_2_outlined,
-              title: 'Kebutuhan Loom Beam',
-              child: _buildLoomBeamTable(loomBeams),
-            ),
-            _buildNotesSection(),
-          ].separatedBy(CustomTheme().vGap('2xl')),
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeader(context),
+          TemplateCard(
+            title: 'Referensi Work Order',
+            icon: Icons.assignment_outlined,
+            child: _buildWorkOrderBox(),
+          ),
+          TemplateCard(
+            title: 'Detail Greige Order',
+            icon: Icons.info_outline,
+            child: _buildDetailGrid(),
+          ),
+          TemplateCard(
+            title: 'Kebutuhan Benang',
+            icon: Icons.layers_outlined,
+            child: _buildYarnTable(yarnItems),
+          ),
+          TemplateCard(
+            title: 'Kebutuhan Loom Beam',
+            icon: Icons.inventory_2_outlined,
+            child: _buildLoomBeamTable(loomBeams),
+          ),
+          TemplateCard(
+            title: 'Catatan',
+            icon: Icons.sticky_note_2_outlined,
+            child: _buildNotesSection(),
+          ),
+        ].separatedBy(CustomTheme().vGap('2xl')),
       ),
     );
   }
 
-  Widget _buildHeader() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Text(
-            _display(data['og_no'] ?? data['pp_no']),
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 28,
-              fontWeight: FontWeight.w800,
+  Widget _buildHeader(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isTablet = constraints.maxWidth > 600;
+
+        return Container(
+          padding: CustomTheme().padding('card'),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                CustomTheme().buttonColor('primary'),
+                CustomTheme().buttonColor('primary').withValues(alpha: 0.85),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color:
+                    CustomTheme().buttonColor('primary').withValues(alpha: 0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      _display(data['og_no'] ?? data['pp_no']),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize:
+                            CustomTheme().fontSize(isTablet ? '2xl' : 'xl'),
+                        fontWeight: CustomTheme().fontWeight('bold'),
+                      ),
+                    ),
+                  ),
+                  _StatusPill(status: _display(data['status'])),
+                ].separatedBy(CustomTheme().hGap('xl')),
+              ),
+              _buildQuickInfoRow(isTablet),
+            ].separatedBy(CustomTheme().vGap('xl')),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildQuickInfoRow(bool isTablet) {
+    final user = _mapValue(data['user']);
+
+    return Container(
+      padding: CustomTheme().padding(isTablet ? 'content' : 'card'),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildQuickInfoItem(
+              icon: Icons.calendar_month_outlined,
+              label: 'Tanggal OG',
+              value: _formatDate(data['og_date'] ?? data['pp_date']),
+              isTablet: isTablet,
             ),
           ),
+          _buildVerticalDivider(),
+          Expanded(
+            child: _buildQuickInfoItem(
+              icon: Icons.scale_outlined,
+              label: 'Jumlah Order',
+              value: _withUnit(data['order_qty'], _orderQtyUnit()),
+              isTablet: isTablet,
+            ),
+          ),
+          _buildVerticalDivider(),
+          Expanded(
+            child: _buildQuickInfoItem(
+              icon: Icons.view_week_outlined,
+              label: 'Warping Type',
+              value: _formatType(data['warping_type']),
+              isTablet: isTablet,
+            ),
+          ),
+          _buildVerticalDivider(),
+          Expanded(
+            child: _buildQuickInfoItem(
+              icon: Icons.person_outlined,
+              label: 'Dibuat Oleh',
+              value: _display(user['name']),
+              isTablet: isTablet,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickInfoItem({
+    required IconData icon,
+    required String label,
+    required String value,
+    required bool isTablet,
+  }) {
+    return Column(
+      children: [
+        Icon(
+          icon,
+          size: CustomTheme().iconSize(isTablet ? 'xl' : 'lg'),
+          color: Colors.white,
         ),
-        _StatusPill(status: _display(data['status'])),
-      ].separatedBy(CustomTheme().hGap('lg')),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('lg'),
+            color: Colors.white.withValues(alpha: 0.7),
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('md'),
+            fontWeight: CustomTheme().fontWeight('semibold'),
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ].separatedBy(CustomTheme().vGap('sm')),
+    );
+  }
+
+  Widget _buildVerticalDivider() {
+    return Container(
+      width: 1,
+      height: 40,
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      color: Colors.white.withValues(alpha: 0.2),
+    );
+  }
+
+  Widget _buildResponsiveInfoRow(List<Widget> children) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isWide = constraints.maxWidth > 720;
+
+        if (!isWide) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: children.separatedBy(CustomTheme().vGap('lg')),
+          );
+        }
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: children
+              .map((child) => Expanded(child: child))
+              .toList()
+              .separatedBy(CustomTheme().hGap('2xl')),
+        );
+      },
     );
   }
 
@@ -178,52 +339,25 @@ class GreigeInfoTab extends StatelessWidget {
     final workOrder = _mapValue(data['work_order']);
     final productName = _productName();
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFCFDFF),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final isWide = constraints.maxWidth > 720;
-              final children = [
-                _buildBlockInfo(
-                  'Referensi Work Order / Lot',
-                  _display(workOrder['wo_no'] ?? data['wo_no']),
-                  isLink: true,
-                ),
-                _buildBlockInfo(
-                  'Kekurangan Greige',
-                  _withUnit(data['greige_shortage_weight'] ?? data['weight'],
-                      _orderQtyUnit()),
-                ),
-              ];
-
-              if (!isWide) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: children.separatedBy(CustomTheme().vGap('lg')),
-                );
-              }
-
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: children
-                    .map((child) => Expanded(child: child))
-                    .toList()
-                    .separatedBy(CustomTheme().hGap('2xl')),
-              );
-            },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildResponsiveInfoRow([
+          _buildBlockInfo(
+            'Referensi Work Order / Lot',
+            _display(workOrder['wo_no'] ?? data['wo_no']),
+            isLink: true,
           ),
-          _buildProductInfo(_productCode(), productName),
-        ].separatedBy(CustomTheme().vGap('xl')),
-      ),
+          _buildBlockInfo(
+            'Kekurangan Greige',
+            _withUnit(
+              data['greige_shortage_weight'] ?? data['weight'],
+              _orderQtyUnit(),
+            ),
+          ),
+        ]),
+        _buildProductInfo(_productCode(), productName),
+      ].separatedBy(CustomTheme().vGap('xl')),
     );
   }
 
@@ -368,32 +502,6 @@ class GreigeInfoTab extends StatelessWidget {
     );
   }
 
-  Widget _buildTableSection({
-    required IconData icon,
-    required String title,
-    required Widget child,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(icon, size: 20, color: Colors.grey.shade900),
-            Text(
-              title,
-              style: TextStyle(
-                color: Colors.grey.shade900,
-                fontSize: CustomTheme().fontSize('lg'),
-                fontWeight: CustomTheme().fontWeight('bold'),
-              ),
-            ),
-          ].separatedBy(CustomTheme().hGap('sm')),
-        ),
-        child,
-      ].separatedBy(CustomTheme().vGap('lg')),
-    );
-  }
-
   Widget _buildYarnTable(List<Map<String, dynamic>> items) {
     if (items.isEmpty) return NoData();
 
@@ -484,49 +592,53 @@ class GreigeInfoTab extends StatelessWidget {
   Widget _buildNotesSection() {
     final notes = _display(data['notes'], fallback: 'Tidak ada catatan');
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(Icons.assignment_outlined,
-                size: 20, color: Colors.grey.shade900),
-            Text(
-              'Catatan',
-              style: TextStyle(
-                color: Colors.grey.shade900,
-                fontSize: CustomTheme().fontSize('lg'),
-                fontWeight: CustomTheme().fontWeight('bold'),
-              ),
-            ),
-          ].separatedBy(CustomTheme().hGap('sm')),
-        ),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF5F7FB),
-            border: Border(
-              left: BorderSide(
-                color: Colors.blueGrey.shade300,
-                width: 4,
-              ),
-            ),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            notes,
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('md'),
-              color: notes == 'Tidak ada catatan'
-                  ? Colors.grey.shade500
-                  : Colors.grey.shade800,
-              fontStyle: notes == 'Tidak ada catatan' ? FontStyle.italic : null,
-              height: 1.5,
-            ),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5F7FB),
+        border: Border(
+          left: BorderSide(
+            color: Colors.blueGrey.shade300,
+            width: 4,
           ),
         ),
-      ].separatedBy(CustomTheme().vGap('lg')),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        notes,
+        style: TextStyle(
+          fontSize: CustomTheme().fontSize('md'),
+          color: notes == 'Tidak ada catatan'
+              ? Colors.grey.shade500
+              : Colors.grey.shade800,
+          fontStyle: notes == 'Tidak ada catatan' ? FontStyle.italic : null,
+          height: 1.5,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChip(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: CustomTheme().buttonColor('primary').withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: CustomTheme().buttonColor('primary').withValues(alpha: 0.12),
+        ),
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          color: CustomTheme().buttonColor('primary'),
+          fontSize: CustomTheme().fontSize('xs'),
+          fontWeight: CustomTheme().fontWeight('bold'),
+        ),
+      ),
     );
   }
 
@@ -553,29 +665,6 @@ class GreigeInfoTab extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildChip(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-      decoration: BoxDecoration(
-        color: CustomTheme().buttonColor('primary').withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(
-          color: CustomTheme().buttonColor('primary').withValues(alpha: 0.12),
-        ),
-      ),
-      child: Text(
-        label,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          color: CustomTheme().buttonColor('primary'),
-          fontSize: CustomTheme().fontSize('xs'),
-          fontWeight: CustomTheme().fontWeight('bold'),
-        ),
       ),
     );
   }

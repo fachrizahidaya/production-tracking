@@ -291,19 +291,63 @@ class _DyeingPreparationFormSectionState
       "weight_unit_id": item["weight_unit_id"],
       "source_index": index,
       "item_value": _itemValue(item, index),
+
+      // WAJIB dari Work Order
+      "source_qty": item["source_qty"] ?? item["qty"],
+      "source_weight": item["source_weight"] ?? item["weight"],
+
       "spk_no": TextEditingController(
         text: item["spk_no"]?.toString() ?? "",
       ),
+
       "qty": TextEditingController(
         text: item["qty"]?.toString() ?? "",
       ),
+
       "weight": TextEditingController(
         text: item["weight"]?.toString() ?? "",
       ),
     };
   }
 
+<<<<<<< HEAD
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
+=======
+  void _calculateGreigeWeight(int index) {
+    final item = greigeForms[index];
+
+    final sourceQty = double.tryParse(
+      _normalizeNumber(item["source_qty"]?.toString() ?? ""),
+    );
+
+    final sourceWeight = double.tryParse(
+      _normalizeNumber(item["source_weight"]?.toString() ?? ""),
+    );
+
+    final qtyGreige = double.tryParse(
+      _normalizeNumber(
+        (item["qty"] as TextEditingController).text,
+      ),
+    );
+
+    if (sourceQty == null ||
+        sourceWeight == null ||
+        qtyGreige == null ||
+        sourceQty == 0) {
+      (item["weight"] as TextEditingController).clear();
+      return;
+    }
+
+    final weightGreige = (sourceWeight / sourceQty) * qtyGreige;
+
+    (item["weight"] as TextEditingController).text =
+        weightGreige.toStringAsFixed(2).replaceFirst(
+              RegExp(r'\.?0+$'),
+              '',
+            );
+  }
+
+>>>>>>> 9170cdf8 (fix: rumus otomatis berat greige persiapan dyeing)
   void _disposeGreigeForms() {
     for (final item in greigeForms) {
       (item["spk_no"] as TextEditingController?)?.dispose();
@@ -1159,7 +1203,10 @@ class _DyeingPreparationFormSectionState
         label: "Qty Greige",
         controller: item["qty"],
         isNumber: true,
-        handleChange: (_) => _syncGreigeItemsToForm(),
+        handleChange: (_) {
+          _calculateGreigeWeight(index);
+          _syncGreigeItemsToForm();
+        },
       ),
       TextForm(
         label: "Berat Greige",

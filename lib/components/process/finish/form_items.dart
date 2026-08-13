@@ -13,6 +13,7 @@ import 'package:textile_tracking/components/master/form/text_form.dart';
 <<<<<<< HEAD
 import 'package:textile_tracking/components/master/text/no_data.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/components/process/finish/process/form_helpers.dart';
 <<<<<<< HEAD
 =======
@@ -24,6 +25,9 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 >>>>>>> 37a5a200 (fix: selesai dyeing)
 =======
 >>>>>>> cb30986c (fix: finish dyeing)
+=======
+import 'package:textile_tracking/components/process/finish/process/form_helpers.dart';
+>>>>>>> 48469958 (fix: selesai dyeing)
 import 'package:textile_tracking/components/process/finish/process/long_hemming_weight.dart';
 import 'package:textile_tracking/components/process/finish/process/process_item_qty.dart';
 import 'package:textile_tracking/components/process/finish/process/qty_weight.dart';

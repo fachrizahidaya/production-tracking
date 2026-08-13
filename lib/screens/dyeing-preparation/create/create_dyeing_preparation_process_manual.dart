@@ -181,8 +181,14 @@ class _CreateDyeingPreparationProcessManualState
             "item_code": greigeItem["item_code"],
             "item_name": greigeItem["item_name"],
             "spk_no": null,
+
             "qty": item["qty"],
             "weight": item["weight"],
+
+            // Sumber rumus dari Work Order
+            "source_qty": item["qty"],
+            "source_weight": item["weight"],
+
             "qty_tolerance": 0,
             "unit_id": item["unit"]?["id"] ?? 1,
             "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
@@ -202,13 +208,24 @@ class _CreateDyeingPreparationProcessManualState
           "item_code": greigeItem["item_code"],
           "item_name": greigeItem["item_name"],
           "spk_no": greige["greige_item_op_no"],
+
+          // Nilai Qty Greige yang sedang digunakan
           "qty": greige["qty"] ?? item["qty"],
+
+          // Berat Greige yang tersimpan
           "weight": greige["weight"] ?? item["weight"],
+
+          // ==============================
+          // SUMBER RUMUS DARI WORK ORDER
+          // ==============================
+          "source_qty": item["qty"],
+          "source_weight": item["weight"],
+
           "qty_tolerance": greige["qty_tolerance"] ?? 0,
           "unit_id": greige["unit_id"] ?? 1,
           "weight_unit_id": greige["weight_unit_id"] ?? 2,
         };
-      });
+      }).toList();
     }).toList();
   }
 

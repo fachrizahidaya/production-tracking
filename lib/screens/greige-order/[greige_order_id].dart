@@ -102,10 +102,14 @@ class _GreigeOrderDetailState extends State<GreigeOrderDetail> {
                     : TabBarView(
                         children: [
 <<<<<<< HEAD
+<<<<<<< HEAD
                           GreigeInfoTab(
 =======
                           _GreigeOrderInfoTab(
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+                          GreigeInfoTab(
+>>>>>>> d6f95f88 (fix: ui order greige detail)
                             data: data,
                             isLoading: _firstLoading,
                           ),
@@ -128,6 +132,7 @@ class _GreigeOrderDetailState extends State<GreigeOrderDetail> {
   }
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 class _GreigeOrderInfoTab extends StatelessWidget {
@@ -154,6 +159,8 @@ class _GreigeOrderInfoTab extends StatelessWidget {
 }
 
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+>>>>>>> d6f95f88 (fix: ui order greige detail)
 class _GreigeOrderProcessTab extends StatelessWidget {
   final Map<String, dynamic> data;
   final bool isLoading;

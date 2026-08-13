@@ -18,6 +18,9 @@ class ItemDyeingPreparationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d6f95f88 (fix: ui order greige detail)
     return LayoutBuilder(
       builder: (context, constraints) {
         final isTablet = constraints.maxWidth > 600;
@@ -38,6 +41,7 @@ class ItemDyeingPreparationCard extends StatelessWidget {
           ),
         );
       },
+<<<<<<< HEAD
     );
   }
 
@@ -54,12 +58,18 @@ class ItemDyeingPreparationCard extends StatelessWidget {
           _buildInformation(),
         ].separatedBy(CustomTheme().vGap('lg')),
       ),
+=======
+>>>>>>> d6f95f88 (fix: ui order greige detail)
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(bool isTablet) {
     return Row(
+<<<<<<< HEAD
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+>>>>>>> d6f95f88 (fix: ui order greige detail)
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
@@ -70,10 +80,14 @@ class ItemDyeingPreparationCard extends StatelessWidget {
                 item['prep_no'] ?? '-',
                 style: TextStyle(
 <<<<<<< HEAD
+<<<<<<< HEAD
                   fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
 =======
                   fontSize: CustomTheme().fontSize('lg'),
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+                  fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
+>>>>>>> d6f95f88 (fix: ui order greige detail)
                   fontWeight: CustomTheme().fontWeight('bold'),
                 ),
               ),
@@ -82,6 +96,7 @@ class ItemDyeingPreparationCard extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.grey[600],
 <<<<<<< HEAD
+<<<<<<< HEAD
                   fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -89,11 +104,19 @@ class ItemDyeingPreparationCard extends StatelessWidget {
                   fontSize: CustomTheme().fontSize('md'),
                 ),
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+                  fontSize: CustomTheme().fontSize(isTablet ? 'xl' : 'lg'),
+                ),
+                overflow: TextOverflow.ellipsis,
+>>>>>>> d6f95f88 (fix: ui order greige detail)
               ),
             ].separatedBy(CustomTheme().vGap('sm')),
           ),
         ),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d6f95f88 (fix: ui order greige detail)
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -104,6 +127,7 @@ class ItemDyeingPreparationCard extends StatelessWidget {
                 withStatus: true,
               ),
           ].separatedBy(CustomTheme().hGap('md')),
+<<<<<<< HEAD
         ),
       ].separatedBy(CustomTheme().hGap('xl')),
     );
@@ -184,47 +208,105 @@ class ItemDyeingPreparationCard extends StatelessWidget {
           title: item['status'] ?? '-',
           status: item['status'],
           withStatus: true,
+=======
+>>>>>>> d6f95f88 (fix: ui order greige detail)
         ),
-      ],
+      ].separatedBy(CustomTheme().hGap('xl')),
     );
   }
 
-  Widget _buildInformation() {
+  Widget _buildInformation(bool isTablet) {
+    final children = [
+      _buildInfoSection(
+        isTablet,
+        icon: Icons.calendar_today_outlined,
+        title: 'Tanggal Persiapan',
+        value: formatDateSafe(item['prep_date']),
+      ),
+      _buildInfoSection(
+        isTablet,
+        icon: Icons.person_outline,
+        title: 'Dibuat Oleh',
+        value: _getUserName(item['start_by']),
+      ),
+    ];
+
     return Row(
-      children: [
-        Expanded(
-          child: _buildInfoRow(
-            Icons.calendar_today_outlined,
-            "Tanggal Persiapan",
-            formatDateSafe(item['prep_date']),
-          ),
-        ),
-        Expanded(
-          child: _buildInfoRow(
-            Icons.person_outline,
-            "Dibuat Oleh",
-            item['start_by'] ?? "-",
-          ),
-        ),
-      ].separatedBy(CustomTheme().vGap('lg')),
+      children: children
+          .map(
+            (child) => Expanded(
+              child: Container(
+                padding: CustomTheme().padding('card'),
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey[200]!),
+                ),
+                child: child,
+              ),
+            ),
+          )
+          .toList()
+          .separatedBy(CustomTheme().hGap('xl')),
     );
+  }
+
+  Widget _buildInfoSection(
+    bool isTablet, {
+    required IconData icon,
+    required String title,
+    required String value,
+  }) {
+    return isTablet
+        ? Row(
+            children: [
+              Expanded(
+                child: _buildInfoRow(
+                  isTablet,
+                  icon,
+                  title,
+                  value,
+                ),
+              ),
+            ],
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildInfoRow(
+                isTablet,
+                icon,
+                title,
+                value,
+              ),
+            ],
+          );
   }
 
   Widget _buildInfoRow(
+<<<<<<< HEAD
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+    bool isTablet,
+>>>>>>> d6f95f88 (fix: ui order greige detail)
     IconData icon,
     String title,
     String value,
   ) {
     return Row(
 <<<<<<< HEAD
+<<<<<<< HEAD
       mainAxisSize: MainAxisSize.min,
 =======
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+      mainAxisSize: MainAxisSize.min,
+>>>>>>> d6f95f88 (fix: ui order greige detail)
       children: [
         Container(
           padding: CustomTheme().padding('process-content'),
           decoration: BoxDecoration(
+<<<<<<< HEAD
 <<<<<<< HEAD
             color: CustomTheme().buttonColor('primary').withOpacity(0.1),
             borderRadius: BorderRadius.circular(4),
@@ -239,15 +321,23 @@ class ItemDyeingPreparationCard extends StatelessWidget {
 =======
             color: CustomTheme().buttonColor('primary').withOpacity(.1),
             borderRadius: BorderRadius.circular(6),
+=======
+            color: CustomTheme().buttonColor('primary').withOpacity(0.1),
+            borderRadius: BorderRadius.circular(4),
+>>>>>>> d6f95f88 (fix: ui order greige detail)
           ),
           child: Icon(
             icon,
-            size: 18,
+            size: isTablet ? 20 : 18,
             color: CustomTheme().buttonColor('primary'),
           ),
         ),
+<<<<<<< HEAD
         Expanded(
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+        Flexible(
+>>>>>>> d6f95f88 (fix: ui order greige detail)
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -256,11 +346,16 @@ class ItemDyeingPreparationCard extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.grey[600],
 <<<<<<< HEAD
+<<<<<<< HEAD
                   fontSize: CustomTheme().fontSize(isTablet ? 12 : 10),
                   fontWeight: CustomTheme().fontWeight('semibold'),
 =======
                   fontSize: CustomTheme().fontSize('sm'),
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+                  fontSize: CustomTheme().fontSize(isTablet ? 12 : 10),
+                  fontWeight: CustomTheme().fontWeight('semibold'),
+>>>>>>> d6f95f88 (fix: ui order greige detail)
                 ),
               ),
               Text(
@@ -270,9 +365,13 @@ class ItemDyeingPreparationCard extends StatelessWidget {
                   fontSize: CustomTheme().fontSize('md'),
                 ),
 <<<<<<< HEAD
+<<<<<<< HEAD
                 overflow: TextOverflow.ellipsis,
 =======
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+                overflow: TextOverflow.ellipsis,
+>>>>>>> d6f95f88 (fix: ui order greige detail)
               ),
             ].separatedBy(CustomTheme().vGap('sm')),
           ),
@@ -281,6 +380,9 @@ class ItemDyeingPreparationCard extends StatelessWidget {
     );
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d6f95f88 (fix: ui order greige detail)
 
   String _getUserName(dynamic user) {
     if (user is Map) {
@@ -302,6 +404,9 @@ class ItemDyeingPreparationCard extends StatelessWidget {
         return status ?? '-';
     }
   }
+<<<<<<< HEAD
 =======
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+>>>>>>> d6f95f88 (fix: ui order greige detail)
 }

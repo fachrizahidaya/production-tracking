@@ -12,6 +12,7 @@ import 'package:textile_tracking/components/master/form/text_form.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
 import 'package:textile_tracking/components/master/text/no_data.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/components/process/finish/process/form_helpers.dart';
 <<<<<<< HEAD
 =======
@@ -21,6 +22,8 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 =======
 >>>>>>> 37a5a200 (fix: selesai dyeing)
+=======
+>>>>>>> cb30986c (fix: finish dyeing)
 import 'package:textile_tracking/components/process/finish/process/long_hemming_weight.dart';
 import 'package:textile_tracking/components/process/finish/process/process_item_qty.dart';
 import 'package:textile_tracking/components/process/finish/process/qty_weight.dart';
@@ -2410,10 +2413,16 @@ class _FormItemsState extends State<FormItems>
                                       ),
                                     ),
                                     PackingGradeASourceSection(
+<<<<<<< HEAD
                                     key: ValueKey(
                                       'packing-grade-a-${widget.form['wo_id']}-$itemId',
                                     ),
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+                                      key: ValueKey(
+                                        'packing-grade-a-${widget.form['wo_id']}-$itemId',
+                                      ),
+>>>>>>> cb30986c (fix: finish dyeing)
                                       initialUsages:
                                           (item['grade_a_stock_usages'] is List)
                                               ? (item['grade_a_stock_usages']
@@ -2452,8 +2461,8 @@ class _FormItemsState extends State<FormItems>
                                           widget.form['items'],
                                         );
                                       },
-                                    onExceededChanged:
-                                        widget.handleItemQtyWarning,
+                                      onExceededChanged:
+                                          widget.handleItemQtyWarning,
                                     ),
                                   ].separatedBy(
                                     CustomTheme().vGap('xl'),

@@ -461,6 +461,97 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
+  Future<String> finishDyeingItem(
+    BuildContext context,
+    String id,
+    Map<String, dynamic> data,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
+    isSubmitting.value = true;
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('access_token');
+
+      final attachments = data['attachments'];
+
+      final uri = Uri.parse('$baseUrl/$endpoint/$id/complete');
+
+      final request = http.MultipartRequest(
+        'POST',
+        uri,
+      );
+
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      });
+
+      void addFields(dynamic value, String key) {
+        if (value == null) return;
+
+        if (value is List) {
+          for (int i = 0; i < value.length; i++) {
+            addFields(value[i], '$key[$i]');
+          }
+        } else if (value is Map) {
+          value.forEach((k, v) {
+            addFields(v, '$key[$k]');
+          });
+        } else {
+          request.fields[key] = value.toString();
+        }
+      }
+
+      data.forEach((key, value) {
+        if (key == 'attachments') return;
+        addFields(value, key);
+      });
+
+      request.fields['_method'] = 'PATCH';
+
+      if (attachments is List) {
+        for (var file in attachments) {
+          if (file is File) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+              ),
+            );
+          } else if (file is Map &&
+              file['path'] != null &&
+              file['path'].toString().isNotEmpty) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file['path'],
+                filename: file['name'] ?? 'file',
+              ),
+            );
+          }
+        }
+      }
+
+      final response = await request.send();
+      final responseBody = await response.stream.bytesToString();
+
+      if (response.statusCode == 200) {
+        await refetchItems(context);
+
+        return '${jsonDecode(responseBody)['message']}. Proses dapat dilanjutkan atau WO sudah selesai.';
+      }
+
+      final error = jsonDecode(responseBody);
+
+      throw error['message'] ?? 'Gagal menyelesaikan proses';
+    } catch (e) {
+      throw e.toString();
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
   Future<String> finishSortingItem(
     BuildContext context,
     String id,

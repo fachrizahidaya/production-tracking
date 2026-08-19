@@ -145,6 +145,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   var processId = '';
 
+  bool _hasItemQtyWarning = false;
+
   @override
   void initState() {
     super.initState();
@@ -1391,7 +1393,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               validateWeight: _validateWeight,
                               weightWarning: _weightWarningValidationMessage,
                               validateQty: _validateQty,
-                              qtyWarning: _itemWarningValidationMessage,
+                              // qtyWarning: _itemWarningValidationMessage,
                               weightDefect: _weightDefectController,
                               combing: _combingController,
                               spraying: _sprayingController,
@@ -1403,6 +1405,14 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               finishedItem: finishedItemOption,
                               finishedItemGrb: finishedItemGrb,
                               isInitializing: _isInitializingSorting,
+                              qtyWarning: _itemWarningValidationMessage,
+                              handleItemQtyWarning: (hasWarning) {
+                                if (!mounted) return;
+
+                                setState(() {
+                                  _hasItemQtyWarning = hasWarning;
+                                });
+                              },
                             ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],
@@ -1435,6 +1445,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             withItemQtyAndWeight: widget.withQtyAndWeight,
             isAllMachineDone: isAllMachineDone,
             label: widget.label,
+            hasItemQtyWarning: _hasItemQtyWarning,
           ),
         ),
       ),

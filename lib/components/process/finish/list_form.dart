@@ -69,6 +69,7 @@ class ListForm extends StatefulWidget {
   final finishedItemGrb;
   final finishedItemGood;
   final isInitializing;
+  final handleItemQtyWarning;
 
   const ListForm(
       {super.key,
@@ -135,7 +136,8 @@ class ListForm extends StatefulWidget {
       this.dyeingQty,
       this.finishedItemGood,
       this.finishedItemGrb,
-      this.isInitializing});
+      this.isInitializing,
+      this.handleItemQtyWarning});
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -283,6 +285,7 @@ class _ListFormState extends State<ListForm> {
         finishedItemGood: widget.finishedItemGood,
         finishedItemGrb: widget.finishedItemGrb,
         isInitializing: widget.isInitializing,
+        handleItemQtyWarning: widget.handleItemQtyWarning,
       ),
     );
   }

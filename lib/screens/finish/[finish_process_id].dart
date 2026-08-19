@@ -1643,10 +1643,14 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               weightWarning: _weightWarningValidationMessage,
                               validateQty: _validateQty,
 <<<<<<< HEAD
+<<<<<<< HEAD
                               // qtyWarning: _itemWarningValidationMessage,
 =======
                               qtyWarning: _itemWarningValidationMessage,
 >>>>>>> e98896b (fix: finish)
+=======
+                              // qtyWarning: _itemWarningValidationMessage,
+>>>>>>> e96383b4 (fix: warning cross cutting, sewing)
                               weightDefect: _weightDefectController,
                               combing: _combingController,
                               spraying: _sprayingController,

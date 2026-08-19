@@ -1585,7 +1585,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               validateWeight: _validateWeight,
                               weightWarning: _weightWarningValidationMessage,
                               validateQty: _validateQty,
-                              qtyWarning: _itemWarningValidationMessage,
+                              // qtyWarning: _itemWarningValidationMessage,
                               weightDefect: _weightDefectController,
                               combing: _combingController,
                               spraying: _sprayingController,

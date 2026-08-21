@@ -1218,6 +1218,7 @@ class _FormItemsState extends State<FormItems>
                   finishedItem: widget.finishedItem,
                   woData: widget.woData,
                   isInitializing: widget.isInitializing,
+                  onQtyWarning: widget.handleItemQtyWarning,
                 ),
               if (widget.label == 'Packing')
                 DefaultTabController(

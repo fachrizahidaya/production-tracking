@@ -1098,94 +1098,94 @@ class _SortingSectionState extends State<SortingSection> {
             key: ValueKey('sorting-item-fields-$itemIndex'),
             child: Column(
               children: [
-          /*
+                /*
       |--------------------------------------------------------------------------
       | GRADES
       |--------------------------------------------------------------------------
       */
 
-          TemplateCard(
-            title: 'Grade',
-            icon: Icons.grade_outlined,
-            child: Column(
-              children: [
-                for (int i = 0; i < grades.length; i++)
-                  _buildGradeCard(
-                    itemIndex,
-                    i,
+                TemplateCard(
+                  title: 'Grade',
+                  icon: Icons.grade_outlined,
+                  child: Column(
+                    children: [
+                      for (int i = 0; i < grades.length; i++)
+                        _buildGradeCard(
+                          itemIndex,
+                          i,
+                        ),
+                    ].separatedBy(
+                      SizedBox(height: 12),
+                    ),
                   ),
-              ].separatedBy(
-                SizedBox(height: 12),
-              ),
-            ),
-          ),
-          SortingGradeASourceSection(
-            key: ValueKey('grade-a-source-$itemIndex'),
-            initialTransfers: _gradeATransfers(itemIndex),
-            itemId: _gradeAItemId(itemIndex),
-            excludeWoId: _currentWoId,
-            sortingId: widget.processData?['id'],
-            gradeAInput: _gradeAInput(itemIndex),
-            maxTakenQty: _maxGradeASourceQty(itemIndex),
-            onTotalChanged: (total) {
-              setState(() => _absorbedQty[itemIndex] = total);
-            },
-            onRowsChanged: (rows) => _setAbsorbedRows(itemIndex, rows),
-            onExceededChanged: (exceeded) =>
-                _setSourceQtyExceeded(itemIndex, exceeded),
-          ),
+                ),
+                SortingGradeASourceSection(
+                  key: ValueKey('grade-a-source-$itemIndex'),
+                  initialTransfers: _gradeATransfers(itemIndex),
+                  itemId: _gradeAItemId(itemIndex),
+                  excludeWoId: _currentWoId,
+                  sortingId: widget.processData?['id'],
+                  gradeAInput: _gradeAInput(itemIndex),
+                  maxTakenQty: _maxGradeASourceQty(itemIndex),
+                  onTotalChanged: (total) {
+                    setState(() => _absorbedQty[itemIndex] = total);
+                  },
+                  onRowsChanged: (rows) => _setAbsorbedRows(itemIndex, rows),
+                  onExceededChanged: (exceeded) =>
+                      _setSourceQtyExceeded(itemIndex, exceeded),
+                ),
 
-          /*
+                /*
       |--------------------------------------------------------------------------
       | PERBAIKAN
       |--------------------------------------------------------------------------
       */
 
-          TemplateCard(
-            title: 'Perbaikan',
-            icon: Icons.build_outlined,
-            child: Row(
-              children: [
-                _buildRepairInput(
-                  itemIndex,
-                  'spraying',
-                  'Semprotan',
+                TemplateCard(
+                  title: 'Perbaikan',
+                  icon: Icons.build_outlined,
+                  child: Row(
+                    children: [
+                      _buildRepairInput(
+                        itemIndex,
+                        'spraying',
+                        'Semprotan',
+                      ),
+                      _buildRepairInput(
+                        itemIndex,
+                        'rework_long_hemming',
+                        'Permak Long Hemming',
+                      ),
+                      _buildRepairInput(
+                        itemIndex,
+                        'combing',
+                        'Sisiran',
+                      ),
+                    ].separatedBy(
+                      SizedBox(width: 12),
+                    ),
+                  ),
                 ),
-                _buildRepairInput(
-                  itemIndex,
-                  'rework_long_hemming',
-                  'Permak Long Hemming',
-                ),
-                _buildRepairInput(
-                  itemIndex,
-                  'combing',
-                  'Sisiran',
-                ),
-              ].separatedBy(
-                SizedBox(width: 12),
-              ),
-            ),
-          ),
 
-          /*
+                /*
       |--------------------------------------------------------------------------
       | DEFECTS
       |--------------------------------------------------------------------------
       */
 
-          _buildDefectsCard(
-            itemIndex,
-          ),
+                _buildDefectsCard(
+                  itemIndex,
+                ),
 
-          /*
+                /*
       |--------------------------------------------------------------------------
       | SUMMARY
       |--------------------------------------------------------------------------
       */
 
-          _buildSummary(
-            itemIndex,
-          ),
+                _buildSummary(
+                  itemIndex,
+                ),
               ].separatedBy(
                 const SizedBox(height: 16),
               ),
@@ -1231,108 +1231,108 @@ class _SortingSectionState extends State<SortingSection> {
       child: Column(
         children: [
           Row(
-        children: [
-          /*
+            children: [
+              /*
 |--------------------------------------------------------------------------
 | GRADE LABEL
 |--------------------------------------------------------------------------
 */
-          Expanded(
-            flex: 1,
-            child: Text(
-              grade['code'] ?? '-',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
+              Expanded(
+                flex: 1,
+                child: Text(
+                  grade['code'] ?? '-',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-          ),
 
-          /*
+              /*
 |--------------------------------------------------------------------------
 | PRODUCT INFO
 |--------------------------------------------------------------------------
 */
-          Expanded(
-            flex: 1,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (grade['code'] == 'A')
-                  Text(
-                    getSpkNo(item),
-                    style: const TextStyle(
-                      color: Colors.blue,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: isBS
-                  ? [
+              Expanded(
+                flex: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (grade['code'] == 'A')
                       Text(
-                        'Perhitungan otomatis dari total Tipe BS',
-                        style: TextStyle(color: Colors.grey),
+                        getSpkNo(item),
+                        style: const TextStyle(
+                          color: Colors.blue,
+                        ),
                       ),
-                    ]
-                  : grade['code'] == 'B' &&
-                          grade['semifinished_product']?['code'] == null
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: isBS
                       ? [
                           Text(
-                            'Material code belum tersedia',
+                            'Perhitungan otomatis dari total Tipe BS',
                             style: TextStyle(color: Colors.grey),
                           ),
                         ]
-                      : [
-                          Text(
-                            grade['semifinished_product']?['code'] ??
-                                grade['finished_product']?['code'] ??
-                                '-',
-                          ),
-                          Text(
-                            grade['semifinished_product']?['name'] ??
-                                grade['finished_product']?['name'] ??
-                                '-',
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                        ],
-            ),
-          ),
+                      : grade['code'] == 'B' &&
+                              grade['semifinished_product']?['code'] == null
+                          ? [
+                              Text(
+                                'Material code belum tersedia',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ]
+                          : [
+                              Text(
+                                grade['semifinished_product']?['code'] ??
+                                    grade['finished_product']?['code'] ??
+                                    '-',
+                              ),
+                              Text(
+                                grade['semifinished_product']?['name'] ??
+                                    grade['finished_product']?['name'] ??
+                                    '-',
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                ),
+              ),
 
-          /*
+              /*
 |--------------------------------------------------------------------------
 | QTY
 |--------------------------------------------------------------------------
 */
-          Expanded(
-            flex: 2,
-            child: TextFormGrade(
-              label: 'Qty',
-              isDisabled: isBS,
-              initialValue: '${grade['qty'] ?? 0}',
-              controller: _getGradeController(
-                itemIndex,
-                gradeIndex,
-                grade['qty'] ?? 0,
+              Expanded(
+                flex: 2,
+                child: TextFormGrade(
+                  label: 'Qty',
+                  isDisabled: isBS,
+                  initialValue: '${grade['qty'] ?? 0}',
+                  controller: _getGradeController(
+                    itemIndex,
+                    gradeIndex,
+                    grade['qty'] ?? 0,
+                  ),
+                  onChanged: (value) {
+                    grade['qty'] = num.tryParse(
+                          value.toString(),
+                        ) ??
+                        0;
+
+                    _syncFormItems();
+
+                    setState(() {});
+
+                    _validateAllSortingQty();
+                  },
+                ),
               ),
-              onChanged: (value) {
-                grade['qty'] = num.tryParse(
-                      value.toString(),
-                    ) ??
-                    0;
-
-                _syncFormItems();
-
-                setState(() {});
-
-                _validateAllSortingQty();
-              },
-            ),
-          ),
-        ],
+            ],
           ),
           if (grade['code'] == 'A' && transferOutNote != null) ...[
             const SizedBox(height: 8),
@@ -2050,12 +2050,10 @@ class _SortingSectionState extends State<SortingSection> {
 
   Widget _summaryBox(
     String title,
-    dynamic value,
-    {
+    dynamic value, {
     String valuePrefix = '',
     Color? valueColor,
-    }
-  ) {
+  }) {
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),
@@ -2111,8 +2109,7 @@ class _SortingSectionState extends State<SortingSection> {
 
         if (code == 'A') {
           totalGradeA += _summaryGradeA(item, grade, itemIndex);
-          totalGradeAAdditional +=
-              _gradeAAdditional(item, grade, itemIndex);
+          totalGradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
           totalGradeATaken += _gradeATaken(item, grade);
         } else if (code == 'B') {
           totalGradeB += qty;
@@ -2214,5 +2211,4 @@ class _SortingSectionState extends State<SortingSection> {
       ),
     );
   }
-
 }

@@ -13,13 +13,12 @@ class DyeingDetail extends StatefulWidget {
   final canDelete;
   final canUpdate;
 
-  const DyeingDetail({
-    super.key,
-    required this.id,
-    required this.no,
-    this.canDelete,
-    this.canUpdate,
-  });
+  const DyeingDetail(
+      {super.key,
+      required this.id,
+      required this.no,
+      this.canDelete,
+      this.canUpdate});
 
   @override
   State<DyeingDetail> createState() => _DyeingDetailState();
@@ -36,20 +35,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
       label: 'Dyeing',
       prefix: 'DYE',
       isMultiMachine: true,
-      service: Provider.of<DyeingService>(
-        context,
-        listen: false,
-      ),
-
-      /*
-      |--------------------------------------------------------------------------
-      | UPDATE
-      |--------------------------------------------------------------------------
-      |
-      | ProcessDetail akan menentukan apakah data merupakan
-      | Dyeing Rework atau Dyeing normal.
-      |
-      */
+      service: Provider.of<DyeingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<DyeingService>(
         context,
@@ -130,11 +116,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
       withMaklon: false,
       forDyeing: true,
       getMachineOptions: (service) => service.dataListOption,
-      fetchMachine: (
-        service,
-        currentMachineIds,
-      ) =>
-          service.fetchOptionsDyeing(
+      fetchMachine: (service, currentMachineIds) => service.fetchOptionsDyeing(
         currentMachineIds: currentMachineIds,
       ),
       idProcess: 'dyeing_id',
@@ -185,12 +167,8 @@ class _DyeingDetailState extends State<DyeingDetail> {
           notes: form['notes'],
           start_time: form['start_time'],
           end_time: form['end_time'],
-          start_by_id: int.tryParse(
-            form['start_by_id']?.toString() ?? '',
-          ),
-          end_by_id: int.tryParse(
-            form['end_by_id']?.toString() ?? '',
-          ),
+          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
           machines: form['machines'] ?? [],
           machine_ids: form['machine_ids'] ?? [],
           attachments: form['attachments'],

@@ -74,7 +74,11 @@ class _DashboardState extends State<Dashboard> {
       'end_date': sampaiTanggalSummary,
     };
 
-    _loadDashboardData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _loadDashboardData();
+      }
+    });
   }
 
   bool get shouldHideActiveMachine {
@@ -82,9 +86,9 @@ class _DashboardState extends State<Dashboard> {
       for (final menu in menuList) {
         final name = (menu['name'] ?? '').toString().toLowerCase();
 
-        if (name == 'sorting' || name == 'packing') {
-          return true;
-        }
+        // if (name == 'sorting' || name == 'packing') {
+        //   return true;
+        // }
 
         final children = menu['children'];
 
@@ -123,29 +127,35 @@ class _DashboardState extends State<Dashboard> {
 
     setState(() => isLoading = true);
 
-    try {
-      await Future.wait([
-        _handleFetchMenu(),
-        _handleFetchStats(),
-        _handleFetchPie(),
-        _handleFetchMachine(),
-        _handleFetchSummary(),
-      ]);
+    await Future.wait([
+      _safeFetch(_handleFetchMenu),
+      _safeFetch(_handleFetchStats),
+      _safeFetch(_handleFetchPie),
+      _safeFetch(_handleFetchMachine),
+      _safeFetch(_handleFetchSummary),
+      _safeFetch(_loadMore),
+    ]);
 
-      Future.microtask(() => _loadMore());
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
-    } finally {
-      if (!mounted) return;
-      setState(() => isLoading = false);
+    if (!mounted) return;
+
+    setState(() => isLoading = false);
+  }
+
+  Future<void> _safeFetch(Future<void> Function() callback) async {
+    try {
+      await callback();
+    } catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: s);
     }
   }
 
   Future<void> _handleFetchStats() async {
-    final service = Provider.of<WorkOrderStatsService>(context, listen: false);
+    final service = context.read<WorkOrderStatsService>();
 
     await service.getDataList();
+
+    if (!mounted) return;
 
     setState(() {
       statsList = service.dataList;
@@ -154,42 +164,87 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> _handleFetchMachine() async {
     if (!mounted) return;
-    setState(() => isMachineLoading = true);
 
-    await Provider.of<MachineService>(context, listen: false).getDataList();
-
-    if (!mounted) return;
     setState(() {
-      machineList =
-          Provider.of<MachineService>(context, listen: false).dataList;
-      isMachineLoading = false;
+      isMachineLoading = true;
+      machineList = {};
     });
+
+    try {
+      final service = context.read<MachineService>();
+
+      await service.getDataList();
+
+      if (!mounted) return;
+
+      setState(() {
+        machineList = service.dataList;
+      });
+    } catch (e, s) {
+      debugPrint('Machine Error: $e');
+      debugPrintStack(stackTrace: s);
+
+      if (!mounted) return;
+
+      setState(() {
+        machineList = {};
+      });
+    } finally {
+      if (!mounted) return;
+
+      setState(() {
+        isMachineLoading = false;
+      });
+    }
   }
 
   Future<void> _handleFetchPie() async {
-    await Provider.of<WorkOrderChartService>(context, listen: false)
-        .getDataPie();
+    final service = context.read<WorkOrderChartService>();
+
+    await service.getDataPie();
 
     if (!mounted) return;
+
     setState(() {
-      pieList =
-          Provider.of<WorkOrderChartService>(context, listen: false).dataPie;
+      pieList = service.dataPie;
     });
   }
 
   Future<void> _handleFetchSummary() async {
     if (!mounted) return;
-    setState(() => isSummaryLoading = true);
 
-    await Provider.of<WorkOrderSummaryService>(context, listen: false)
-        .getDataList(context, summaryParams);
-
-    if (!mounted) return;
     setState(() {
-      summaryList =
-          Provider.of<WorkOrderSummaryService>(context, listen: false).dataList;
-      isSummaryLoading = false;
+      isSummaryLoading = true;
+      summaryList = [];
     });
+
+    try {
+      final service =
+          Provider.of<WorkOrderSummaryService>(context, listen: false);
+
+      await service.getDataList(context, summaryParams);
+
+      if (!mounted) return;
+
+      setState(() {
+        summaryList = service.dataList;
+      });
+    } catch (e, s) {
+      debugPrint('Summary Error: $e');
+      debugPrintStack(stackTrace: s);
+
+      if (!mounted) return;
+
+      setState(() {
+        summaryList = [];
+      });
+    } finally {
+      if (!mounted) return;
+
+      setState(() {
+        isSummaryLoading = false;
+      });
+    }
   }
 
   void _handleSummaryFilter(String key, String value) {
@@ -235,7 +290,10 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> _loadMore() async {
     if (!mounted) return;
-    setState(() => _isLoadMore = true);
+
+    setState(() {
+      _isLoadMore = true;
+    });
 
     if (params['page'] == '0') {
       setState(() {
@@ -248,23 +306,35 @@ class _DashboardState extends State<Dashboard> {
     final currentPage = int.tryParse(params['page'] ?? '0') ?? 0;
     params['page'] = (currentPage + 1).toString();
 
-    await Provider.of<WorkOrderProcessService>(context, listen: false)
-        .getDataList(context, params);
+    try {
+      final service =
+          Provider.of<WorkOrderProcessService>(context, listen: false);
 
-    if (!mounted) return;
+      await service.getDataList(context, params);
 
-    List<dynamic> loadData =
-        Provider.of<WorkOrderProcessService>(context, listen: false).items;
+      if (!mounted) return;
 
-    if (loadData.isEmpty) {
+      final loadData = service.items;
+
       setState(() {
-        _firstLoading = false;
-        _isLoadMore = false;
+        if (params['page'] == '1') {
+          _dataList.clear();
+        }
+
+        _dataList.addAll(loadData);
+        _hasMore = loadData.isNotEmpty;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _dataList.clear();
         _hasMore = false;
       });
-    } else {
+    } finally {
+      if (!mounted) return;
+
       setState(() {
-        _dataList.addAll(loadData);
         _firstLoading = false;
         _isLoadMore = false;
       });

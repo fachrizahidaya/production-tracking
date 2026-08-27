@@ -42,6 +42,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
   bool _isLoadMore = false;
   bool _canUpdate = false;
   bool _showFab = true;
+  bool _menuLoaded = false;
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
@@ -58,17 +59,13 @@ class _DyeingScreenState extends State<DyeingScreen> {
   void initState() {
     super.initState();
 
-    setState(() {
-      params = {
-        'search': _search,
-        'page': '0',
-        'start_date': '',
-        'end_date': '',
-      };
-    });
-    Future.delayed(Duration.zero, () {
-      _loadMore();
-    });
+    params = {
+      'search': _search,
+      'page': '0',
+      'start_date': '',
+      'end_date': '',
+    };
+
     _intializeMenus();
   }
 
@@ -93,10 +90,18 @@ class _DyeingScreenState extends State<DyeingScreen> {
     await _menuService.handleFetchMenu(context);
     await _userMenu.handleLoadMenu();
 
+    if (!mounted) return;
+
     setState(() {
       _canRead = _userMenu.checkMenu('Dyeing', 'read');
       _canDelete = _userMenu.checkMenu('Dyeing', 'delete');
       _canUpdate = _userMenu.checkMenu('Dyeing', 'update');
+
+      _menuLoaded = true;
+
+      if (_canRead) {
+        _loadMore();
+      }
     });
   }
 
@@ -137,8 +142,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
   }
 
   Future<void> _loadMore() async {
-    _isLoadMore = true;
-
     if (params['page'] == '0') {
       setState(() {
         _dataList.clear();
@@ -174,6 +177,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
   }
 
   _refetch() {
+    _debounce?.cancel();
     setState(() {
       _search = '';
       dariTanggal = '';
@@ -286,73 +290,83 @@ class _DyeingScreenState extends State<DyeingScreen> {
             }
           },
         ),
-        body: SafeArea(
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              if (notification is UserScrollNotification) {
-                if (notification.direction == ScrollDirection.reverse) {
-                  if (_showFab) {
-                    setState(() => _showFab = false);
-                  }
-                } else if (notification.direction == ScrollDirection.forward) {
-                  if (!_showFab) {
-                    setState(() => _showFab = true);
-                  }
-                }
-              }
-              return false;
-            },
-            child: ProcessList(
-              fetchData: (params) async {
-                final service =
-                    Provider.of<DyeingService>(context, listen: false);
-                await service.getDataList(context, params);
-                return service.items;
-              },
-              canRead: _canRead,
-              isLoadMore: _isLoadMore,
-              itemBuilder: (item) => ItemProcessCard(
-                label: 'No. Dyeing',
-                item: item,
-                titleKey: 'dyeing_no',
-                subtitleKey: 'work_orders',
-                subtitleField: 'wo_no',
-                itemField: ItemField.get,
-                nestedField: ItemField.nested,
-                canUpdate: _canUpdate,
-                canDelete: _canDelete,
-                onUpdate: () => _openProcessDetail(
-                  item,
-                  openUpdateOnStart: true,
+        body: !_menuLoaded
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : SafeArea(
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (notification) {
+                    if (notification is UserScrollNotification) {
+                      if (notification.direction == ScrollDirection.reverse) {
+                        if (_showFab) {
+                          setState(() => _showFab = false);
+                        }
+                      } else if (notification.direction ==
+                          ScrollDirection.forward) {
+                        if (!_showFab) {
+                          setState(() => _showFab = true);
+                        }
+                      }
+                    }
+                    return false;
+                  },
+                  child: ProcessList(
+                    fetchData: (params) async {
+                      final service =
+                          Provider.of<DyeingService>(context, listen: false);
+                      await service.getDataList(context, params);
+                      return service.items;
+                    },
+                    canRead: _canRead,
+                    isLoadMore: _isLoadMore,
+                    itemBuilder: (item) => ItemProcessCard(
+                      label: 'No. Dyeing',
+                      item: item,
+                      titleKey: 'dyeing_no',
+                      subtitleKey: 'work_orders',
+                      subtitleField: 'wo_no',
+                      itemField: ItemField.get,
+                      nestedField: ItemField.nested,
+                    ),
+                    onItemTap: (context, item) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DyeingDetail(
+                              id: item['id'].toString(),
+                              no: item['dyeing_no'].toString(),
+                              canDelete: _canDelete,
+                              canUpdate: _canUpdate,
+                            ),
+                          )).then((value) {
+                        if (value == true) {
+                          _refetch();
+                        } else {
+                          return null;
+                        }
+                      });
+                    },
+                    filterWidget: ListFilter(
+                      title: 'Filter',
+                      params: params,
+                      onHandleFilter: _handleFilter,
+                      onSubmitFilter: () {
+                        _submitFilter();
+                      },
+                      dariTanggal: dariTanggal,
+                      sampaiTanggal: sampaiTanggal,
+                    ),
+                    firstLoading: _firstLoading,
+                    isFiltered: _isFiltered,
+                    hasMore: _hasMore,
+                    handleLoadMore: _loadMore,
+                    handleRefetch: _refetch,
+                    handleSearch: _handleSearch,
+                    dataList: _dataList,
+                  ),
                 ),
-                onDelete: () => _handleDeleteItem(item),
               ),
-              onItemTap: (context, item) {
-                _openProcessDetail(
-                  item,
-                  openUpdateOnStart: item['status'] == 'Diproses',
-                );
-              },
-              filterWidget: ListFilter(
-                title: 'Filter',
-                params: params,
-                onHandleFilter: _handleFilter,
-                onSubmitFilter: () {
-                  _submitFilter();
-                },
-                dariTanggal: dariTanggal,
-                sampaiTanggal: sampaiTanggal,
-              ),
-              firstLoading: _firstLoading,
-              isFiltered: _isFiltered,
-              hasMore: _hasMore,
-              handleLoadMore: _loadMore,
-              handleRefetch: _refetch,
-              handleSearch: _handleSearch,
-              dataList: _dataList,
-            ),
-          ),
-        ),
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

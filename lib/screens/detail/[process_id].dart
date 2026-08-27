@@ -4,7 +4,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/detail.dart';
-import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -15,7 +14,6 @@ import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_master_item_grade.dart';
-import 'package:textile_tracking/models/option/option_unit.dart';
 import 'package:textile_tracking/screens/update/%5Bupdate_process_id%5D.dart';
 
 class ProcessDetail<T> extends StatefulWidget {
@@ -104,10 +102,7 @@ class ProcessDetail<T> extends StatefulWidget {
 class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   bool _firstLoading = true;
   bool _isFetchingMachine = false;
-  bool _isFetchingUnit = false;
-  bool _isFetchingItemType = false;
 
-  final GlobalKey<FormState> _formKey = GlobalKey();
   final WorkOrderService _workOrderService = WorkOrderService();
   final ValueNotifier<bool> _processLoading = ValueNotifier(false);
   final ValueNotifier<bool> _firstSubmitting = ValueNotifier(false);
@@ -138,10 +133,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   final List<TextEditingController> _defectQtyControllers = [];
 
   late List<dynamic> itemGradeOption = [];
-  late List<dynamic> unitOption = [];
   late List<dynamic> machineOption = [];
   late List<dynamic> itemTypeOption = [];
-  late List<dynamic> finishedItemMaterial = [];
   late List<dynamic> finishedItemGrb = [];
   late List<dynamic> finishedItemGood = [];
 
@@ -187,7 +180,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     'weight_grade_a': '0',
     'total_sorting': '0',
     'semifinished_products': [],
-    'items': []
+    'items': [],
   };
 
   final fieldConfigs = [
@@ -258,32 +251,25 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     _handleChangeInput('defects', _defects);
   }
 
-  void updateGrade(int index, String key, dynamic value) {
-    setState(() {
-      _grades[index][key] = value;
-    });
-
-    _handleChangeInput('grades', _grades);
-    _onGradeChanged(_grades);
-  }
-
-  void updateDefect(int index, String key, dynamic value) {
-    setState(() {
-      _defects[index][key] = value;
-    });
-
-    _handleChangeInput('defects', _defects);
-  }
-
   Future<void> _postInit() async {
     await _getDataView();
-    await _handleFetchUnit();
+    if (!mounted) return;
+
     await _handleFetchMachine();
-    await _handleFetchItemType();
+    if (!mounted) return;
+
     await _handleFetchItemGrade();
-    await _handleFetchFinishedMaterial();
+    if (!mounted) return;
+
+    await _handleFetchItemType();
+    if (!mounted) return;
+
     await _handleFetchFinishedGrbMaterial();
+    if (!mounted) return;
+
     await _handleFetchFinishedGoodMaterial();
+    if (!mounted) return;
+
     _syncGradesWithOptions();
     _syncDefectsWithOptions();
 
@@ -514,39 +500,27 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           data: data,
           handleUpdate: _handleUpdate,
           handleSelectMachine: _selectMachine,
-          handleSelectItemType: _selectItemType,
           withMaklon: widget.withMaklon,
           maklon: _maklonNameController,
           handleChangeInput: _handleChangeInput,
           withQtyAndWeight: widget.withQtyAndWeight,
-          handleSelectQtyItemUnit: _selectQtyItemUnit,
           length: _lengthController,
           width: _widthController,
           weight: _weightController,
-          handleSelectUnit: _selectUnit,
-          handleSelectWidthUnit: _selectWidthUnit,
-          handleSelectLengthUnit: _selectLengthUnit,
           isSubmitting: _isSubmitting,
-          formKey: _formKey,
           grades: _grades,
           getMachineStatus: getMachineStatus,
-          handleFetchMachine: _handleFetchMachine,
           qty: _qtyControllers,
           note: _noteController,
           defectQty: _defectQtyControllers,
-          onGradeChanged: _onGradeChanged,
           itemGradeOption: itemGradeOption,
           itemTypeOption: itemTypeOption,
           defects: _defects,
-          handleUpdateGrade: updateGrade,
-          handleUpdateDefect: updateDefect,
           reworkLongHemming: _reworkLongHemmingController,
           combing: _combingController,
           spraying: _sprayingController,
           woData: woData,
           cuttingSewingQty: _qtyItemController,
-          defectWeight: _defectWeightController,
-          goodWeight: _goodWeightController,
           packingQty: _packingQtyController,
           weightPerDozen: _weightDozenController,
           gsm: _gsmController,
@@ -554,7 +528,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           weightGradeA: _weightGradeAController,
           finishedItemGrb: finishedItemGrb,
           finishedItemGood: finishedItemGood,
-          finishedItemMaterial: finishedItemMaterial,
         ),
       ),
     );
@@ -594,29 +567,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         }
       },
     );
-  }
-
-  Future<void> _handleFetchUnit() async {
-    setState(() {
-      _isFetchingUnit = true;
-    });
-
-    try {
-      await Provider.of<OptionUnitService>(context, listen: false)
-          .getDataListOption();
-      setState(() {
-        unitOption = Provider.of<OptionUnitService>(context, listen: false)
-            .dataListOption;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
-    } finally {
-      setState(() {
-        _isFetchingUnit = false;
-      });
-    }
   }
 
   void _syncMachineStatusWithOptions() {
@@ -709,12 +659,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     return 'Tersedia';
   }
 
-  void _onGradeChanged(List<dynamic> grades) {
-    setState(() {
-      _form['grades'] = grades;
-    });
-  }
-
   Future<void> _handleFetchItemGrade({String search = ''}) async {
     final service = context.read<OptionMasterItemGradeService>();
 
@@ -736,10 +680,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   Future<void> _handleFetchItemType({String search = ''}) async {
     final service = context.read<OptionItemTypeService>();
 
-    setState(() {
-      _isFetchingItemType = true;
-    });
-
     try {
       await service.fetchOptions(
         isInitialLoad: true,
@@ -748,54 +688,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
       setState(() {
         itemTypeOption = service.dataListOption;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
-    } finally {
-      setState(() {
-        _isFetchingItemType = false;
-      });
-    }
-  }
-
-  String formatProcessLabel(String label) {
-    final trimmed = label.trim().toLowerCase();
-
-    // kalau lebih dari 1 kata → pakai underscore
-    if (trimmed.contains(' ')) {
-      return trimmed.replaceAll(RegExp(r'\s+'), '_');
-    }
-
-    return trimmed;
-  }
-
-  Future<void> _handleFetchFinishedMaterial() async {
-    final service = Provider.of<OptionItemService>(context, listen: false);
-
-    try {
-      String baseCode = '';
-      String colorCode = '';
-
-      final itemCode = woData['items']?[0]?['item_code'] ?? '';
-
-      if (itemCode.isNotEmpty) {
-        final parts = itemCode.split('-');
-        baseCode = parts.first;
-        colorCode = parts.last;
-      }
-
-      await service.fetchOptions(
-        process: formatProcessLabel(widget.label),
-        baseCode: baseCode,
-        colorCode: colorCode,
-      );
-
-      final data = service.dataListOption;
-
-      setState(() {
-        finishedItemMaterial = data;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -894,154 +786,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     super.dispose();
   }
 
-  _selectUnit() {
-    if (_isFetchingUnit) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
-
-    showDialog(
-      context: context,
-      builder: (_) => SelectDialog(
-        label: 'Satuan',
-        options: unitOption,
-        selected: _form['weight_unit_id']?.toString(),
-        handleChangeValue: (e) {
-          setState(() {
-            _form['weight_unit_id'] = e['value'].toString();
-            _form['nama_satuan_berat'] = e['label'].toString();
-          });
-        },
-      ),
-    );
-  }
-
-  _selectLengthUnit() {
-    if (_isFetchingUnit) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
-
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      useSafeArea: true,
-      builder: (BuildContext context) {
-        return SelectDialog(
-          label: 'Satuan Panjang',
-          options: unitOption,
-          selected: _form['length_unit_id'].toString(),
-          handleChangeValue: (e) {
-            setState(() {
-              _form['length_unit_id'] = e['value'].toString();
-              _form['nama_satuan_panjang'] = e['label'].toString();
-            });
-          },
-        );
-      },
-    );
-  }
-
-  _selectWidthUnit() {
-    if (_isFetchingUnit) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
-
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      useSafeArea: true,
-      builder: (BuildContext context) {
-        return SelectDialog(
-          label: 'Satuan Lebar',
-          options: unitOption,
-          selected: _form['width_unit_id'].toString(),
-          handleChangeValue: (e) {
-            setState(() {
-              _form['width_unit_id'] = e['value'].toString();
-              _form['nama_satuan_lebar'] = e['label'].toString();
-            });
-          },
-        );
-      },
-    );
-  }
-
-  _selectQtyUnit(int index) {
-    if (_isFetchingUnit) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
-
-    showDialog(
-      context: context,
-      builder: (_) => SelectDialog(
-        label: 'Satuan',
-        options: unitOption,
-        selected: _form['grades'][index]['unit_id'].toString(),
-        handleChangeValue: (e) {
-          setState(() {
-            _form['grades'][index]['unit_id'] = e['value'].toString();
-            _form['grades'][index]['unit']['name'] = e['label'].toString();
-          });
-        },
-      ),
-    );
-  }
-
-  _selectQtyItemUnit() {
-    if (_isFetchingUnit) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
-    }
-
-    showDialog(
-      context: context,
-      builder: (_) => SelectDialog(
-        label: 'Satuan',
-        options: unitOption,
-        selected: _form['item_unit_id'].toString(),
-        handleChangeValue: (e) {
-          setState(() {
-            _form['item_unit_id'] = e['value'].toString();
-            _form['nama_satuan'] = e['label'].toString();
-          });
-        },
-      ),
-    );
-  }
-
   Future<Map<String, dynamic>?> _selectMachine() async {
     if (widget.label == 'Long Hemming' ||
         widget.label == 'Cross Cutting' ||
@@ -1085,65 +829,23 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     return null;
   }
 
-  Future<Map<String, dynamic>?> _selectItemType() async {
-    Map<String, dynamic>? result;
+  double _calculateTotalSortingFromWo() {
+    final processes = woData['processes'];
 
-    await showSelectDialog(
-      context: context,
-      title: 'Tipe BS',
-      isFetching: _isFetchingItemType,
-      option: itemTypeOption,
-      handleChangeValue: (selected) {
-        result = {
-          'id': selected['id'],
-          'name': selected['name'],
-          'qty': 0,
-        };
-      },
-      selected: '',
-    );
-
-    return result;
-  }
-
-  double getTotalItemQty() {
-    final items = data['work_orders']?['items'] as List<dynamic>?;
-
-    if (items == null || items.isEmpty) return 0;
-
-    return items.fold<double>(0, (sum, item) {
-      final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
-      return sum + qty;
-    });
-  }
-
-  double getRemainingQtyForGrade(int index) {
-    final totalQty = getTotalItemQty();
-    if (totalQty == 0) return 0;
-
-    final grades = _form['grades'] as List<dynamic>?;
-
-    if (grades == null) return totalQty;
-
-    double usedQty = 0;
-
-    for (int i = 0; i < grades.length; i++) {
-      if (i == index) continue;
-
-      final qty = double.tryParse(
-            grades[i]?['qty']?.toString() ?? '0',
-          ) ??
-          0;
-
-      usedQty += qty;
+    if (processes == null || processes is! List || processes.isEmpty) {
+      return 0;
     }
 
-    final remaining = totalQty - usedQty;
+    if (processes.length <= 10) {
+      return 0;
+    }
 
-    return remaining < 0 ? 0 : remaining;
-  }
+    final dataList = processes[10]['data'];
 
-  double _calculateTotalSortingFromWo() {
+    if (dataList == null || dataList is! List || dataList.isEmpty) {
+      return 0;
+    }
+
     final processData = woData['processes']?[10]?['data']?[0];
 
     if (processData == null) return 0;
@@ -1189,19 +891,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     });
   }
 
-  bool isQtyFullyDistributed() {
-    final totalQty = getTotalItemQty();
-    if (totalQty <= 0) return false;
-
-    final grades = _form['grades'] as List<dynamic>?;
-    if (grades == null || grades.isEmpty) return false;
-
-    return grades.any((g) {
-      final qty = double.tryParse(g['qty']?.toString() ?? '0') ?? 0;
-      return qty > 0;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     if (widget.openUpdateOnStart) {
@@ -1224,10 +913,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       width: _widthController,
       note: _noteController,
       form: _form,
-      handleSelectLengthUnit: _selectLengthUnit,
-      handleSelectWidthUnit: _selectWidthUnit,
-      handleSelectQtyItemUnit: _selectQtyItemUnit,
-      handleSelectMachine: _selectMachine,
       refetch: _getDataView,
       fieldConfigs: fieldConfigs,
       fieldControllers: {
@@ -1237,17 +922,13 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       no: widget.no,
       withItemGrade: widget.withItemGrade,
       qty: _qtyControllers,
-      handleSelectQtyUnit: _selectQtyUnit,
       notes: _notesControllers,
       withQtyAndWeight: widget.withQtyAndWeight,
       qtyItem: _qtyItemController,
-      withMaklon: widget.withMaklon,
       maklon: _maklonNameController,
-      onlySewing: widget.onlySewing,
       label: widget.label,
       forDyeing: widget.forDyeing,
       canDelete: widget.canDelete,
-      canUpdate: widget.canUpdate,
       handleDelete: _handleDelete,
       handleNavigateToUpdate: _handleNavigateToUpdate,
       handleRefetch: _getDataView,
@@ -1259,8 +940,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       itemGradeOption: itemGradeOption,
       fetchItemGrade: widget.fetchItemGrade,
       getItemGradeOptions: widget.getItemGradeOptions,
-      forHemming: widget.forHemming,
-      forSewing: widget.forSewing,
     );
   }
 }

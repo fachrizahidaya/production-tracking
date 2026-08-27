@@ -9,6 +9,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final bool isWithNotification;
   final bool isWithAccount;
+  final bool showNameWithAvatar;
   final tab;
   final bool? canDelete;
   final bool? canUpdate;
@@ -48,7 +49,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.handleSave,
       this.name,
       this.handleFinish,
-      this.isLoading = false});
+      this.isLoading = false,
+      this.showNameWithAvatar = false});
 
   @override
   Widget build(BuildContext context) {
@@ -73,18 +75,32 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         if (isWithAccount)
           PopupMenuButton<String>(
-            icon: CircleAvatar(
-              radius: 16,
-              backgroundColor: CustomTheme().colors('primary'),
-              child: Text(
-                getInitial(name),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: CustomTheme().fontSize('sm'),
-                ),
-              ),
-            ),
+            icon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (showNameWithAvatar)
+                    Text(
+                      name ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('md'),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundColor: CustomTheme().colors('primary'),
+                    child: Text(
+                      getInitial(name),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: CustomTheme().fontSize('sm'),
+                      ),
+                    ),
+                  ),
+                ].separatedBy(CustomTheme().hGap('xl'))),
             color: Colors.white,
             offset: Offset(0, 40),
             onSelected: (value) {

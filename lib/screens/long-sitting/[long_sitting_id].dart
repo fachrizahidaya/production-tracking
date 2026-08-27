@@ -12,15 +12,13 @@ class LongSittingDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
-  final bool openUpdateOnStart;
 
   const LongSittingDetail(
       {super.key,
       required this.id,
       required this.no,
       this.canDelete,
-      this.canUpdate,
-      this.openUpdateOnStart = false});
+      this.canUpdate});
 
   @override
   State<LongSittingDetail> createState() => _LongSittingDetailState();
@@ -36,7 +34,7 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       no: widget.no,
       label: 'Long Slitting',
       prefix: 'LST',
-      isMultiMachine: false,
+      isMultiMachine: true,
       service: Provider.of<LongSittingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<LongSittingService>(context, listen: false)
@@ -60,6 +58,8 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
         width: form['width'] ?? '0',
         length: form['length'] ?? '0',
         notes: form['notes'] ?? data['notes'],
+        machine_ids: form['machine_ids'],
+        machines: form['machines'],
         attachments: [
           ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
           ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
@@ -67,9 +67,11 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
-      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/long-slittings',
-      fetchMachine: (service, _) => service.fetchOptionsLongSitting(),
+      fetchMachine: (service, currentMachineIds) =>
+          service.fetchOptionsLongSitting(
+        currentMachineIds: currentMachineIds,
+      ),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withMaklon: false,
@@ -95,6 +97,8 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
           end_time: form['end_time'],
           start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
           end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+          machines: form['machines'] ?? [],
+          machine_ids: form['machine_ids'] ?? [],
           attachments: form['attachments'],
         );
 

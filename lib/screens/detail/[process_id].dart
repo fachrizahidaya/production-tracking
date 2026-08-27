@@ -271,15 +271,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
     _syncGradesWithOptions();
     _syncDefectsWithOptions();
-
-    if (widget.openUpdateOnStart && !_hasOpenedInitialUpdate && mounted) {
-      if (widget.canUpdate) {
-        _hasOpenedInitialUpdate = true;
-        await _handleNavigateToUpdate();
-      } else {
-        Navigator.pop(context, false);
-      }
-    }
   }
 
   void _handleChangeInput(String fieldName, dynamic value) {
@@ -477,8 +468,13 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
       if (!mounted) return;
       if (widget.openUpdateOnStart) {
-        Navigator.pop(context);
-        Navigator.pop(context, true);
+        final navigator = Navigator.of(context);
+        if (navigator.canPop()) {
+          navigator.pop();
+        }
+        if (navigator.canPop()) {
+          navigator.pop(true);
+        }
         return;
       }
 
@@ -534,7 +530,10 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     if (!mounted) return;
 
     if (widget.openUpdateOnStart) {
-      Navigator.pop(context, result == true);
+      final navigator = Navigator.of(context);
+      if (navigator.canPop()) {
+        navigator.pop(result == true);
+      }
       return;
     }
 
@@ -786,7 +785,11 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
   Future<Map<String, dynamic>?> _selectMachine() async {
-    if (widget.label == 'Long Hemming' ||
+    if (widget.label == 'Dyeing' ||
+        widget.label == 'Press' ||
+        widget.label == 'Tumbler' ||
+        widget.label == 'Long Slitting' ||
+        widget.label == 'Long Hemming' ||
         widget.label == 'Cross Cutting' ||
         widget.label == 'Sewing') {
       Map<String, dynamic>? result;

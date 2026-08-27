@@ -290,6 +290,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 
@@ -357,6 +358,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 =======
 
 >>>>>>> ae9b2985 (fix: rework dyeing)
+=======
+>>>>>>> bd2f8083 (Release/version 1.2.1 (#30))
     if (!mounted) return;
 
     await _handleFetchMachine();

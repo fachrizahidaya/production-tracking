@@ -194,7 +194,6 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
           no: item['press_no'].toString(),
           canDelete: _canDelete,
           canUpdate: _canUpdate,
-          openUpdateOnStart: openUpdateOnStart,
         ),
       ),
     );

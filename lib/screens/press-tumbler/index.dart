@@ -203,12 +203,15 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
           canUpdate: _canUpdate,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
           openUpdateOnStart: openUpdateOnStart,
 >>>>>>> 993ef46 (fix: card navigate to update (#16))
 =======
           openUpdateOnStart: openUpdateOnStart,
 >>>>>>> 8bc14cd (fix: card navigate to update)
+=======
+>>>>>>> ddaf785b (fix: index dyeing - long slitting)
         ),
       ),
     );

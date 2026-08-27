@@ -10,13 +10,15 @@ class ProcessItemsQtySection extends StatefulWidget {
   final List<dynamic> items;
   final Function(int index, String key, dynamic value) onChange;
   final data;
+  final handleItemQtyWarning;
 
   const ProcessItemsQtySection(
       {super.key,
       required this.label,
       required this.items,
       required this.onChange,
-      this.data});
+      this.data,
+      this.handleItemQtyWarning});
 
   @override
   State<ProcessItemsQtySection> createState() => _ProcessItemsQtySectionState();
@@ -24,6 +26,7 @@ class ProcessItemsQtySection extends StatefulWidget {
 
 class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
   final Map<int, TextEditingController> _qtyControllers = {};
+  final Map<int, String?> _qtyWarnings = {};
 
   @override
   void initState() {
@@ -35,6 +38,8 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
       _qtyControllers[i] = TextEditingController(
         text: item['qty']?.toString() ?? '0',
       );
+
+      _qtyWarnings[i] = _validateItemQty(i, item['qty']);
     }
   }
 
@@ -47,11 +52,111 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
     super.dispose();
   }
 
+  double _toDouble(dynamic value) {
+    if (value == null) return 0;
+
+    if (value is num) {
+      return value.toDouble();
+    }
+
+    final valueString = value.toString().trim();
+
+    if (valueString.isEmpty) {
+      return 0;
+    }
+
+    return double.tryParse(valueString.replaceAll(',', '.')) ?? 0;
+  }
+
+  Map<String, dynamic>? _getWorkOrderItem(
+    Map<String, dynamic> item,
+  ) {
+    final woItems = widget.data;
+
+    if (woItems == null || woItems is! List) {
+      return null;
+    }
+
+    final woItemId = item['wo_item_id'];
+    final itemCode = item['finished_product']?['code'];
+
+    for (final raw in woItems) {
+      if (raw is! Map) continue;
+
+      final woItem = Map<String, dynamic>.from(raw);
+
+      if (woItem['id'].toString() == woItemId?.toString() &&
+          woItem['item_code'].toString() == itemCode?.toString()) {
+        return woItem;
+      }
+    }
+
+    return null;
+  }
+
+  String? _validateItemQty(
+    int index,
+    dynamic inputValue,
+  ) {
+    if (widget.label != 'Cross Cutting' && widget.label != 'Sewing') {
+      return null;
+    }
+
+    if (index >= widget.items.length) {
+      return null;
+    }
+
+    final item = widget.items[index];
+
+    final woItem = _getWorkOrderItem(item);
+
+    if (woItem == null) {
+      return null;
+    }
+
+    final referenceQty = _toDouble(woItem['qty']);
+    final inputQty = _toDouble(inputValue);
+
+    if (referenceQty <= 0) {
+      return null;
+    }
+
+    final lowerLimit = referenceQty * 0.90;
+    final upperLimit = referenceQty * 1.10;
+
+    if (inputQty < lowerLimit || inputQty > upperLimit) {
+      final differencePercent =
+          ((inputQty - referenceQty) / referenceQty) * 100;
+
+      return 'Qty ${inputQty < referenceQty ? 'kurang' : 'lebih'} '
+          '${differencePercent.abs().toStringAsFixed(2)}% '
+          '(Batas: ${lowerLimit.toStringAsFixed(0)} – '
+          '${upperLimit.toStringAsFixed(0)})';
+    }
+
+    return null;
+  }
+
+  bool get _hasWarning {
+    return _qtyWarnings.values.any(
+      (warning) => warning != null && warning!.isNotEmpty,
+    );
+  }
+
   void _handleQty(
     int index,
     String value,
   ) {
     final safeValue = value.toString().trim().isEmpty ? '0' : value.toString();
+
+    final warning = _validateItemQty(
+      index,
+      safeValue,
+    );
+
+    setState(() {
+      _qtyWarnings[index] = warning;
+    });
 
     widget.onChange(
       index,
@@ -212,6 +317,38 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
             ),
           ),
         ),
+        if (_qtyWarnings[index] != null)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: Colors.orange.shade200,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.orange.shade700,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    _qtyWarnings[index]!,
+                    style: TextStyle(
+                      color: Colors.orange.shade900,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
       ].separatedBy(
         CustomTheme().vGap('lg'),
       ),

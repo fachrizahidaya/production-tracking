@@ -51,6 +51,7 @@ class FinishSection extends StatefulWidget {
   final dyeingQty;
   final finishedItemGrb;
   final isInitializing;
+  final handleItemQtyWarning;
 
   const FinishSection(
       {super.key,
@@ -91,7 +92,8 @@ class FinishSection extends StatefulWidget {
       this.finishedItem,
       this.dyeingQty,
       this.finishedItemGrb,
-      this.isInitializing});
+      this.isInitializing,
+      this.handleItemQtyWarning});
 
   @override
   State<FinishSection> createState() => _FinishSectionState();
@@ -304,6 +306,7 @@ class _FinishSectionState extends State<FinishSection> {
       dyeingQty: widget.dyeingQty,
       finishedItemGrb: widget.finishedItemGrb,
       isInitializing: widget.isInitializing,
+      handleItemQtyWarning: widget.handleItemQtyWarning,
     );
   }
 }

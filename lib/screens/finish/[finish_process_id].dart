@@ -145,6 +145,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   var processId = '';
 
+  bool _hasItemQtyWarning = false;
+
   @override
   void initState() {
     super.initState();
@@ -569,10 +571,14 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       if (data['machine'] != null) {
         widget.form?['machine_id'] = data['machine']['id'].toString();
         widget.form?['nama_mesin'] = data['machine']['name'].toString();
+      } else if (data['machine_id'] != null) {
+        widget.form?['machine_id'] = data['machine_id'].toString();
       }
       if (data['unit'] != null) {
         widget.form?['unit_id'] = data['unit']['id'].toString();
         widget.form?['nama_satuan'] = data['unit']['name'].toString();
+      } else if (data['unit_id'] != null) {
+        widget.form?['unit_id'] = data['unit_id'].toString();
       }
       if (data['item_unit'] != null) {
         widget.form?['item_unit_id'] = data['item_unit']['id'].toString();
@@ -1399,6 +1405,13 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               finishedItem: finishedItemOption,
                               finishedItemGrb: finishedItemGrb,
                               isInitializing: _isInitializingSorting,
+                              handleItemQtyWarning: (hasWarning) {
+                                if (!mounted) return;
+
+                                setState(() {
+                                  _hasItemQtyWarning = hasWarning;
+                                });
+                              },
                             ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],
@@ -1431,6 +1444,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             withItemQtyAndWeight: widget.withQtyAndWeight,
             isAllMachineDone: isAllMachineDone,
             label: widget.label,
+            hasItemQtyWarning: _hasItemQtyWarning,
           ),
         ),
       ),

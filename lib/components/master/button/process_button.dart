@@ -22,6 +22,7 @@ class ProcessButton extends StatefulWidget {
   final withItemQtyAndWeight;
   final isAllMachineDone;
   final label;
+  final hasItemQtyWarning;
 
   const ProcessButton(
       {super.key,
@@ -41,7 +42,8 @@ class ProcessButton extends StatefulWidget {
       this.withItemGrade,
       this.withItemQtyAndWeight,
       this.isAllMachineDone,
-      this.label});
+      this.label,
+      this.hasItemQtyWarning = false});
 
   @override
   State<ProcessButton> createState() => _ProcessButtonState();
@@ -123,8 +125,10 @@ class _ProcessButtonState extends State<ProcessButton> {
             ? hasInvalidQtyItems()
             : false;
 
-    final bool isDisabled =
-        hasBasicError || hasWeightItemError || hasQtyItemError;
+    final bool isDisabled = hasBasicError ||
+        hasWeightItemError ||
+        hasQtyItemError ||
+        widget.hasItemQtyWarning == true;
 
     return SafeArea(
       child: Padding(

@@ -24,6 +24,7 @@ class SortingSection extends StatefulWidget {
   final finishedItem;
   final woData;
   final bool isInitializing;
+  final onQtyWarning;
 
   const SortingSection(
       {super.key,
@@ -34,7 +35,8 @@ class SortingSection extends StatefulWidget {
       this.finishedItemGrb,
       this.finishedItem,
       this.woData,
-      this.isInitializing = false});
+      this.isInitializing = false,
+      this.onQtyWarning});
 
   @override
   State<SortingSection> createState() => _SortingSectionState();
@@ -193,9 +195,14 @@ class _SortingSectionState extends State<SortingSection> {
 
       _syncFormItems();
 
+      widget.form['grades'] =
+          _items.expand((item) => item['grades'] ?? []).toList();
+
       if (mounted) {
         setState(() {});
       }
+
+      _validateAllSortingQty();
 
       return;
     }
@@ -619,6 +626,8 @@ class _SortingSectionState extends State<SortingSection> {
     if (mounted) {
       setState(() {});
     }
+
+    _validateAllSortingQty();
   }
 
   @override
@@ -658,6 +667,144 @@ class _SortingSectionState extends State<SortingSection> {
     super.dispose();
   }
 
+  double _toDouble(dynamic value) {
+    if (value == null) return 0;
+
+    if (value is num) {
+      return value.toDouble();
+    }
+
+    final stringValue = value.toString().trim();
+
+    if (stringValue.isEmpty) {
+      return 0;
+    }
+
+    return double.tryParse(
+          stringValue.replaceAll(',', '.'),
+        ) ??
+        0;
+  }
+
+  String? _validateSortingQty(int itemIndex) {
+    if (itemIndex >= _items.length) {
+      return null;
+    }
+
+    final item = _items[itemIndex];
+
+    final woItems = widget.processData['work_orders']?['items'];
+
+    if (woItems is! List || woItems.isEmpty) {
+      return null;
+    }
+
+    final woItemId = item['wo_item_id'];
+
+    Map<String, dynamic>? woItem;
+
+    for (final raw in woItems) {
+      if (raw is! Map) continue;
+
+      if (raw['id'].toString() == woItemId?.toString()) {
+        woItem = Map<String, dynamic>.from(raw);
+        break;
+      }
+    }
+
+    if (woItem == null) {
+      return null;
+    }
+
+    final referenceQty = _parseQty(woItem['qty']);
+
+    if (referenceQty <= 0) {
+      return null;
+    }
+
+    final grades = item['grades'] ?? [];
+
+    double gradeA = 0;
+    double gradeB = 0;
+    double gradeBS = 0;
+
+    double spraying = 0;
+    double combing = 0;
+    double reworkLongHemming = 0;
+
+    for (final grade in grades) {
+      final code = (grade['code'] ?? '').toString().toUpperCase();
+
+      final qty = _parseQty(grade['qty']);
+
+      if (code == 'A') {
+        gradeA += qty;
+      } else if (code == 'B') {
+        gradeB += qty;
+      } else if (code == 'BS') {
+        gradeBS += qty;
+      }
+
+      spraying += _parseQty(grade['spraying']);
+      combing += _parseQty(grade['combing']);
+      reworkLongHemming += _parseQty(grade['rework_long_hemming']);
+    }
+
+    final totalSorting =
+        gradeA + gradeB + gradeBS + spraying + combing + reworkLongHemming;
+
+    final lowerLimit = referenceQty * 0.90;
+    final upperLimit = referenceQty * 1.10;
+
+    if (totalSorting < lowerLimit || totalSorting > upperLimit) {
+      final differencePercent =
+          ((totalSorting - referenceQty) / referenceQty) * 100;
+
+      return 'Total hasil sortir ${totalSorting < referenceQty ? 'kurang' : 'lebih'} '
+          '${differencePercent.abs().toStringAsFixed(2)}% '
+          '(Batas: ${lowerLimit.toStringAsFixed(0)} – '
+          '${upperLimit.toStringAsFixed(0)})';
+    }
+
+    return null;
+  }
+
+  void _validateAllSortingQty() {
+    String? warning;
+
+    for (int i = 0; i < _items.length; i++) {
+      final itemWarning = _validateSortingQty(i);
+
+      if (itemWarning != null) {
+        warning = itemWarning;
+        break;
+      }
+    }
+
+    widget.onQtyWarning?.call(
+      warning != null,
+    );
+  }
+
+  double _parseQty(dynamic value) {
+    if (value == null) return 0;
+
+    if (value is num) {
+      return value.toDouble();
+    }
+
+    final valueString = value.toString().trim();
+
+    if (valueString.isEmpty) {
+      return 0;
+    }
+
+    return double.tryParse(
+          valueString.replaceAll(',', ''),
+        ) ??
+        0;
+  }
+
   /*
 |--------------------------------------------------------------------------
 | BUILD
@@ -688,6 +835,8 @@ class _SortingSectionState extends State<SortingSection> {
 |--------------------------------------------------------------------------
 */
           _buildGlobalSummary(),
+          SizedBox(height: 16),
+          _buildSortingWarning(),
           SizedBox(height: 16),
           Container(
             height: 50,
@@ -990,6 +1139,8 @@ class _SortingSectionState extends State<SortingSection> {
                 _syncFormItems();
 
                 setState(() {});
+
+                _validateAllSortingQty();
               },
             ),
           ),
@@ -1035,6 +1186,8 @@ class _SortingSectionState extends State<SortingSection> {
           });
 
           _syncFormItems();
+
+          _validateAllSortingQty();
         },
       ),
     );
@@ -1626,6 +1779,100 @@ class _SortingSectionState extends State<SortingSection> {
         ].separatedBy(
           SizedBox(width: 12),
         ),
+      ),
+    );
+  }
+
+  Widget _buildQtyWarning() {
+    String? warning;
+
+    for (int i = 0; i < _items.length; i++) {
+      warning = _validateSortingQty(i);
+
+      if (warning != null) {
+        break;
+      }
+    }
+
+    if (warning == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.orange.shade200,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.orange.shade700,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              warning,
+              style: TextStyle(
+                color: Colors.orange.shade900,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSortingWarning() {
+    String? warning;
+
+    for (int i = 0; i < _items.length; i++) {
+      warning = _validateSortingQty(i);
+
+      if (warning != null) {
+        break;
+      }
+    }
+
+    if (warning == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.orange.shade200,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.orange.shade700,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              warning,
+              style: TextStyle(
+                color: Colors.orange.shade900,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

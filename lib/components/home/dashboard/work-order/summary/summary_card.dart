@@ -12,7 +12,11 @@ class SummaryCard extends StatefulWidget {
   final bool isSelected;
   final showProgress;
   final filter;
+<<<<<<< HEAD
   final bool isGreige;
+=======
+  final isMobile;
+>>>>>>> d86a31e7 (fix: UI mobile dashboard)
 
   const SummaryCard(
       {super.key,
@@ -21,7 +25,11 @@ class SummaryCard extends StatefulWidget {
       this.isSelected = false,
       this.showProgress,
       this.filter,
+<<<<<<< HEAD
       this.isGreige = false});
+=======
+      this.isMobile = false});
+>>>>>>> d86a31e7 (fix: UI mobile dashboard)
 
   @override
   State<SummaryCard> createState() => _SummaryCardState();
@@ -52,27 +60,22 @@ class _SummaryCardState extends State<SummaryCard>
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isTablet = constraints.maxWidth > 400;
-
-        return GestureDetector(
-          onTapDown: (_) => _animationController.forward(),
-          onTapUp: (_) => _animationController.reverse(),
-          onTapCancel: () => _animationController.reverse(),
-          onTap: widget.onTap,
-          child: SizedBox(
-            width: double.infinity,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              child: _buildCard(isTablet),
-            ),
-          ),
-        );
-      },
+    return GestureDetector(
+      onTapDown: (_) => _animationController.forward(),
+      onTapUp: (_) => _animationController.reverse(),
+      onTapCancel: () => _animationController.reverse(),
+      onTap: widget.onTap,
+      child: SizedBox(
+        width: double.infinity,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: _buildCard(widget.isMobile),
+        ),
+      ),
     );
   }
 
+<<<<<<< HEAD
   Widget _buildCard(bool isTablet) {
     return Container(
       width: double.infinity,
@@ -104,6 +107,63 @@ class _SummaryCardState extends State<SummaryCard>
           ),
         ],
       ),
+=======
+  Widget _buildCard(bool isMobile) {
+    final Map<String, dynamic> summary =
+        (widget.data['summary'] as Map<String, dynamic>?) ??
+            {
+              'completed': 0,
+              'in_progress': 0,
+              'waiting': 0,
+              'skipped': 0,
+            };
+
+    final statusColor = _getSummaryColor(summary);
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: widget.isSelected
+              ? CustomTheme().buttonColor('primary')
+              : Colors.grey[200]!,
+          width: widget.isSelected ? 2 : 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: widget.isSelected
+                ? CustomTheme().buttonColor('primary').withOpacity(0.15)
+                : Colors.black.withOpacity(0.05),
+            blurRadius: widget.isSelected ? 12 : 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CardHeader(
+              data: widget.data,
+              isTablet: !isMobile,
+              statusColor: statusColor,
+              filter: widget.filter,
+              getTotalCount: _getTotalCount,
+            ),
+            CardContent(
+              data: widget.data,
+              filter: widget.filter,
+              isTablet: !isMobile,
+              showProgress: widget.showProgress,
+              showWorkOrdersByStatusDialog: _showWorkOrdersByStatusDialog,
+            ),
+          ],
+        ),
+      ),
+>>>>>>> d86a31e7 (fix: UI mobile dashboard)
     );
   }
 

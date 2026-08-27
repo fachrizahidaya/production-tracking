@@ -146,7 +146,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
         child: Center(
           child: Padding(
             padding: CustomTheme().padding('content'),
-            child: CircularProgressIndicator(),
+            child: const CircularProgressIndicator(),
           ),
         ),
       );
@@ -156,14 +156,48 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       return NoData();
     }
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+
+    final items = widget.data!.map<Widget>((item) {
+      final mappedItem = _mapApiToSummaryCard(item);
+
+      return SummaryCard(
+        data: mappedItem,
+        showProgress: _showProgress,
+        filter: processFilters[selectedIndex],
+        isMobile: isMobile,
+      );
+    }).toList();
+
+    // =========================
+    // MOBILE
+    // =========================
+    if (isMobile) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+        child: Column(
+          children: [
+            for (int i = 0; i < items.length; i++) ...[
+              if (i > 0) const SizedBox(height: 12),
+              items[i],
+            ],
+          ],
+        ),
+      );
+    }
+
+    // =========================
+    // TABLET
+    // =========================
     final isSingleItem = widget.data!.length == 1;
-    final screenWidth = MediaQuery.of(context).size.width * 0.95;
+    final screenWidthTablet = screenWidth * 0.95;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: isSingleItem
-          ? NeverScrollableScrollPhysics()
-          : BouncingScrollPhysics(),
+          ? const NeverScrollableScrollPhysics()
+          : const BouncingScrollPhysics(),
       child: Row(
         children: widget.data!.map<Widget>((item) {
           final mappedItem = _mapApiToSummaryCard(item);
@@ -171,11 +205,12 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
           return Padding(
             padding: CustomTheme().padding('card'),
             child: SizedBox(
-              width: isSingleItem ? screenWidth : 500,
+              width: isSingleItem ? screenWidthTablet : 500,
               child: SummaryCard(
                 data: mappedItem,
                 showProgress: _showProgress,
                 filter: processFilters[selectedIndex],
+                isMobile: false,
               ),
             ),
           );

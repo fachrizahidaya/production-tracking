@@ -43,8 +43,11 @@ class CardHeader extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
+=======
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
     return Row(
       children: [
         Expanded(
@@ -54,6 +57,7 @@ class CardHeader extends StatelessWidget {
               fontWeight: FontWeight.w600,
               fontSize: 16,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 73378bdd (fix: UI mobile dashboard)
@@ -61,6 +65,9 @@ class CardHeader extends StatelessWidget {
 >>>>>>> 62cb1f4a (fix: UI mobile dashboard)
 =======
 >>>>>>> 1c1ecf12 (fix: UI mobile dashboard)
+=======
+=======
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
     if (!isTablet) {
       return _buildMobileHeader(
         context,
@@ -98,6 +105,7 @@ class CardHeader extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 3bba1171 (fix: filter summary)
 =======
@@ -125,6 +133,11 @@ class CardHeader extends StatelessWidget {
                 : '/${slug}s';
 
         Navigator.pushNamed(context, routeName);
+=======
+    return InkWell(
+      onTap: () {
+        _navigateToProcess(context);
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
       },
       child: Container(
         padding: CustomTheme().padding('card'),
@@ -141,9 +154,13 @@ class CardHeader extends StatelessWidget {
             bottom: BorderSide(
               color: statusColor.withOpacity(0.2),
               width: 1,
+<<<<<<< HEAD
 >>>>>>> d86a31e7 (fix: UI mobile dashboard)
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
+=======
+>>>>>>> e61620e (fix: UI mobile dashboard)
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -151,6 +168,9 @@ class CardHeader extends StatelessWidget {
         ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
         if (!isMobile) ...[
 =======
         child: Row(
@@ -163,9 +183,13 @@ class CardHeader extends StatelessWidget {
               ),
               child: Icon(
                 _getProcessIcon(data['name']),
+<<<<<<< HEAD
                 size: isTablet
                     ? CustomTheme().iconSize('3xl')
                     : CustomTheme().iconSize('2xl'),
+=======
+                size: CustomTheme().iconSize('3xl'),
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
                 color: statusColor,
               ),
             ),
@@ -175,7 +199,11 @@ class CardHeader extends StatelessWidget {
                   Text(
                     displayTitle ?? '-',
                     style: TextStyle(
+<<<<<<< HEAD
                       fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
+=======
+                      fontSize: CustomTheme().fontSize('lg'),
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
                       fontWeight: CustomTheme().fontWeight('bold'),
                       color: Colors.grey[800],
                     ),
@@ -187,11 +215,109 @@ class CardHeader extends StatelessWidget {
                     size: CustomTheme().iconSize('xl'),
                     color: Colors.grey[500],
                   ),
+<<<<<<< HEAD
                 ].separatedBy(CustomTheme().hGap('sm')),
               ),
             ),
             _buildTotalBadge(total, statusColor, isTablet),
           ].separatedBy(CustomTheme().hGap('xl')),
+=======
+                ],
+              ),
+            ),
+            _buildTotalBadge(
+              total,
+              statusColor,
+              true,
+            ),
+          ].separatedBy(
+            CustomTheme().hGap('xl'),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMobileHeader(
+    BuildContext context,
+    String displayTitle,
+    int total,
+  ) {
+    return InkWell(
+      onTap: () {
+        _navigateToProcess(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              statusColor.withOpacity(0.15),
+              statusColor.withOpacity(0.05),
+            ],
+          ),
+          border: Border(
+            bottom: BorderSide(
+              color: statusColor.withOpacity(0.2),
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: statusColor.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                _getProcessIcon(data['name']),
+                size: 22,
+                color: statusColor,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          displayTitle ?? '-',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: CustomTheme().fontWeight('bold'),
+                            color: Colors.grey[800],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        Icons.chevron_right,
+                        size: 18,
+                        color: Colors.grey[500],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    '$total Work Order',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
         ),
       ),
     );
@@ -261,10 +387,14 @@ class CardHeader extends StatelessWidget {
                 : CustomTheme().iconSize('md'),
             color: color,
           ),
+<<<<<<< HEAD
 >>>>>>> d86a31e7 (fix: UI mobile dashboard)
 =======
         if (!isMobile) ...[
 >>>>>>> 025659bb (fix: dashboard mobile)
+=======
+>>>>>>> e61620e (fix: UI mobile dashboard)
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
           Text(
             formatNumber(total),
             style: TextStyle(

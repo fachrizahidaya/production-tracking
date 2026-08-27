@@ -144,8 +144,11 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
+=======
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
   bool get _isMobile => widget.isMobile;
 
   void _applyMobileProcessParams() {
@@ -172,8 +175,16 @@ class _DashboardState extends State<Dashboard> {
     };
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   bool get isMobile => MediaQuery.of(context).size.width < 600;
+=======
+=======
+  bool get isMobile => MediaQuery.of(context).size.width < 600;
+
+  bool get isTablet => MediaQuery.of(context).size.width >= 600;
+>>>>>>> e61620e (fix: UI mobile dashboard)
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
 
   bool get isTablet => MediaQuery.of(context).size.width >= 600;
 >>>>>>> d86a31e7 (fix: UI mobile dashboard)
@@ -1324,6 +1335,10 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final sectionGap = isMobile ? 16.0 : 24.0;
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -1351,10 +1366,20 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                   padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 0),
 =======
                   padding: EdgeInsets.zero,
 >>>>>>> 97ee959c (fix: UI dashboard)
+=======
+                  padding: EdgeInsets.zero,
+=======
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 12 : 24,
+                    vertical: isMobile ? 12 : 20,
+                  ),
+>>>>>>> e61620e (fix: UI mobile dashboard)
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
                   sliver: SliverList(
                     delegate: SliverChildListDelegate(
                       [

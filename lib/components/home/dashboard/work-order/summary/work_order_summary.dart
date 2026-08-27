@@ -516,7 +516,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
         child: Center(
           child: Padding(
             padding: CustomTheme().padding('content'),
-            child: CircularProgressIndicator(),
+            child: const CircularProgressIndicator(),
           ),
         ),
       );
@@ -549,6 +549,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
               )
               .toDouble();
 
+<<<<<<< HEAD
           return ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: const AlwaysScrollableScrollPhysics(),
@@ -578,6 +579,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
               );
             },
 =======
+<<<<<<< HEAD
 =======
 >>>>>>> 73378bdd (fix: UI mobile dashboard)
     final screenWidth = MediaQuery.of(context).size.width;
@@ -657,6 +659,21 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
             padding: CustomTheme().padding('card'),
             child: SizedBox(
               width: isSingleItem ? screenWidth : 500,
+=======
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: isSingleItem
+          ? const NeverScrollableScrollPhysics()
+          : const BouncingScrollPhysics(),
+      child: Row(
+        children: _activeData.map<Widget>((item) {
+          final mappedItem = _mapApiToSummaryCard(item);
+
+          return Padding(
+            padding: CustomTheme().padding('card'),
+            child: SizedBox(
+              width: isSingleItem ? screenWidthTablet : 500,
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
               child: SummaryCard(
                 data: mappedItem,
                 showProgress: _showProgress,
@@ -664,6 +681,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                 isGreige: _isGreigeActive,
               ),
             ),
+<<<<<<< HEAD
 >>>>>>> d86a31e7 (fix: UI mobile dashboard)
 =======
               return SizedBox(
@@ -687,6 +705,9 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
               );
             },
 >>>>>>> 025659bb (fix: dashboard mobile)
+=======
+>>>>>>> e61620e (fix: UI mobile dashboard)
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
           );
         },
       ),

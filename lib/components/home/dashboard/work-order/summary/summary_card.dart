@@ -114,24 +114,18 @@ class _SummaryCardState extends State<SummaryCard>
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isTablet = constraints.maxWidth > 400;
-
-        return GestureDetector(
-          onTapDown: (_) => _animationController.forward(),
-          onTapUp: (_) => _animationController.reverse(),
-          onTapCancel: () => _animationController.reverse(),
-          onTap: widget.onTap,
-          child: SizedBox(
-            width: double.infinity,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              child: _buildCard(isTablet),
-            ),
-          ),
-        );
-      },
+    return GestureDetector(
+      onTapDown: (_) => _animationController.forward(),
+      onTapUp: (_) => _animationController.reverse(),
+      onTapCancel: () => _animationController.reverse(),
+      onTap: widget.onTap,
+      child: SizedBox(
+        width: double.infinity,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: _buildCard(widget.isMobile),
+        ),
+      ),
     );
   }
 
@@ -143,6 +137,9 @@ class _SummaryCardState extends State<SummaryCard>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
   Widget _buildCard(bool isTablet) {
     return Container(
 <<<<<<< HEAD
@@ -177,6 +174,7 @@ class _SummaryCardState extends State<SummaryCard>
       ),
 =======
   Widget _buildCard(bool isMobile) {
+<<<<<<< HEAD
 =======
   Widget _buildCard(bool isTablet) {
 >>>>>>> 3bba1171 (fix: filter summary)
@@ -198,6 +196,8 @@ class _SummaryCardState extends State<SummaryCard>
 =======
   Widget _buildCard(bool isTablet) {
 >>>>>>> b167f1b0 (fix: filter summary)
+=======
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
     final Map<String, dynamic> summary =
         (widget.data['summary'] as Map<String, dynamic>?) ??
             {
@@ -210,6 +210,7 @@ class _SummaryCardState extends State<SummaryCard>
     final statusColor = _getSummaryColor(summary);
 
     return AnimatedContainer(
+<<<<<<< HEAD
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
       width: double.infinity,
@@ -244,12 +245,40 @@ class _SummaryCardState extends State<SummaryCard>
 <<<<<<< HEAD
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
+=======
+      duration: const Duration(milliseconds: 200),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: widget.isSelected
+              ? CustomTheme().buttonColor('primary')
+              : Colors.grey[200]!,
+          width: widget.isSelected ? 2 : 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: widget.isSelected
+                ? CustomTheme().buttonColor('primary').withOpacity(0.15)
+                : Colors.black.withOpacity(0.05),
+            blurRadius: widget.isSelected ? 12 : 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             CardHeader(
               data: widget.data,
+<<<<<<< HEAD
               isTablet: isTablet,
+=======
+              isTablet: !isMobile,
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
               statusColor: statusColor,
               filter: widget.filter,
               getTotalCount: _getTotalCount,
@@ -257,16 +286,24 @@ class _SummaryCardState extends State<SummaryCard>
             CardContent(
               data: widget.data,
               filter: widget.filter,
+<<<<<<< HEAD
               isTablet: isTablet,
+=======
+              isTablet: !isMobile,
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
               showProgress: widget.showProgress,
               showWorkOrdersByStatusDialog: _showWorkOrdersByStatusDialog,
             ),
           ],
         ),
       ),
+<<<<<<< HEAD
 >>>>>>> d86a31e7 (fix: UI mobile dashboard)
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
+=======
+>>>>>>> e61620e (fix: UI mobile dashboard)
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
     );
   }
 

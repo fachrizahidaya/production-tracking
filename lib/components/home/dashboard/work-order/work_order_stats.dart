@@ -74,7 +74,15 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
     if (widget.data?.length == 0) return const SizedBox();
+=======
+    if (widget.data == null || widget.data.isEmpty) {
+      return const SizedBox.shrink();
+    }
+>>>>>>> e61620e (fix: UI mobile dashboard)
 
     if (widget.isFetching) {
       return Padding(

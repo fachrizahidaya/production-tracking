@@ -140,6 +140,7 @@ class CardContent extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   List<_StatusItem> _filteredItems(Map<String, dynamic> summary) {
 =======
 =======
@@ -148,10 +149,15 @@ class CardContent extends StatelessWidget {
 >>>>>>> 62cb1f4a (fix: UI mobile dashboard)
 =======
 >>>>>>> 1c1ecf12 (fix: UI mobile dashboard)
+=======
+  List<_StatusItem> _filteredItems(Map<String, dynamic> summary) {
+=======
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
   Widget _buildStatusGrid(
     Map<String, dynamic> summary,
     bool isTablet,
   ) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -189,6 +195,11 @@ class CardContent extends StatelessWidget {
 =======
   List<_StatusItem> _filteredItems(Map<String, dynamic> summary) {
 >>>>>>> 025659bb (fix: dashboard mobile)
+=======
+    final bool hasOverdueWaiting = data['hasOverdueWaiting'] == true;
+
+>>>>>>> e61620e (fix: UI mobile dashboard)
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
     final allItems = [
       _StatusItem(label: 'Selesai', value: summary['completed'] ?? 0),
       _StatusItem(label: 'Dilewati', value: summary['skipped'] ?? 0),
@@ -196,33 +207,51 @@ class CardContent extends StatelessWidget {
       _StatusItem(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
         label: 'Menunggu',
         value: summary['waiting'] ?? 0,
 =======
         label: 'Selesai',
         value: summary['completed'] ?? 0,
         icon: Icons.task_alt_outlined,
+<<<<<<< HEAD
         color: Color(0xffd1fae4),
         iconColor: Color(0xFF10b981),
+=======
+        color: const Color(0xffd1fae4),
+        iconColor: const Color(0xFF10b981),
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
       ),
       _StatusItem(
         label: 'Dilewati',
         value: summary['skipped'] ?? 0,
         icon: Icons.fast_forward_outlined,
+<<<<<<< HEAD
         color: Color(0xffe9eefd),
+=======
+        color: const Color(0xffe9eefd),
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
         iconColor: CustomTheme().colors('primary'),
       ),
       _StatusItem(
         label: 'Diproses',
         value: summary['in_progress'] ?? 0,
         icon: Icons.access_time_outlined,
+<<<<<<< HEAD
         color: Color(0xFFfff3c6),
         iconColor: Color(0xfff18800),
+=======
+        color: const Color(0xFFfff3c6),
+        iconColor: const Color(0xfff18800),
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
       ),
       _StatusItem(
         label: 'Menunggu Diproses',
         value: summary['waiting'] ?? 0,
         icon: Icons.error_outline,
+<<<<<<< HEAD
         color: Color(0xFFf1f5f9),
         iconColor: Color.fromRGBO(113, 113, 123, 1),
         showPulse: hasOverdueWaiting,
@@ -231,6 +260,12 @@ class CardContent extends StatelessWidget {
         label: 'Menunggu',
         value: summary['waiting'] ?? 0,
 >>>>>>> 025659bb (fix: dashboard mobile)
+=======
+        color: const Color(0xFFf1f5f9),
+        iconColor: const Color.fromRGBO(113, 113, 123, 1),
+        showPulse: hasOverdueWaiting,
+>>>>>>> e61620e (fix: UI mobile dashboard)
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
       ),
     ];
 
@@ -250,6 +285,9 @@ class CardContent extends StatelessWidget {
     }).toList();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
   }
 
   Widget _buildInfo(String label, int value) {
@@ -275,6 +313,7 @@ class CardContent extends StatelessWidget {
           ),
 =======
 
+<<<<<<< HEAD
     return Wrap(
         spacing: 8,
         runSpacing: 16,
@@ -338,10 +377,130 @@ class CardContent extends StatelessWidget {
                   ),
                 ),
               ],
+=======
+    if (!isTablet) {
+      return _buildMobileStatusGrid(filteredItems);
+    }
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 16,
+      children:
+          filteredItems.map((item) => _buildStatusItem(item, true)).toList(),
+    );
+  }
+
+  Widget _buildMobileStatusGrid(
+    List<_StatusItem> items,
+  ) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const spacing = 8.0;
+
+        final itemWidth = (constraints.maxWidth - spacing) / 2;
+
+        return Wrap(
+          spacing: spacing,
+          runSpacing: 8,
+          children: items.map((item) {
+            return SizedBox(
+              width: itemWidth,
+              child: _buildStatusItem(
+                item,
+                false,
+              ),
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
+  Color _getProgressColor(double progress) {
+    return Colors.green;
+  }
+
+  Widget _buildStatusItem(
+    _StatusItem item,
+    bool isTablet,
+  ) {
+    final woList = _getWOListByStatus(item.label);
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () {
+        showWorkOrdersByStatusDialog(
+          title: item.label,
+          woList: woList,
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(
+          horizontal: isTablet ? 10 : 8,
+          vertical: isTablet ? 10 : 8,
+        ),
+        decoration: BoxDecoration(
+          color: item.color,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Colors.grey.withOpacity(0.3),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              item.icon,
+              size: isTablet ? 22 : 19,
+              color: item.iconColor,
+            ),
+            const SizedBox(width: 7),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          formatNumber(item.value),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: isTablet ? 14 : 13,
+                            fontWeight: CustomTheme().fontWeight('bold'),
+                            color: item.iconColor,
+                          ),
+                        ),
+                      ),
+                      if (item.showPulse) ...[
+                        const SizedBox(width: 4),
+                        PulseIcon(
+                          icon: Icons.circle,
+                          color: Colors.red,
+                          size: 10,
+                        ),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    item.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: isTablet ? 13 : 11,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
             ),
             if (item.value > 0)
               Icon(
                 Icons.chevron_right_outlined,
+<<<<<<< HEAD
                 size: isTablet
                     ? CustomTheme().iconSize('xl')
                     : CustomTheme().iconSize('lg'),
@@ -387,6 +546,13 @@ class CardContent extends StatelessWidget {
             height: 1.2,
           ),
 >>>>>>> 025659bb (fix: dashboard mobile)
+=======
+                size: isTablet ? 20 : 17,
+                color: Colors.grey,
+              ),
+          ],
+>>>>>>> e61620e (fix: UI mobile dashboard)
+>>>>>>> bc05a2f3 (fix: UI mobile dashboard)
         ),
       ],
     );

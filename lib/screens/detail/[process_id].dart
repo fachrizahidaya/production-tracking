@@ -259,7 +259,18 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
   Future<void> _postInit() async {
     await _getDataView();
+    if (!mounted) return;
 
+    await _handleFetchMachine();
+    if (!mounted) return;
+
+    await _handleFetchItemGrade();
+    if (!mounted) return;
+
+    await _handleFetchItemType();
+    if (!mounted) return;
+
+    await _handleFetchFinishedGrbMaterial();
     if (!mounted) return;
 
     await _handleFetchMachine();

@@ -49,7 +49,9 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.data?.length == 0) return SizedBox();
+    if (widget.data == null || widget.data.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     if (widget.isFetching) {
       return Padding(

@@ -272,6 +272,15 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
     _syncGradesWithOptions();
     _syncDefectsWithOptions();
+
+    if (widget.openUpdateOnStart && !_hasOpenedInitialUpdate && mounted) {
+      if (widget.canUpdate) {
+        _hasOpenedInitialUpdate = true;
+        await _handleNavigateToUpdate();
+      } else {
+        Navigator.pop(context, false);
+      }
+    }
   }
 
   void _handleChangeInput(String fieldName, dynamic value) {

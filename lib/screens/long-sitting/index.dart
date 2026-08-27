@@ -11,6 +11,8 @@ import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/card/item_process_card.dart';
 import 'package:textile_tracking/components/process/process_list.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
@@ -39,6 +41,8 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
   bool _isLoadMore = false;
   bool _showFab = true;
   bool _menuLoaded = false;
+
+  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
   final List<dynamic> _dataList = [];
   String _search = '';
@@ -187,6 +191,76 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
     });
 
     _loadMore();
+  }
+
+  Future<void> _openProcessDetail(
+    dynamic item, {
+    bool openUpdateOnStart = false,
+  }) async {
+    final value = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LongSittingDetail(
+          id: item['id'].toString(),
+          no: item['ls_no'].toString(),
+          canDelete: _canDelete,
+          canUpdate: _canUpdate,
+          openUpdateOnStart: openUpdateOnStart,
+        ),
+      ),
+    );
+
+    if (value == true) {
+      _refetch();
+    }
+  }
+
+  Future<void> _handleDeleteItem(dynamic item) async {
+    if (item['can_delete'] == false) {
+      await showAlertDialog(
+        context: context,
+        title: 'Tidak Bisa Hapus',
+        message:
+            'Proses tidak bisa dihapus karena sudah diproses di proses selanjutnya.',
+      );
+      return;
+    }
+
+    showConfirmationDialog(
+      context: context,
+      title: 'Hapus Data',
+      message: 'Apakah Anda yakin ingin menghapus proses?',
+      isLoading: _deleteLoading,
+      buttonBackground: CustomTheme().buttonColor('danger'),
+      onConfirm: () async {
+        try {
+          final message =
+              await Provider.of<LongSittingService>(context, listen: false)
+                  .deleteItem(context, item['id'].toString(), _deleteLoading);
+
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+
+          await showAlertDialog(
+            context: context,
+            title: 'Long Slitting Deleted',
+            message: message,
+          );
+          _refetch();
+        } catch (e) {
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+
+          await showAlertDialog(
+            context: context,
+            title: 'Error',
+            message: e.toString(),
+          );
+        }
+      },
+    );
   }
 
   @override

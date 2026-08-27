@@ -12,13 +12,15 @@ class LongHemmingDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
+  final bool openUpdateOnStart;
 
   const LongHemmingDetail(
       {super.key,
       required this.id,
       required this.no,
       this.canDelete,
-      this.canUpdate});
+      this.canUpdate,
+      this.openUpdateOnStart = false});
 
   @override
   State<LongHemmingDetail> createState() => _LongHemmingDetailState();
@@ -63,6 +65,7 @@ class _LongHemmingDetailState extends State<LongHemmingDetail> {
           items: form['items']),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
+      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/long-hemmings',
       fetchMachine: (service, currentMachineIds) =>
           service.fetchOptionsLongHemming(

@@ -126,6 +126,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   bool get _isMobile => widget.isMobile;
 
   void _applyMobileProcessParams() {
@@ -164,10 +165,13 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 8d5fb5bc (fix: UI mobile dashboard)
 =======
 >>>>>>> 62cb1f4a (fix: UI mobile dashboard)
+=======
+>>>>>>> 1c1ecf12 (fix: UI mobile dashboard)
   bool get isMobile => MediaQuery.of(context).size.width < 600;
 
   bool get isTablet => MediaQuery.of(context).size.width >= 600;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 73378bdd (fix: UI mobile dashboard)
@@ -181,6 +185,8 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 62cb1f4a (fix: UI mobile dashboard)
 =======
 >>>>>>> e29a2ffd (fix: UI dashboard)
+=======
+>>>>>>> 1c1ecf12 (fix: UI mobile dashboard)
   @override
   void initState() {
     super.initState();
@@ -1123,6 +1129,10 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final sectionGap = isMobile ? 16.0 : 24.0;
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -1138,6 +1148,7 @@ class _DashboardState extends State<Dashboard> {
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverPadding(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1185,10 +1196,13 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 8d5fb5bc (fix: UI mobile dashboard)
 =======
 >>>>>>> 62cb1f4a (fix: UI mobile dashboard)
+=======
+>>>>>>> 1c1ecf12 (fix: UI mobile dashboard)
                   padding: EdgeInsets.symmetric(
                     horizontal: isMobile ? 12 : 24,
                     vertical: isMobile ? 12 : 20,
                   ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1292,6 +1306,8 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> d86a31e7 (fix: UI mobile dashboard)
 =======
                   padding: CustomTheme().padding('content'),
+=======
+>>>>>>> 1c1ecf12 (fix: UI mobile dashboard)
                   sliver: SliverList(
 =======
                   padding: CustomTheme().padding('content'),

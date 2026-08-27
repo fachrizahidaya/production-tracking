@@ -26,52 +26,38 @@ class UpdateProcess extends StatefulWidget {
   final id;
   final label;
   final form;
-  final formKey;
   final data;
   final woData;
   final handleUpdate;
   final handleSelectMachine;
-  final handleSelectItemType;
   final withMaklon;
   final maklon;
-  final qtyItem;
   final handleChangeInput;
   final withQtyAndWeight;
-  final handleSelectQtyItemUnit;
   final length;
   final width;
   final weight;
-  final handleSelectUnit;
-  final handleSelectWidthUnit;
-  final handleSelectLengthUnit;
   final isSubmitting;
   final forDyeing;
   final grades;
   final getMachineStatus;
-  final handleFetchMachine;
   final qty;
   final defectQty;
   final note;
   final itemGradeOption;
-  final onGradeChanged;
   final itemTypeOption;
   final defects;
-  final handleUpdateGrade;
-  final handleUpdateDefect;
   final reworkLongHemming;
   final combing;
   final spraying;
   final cuttingSewingQty;
   final packingQty;
-  final defectWeight;
-  final goodWeight;
   final gsm;
   final totalWeight;
   final weightPerDozen;
   final weightGradeA;
   final finishedItemGrb;
   final finishedItemGood;
-  final finishedItemMaterial;
 
   const UpdateProcess(
       {super.key,
@@ -79,49 +65,35 @@ class UpdateProcess extends StatefulWidget {
       this.id,
       this.form,
       this.withMaklon,
-      this.handleSelectItemType,
       this.data,
       this.maklon,
       this.handleChangeInput,
-      this.qtyItem,
-      this.handleSelectQtyItemUnit,
       this.withQtyAndWeight,
       this.length,
       this.weight,
       this.width,
       this.handleUpdate,
-      this.handleSelectUnit,
-      this.handleSelectWidthUnit,
-      this.handleSelectLengthUnit,
       this.isSubmitting,
-      this.formKey,
       this.forDyeing,
       this.handleSelectMachine,
       this.grades,
       this.getMachineStatus,
-      this.handleFetchMachine,
       this.defectQty,
       this.note,
       this.qty,
       this.itemGradeOption,
-      this.onGradeChanged,
       this.itemTypeOption,
       this.defects,
-      this.handleUpdateGrade,
-      this.handleUpdateDefect,
       this.reworkLongHemming,
       this.combing,
       this.spraying,
       this.woData,
       this.cuttingSewingQty,
-      this.defectWeight,
-      this.goodWeight,
       this.packingQty,
       this.gsm,
       this.totalWeight,
       this.weightPerDozen,
       this.weightGradeA,
-      this.finishedItemMaterial,
       this.finishedItemGrb,
       this.finishedItemGood});
 
@@ -394,8 +366,6 @@ class _UpdateProcessState extends State<UpdateProcess>
 
     final grades = processData['sorting']?['grades'] ?? [];
 
-    final itemCode = item['finished_product']?['code']?.toString().trim();
-
     final woItemId = item['wo_item_id'];
 
     for (final grade in grades) {
@@ -403,9 +373,6 @@ class _UpdateProcessState extends State<UpdateProcess>
 
       final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
         (gradeItem) {
-          final gradeItemCode =
-              gradeItem?['finished_product']?['code']?.toString().trim();
-
           return gradeItem?['wo_item_id'] == woItemId;
         },
         orElse: () => null,
@@ -443,7 +410,6 @@ class _UpdateProcessState extends State<UpdateProcess>
     double gradeB = 0;
     double gradeBS = 0;
 
-    final itemCode = item['finished_product']?['code']?.toString().trim();
     final woItemId = item['wo_item_id'];
 
     for (final grade in grades) {
@@ -453,9 +419,6 @@ class _UpdateProcessState extends State<UpdateProcess>
 
       final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
         (gradeItem) {
-          final gradeItemCode =
-              gradeItem?['finished_product']?['code']?.toString().trim();
-
           return gradeItem?['wo_item_id'] == woItemId;
         },
         orElse: () => null,
@@ -653,7 +616,6 @@ class _UpdateProcessState extends State<UpdateProcess>
   ) {
     final grades = data['sorting']?['grades'] ?? [];
 
-    final itemCode = item['finished_product']?['code']?.toString().trim();
     final woItemId = item['wo_item_id'];
 
     double total = 0;
@@ -663,9 +625,6 @@ class _UpdateProcessState extends State<UpdateProcess>
 
       final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
         (gradeItem) {
-          final gradeItemCode =
-              gradeItem?['finished_product']?['code']?.toString().trim();
-
           return gradeItem?['wo_item_id'] == woItemId;
         },
         orElse: () => null,

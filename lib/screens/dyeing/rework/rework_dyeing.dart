@@ -172,7 +172,6 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
             data: data,
             form: _form,
             handleSubmit: _handleSubmit,
-            handleChangeInput: _handleChangeInput,
           ),
         ),
       );
@@ -287,7 +286,6 @@ Route _createRoute(dynamic form, handleSubmit, handleChangeInput) {
       dyeingId: null,
       form: form,
       handleSubmit: handleSubmit,
-      handleChangeInput: handleChangeInput,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);

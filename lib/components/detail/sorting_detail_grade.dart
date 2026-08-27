@@ -61,7 +61,6 @@ class SortingDetailGradeList extends StatelessWidget {
       final items = grade['items'] ?? [];
 
       for (final item in items) {
-        final itemId = item['item_id'];
         final uniqueKey =
             '${item['wo_item_id']}_${item['finished_product']?['code']}';
 
@@ -96,8 +95,6 @@ class SortingDetailGradeList extends StatelessWidget {
           icon: Icons.inventory_2_outlined,
           child: NoData());
     }
-
-    final woItems = sortingData['work_orders']?['items'] ?? [];
 
     return DefaultTabController(
       length: items.length,

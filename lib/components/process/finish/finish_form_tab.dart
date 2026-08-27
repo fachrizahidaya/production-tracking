@@ -6,18 +6,9 @@ class FinishFormTab extends StatefulWidget {
   final id;
   final form;
   final formKey;
-  final handleSelectMachine;
   final isLoading;
   final maklon;
-  final isMaklon;
-  final withMaklonOrMachine;
-  final withOnlyMaklon;
-  final withNoMaklonOrMachine;
-  final handleSelectUnit;
-  final handleSelectLengthUnit;
-  final handleSelectWidthUnit;
   final handleChangeInput;
-  final processId;
   final length;
   final width;
   final weight;
@@ -25,59 +16,33 @@ class FinishFormTab extends StatefulWidget {
   final qty;
   final qtyItem;
   final handleSelectWo;
-  final handleSelectQtyUnit;
-  final handleSelectQtyUnitItem;
-  final handleSelectQtyUnitDyeing;
   final data;
-  final weightDozen;
   final gsm;
   final totalWeight;
   final woData;
 
-  final isSubmitting;
-  final isFormIncomplete;
-  final isChanged;
-  final initialQty;
-  final initialWeight;
-  final initialLength;
-  final initialWidth;
-  final initialNotes;
-  final allAttachments;
-  final handlePickAttachments;
   final processData;
   final withItemGrade;
   final itemGradeOption;
   final withQtyAndWeight;
   final label;
   final forDyeing;
-  final forPacking;
-  final forHemming;
-  final forSewing;
   final validateWeight;
   final weightWarning;
   final validateQty;
   final qtyWarning;
-  final handleTotalItemQty;
-  final handleRemainingQtyForGrade;
-  final onGradeChanged;
-  final dyeingLotNo;
-  final handleSelectFinishedMaterial;
   final weightGood;
   final weightDefect;
   final packingQty;
   final combing;
   final spraying;
-  final reworkLongHemming;
   final itemTypeOption;
   final defects;
   final defectQty;
-  final handleUpdateDefect;
   final weightGradeA;
   final finishedItem;
-  final grades;
   final dyeingQty;
   final finishedItemGrb;
-  final finishedItemGood;
   final isInitializing;
   final handleItemQtyWarning;
 
@@ -174,12 +139,6 @@ class _FinishFormTabState extends State<FinishFormTab>
   Widget build(BuildContext context) {
     super.build(context);
 
-    // if (widget.isLoading) {
-    //   return Center(
-    //     child: CircularProgressIndicator(),
-    //   );
-    // }
-
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
@@ -196,57 +155,35 @@ class _FinishFormTabState extends State<FinishFormTab>
                   width: widget.width,
                   length: widget.length,
                   handleSelectWo: widget.handleSelectWo,
-                  handleSelectUnit: widget.handleSelectUnit,
                   handleChangeInput: widget.handleChangeInput,
-                  handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
-                  handleSelectQtyUnitDyeing: widget.handleSelectQtyUnitDyeing,
                   id: widget.id,
-                  processId: widget.processId,
                   processData: widget.processData,
-                  isLoading: widget.isLoading,
-                  handleSelectLengthUnit: widget.handleSelectLengthUnit,
-                  handleSelectWidthUnit: widget.handleSelectWidthUnit,
                   withItemGrade: widget.withItemGrade,
                   itemGradeOption: widget.itemGradeOption,
-                  handleSelectQtyUnit: widget.handleSelectQtyUnit,
                   qty: widget.qty,
                   withQtyAndWeight: widget.withQtyAndWeight,
                   qtyItem: widget.qtyItem,
                   label: widget.label,
                   forDyeing: widget.forDyeing,
                   data: widget.data,
-                  forPacking: widget.forPacking,
                   gsm: widget.gsm,
-                  weightDozen: widget.weightDozen,
                   totalWeight: widget.totalWeight,
                   validateWeight: widget.validateWeight,
                   weightWarning: widget.weightWarning,
                   validateQty: widget.validateQty,
                   qtyWarning: widget.qtyWarning,
-                  handleRemainingQtyForGrade: widget.handleRemainingQtyForGrade,
-                  handleTotalItemQty: widget.handleTotalItemQty,
-                  onGradeChanged: widget.onGradeChanged,
-                  dyeingLotNo: widget.dyeingLotNo,
-                  forHemming: widget.forHemming,
-                  forSewing: widget.forSewing,
-                  handleSelectFinishedMaterial:
-                      widget.handleSelectFinishedMaterial,
                   weightDefect: widget.weightDefect,
                   weightGood: widget.weightGood,
                   woData: widget.woData,
                   packingQty: widget.packingQty,
                   combing: widget.combing,
                   spraying: widget.spraying,
-                  reworkLongHemming: widget.reworkLongHemming,
                   itemTypeOption: widget.itemTypeOption,
                   defects: widget.defects,
                   defectQty: widget.defectQty,
-                  handleUpdateDefect: widget.handleUpdateDefect,
                   weightGradeA: widget.weightGradeA,
                   finishedItem: widget.finishedItem,
-                  grades: widget.grades,
                   dyeingQty: widget.dyeingQty,
-                  finishedItemGood: widget.finishedItemGood,
                   finishedItemGrb: widget.finishedItemGrb,
                   isInitializing: widget.isInitializing,
                   handleItemQtyWarning: widget.handleItemQtyWarning,

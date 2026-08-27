@@ -7,11 +7,9 @@ class ListForm extends StatefulWidget {
   final formKey;
   final form;
   final id;
-  final processId;
   final length;
   final width;
   final weight;
-  final weightDozen;
   final gsm;
   final totalWeight;
   final note;
@@ -19,16 +17,7 @@ class ListForm extends StatefulWidget {
   final qtyItem;
   final handleSelectWo;
   final handleChangeInput;
-  final handleSelectUnit;
-  final handleSelectQtyUnit;
-  final handleSelectLengthUnit;
-  final handleSelectWidthUnit;
-  final handleSelectQtyUnitItem;
-  final handleSelectQtyUnitDyeing;
   final data;
-
-  final handleSelectMachine;
-  final isChanged;
   final allAttachments;
   final handlePickAttachments;
   final handleDeleteAttachment;
@@ -39,35 +28,23 @@ class ListForm extends StatefulWidget {
   final showImageDialog;
   final label;
   final forDyeing;
-  final forPacking;
-  final forHemming;
-  final forSewing;
   final validateWeight;
   final weightWarning;
   final validateQty;
   final qtyWarning;
-  final handleTotalItemQty;
-  final handleRemainingQtyForGrade;
-  final onGradeChanged;
-  final dyeingLotNo;
-  final handleSelectFinishedMaterial;
   final weightGood;
   final weightDefect;
   final woData;
-  final reworkLongHemming;
   final combing;
   final spraying;
   final itemTypeOption;
   final defects;
   final defectQty;
-  final handleSelectItemType;
-  final handleUpdateDefect;
   final packingQty;
   final weightGradeA;
   final finishedItem;
   final dyeingQty;
   final finishedItemGrb;
-  final finishedItemGood;
   final isInitializing;
   final handleItemQtyWarning;
 
@@ -82,59 +59,37 @@ class ListForm extends StatefulWidget {
       this.weight,
       this.note,
       this.handleChangeInput,
-      this.handleSelectUnit,
-      this.handleSelectLengthUnit,
-      this.handleSelectWidthUnit,
-      this.handleSelectMachine,
-      this.processId,
-      this.isChanged,
       this.allAttachments,
       this.handlePickAttachments,
       this.processData,
       this.withItemGrade = false,
       this.itemGradeOption,
-      this.handleSelectQtyUnit,
       this.qty,
       this.withQtyAndWeight = false,
-      this.handleSelectQtyUnitItem,
       this.qtyItem,
       this.showImageDialog,
       this.handleDeleteAttachment,
       this.label,
       this.forDyeing,
-      this.handleSelectQtyUnitDyeing,
       this.data,
-      this.forPacking,
       this.gsm,
       this.totalWeight,
-      this.weightDozen,
       this.validateWeight,
       this.weightWarning,
       this.qtyWarning,
       this.validateQty,
-      this.handleRemainingQtyForGrade,
-      this.handleTotalItemQty,
-      this.onGradeChanged,
-      this.dyeingLotNo,
-      this.forHemming,
-      this.forSewing,
-      this.handleSelectFinishedMaterial,
       this.weightDefect,
       this.weightGood,
       this.woData,
-      this.reworkLongHemming,
       this.combing,
       this.spraying,
       this.itemTypeOption,
       this.defects,
       this.defectQty,
-      this.handleSelectItemType,
-      this.handleUpdateDefect,
       this.packingQty,
       this.weightGradeA,
       this.finishedItem,
       this.dyeingQty,
-      this.finishedItemGood,
       this.finishedItemGrb,
       this.isInitializing,
       this.handleItemQtyWarning});
@@ -210,15 +165,6 @@ class _ListFormState extends State<ListForm> {
     widget.handleChangeInput('defects', _defects);
   }
 
-  void _updateGrade(int index, String key, dynamic value) {
-    setState(() {
-      _grades[index][key] = value;
-    });
-
-    widget.handleChangeInput('grades', _grades);
-    widget.onGradeChanged(_grades);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -229,23 +175,16 @@ class _ListFormState extends State<ListForm> {
         withItemGrade: widget.withItemGrade,
         withQtyAndWeight: widget.withQtyAndWeight,
         itemGradeOption: widget.itemGradeOption,
-        handleSelectQtyUnit: widget.handleSelectQtyUnit,
         length: widget.length,
         width: widget.width,
         weight: widget.weight,
         note: widget.note,
         handleChangeInput: widget.handleChangeInput,
-        handleSelectLengthUnit: widget.handleSelectLengthUnit,
-        handleSelectWidthUnit: widget.handleSelectWidthUnit,
-        handleSelectUnit: widget.handleSelectUnit,
         qty: widget.qty,
         grades: _grades,
         allAttachments: widget.allAttachments,
         handleSelectWo: widget.handleSelectWo,
-        handleUpdateGrade: _updateGrade,
         handlePickAttachments: widget.handlePickAttachments,
-        handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
-        handleSelectQtyUnitDyeing: widget.handleSelectQtyUnitDyeing,
         showImageDialog: widget.showImageDialog,
         handleDeleteAttachment: widget.handleDeleteAttachment,
         validateWeight: widget.validateWeight,
@@ -256,33 +195,19 @@ class _ListFormState extends State<ListForm> {
         forDyeing: widget.forDyeing,
         data: widget.data,
         processData: widget.processData,
-        forPacking: widget.forPacking,
         gsm: widget.gsm,
-        weightDozen: widget.weightDozen,
         totalWeight: widget.totalWeight,
-        handleRemainingQtyForGrade: widget.handleRemainingQtyForGrade,
-        handleTotalItemQty: widget.handleTotalItemQty,
         qtyItem: widget.qtyItem,
-        dyeingLotNo: widget.dyeingLotNo,
-        forSewing: widget.forSewing,
-        forHemming: widget.forHemming,
-        handleSelectFinishedMaterial: widget.handleSelectFinishedMaterial,
         weightDefect: widget.weightDefect,
         weightGood: widget.weightGood,
         woData: widget.woData,
-        reworkLongHemming: widget.reworkLongHemming,
         combing: widget.combing,
         spraying: widget.spraying,
         itemTypeOption: widget.itemTypeOption,
-        defects: _defects,
-        defectQty: widget.defectQty,
-        handleSelectItemType: widget.handleSelectItemType,
-        handleUpdateDefect: widget.handleUpdateDefect,
         packingQty: widget.packingQty,
         weightGradeA: widget.weightGradeA,
         finishedItem: widget.finishedItem,
         dyeingQty: widget.dyeingQty,
-        finishedItemGood: widget.finishedItemGood,
         finishedItemGrb: widget.finishedItemGrb,
         isInitializing: widget.isInitializing,
         handleItemQtyWarning: widget.handleItemQtyWarning,

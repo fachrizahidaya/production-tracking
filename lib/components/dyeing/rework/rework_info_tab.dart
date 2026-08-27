@@ -12,7 +12,6 @@ class ReworkInfoTab extends StatefulWidget {
   final data;
   final form;
   final formKey;
-  final handleSubmit;
   final handleSelectMachine;
   final handleSelectWorkOrder;
   final isLoading;
@@ -24,7 +23,6 @@ class ReworkInfoTab extends StatefulWidget {
       this.formKey,
       this.handleSelectMachine,
       this.handleSelectWorkOrder,
-      this.handleSubmit,
       this.id,
       this.isLoading,
       this.label});
@@ -53,12 +51,9 @@ class _ReworkInfoTabState extends State<ReworkInfoTab> {
               CreateForm(
                 form: widget.form,
                 formKey: widget.formKey,
-                handleSubmit: widget.handleSubmit,
-                data: widget.data,
                 selectWorkOrder: widget.handleSelectWorkOrder,
                 selectMachine: widget.handleSelectMachine,
                 id: widget.id,
-                isLoading: widget.isLoading,
               ),
               if (widget.form?['wo_id'] != null)
                 InfoTab(

@@ -252,8 +252,17 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
   Future<void> _postInit() async {
     await _getDataView();
+    if (!mounted) return;
+
     await _handleFetchMachine();
+    if (!mounted) return;
+
     await _handleFetchItemGrade();
+    if (!mounted) return;
+
+    await _handleFetchItemType();
+    if (!mounted) return;
+
     await _handleFetchFinishedGrbMaterial();
     if (!mounted) return;
 
@@ -659,6 +668,25 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       );
       setState(() {
         itemGradeOption = service.dataListOption;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
+    }
+  }
+
+  Future<void> _handleFetchItemType({String search = ''}) async {
+    final service = context.read<OptionItemTypeService>();
+
+    try {
+      await service.fetchOptions(
+        isInitialLoad: true,
+        searchQuery: search,
+      );
+
+      setState(() {
+        itemTypeOption = service.dataListOption;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

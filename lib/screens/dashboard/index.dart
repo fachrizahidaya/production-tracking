@@ -88,6 +88,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   bool get _isMobile => widget.isMobile;
 
   void _applyMobileProcessParams() {
@@ -124,10 +125,13 @@ class _DashboardState extends State<Dashboard> {
 =======
 =======
 >>>>>>> 8d5fb5bc (fix: UI mobile dashboard)
+=======
+>>>>>>> 62cb1f4a (fix: UI mobile dashboard)
   bool get isMobile => MediaQuery.of(context).size.width < 600;
 
   bool get isTablet => MediaQuery.of(context).size.width >= 600;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 73378bdd (fix: UI mobile dashboard)
 =======
@@ -136,6 +140,8 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 8d5fb5bc (fix: UI mobile dashboard)
 =======
 >>>>>>> a6b1bf80 (fix: UI dashboard)
+=======
+>>>>>>> 62cb1f4a (fix: UI mobile dashboard)
   @override
   void initState() {
     super.initState();
@@ -887,6 +893,10 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final sectionGap = isMobile ? 16.0 : 24.0;
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -902,6 +912,7 @@ class _DashboardState extends State<Dashboard> {
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverPadding(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -945,10 +956,13 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 73378bdd (fix: UI mobile dashboard)
 =======
 >>>>>>> 8d5fb5bc (fix: UI mobile dashboard)
+=======
+>>>>>>> 62cb1f4a (fix: UI mobile dashboard)
                   padding: EdgeInsets.symmetric(
                     horizontal: isMobile ? 12 : 24,
                     vertical: isMobile ? 12 : 20,
                   ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                   sliver: SliverList(
@@ -1139,10 +1153,12 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 73378bdd (fix: UI mobile dashboard)
 =======
                   padding: CustomTheme().padding('content'),
+=======
+>>>>>>> 62cb1f4a (fix: UI mobile dashboard)
                   sliver: SliverList(
                       delegate: SliverChildListDelegate([
                     WorkOrderStats(data: statsList, isFetching: isStatsLoading),
-                    WorkOrderSummary(
+                    WorkOrderSummary( 
                       data: summaryList,
                       greigeData: greigeSummaryList,
                       handleRefetch: _handleFetchSummary,
@@ -1159,38 +1175,7 @@ class _DashboardState extends State<Dashboard> {
 =======
 >>>>>>> a6b1bf80 (fix: UI dashboard)
                     ),
-                    if (!shouldHideActiveMachine)
-                      ActiveMachine(
-                        data: machineList,
-                        available: machineList['available'],
-                        unavailable: machineList['unavailable'],
-                        handleRefetch: _handleFetchMachine,
-                        isFetching: isMachineLoading,
-                      ),
-                    WorkOrderProcessScreen(
-                      data: _dataList,
-                      search: _search,
-                      handleSearch: _handleSearch,
-                      firstLoading: _firstLoading,
-                      hasMore: _hasMore,
-                      handleLoadMore: _loadMore,
-                      handleRefetch: _refetch,
-                      isLoadMore: _isLoadMore,
-                      filterWidget: ProcessFilter(
-                        params: params,
-                        onHandleFilter: _handleProcessFilter,
-                      ),
-                      handleFetchData: (params) async {
-                        final service = Provider.of<WorkOrderProcessService>(
-                            context,
-                            listen: false);
-                        await service.getDataList(context, params);
-                        return service.items;
-                      },
-                      service: WorkOrderProcessService(),
-                      isFiltered: _isFiltered,
-                    ),
-                  ].separatedBy(CustomTheme().vGap('2xl')))),
+                  ),
                 ),
               ],
             ),

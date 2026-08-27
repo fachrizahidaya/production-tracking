@@ -61,6 +61,7 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (widget.data?.length == 0) return const SizedBox();
 
     if (widget.isFetching) {
@@ -244,6 +245,11 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
     );
 =======
     if (widget.data?.length == 0) return SizedBox();
+=======
+    if (widget.data == null || widget.data.isEmpty) {
+      return const SizedBox.shrink();
+    }
+>>>>>>> 62cb1f4a (fix: UI mobile dashboard)
 
     return widget.isFetching == true
         ? Center(

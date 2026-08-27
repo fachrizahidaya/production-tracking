@@ -56,6 +56,10 @@ class _ProcessButtonState extends State<ProcessButton> {
         widget.weightWarning != null || widget.qtyWarning != null;
 
     final bool isNeedMachineValidation = [
+      'dyeing',
+      'press',
+      'tumbler',
+      'long slitting',
       'long hemming',
       'sewing',
       'cross cutting'

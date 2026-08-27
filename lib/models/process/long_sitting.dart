@@ -27,6 +27,8 @@ class LongSitting {
   final machine;
   final String? maklon_name;
   final bool? maklon;
+  final machines;
+  final machine_ids;
 
   LongSitting(
       {this.id,
@@ -52,7 +54,9 @@ class LongSitting {
       this.end_by,
       this.machine,
       this.maklon,
-      this.maklon_name});
+      this.maklon_name,
+      this.machine_ids,
+      this.machines});
 
   factory LongSitting.fromJson(Map<String, dynamic> json) {
     return LongSitting(
@@ -79,6 +83,8 @@ class LongSitting {
       machine: json['machine'] ?? {},
       maklon: json['maklon'] as bool?,
       maklon_name: json['maklon_name'] ?? '',
+      machines: json['machines'] ?? [],
+      machine_ids: json['machine_ids'] ?? [],
     );
   }
 
@@ -108,6 +114,8 @@ class LongSitting {
       'machine': machine,
       'maklon': maklon == true ? 1 : 0,
       'maklon_name': maklon == true ? maklon_name : '',
+      'machines': machines,
+      'machine_ids': machine_ids,
     };
   }
 }

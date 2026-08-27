@@ -211,7 +211,11 @@ class _ListFormState extends State<ListForm> {
                     ].separatedBy(CustomTheme().vGap('xl')),
                   )
                 else if (widget.form?['wo_id'] != null)
-                  if (widget.label == 'Long Hemming' ||
+                  if (widget.label == 'Dyeing' ||
+                      widget.label == 'Press' ||
+                      widget.label == 'Tumbler' ||
+                      widget.label == 'Long Slitting' ||
+                      widget.label == 'Long Hemming' ||
                       widget.label == 'Cross Cutting')
                     _buildMultiMesin()
                   else

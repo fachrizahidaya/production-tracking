@@ -12,15 +12,13 @@ class TumblerDetail extends StatefulWidget {
   final no;
   final canDelete;
   final canUpdate;
-  final bool openUpdateOnStart;
 
   const TumblerDetail(
       {super.key,
       required this.id,
       required this.no,
       this.canDelete,
-      this.canUpdate,
-      this.openUpdateOnStart = false});
+      this.canUpdate});
 
   @override
   State<TumblerDetail> createState() => _TumblerDetailState();
@@ -36,7 +34,7 @@ class _TumblerDetailState extends State<TumblerDetail> {
       no: widget.no,
       label: 'Tumbler',
       prefix: 'TMB',
-      isMultiMachine: false,
+      isMultiMachine: true,
       service: Provider.of<TumblerService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<TumblerService>(context, listen: false)
@@ -60,6 +58,8 @@ class _TumblerDetailState extends State<TumblerDetail> {
         width: form['width'] ?? '0',
         length: form['length'] ?? '0',
         notes: form['notes'] ?? data['notes'],
+        machine_ids: form['machine_ids'],
+        machines: form['machines'],
         attachments: [
           ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
           ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
@@ -67,9 +67,10 @@ class _TumblerDetailState extends State<TumblerDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
-      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/tumblers',
-      fetchMachine: (service, _) => service.fetchOptionsTumbler(),
+      fetchMachine: (service, currentMachineIds) => service.fetchOptionsTumbler(
+        currentMachineIds: currentMachineIds,
+      ),
       getMachineOptions: (service) => service.dataListOption,
       withItemGrade: false,
       withMaklon: false,
@@ -101,6 +102,8 @@ class _TumblerDetailState extends State<TumblerDetail> {
           end_time: form['end_time'],
           start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
           end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+          machines: form['machines'] ?? [],
+          machine_ids: form['machine_ids'] ?? [],
           attachments: form['attachments'],
         );
 

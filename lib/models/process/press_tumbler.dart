@@ -27,6 +27,8 @@ class PressTumbler {
   final machine;
   final String? maklon_name;
   final bool? maklon;
+  final machines;
+  final machine_ids;
 
   PressTumbler(
       {this.id,
@@ -52,7 +54,9 @@ class PressTumbler {
       this.end_by,
       this.machine,
       this.maklon,
-      this.maklon_name});
+      this.maklon_name,
+      this.machines,
+      this.machine_ids});
 
   factory PressTumbler.fromJson(Map<String, dynamic> json) {
     return PressTumbler(
@@ -80,6 +84,8 @@ class PressTumbler {
       machine: json['machine'] ?? {},
       maklon: json['maklon'] as bool?,
       maklon_name: json['maklon_name'] ?? '',
+      machines: json['machines'] ?? [],
+      machine_ids: json['machine_ids'] ?? [],
     );
   }
 
@@ -109,6 +115,8 @@ class PressTumbler {
       'machine': machine,
       'maklon': maklon == true ? 1 : 0,
       'maklon_name': maklon == true ? maklon_name : '',
+      'machines': machines,
+      'machine_ids': machine_ids,
     };
   }
 }

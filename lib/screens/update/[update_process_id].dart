@@ -666,7 +666,11 @@ class _UpdateProcessState extends State<UpdateProcess>
           widget.isSubmitting.value = true;
 
           try {
-            if (widget.label == 'Long Hemming' ||
+            if (widget.label == 'Dyeing' ||
+                widget.label == 'Press' ||
+                widget.label == 'Tumbler' ||
+                widget.label == 'Long Slitting' ||
+                widget.label == 'Long Hemming' ||
                 widget.label == 'Cross Cutting' ||
                 widget.label == 'Sewing') {
               final machines = List<Map<String, dynamic>>.from(
@@ -952,7 +956,11 @@ class _UpdateProcessState extends State<UpdateProcess>
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        if (widget.label == 'Long Hemming' ||
+                                        if (widget.label == 'Dyeing' ||
+                                            widget.label == 'Press' ||
+                                            widget.label == 'Tumbler' ||
+                                            widget.label == 'Long Slitting' ||
+                                            widget.label == 'Long Hemming' ||
                                             widget.label == 'Cross Cutting' ||
                                             widget.label == 'Sewing')
                                           MachineEditSection(

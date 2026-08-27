@@ -1104,6 +1104,8 @@ class _SortingSectionState extends State<SortingSection> {
 */
           _buildGlobalSummary(),
           SizedBox(height: 16),
+          _buildSortingWarning(),
+          SizedBox(height: 16),
           Container(
             height: 50,
             decoration: BoxDecoration(

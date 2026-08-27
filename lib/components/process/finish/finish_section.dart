@@ -51,10 +51,14 @@ class FinishSection extends StatefulWidget {
   final dyeingQty;
   final finishedItemGrb;
   final isInitializing;
+<<<<<<< HEAD
   final reworkCategoryOption;
   final onMachineChanged;
   final handleItemQtyWarning;
   final onAttachmentChanged;
+=======
+  final handleItemQtyWarning;
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 
   const FinishSection(
       {super.key,
@@ -106,10 +110,14 @@ class FinishSection extends StatefulWidget {
       this.dyeingQty,
       this.finishedItemGrb,
       this.isInitializing,
+<<<<<<< HEAD
       this.reworkCategoryOption,
       this.onMachineChanged,
       this.handleItemQtyWarning,
       this.onAttachmentChanged});
+=======
+      this.handleItemQtyWarning});
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 
   @override
   State<FinishSection> createState() => _FinishSectionState();
@@ -341,8 +349,11 @@ class _FinishSectionState extends State<FinishSection> {
       dyeingQty: widget.dyeingQty,
       finishedItemGrb: widget.finishedItemGrb,
       isInitializing: widget.isInitializing,
+<<<<<<< HEAD
       reworkCategoryOption: widget.reworkCategoryOption,
       onMachineChanged: widget.onMachineChanged,
+=======
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
       handleItemQtyWarning: widget.handleItemQtyWarning,
     );
   }

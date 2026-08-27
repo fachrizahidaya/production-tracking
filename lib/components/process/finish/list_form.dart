@@ -46,8 +46,11 @@ class ListForm extends StatefulWidget {
   final dyeingQty;
   final finishedItemGrb;
   final isInitializing;
+<<<<<<< HEAD
   final reworkCategoryOption;
   final onMachineChanged;
+=======
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
   final handleItemQtyWarning;
 
   const ListForm(
@@ -94,8 +97,11 @@ class ListForm extends StatefulWidget {
       this.dyeingQty,
       this.finishedItemGrb,
       this.isInitializing,
+<<<<<<< HEAD
       this.reworkCategoryOption,
       this.onMachineChanged,
+=======
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
       this.handleItemQtyWarning});
 
   @override
@@ -214,8 +220,11 @@ class _ListFormState extends State<ListForm> {
         dyeingQty: widget.dyeingQty,
         finishedItemGrb: widget.finishedItemGrb,
         isInitializing: widget.isInitializing,
+<<<<<<< HEAD
         reworkCategoryOption: widget.reworkCategoryOption,
         onMachineChanged: widget.onMachineChanged,
+=======
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
         handleItemQtyWarning: widget.handleItemQtyWarning,
       ),
     );

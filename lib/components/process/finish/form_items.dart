@@ -10,10 +10,14 @@ import 'package:textile_tracking/components/master/form/packing_number_form.dart
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/process/finish/process/form_helpers.dart';
 =======
 >>>>>>> e98896b (fix: finish)
+=======
+import 'package:textile_tracking/components/master/text/no_data.dart';
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 import 'package:textile_tracking/components/process/finish/process/long_hemming_weight.dart';
 import 'package:textile_tracking/components/process/finish/process/process_item_qty.dart';
 import 'package:textile_tracking/components/process/finish/process/qty_weight.dart';
@@ -72,8 +76,11 @@ class FormItems extends StatefulWidget {
   final getMachineStatus;
   final handleSelectMachine;
   final newMachines;
+<<<<<<< HEAD
   final onMachineChanged;
   final reworkCategoryOption;
+=======
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
   final handleItemQtyWarning;
 
   const FormItems(
@@ -121,8 +128,11 @@ class FormItems extends StatefulWidget {
       this.getMachineStatus,
       this.handleSelectMachine,
       this.newMachines,
+<<<<<<< HEAD
       this.onMachineChanged,
       this.reworkCategoryOption,
+=======
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
       this.handleItemQtyWarning});
 
   @override

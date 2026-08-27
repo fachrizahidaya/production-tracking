@@ -44,10 +44,14 @@ class FinishFormTab extends StatefulWidget {
   final dyeingQty;
   final finishedItemGrb;
   final isInitializing;
+<<<<<<< HEAD
   final reworkCategoryOption;
   final onMachineChanged;
   final handleItemQtyWarning;
   final onAttachmentChanged;
+=======
+  final handleItemQtyWarning;
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 
   const FinishFormTab(
       {super.key,
@@ -91,10 +95,14 @@ class FinishFormTab extends StatefulWidget {
       this.dyeingQty,
       this.finishedItemGrb,
       this.isInitializing,
+<<<<<<< HEAD
       this.reworkCategoryOption,
       this.onMachineChanged,
       this.handleItemQtyWarning,
       this.onAttachmentChanged});
+=======
+      this.handleItemQtyWarning});
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();
@@ -166,10 +174,14 @@ class _FinishFormTabState extends State<FinishFormTab>
                   dyeingQty: widget.dyeingQty,
                   finishedItemGrb: widget.finishedItemGrb,
                   isInitializing: widget.isInitializing,
+<<<<<<< HEAD
                   reworkCategoryOption: widget.reworkCategoryOption,
                   onMachineChanged: widget.onMachineChanged,
                   handleItemQtyWarning: widget.handleItemQtyWarning,
                   onAttachmentChanged: widget.onAttachmentChanged,
+=======
+                  handleItemQtyWarning: widget.handleItemQtyWarning,
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
                 ),
               ],
             ),

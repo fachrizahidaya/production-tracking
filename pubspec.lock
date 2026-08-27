@@ -235,6 +235,7 @@ packages:
     description:
       name: ed25519_edwards
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: f3c3b109a0e470ee35f6346a155cab290578660852237fce10df6bbd92758534
       url: "https://pub.dev"
     source: hosted
@@ -245,6 +246,12 @@ packages:
     source: hosted
     version: "0.3.1"
 >>>>>>> 25f3ec5 (fix: create)
+=======
+      sha256: f3c3b109a0e470ee35f6346a155cab290578660852237fce10df6bbd92758534
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.2"
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
   equatable:
     dependency: transitive
     description:

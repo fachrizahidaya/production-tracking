@@ -23,8 +23,11 @@ class ProcessButton extends StatefulWidget {
   final isAllMachineDone;
   final label;
   final hasItemQtyWarning;
+<<<<<<< HEAD
   final attachments;
   final hasAttachment;
+=======
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 
   const ProcessButton(
       {super.key,
@@ -45,9 +48,13 @@ class ProcessButton extends StatefulWidget {
       this.withItemQtyAndWeight,
       this.isAllMachineDone,
       this.label,
+<<<<<<< HEAD
       this.hasItemQtyWarning = false,
       this.attachments,
       this.hasAttachment});
+=======
+      this.hasItemQtyWarning = false});
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 
   @override
   State<ProcessButton> createState() => _ProcessButtonState();
@@ -148,6 +155,7 @@ class _ProcessButtonState extends State<ProcessButton> {
             ? hasInvalidQtyItems()
             : false;
 
+<<<<<<< HEAD
     final bool hasPackingAttachmentError = widget.label == 'Packing' &&
         ((widget.attachments == null) ||
             (widget.attachments is! List) ||
@@ -160,6 +168,11 @@ class _ProcessButtonState extends State<ProcessButton> {
         hasQtyItemError ||
         hasDyeingReworkError() ||
         // hasPackingAttachmentError ||
+=======
+    final bool isDisabled = hasBasicError ||
+        hasWeightItemError ||
+        hasQtyItemError ||
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
         widget.hasItemQtyWarning == true;
 
     return SafeArea(

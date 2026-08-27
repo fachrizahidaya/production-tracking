@@ -900,6 +900,7 @@ class _SortingSectionState extends State<SortingSection> {
     double gradeB = 0;
     double gradeBS = 0;
 
+<<<<<<< HEAD
     for (final grade in grades) {
       if (grade is! Map) continue;
       final code = (grade['code'] ?? '').toString().toUpperCase();
@@ -907,11 +908,25 @@ class _SortingSectionState extends State<SortingSection> {
 
       if (code == 'A') {
         gradeA += _summaryGradeA(item, grade, itemIndex);
+=======
+    double spraying = 0;
+    double combing = 0;
+    double reworkLongHemming = 0;
+
+    for (final grade in grades) {
+      final code = (grade['code'] ?? '').toString().toUpperCase();
+
+      final qty = _parseQty(grade['qty']);
+
+      if (code == 'A') {
+        gradeA += qty;
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
       } else if (code == 'B') {
         gradeB += qty;
       } else if (code == 'BS') {
         gradeBS += qty;
       }
+<<<<<<< HEAD
     }
 
     final repair = grades.isEmpty
@@ -920,6 +935,16 @@ class _SortingSectionState extends State<SortingSection> {
             _parseQty(grades[0]['rework_long_hemming']) +
             _parseQty(grades[0]['combing']);
     final totalSorting = gradeA + gradeB + gradeBS + repair;
+=======
+
+      spraying += _parseQty(grade['spraying']);
+      combing += _parseQty(grade['combing']);
+      reworkLongHemming += _parseQty(grade['rework_long_hemming']);
+    }
+
+    final totalSorting =
+        gradeA + gradeB + gradeBS + spraying + combing + reworkLongHemming;
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 
     final lowerLimit = referenceQty * 0.90;
     final upperLimit = referenceQty * 1.10;
@@ -930,8 +955,13 @@ class _SortingSectionState extends State<SortingSection> {
 
       return 'Total hasil sortir ${totalSorting < referenceQty ? 'kurang' : 'lebih'} '
           '${differencePercent.abs().toStringAsFixed(2)}% '
+<<<<<<< HEAD
           '(Batas: ${formatNumber(lowerLimit)} – '
           '${formatNumber(upperLimit)})';
+=======
+          '(Batas: ${lowerLimit.toStringAsFixed(0)} – '
+          '${upperLimit.toStringAsFixed(0)})';
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
     }
 
     return null;
@@ -949,10 +979,15 @@ class _SortingSectionState extends State<SortingSection> {
       }
     }
 
+<<<<<<< HEAD
     final sourceExceeded = _sourceQtyExceeded.values.any((value) => value);
 
     widget.onQtyWarning?.call(
       warning != null || sourceExceeded,
+=======
+    widget.onQtyWarning?.call(
+      warning != null,
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
     );
   }
 
@@ -993,6 +1028,7 @@ class _SortingSectionState extends State<SortingSection> {
 
     return DefaultTabController(
       length: items.length,
+<<<<<<< HEAD
       child: Builder(
         builder: (context) {
           final tabController = DefaultTabController.of(context);
@@ -1053,6 +1089,49 @@ class _SortingSectionState extends State<SortingSection> {
                         ),
                         _buildItemCard(itemIndex),
                       ].separatedBy(CustomTheme().vGap('xl')),
+=======
+      child: Column(
+        children: [
+          /*
+|--------------------------------------------------------------------------
+| TAB HEADER
+|--------------------------------------------------------------------------
+*/
+          _buildGlobalSummary(),
+          SizedBox(height: 16),
+          _buildSortingWarning(),
+          SizedBox(height: 16),
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(
+                12,
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: TabBar(
+                isScrollable: true,
+                dividerColor: Colors.transparent,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.black,
+                indicatorColor: Colors.white,
+                indicator: BoxDecoration(
+                  color: Colors.blue[800],
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                tabAlignment: TabAlignment.start,
+                tabs: List.generate(
+                  items.length,
+                  (index) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4,
+                      horizontal: 8,
+                    ),
+                    child: Tab(
+                      text: 'Item ${index + 1}',
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
                     ),
                   ),
                 ],
@@ -2182,7 +2261,25 @@ class _SortingSectionState extends State<SortingSection> {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildQtyWarning(String warning) {
+=======
+  Widget _buildQtyWarning() {
+    String? warning;
+
+    for (int i = 0; i < _items.length; i++) {
+      warning = _validateSortingQty(i);
+
+      if (warning != null) {
+        break;
+      }
+    }
+
+    if (warning == null) {
+      return const SizedBox.shrink();
+    }
+
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
@@ -2215,4 +2312,53 @@ class _SortingSectionState extends State<SortingSection> {
     );
   }
 
+<<<<<<< HEAD
+=======
+  Widget _buildSortingWarning() {
+    String? warning;
+
+    for (int i = 0; i < _items.length; i++) {
+      warning = _validateSortingQty(i);
+
+      if (warning != null) {
+        break;
+      }
+    }
+
+    if (warning == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.orange.shade200,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.orange.shade700,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              warning,
+              style: TextStyle(
+                color: Colors.orange.shade900,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 }

@@ -131,8 +131,13 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
 
       return 'Qty ${inputQty < referenceQty ? 'kurang' : 'lebih'} '
           '${differencePercent.abs().toStringAsFixed(2)}% '
+<<<<<<< HEAD
           '(Batas: ${formatNumber(lowerLimit)} – '
           '${formatNumber(upperLimit)})';
+=======
+          '(Batas: ${lowerLimit.toStringAsFixed(0)} – '
+          '${upperLimit.toStringAsFixed(0)})';
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
     }
 
     return null;

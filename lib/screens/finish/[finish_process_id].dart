@@ -1659,9 +1659,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                                   _hasItemQtyWarning = hasWarning;
                                 });
                               },
+<<<<<<< HEAD
                               onAttachmentChanged: () {
                                 _updateAttachmentStatus();
                               },
+=======
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
                             ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],
@@ -1695,7 +1698,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             isAllMachineDone: isAllMachineDone,
             label: widget.label,
             hasItemQtyWarning: _hasItemQtyWarning,
+<<<<<<< HEAD
             hasAttachment: _hasAttachment,
+=======
+>>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
           ),
         ),
       ),

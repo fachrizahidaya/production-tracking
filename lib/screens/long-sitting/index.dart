@@ -205,7 +205,6 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
           no: item['ls_no'].toString(),
           canDelete: _canDelete,
           canUpdate: _canUpdate,
-          openUpdateOnStart: openUpdateOnStart,
         ),
       ),
     );

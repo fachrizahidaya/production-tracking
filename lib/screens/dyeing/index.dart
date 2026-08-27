@@ -207,7 +207,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
           no: item['dyeing_no'].toString(),
           canDelete: _canDelete,
           canUpdate: _canUpdate,
-          openUpdateOnStart: openUpdateOnStart,
         ),
       ),
     );

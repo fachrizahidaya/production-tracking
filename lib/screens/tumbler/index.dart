@@ -205,7 +205,6 @@ class _TumblerScreenState extends State<TumblerScreen> {
           no: item['tumbler_no'].toString(),
           canDelete: _canDelete,
           canUpdate: _canUpdate,
-          openUpdateOnStart: openUpdateOnStart,
         ),
       ),
     );

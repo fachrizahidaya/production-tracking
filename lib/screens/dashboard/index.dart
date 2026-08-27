@@ -80,6 +80,10 @@ class _DashboardState extends State<Dashboard> {
   bool isMachineLoading = false;
   bool isSummaryLoading = false;
 
+  bool get isMobile => MediaQuery.of(context).size.width < 600;
+
+  bool get isTablet => MediaQuery.of(context).size.width >= 600;
+
   @override
   void initState() {
     super.initState();
@@ -570,6 +574,10 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final sectionGap = isMobile ? 16.0 : 24.0;
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -585,7 +593,10 @@ class _DashboardState extends State<Dashboard> {
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverPadding(
-                  padding: CustomTheme().padding('content'),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 12 : 24,
+                    vertical: isMobile ? 12 : 20,
+                  ),
                   sliver: SliverList(
                       delegate: SliverChildListDelegate([
                     _buildDashboardSettingsButton(),

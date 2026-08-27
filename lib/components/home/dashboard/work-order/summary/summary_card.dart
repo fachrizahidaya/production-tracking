@@ -69,28 +69,22 @@ class _SummaryCardState extends State<SummaryCard>
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isTablet = constraints.maxWidth > 400;
-
-        return GestureDetector(
-          onTapDown: (_) => _animationController.forward(),
-          onTapUp: (_) => _animationController.reverse(),
-          onTapCancel: () => _animationController.reverse(),
-          onTap: widget.onTap,
-          child: SizedBox(
-            width: double.infinity,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              child: _buildCard(isTablet),
-            ),
-          ),
-        );
-      },
+    return GestureDetector(
+      onTapDown: (_) => _animationController.forward(),
+      onTapUp: (_) => _animationController.reverse(),
+      onTapCancel: () => _animationController.reverse(),
+      onTap: widget.onTap,
+      child: SizedBox(
+        width: double.infinity,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: _buildCard(widget.isMobile),
+        ),
+      ),
     );
   }
 
-  Widget _buildCard(bool isTablet) {
+  Widget _buildCard(bool isMobile) {
     final Map<String, dynamic> summary =
         (widget.data['summary'] as Map<String, dynamic>?) ??
             {
@@ -103,11 +97,10 @@ class _SummaryCardState extends State<SummaryCard>
     final statusColor = _getSummaryColor(summary);
 
     return AnimatedContainer(
-      width: double.infinity,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: widget.isSelected
               ? CustomTheme().buttonColor('primary')
@@ -119,19 +112,19 @@ class _SummaryCardState extends State<SummaryCard>
             color: widget.isSelected
                 ? CustomTheme().buttonColor('primary').withOpacity(0.15)
                 : Colors.black.withOpacity(0.05),
-            blurRadius: widget.isSelected ? 12 : 10,
-            offset: Offset(0, 2),
+            blurRadius: widget.isSelected ? 12 : 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             CardHeader(
               data: widget.data,
-              isTablet: isTablet,
+              isTablet: !isMobile,
               statusColor: statusColor,
               filter: widget.filter,
               getTotalCount: _getTotalCount,
@@ -139,7 +132,7 @@ class _SummaryCardState extends State<SummaryCard>
             CardContent(
               data: widget.data,
               filter: widget.filter,
-              isTablet: isTablet,
+              isTablet: !isMobile,
               showProgress: widget.showProgress,
               showWorkOrdersByStatusDialog: _showWorkOrdersByStatusDialog,
             ),

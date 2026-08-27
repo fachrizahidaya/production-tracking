@@ -362,7 +362,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
         child: Center(
           child: Padding(
             padding: CustomTheme().padding('content'),
-            child: CircularProgressIndicator(),
+            child: const CircularProgressIndicator(),
           ),
         ),
       );
@@ -375,6 +375,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       );
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     return SizedBox(
@@ -417,6 +418,8 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
               );
             },
 =======
+=======
+>>>>>>> 73378bdd (fix: UI mobile dashboard)
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
 
@@ -451,16 +454,19 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     // =========================
     // TABLET
     // =========================
+<<<<<<< HEAD
 =======
 >>>>>>> 3bba1171 (fix: filter summary)
+=======
+>>>>>>> 73378bdd (fix: UI mobile dashboard)
     final isSingleItem = widget.data!.length == 1;
-    final screenWidth = MediaQuery.of(context).size.width * 0.95;
+    final screenWidthTablet = screenWidth * 0.95;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: isSingleItem
-          ? NeverScrollableScrollPhysics()
-          : BouncingScrollPhysics(),
+          ? const NeverScrollableScrollPhysics()
+          : const BouncingScrollPhysics(),
       child: Row(
         children: widget.data!.map<Widget>((item) {
           final mappedItem = _mapApiToSummaryCard(item);
@@ -468,11 +474,12 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
           return Padding(
             padding: CustomTheme().padding('card'),
             child: SizedBox(
-              width: isSingleItem ? screenWidth : 500,
+              width: isSingleItem ? screenWidthTablet : 500,
               child: SummaryCard(
                 data: mappedItem,
                 showProgress: _showProgress,
                 filter: processFilters[selectedIndex],
+                isMobile: false,
               ),
             ),
 >>>>>>> d86a31e7 (fix: UI mobile dashboard)

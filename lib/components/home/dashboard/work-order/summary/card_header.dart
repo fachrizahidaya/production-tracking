@@ -36,6 +36,7 @@ class CardHeader extends StatelessWidget {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     return Row(
       children: [
         Expanded(
@@ -45,6 +46,8 @@ class CardHeader extends StatelessWidget {
               fontWeight: FontWeight.w600,
               fontSize: 16,
 =======
+=======
+>>>>>>> 73378bdd (fix: UI mobile dashboard)
     if (!isTablet) {
       return _buildMobileHeader(
         context,
@@ -79,21 +82,14 @@ class CardHeader extends StatelessWidget {
     String displayTitle,
     int total,
   ) {
+<<<<<<< HEAD
 =======
 >>>>>>> 3bba1171 (fix: filter summary)
+=======
+>>>>>>> 73378bdd (fix: UI mobile dashboard)
     return InkWell(
       onTap: () {
-        final String name = data['name']?.toString() ?? '';
-
-        final String slug = name.toLowerCase().replaceAll(' ', '-');
-
-        final String routeName = slug == 'press'
-            ? '/press'
-            : slug == 'embroidery'
-                ? '/embroideries'
-                : '/${slug}s';
-
-        Navigator.pushNamed(context, routeName);
+        _navigateToProcess(context);
       },
       child: Container(
         padding: CustomTheme().padding('card'),
@@ -129,9 +125,7 @@ class CardHeader extends StatelessWidget {
               ),
               child: Icon(
                 _getProcessIcon(data['name']),
-                size: isTablet
-                    ? CustomTheme().iconSize('3xl')
-                    : CustomTheme().iconSize('2xl'),
+                size: CustomTheme().iconSize('3xl'),
                 color: statusColor,
               ),
             ),
@@ -141,7 +135,7 @@ class CardHeader extends StatelessWidget {
                   Text(
                     displayTitle ?? '-',
                     style: TextStyle(
-                      fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
+                      fontSize: CustomTheme().fontSize('lg'),
                       fontWeight: CustomTheme().fontWeight('bold'),
                       color: Colors.grey[800],
                     ),
@@ -153,11 +147,101 @@ class CardHeader extends StatelessWidget {
                     size: CustomTheme().iconSize('xl'),
                     color: Colors.grey[500],
                   ),
-                ].separatedBy(CustomTheme().hGap('sm')),
+                ],
               ),
             ),
-            _buildTotalBadge(total, statusColor, isTablet),
-          ].separatedBy(CustomTheme().hGap('xl')),
+            _buildTotalBadge(
+              total,
+              statusColor,
+              true,
+            ),
+          ].separatedBy(
+            CustomTheme().hGap('xl'),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMobileHeader(
+    BuildContext context,
+    String displayTitle,
+    int total,
+  ) {
+    return InkWell(
+      onTap: () {
+        _navigateToProcess(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              statusColor.withOpacity(0.15),
+              statusColor.withOpacity(0.05),
+            ],
+          ),
+          border: Border(
+            bottom: BorderSide(
+              color: statusColor.withOpacity(0.2),
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: statusColor.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                _getProcessIcon(data['name']),
+                size: 22,
+                color: statusColor,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          displayTitle ?? '-',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: CustomTheme().fontWeight('bold'),
+                            color: Colors.grey[800],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        Icons.chevron_right,
+                        size: 18,
+                        color: Colors.grey[500],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    '$total Work Order',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

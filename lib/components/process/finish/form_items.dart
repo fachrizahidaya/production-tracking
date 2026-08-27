@@ -1333,7 +1333,10 @@ class _FormItemsState extends State<FormItems>
                 (widget.label != 'Dyeing' &&
                     widget.label != 'Press' &&
                     widget.label != 'Tumbler' &&
+<<<<<<< HEAD
                     widget.label != 'Long Slitting' &&
+=======
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
                     widget.label != 'Long Hemming' &&
                     widget.label != 'Cross Cutting' &&
                     widget.label != 'Sewing' &&

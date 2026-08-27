@@ -375,14 +375,20 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
     if (widget.label == 'Dyeing' ||
         widget.label == 'Press' ||
         widget.label == 'Tumbler' ||
         widget.label == 'Long Slitting' ||
         widget.label == 'Long Hemming' ||
+<<<<<<< HEAD
 =======
     if (widget.label == 'Long Hemming' ||
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
         widget.label == 'Cross Cutting' ||
         widget.label == 'Sewing') {
       showSelectDialog(

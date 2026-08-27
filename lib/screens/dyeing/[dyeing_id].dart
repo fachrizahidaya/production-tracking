@@ -12,7 +12,6 @@ class DyeingDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
-  final bool openUpdateOnStart;
 
 <<<<<<< HEAD
   const DyeingDetail({
@@ -28,12 +27,16 @@ class DyeingDetail extends StatefulWidget {
       required this.id,
       required this.no,
       this.canDelete,
+<<<<<<< HEAD
       this.canUpdate,
       this.openUpdateOnStart = false});
 <<<<<<< HEAD
 >>>>>>> 993ef46 (fix: card navigate to update (#16))
 =======
 >>>>>>> 8bc14cd (fix: card navigate to update)
+=======
+      this.canUpdate});
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
 
   @override
   State<DyeingDetail> createState() => _DyeingDetailState();
@@ -50,6 +53,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
       label: 'Dyeing',
       prefix: 'DYE',
       isMultiMachine: true,
+<<<<<<< HEAD
       service: Provider.of<DyeingService>(
         context,
         listen: false,
@@ -64,6 +68,9 @@ class _DyeingDetailState extends State<DyeingDetail> {
       | Dyeing Rework atau Dyeing normal.
       |
       */
+=======
+      service: Provider.of<DyeingService>(context, listen: false),
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<DyeingService>(
         context,
@@ -138,18 +145,21 @@ class _DyeingDetailState extends State<DyeingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
-      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/dyeings',
       withItemGrade: false,
       withQtyAndWeight: false,
       withMaklon: false,
       forDyeing: true,
       getMachineOptions: (service) => service.dataListOption,
+<<<<<<< HEAD
       fetchMachine: (
         service,
         currentMachineIds,
       ) =>
           service.fetchOptionsDyeing(
+=======
+      fetchMachine: (service, currentMachineIds) => service.fetchOptionsDyeing(
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
         currentMachineIds: currentMachineIds,
       ),
       idProcess: 'dyeing_id',
@@ -200,12 +210,17 @@ class _DyeingDetailState extends State<DyeingDetail> {
           notes: form['notes'],
           start_time: form['start_time'],
           end_time: form['end_time'],
+<<<<<<< HEAD
           start_by_id: int.tryParse(
             form['start_by_id']?.toString() ?? '',
           ),
           end_by_id: int.tryParse(
             form['end_by_id']?.toString() ?? '',
           ),
+=======
+          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
+          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
           machines: form['machines'] ?? [],
           machine_ids: form['machine_ids'] ?? [],
           attachments: form['attachments'],

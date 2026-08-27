@@ -23,6 +23,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 version: 2.4.1+132
 =======
 version: 1.2.2+105
@@ -45,6 +46,9 @@ version: 1.2.2+106
 =======
 version: 1.2.2+109
 >>>>>>> c41d347 (fix: update sortir (#25))
+=======
+version: 1.2.2+116
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
 
 environment:
   sdk: ^3.6.0

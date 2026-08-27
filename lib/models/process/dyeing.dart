@@ -37,10 +37,13 @@ class Dyeing {
   final semifinished_products;
   final machines;
   final machine_ids;
+<<<<<<< HEAD
   final String? rework_category;
   final rework_type;
   final rework_method;
   final rework_categories;
+=======
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
 
   Dyeing(
       {this.id,
@@ -72,11 +75,15 @@ class Dyeing {
       this.greige_item_id,
       this.semifinished_products,
       this.machine_ids,
+<<<<<<< HEAD
       this.machines,
       this.rework_category,
       this.rework_type,
       this.rework_method,
       this.rework_categories});
+=======
+      this.machines});
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
 
   factory Dyeing.fromJson(Map<String, dynamic> json) {
     return Dyeing(
@@ -110,10 +117,13 @@ class Dyeing {
       semifinished_products: json['semifinished_products'] ?? [],
       machines: json['machines'] ?? [],
       machine_ids: json['machine_ids'] ?? [],
+<<<<<<< HEAD
       rework_category: json['rework_category'],
       rework_type: json['rework_type'] ?? [],
       rework_method: json['rework_method'] ?? [],
       rework_categories: json['rework_categories'] ?? [],
+=======
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
     );
   }
 
@@ -149,10 +159,13 @@ class Dyeing {
       'semifinished_products': semifinished_products,
       'machines': machines,
       'machine_ids': machine_ids,
+<<<<<<< HEAD
       'rework_category': rework_category,
       'rework_type': rework_type,
       'rework_method': rework_method,
       'rework_categories': rework_categories,
+=======
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
     };
   }
 }

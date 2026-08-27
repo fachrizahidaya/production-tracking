@@ -588,8 +588,13 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 =======
 >>>>>>> 3653fed (fix: update to list)
       if (widget.openUpdateOnStart) {
-        Navigator.pop(context);
-        Navigator.pop(context, true);
+        final navigator = Navigator.of(context);
+        if (navigator.canPop()) {
+          navigator.pop();
+        }
+        if (navigator.canPop()) {
+          navigator.pop(true);
+        }
         return;
       }
 
@@ -656,16 +661,22 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     if (widget.openUpdateOnStart) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
       final navigator = Navigator.of(context);
       if (navigator.canPop()) {
         navigator.pop(result == true);
       }
+<<<<<<< HEAD
 =======
       Navigator.pop(context, result == true);
 >>>>>>> 993ef46 (fix: card navigate to update (#16))
 =======
       Navigator.pop(context, result == true);
 >>>>>>> 8bc14cd (fix: card navigate to update)
+=======
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
       return;
     }
 

@@ -218,8 +218,12 @@ class _ListFormState extends State<ListForm> {
                       widget.label == 'Tumbler' ||
                       widget.label == 'Long Slitting' ||
                       widget.label == 'Long Hemming' ||
+<<<<<<< HEAD
                       widget.label == 'Cross Cutting' ||
                       widget.label == 'Sewing')
+=======
+                      widget.label == 'Cross Cutting')
+>>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
                     _buildMultiMesin()
                   else
                     SelectForm(

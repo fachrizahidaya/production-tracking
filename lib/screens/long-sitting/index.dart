@@ -43,8 +43,6 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
-  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
-
   final List<dynamic> _dataList = [];
   String _search = '';
   Map<String, String> params = {'search': '', 'page': '0'};

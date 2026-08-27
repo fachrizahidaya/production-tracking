@@ -1132,6 +1132,10 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final sectionGap = isMobile ? 16.0 : 24.0;
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -1540,6 +1544,7 @@ class _DashboardState extends State<Dashboard> {
                       ].separatedBy(CustomTheme().vGap('2xl')),
                     ),
 <<<<<<< HEAD
+<<<<<<< HEAD
                   ),
 >>>>>>> 99705a2c (fix: home, dashboard)
 =======
@@ -1576,6 +1581,9 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ].separatedBy(CustomTheme().vGap('2xl')))),
 >>>>>>> bdfe60da (fix: UI dashboard)
+=======
+                  ),
+>>>>>>> 7833ba7c (fix: UI mobile dashboard)
                 ),
               ],
             ),

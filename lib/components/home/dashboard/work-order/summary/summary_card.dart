@@ -52,24 +52,18 @@ class _SummaryCardState extends State<SummaryCard>
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isTablet = constraints.maxWidth > 400;
-
-        return GestureDetector(
-          onTapDown: (_) => _animationController.forward(),
-          onTapUp: (_) => _animationController.reverse(),
-          onTapCancel: () => _animationController.reverse(),
-          onTap: widget.onTap,
-          child: SizedBox(
-            width: double.infinity,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              child: _buildCard(isTablet),
-            ),
-          ),
-        );
-      },
+    return GestureDetector(
+      onTapDown: (_) => _animationController.forward(),
+      onTapUp: (_) => _animationController.reverse(),
+      onTapCancel: () => _animationController.reverse(),
+      onTap: widget.onTap,
+      child: SizedBox(
+        width: double.infinity,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: _buildCard(widget.isMobile),
+        ),
+      ),
     );
   }
 

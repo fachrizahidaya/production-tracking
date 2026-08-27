@@ -12,15 +12,13 @@ class LongSittingDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
-  final bool openUpdateOnStart;
 
   const LongSittingDetail(
       {super.key,
       required this.id,
       required this.no,
       this.canDelete,
-      this.canUpdate,
-      this.openUpdateOnStart = false});
+      this.canUpdate});
 
   @override
   State<LongSittingDetail> createState() => _LongSittingDetailState();
@@ -69,7 +67,6 @@ class _LongSittingDetailState extends State<LongSittingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
-      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/long-slittings',
       fetchMachine: (service, currentMachineIds) =>
           service.fetchOptionsLongSitting(

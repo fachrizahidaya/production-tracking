@@ -12,15 +12,13 @@ class TumblerDetail extends StatefulWidget {
   final no;
   final canDelete;
   final canUpdate;
-  final bool openUpdateOnStart;
 
   const TumblerDetail(
       {super.key,
       required this.id,
       required this.no,
       this.canDelete,
-      this.canUpdate,
-      this.openUpdateOnStart = false});
+      this.canUpdate});
 
   @override
   State<TumblerDetail> createState() => _TumblerDetailState();
@@ -69,7 +67,6 @@ class _TumblerDetailState extends State<TumblerDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
-      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/tumblers',
       fetchMachine: (service, currentMachineIds) => service.fetchOptionsTumbler(
         currentMachineIds: currentMachineIds,

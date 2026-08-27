@@ -175,7 +175,11 @@ class _TabSectionState extends State<TabSection> {
     // else if (widget.withMaklonOrMachine == true) {
     //   isDisabled = widget.form?['wo_id'] == null;
     // }
-    else if (widget.label == 'Long Hemming' ||
+    else if (widget.label == 'Dyeing' ||
+        widget.label == 'Press' ||
+        widget.label == 'Tumbler' ||
+        widget.label == 'Long Slitting' ||
+        widget.label == 'Long Hemming' ||
         widget.label == 'Cross Cutting' ||
         widget.label == 'Sewing') {
       isDisabled = widget.form?['wo_id'] == null || machines.isEmpty;

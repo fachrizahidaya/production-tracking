@@ -127,7 +127,7 @@ class OptionMachineService extends BaseService<OptionMachine> {
     await _fetchOptionsGeneric();
   }
 
-  Future<void> fetchOptionsDyeing() async {
+  Future<void> fetchOptionsDyeing({List<dynamic>? currentMachineIds}) async {
     await _fetchOptionsGeneric(process: 'dyeing', currentMachineIds: null);
   }
 

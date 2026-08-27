@@ -31,6 +31,8 @@ class Dyeing {
   final dyeingLotNo;
   final greige_item_id;
   final semifinished_products;
+  final machines;
+  final machine_ids;
 
   Dyeing(
       {this.id,
@@ -60,7 +62,9 @@ class Dyeing {
       this.rework_reference,
       this.dyeingLotNo,
       this.greige_item_id,
-      this.semifinished_products});
+      this.semifinished_products,
+      this.machine_ids,
+      this.machines});
 
   factory Dyeing.fromJson(Map<String, dynamic> json) {
     return Dyeing(
@@ -92,6 +96,8 @@ class Dyeing {
       dyeingLotNo: json['lot_celup_no'],
       greige_item_id: json['greige_item_id'] as int?,
       semifinished_products: json['semifinished_products'] ?? [],
+      machines: json['machines'] ?? [],
+      machine_ids: json['machine_ids'] ?? [],
     );
   }
 
@@ -125,6 +131,8 @@ class Dyeing {
       'lot_celup_no': dyeingLotNo,
       'greige_item_id': greige_item_id,
       'semifinished_products': semifinished_products,
+      'machines': machines,
+      'machine_ids': machine_ids,
     };
   }
 }

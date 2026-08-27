@@ -865,7 +865,10 @@ class _FormItemsState extends State<FormItems>
                     )),
               ),
             if (widget.data != null &&
-                (widget.label != 'Long Hemming' &&
+                (widget.label != 'Dyeing' &&
+                    widget.label != 'Press' &&
+                    widget.label != 'Tumbler' &&
+                    widget.label != 'Long Hemming' &&
                     widget.label != 'Cross Cutting' &&
                     widget.label != 'Sewing' &&
                     widget.label != 'Embroidery' &&
@@ -955,7 +958,11 @@ class _FormItemsState extends State<FormItems>
           ].separatedBy(CustomTheme().hGap('xl')),
         ),
         if (widget.data != null &&
-            (widget.label == 'Long Hemming' ||
+            (widget.label == 'Dyeing' ||
+                widget.label == 'Press' ||
+                widget.label == 'Tumbler' ||
+                widget.label == 'Long Slitting' ||
+                widget.label == 'Long Hemming' ||
                 widget.label == 'Cross Cutting' ||
                 widget.label == 'Sewing'))
           TemplateCard(

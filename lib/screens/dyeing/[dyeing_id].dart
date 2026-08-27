@@ -12,15 +12,13 @@ class DyeingDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
-  final bool openUpdateOnStart;
 
   const DyeingDetail(
       {super.key,
       required this.id,
       required this.no,
       this.canDelete,
-      this.canUpdate,
-      this.openUpdateOnStart = false});
+      this.canUpdate});
 
   @override
   State<DyeingDetail> createState() => _DyeingDetailState();
@@ -41,7 +39,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
       no: widget.no,
       label: 'Dyeing',
       prefix: 'DYE',
-      isMultiMachine: false,
+      isMultiMachine: true,
       service: Provider.of<DyeingService>(context, listen: false),
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<DyeingService>(context, listen: false)
@@ -65,6 +63,8 @@ class _DyeingDetailState extends State<DyeingDetail> {
         width: form['width'] ?? '0',
         length: form['length'] ?? '0',
         notes: form['notes'] ?? data['notes'],
+        machine_ids: form['machine_ids'],
+        machines: form['machines'],
         attachments: [
           ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
           ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
@@ -72,14 +72,15 @@ class _DyeingDetailState extends State<DyeingDetail> {
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
-      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/dyeings',
       withItemGrade: false,
       withQtyAndWeight: false,
       withMaklon: false,
       forDyeing: true,
       getMachineOptions: (service) => service.dataListOption,
-      fetchMachine: (service, _) => service.fetchOptionsDyeing(),
+      fetchMachine: (service, currentMachineIds) => service.fetchOptionsDyeing(
+        currentMachineIds: currentMachineIds,
+      ),
       idProcess: 'dyeing_id',
       processService: _dyeingService,
       forPacking: false,
@@ -106,6 +107,8 @@ class _DyeingDetailState extends State<DyeingDetail> {
           end_time: form['end_time'],
           start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
           end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+          machines: form['machines'] ?? [],
+          machine_ids: form['machine_ids'] ?? [],
           attachments: form['attachments'],
         );
 

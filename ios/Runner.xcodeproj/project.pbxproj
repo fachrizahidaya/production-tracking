@@ -69,6 +69,7 @@
 		B6597A8DC7BA3E0964ED80DD /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		C0DE00000000000000000002 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C0DE00000000000000000003 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 =======
@@ -77,6 +78,8 @@
 		C0DE00000000000000000002 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C0DE00000000000000000003 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 >>>>>>> 40978162 (fix: ios)
+=======
+>>>>>>> ec16694a (chore: ios)
 		E98E9AA704C0239FDB0D7995 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -87,12 +90,15 @@
 			files = (
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 =======
 >>>>>>> 309725d4 (chore: ios)
 =======
 				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 >>>>>>> 593bbd5e (chore: for iOS)
+=======
+>>>>>>> ec16694a (chore: ios)
 				09F5357FD9E348129068D101 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -187,11 +193,15 @@
 			);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 			name = Pods;
 >>>>>>> 309725d4 (chore: ios)
 =======
 >>>>>>> 58f548c8 (chore: ios)
+=======
+			name = Pods;
+>>>>>>> ec16694a (chore: ios)
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -228,6 +238,8 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
+				1DD1FA939E4E846AB735AF66 /* [CP] Embed Pods Frameworks */,
+				FC8DD28A70D3E52D14136F56 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -326,17 +338,24 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 		1DD1FA939E4E846AB735AF66 /* [CP] Embed Pods Frameworks */ = {
 =======
 		257F34A0924835A73A2BE20C /* [CP] Copy Pods Resources */ = {
 >>>>>>> 40978162 (fix: ios)
+=======
+		1DD1FA939E4E846AB735AF66 /* [CP] Embed Pods Frameworks */ = {
+>>>>>>> ec16694a (chore: ios)
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ec16694a (chore: ios)
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -348,6 +367,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+<<<<<<< HEAD
 >>>>>>> 309725d4 (chore: ios)
 =======
 >>>>>>> 593bbd5e (chore: for iOS)
@@ -370,6 +390,8 @@
 >>>>>>> 40978162 (fix: ios)
 =======
 >>>>>>> fe8c7222 (chore: package)
+=======
+>>>>>>> ec16694a (chore: ios)
 		2D602E86E0E22BDD068B4E92 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -447,7 +469,10 @@
 		};
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> ec16694a (chore: ios)
 		FC8DD28A70D3E52D14136F56 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -465,9 +490,12 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+<<<<<<< HEAD
 >>>>>>> 309725d4 (chore: ios)
 =======
 >>>>>>> 593bbd5e (chore: for iOS)
+=======
+>>>>>>> ec16694a (chore: ios)
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */

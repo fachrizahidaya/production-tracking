@@ -288,7 +288,21 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    if (!mounted) return;
+>>>>>>> 5f7a4c3d (Release/version 1.2.1 (#30))
 
+    await _handleFetchMachine();
+    if (!mounted) return;
+
+    await _handleFetchItemGrade();
+    if (!mounted) return;
+
+    await _handleFetchItemType();
+    if (!mounted) return;
+
+    await _handleFetchFinishedGrbMaterial();
     if (!mounted) return;
 
     await _handleFetchMachine();

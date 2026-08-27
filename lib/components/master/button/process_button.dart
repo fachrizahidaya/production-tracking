@@ -87,6 +87,15 @@ class _ProcessButtonState extends State<ProcessButton> {
 >>>>>>> 9965df4b (fix: hilangkan cek status mesin saat selesai)
     final bool isDyeingRework =
         widget.label == 'Dyeing' && widget.data?['rework'] == true;
+    final bool isNeedMachineValidation = [
+      'dyeing',
+      'press',
+      'tumbler',
+      'long slitting',
+      'long hemming',
+      'sewing',
+      'cross cutting'
+    ].contains(widget.label.toLowerCase());
 
 >>>>>>> b2f13701 (fix: kondisi button finish process)
     bool hasDyeingReworkError() {

@@ -655,8 +655,13 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 >>>>>>> 94db6889 (fix: card navigate to update)
 =======
       if (widget.openUpdateOnStart) {
-        Navigator.pop(context);
-        Navigator.pop(context, true);
+        final navigator = Navigator.of(context);
+        if (navigator.canPop()) {
+          navigator.pop();
+        }
+        if (navigator.canPop()) {
+          navigator.pop(true);
+        }
         return;
       }
 

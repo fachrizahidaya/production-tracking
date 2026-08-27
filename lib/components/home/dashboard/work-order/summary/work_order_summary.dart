@@ -362,7 +362,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
         child: Center(
           child: Padding(
             padding: CustomTheme().padding('content'),
-            child: CircularProgressIndicator(),
+            child: const CircularProgressIndicator(),
           ),
         ),
       );
@@ -386,6 +386,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
               )
               .toDouble();
 
+<<<<<<< HEAD
           return ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: const AlwaysScrollableScrollPhysics(),
@@ -414,6 +415,28 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                 ),
               );
             },
+=======
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: isSingleItem
+          ? const NeverScrollableScrollPhysics()
+          : const BouncingScrollPhysics(),
+      child: Row(
+        children: _activeData.map<Widget>((item) {
+          final mappedItem = _mapApiToSummaryCard(item);
+
+          return Padding(
+            padding: CustomTheme().padding('card'),
+            child: SizedBox(
+              width: isSingleItem ? screenWidthTablet : 500,
+              child: SummaryCard(
+                data: mappedItem,
+                showProgress: _showProgress,
+                filter: processFilters[selectedIndex],
+                isGreige: _isGreigeActive,
+              ),
+            ),
+>>>>>>> e61620e (fix: UI mobile dashboard)
           );
         },
       ),

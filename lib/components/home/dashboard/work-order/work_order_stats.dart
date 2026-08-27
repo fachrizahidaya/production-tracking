@@ -49,7 +49,13 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     if (widget.data?.length == 0) return const SizedBox();
+=======
+    if (widget.data == null || widget.data.isEmpty) {
+      return const SizedBox.shrink();
+    }
+>>>>>>> e61620e (fix: UI mobile dashboard)
 
     if (widget.isFetching) {
       return Padding(

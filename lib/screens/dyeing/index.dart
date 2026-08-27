@@ -316,8 +316,8 @@ class _DyeingScreenState extends State<DyeingScreen> {
                       titleKey: 'dyeing_no',
                       subtitleKey: 'work_orders',
                       subtitleField: 'wo_no',
-                      canUpdate: _canUpdate,
-                      canDelete: _canDelete,
+                      itemField: ItemField.get,
+                      nestedField: ItemField.nested,
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -338,8 +338,12 @@ class _DyeingScreenState extends State<DyeingScreen> {
                       });
                     },
                     filterWidget: ListFilter(
+                      title: 'Filter',
                       params: params,
                       onHandleFilter: _handleFilter,
+                      onSubmitFilter: () {
+                        _submitFilter();
+                      },
                       dariTanggal: dariTanggal,
                       sampaiTanggal: sampaiTanggal,
                     ),

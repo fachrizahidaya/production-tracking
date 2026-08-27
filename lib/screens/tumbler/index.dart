@@ -313,8 +313,8 @@ class _TumblerScreenState extends State<TumblerScreen> {
                       titleKey: 'tumbler_no',
                       subtitleKey: 'work_orders',
                       subtitleField: 'wo_no',
-                      canUpdate: _canUpdate,
-                      canDelete: _canDelete,
+                      itemField: ItemField.get,
+                      nestedField: ItemField.nested,
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -335,8 +335,12 @@ class _TumblerScreenState extends State<TumblerScreen> {
                       });
                     },
                     filterWidget: ListFilter(
+                      title: 'Filter',
                       params: params,
                       onHandleFilter: _handleFilter,
+                      onSubmitFilter: () {
+                        _submitFilter();
+                      },
                       dariTanggal: dariTanggal,
                       sampaiTanggal: sampaiTanggal,
                     ),

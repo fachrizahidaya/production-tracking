@@ -9,10 +9,12 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/spk/tab/note_attachment_spk.dart';
 import 'package:textile_tracking/helpers/result/safe_to_api.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/helpers/result/to_double.dart';
 import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
+import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/models/master/spk.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
@@ -142,6 +144,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   final FetchFunction _fetcher = FetchFunction();
 
   var processId = '';
+
+  bool _hasItemQtyWarning = false;
 
   @override
   void initState() {
@@ -423,6 +427,13 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+  void _setNumberControllerText(
+    TextEditingController controller,
+    dynamic value,
+  ) {
+    controller.text = formatNumber(value);
+  }
+
   Future<void> _getDataView(id) async {
     setState(() => _firstLoading = true);
 
@@ -436,7 +447,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       if (widget.label == 'Dyeing') {
         final totalWeight = getTotalItemWeight();
 
-        _qtyController.text = totalWeight.toString();
+        _setNumberControllerText(_qtyController, totalWeight);
         widget.form?['qty'] = totalWeight;
       } else if ([
         'Press',
@@ -446,10 +457,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       ].contains(widget.label)) {
         final totalWeight = getTotalItemWeight();
 
-        _weightController.text = totalWeight.toString();
+        _setNumberControllerText(_weightController, totalWeight);
         widget.form?['weight'] = totalWeight;
       } else if (greigeQty != null) {
-        _weightController.text = greigeQty.toString();
+        _setNumberControllerText(_weightController, greigeQty);
         widget.form?['weight'] = greigeQty.toString();
       }
 
@@ -479,40 +490,45 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
           'Stenter',
           'Long Slitting',
         ].contains(widget.label)) {
-          _weightController.text = data['weight'].toString();
+          _setNumberControllerText(_weightController, data['weight']);
           widget.form?['weight'] = data['weight'];
         } else if (widget.label != 'Sewing' &&
             widget.label != 'Long Hemming' &&
             widget.label != 'Cross Cutting') {
-          _weightController.text = woData['greige_qty'].toString();
+          _setNumberControllerText(_weightController, woData['greige_qty']);
           widget.form?['weight'] = woData['greige_qty'];
         }
       }
       if (data['good_weight'] != null) {
-        _weightGoodController.text = data['good_weight'].toString();
+        _setNumberControllerText(_weightGoodController, data['good_weight']);
         widget.form?['good_weight'] = data['good_weight'];
       }
       if (data['bs_weight'] != null) {
-        _weightDefectController.text = data['bs_weight'].toString();
+        _setNumberControllerText(_weightDefectController, data['bs_weight']);
         widget.form?['bs_weight'] = data['bs_weight'];
       }
 
       if (data['combing'] != null) {
-        _combingController.text = data['combing'].toString();
+        _setNumberControllerText(_combingController, data['combing']);
         widget.form?['combing'] = data['combing'];
       }
       if (data['spraying'] != null) {
-        _sprayingController.text = data['spraying'].toString();
+        _setNumberControllerText(_sprayingController, data['spraying']);
         widget.form?['spraying'] = data['spraying'];
       }
       if (data['rework_long_hemming'] != null) {
-        _reworkLongHemmingController.text =
-            data['rework_long_hemming'].toString();
+        _setNumberControllerText(
+          _reworkLongHemmingController,
+          data['rework_long_hemming'],
+        );
         widget.form?['rework_long_hemming'] = data['rework_long_hemming'];
       }
 
       if (data['weight_per_dozen'] != null) {
-        _weightDozenController.text = data['weight_per_dozen'].toString();
+        _setNumberControllerText(
+          _weightDozenController,
+          data['weight_per_dozen'],
+        );
         widget.form?['weight_per_dozen'] = data['weight_per_dozen'];
       }
       if (data['weight_grade_a'] != null) {
@@ -524,23 +540,23 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['gsm'] = data['gsm'];
       }
       if (data['total_weight'] != null) {
-        _totalWeightController.text = data['total_weight'].toString();
+        _setNumberControllerText(_totalWeightController, data['total_weight']);
         widget.form?['total_weight'] = data['total_weight'];
       }
       if (data['item_qty'] != null) {
-        _qtyItemController.text = data['item_qty'].toString();
+        _setNumberControllerText(_qtyItemController, data['item_qty']);
         widget.form?['item_qty'] = data['item_qty'].toString();
       }
       if (data['qty'] != null) {
-        _packingQtyController.text = data['qty'].toString();
+        _setNumberControllerText(_packingQtyController, data['qty']);
         widget.form?['qty'] = data['qty'];
       }
       if (data['qty'] != null) {
         if (widget.label == 'Dyeing') {
-          _qtyController.text = data['qty'].toString();
+          _setNumberControllerText(_qtyController, data['qty']);
           widget.form?['qty'] = data['qty'];
         } else {
-          _qtyController.text = woData['greige_qty'].toString();
+          _setNumberControllerText(_qtyController, woData['greige_qty']);
           widget.form?['qty'] = woData['greige_qty'];
         }
       }
@@ -900,6 +916,25 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
           e['value'].toString(),
         );
 
+        final processKey =
+            widget.label.toString().trim().toLowerCase().replaceAll(' ', '_');
+
+        final canContinue = canStartCurrentProcess(
+          woData['processes'] ?? [],
+          processKey,
+        );
+
+        if (!canContinue) {
+          showAlertDialog(
+            context: context,
+            title: 'Proses Sebelumnya Belum Selesai',
+            message: 'Proses sebelumnya masih berstatus Diproses. '
+                'Silakan selesaikan terlebih dahulu sebelum melakukan proses ${widget.label}.',
+          );
+
+          return;
+        }
+
         await _fetchSpkDocuments();
 
         /*
@@ -919,6 +954,35 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       option: workOrderOption,
       selected: widget.form?['wo_id'].toString() ?? '',
     );
+  }
+
+  bool canStartCurrentProcess(
+    List<dynamic> processes,
+    String currentProcess,
+  ) {
+    final currentIndex = processes.indexWhere(
+      (e) => e['key'] == currentProcess,
+    );
+
+    if (currentIndex <= 0) return true;
+
+    for (int i = 0; i < currentIndex; i++) {
+      final process = processes[i];
+
+      final data = process['data'] as List? ?? [];
+
+      if (data.isEmpty) {
+        continue;
+      }
+
+      final status = data.first['status']?.toString();
+
+      if (status == 'Diproses') {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   double _getTotalItemQty() {
@@ -1261,6 +1325,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   @override
   Widget build(BuildContext context) {
+    final shouldShowFormLoader =
+        _firstLoading && (widget.id != null || widget.form?['wo_id'] != null);
+
     return DefaultTabController(
       length: 3,
       child: GestureDetector(
@@ -1296,7 +1363,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      _firstLoading
+                      shouldShowFormLoader
                           ? Center(child: CircularProgressIndicator())
                           : FinishFormTab(
                               id: widget.id,
@@ -1326,7 +1393,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               validateWeight: _validateWeight,
                               weightWarning: _weightWarningValidationMessage,
                               validateQty: _validateQty,
-                              qtyWarning: _itemWarningValidationMessage,
+                              // qtyWarning: _itemWarningValidationMessage,
                               weightDefect: _weightDefectController,
                               combing: _combingController,
                               spraying: _sprayingController,
@@ -1338,6 +1405,14 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               finishedItem: finishedItemOption,
                               finishedItemGrb: finishedItemGrb,
                               isInitializing: _isInitializingSorting,
+                              qtyWarning: _itemWarningValidationMessage,
+                              handleItemQtyWarning: (hasWarning) {
+                                if (!mounted) return;
+
+                                setState(() {
+                                  _hasItemQtyWarning = hasWarning;
+                                });
+                              },
                             ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],
@@ -1370,6 +1445,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             withItemQtyAndWeight: widget.withQtyAndWeight,
             isAllMachineDone: isAllMachineDone,
             label: widget.label,
+            hasItemQtyWarning: _hasItemQtyWarning,
           ),
         ),
       ),

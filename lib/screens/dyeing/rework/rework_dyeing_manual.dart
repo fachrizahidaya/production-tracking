@@ -453,10 +453,14 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
 
   @override
   Widget build(BuildContext context) {
+    final machines = List<Map<String, dynamic>>.from(
+      widget.form?['machines'] ?? [],
+    );
     final reworkCategory = widget.form?['rework_category'];
     final reworkType = widget.form?['rework_type'] as List? ?? [];
     final reworkMethod = widget.form?['rework_method'] as List? ?? [];
     final isSubmitDisabled = widget.form?['wo_id'] == null ||
+        machines.isEmpty ||
         reworkCategory == null ||
         (reworkCategory == 'perbaikan' && reworkType.isEmpty) ||
         (reworkType.contains('perbaikan_warna') && reworkMethod.isEmpty);
@@ -489,7 +493,6 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                   handleSelectWorkOrder: _selectWorkOrder,
                   handleSelectReworkCategory: _selectReworkCategory,
                   reworkCategoryOption: reworkCategoryOption,
-                  onFormChanged: () => setState(() {}),
                 ),
               ),
             ],

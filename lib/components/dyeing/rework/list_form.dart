@@ -9,22 +9,32 @@ class ListForm extends StatefulWidget {
   final formKey;
   final id;
   final form;
+  final data;
+  final attachments;
   final selectWorkOrder;
   final selectMachine;
   final selectReworkCategory;
   final reworkCategoryOption;
-  final onFormChanged;
+  final isSubmitting;
+  final isFormIncomplete;
+  final handleSubmit;
+  final handlePickAttachments;
 
   const ListForm(
       {super.key,
       this.formKey,
       this.id,
       this.form,
+      this.data,
       this.selectWorkOrder,
       this.selectMachine,
-      this.reworkCategoryOption,
       this.selectReworkCategory,
-      this.onFormChanged});
+      this.reworkCategoryOption,
+      this.isSubmitting,
+      this.isFormIncomplete,
+      this.handleSubmit,
+      this.handlePickAttachments,
+      this.attachments});
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -56,12 +66,14 @@ class _ListFormState extends State<ListForm> {
                           required: true,
                         )),
                   ),
+                if (widget.form?['wo_id'] != null)
+                  Expanded(
+                    child: TemplateCard(
+                        title: 'Mesin',
+                        icon: Icons.local_laundry_service_outlined,
+                        child: _buildMultiMesin()),
+                  ),
               ].separatedBy(CustomTheme().hGap('xl'))),
-          if (widget.form?['wo_id'] != null)
-            TemplateCard(
-                title: 'Mesin',
-                icon: Icons.local_laundry_service_outlined,
-                child: _buildMultiMesin()),
           if (widget.form?['wo_id'] != null)
             TemplateCard(
               title: 'Rework',
@@ -111,7 +123,6 @@ class _ListFormState extends State<ListForm> {
                                     .map((machine) => machine['value'])
                                     .toList();
                               });
-                              widget.onFormChanged?.call();
                             },
                             child: Icon(
                               Icons.close,
@@ -219,7 +230,6 @@ class _ListFormState extends State<ListForm> {
                                     widget.form['rework_method'] = [];
                                   }
                                 });
-                                widget.onFormChanged?.call();
                               },
                             ),
                             if (typeValue == 'perbaikan_warna' && isSelected)
@@ -277,7 +287,6 @@ class _ListFormState extends State<ListForm> {
                     checked: checked == true,
                   );
                 });
-                widget.onFormChanged?.call();
               },
             );
           }).toList(),

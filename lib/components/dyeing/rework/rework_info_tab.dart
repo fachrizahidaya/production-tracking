@@ -16,7 +16,10 @@ class ReworkInfoTab extends StatefulWidget {
   final handleSelectWorkOrder;
   final handleSelectReworkCategory;
   final reworkCategoryOption;
+<<<<<<< HEAD
   final onFormChanged;
+=======
+>>>>>>> 11b79f06 (feat: option rework dyeing)
   final isLoading;
 
   const ReworkInfoTab(
@@ -30,7 +33,10 @@ class ReworkInfoTab extends StatefulWidget {
       this.id,
       this.isLoading,
       this.label,
+<<<<<<< HEAD
       this.onFormChanged,
+=======
+>>>>>>> 11b79f06 (feat: option rework dyeing)
       this.reworkCategoryOption});
 
   @override
@@ -62,7 +68,10 @@ class _ReworkInfoTabState extends State<ReworkInfoTab> {
                 selectMachine: widget.handleSelectMachine,
                 selectReworkCategory: widget.handleSelectReworkCategory,
                 reworkCategoryOption: widget.reworkCategoryOption,
+<<<<<<< HEAD
                 onFormChanged: widget.onFormChanged,
+=======
+>>>>>>> 11b79f06 (feat: option rework dyeing)
                 id: widget.id,
               ),
               if (widget.form?['wo_id'] != null)

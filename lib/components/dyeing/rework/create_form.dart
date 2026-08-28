@@ -10,14 +10,20 @@ class CreateForm extends StatefulWidget {
   final selectMachine;
   final selectReworkCategory;
   final reworkCategoryOption;
+<<<<<<< HEAD
   final onFormChanged;
   final id;
 
 <<<<<<< HEAD
+=======
+  final id;
+
+>>>>>>> 11b79f06 (feat: option rework dyeing)
   const CreateForm(
       {super.key,
       this.formKey,
       this.form,
+<<<<<<< HEAD
       this.handleSubmit,
       this.data,
       this.selectWorkOrder,
@@ -37,6 +43,13 @@ class CreateForm extends StatefulWidget {
     this.id,
   });
 >>>>>>> dae9522 (fix: rework)
+=======
+      this.selectWorkOrder,
+      this.selectMachine,
+      this.id,
+      this.reworkCategoryOption,
+      this.selectReworkCategory});
+>>>>>>> 11b79f06 (feat: option rework dyeing)
 
   @override
   State<CreateForm> createState() => _CreateFormState();

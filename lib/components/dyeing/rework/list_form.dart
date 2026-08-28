@@ -14,6 +14,7 @@ class ListForm extends StatefulWidget {
   final selectWorkOrder;
   final selectMachine;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final selectReworkCategory;
   final reworkCategoryOption;
   final isSubmitting;
@@ -49,6 +50,20 @@ class ListForm extends StatefulWidget {
     this.selectMachine,
   });
 >>>>>>> dae9522 (fix: rework)
+=======
+  final selectReworkCategory;
+  final reworkCategoryOption;
+
+  const ListForm(
+      {super.key,
+      this.formKey,
+      this.id,
+      this.form,
+      this.selectWorkOrder,
+      this.selectMachine,
+      this.reworkCategoryOption,
+      this.selectReworkCategory});
+>>>>>>> 11b79f06 (feat: option rework dyeing)
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -82,6 +97,7 @@ class _ListFormState extends State<ListForm> {
                           required: true,
                         )),
                   ),
+<<<<<<< HEAD
               ].separatedBy(CustomTheme().hGap('xl'))),
           if (widget.form?['wo_id'] != null) _buildSemiFinishedProducts(),
           if (widget.form?['wo_id'] != null)
@@ -89,6 +105,16 @@ class _ListFormState extends State<ListForm> {
                 title: 'Mesin',
                 icon: Icons.local_laundry_service_outlined,
                 child: _buildMultiMesin()),
+=======
+                if (widget.form?['wo_id'] != null)
+                  Expanded(
+                    child: TemplateCard(
+                        title: 'Mesin',
+                        icon: Icons.local_laundry_service_outlined,
+                        child: _buildMultiMesin()),
+                  ),
+              ].separatedBy(CustomTheme().hGap('xl'))),
+>>>>>>> 11b79f06 (feat: option rework dyeing)
           if (widget.form?['wo_id'] != null)
             TemplateCard(
               title: 'Rework',
@@ -100,6 +126,7 @@ class _ListFormState extends State<ListForm> {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildSemiFinishedProducts() {
     final products = List<Map<String, dynamic>>.from(
       widget.data?['semifinished_products'] ?? [],
@@ -190,6 +217,8 @@ class _ListFormState extends State<ListForm> {
     );
   }
 
+=======
+>>>>>>> 11b79f06 (feat: option rework dyeing)
   Widget _buildMultiMesin() {
     final machines = widget.form['machines'] as List? ?? [];
 
@@ -228,7 +257,10 @@ class _ListFormState extends State<ListForm> {
                                     .map((machine) => machine['value'])
                                     .toList();
                               });
+<<<<<<< HEAD
                               widget.onFormChanged?.call();
+=======
+>>>>>>> 11b79f06 (feat: option rework dyeing)
                             },
                             child: Icon(
                               Icons.close,
@@ -336,7 +368,10 @@ class _ListFormState extends State<ListForm> {
                                     widget.form['rework_method'] = [];
                                   }
                                 });
+<<<<<<< HEAD
                                 widget.onFormChanged?.call();
+=======
+>>>>>>> 11b79f06 (feat: option rework dyeing)
                               },
                             ),
                             if (typeValue == 'perbaikan_warna' && isSelected)
@@ -394,7 +429,10 @@ class _ListFormState extends State<ListForm> {
                     checked: checked == true,
                   );
                 });
+<<<<<<< HEAD
                 widget.onFormChanged?.call();
+=======
+>>>>>>> 11b79f06 (feat: option rework dyeing)
               },
             );
           }).toList(),

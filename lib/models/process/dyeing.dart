@@ -40,6 +40,7 @@ class Dyeing {
   final String? rework_category;
   final rework_type;
   final rework_method;
+  final rework_categories;
 
   Dyeing(
       {this.id,
@@ -74,7 +75,8 @@ class Dyeing {
       this.machines,
       this.rework_category,
       this.rework_type,
-      this.rework_method});
+      this.rework_method,
+      this.rework_categories});
 
   factory Dyeing.fromJson(Map<String, dynamic> json) {
     return Dyeing(
@@ -111,6 +113,7 @@ class Dyeing {
       rework_category: json['rework_category'],
       rework_type: json['rework_type'] ?? [],
       rework_method: json['rework_method'] ?? [],
+      rework_categories: json['rework_categories'] ?? [],
     );
   }
 
@@ -149,6 +152,7 @@ class Dyeing {
       'rework_category': rework_category,
       'rework_type': rework_type,
       'rework_method': rework_method,
+      'rework_categories': rework_categories,
     };
   }
 }

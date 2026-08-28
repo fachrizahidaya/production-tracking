@@ -11,6 +11,8 @@ class ListForm extends StatefulWidget {
   final formKey;
   final id;
   final form;
+  final data;
+  final attachments;
   final selectWorkOrder;
   final selectMachine;
 <<<<<<< HEAD
@@ -53,15 +55,20 @@ class ListForm extends StatefulWidget {
 =======
   final selectReworkCategory;
   final reworkCategoryOption;
-  final onFormChanged;
+  final isSubmitting;
+  final isFormIncomplete;
+  final handleSubmit;
+  final handlePickAttachments;
 
   const ListForm(
       {super.key,
       this.formKey,
       this.id,
       this.form,
+      this.data,
       this.selectWorkOrder,
       this.selectMachine,
+<<<<<<< HEAD
       this.reworkCategoryOption,
 <<<<<<< HEAD
       this.selectReworkCategory});
@@ -70,6 +77,15 @@ class ListForm extends StatefulWidget {
       this.selectReworkCategory,
       this.onFormChanged});
 >>>>>>> dbcc6ae5 (chore: adjust not error)
+=======
+      this.selectReworkCategory,
+      this.reworkCategoryOption,
+      this.isSubmitting,
+      this.isFormIncomplete,
+      this.handleSubmit,
+      this.handlePickAttachments,
+      this.attachments});
+>>>>>>> 55a0e7ec (feat: option rework dyeing)
 
   @override
   State<ListForm> createState() => _ListFormState();
@@ -105,6 +121,16 @@ class _ListFormState extends State<ListForm> {
                   ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+                if (widget.form?['wo_id'] != null)
+                  Expanded(
+                    child: TemplateCard(
+                        title: 'Mesin',
+                        icon: Icons.local_laundry_service_outlined,
+                        child: _buildMultiMesin()),
+                  ),
+>>>>>>> 55a0e7ec (feat: option rework dyeing)
               ].separatedBy(CustomTheme().hGap('xl'))),
           if (widget.form?['wo_id'] != null) _buildSemiFinishedProducts(),
           if (widget.form?['wo_id'] != null)
@@ -124,11 +150,6 @@ class _ListFormState extends State<ListForm> {
 >>>>>>> ae9b2985 (fix: rework dyeing)
               ].separatedBy(CustomTheme().hGap('xl'))),
 >>>>>>> 11b79f06 (feat: option rework dyeing)
-          if (widget.form?['wo_id'] != null)
-            TemplateCard(
-                title: 'Mesin',
-                icon: Icons.local_laundry_service_outlined,
-                child: _buildMultiMesin()),
           if (widget.form?['wo_id'] != null)
             TemplateCard(
               title: 'Rework',
@@ -273,12 +294,15 @@ class _ListFormState extends State<ListForm> {
                               });
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                               widget.onFormChanged?.call();
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
 =======
                               widget.onFormChanged?.call();
 >>>>>>> fc4fb8a2 (fix: kondisi button rework)
+=======
+>>>>>>> 55a0e7ec (feat: option rework dyeing)
                             },
                             child: Icon(
                               Icons.close,
@@ -388,12 +412,15 @@ class _ListFormState extends State<ListForm> {
                                 });
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 widget.onFormChanged?.call();
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
 =======
                                 widget.onFormChanged?.call();
 >>>>>>> fc4fb8a2 (fix: kondisi button rework)
+=======
+>>>>>>> 55a0e7ec (feat: option rework dyeing)
                               },
                             ),
                             if (typeValue == 'perbaikan_warna' && isSelected)
@@ -453,12 +480,15 @@ class _ListFormState extends State<ListForm> {
                 });
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 widget.onFormChanged?.call();
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
 =======
                 widget.onFormChanged?.call();
 >>>>>>> fc4fb8a2 (fix: kondisi button rework)
+=======
+>>>>>>> 55a0e7ec (feat: option rework dyeing)
               },
             );
           }).toList(),

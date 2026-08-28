@@ -458,6 +458,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   Widget build(BuildContext context) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     final machines = List<Map<String, dynamic>>.from(
       widget.form?['machines'] ?? [],
@@ -465,10 +466,16 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
 >>>>>>> 11b79f06 (feat: option rework dyeing)
 =======
 >>>>>>> fc4fb8a2 (fix: kondisi button rework)
+=======
+    final machines = List<Map<String, dynamic>>.from(
+      widget.form?['machines'] ?? [],
+    );
+>>>>>>> 55a0e7ec (feat: option rework dyeing)
     final reworkCategory = widget.form?['rework_category'];
     final reworkType = widget.form?['rework_type'] as List? ?? [];
     final reworkMethod = widget.form?['rework_method'] as List? ?? [];
     final isSubmitDisabled = widget.form?['wo_id'] == null ||
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -476,6 +483,9 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
 >>>>>>> 11b79f06 (feat: option rework dyeing)
 =======
 >>>>>>> fc4fb8a2 (fix: kondisi button rework)
+=======
+        machines.isEmpty ||
+>>>>>>> 55a0e7ec (feat: option rework dyeing)
         reworkCategory == null ||
         (reworkCategory == 'perbaikan' && reworkType.isEmpty) ||
         (reworkType.contains('perbaikan_warna') && reworkMethod.isEmpty);
@@ -510,12 +520,15 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                   reworkCategoryOption: reworkCategoryOption,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                   onFormChanged: () => setState(() {}),
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
 =======
                   onFormChanged: () => setState(() {}),
 >>>>>>> fc4fb8a2 (fix: kondisi button rework)
+=======
+>>>>>>> 55a0e7ec (feat: option rework dyeing)
                 ),
               ),
             ],

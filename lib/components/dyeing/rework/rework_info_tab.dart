@@ -18,12 +18,15 @@ class ReworkInfoTab extends StatefulWidget {
   final reworkCategoryOption;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   final onFormChanged;
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
 =======
   final onFormChanged;
 >>>>>>> fc4fb8a2 (fix: kondisi button rework)
+=======
+>>>>>>> 55a0e7ec (feat: option rework dyeing)
   final isLoading;
 
   const ReworkInfoTab(
@@ -39,12 +42,15 @@ class ReworkInfoTab extends StatefulWidget {
       this.label,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.onFormChanged,
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
 =======
       this.onFormChanged,
 >>>>>>> fc4fb8a2 (fix: kondisi button rework)
+=======
+>>>>>>> 55a0e7ec (feat: option rework dyeing)
       this.reworkCategoryOption});
 
   @override
@@ -78,12 +84,15 @@ class _ReworkInfoTabState extends State<ReworkInfoTab> {
                 reworkCategoryOption: widget.reworkCategoryOption,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 onFormChanged: widget.onFormChanged,
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
 =======
                 onFormChanged: widget.onFormChanged,
 >>>>>>> fc4fb8a2 (fix: kondisi button rework)
+=======
+>>>>>>> 55a0e7ec (feat: option rework dyeing)
                 id: widget.id,
               ),
               if (widget.form?['wo_id'] != null)

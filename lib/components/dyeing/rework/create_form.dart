@@ -8,16 +8,19 @@ class CreateForm extends StatefulWidget {
   final form;
   final selectWorkOrder;
   final selectMachine;
+  final selectReworkCategory;
+  final reworkCategoryOption;
   final id;
 
-  const CreateForm({
-    super.key,
-    this.formKey,
-    this.form,
-    this.selectWorkOrder,
-    this.selectMachine,
-    this.id,
-  });
+  const CreateForm(
+      {super.key,
+      this.formKey,
+      this.form,
+      this.selectWorkOrder,
+      this.selectMachine,
+      this.id,
+      this.reworkCategoryOption,
+      this.selectReworkCategory});
 
   @override
   State<CreateForm> createState() => _CreateFormState();

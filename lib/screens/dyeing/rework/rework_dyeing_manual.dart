@@ -9,6 +9,7 @@ import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
@@ -44,6 +45,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   bool _firstLoading = false;
   bool _isFetchingMachine = false;
   bool _isFetchingWorkOrder = false;
+  bool _isFetchingReworkCategory = false;
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
@@ -52,6 +54,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
   late List<dynamic> workOrderOption = [];
   late List<dynamic> machineOption = [];
   late List<dynamic> unitOption = [];
+  late List<dynamic> reworkCategoryOption = [];
 
   Map<String, dynamic> woData = {};
   Map<String, dynamic> dyeingData = {};
@@ -71,6 +74,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
       _handleFetchWorkOrder();
       _handleFetchUnit();
       _handleFetchMachine();
+      _handleFetchReworkCategory();
 
       if (widget.dyeingId != null) {
         _getDyeingView(widget.dyeingId);
@@ -135,6 +139,28 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
     } finally {
       setState(() {
         _isFetchingMachine = false;
+      });
+    }
+  }
+
+  Future<void> _handleFetchReworkCategory() async {
+    setState(() {
+      _isFetchingReworkCategory = true;
+    });
+
+    try {
+      final result = await _dyeingService.fetchReworkCategoryOptions(context);
+
+      setState(() {
+        reworkCategoryOption = result;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("$e")),
+      );
+    } finally {
+      setState(() {
+        _isFetchingReworkCategory = false;
       });
     }
   }
@@ -333,6 +359,16 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
       return;
     }
 
+    if (machineOption.isEmpty) {
+      showAlertDialog(
+        context: context,
+        title: 'Mesin Tidak Tersedia',
+        message:
+            'Saat ini tidak ada mesin yang tersedia atau seluruh mesin sedang dipakai.',
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -341,11 +377,65 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
         return SelectDialog(
           label: 'Mesin',
           options: machineOption.toList(),
-          selected: widget.form?['machine_id'].toString() ?? '',
+          selected: '',
           handleChangeValue: (e) {
             setState(() {
-              widget.form?['machine_id'] = e['value'].toString();
-              widget.form?['nama_mesin'] = e['label'].toString();
+              final machines = widget.form?['machines'] as List? ?? [];
+              final isExist =
+                  machines.any((machine) => machine['value'] == e['value']);
+
+              if (!isExist) {
+                machines.add({
+                  'value': e['value'],
+                  'label': e['label'],
+                });
+              }
+
+              widget.form?['machines'] = machines;
+              widget.form?['machine_ids'] =
+                  machines.map((machine) => machine['value']).toList();
+            });
+          },
+        );
+      },
+    );
+  }
+
+  _selectReworkCategory() {
+    if (_isFetchingReworkCategory) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      return;
+    }
+
+    if (reworkCategoryOption.isEmpty) {
+      showAlertDialog(
+        context: context,
+        title: 'Kategori Rework Tidak Tersedia',
+        message: 'Saat ini tidak ada kategori rework yang tersedia.',
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return SelectDialog(
+          label: 'Kategori Rework',
+          options: reworkCategoryOption.toList(),
+          selected: widget.form?['rework_category']?.toString() ?? '',
+          handleChangeValue: (e) {
+            setState(() {
+              widget.form?['rework_category'] = e?['value']?.toString();
+              widget.form?['rework_type'] = [];
+              widget.form?['rework_method'] = [];
             });
           },
         );
@@ -363,6 +453,18 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
 
   @override
   Widget build(BuildContext context) {
+    final machines = List<Map<String, dynamic>>.from(
+      widget.form?['machines'] ?? [],
+    );
+    final reworkCategory = widget.form?['rework_category'];
+    final reworkType = widget.form?['rework_type'] as List? ?? [];
+    final reworkMethod = widget.form?['rework_method'] as List? ?? [];
+    final isSubmitDisabled = widget.form?['wo_id'] == null ||
+        machines.isEmpty ||
+        reworkCategory == null ||
+        (reworkCategory == 'perbaikan' && reworkType.isEmpty) ||
+        (reworkType.contains('perbaikan_warna') && reworkMethod.isEmpty);
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -389,6 +491,8 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                   formKey: _formKey,
                   handleSelectMachine: _selectMachine,
                   handleSelectWorkOrder: _selectWorkOrder,
+                  handleSelectReworkCategory: _selectReworkCategory,
+                  reworkCategoryOption: reworkCategoryOption,
                 ),
               ),
             ],
@@ -417,6 +521,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                         child: FormButton(
                       label: 'Mulai',
                       onPressed: () => _handleSubmit(context),
+                      isDisabled: isSubmitDisabled,
                       customHeight: 56.0,
                       fontSize: CustomTheme().fontSize('xl'),
                     ))

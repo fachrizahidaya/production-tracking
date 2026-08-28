@@ -62,6 +62,11 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
     'no_dyeing': '',
     'nama_mesin': '',
     'nama_satuan': '',
+    'machines': [],
+    'machine_ids': [],
+    'rework_category': null,
+    'rework_type': [],
+    'rework_method': [],
     'semifinished_products': [],
     'items': [],
     'attachments_ids': [],
@@ -200,9 +205,17 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
         machine_id: _form['machine_id'] != null
             ? int.tryParse(_form['machine_id'].toString())
             : null,
+        machine_ids: (_form['machines'] as List?)
+            ?.map((e) => int.tryParse(e['value'].toString()))
+            .where((e) => e != null)
+            .cast<int>()
+            .toList(),
         rework_reference_id: _form['rework_reference_id'] != null
             ? int.tryParse(_form['rework_reference_id'].toString())
             : null,
+        rework_category: _form['rework_category']?.toString(),
+        rework_type: _form['rework_type'] ?? [],
+        rework_method: _form['rework_method'] ?? [],
         notes: _form['notes'],
         rework: _form['rework'],
         status: _form['status'],

@@ -831,6 +831,297 @@ Rework
     return _buildInfoGrid(items, isTablet);
   }
 
+  Widget _buildReworkDetailInfo(bool isTablet) {
+    final reworkCategories = List<Map<String, dynamic>>.from(
+      widget.data['rework_categories'] ?? [],
+    );
+
+    final category = widget.data['rework_categories']?[0]?['type']?.toString();
+
+    String categoryLabel;
+
+    if (category == 'toping') {
+      categoryLabel = 'Toping / Perbaikan Warna';
+    } else if (category != null &&
+        category.toLowerCase().contains('perbaikan')) {
+      categoryLabel = 'Perbaikan';
+    } else {
+      categoryLabel = category != null && category.isNotEmpty
+          ? capitalizeWords(category.replaceAll('_', ' '))
+          : 'Perbaikan';
+    }
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(
+          color: const Color(0xFFE5E7EB),
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // HEADER
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: const Color(0xFFE5E7EB),
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.local_offer_outlined,
+                    size: 16,
+                    color: Color(0xFF737782),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'KATEGORI REWORK',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF737782),
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        categoryLabel,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF111111),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          if (reworkCategories.isNotEmpty) ...[
+            const Divider(
+              height: 1,
+              thickness: 1,
+              color: Color(0xFFE5E7EB),
+            ),
+            Column(
+              children: [
+                for (int i = 0; i < reworkCategories.length; i++)
+                  _buildReworkCategoryItem(
+                    reworkCategories[i],
+                    isLast: i == reworkCategories.length - 1,
+                  ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReworkCategoryItem(
+    Map<String, dynamic> category, {
+    required bool isLast,
+  }) {
+    final label = category['label']?.toString() ?? '';
+
+    final methods = List<Map<String, dynamic>>.from(
+      category['methods'] ?? [],
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 12,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // JENIS REWORK
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF303038),
+                ),
+              ),
+
+              // METHOD
+              if (methods.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final method in methods)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 10,
+                          bottom: 2,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              '•',
+                              style: TextStyle(
+                                fontSize: 16,
+                                height: 1.3,
+                                color: Color(0xFF565863),
+                              ),
+                            ),
+                            const SizedBox(width: 7),
+                            Expanded(
+                              child: Text(
+                                method['label']?.toString() ?? '',
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFF565863),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+        if (!isLast)
+          const Divider(
+            height: 1,
+            thickness: 1,
+            color: Color(0xFFE5E7EB),
+          ),
+      ],
+    );
+  }
+
+  String _getReworkCategoryLabel(
+    List<Map<String, dynamic>> reworkCategories,
+  ) {
+    // Jika API mengirim rework_category
+    final category = widget.data['rework_category']?.toString();
+
+    if (category != null && category.isNotEmpty) {
+      switch (category) {
+        case 'perbaikan':
+          return 'Perbaikan';
+
+        case 'toping':
+          return 'Toping / Perbaikan Warna';
+
+        default:
+          return capitalizeWords(
+            category.replaceAll('_', ' '),
+          );
+      }
+    }
+
+    // Response detail terbaru tidak memiliki
+    // rework_category, hanya rework_categories.
+    //
+    // Jika ada data rework_categories, berarti
+    // kategori utamanya adalah Perbaikan.
+    if (reworkCategories.isNotEmpty) {
+      return 'Perbaikan';
+    }
+
+    return '-';
+  }
+
+  String _joinLabels(
+    List<Map<String, dynamic>> items,
+  ) {
+    final labels = items
+        .map(
+          (item) => item['label']?.toString() ?? '',
+        )
+        .where(
+          (label) => label.isNotEmpty,
+        )
+        .toList();
+
+    if (labels.isEmpty) {
+      return '-';
+    }
+
+    return labels.join(', ');
+  }
+
+  String _getReworkTypeLabel(
+    List<Map<String, dynamic>> reworkCategories,
+  ) {
+    if (reworkCategories.isEmpty) {
+      return _joinDynamicLabels(
+        widget.data['rework_type'],
+      );
+    }
+
+    return _joinLabels(reworkCategories);
+  }
+
+  String _getReworkMethodLabel(
+    List<Map<String, dynamic>> reworkCategories,
+  ) {
+    final methods = reworkCategories
+        .expand(
+          (item) => List<Map<String, dynamic>>.from(
+            item['methods'] ?? [],
+          ),
+        )
+        .toList();
+
+    if (methods.isNotEmpty) {
+      return _joinLabels(methods);
+    }
+
+    return _joinDynamicLabels(
+      widget.data['rework_method'],
+    );
+  }
+
+  String _joinDynamicLabels(dynamic values) {
+    final labels = (values as List? ?? [])
+        .map((item) {
+          if (item is Map) {
+            return item['label']?.toString() ?? item['value']?.toString() ?? '';
+          }
+
+          return item?.toString() ?? '';
+        })
+        .where((label) => label.isNotEmpty)
+        .map((label) => capitalizeWords(label.replaceAll('_', ' ')))
+        .toList();
+
+    if (labels.isEmpty) {
+      return '-';
+    }
+
+    return labels.join(', ');
+  }
+
   /*
 Multi Mesin
 */
@@ -1725,6 +2016,12 @@ Catatan WO
             icon: Icons.replay_outlined,
             child: _buildReworkInfo(true),
           ),
+        if (widget.data['rework'] == true)
+          _buildInfoCard(
+            title: 'Detail Rework',
+            icon: Icons.build_circle_outlined,
+            child: _buildReworkDetailInfo(true),
+          ),
         if (widget.label == 'Packing')
           _buildInfoCard(
             title: 'Informasi Packing',
@@ -1826,6 +2123,12 @@ Catatan WO
             title: 'Informasi Rework',
             icon: Icons.replay_outlined,
             child: _buildReworkInfo(false),
+          ),
+        if (widget.data['rework'] == true)
+          _buildInfoCard(
+            title: 'Detail Rework',
+            icon: Icons.build_circle_outlined,
+            child: _buildReworkDetailInfo(false),
           ),
         if (widget.label == 'Packing')
           _buildInfoCard(

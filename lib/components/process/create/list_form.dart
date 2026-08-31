@@ -14,6 +14,7 @@ class ListForm extends StatefulWidget {
   final form;
   final selectWorkOrder;
   final selectMachine;
+  final onFormChanged;
   final isMaklon;
   final maklonName;
   final withMaklonOrMachine;
@@ -30,6 +31,7 @@ class ListForm extends StatefulWidget {
       this.form,
       this.selectWorkOrder,
       this.selectMachine,
+      this.onFormChanged,
       this.maklonName,
       this.isMaklon = false,
       this.withMaklonOrMachine = false,
@@ -216,7 +218,8 @@ class _ListFormState extends State<ListForm> {
                       widget.label == 'Tumbler' ||
                       widget.label == 'Long Slitting' ||
                       widget.label == 'Long Hemming' ||
-                      widget.label == 'Cross Cutting')
+                      widget.label == 'Cross Cutting' ||
+                      widget.label == 'Sewing')
                     _buildMultiMesin()
                   else
                     SelectForm(
@@ -272,6 +275,7 @@ class _ListFormState extends State<ListForm> {
                                       );
                                       widget.form['machines'] = machines;
                                     });
+                                    widget.onFormChanged?.call();
                                   },
                                   child: Icon(
                                     Icons.close,

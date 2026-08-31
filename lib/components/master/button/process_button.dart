@@ -55,18 +55,6 @@ class _ProcessButtonState extends State<ProcessButton> {
     final bool hasBasicError =
         widget.weightWarning != null || widget.qtyWarning != null;
 
-    final bool isNeedMachineValidation = [
-      'dyeing',
-      'press',
-      'tumbler',
-      'long slitting',
-      'long hemming',
-      'sewing',
-      'cross cutting'
-    ].contains(widget.label.toLowerCase());
-
-    final machines = widget.data?['machines'] ?? widget.form?['machines'] ?? [];
-    final result = widget.isAllMachineDone(machines);
     final bool isDyeingRework =
         widget.label == 'Dyeing' && widget.data?['rework'] == true;
 
@@ -83,18 +71,6 @@ class _ProcessButtonState extends State<ProcessButton> {
           reworkCategory.isEmpty ||
           (reworkCategory == 'perbaikan' && reworkType.isEmpty) ||
           (reworkType.contains('perbaikan_warna') && reworkMethod.isEmpty);
-    }
-
-    bool hasMachineError() {
-      if (!isNeedMachineValidation) {
-        return false;
-      }
-
-      if (isDyeingRework) {
-        return machines.isNotEmpty && !result;
-      }
-
-      return !result;
     }
 
     double parseSafeWeight(dynamic value) {
@@ -163,7 +139,6 @@ class _ProcessButtonState extends State<ProcessButton> {
         hasWeightItemError ||
         hasQtyItemError ||
         hasDyeingReworkError() ||
-        hasMachineError() ||
         widget.hasItemQtyWarning == true;
 
     return SafeArea(

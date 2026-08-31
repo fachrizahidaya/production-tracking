@@ -10,6 +10,7 @@ class CreateForm extends StatefulWidget {
   final selectMachine;
   final selectReworkCategory;
   final reworkCategoryOption;
+  final onFormChanged;
   final id;
 
   const CreateForm(
@@ -20,7 +21,8 @@ class CreateForm extends StatefulWidget {
       this.selectMachine,
       this.id,
       this.reworkCategoryOption,
-      this.selectReworkCategory});
+      this.selectReworkCategory,
+      this.onFormChanged});
 
   @override
   State<CreateForm> createState() => _CreateFormState();

@@ -109,6 +109,7 @@ class _ListFormState extends State<ListForm> {
                                     .map((machine) => machine['value'])
                                     .toList();
                               });
+                              widget.onFormChanged?.call();
                             },
                             child: Icon(
                               Icons.close,
@@ -216,6 +217,7 @@ class _ListFormState extends State<ListForm> {
                                     widget.form['rework_method'] = [];
                                   }
                                 });
+                                widget.onFormChanged?.call();
                               },
                             ),
                             if (typeValue == 'perbaikan_warna' && isSelected)
@@ -273,6 +275,7 @@ class _ListFormState extends State<ListForm> {
                     checked: checked == true,
                   );
                 });
+                widget.onFormChanged?.call();
               },
             );
           }).toList(),

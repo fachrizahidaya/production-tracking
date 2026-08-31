@@ -895,7 +895,7 @@ class _DashboardState extends State<Dashboard> {
       summaryParams['end_date'] = endDate;
     });
 
-    _handleFetchSummary();
+    // _handleFetchSummary();
   }
 
   void _handleProcessFilter(String key, dynamic value) {
@@ -1132,10 +1132,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
-    final sectionGap = isMobile ? 16.0 : 24.0;
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -1545,9 +1541,12 @@ class _DashboardState extends State<Dashboard> {
                     ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                   ),
 >>>>>>> 99705a2c (fix: home, dashboard)
 =======
+=======
+>>>>>>> 6305f554 (fix: UI dashboard)
                     if (!shouldHideActiveMachine)
                       ActiveMachine(
                         data: machineList,
@@ -1580,10 +1579,13 @@ class _DashboardState extends State<Dashboard> {
                       isFiltered: _isFiltered,
                     ),
                   ].separatedBy(CustomTheme().vGap('2xl')))),
+<<<<<<< HEAD
 >>>>>>> bdfe60da (fix: UI dashboard)
 =======
                   ),
 >>>>>>> 7833ba7c (fix: UI mobile dashboard)
+=======
+>>>>>>> 6305f554 (fix: UI dashboard)
                 ),
               ],
             ),

@@ -65,7 +65,37 @@ class _ProcessButtonState extends State<ProcessButton> {
       'cross cutting'
     ].contains(widget.label.toLowerCase());
 
-    final result = widget.isAllMachineDone(widget.data?['machines'] ?? []);
+    final machines = widget.data?['machines'] ?? widget.form?['machines'] ?? [];
+    final result = widget.isAllMachineDone(machines);
+    final bool isDyeingRework =
+        widget.label == 'Dyeing' && widget.data?['rework'] == true;
+
+    bool hasDyeingReworkError() {
+      if (!isDyeingRework) {
+        return false;
+      }
+
+      final reworkCategory = widget.form?['rework_category']?.toString();
+      final reworkType = widget.form?['rework_type'] as List? ?? [];
+      final reworkMethod = widget.form?['rework_method'] as List? ?? [];
+
+      return reworkCategory == null ||
+          reworkCategory.isEmpty ||
+          (reworkCategory == 'perbaikan' && reworkType.isEmpty) ||
+          (reworkType.contains('perbaikan_warna') && reworkMethod.isEmpty);
+    }
+
+    bool hasMachineError() {
+      if (!isNeedMachineValidation) {
+        return false;
+      }
+
+      if (isDyeingRework) {
+        return machines.isNotEmpty && !result;
+      }
+
+      return !result;
+    }
 
     double parseSafeWeight(dynamic value) {
       if (value == null) return 0;
@@ -132,6 +162,8 @@ class _ProcessButtonState extends State<ProcessButton> {
     final bool isDisabled = hasBasicError ||
         hasWeightItemError ||
         hasQtyItemError ||
+        hasDyeingReworkError() ||
+        hasMachineError() ||
         widget.hasItemQtyWarning == true;
 
     return SafeArea(
@@ -158,8 +190,7 @@ class _ProcessButtonState extends State<ProcessButton> {
                   Expanded(
                       child: FormButton(
                     label: widget.labelProcess,
-                    isDisabled:
-                        isDisabled || (isNeedMachineValidation && !result),
+                    isDisabled: isDisabled,
                     customHeight: 56.0,
                     fontSize: CustomTheme().fontSize('xl'),
                     onPressed: () async {

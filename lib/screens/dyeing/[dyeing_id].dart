@@ -18,10 +18,13 @@ class DyeingDetail extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ae9b2985 (fix: rework dyeing)
 =======
 >>>>>>> 7429ce6e (fix: rework dyeing)
+=======
+>>>>>>> 585d6eac (fix: rework dyeing)
   const DyeingDetail({
     super.key,
     required this.id,
@@ -29,6 +32,7 @@ class DyeingDetail extends StatefulWidget {
     this.canDelete,
     this.canUpdate,
   });
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -68,6 +72,8 @@ class DyeingDetail extends StatefulWidget {
 =======
       this.canUpdate});
 >>>>>>> cbfab539 (feat: multi mesin dyeing - long slitting)
+=======
+>>>>>>> 585d6eac (fix: rework dyeing)
 
   @override
   State<DyeingDetail> createState() => _DyeingDetailState();

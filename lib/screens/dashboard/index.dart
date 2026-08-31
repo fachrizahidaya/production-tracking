@@ -487,10 +487,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
-    final sectionGap = isMobile ? 16.0 : 24.0;
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -506,7 +502,7 @@ class _DashboardState extends State<Dashboard> {
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverPadding(
-                  padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 0),
+                  padding: EdgeInsets.zero,
                   sliver: SliverList(
                     delegate: SliverChildListDelegate(
                       [

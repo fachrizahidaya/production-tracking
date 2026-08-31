@@ -12,19 +12,23 @@ class MachineSection extends StatelessWidget {
   final List<dynamic> data;
   final bool isPortrait;
   final status;
+  final bool isMobile;
 
-  const MachineSection(
-      {super.key,
-      required this.title,
-      required this.icon,
-      this.headerColor,
-      required this.data,
-      required this.isPortrait,
-      this.status});
+  const MachineSection({
+    super.key,
+    required this.title,
+    required this.icon,
+    this.headerColor,
+    required this.data,
+    required this.isPortrait,
+    this.status,
+    this.isMobile = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ProcessCard(
           forMachine: true,
@@ -34,32 +38,51 @@ class MachineSection extends StatelessWidget {
               Icon(
                 icon,
                 color: status,
+                size: isMobile ? 20 : null,
               ),
-              Text('$title (${data.length})'),
-            ].separatedBy(CustomTheme().hGap('lg')),
+              Expanded(
+                child: Text(
+                  '$title (${data.length})',
+                  style: TextStyle(
+                    fontSize: isMobile ? 14 : null,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
         ),
-        SizedBox(
-          height: 500,
-          child: data.isEmpty
-              ? NoData()
-              : CustomScrollView(
-                  slivers: [
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          return MachineCard(
-                            data: data[index],
-                            isPortrait: isPortrait,
-                          );
-                        },
-                        childCount: data.length,
-                      ),
-                    ),
-                  ],
-                ),
-        ),
-      ].separatedBy(CustomTheme().vGap('xl')),
+        SizedBox(height: isMobile ? 10 : 16),
+        if (data.isEmpty)
+          SizedBox(
+            height: isMobile ? 120 : 200,
+            child: NoData(),
+          )
+        else if (isMobile)
+          Column(
+            children: data.map<Widget>((machine) {
+              return MachineCard(
+                data: machine,
+                isPortrait: true,
+              );
+            }).toList(),
+          )
+        else
+          Expanded(
+            child: ListView.builder(
+              physics: const ClampingScrollPhysics(),
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                return MachineCard(
+                  data: data[index],
+                  isPortrait: isPortrait,
+                );
+              },
+            ),
+          ),
+      ],
     );
   }
 }

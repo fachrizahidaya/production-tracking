@@ -1446,6 +1446,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                       ],
                                     ),
                                   ),
+                                if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
                                   DefaultTabController(
                                     length: (widget.form['items'] ?? []).length,

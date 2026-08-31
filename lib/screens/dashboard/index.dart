@@ -85,6 +85,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   bool get _isMobile => widget.isMobile;
 
   void _applyMobileProcessParams() {
@@ -124,6 +125,8 @@ class _DashboardState extends State<Dashboard> {
   bool get isTablet => MediaQuery.of(context).size.width >= 600;
 
 >>>>>>> 73378bdd (fix: UI mobile dashboard)
+=======
+>>>>>>> 0f73a2e7 (fix: UI dashboard)
   @override
   void initState() {
     super.initState();
@@ -850,10 +853,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
-    final sectionGap = isMobile ? 16.0 : 24.0;
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -869,6 +868,7 @@ class _DashboardState extends State<Dashboard> {
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverPadding(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1089,8 +1089,55 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ],
 >>>>>>> 73378bdd (fix: UI mobile dashboard)
+=======
+                  padding: CustomTheme().padding('content'),
+                  sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                    WorkOrderStats(data: statsList, isFetching: isStatsLoading),
+                    WorkOrderSummary(
+                      data: summaryList,
+                      handleRefetch: _handleFetchSummary,
+                      isFetching: isSummaryLoading,
+                      filterWidget: SummaryFilter(
+                        dariTanggal: dariTanggalSummary,
+                        sampaiTanggal: sampaiTanggalSummary,
+                        onHandleFilter: _handleSummaryFilter,
+                        params: summaryParams,
+                      ),
+>>>>>>> 0f73a2e7 (fix: UI dashboard)
                     ),
-                  ),
+                    if (!shouldHideActiveMachine)
+                      ActiveMachine(
+                        data: machineList,
+                        available: machineList['available'],
+                        unavailable: machineList['unavailable'],
+                        handleRefetch: _handleFetchMachine,
+                        isFetching: isMachineLoading,
+                      ),
+                    WorkOrderProcessScreen(
+                      data: _dataList,
+                      search: _search,
+                      handleSearch: _handleSearch,
+                      firstLoading: _firstLoading,
+                      hasMore: _hasMore,
+                      handleLoadMore: _loadMore,
+                      handleRefetch: _refetch,
+                      isLoadMore: _isLoadMore,
+                      filterWidget: ProcessFilter(
+                        params: params,
+                        onHandleFilter: _handleProcessFilter,
+                      ),
+                      handleFetchData: (params) async {
+                        final service = Provider.of<WorkOrderProcessService>(
+                            context,
+                            listen: false);
+                        await service.getDataList(context, params);
+                        return service.items;
+                      },
+                      service: WorkOrderProcessService(),
+                      isFiltered: _isFiltered,
+                    ),
+                  ].separatedBy(CustomTheme().vGap('2xl')))),
                 ),
               ],
             ),

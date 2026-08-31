@@ -50,6 +50,7 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (widget.data?.length == 0) return const SizedBox();
 
     if (widget.isFetching) {
@@ -294,89 +295,60 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
       },
     );
 >>>>>>> 73378bdd (fix: UI mobile dashboard)
+=======
+    if (widget.data?.length == 0) return SizedBox();
+
+    return widget.isFetching == true
+        ? Center(
+            child: Padding(
+              padding: CustomTheme().padding('content'),
+              child: CircularProgressIndicator(),
+            ),
+          )
+        : Wrap(
+            spacing: 16,
+            runSpacing: 8,
+            children: [
+              for (int i = 0; i < widget.data?.length; i++)
+                SizedBox(
+                  width: (MediaQuery.of(context).size.width - 48) / 2,
+                  child: buildStatsCard(i),
+                ),
+            ],
+          );
+>>>>>>> 0f73a2e7 (fix: UI dashboard)
   }
 
-  Widget buildStatsCard(int i, bool isMobile) {
+  Widget buildStatsCard(int i) {
     final item = widget.data[i];
 
     return StatsCard(
       bottomBorderColor: getBorderColor(i),
-      child: isMobile
-          ? _buildMobileStatsCard(item, i)
-          : _buildTabletStatsCard(item, i),
-    );
-  }
-
-  Widget _buildTabletStatsCard(dynamic item, int i) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: getIconBgColor(i),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          padding: const EdgeInsets.all(9),
-          child: Icon(
-            getIcon(i),
-            color: Colors.white,
-            size: 24,
-          ),
-        ),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Text(
-            item['value'].toString(),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 26,
-              fontWeight: CustomTheme().fontWeight('bold'),
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Flexible(
-          child: CustomBadge(
-            title: item['label'],
-            withStatus: i != 0,
-            status: item['label'],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMobileStatsCard(dynamic item, int i) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: getIconBgColor(i),
-            borderRadius: BorderRadius.circular(7),
-          ),
-          padding: const EdgeInsets.all(8),
-          child: Icon(
-            getIcon(i),
-            color: Colors.white,
-            size: 21,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
             children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: getIconBgColor(i),
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                padding: CustomTheme().padding('badge'),
+                child: Icon(
+                  getIcon(i),
+                  color: Colors.white,
+                  size: CustomTheme().iconSize('2xl'),
+                ),
+              ),
               Text(
                 item['value'].toString(),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 21,
+                  fontSize: CustomTheme().fontSize('2xl'),
                   fontWeight: CustomTheme().fontWeight('bold'),
                 ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -442,6 +414,18 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
         ),
       ],
 >>>>>>> 73378bdd (fix: UI mobile dashboard)
+=======
+              )
+            ].separatedBy(CustomTheme().hGap('lg')),
+          ),
+          CustomBadge(
+            title: item['label'],
+            withStatus: i == 0 ? false : true,
+            status: item['label'],
+          )
+        ],
+      ),
+>>>>>>> 0f73a2e7 (fix: UI dashboard)
     );
   }
 }

@@ -7,14 +7,20 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class CardHeader extends StatelessWidget {
-  final item;
-  final isTablet;
-  const CardHeader({super.key, this.item, this.isTablet});
+  final dynamic item;
+  final bool isTablet;
+
+  const CardHeader({
+    super.key,
+    this.item,
+    this.isTablet = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final itemName = item['wo_no']?.toString() ?? 'Item';
     final itemCode = item['spk_no']?.toString() ?? '-';
+
     final overallStatus = _getOverallStatus();
     final statusConfig = _getStatusConfig(overallStatus);
 
@@ -30,6 +36,7 @@ class CardHeader extends StatelessWidget {
         );
       },
       child: Container(
+        width: double.infinity,
         padding: CustomTheme().padding('card'),
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -40,7 +47,7 @@ class CardHeader extends StatelessWidget {
               statusConfig['color'].withOpacity(0.03),
             ],
           ),
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(8),
             topRight: Radius.circular(8),
           ),
@@ -51,124 +58,230 @@ class CardHeader extends StatelessWidget {
             ),
           ),
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Item Info + Chevron
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // WO + Chevron
-                  Row(
-                    children: [
-                      Text(
-                        itemName,
-                        style: TextStyle(
-                          fontSize: CustomTheme().fontSize('xl'),
-                          fontWeight: CustomTheme().fontWeight('bold'),
-                          color: Colors.grey[800],
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Icon(
-                        Icons.chevron_right,
-                        size: isTablet
-                            ? CustomTheme().iconSize('2xl')
-                            : CustomTheme().iconSize('xl'),
-                        color: Colors.grey[500],
-                      ),
-                    ].separatedBy(CustomTheme().hGap('xs')),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // SPK + Date
-                      Row(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 600;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // =========================================================
+                // HEADER
+                // =========================================================
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          _buildSpkBadge(itemCode, isTablet),
-                          if (item['wo_date'] != null)
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.calendar_month_outlined,
-                                  size: CustomTheme().iconSize('md'),
-                                  color: Colors.grey[500],
-                                ),
-                                Text(
-                                  DateFormat("dd MMM yyyy")
-                                      .format(DateTime.parse(item['wo_date'])),
+                          // WO NUMBER
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  itemName,
                                   style: TextStyle(
-                                    fontSize: CustomTheme().fontSize('lg'),
-                                    color: Colors.grey[600],
+                                    fontSize: CustomTheme().fontSize('xl'),
+                                    fontWeight:
+                                        CustomTheme().fontWeight('bold'),
+                                    color: Colors.grey[800],
                                   ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ].separatedBy(CustomTheme().hGap('sm')),
-                            )
-                        ].separatedBy(CustomTheme().hGap('lg')),
-                      ),
+                              ),
+                              Icon(
+                                Icons.chevron_right,
+                                size: isTablet
+                                    ? CustomTheme().iconSize('2xl')
+                                    : CustomTheme().iconSize('xl'),
+                                color: Colors.grey[500],
+                              ),
+                            ].separatedBy(
+                              CustomTheme().hGap('xs'),
+                            ),
+                          ),
 
-                      // Qty Material + Qty Greige
-                      Row(
-                        children: [
-                          _buildQtyInfo(
-                            label: 'Qty Material',
-                            value: formatNumber(item['wo_qty']),
-                            isTablet: isTablet,
-                            unit: item['wo_unit'],
+                          SizedBox(
+                            height: 4,
                           ),
-                          _buildQtyInfo(
-                            label: 'Qty Greige',
-                            value: formatNumber(item['greige_qty']),
-                            isTablet: isTablet,
-                            unit: item['greige_unit'],
+
+                          // SPK + DATE
+                          Wrap(
+                            spacing: 12,
+                            runSpacing: 4,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              _buildSpkBadge(
+                                itemCode,
+                                isTablet,
+                              ),
+                              if (item['wo_date'] != null)
+                                _buildDate(
+                                  item['wo_date'],
+                                  isTablet,
+                                ),
+                            ],
                           ),
-                        ].separatedBy(CustomTheme().hGap('md')),
+
+                          SizedBox(
+                            height: 12,
+                          ),
+
+                          // QTY
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 4,
+                            children: [
+                              _buildQtyInfo(
+                                label: 'Qty Material',
+                                value: formatNumber(
+                                  item['wo_qty'],
+                                ),
+                                isTablet: isTablet,
+                                unit: item['wo_unit'],
+                              ),
+                              _buildQtyInfo(
+                                label: 'Qty Greige',
+                                value: formatNumber(
+                                  item['greige_qty'],
+                                ),
+                                isTablet: isTablet,
+                                unit: item['greige_unit'],
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ].separatedBy(CustomTheme().vGap('lg')),
+                    ),
+
+                    // =====================================================
+                    // STATUS
+                    // =====================================================
+                    if (!isMobile) ...[
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Flexible(
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: CustomBadge(
+                            withStatus: true,
+                            title: item['status']?.toString() ?? '-',
+                            status: item['status']?.toString() ?? '-',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+
+                // =========================================================
+                // MOBILE STATUS
+                // =========================================================
+                if (isMobile) ...[
+                  SizedBox(
+                    height: 12,
                   ),
-                ].separatedBy(CustomTheme().vGap('sm')),
-              ),
-            ),
-
-            // Overall Status Badge
-            CustomBadge(
-              withStatus: true,
-              title: item['status'],
-              status: item['status'],
-            ),
-          ].separatedBy(CustomTheme().hGap('xl')),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: CustomBadge(
+                      withStatus: true,
+                      title: item['status']?.toString() ?? '-',
+                      status: item['status']?.toString() ?? '-',
+                    ),
+                  ),
+                ],
+              ],
+            );
+          },
         ),
+      ),
+    );
+  }
+
+  Widget _buildDate(
+    dynamic date,
+    bool isTablet,
+  ) {
+    DateTime? parsedDate;
+
+    try {
+      parsedDate = DateTime.parse(
+        date.toString(),
+      );
+    } catch (_) {
+      parsedDate = null;
+    }
+
+    if (parsedDate == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.calendar_month_outlined,
+          size: CustomTheme().iconSize('md'),
+          color: Colors.grey[500],
+        ),
+        Flexible(
+          child: Text(
+            DateFormat("dd MMM yyyy").format(parsedDate),
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('lg'),
+              color: Colors.grey[600],
+            ),
+          ),
+        ),
+      ].separatedBy(
+        CustomTheme().hGap('sm'),
       ),
     );
   }
 
   String _getOverallStatus() {
     final processes = item['processes'] as Map<String, dynamic>? ?? {};
-    if (processes.isEmpty) return 'Menunggu Diproses';
 
-    List<String> statuses = [];
+    if (processes.isEmpty) {
+      return 'Menunggu Diproses';
+    }
 
-    for (var process in processes.values) {
+    final List<String> statuses = [];
+
+    for (final process in processes.values) {
       if (process is List) {
-        for (var p in process) {
-          statuses.add(
-              (p['status']?.toString().toLowerCase() ?? 'menunggu diproses'));
+        for (final p in process) {
+          if (p is Map) {
+            statuses.add(
+              p['status']?.toString().toLowerCase() ?? 'menunggu diproses',
+            );
+          }
         }
-      } else if (process is Map<String, dynamic>) {
-        statuses.add((process['status']?.toString().toLowerCase() ??
-            'menunggu diproses'));
+      } else if (process is Map) {
+        statuses.add(
+          process['status']?.toString().toLowerCase() ?? 'menunggu diproses',
+        );
       }
     }
 
-    if (statuses.isEmpty) return 'Menunggu Diproses';
+    if (statuses.isEmpty) {
+      return 'Menunggu Diproses';
+    }
 
-    if (statuses.every((s) => s == 'selesai' || s == 'completed')) {
+    if (statuses.every(
+      (s) => s == 'selesai' || s == 'completed',
+    )) {
       return 'Selesai';
     }
 
-    if (statuses.any((s) => s == 'diproses' || s == 'in_progress')) {
+    if (statuses.any(
+      (s) => s == 'diproses' || s == 'in_progress' || s == 'processing',
+    )) {
       return 'Diproses';
     }
 
@@ -187,6 +300,7 @@ class CardHeader extends StatelessWidget {
 
       case 'in_progress':
       case 'diproses':
+      case 'processing':
         return {
           'label': 'Diproses',
           'color': CustomTheme().colors('Diproses'),
@@ -214,7 +328,7 @@ class CardHeader extends StatelessWidget {
     required String label,
     required dynamic value,
     required bool isTablet,
-    unit,
+    dynamic unit,
   }) {
     return Container(
       padding: CustomTheme().padding('badge-rework'),
@@ -234,7 +348,7 @@ class CardHeader extends StatelessWidget {
               color: Colors.grey[500],
             ),
           ),
-          SizedBox(width: 4),
+          const SizedBox(width: 4),
           Text(
             '${value?.toString() ?? '-'} ${unit ?? ''}',
             style: TextStyle(
@@ -250,7 +364,10 @@ class CardHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildSpkBadge(String code, bool isTablet) {
+  Widget _buildSpkBadge(
+    String code,
+    bool isTablet,
+  ) {
     return Container(
       padding: CustomTheme().padding('badge-rework'),
       decoration: BoxDecoration(

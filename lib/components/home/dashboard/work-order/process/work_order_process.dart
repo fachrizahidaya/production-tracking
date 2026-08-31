@@ -3,56 +3,45 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/process/process_list.dart';
+import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 
 class WorkOrderProcessScreen extends StatefulWidget {
-  final data;
-  final filterWidget;
-  final handleSearch;
-  final search;
-  final firstLoading;
-  final hasMore;
-  final handleRefetch;
-  final handleLoadMore;
-  final handleFetchData;
-  final service;
-  final isFiltered;
-  final isLoadMore;
+  final dynamic data;
+  final Widget? filterWidget;
+  final Function(String)? handleSearch;
+  final String search;
+  final bool firstLoading;
+  final bool hasMore;
+  final VoidCallback? handleRefetch;
+  final VoidCallback? handleLoadMore;
+  final Future<List<dynamic>> Function(
+    Map<String, String> params,
+  ) handleFetchData;
+  final BaseCrudService service;
+  final bool isFiltered;
+  final bool isLoadMore;
 
-  const WorkOrderProcessScreen(
-      {super.key,
-      this.data,
-      this.filterWidget,
-      this.handleSearch,
-      this.search,
-      this.handleRefetch,
-      this.handleLoadMore,
-      this.firstLoading,
-      this.hasMore,
-      this.handleFetchData,
-      this.service,
-      this.isFiltered,
-      this.isLoadMore});
+  const WorkOrderProcessScreen({
+    super.key,
+    this.data,
+    this.filterWidget,
+    this.handleSearch,
+    this.search = '',
+    this.handleRefetch,
+    this.handleLoadMore,
+    this.firstLoading = false,
+    this.hasMore = false,
+    required this.handleFetchData,
+    required this.service,
+    this.isFiltered = false,
+    this.isLoadMore = false,
+  });
 
   @override
   State<WorkOrderProcessScreen> createState() => _WorkOrderProcessScreenState();
 }
 
 class _WorkOrderProcessScreenState extends State<WorkOrderProcessScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didUpdateWidget(covariant WorkOrderProcessScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return DashboardCard(

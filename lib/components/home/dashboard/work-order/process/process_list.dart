@@ -8,100 +8,92 @@ import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 class ProcessList<T> extends StatefulWidget {
   final BaseCrudService<T> service;
   final String searchQuery;
-  final Future<void> Function(BuildContext context, T? currentItem)? onForm;
-  final void Function(BuildContext context, T item)? onItemTap;
-  final Future<List<T>> Function(Map<String, String> params) fetchData;
-  final Widget? filterWidget;
-  final dataList;
-  final handleRefetch;
-  final handleLoadMore;
-  final handleSearch;
-  final firstLoading;
-  final hasMore;
-  final isFiltered;
-  final isFetching;
-  final isLoadMore;
 
-  const ProcessList(
-      {super.key,
-      required this.service,
-      required this.searchQuery,
-      this.onForm,
-      this.onItemTap,
-      required this.fetchData,
-      this.filterWidget,
-      this.handleRefetch,
-      this.handleLoadMore,
-      this.handleSearch,
-      this.dataList,
-      this.firstLoading,
-      this.hasMore,
-      this.isFiltered,
-      this.isFetching,
-      this.isLoadMore});
+  final Future<void> Function(
+    BuildContext context,
+    T? currentItem,
+  )? onForm;
+
+  final void Function(
+    BuildContext context,
+    T item,
+  )? onItemTap;
+
+  final Future<List<T>> Function(
+    Map<String, String> params,
+  ) fetchData;
+
+  final Widget? filterWidget;
+
+  final dynamic dataList;
+
+  final VoidCallback? handleRefetch;
+  final VoidCallback? handleLoadMore;
+  final handleSearch;
+
+  final bool firstLoading;
+  final bool hasMore;
+  final bool isFiltered;
+  final bool isFetching;
+  final bool isLoadMore;
+
+  const ProcessList({
+    super.key,
+    required this.service,
+    required this.searchQuery,
+    required this.fetchData,
+    this.onForm,
+    this.onItemTap,
+    this.filterWidget,
+    this.dataList,
+    this.handleRefetch,
+    this.handleLoadMore,
+    this.handleSearch,
+    this.firstLoading = false,
+    this.hasMore = false,
+    this.isFiltered = false,
+    this.isFetching = false,
+    this.isLoadMore = false,
+  });
 
   @override
   State<ProcessList<T>> createState() => _ProcessListState<T>();
 }
 
 class _ProcessListState<T> extends State<ProcessList<T>> {
-  final ScrollController _scrollController = ScrollController();
-
   int? _expandedIndex;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
   void _openFilter() {
-    if (widget.filterWidget != null) {
-      showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        enableDrag: true,
-        isDismissible: true,
-        isScrollControlled: true,
-        builder: (BuildContext context) {
-          return widget.filterWidget!;
-        },
-      );
-    }
-  }
+    if (widget.filterWidget == null) return;
 
-  double? get _adaptiveHeight {
-    final count = widget.dataList.length;
-
-    if (count == 1) {
-      return 1700;
-    }
-
-    if (_expandedIndex != null) {
-      return 3400;
-    }
-
-    return 1700;
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      enableDrag: true,
+      isDismissible: true,
+      isScrollControlled: true,
+      builder: (context) {
+        return widget.filterWidget!;
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    MediaQuery.of(context).orientation == Orientation.portrait;
+    final List<dynamic> data =
+        widget.dataList is List ? List<dynamic>.from(widget.dataList) : [];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        /// STICKY-LIKE SEARCH
+        /// SEARCH + FILTER
         Container(
           color: Theme.of(context).scaffoldBackgroundColor,
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               CustomSearchBar(
                 handleSearchChange: widget.handleSearch,
@@ -110,7 +102,7 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
                 withRefresh: true,
                 handleRefetch: widget.handleRefetch,
               ),
-              Divider(height: 1),
+              const Divider(height: 1),
             ],
           ),
         ),
@@ -119,51 +111,76 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
         if (widget.firstLoading)
           Padding(
             padding: CustomTheme().padding('content'),
-            child: Center(
+            child: const Center(
               child: CircularProgressIndicator(),
             ),
           )
 
         /// EMPTY
-        else if (widget.dataList == null || widget.dataList.isEmpty)
+        else if (data.isEmpty)
           Padding(
             padding: CustomTheme().padding('content'),
-            child: NoData(),
+            child: const NoData(),
           )
 
-        /// LIST
+        /// DATA
         else
           Padding(
             padding: CustomTheme().padding('content'),
             child: Column(
-              children: [
-                ...List.generate(
-                  widget.dataList.length,
-                  (index) {
-                    final item = widget.dataList[index];
+              mainAxisSize: MainAxisSize.min,
+              children: data.asMap().entries.map<Widget>((entry) {
+                final index = entry.key;
+                final item = entry.value;
 
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        bottom: index == widget.dataList.length - 1 ? 0 : 24,
-                      ),
-                      child: AnimatedSize(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                        child: ItemProcess(
-                          item: item,
-                          showTimeline: true,
-                          isExpanded: _expandedIndex == index,
-                          onExpandChanged: (expanded) {
-                            setState(() {
-                              _expandedIndex = expanded ? index : null;
-                            });
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                return Padding(
+                  padding: EdgeInsets.only(
+                    bottom: index == data.length - 1 ? 0 : 24,
+                  ),
+                  child: AnimatedSize(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    alignment: Alignment.topCenter,
+                    child: ItemProcess(
+                      item: item,
+                      showTimeline: true,
+                      isExpanded: _expandedIndex == index,
+                      onExpandChanged: (expanded) {
+                        if (!mounted) return;
+
+                        setState(() {
+                          _expandedIndex = expanded ? index : null;
+                        });
+                      },
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+
+        /// LOAD MORE
+        if (widget.isLoadMore)
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+
+        if (widget.hasMore && !widget.firstLoading)
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 16,
+              right: 16,
+              bottom: 16,
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: widget.isLoadMore ? null : widget.handleLoadMore,
+                child: const Text('Muat Lebih Banyak'),
+              ),
             ),
           ),
       ],

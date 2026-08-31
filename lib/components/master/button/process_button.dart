@@ -66,6 +66,7 @@ class _ProcessButtonState extends State<ProcessButton> {
     final bool hasBasicError =
         widget.weightWarning != null || widget.qtyWarning != null;
 
+<<<<<<< HEAD
     final bool isDyeingRework =
         widget.label == 'Dyeing' && widget.data?['rework'] == true;
     final bool isNeedMachineValidation = [
@@ -82,6 +83,8 @@ class _ProcessButtonState extends State<ProcessButton> {
 =======
     final machines = widget.data?['machines'] ?? widget.form?['machines'] ?? [];
     final result = widget.isAllMachineDone(machines);
+=======
+>>>>>>> 9965df4b (fix: hilangkan cek status mesin saat selesai)
     final bool isDyeingRework =
         widget.label == 'Dyeing' && widget.data?['rework'] == true;
 
@@ -103,6 +106,7 @@ class _ProcessButtonState extends State<ProcessButton> {
 <<<<<<< HEAD
 =======
 
+<<<<<<< HEAD
     bool hasMachineError() {
       if (!isNeedMachineValidation) {
         return false;
@@ -116,6 +120,8 @@ class _ProcessButtonState extends State<ProcessButton> {
     }
 >>>>>>> b2f13701 (fix: kondisi button finish process)
 
+=======
+>>>>>>> 9965df4b (fix: hilangkan cek status mesin saat selesai)
     double parseSafeWeight(dynamic value) {
       if (value == null) return 0;
 
@@ -191,6 +197,7 @@ class _ProcessButtonState extends State<ProcessButton> {
         hasQtyItemError ||
         hasDyeingReworkError() ||
 <<<<<<< HEAD
+<<<<<<< HEAD
         // hasPackingAttachmentError ||
 =======
     final bool isDisabled = hasBasicError ||
@@ -200,6 +207,8 @@ class _ProcessButtonState extends State<ProcessButton> {
 =======
         hasMachineError() ||
 >>>>>>> b2f13701 (fix: kondisi button finish process)
+=======
+>>>>>>> 9965df4b (fix: hilangkan cek status mesin saat selesai)
         widget.hasItemQtyWarning == true;
 
     return SafeArea(

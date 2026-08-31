@@ -20,6 +20,7 @@ class MachineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     final usedBy = data['used_by'];
     final currentJob = usedBy is List && usedBy.isNotEmpty ? usedBy[0] : null;
     final bool isUsed = currentJob != null;
@@ -98,6 +99,59 @@ class MachineCard extends StatelessWidget {
           ],
         ),
       ),
+=======
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isTablet = constraints.maxWidth > 600;
+
+        // Pastikan selalu bool
+        final selected = isSelected == true;
+
+        return GestureDetector(
+          onTap: onTap,
+          child: Container(
+            margin: EdgeInsets.only(
+              bottom: isTablet ? 12 : 8,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: selected
+                    ? CustomTheme().buttonColor('primary')
+                    : Colors.grey[200]!,
+                width: selected ? 2 : 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: selected
+                      ? CustomTheme().buttonColor('primary').withOpacity(0.15)
+                      : Colors.black.withOpacity(0.05),
+                  blurRadius: selected ? 12 : 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  MachineCardHeader(
+                    data: data,
+                    isTablet: isTablet,
+                  ),
+                  MachineCardContent(
+                    data: data,
+                    isTablet: isTablet,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+>>>>>>> 83d26bbb (fix: UI mobile dashboard)
     );
   }
 }

@@ -22,6 +22,7 @@ class ProcessList<T> extends StatefulWidget {
     Map<String, String> params,
   ) fetchData;
 
+<<<<<<< HEAD
   final dynamic dataList;
 
   final VoidCallback? handleLoadMore;
@@ -31,6 +32,21 @@ class ProcessList<T> extends StatefulWidget {
   final bool isFetching;
   final bool isLoadMore;
   final bool isMobile;
+=======
+  final Widget? filterWidget;
+
+  final dynamic dataList;
+
+  final VoidCallback? handleRefetch;
+  final VoidCallback? handleLoadMore;
+  final handleSearch;
+
+  final bool firstLoading;
+  final bool hasMore;
+  final bool isFiltered;
+  final bool isFetching;
+  final bool isLoadMore;
+>>>>>>> 83d26bbb (fix: UI mobile dashboard)
 
   const ProcessList({
     super.key,
@@ -39,6 +55,7 @@ class ProcessList<T> extends StatefulWidget {
     required this.fetchData,
     this.onForm,
     this.onItemTap,
+<<<<<<< HEAD
     this.dataList,
     this.handleLoadMore,
     this.firstLoading = false,
@@ -46,6 +63,18 @@ class ProcessList<T> extends StatefulWidget {
     this.isFetching = false,
     this.isLoadMore = false,
     this.isMobile = true,
+=======
+    this.filterWidget,
+    this.dataList,
+    this.handleRefetch,
+    this.handleLoadMore,
+    this.handleSearch,
+    this.firstLoading = false,
+    this.hasMore = false,
+    this.isFiltered = false,
+    this.isFetching = false,
+    this.isLoadMore = false,
+>>>>>>> 83d26bbb (fix: UI mobile dashboard)
   });
 
   @override
@@ -53,6 +82,7 @@ class ProcessList<T> extends StatefulWidget {
 }
 
 class _ProcessListState<T> extends State<ProcessList<T>> {
+<<<<<<< HEAD
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -77,12 +107,32 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
     if (position.pixels >= position.maxScrollExtent - 80) {
       widget.handleLoadMore!();
     }
+=======
+  int? _expandedIndex;
+
+  void _openFilter() {
+    if (widget.filterWidget == null) return;
+
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      enableDrag: true,
+      isDismissible: true,
+      isScrollControlled: true,
+      builder: (context) {
+        return widget.filterWidget!;
+      },
+    );
+>>>>>>> 83d26bbb (fix: UI mobile dashboard)
   }
 
   @override
   Widget build(BuildContext context) {
     final List<dynamic> data =
         widget.dataList is List ? List<dynamic>.from(widget.dataList) : [];
+<<<<<<< HEAD
     final isTablet = !widget.isMobile;
     final listHeight = isTablet ? 340.0 : 300.0;
 
@@ -93,11 +143,34 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
           padding: CustomTheme().padding('content'),
           child: const Center(
             child: CircularProgressIndicator(),
+=======
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        /// SEARCH + FILTER
+        Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomSearchBar(
+                handleSearchChange: widget.handleSearch,
+                showFilter: _openFilter,
+                isFiltered: widget.isFiltered,
+                withRefresh: true,
+                handleRefetch: widget.handleRefetch,
+              ),
+              const Divider(height: 1),
+            ],
+>>>>>>> 83d26bbb (fix: UI mobile dashboard)
           ),
         ),
       );
     }
 
+<<<<<<< HEAD
     if (data.isEmpty) {
       return SizedBox(
         height: 120,
@@ -169,6 +242,85 @@ class _ProcessListState<T> extends State<ProcessList<T>> {
           );
         },
       ),
+=======
+        /// LOADING
+        if (widget.firstLoading)
+          Padding(
+            padding: CustomTheme().padding('content'),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+
+        /// EMPTY
+        else if (data.isEmpty)
+          Padding(
+            padding: CustomTheme().padding('content'),
+            child: const NoData(),
+          )
+
+        /// DATA
+        else
+          Padding(
+            padding: CustomTheme().padding('content'),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: data.asMap().entries.map<Widget>((entry) {
+                final index = entry.key;
+                final item = entry.value;
+
+                return Padding(
+                  padding: EdgeInsets.only(
+                    bottom: index == data.length - 1 ? 0 : 24,
+                  ),
+                  child: AnimatedSize(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    alignment: Alignment.topCenter,
+                    child: ItemProcess(
+                      item: item,
+                      showTimeline: true,
+                      isExpanded: _expandedIndex == index,
+                      onExpandChanged: (expanded) {
+                        if (!mounted) return;
+
+                        setState(() {
+                          _expandedIndex = expanded ? index : null;
+                        });
+                      },
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+
+        /// LOAD MORE
+        if (widget.isLoadMore)
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+
+        if (widget.hasMore && !widget.firstLoading)
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 16,
+              right: 16,
+              bottom: 16,
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: widget.isLoadMore ? null : widget.handleLoadMore,
+                child: const Text('Muat Lebih Banyak'),
+              ),
+            ),
+          ),
+      ],
+>>>>>>> 83d26bbb (fix: UI mobile dashboard)
     );
   }
 }

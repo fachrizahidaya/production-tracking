@@ -8,10 +8,15 @@ class MachineSection extends StatelessWidget {
   final dynamic headerColor;
   final List<dynamic> data;
   final bool isPortrait;
+<<<<<<< HEAD
   final dynamic status;
   final bool isMobile;
   final bool showStatus;
   final bool compact;
+=======
+  final status;
+  final bool isMobile;
+>>>>>>> 83d26bbb (fix: UI mobile dashboard)
 
   const MachineSection({
     super.key,
@@ -22,8 +27,11 @@ class MachineSection extends StatelessWidget {
     required this.isPortrait,
     this.status,
     this.isMobile = false,
+<<<<<<< HEAD
     this.showStatus = true,
     this.compact = false,
+=======
+>>>>>>> 83d26bbb (fix: UI mobile dashboard)
   });
 
   @override
@@ -34,7 +42,10 @@ class MachineSection extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+<<<<<<< HEAD
       mainAxisSize: MainAxisSize.min,
+=======
+>>>>>>> 83d26bbb (fix: UI mobile dashboard)
       children: [
         Padding(
           padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -43,14 +54,23 @@ class MachineSection extends StatelessWidget {
               Icon(
                 icon,
                 color: status,
+<<<<<<< HEAD
                 size: isMobile ? 18 : 22,
               ),
               const SizedBox(width: 8),
+=======
+                size: isMobile ? 20 : null,
+              ),
+>>>>>>> 83d26bbb (fix: UI mobile dashboard)
               Expanded(
                 child: Text(
                   '$title (${data.length})',
                   style: TextStyle(
+<<<<<<< HEAD
                     fontSize: isMobile ? 13 : 16,
+=======
+                    fontSize: isMobile ? 14 : null,
+>>>>>>> 83d26bbb (fix: UI mobile dashboard)
                     fontWeight: FontWeight.w600,
                   ),
                   maxLines: 1,
@@ -60,6 +80,7 @@ class MachineSection extends StatelessWidget {
             ],
           ),
         ),
+<<<<<<< HEAD
         const SizedBox(height: 6),
         if (data.isEmpty)
           SizedBox(
@@ -90,6 +111,32 @@ class MachineSection extends StatelessWidget {
                       ),
                     ),
                   ),
+=======
+        SizedBox(height: isMobile ? 10 : 16),
+        if (data.isEmpty)
+          SizedBox(
+            height: isMobile ? 120 : 200,
+            child: NoData(),
+          )
+        else if (isMobile)
+          Column(
+            children: data.map<Widget>((machine) {
+              return MachineCard(
+                data: machine,
+                isPortrait: true,
+              );
+            }).toList(),
+          )
+        else
+          Expanded(
+            child: ListView.builder(
+              physics: const ClampingScrollPhysics(),
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                return MachineCard(
+                  data: data[index],
+                  isPortrait: isPortrait,
+>>>>>>> 83d26bbb (fix: UI mobile dashboard)
                 );
               },
             ),

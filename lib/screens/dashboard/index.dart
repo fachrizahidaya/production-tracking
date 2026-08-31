@@ -145,10 +145,13 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
 =======
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+>>>>>>> 8d23ccdc (fix: UI dashboard)
   bool get _isMobile => widget.isMobile;
 
   void _applyMobileProcessParams() {
@@ -186,6 +189,7 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> e61620e (fix: UI mobile dashboard)
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
 
+<<<<<<< HEAD
   bool get isTablet => MediaQuery.of(context).size.width >= 600;
 >>>>>>> d86a31e7 (fix: UI mobile dashboard)
 
@@ -223,6 +227,10 @@ class _DashboardState extends State<Dashboard> {
 =======
 
 >>>>>>> 025659bb (fix: dashboard mobile)
+=======
+=======
+>>>>>>> 6330259 (fix: UI dashboard)
+>>>>>>> 8d23ccdc (fix: UI dashboard)
   @override
   void initState() {
     super.initState();
@@ -1098,7 +1106,7 @@ class _DashboardState extends State<Dashboard> {
       summaryParams['end_date'] = endDate;
     });
 
-    _handleFetchSummary();
+    // _handleFetchSummary();
   }
 
   void _handleProcessFilter(String key, dynamic value) {
@@ -1335,10 +1343,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
-    final sectionGap = isMobile ? 16.0 : 24.0;
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -1367,11 +1371,14 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                   padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 0),
 =======
                   padding: EdgeInsets.zero,
 >>>>>>> 97ee959c (fix: UI dashboard)
 =======
+=======
+>>>>>>> 8d23ccdc (fix: UI dashboard)
                   padding: EdgeInsets.zero,
 =======
                   padding: EdgeInsets.symmetric(
@@ -1379,7 +1386,13 @@ class _DashboardState extends State<Dashboard> {
                     vertical: isMobile ? 12 : 20,
                   ),
 >>>>>>> e61620e (fix: UI mobile dashboard)
+<<<<<<< HEAD
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+=======
+                  padding: CustomTheme().padding('content'),
+>>>>>>> 6330259 (fix: UI dashboard)
+>>>>>>> 8d23ccdc (fix: UI dashboard)
                   sliver: SliverList(
                     delegate: SliverChildListDelegate(
                       [

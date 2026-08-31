@@ -15,6 +15,7 @@ class MachineEditSection extends StatefulWidget {
   final getMachineStatus;
   final newMachines;
   final withAddMachine;
+  final onMachineChanged;
 
   const MachineEditSection(
       {super.key,
@@ -23,7 +24,8 @@ class MachineEditSection extends StatefulWidget {
       this.handleSelectMachine,
       this.getMachineStatus,
       this.newMachines,
-      this.withAddMachine = true});
+      this.withAddMachine = true,
+      this.onMachineChanged});
 
   @override
   State<MachineEditSection> createState() => _MachineEditSectionState();
@@ -105,6 +107,7 @@ class _MachineEditSectionState extends State<MachineEditSection> {
                                   setState(() {
                                     machine['status'] = 'Selesai';
                                   });
+                                  widget.onMachineChanged?.call();
 
                                   Navigator.pop(context);
                                 } catch (e) {
@@ -182,6 +185,7 @@ class _MachineEditSectionState extends State<MachineEditSection> {
 
                                       widget.form['machines'] = machines;
                                     });
+                                    widget.onMachineChanged?.call();
 
                                     Navigator.pop(context);
                                   },
@@ -258,6 +262,7 @@ class _MachineEditSectionState extends State<MachineEditSection> {
                 widget.data['machines'] = current;
                 widget.form['machines'] = current;
               });
+              widget.onMachineChanged?.call();
             },
             child: Container(
               height: 48,

@@ -55,9 +55,12 @@ class FinishSection extends StatefulWidget {
 <<<<<<< HEAD
   final reworkCategoryOption;
   final onMachineChanged;
+<<<<<<< HEAD
 =======
   final reworkCategoryOption;
 >>>>>>> ae9b2985 (fix: rework dyeing)
+=======
+>>>>>>> b2f13701 (fix: kondisi button finish process)
   final handleItemQtyWarning;
   final onAttachmentChanged;
 =======
@@ -118,12 +121,15 @@ class FinishSection extends StatefulWidget {
 <<<<<<< HEAD
       this.reworkCategoryOption,
       this.onMachineChanged,
+<<<<<<< HEAD
       this.handleItemQtyWarning,
       this.onAttachmentChanged});
 =======
 =======
       this.reworkCategoryOption,
 >>>>>>> ae9b2985 (fix: rework dyeing)
+=======
+>>>>>>> b2f13701 (fix: kondisi button finish process)
       this.handleItemQtyWarning});
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 
@@ -361,11 +367,14 @@ class _FinishSectionState extends State<FinishSection> {
 <<<<<<< HEAD
       reworkCategoryOption: widget.reworkCategoryOption,
       onMachineChanged: widget.onMachineChanged,
+<<<<<<< HEAD
 =======
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 =======
       reworkCategoryOption: widget.reworkCategoryOption,
 >>>>>>> ae9b2985 (fix: rework dyeing)
+=======
+>>>>>>> b2f13701 (fix: kondisi button finish process)
       handleItemQtyWarning: widget.handleItemQtyWarning,
     );
   }

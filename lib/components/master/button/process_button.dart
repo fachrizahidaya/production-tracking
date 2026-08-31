@@ -78,6 +78,14 @@ class _ProcessButtonState extends State<ProcessButton> {
       'cross cutting'
     ].contains(widget.label.toLowerCase());
 
+<<<<<<< HEAD
+=======
+    final machines = widget.data?['machines'] ?? widget.form?['machines'] ?? [];
+    final result = widget.isAllMachineDone(machines);
+    final bool isDyeingRework =
+        widget.label == 'Dyeing' && widget.data?['rework'] == true;
+
+>>>>>>> b2f13701 (fix: kondisi button finish process)
     bool hasDyeingReworkError() {
       if (!isDyeingRework) {
         return false;
@@ -92,6 +100,21 @@ class _ProcessButtonState extends State<ProcessButton> {
           (reworkCategory == 'perbaikan' && reworkType.isEmpty) ||
           (reworkType.contains('perbaikan_warna') && reworkMethod.isEmpty);
     }
+<<<<<<< HEAD
+=======
+
+    bool hasMachineError() {
+      if (!isNeedMachineValidation) {
+        return false;
+      }
+
+      if (isDyeingRework) {
+        return machines.isNotEmpty && !result;
+      }
+
+      return !result;
+    }
+>>>>>>> b2f13701 (fix: kondisi button finish process)
 
     double parseSafeWeight(dynamic value) {
       if (value == null) return 0;
@@ -167,12 +190,16 @@ class _ProcessButtonState extends State<ProcessButton> {
         hasWeightItemError ||
         hasQtyItemError ||
         hasDyeingReworkError() ||
+<<<<<<< HEAD
         // hasPackingAttachmentError ||
 =======
     final bool isDisabled = hasBasicError ||
         hasWeightItemError ||
         hasQtyItemError ||
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+        hasMachineError() ||
+>>>>>>> b2f13701 (fix: kondisi button finish process)
         widget.hasItemQtyWarning == true;
 
     return SafeArea(

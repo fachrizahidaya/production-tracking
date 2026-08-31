@@ -78,6 +78,9 @@ class FormItems extends StatefulWidget {
   final newMachines;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b2f13701 (fix: kondisi button finish process)
   final onMachineChanged;
   final reworkCategoryOption;
 =======
@@ -134,6 +137,9 @@ class FormItems extends StatefulWidget {
       this.newMachines,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b2f13701 (fix: kondisi button finish process)
       this.onMachineChanged,
       this.reworkCategoryOption,
 =======

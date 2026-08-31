@@ -50,11 +50,14 @@ class ListForm extends StatefulWidget {
 <<<<<<< HEAD
   final reworkCategoryOption;
   final onMachineChanged;
+<<<<<<< HEAD
 =======
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 =======
   final reworkCategoryOption;
 >>>>>>> ae9b2985 (fix: rework dyeing)
+=======
+>>>>>>> b2f13701 (fix: kondisi button finish process)
   final handleItemQtyWarning;
 
   const ListForm(
@@ -105,11 +108,14 @@ class ListForm extends StatefulWidget {
 <<<<<<< HEAD
       this.reworkCategoryOption,
       this.onMachineChanged,
+<<<<<<< HEAD
 =======
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 =======
       this.reworkCategoryOption,
 >>>>>>> ae9b2985 (fix: rework dyeing)
+=======
+>>>>>>> b2f13701 (fix: kondisi button finish process)
       this.handleItemQtyWarning});
 
   @override
@@ -232,11 +238,14 @@ class _ListFormState extends State<ListForm> {
 <<<<<<< HEAD
         reworkCategoryOption: widget.reworkCategoryOption,
         onMachineChanged: widget.onMachineChanged,
+<<<<<<< HEAD
 =======
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 =======
         reworkCategoryOption: widget.reworkCategoryOption,
 >>>>>>> ae9b2985 (fix: rework dyeing)
+=======
+>>>>>>> b2f13701 (fix: kondisi button finish process)
         handleItemQtyWarning: widget.handleItemQtyWarning,
       ),
     );

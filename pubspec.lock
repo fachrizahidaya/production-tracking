@@ -99,6 +99,7 @@ packages:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ef28ba96 (chore: update necessary)
     version: "1.19.1"
@@ -123,6 +124,9 @@ packages:
 =======
     version: "1.19.0"
 >>>>>>> 7731bab3 (chore: install package)
+=======
+    version: "1.19.1"
+>>>>>>> 97ee959c (fix: UI dashboard)
   connectivity_plus:
     dependency: "direct main"
     description:
@@ -139,6 +143,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -166,6 +171,8 @@ packages:
 >>>>>>> b8a5267 (chore: internet checker)
 =======
 >>>>>>> 0992ab27 (fix: user name di appbar)
+=======
+>>>>>>> 97ee959c (fix: UI dashboard)
   convert:
     dependency: transitive
     description:
@@ -175,12 +182,15 @@ packages:
     source: hosted
     version: "3.1.2"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> f1fbda3e (chore: install package)
 =======
 >>>>>>> 0992ab27 (fix: user name di appbar)
 =======
 >>>>>>> 7731bab3 (chore: install package)
+=======
+>>>>>>> 97ee959c (fix: UI dashboard)
   cross_file:
     dependency: transitive
     description:
@@ -691,8 +701,11 @@ packages:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 94db6889 (fix: card navigate to update)
+=======
+>>>>>>> 97ee959c (fix: UI dashboard)
   internet_connection_checker_plus:
     dependency: "direct main"
     description:
@@ -701,10 +714,14 @@ packages:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 97ee959c (fix: UI dashboard)
       sha256: "43edc904d8b8a9f5a2f871e9317a352ca005641b2f158a8b22732447c9f3994e"
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 94db6889 (fix: card navigate to update)
@@ -732,6 +749,8 @@ packages:
 >>>>>>> 7731bab3 (chore: install package)
 =======
 >>>>>>> 50d777c9 (chore: package)
+=======
+>>>>>>> 97ee959c (fix: UI dashboard)
   intl:
     dependency: transitive
     description:
@@ -868,6 +887,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  nm:
+    dependency: transitive
+    description:
+      name: nm
+      sha256: "2c9aae4127bdc8993206464fcc063611e0e36e72018696cd9631023a31b24254"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   path:
     dependency: "direct main"
     description:

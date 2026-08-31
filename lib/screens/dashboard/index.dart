@@ -354,7 +354,7 @@ class _DashboardState extends State<Dashboard> {
       summaryParams['end_date'] = endDate;
     });
 
-    _handleFetchSummary();
+    // _handleFetchSummary();
   }
 
   void _handleProcessFilter(String key, dynamic value) {
@@ -487,10 +487,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
-    final sectionGap = isMobile ? 16.0 : 24.0;
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -578,7 +574,38 @@ class _DashboardState extends State<Dashboard> {
                           ),
                       ].separatedBy(CustomTheme().vGap('2xl')),
                     ),
-                  ),
+                    if (!shouldHideActiveMachine)
+                      ActiveMachine(
+                        data: machineList,
+                        available: machineList['available'],
+                        unavailable: machineList['unavailable'],
+                        handleRefetch: _handleFetchMachine,
+                        isFetching: isMachineLoading,
+                      ),
+                    WorkOrderProcessScreen(
+                      data: _dataList,
+                      search: _search,
+                      handleSearch: _handleSearch,
+                      firstLoading: _firstLoading,
+                      hasMore: _hasMore,
+                      handleLoadMore: _loadMore,
+                      handleRefetch: _refetch,
+                      isLoadMore: _isLoadMore,
+                      filterWidget: ProcessFilter(
+                        params: params,
+                        onHandleFilter: _handleProcessFilter,
+                      ),
+                      handleFetchData: (params) async {
+                        final service = Provider.of<WorkOrderProcessService>(
+                            context,
+                            listen: false);
+                        await service.getDataList(context, params);
+                        return service.items;
+                      },
+                      service: WorkOrderProcessService(),
+                      isFiltered: _isFiltered,
+                    ),
+                  ].separatedBy(CustomTheme().vGap('2xl')))),
                 ),
               ],
             ),

@@ -259,23 +259,30 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
   Future<void> _postInit() async {
     await _getDataView();
+
     if (!mounted) return;
 
     await _handleFetchMachine();
+
     if (!mounted) return;
 
     await _handleFetchItemGrade();
+
     if (!mounted) return;
 
     await _handleFetchItemType();
-    if (!mounted) return;
-
-    await _handleFetchFinishedGrbMaterial();
-    if (!mounted) return;
-
-    await _handleFetchMachine();
 
     if (!mounted) return;
+
+    if (widget.label == 'Dyeing' && data['rework'] == true) {
+      await _handleFetchReworkCategory();
+
+      if (!mounted) return;
+
+      setState(() {
+        _mapExistingDyeingRework(data);
+      });
+    }
 
     await _handleFetchItemGrade();
 

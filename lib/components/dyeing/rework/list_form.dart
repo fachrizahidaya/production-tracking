@@ -66,14 +66,12 @@ class _ListFormState extends State<ListForm> {
                           required: true,
                         )),
                   ),
-                if (widget.form?['wo_id'] != null)
-                  Expanded(
-                    child: TemplateCard(
-                        title: 'Mesin',
-                        icon: Icons.local_laundry_service_outlined,
-                        child: _buildMultiMesin()),
-                  ),
               ].separatedBy(CustomTheme().hGap('xl'))),
+          if (widget.form?['wo_id'] != null)
+            TemplateCard(
+                title: 'Mesin',
+                icon: Icons.local_laundry_service_outlined,
+                child: _buildMultiMesin()),
           if (widget.form?['wo_id'] != null)
             TemplateCard(
               title: 'Rework',

@@ -55,10 +55,6 @@ class _DashboardState extends State<Dashboard> {
   bool isMachineLoading = false;
   bool isSummaryLoading = false;
 
-  bool get isMobile => MediaQuery.of(context).size.width < 600;
-
-  bool get isTablet => MediaQuery.of(context).size.width >= 600;
-
   @override
   void initState() {
     super.initState();
@@ -264,7 +260,7 @@ class _DashboardState extends State<Dashboard> {
       }
     });
 
-    _handleFetchSummary();
+    // _handleFetchSummary();
   }
 
   void _handleProcessFilter(String key, dynamic value) {
@@ -368,10 +364,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
-    final sectionGap = isMobile ? 16.0 : 24.0;
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -386,14 +378,11 @@ class _DashboardState extends State<Dashboard> {
               physics: AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverPadding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isMobile ? 12 : 24,
-                    vertical: isMobile ? 12 : 20,
-                  ),
+                  padding: CustomTheme().padding('content'),
                   sliver: SliverList(
                       delegate: SliverChildListDelegate([
                     WorkOrderStats(data: statsList, isFetching: isStatsLoading),
-                    WorkOrderSummary( 
+                    WorkOrderSummary(
                       data: summaryList,
                       greigeData: greigeSummaryList,
                       handleRefetch: _handleFetchSummary,
@@ -405,7 +394,38 @@ class _DashboardState extends State<Dashboard> {
                         params: summaryParams,
                       ),
                     ),
-                  ),
+                    if (!shouldHideActiveMachine)
+                      ActiveMachine(
+                        data: machineList,
+                        available: machineList['available'],
+                        unavailable: machineList['unavailable'],
+                        handleRefetch: _handleFetchMachine,
+                        isFetching: isMachineLoading,
+                      ),
+                    WorkOrderProcessScreen(
+                      data: _dataList,
+                      search: _search,
+                      handleSearch: _handleSearch,
+                      firstLoading: _firstLoading,
+                      hasMore: _hasMore,
+                      handleLoadMore: _loadMore,
+                      handleRefetch: _refetch,
+                      isLoadMore: _isLoadMore,
+                      filterWidget: ProcessFilter(
+                        params: params,
+                        onHandleFilter: _handleProcessFilter,
+                      ),
+                      handleFetchData: (params) async {
+                        final service = Provider.of<WorkOrderProcessService>(
+                            context,
+                            listen: false);
+                        await service.getDataList(context, params);
+                        return service.items;
+                      },
+                      service: WorkOrderProcessService(),
+                      isFiltered: _isFiltered,
+                    ),
+                  ].separatedBy(CustomTheme().vGap('2xl')))),
                 ),
               ],
             ),

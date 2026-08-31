@@ -449,6 +449,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
       isSubmitting: _isSubmitting,
       selectMachine: _selectMachine,
       selectWorkOrder: _selectWorkOrder,
+      onFormChanged: () => setState(() {}),
       spkDocuments: spkDocuments,
       handleChangeInput: _handleChangeInput,
     );

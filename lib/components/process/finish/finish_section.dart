@@ -52,8 +52,12 @@ class FinishSection extends StatefulWidget {
   final finishedItemGrb;
   final isInitializing;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final reworkCategoryOption;
   final onMachineChanged;
+=======
+  final reworkCategoryOption;
+>>>>>>> ae9b2985 (fix: rework dyeing)
   final handleItemQtyWarning;
   final onAttachmentChanged;
 =======
@@ -111,11 +115,15 @@ class FinishSection extends StatefulWidget {
       this.finishedItemGrb,
       this.isInitializing,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.reworkCategoryOption,
       this.onMachineChanged,
       this.handleItemQtyWarning,
       this.onAttachmentChanged});
 =======
+=======
+      this.reworkCategoryOption,
+>>>>>>> ae9b2985 (fix: rework dyeing)
       this.handleItemQtyWarning});
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 
@@ -350,10 +358,14 @@ class _FinishSectionState extends State<FinishSection> {
       finishedItemGrb: widget.finishedItemGrb,
       isInitializing: widget.isInitializing,
 <<<<<<< HEAD
+<<<<<<< HEAD
       reworkCategoryOption: widget.reworkCategoryOption,
       onMachineChanged: widget.onMachineChanged,
 =======
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+      reworkCategoryOption: widget.reworkCategoryOption,
+>>>>>>> ae9b2985 (fix: rework dyeing)
       handleItemQtyWarning: widget.handleItemQtyWarning,
     );
   }

@@ -94,11 +94,17 @@ class UpdateProcess extends StatefulWidget {
   final finishedItemGrb;
   final finishedItemGood;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final finishedItemMaterial;
   final handleSelectReworkCategory;
   final reworkCategoryOption;
 =======
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+  final finishedItemMaterial;
+  final handleSelectReworkCategory;
+  final reworkCategoryOption;
+>>>>>>> ae9b2985 (fix: rework dyeing)
 
   const UpdateProcess(
       {super.key,
@@ -1488,6 +1494,7 @@ class _UpdateProcessState extends State<UpdateProcess>
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
                                   ),
+                                if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
                                   DefaultTabController(
                                     length: (widget.form['items'] ?? []).length,

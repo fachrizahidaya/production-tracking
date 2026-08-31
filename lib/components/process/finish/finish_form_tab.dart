@@ -45,8 +45,12 @@ class FinishFormTab extends StatefulWidget {
   final finishedItemGrb;
   final isInitializing;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final reworkCategoryOption;
   final onMachineChanged;
+=======
+  final reworkCategoryOption;
+>>>>>>> ae9b2985 (fix: rework dyeing)
   final handleItemQtyWarning;
   final onAttachmentChanged;
 =======
@@ -96,6 +100,7 @@ class FinishFormTab extends StatefulWidget {
       this.finishedItemGrb,
       this.isInitializing,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.reworkCategoryOption,
       this.onMachineChanged,
       this.handleItemQtyWarning,
@@ -103,6 +108,10 @@ class FinishFormTab extends StatefulWidget {
 =======
       this.handleItemQtyWarning});
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+      this.handleItemQtyWarning,
+      this.reworkCategoryOption});
+>>>>>>> ae9b2985 (fix: rework dyeing)
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();
@@ -175,8 +184,12 @@ class _FinishFormTabState extends State<FinishFormTab>
                   finishedItemGrb: widget.finishedItemGrb,
                   isInitializing: widget.isInitializing,
 <<<<<<< HEAD
+<<<<<<< HEAD
                   reworkCategoryOption: widget.reworkCategoryOption,
                   onMachineChanged: widget.onMachineChanged,
+=======
+                  reworkCategoryOption: widget.reworkCategoryOption,
+>>>>>>> ae9b2985 (fix: rework dyeing)
                   handleItemQtyWarning: widget.handleItemQtyWarning,
                   onAttachmentChanged: widget.onAttachmentChanged,
 =======

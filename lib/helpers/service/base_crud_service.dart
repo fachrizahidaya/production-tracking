@@ -726,9 +726,20 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       final String? token = prefs.getString('access_token');
 
+<<<<<<< HEAD
       final uri = Uri.parse('$baseUrl/$endpoint/$id');
 
       final request = http.MultipartRequest('POST', uri);
+=======
+      final uri = Uri.parse(
+        '$baseUrl/$endpoint/$id',
+      );
+
+      final request = http.MultipartRequest(
+        'POST',
+        uri,
+      );
+>>>>>>> ae9b2985 (fix: rework dyeing)
 
       request.headers.addAll({
         'Authorization': 'Bearer $token',
@@ -749,12 +760,20 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     |--------------------------------------------------------------------------
     */
 
+<<<<<<< HEAD
       void addField(String key, dynamic value) {
+=======
+      void addField(
+        String key,
+        dynamic value,
+      ) {
+>>>>>>> ae9b2985 (fix: rework dyeing)
         if (value == null) return;
 
         request.fields[key] = value.toString();
       }
 
+<<<<<<< HEAD
       addField('wo_id', data['wo_id']);
 
       addField('unit_id', data['unit_id']);
@@ -766,6 +785,37 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       addField('rework', data['rework']);
 
       addField('rework_category', data['rework_category']);
+=======
+      addField(
+        'wo_id',
+        data['wo_id'],
+      );
+
+      addField(
+        'unit_id',
+        data['unit_id'],
+      );
+
+      addField(
+        'qty',
+        data['qty'],
+      );
+
+      addField(
+        'notes',
+        data['notes'],
+      );
+
+      addField(
+        'rework',
+        data['rework'],
+      );
+
+      addField(
+        'rework_category',
+        data['rework_category'],
+      );
+>>>>>>> ae9b2985 (fix: rework dyeing)
 
       /*
     |--------------------------------------------------------------------------
@@ -786,7 +836,14 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       if (reworkTypes is List) {
         for (int i = 0; i < reworkTypes.length; i++) {
+<<<<<<< HEAD
           addField('rework_type[$i]', reworkTypes[i]);
+=======
+          addField(
+            'rework_type[$i]',
+            reworkTypes[i],
+          );
+>>>>>>> ae9b2985 (fix: rework dyeing)
         }
       }
 
@@ -808,7 +865,14 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       if (reworkMethods is List) {
         for (int i = 0; i < reworkMethods.length; i++) {
+<<<<<<< HEAD
           addField('rework_method[$i]', reworkMethods[i]);
+=======
+          addField(
+            'rework_method[$i]',
+            reworkMethods[i],
+          );
+>>>>>>> ae9b2985 (fix: rework dyeing)
         }
       }
 
@@ -822,7 +886,14 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       if (machineIds is List) {
         for (int i = 0; i < machineIds.length; i++) {
+<<<<<<< HEAD
           addField('machine_ids[$i]', machineIds[i]);
+=======
+          addField(
+            'machine_ids[$i]',
+            machineIds[i],
+          );
+>>>>>>> ae9b2985 (fix: rework dyeing)
         }
       }
 
@@ -838,7 +909,14 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         for (final file in attachments) {
           if (file is File) {
             request.files.add(
+<<<<<<< HEAD
               await http.MultipartFile.fromPath('attachments[]', file.path),
+=======
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+              ),
+>>>>>>> ae9b2985 (fix: rework dyeing)
             );
           } else if (file is XFile) {
             request.files.add(
@@ -870,7 +948,13 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       final streamedResponse = await request.send();
 
+<<<<<<< HEAD
       final response = await http.Response.fromStream(streamedResponse);
+=======
+      final response = await http.Response.fromStream(
+        streamedResponse,
+      );
+>>>>>>> ae9b2985 (fix: rework dyeing)
 
       /*
     |--------------------------------------------------------------------------
@@ -901,7 +985,13 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       try {
         final error = jsonDecode(response.body);
 
+<<<<<<< HEAD
         throw Exception(error['message'] ?? 'Gagal mengubah rework Dyeing');
+=======
+        throw Exception(
+          error['message'] ?? 'Gagal mengubah rework Dyeing',
+        );
+>>>>>>> ae9b2985 (fix: rework dyeing)
       } catch (_) {
         throw Exception(
           'Gagal mengubah rework Dyeing '

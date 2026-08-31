@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/detail.dart';
+import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -15,9 +16,13 @@ import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_master_item_grade.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/models/process/dyeing.dart';
 =======
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+import 'package:textile_tracking/models/process/dyeing.dart';
+>>>>>>> ae9b2985 (fix: rework dyeing)
 import 'package:textile_tracking/screens/update/%5Bupdate_process_id%5D.dart';
 
 class ProcessDetail<T> extends StatefulWidget {
@@ -189,6 +194,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     'rework_category': null,
     'rework_type': [],
     'rework_method': [],
@@ -202,6 +208,11 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 >>>>>>> e03dd57 (chore: remove unnecessary)
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+    'rework_category': null,
+    'rework_type': [],
+    'rework_method': [],
+>>>>>>> ae9b2985 (fix: rework dyeing)
   };
 
   final fieldConfigs = [
@@ -276,6 +287,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     await _getDataView();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     if (!mounted) return;
 
@@ -325,17 +337,24 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
 =======
 =======
+=======
+
+>>>>>>> ae9b2985 (fix: rework dyeing)
     if (!mounted) return;
 
     await _handleFetchMachine();
+
     if (!mounted) return;
 
     await _handleFetchItemGrade();
+
     if (!mounted) return;
 
     await _handleFetchItemType();
+
     if (!mounted) return;
 
+<<<<<<< HEAD
 >>>>>>> 60e98a5 (fix: tipe bs di update)
     await _handleFetchFinishedGrbMaterial();
     if (!mounted) return;
@@ -345,6 +364,17 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 >>>>>>> bf8a2c0 (fix: update process)
 =======
     if (!mounted) return;
+=======
+    if (widget.label == 'Dyeing' && data['rework'] == true) {
+      await _handleFetchReworkCategory();
+
+      if (!mounted) return;
+
+      setState(() {
+        _mapExistingDyeingRework(data);
+      });
+    }
+>>>>>>> ae9b2985 (fix: rework dyeing)
 
 >>>>>>> 60e98a5 (fix: tipe bs di update)
     _syncGradesWithOptions();
@@ -544,6 +574,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   Future<void> _handleUpdate(String id) async {
     try {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ae9b2985 (fix: rework dyeing)
       final isDyeingRework = widget.label == 'Dyeing' && data['rework'] == true;
 
       if (isDyeingRework) {
@@ -648,10 +681,15 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           finishedItemGrb: finishedItemGrb,
           finishedItemGood: finishedItemGood,
 <<<<<<< HEAD
+<<<<<<< HEAD
           handleSelectReworkCategory: _selectReworkCategory,
           reworkCategoryOption: reworkCategoryOption,
 =======
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+          handleSelectReworkCategory: _selectReworkCategory,
+          reworkCategoryOption: reworkCategoryOption,
+>>>>>>> ae9b2985 (fix: rework dyeing)
         ),
       ),
     );
@@ -1027,6 +1065,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ae9b2985 (fix: rework dyeing)
   void _selectReworkCategory() {
     if (reworkCategoryOption.isEmpty) {
       showAlertDialog(
@@ -1035,6 +1076,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         message: 'Saat ini tidak ada kategori rework yang tersedia.',
       );
       return;
+<<<<<<< HEAD
 =======
   double getTotalItemQty() {
     final items = data['work_orders']?['items'] as List<dynamic>?;
@@ -1067,6 +1109,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
       usedQty += qty;
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+>>>>>>> ae9b2985 (fix: rework dyeing)
     }
 
     showDialog(
@@ -1094,8 +1138,11 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     );
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> bf8a2c0 (fix: update process)
+=======
+>>>>>>> ae9b2985 (fix: rework dyeing)
   double _calculateTotalSortingFromWo() {
     final processes = woData['processes'];
 
@@ -1159,6 +1206,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ae9b2985 (fix: rework dyeing)
   Future<void> _handleFetchReworkCategory() async {
     if (widget.label != 'Dyeing') return;
 
@@ -1297,8 +1347,11 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     return null;
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+>>>>>>> ae9b2985 (fix: rework dyeing)
   @override
   Widget build(BuildContext context) {
     if (widget.openUpdateOnStart) {

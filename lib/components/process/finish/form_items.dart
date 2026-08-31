@@ -77,10 +77,14 @@ class FormItems extends StatefulWidget {
   final handleSelectMachine;
   final newMachines;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final onMachineChanged;
   final reworkCategoryOption;
 =======
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+  final reworkCategoryOption;
+>>>>>>> ae9b2985 (fix: rework dyeing)
   final handleItemQtyWarning;
 
   const FormItems(
@@ -129,10 +133,14 @@ class FormItems extends StatefulWidget {
       this.handleSelectMachine,
       this.newMachines,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.onMachineChanged,
       this.reworkCategoryOption,
 =======
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+      this.reworkCategoryOption,
+>>>>>>> ae9b2985 (fix: rework dyeing)
       this.handleItemQtyWarning});
 
   @override
@@ -1334,9 +1342,13 @@ class _FormItemsState extends State<FormItems>
                     widget.label != 'Press' &&
                     widget.label != 'Tumbler' &&
 <<<<<<< HEAD
+<<<<<<< HEAD
                     widget.label != 'Long Slitting' &&
 =======
 >>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
+=======
+                    widget.label != 'Long Slitting' &&
+>>>>>>> ae9b2985 (fix: rework dyeing)
                     widget.label != 'Long Hemming' &&
                     widget.label != 'Cross Cutting' &&
                     widget.label != 'Sewing' &&

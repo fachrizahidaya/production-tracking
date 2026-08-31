@@ -450,6 +450,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ae9b2985 (fix: rework dyeing)
   Future<void> _handleFetchReworkCategory() async {
     if (widget.label != 'Dyeing') return;
 
@@ -472,8 +475,11 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> ca871cd (fix: loading finish)
+=======
+>>>>>>> ae9b2985 (fix: rework dyeing)
   void _setNumberControllerText(
     TextEditingController controller,
     dynamic value,

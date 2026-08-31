@@ -62,6 +62,7 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (widget.data?.length == 0) return const SizedBox();
 
     if (widget.isFetching) {
@@ -73,6 +74,9 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
     if (widget.data == null || widget.data.isEmpty) {
       return const SizedBox.shrink();
     }
+=======
+    if (widget.data?.length == 0) return SizedBox();
+>>>>>>> e29a2ffd (fix: UI dashboard)
 
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;

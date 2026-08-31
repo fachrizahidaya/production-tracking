@@ -4,6 +4,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
+import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
+import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/form/packing_number_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
@@ -16,6 +18,7 @@ import 'package:textile_tracking/components/process/finish/process/sorting.dart'
 import 'package:textile_tracking/components/process/finish/process/weight.dart';
 import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -86,6 +89,7 @@ class FormItems extends StatefulWidget {
   final getMachineStatus;
   final handleSelectMachine;
   final newMachines;
+  final reworkCategoryOption;
   final handleItemQtyWarning;
 
   const FormItems(
@@ -154,6 +158,7 @@ class FormItems extends StatefulWidget {
       this.getMachineStatus,
       this.handleSelectMachine,
       this.newMachines,
+      this.reworkCategoryOption,
       this.handleItemQtyWarning});
 
   @override
@@ -769,6 +774,396 @@ class _FormItemsState extends State<FormItems>
     return total;
   }
 
+  Map<String, dynamic>? get _selectedDyeingReworkCategory {
+    final categoryValue = widget.form?['rework_category']?.toString();
+
+    if (categoryValue == null || categoryValue.isEmpty) {
+      return null;
+    }
+
+    final options = List<Map<String, dynamic>>.from(
+      widget.reworkCategoryOption ?? [],
+    );
+
+    for (final option in options) {
+      if (option['value']?.toString() == categoryValue) {
+        return option;
+      }
+    }
+
+    return null;
+  }
+
+  void _selectDyeingReworkCategory() {
+    final options = List<Map<String, dynamic>>.from(
+      widget.reworkCategoryOption ?? [],
+    );
+
+    if (options.isEmpty) {
+      showAlertDialog(
+        context: context,
+        title: 'Kategori Rework Tidak Tersedia',
+        message: 'Saat ini tidak ada kategori rework yang tersedia.',
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      useSafeArea: true,
+      builder: (context) {
+        return SelectDialog(
+          label: 'Kategori Rework',
+          options: options,
+          selected: widget.form?['rework_category']?.toString() ?? '',
+          handleChangeValue: (e) {
+            final value = e['value']?.toString();
+
+            setState(() {
+              widget.form?['rework_category'] = value;
+              widget.form?['rework_type'] = [];
+              widget.form?['rework_method'] = [];
+            });
+
+            widget.handleChangeInput?.call('rework_category', value);
+            widget.handleChangeInput?.call('rework_type', []);
+            widget.handleChangeInput?.call('rework_method', []);
+          },
+        );
+      },
+    );
+  }
+
+  void _toggleDyeingReworkValue({
+    required String fieldName,
+    required String value,
+    required bool checked,
+  }) {
+    final values = List<String>.from(
+      widget.form?[fieldName] ?? [],
+    );
+
+    if (checked) {
+      if (!values.contains(value)) {
+        values.add(value);
+      }
+    } else {
+      values.remove(value);
+    }
+
+    widget.form?[fieldName] = values;
+    widget.handleChangeInput?.call(fieldName, values);
+  }
+
+  String _getReworkCategoryLabel(String? categoryValue) {
+    if (categoryValue == null || categoryValue.isEmpty) {
+      return '';
+    }
+
+    final option = _selectedDyeingReworkCategory;
+
+    if (option != null) {
+      return option['label']?.toString() ?? '';
+    }
+
+    return categoryValue
+        .replaceAll('_', ' ')
+        .split(' ')
+        .map(
+          (word) => word.isEmpty
+              ? word
+              : '${word[0].toUpperCase()}${word.substring(1)}',
+        )
+        .join(' ');
+  }
+
+  List<Map<String, dynamic>> _methodOptions(
+    List<Map<String, dynamic>> typeOptions,
+  ) {
+    for (final option in typeOptions) {
+      if (option['value']?.toString() == 'perbaikan_warna') {
+        return List<Map<String, dynamic>>.from(
+          option['children'] ?? [],
+        );
+      }
+    }
+
+    return [];
+  }
+
+  bool _isReworkCategoryValue(String value) {
+    final options = List<Map<String, dynamic>>.from(
+      widget.reworkCategoryOption ?? [],
+    );
+
+    if (options.any((option) => option['value']?.toString() == value)) {
+      return true;
+    }
+
+    return value == 'toping' || value == 'perbaikan';
+  }
+
+  List<Map<String, dynamic>> _getDyeingReworkTypeOptions() {
+    final result = <Map<String, dynamic>>[];
+    final categoryValue = widget.form?['rework_category']?.toString();
+
+    if (categoryValue != 'perbaikan') {
+      return result;
+    }
+
+    final existingCategories = List<Map<String, dynamic>>.from(
+      widget.processData['rework_categories'] ?? [],
+    );
+
+    for (final item in existingCategories) {
+      final value = item['type']?.toString();
+
+      if (value == null || value.isEmpty || _isReworkCategoryValue(value)) {
+        continue;
+      }
+
+      result.add({
+        'value': value,
+        'label': item['label']?.toString() ?? value,
+      });
+    }
+
+    final category = _selectedDyeingReworkCategory;
+
+    final children = List<Map<String, dynamic>>.from(
+      category?['children'] ?? [],
+    );
+
+    for (final item in children) {
+      final value = item['value']?.toString();
+
+      if (value == null || value.isEmpty) {
+        continue;
+      }
+
+      final exists = result.any(
+        (e) => e['value']?.toString() == value,
+      );
+
+      if (!exists) {
+        result.add(item);
+      }
+    }
+
+    return result;
+  }
+
+  List<Map<String, dynamic>> _getDyeingReworkMethodOptions() {
+    final result = <Map<String, dynamic>>[];
+
+    final category = _selectedDyeingReworkCategory;
+
+    final children = List<Map<String, dynamic>>.from(
+      category?['children'] ?? [],
+    );
+
+    final methodOptions = _methodOptions(children);
+
+    for (final method in methodOptions) {
+      final value = method['value']?.toString();
+
+      if (value == null || value.isEmpty) {
+        continue;
+      }
+
+      result.add(method);
+    }
+
+    final categories = List<Map<String, dynamic>>.from(
+      widget.processData['rework_categories'] ?? [],
+    );
+
+    final existing = categories.firstWhere(
+      (item) => item['type']?.toString() == 'perbaikan_warna',
+      orElse: () => <String, dynamic>{},
+    );
+
+    final methods = List<Map<String, dynamic>>.from(
+      existing['methods'] ?? [],
+    );
+
+    for (final method in methods) {
+      final value = method['value']?.toString();
+
+      if (value == null || value.isEmpty) {
+        continue;
+      }
+
+      final exists = result.any(
+        (item) => item['value']?.toString() == value,
+      );
+
+      if (!exists) {
+        result.add(method);
+      }
+    }
+
+    return result;
+  }
+
+  Widget _buildDyeingReworkMethodOptions(
+    List<Map<String, dynamic>> methodOptions,
+    List<String> selectedMethods,
+  ) {
+    return Container(
+      padding: const EdgeInsets.only(left: 16),
+      decoration: BoxDecoration(
+        border: Border(
+          left: BorderSide(
+            color: Colors.grey.shade300,
+            width: 2,
+          ),
+        ),
+      ),
+      child: GroupForm(
+        label: 'Metode Perbaikan',
+        req: true,
+        formControl: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: methodOptions.map((method) {
+            final methodValue = method['value']?.toString() ?? '';
+            final methodLabel = method['label']?.toString() ?? '';
+
+            return CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              controlAffinity: ListTileControlAffinity.leading,
+              title: Text(methodLabel),
+              value: selectedMethods.contains(methodValue),
+              onChanged: (checked) {
+                setState(() {
+                  _toggleDyeingReworkValue(
+                    fieldName: 'rework_method',
+                    value: methodValue,
+                    checked: checked == true,
+                  );
+                });
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDyeingReworkMethods(String typeValue) {
+    if (typeValue != 'perbaikan_warna') {
+      return const SizedBox.shrink();
+    }
+
+    final methodOptions = _getDyeingReworkMethodOptions();
+
+    if (methodOptions.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final selectedMethods = List<String>.from(
+      widget.form?['rework_method'] ?? [],
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 40),
+      child: _buildDyeingReworkMethodOptions(
+        methodOptions,
+        selectedMethods,
+      ),
+    );
+  }
+
+  Widget _buildDyeingReworkForm() {
+    final categoryValue = widget.form?['rework_category']?.toString();
+    final category = _selectedDyeingReworkCategory;
+    final categoryLabel = category?['label']?.toString() ??
+        _getReworkCategoryLabel(categoryValue);
+    final typeOptions = _getDyeingReworkTypeOptions();
+    final selectedTypes = List<String>.from(
+      widget.form?['rework_type'] ?? [],
+    );
+    final isPerbaikan = categoryValue == 'perbaikan';
+
+    return TemplateCard(
+      title: 'Rework',
+      icon: Icons.build_circle_outlined,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: SelectForm(
+              label: 'Kategori Rework',
+              onTap: _selectDyeingReworkCategory,
+              selectedLabel: categoryLabel,
+              selectedValue: categoryValue ?? '',
+              required: true,
+            ),
+          ),
+          if (isPerbaikan) ...[
+            const SizedBox(height: 16),
+            Expanded(
+              child: GroupForm(
+                label: 'Jenis Perbaikan',
+                req: true,
+                formControl: Container(
+                  width: double.infinity,
+                  padding: CustomTheme().padding('card'),
+                  decoration: CustomTheme().inputStaticDecorationRequired(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...typeOptions.map((type) {
+                        final typeValue = type['value']?.toString() ?? '';
+                        final typeLabel = type['label']?.toString() ?? '';
+                        final isSelected = selectedTypes.contains(typeValue);
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CheckboxListTile(
+                              contentPadding: EdgeInsets.zero,
+                              dense: true,
+                              controlAffinity: ListTileControlAffinity.leading,
+                              title: Text(typeLabel),
+                              value: isSelected,
+                              onChanged: (checked) {
+                                setState(() {
+                                  _toggleDyeingReworkValue(
+                                    fieldName: 'rework_type',
+                                    value: typeValue,
+                                    checked: checked == true,
+                                  );
+
+                                  if (typeValue == 'perbaikan_warna' &&
+                                      checked != true) {
+                                    widget.form?['rework_method'] = [];
+                                    widget.handleChangeInput?.call(
+                                      'rework_method',
+                                      [],
+                                    );
+                                  }
+                                });
+                              },
+                            ),
+                            if (isSelected)
+                              _buildDyeingReworkMethods(typeValue),
+                          ],
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ].separatedBy(CustomTheme().hGap('xl')),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _semiFinishedTabController?.dispose();
@@ -868,6 +1263,7 @@ class _FormItemsState extends State<FormItems>
                 (widget.label != 'Dyeing' &&
                     widget.label != 'Press' &&
                     widget.label != 'Tumbler' &&
+                    widget.label != 'Long Slitting' &&
                     widget.label != 'Long Hemming' &&
                     widget.label != 'Cross Cutting' &&
                     widget.label != 'Sewing' &&
@@ -1194,7 +1590,8 @@ class _FormItemsState extends State<FormItems>
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (widget.processData['rework'] == true)
+            if (widget.label == 'Dyeing' &&
+                widget.processData['rework'] == true)
               Expanded(
                 child: TemplateCard(
                     title: 'Referensi Rework',
@@ -1210,6 +1607,8 @@ class _FormItemsState extends State<FormItems>
               ),
           ].separatedBy(CustomTheme().hGap('xl')),
         ),
+        if (widget.label == 'Dyeing' && widget.processData['rework'] == true)
+          _buildDyeingReworkForm(),
         if (widget.form?['wo_id'] != null)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

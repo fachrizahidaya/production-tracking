@@ -57,6 +57,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
     'nama_greige_item': '',
     'sku_greige_item': '',
     'semifinished_products': [],
+    'rework_category': null,
+    'rework_type': [],
+    'rework_method': [],
   };
 
   @override
@@ -99,6 +102,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
           'qty': form['qty'],
           'notes': form['notes'] ?? '',
           'rework': form['rework'] == true ? 1 : 0,
+          'rework_category': form['rework_category'],
+          'rework_type': form['rework_type'] ?? [],
+          'rework_method': form['rework_method'] ?? [],
           '_method': 'PATCH',
           'attachments': form['attachments'],
         };

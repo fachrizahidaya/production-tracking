@@ -79,6 +79,7 @@ class FinishFormTab extends StatefulWidget {
   final finishedItemGrb;
   final finishedItemGood;
   final isInitializing;
+  final reworkCategoryOption;
   final handleItemQtyWarning;
 
   const FinishFormTab({
@@ -158,6 +159,7 @@ class FinishFormTab extends StatefulWidget {
     this.finishedItemGood,
     this.finishedItemGrb,
     this.isInitializing,
+    this.reworkCategoryOption,
     this.handleItemQtyWarning,
   });
 
@@ -249,6 +251,7 @@ class _FinishFormTabState extends State<FinishFormTab>
                   finishedItemGood: widget.finishedItemGood,
                   finishedItemGrb: widget.finishedItemGrb,
                   isInitializing: widget.isInitializing,
+                  reworkCategoryOption: widget.reworkCategoryOption,
                   handleItemQtyWarning: widget.handleItemQtyWarning,
                 ),
               ],

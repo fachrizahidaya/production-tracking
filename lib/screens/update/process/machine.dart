@@ -175,9 +175,8 @@ class _MachineEditSectionState extends State<MachineEditSection> {
                           /// BADGE
                           if (widget.compactDisplay || status != 'Tersedia')
                             CustomBadge(
-                              status: status == 'Selesai'
-                                  ? 'Selesai'
-                                  : 'Diproses',
+                              status:
+                                  status == 'Selesai' ? 'Selesai' : 'Diproses',
                               title: status ?? 'Tersedia',
                             ),
 

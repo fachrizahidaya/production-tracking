@@ -13,12 +13,13 @@ class DyeingDetail extends StatefulWidget {
   final canDelete;
   final canUpdate;
 
-  const DyeingDetail(
-      {super.key,
-      required this.id,
-      required this.no,
-      this.canDelete,
-      this.canUpdate});
+  const DyeingDetail({
+    super.key,
+    required this.id,
+    required this.no,
+    this.canDelete,
+    this.canUpdate,
+  });
 
   @override
   State<DyeingDetail> createState() => _DyeingDetailState();

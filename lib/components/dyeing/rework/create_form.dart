@@ -11,6 +11,9 @@ class CreateForm extends StatefulWidget {
   final selectReworkCategory;
   final reworkCategoryOption;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fc4fb8a2 (fix: kondisi button rework)
   final onFormChanged;
   final id;
 
@@ -48,8 +51,13 @@ class CreateForm extends StatefulWidget {
       this.selectMachine,
       this.id,
       this.reworkCategoryOption,
+<<<<<<< HEAD
       this.selectReworkCategory});
 >>>>>>> 11b79f06 (feat: option rework dyeing)
+=======
+      this.selectReworkCategory,
+      this.onFormChanged});
+>>>>>>> fc4fb8a2 (fix: kondisi button rework)
 
   @override
   State<CreateForm> createState() => _CreateFormState();

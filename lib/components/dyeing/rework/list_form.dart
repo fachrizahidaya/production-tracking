@@ -266,9 +266,13 @@ class _ListFormState extends State<ListForm> {
                                     .toList();
                               });
 <<<<<<< HEAD
+<<<<<<< HEAD
                               widget.onFormChanged?.call();
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
+=======
+                              widget.onFormChanged?.call();
+>>>>>>> fc4fb8a2 (fix: kondisi button rework)
                             },
                             child: Icon(
                               Icons.close,
@@ -377,9 +381,13 @@ class _ListFormState extends State<ListForm> {
                                   }
                                 });
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 widget.onFormChanged?.call();
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
+=======
+                                widget.onFormChanged?.call();
+>>>>>>> fc4fb8a2 (fix: kondisi button rework)
                               },
                             ),
                             if (typeValue == 'perbaikan_warna' && isSelected)
@@ -438,9 +446,13 @@ class _ListFormState extends State<ListForm> {
                   );
                 });
 <<<<<<< HEAD
+<<<<<<< HEAD
                 widget.onFormChanged?.call();
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
+=======
+                widget.onFormChanged?.call();
+>>>>>>> fc4fb8a2 (fix: kondisi button rework)
               },
             );
           }).toList(),

@@ -369,6 +369,251 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
+  Future<String> updateItemReworkDyeing(
+    BuildContext context,
+    String id,
+    Map<String, dynamic> data,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
+    isSubmitting.value = true;
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      final String? token = prefs.getString('access_token');
+
+      final uri = Uri.parse(
+        '$baseUrl/$endpoint/$id',
+      );
+
+      final request = http.MultipartRequest(
+        'POST',
+        uri,
+      );
+
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      });
+
+      /*
+    |--------------------------------------------------------------------------
+    | METHOD
+    |--------------------------------------------------------------------------
+    */
+
+      request.fields['_method'] = 'PATCH';
+
+      /*
+    |--------------------------------------------------------------------------
+    | BASIC FIELDS
+    |--------------------------------------------------------------------------
+    */
+
+      void addField(
+        String key,
+        dynamic value,
+      ) {
+        if (value == null) return;
+
+        request.fields[key] = value.toString();
+      }
+
+      addField(
+        'wo_id',
+        data['wo_id'],
+      );
+
+      addField(
+        'unit_id',
+        data['unit_id'],
+      );
+
+      addField(
+        'qty',
+        data['qty'],
+      );
+
+      addField(
+        'notes',
+        data['notes'],
+      );
+
+      addField(
+        'rework',
+        data['rework'],
+      );
+
+      addField(
+        'rework_category',
+        data['rework_category'],
+      );
+
+      /*
+    |--------------------------------------------------------------------------
+    | REWORK TYPE
+    |--------------------------------------------------------------------------
+    |
+    | rework_type[]
+    |
+    | Contoh:
+    |
+    | rework_type[0] = perbaikan_warna
+    | rework_type[1] = perbaikan_noda
+    | rework_type[2] = pelemas_ulang
+    |
+    */
+
+      final reworkTypes = data['rework_type'];
+
+      if (reworkTypes is List) {
+        for (int i = 0; i < reworkTypes.length; i++) {
+          addField(
+            'rework_type[$i]',
+            reworkTypes[i],
+          );
+        }
+      }
+
+      /*
+    |--------------------------------------------------------------------------
+    | REWORK METHOD
+    |--------------------------------------------------------------------------
+    |
+    | rework_method[]
+    |
+    | Contoh:
+    |
+    | rework_method[0] = cuci_panas
+    | rework_method[1] = sabun_panas
+    |
+    */
+
+      final reworkMethods = data['rework_method'];
+
+      if (reworkMethods is List) {
+        for (int i = 0; i < reworkMethods.length; i++) {
+          addField(
+            'rework_method[$i]',
+            reworkMethods[i],
+          );
+        }
+      }
+
+      /*
+    |--------------------------------------------------------------------------
+    | MACHINE IDS
+    |--------------------------------------------------------------------------
+    */
+
+      final machineIds = data['machine_ids'];
+
+      if (machineIds is List) {
+        for (int i = 0; i < machineIds.length; i++) {
+          addField(
+            'machine_ids[$i]',
+            machineIds[i],
+          );
+        }
+      }
+
+      /*
+    |--------------------------------------------------------------------------
+    | ATTACHMENTS
+    |--------------------------------------------------------------------------
+    */
+
+      final attachments = data['attachments'];
+
+      if (attachments is List) {
+        for (final file in attachments) {
+          if (file is File) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+              ),
+            );
+          } else if (file is XFile) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+                filename: file.name,
+              ),
+            );
+          } else if (file is Map &&
+              file['path'] != null &&
+              file['path'].toString().isNotEmpty) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file['path'].toString(),
+                filename: file['name']?.toString() ?? 'file',
+              ),
+            );
+          }
+        }
+      }
+
+      /*
+    |--------------------------------------------------------------------------
+    | REQUEST
+    |--------------------------------------------------------------------------
+    */
+
+      final streamedResponse = await request.send();
+
+      final response = await http.Response.fromStream(
+        streamedResponse,
+      );
+
+      /*
+    |--------------------------------------------------------------------------
+    | DEBUG RESPONSE
+    |--------------------------------------------------------------------------
+    */
+
+      /*
+    |--------------------------------------------------------------------------
+    | SUCCESS
+    |--------------------------------------------------------------------------
+    */
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        await refetchItems(context);
+
+        return responseData['message'] ?? 'Berhasil mengubah rework Dyeing';
+      }
+
+      /*
+    |--------------------------------------------------------------------------
+    | ERROR
+    |--------------------------------------------------------------------------
+    */
+
+      try {
+        final error = jsonDecode(response.body);
+
+        throw Exception(
+          error['message'] ?? 'Gagal mengubah rework Dyeing',
+        );
+      } catch (_) {
+        throw Exception(
+          'Gagal mengubah rework Dyeing '
+          '(${response.statusCode}). '
+          'Response: ${response.body}',
+        );
+      }
+    } catch (e) {
+      throw e.toString();
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
   Future<String> finishItem(
     BuildContext context,
     String id,

@@ -44,6 +44,7 @@ class FinishFormTab extends StatefulWidget {
   final dyeingQty;
   final finishedItemGrb;
   final isInitializing;
+  final reworkCategoryOption;
   final handleItemQtyWarning;
 
   const FinishFormTab(
@@ -88,7 +89,8 @@ class FinishFormTab extends StatefulWidget {
       this.dyeingQty,
       this.finishedItemGrb,
       this.isInitializing,
-      this.handleItemQtyWarning});
+      this.handleItemQtyWarning,
+      this.reworkCategoryOption});
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();
@@ -150,6 +152,7 @@ class _FinishFormTabState extends State<FinishFormTab>
                   dyeingQty: widget.dyeingQty,
                   finishedItemGrb: widget.finishedItemGrb,
                   isInitializing: widget.isInitializing,
+                  reworkCategoryOption: widget.reworkCategoryOption,
                   handleItemQtyWarning: widget.handleItemQtyWarning,
                 ),
               ],

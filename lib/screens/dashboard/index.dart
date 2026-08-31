@@ -127,6 +127,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   bool get _isMobile => widget.isMobile;
 
   void _applyMobileProcessParams() {
@@ -187,6 +188,8 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> e29a2ffd (fix: UI dashboard)
 =======
 >>>>>>> 1c1ecf12 (fix: UI mobile dashboard)
+=======
+>>>>>>> 908fd21b (fix: UI dashboard)
   @override
   void initState() {
     super.initState();
@@ -955,7 +958,7 @@ class _DashboardState extends State<Dashboard> {
       summaryParams['end_date'] = endDate;
     });
 
-    _handleFetchSummary();
+    // _handleFetchSummary();
   }
 
   void _handleProcessFilter(String key, dynamic value) {
@@ -1129,10 +1132,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
-    final sectionGap = isMobile ? 16.0 : 24.0;
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
@@ -1148,6 +1147,7 @@ class _DashboardState extends State<Dashboard> {
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverPadding(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1401,6 +1401,9 @@ class _DashboardState extends State<Dashboard> {
 =======
                   padding: CustomTheme().padding('content'),
 >>>>>>> e29a2ffd (fix: UI dashboard)
+=======
+                  padding: CustomTheme().padding('content'),
+>>>>>>> 908fd21b (fix: UI dashboard)
                   sliver: SliverList(
                       delegate: SliverChildListDelegate([
                     _buildDashboardSettingsButton(),

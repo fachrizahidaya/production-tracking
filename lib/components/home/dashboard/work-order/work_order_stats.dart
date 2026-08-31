@@ -64,6 +64,7 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (widget.data?.length == 0) return const SizedBox();
 
     if (widget.isFetching) {
@@ -351,6 +352,9 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
       return const SizedBox.shrink();
     }
 >>>>>>> 1c1ecf12 (fix: UI mobile dashboard)
+=======
+    if (widget.data?.length == 0) return SizedBox();
+>>>>>>> 908fd21b (fix: UI dashboard)
 
     if (widget.isFetching) {
       return Padding(

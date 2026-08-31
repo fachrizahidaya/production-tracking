@@ -12,6 +12,7 @@ class CreateForm extends StatefulWidget {
   final selectMachine;
   final selectReworkCategory;
   final reworkCategoryOption;
+  final onFormChanged;
   final id;
   final isLoading;
 
@@ -25,6 +26,7 @@ class CreateForm extends StatefulWidget {
       this.selectMachine,
       this.selectReworkCategory,
       this.reworkCategoryOption,
+      this.onFormChanged,
       this.id,
       this.isLoading});
 
@@ -38,8 +40,6 @@ class _CreateFormState extends State<CreateForm> {
   bool get _isFormIncomplete {
     final woId = widget.form?['wo_id'];
 
-    final machines = widget.form?['machines'] as List? ?? [];
-
     final reworkCategory = widget.form?['rework_category'];
 
     final reworkType = widget.form?['rework_type'] as List? ?? [];
@@ -51,7 +51,6 @@ class _CreateFormState extends State<CreateForm> {
     final isPerbaikanWarna = reworkType.contains('perbaikan_warna');
 
     return woId == null ||
-        machines.isEmpty ||
         reworkCategory == null ||
         (isPerbaikan && reworkType.isEmpty) ||
         (isPerbaikanWarna && reworkMethod.isEmpty);
@@ -59,8 +58,6 @@ class _CreateFormState extends State<CreateForm> {
 
   String? _getValidationMessage() {
     final woId = widget.form?['wo_id'];
-
-    final machines = widget.form?['machines'] as List? ?? [];
 
     final reworkCategory = widget.form?['rework_category'];
 
@@ -74,10 +71,6 @@ class _CreateFormState extends State<CreateForm> {
 
     if (woId == null) {
       return 'Work Order wajib dipilih.';
-    }
-
-    if (machines.isEmpty) {
-      return 'Minimal pilih satu mesin.';
     }
 
     if (reworkCategory == null || reworkCategory.toString().isEmpty) {
@@ -109,6 +102,7 @@ class _CreateFormState extends State<CreateForm> {
       isFormIncomplete: _isFormIncomplete,
       handleSubmit: widget.handleSubmit,
       handlePickAttachments: null,
+      onFormChanged: widget.onFormChanged,
     );
   }
 }

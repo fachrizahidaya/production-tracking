@@ -28,6 +28,7 @@ class TabSection extends StatefulWidget {
   final isSubmitting;
   final selectMachine;
   final selectWorkOrder;
+  final onFormChanged;
   final spkDocuments;
 
   const TabSection(
@@ -43,6 +44,7 @@ class TabSection extends StatefulWidget {
       this.maklonName,
       this.selectMachine,
       this.selectWorkOrder,
+      this.onFormChanged,
       this.withMaklonOrMachine,
       this.withNoMaklonOrMachine,
       this.withOnlyMaklon,
@@ -226,6 +228,7 @@ class _TabSectionState extends State<TabSection> {
                         formKey: widget.formKey,
                         handleSelectMachine: widget.selectMachine,
                         handleSelectWorkOrder: widget.selectWorkOrder,
+                        onFormChanged: widget.onFormChanged,
                         maklonName: widget.maklonName,
                         withMaklonOrMachine: widget.withMaklonOrMachine,
                         withOnlyMaklon: widget.withOnlyMaklon,

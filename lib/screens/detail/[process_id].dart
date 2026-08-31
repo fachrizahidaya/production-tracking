@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/detail.dart';
+import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -291,6 +292,7 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 
@@ -360,6 +362,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 >>>>>>> ae9b2985 (fix: rework dyeing)
 =======
 >>>>>>> bd2f8083 (Release/version 1.2.1 (#30))
+=======
+
+>>>>>>> d50080d8 (fix: rework dyeing)
     if (!mounted) return;
 
     await _handleFetchMachine();

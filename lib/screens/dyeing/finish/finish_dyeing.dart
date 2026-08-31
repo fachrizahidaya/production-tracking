@@ -104,6 +104,7 @@ class _FinishDyeingState extends State<FinishDyeing> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           'rework_category': form['rework_category'],
           'rework_type': form['rework_type'] ?? [],
           'rework_method': form['rework_method'] ?? [],
@@ -116,6 +117,11 @@ class _FinishDyeingState extends State<FinishDyeing> {
 >>>>>>> ae9b2985 (fix: rework dyeing)
 =======
 >>>>>>> cb30986c (fix: finish dyeing)
+=======
+          'rework_category': form['rework_category'],
+          'rework_type': form['rework_type'] ?? [],
+          'rework_method': form['rework_method'] ?? [],
+>>>>>>> d50080d8 (fix: rework dyeing)
           '_method': 'PATCH',
           'attachments': form['attachments'],
         };

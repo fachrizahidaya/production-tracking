@@ -22,6 +22,7 @@ import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
+import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/components/process/finish/functions/fetch_function.dart';
 
 class FinishProcessManual extends StatefulWidget {
@@ -131,6 +132,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   late List<dynamic> unitOption = [];
   late List<dynamic> finishedItemGrb = [];
   late List<dynamic> finishedItemGood = [];
+  late List<dynamic> reworkCategoryOption = [];
   List<Map<String, dynamic>> spkDocuments = [];
 
   Map<String, dynamic> woData = {};
@@ -201,6 +203,16 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     await _handleFetchItemGrade();
     await _handleFetchUnit();
     await _handleFetchItemType();
+
+    if (widget.label == 'Dyeing' && data['rework'] == true) {
+      await _handleFetchReworkCategory();
+
+      if (!mounted) return;
+
+      setState(() {
+        _mapExistingDyeingRework(data);
+      });
+    }
 
     if ((widget.finishedItemOptions ?? []).isEmpty) {
       await _handleFetchFinishedMaterial();
@@ -427,6 +439,28 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+  Future<void> _handleFetchReworkCategory() async {
+    if (widget.label != 'Dyeing') return;
+
+    try {
+      final dyeingService = DyeingService();
+
+      final result = await dyeingService.fetchReworkCategoryOptions(context);
+
+      if (!mounted) return;
+
+      setState(() {
+        reworkCategoryOption = result;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$e')),
+      );
+    }
+  }
+
   void _setNumberControllerText(
     TextEditingController controller,
     dynamic value,
@@ -616,6 +650,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['items'] = List.from(data['items']);
       }
 
+      _mapExistingDyeingRework(data);
+
       if (data['grades'] != null) {
         widget.form?['grades'] = List.from(data['grades']);
       }
@@ -771,6 +807,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       widget.form?['semifinished_products'] ??= [];
       widget.form?['items'] ??= [];
 
+      if (widget.label == 'Dyeing' && data['rework'] == true) {
+        _sanitizeDyeingReworkForm();
+      }
+
       widget.form?['defects'] = _defects
           .map((e) => {
                 'defect_type_id': e['defect_type_id'],
@@ -800,6 +840,132 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         Navigator.pop(context);
       }
     }
+  }
+
+  void _sanitizeDyeingReworkForm() {
+    final reworkCategory = widget.form?['rework_category']?.toString();
+    final reworkTypes = List<String>.from(
+      widget.form?['rework_type'] ?? [],
+    );
+
+    widget.form?['rework_type'] ??= [];
+    widget.form?['rework_method'] ??= [];
+
+    if (reworkCategory != 'perbaikan') {
+      widget.form?['rework_type'] = [];
+      widget.form?['rework_method'] = [];
+    } else if (!reworkTypes.contains('perbaikan_warna')) {
+      widget.form?['rework_method'] = [];
+    }
+  }
+
+  void _mapExistingDyeingRework(Map<String, dynamic> d) {
+    if (widget.label != 'Dyeing' || d['rework'] != true) {
+      return;
+    }
+
+    final categories = List<Map<String, dynamic>>.from(
+      d['rework_categories'] ?? [],
+    );
+
+    widget.form?['rework'] = true;
+
+    final categoryTypes = categories
+        .map((e) => e['type']?.toString())
+        .whereType<String>()
+        .toList();
+    final existingParentCategory = d['rework_category']?.toString();
+    final inferredParentCategory =
+        existingParentCategory != null && existingParentCategory.isNotEmpty
+            ? existingParentCategory
+            : _findReworkCategoryFromResponseTypes(categoryTypes);
+    final isParentCategoryFromResponse = inferredParentCategory != null &&
+        categoryTypes.contains(inferredParentCategory);
+    final existingTypes =
+        isParentCategoryFromResponse ? <String>[] : categoryTypes;
+
+    final existingMethods = categories
+        .expand(
+          (e) => List<dynamic>.from(e['methods'] ?? []),
+        )
+        .map((e) => e is Map ? e['value']?.toString() : e.toString())
+        .whereType<String>()
+        .toList();
+
+    widget.form?['rework_type'] = existingTypes.isNotEmpty
+        ? existingTypes
+        : List<String>.from(d['rework_type'] ?? []);
+
+    widget.form?['rework_method'] = existingMethods.isNotEmpty
+        ? existingMethods
+        : List<String>.from(d['rework_method'] ?? []);
+
+    widget.form?['rework_category'] = inferredParentCategory;
+
+    if (widget.form?['rework_category'] == null &&
+        (widget.form?['rework_type'] as List).isNotEmpty) {
+      widget.form?['rework_category'] = _findParentReworkCategory(
+        widget.form?['rework_type'],
+      );
+    }
+
+    if (widget.form?['rework_category'] == null && categories.isNotEmpty) {
+      widget.form?['rework_category'] = 'perbaikan';
+    }
+
+    _sanitizeDyeingReworkForm();
+  }
+
+  String? _findReworkCategoryFromResponseTypes(List<String> types) {
+    if (types.isEmpty) {
+      return null;
+    }
+
+    final options = List<Map<String, dynamic>>.from(
+      reworkCategoryOption,
+    );
+
+    for (final option in options) {
+      final value = option['value']?.toString();
+
+      if (value != null && types.contains(value)) {
+        return value;
+      }
+    }
+
+    if (types.contains('toping')) {
+      return 'toping';
+    }
+
+    if (types.contains('perbaikan')) {
+      return 'perbaikan';
+    }
+
+    return null;
+  }
+
+  String? _findParentReworkCategory(List<String> types) {
+    final options = List<Map<String, dynamic>>.from(
+      reworkCategoryOption,
+    );
+
+    for (final category in options) {
+      final children = List<Map<String, dynamic>>.from(
+        category['children'] ?? [],
+      );
+
+      final found = children.any(
+        (child) => types.contains(
+          child['value']?.toString(),
+        ),
+      );
+
+      if (found) {
+        return category['value']?.toString();
+      }
+    }
+
+    return null;
   }
 
   Future<void> _handleFetchSemiFinishedItems() async {
@@ -905,6 +1071,16 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         await _getProcessView(
           e[widget.idProcess].toString(),
         );
+
+        if (widget.label == 'Dyeing' && data['rework'] == true) {
+          await _handleFetchReworkCategory();
+
+          if (!mounted) return;
+
+          setState(() {
+            _mapExistingDyeingRework(data);
+          });
+        }
 
         /*
       |--------------------------------------------------------------------------
@@ -1405,6 +1581,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               finishedItem: finishedItemOption,
                               finishedItemGrb: finishedItemGrb,
                               isInitializing: _isInitializingSorting,
+                              reworkCategoryOption: reworkCategoryOption,
                               qtyWarning: _itemWarningValidationMessage,
                               handleItemQtyWarning: (hasWarning) {
                                 if (!mounted) return;

@@ -19,6 +19,7 @@ class ListForm extends StatefulWidget {
   final isFormIncomplete;
   final handleSubmit;
   final handlePickAttachments;
+  final onFormChanged;
 
   const ListForm(
       {super.key,
@@ -34,6 +35,7 @@ class ListForm extends StatefulWidget {
       this.isFormIncomplete,
       this.handleSubmit,
       this.handlePickAttachments,
+      this.onFormChanged,
       this.attachments});
 
   @override
@@ -121,6 +123,7 @@ class _ListFormState extends State<ListForm> {
                                     .map((machine) => machine['value'])
                                     .toList();
                               });
+                              widget.onFormChanged?.call();
                             },
                             child: Icon(
                               Icons.close,
@@ -228,6 +231,7 @@ class _ListFormState extends State<ListForm> {
                                     widget.form['rework_method'] = [];
                                   }
                                 });
+                                widget.onFormChanged?.call();
                               },
                             ),
                             if (typeValue == 'perbaikan_warna' && isSelected)
@@ -285,6 +289,7 @@ class _ListFormState extends State<ListForm> {
                     checked: checked == true,
                   );
                 });
+                widget.onFormChanged?.call();
               },
             );
           }).toList(),

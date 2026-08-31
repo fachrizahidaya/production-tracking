@@ -89,6 +89,7 @@ class FormItems extends StatefulWidget {
   final getMachineStatus;
   final handleSelectMachine;
   final newMachines;
+  final onMachineChanged;
   final reworkCategoryOption;
   final handleItemQtyWarning;
 
@@ -158,6 +159,7 @@ class FormItems extends StatefulWidget {
       this.getMachineStatus,
       this.handleSelectMachine,
       this.newMachines,
+      this.onMachineChanged,
       this.reworkCategoryOption,
       this.handleItemQtyWarning});
 
@@ -1371,6 +1373,7 @@ class _FormItemsState extends State<FormItems>
               handleSelectMachine: widget.handleSelectMachine,
               newMachines: widget.newMachines ?? [],
               withAddMachine: false,
+              onMachineChanged: widget.onMachineChanged,
             ),
           ),
         Row(

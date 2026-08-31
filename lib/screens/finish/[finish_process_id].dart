@@ -1582,6 +1582,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               finishedItemGrb: finishedItemGrb,
                               isInitializing: _isInitializingSorting,
                               reworkCategoryOption: reworkCategoryOption,
+                              onMachineChanged: () => setState(() {}),
                               qtyWarning: _itemWarningValidationMessage,
                               handleItemQtyWarning: (hasWarning) {
                                 if (!mounted) return;

@@ -73,6 +73,7 @@ class FinishSection extends StatefulWidget {
   final finishedItemGood;
   final isInitializing;
   final reworkCategoryOption;
+  final onMachineChanged;
   final handleItemQtyWarning;
 
   const FinishSection(
@@ -137,6 +138,7 @@ class FinishSection extends StatefulWidget {
       this.finishedItemGrb,
       this.isInitializing,
       this.reworkCategoryOption,
+      this.onMachineChanged,
       this.handleItemQtyWarning});
 
   @override
@@ -374,6 +376,7 @@ class _FinishSectionState extends State<FinishSection> {
       finishedItemGrb: widget.finishedItemGrb,
       isInitializing: widget.isInitializing,
       reworkCategoryOption: widget.reworkCategoryOption,
+      onMachineChanged: widget.onMachineChanged,
       handleItemQtyWarning: widget.handleItemQtyWarning,
     );
   }

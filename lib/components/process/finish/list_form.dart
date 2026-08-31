@@ -70,6 +70,7 @@ class ListForm extends StatefulWidget {
   final finishedItemGood;
   final isInitializing;
   final reworkCategoryOption;
+  final onMachineChanged;
   final handleItemQtyWarning;
 
   const ListForm(
@@ -139,6 +140,7 @@ class ListForm extends StatefulWidget {
       this.finishedItemGrb,
       this.isInitializing,
       this.reworkCategoryOption,
+      this.onMachineChanged,
       this.handleItemQtyWarning});
 
   @override
@@ -288,6 +290,7 @@ class _ListFormState extends State<ListForm> {
         finishedItemGrb: widget.finishedItemGrb,
         isInitializing: widget.isInitializing,
         reworkCategoryOption: widget.reworkCategoryOption,
+        onMachineChanged: widget.onMachineChanged,
         handleItemQtyWarning: widget.handleItemQtyWarning,
       ),
     );

@@ -1353,6 +1353,7 @@ class _FormItemsState extends State<FormItems>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     widget.label != 'Long Slitting' &&
 =======
 >>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
@@ -1361,6 +1362,9 @@ class _FormItemsState extends State<FormItems>
 >>>>>>> ae9b2985 (fix: rework dyeing)
 =======
 >>>>>>> 2187e9a5 (feat: multi mesin dyeing - long slitting)
+=======
+                    widget.label != 'Long Slitting' &&
+>>>>>>> 7429ce6e (fix: rework dyeing)
                     widget.label != 'Long Hemming' &&
                     widget.label != 'Cross Cutting' &&
                     widget.label != 'Sewing' &&

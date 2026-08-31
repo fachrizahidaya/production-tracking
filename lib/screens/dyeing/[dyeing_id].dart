@@ -16,8 +16,11 @@ class DyeingDetail extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ae9b2985 (fix: rework dyeing)
+=======
+>>>>>>> 7429ce6e (fix: rework dyeing)
   const DyeingDetail({
     super.key,
     required this.id,
@@ -25,6 +28,7 @@ class DyeingDetail extends StatefulWidget {
     this.canDelete,
     this.canUpdate,
   });
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 =======
@@ -50,6 +54,8 @@ class DyeingDetail extends StatefulWidget {
 =======
       this.canUpdate});
 >>>>>>> 2187e9a5 (feat: multi mesin dyeing - long slitting)
+=======
+>>>>>>> 7429ce6e (fix: rework dyeing)
 
   @override
   State<DyeingDetail> createState() => _DyeingDetailState();
@@ -69,8 +75,11 @@ class _DyeingDetailState extends State<DyeingDetail> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ae9b2985 (fix: rework dyeing)
+=======
+>>>>>>> 7429ce6e (fix: rework dyeing)
       service: Provider.of<DyeingService>(
         context,
         listen: false,
@@ -86,6 +95,7 @@ class _DyeingDetailState extends State<DyeingDetail> {
       |
       */
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       service: Provider.of<DyeingService>(context, listen: false),
 >>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
@@ -94,6 +104,8 @@ class _DyeingDetailState extends State<DyeingDetail> {
 =======
       service: Provider.of<DyeingService>(context, listen: false),
 >>>>>>> 2187e9a5 (feat: multi mesin dyeing - long slitting)
+=======
+>>>>>>> 7429ce6e (fix: rework dyeing)
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<DyeingService>(
         context,
@@ -177,13 +189,17 @@ class _DyeingDetailState extends State<DyeingDetail> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ae9b2985 (fix: rework dyeing)
+=======
+>>>>>>> 7429ce6e (fix: rework dyeing)
       fetchMachine: (
         service,
         currentMachineIds,
       ) =>
           service.fetchOptionsDyeing(
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
       fetchMachine: (service, currentMachineIds) => service.fetchOptionsDyeing(
@@ -193,6 +209,8 @@ class _DyeingDetailState extends State<DyeingDetail> {
 =======
       fetchMachine: (service, currentMachineIds) => service.fetchOptionsDyeing(
 >>>>>>> 2187e9a5 (feat: multi mesin dyeing - long slitting)
+=======
+>>>>>>> 7429ce6e (fix: rework dyeing)
         currentMachineIds: currentMachineIds,
       ),
       idProcess: 'dyeing_id',
@@ -246,14 +264,18 @@ class _DyeingDetailState extends State<DyeingDetail> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ae9b2985 (fix: rework dyeing)
+=======
+>>>>>>> 7429ce6e (fix: rework dyeing)
           start_by_id: int.tryParse(
             form['start_by_id']?.toString() ?? '',
           ),
           end_by_id: int.tryParse(
             form['end_by_id']?.toString() ?? '',
           ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
           start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
@@ -265,6 +287,8 @@ class _DyeingDetailState extends State<DyeingDetail> {
           start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
           end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
 >>>>>>> 2187e9a5 (feat: multi mesin dyeing - long slitting)
+=======
+>>>>>>> 7429ce6e (fix: rework dyeing)
           machines: form['machines'] ?? [],
           machine_ids: form['machine_ids'] ?? [],
           attachments: form['attachments'],

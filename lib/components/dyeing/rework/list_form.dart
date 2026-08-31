@@ -122,6 +122,7 @@ class _ListFormState extends State<ListForm> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 if (widget.form?['wo_id'] != null)
                   Expanded(
@@ -131,6 +132,8 @@ class _ListFormState extends State<ListForm> {
                         child: _buildMultiMesin()),
                   ),
 >>>>>>> 55a0e7ec (feat: option rework dyeing)
+=======
+>>>>>>> 7429ce6e (fix: rework dyeing)
               ].separatedBy(CustomTheme().hGap('xl'))),
           if (widget.form?['wo_id'] != null) _buildSemiFinishedProducts(),
           if (widget.form?['wo_id'] != null)
@@ -150,6 +153,11 @@ class _ListFormState extends State<ListForm> {
 >>>>>>> ae9b2985 (fix: rework dyeing)
               ].separatedBy(CustomTheme().hGap('xl'))),
 >>>>>>> 11b79f06 (feat: option rework dyeing)
+          if (widget.form?['wo_id'] != null)
+            TemplateCard(
+                title: 'Mesin',
+                icon: Icons.local_laundry_service_outlined,
+                child: _buildMultiMesin()),
           if (widget.form?['wo_id'] != null)
             TemplateCard(
               title: 'Rework',

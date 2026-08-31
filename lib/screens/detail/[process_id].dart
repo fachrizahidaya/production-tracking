@@ -289,26 +289,27 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+
+>>>>>>> 7429ce6e (fix: rework dyeing)
     if (!mounted) return;
 >>>>>>> 5f7a4c3d (Release/version 1.2.1 (#30))
 
     await _handleFetchMachine();
+
     if (!mounted) return;
 
     await _handleFetchItemGrade();
+
     if (!mounted) return;
 
     await _handleFetchItemType();
-    if (!mounted) return;
-
-    await _handleFetchFinishedGrbMaterial();
-    if (!mounted) return;
-
-    await _handleFetchMachine();
 
     if (!mounted) return;
 
+<<<<<<< HEAD
 =======
     await _handleFetchMachine();
 >>>>>>> 12b70b7 (fix: mulai weaving)
@@ -321,6 +322,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
     if (!mounted) return;
 
+=======
+>>>>>>> 7429ce6e (fix: rework dyeing)
     if (widget.label == 'Dyeing' && data['rework'] == true) {
       await _handleFetchReworkCategory();
 

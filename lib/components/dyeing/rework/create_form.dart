@@ -15,11 +15,15 @@ class CreateForm extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> fc4fb8a2 (fix: kondisi button rework)
   final onFormChanged;
 =======
 >>>>>>> 55a0e7ec (feat: option rework dyeing)
+=======
+  final onFormChanged;
+>>>>>>> 77ccb664 (fix: kondisi button rework)
   final id;
   final isLoading;
 
@@ -72,6 +76,7 @@ class CreateForm extends StatefulWidget {
       this.selectMachine,
       this.selectReworkCategory,
       this.reworkCategoryOption,
+      this.onFormChanged,
       this.id,
       this.isLoading});
 >>>>>>> 55a0e7ec (feat: option rework dyeing)
@@ -91,10 +96,13 @@ class _CreateFormState extends State<CreateForm> {
     final woId = widget.form?['wo_id'];
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     final machines = widget.form?['machines'] as List? ?? [];
 
 >>>>>>> 55a0e7ec (feat: option rework dyeing)
+=======
+>>>>>>> 77ccb664 (fix: kondisi button rework)
     final reworkCategory = widget.form?['rework_category'];
 
     final reworkType = widget.form?['rework_type'] as List? ?? [];
@@ -107,9 +115,12 @@ class _CreateFormState extends State<CreateForm> {
 
     return woId == null ||
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         machines.isEmpty ||
 >>>>>>> 55a0e7ec (feat: option rework dyeing)
+=======
+>>>>>>> 77ccb664 (fix: kondisi button rework)
         reworkCategory == null ||
         (isPerbaikan && reworkType.isEmpty) ||
         (isPerbaikanWarna && reworkMethod.isEmpty);
@@ -119,10 +130,13 @@ class _CreateFormState extends State<CreateForm> {
     final woId = widget.form?['wo_id'];
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     final machines = widget.form?['machines'] as List? ?? [];
 
 >>>>>>> 55a0e7ec (feat: option rework dyeing)
+=======
+>>>>>>> 77ccb664 (fix: kondisi button rework)
     final reworkCategory = widget.form?['rework_category'];
 
     final reworkType = widget.form?['rework_type'] as List? ?? [];
@@ -138,12 +152,15 @@ class _CreateFormState extends State<CreateForm> {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     if (machines.isEmpty) {
       return 'Minimal pilih satu mesin.';
     }
 
 >>>>>>> 55a0e7ec (feat: option rework dyeing)
+=======
+>>>>>>> 77ccb664 (fix: kondisi button rework)
     if (reworkCategory == null || reworkCategory.toString().isEmpty) {
       return 'Kategori Rework wajib dipilih.';
     }
@@ -181,6 +198,7 @@ class _CreateFormState extends State<CreateForm> {
       handleSubmit: widget.handleSubmit,
       handlePickAttachments: null,
 <<<<<<< HEAD
+<<<<<<< HEAD
       onFormChanged: widget.onFormChanged,
 =======
       selectWorkOrder: widget.selectWorkOrder,
@@ -188,6 +206,9 @@ class _CreateFormState extends State<CreateForm> {
 >>>>>>> dae9522 (fix: rework)
 =======
 >>>>>>> 55a0e7ec (feat: option rework dyeing)
+=======
+      onFormChanged: widget.onFormChanged,
+>>>>>>> 77ccb664 (fix: kondisi button rework)
     );
   }
 }

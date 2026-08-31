@@ -303,6 +303,7 @@ class _ListFormState extends State<ListForm> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                               widget.onFormChanged?.call();
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
@@ -311,6 +312,9 @@ class _ListFormState extends State<ListForm> {
 >>>>>>> fc4fb8a2 (fix: kondisi button rework)
 =======
 >>>>>>> 55a0e7ec (feat: option rework dyeing)
+=======
+                              widget.onFormChanged?.call();
+>>>>>>> 77ccb664 (fix: kondisi button rework)
                             },
                             child: Icon(
                               Icons.close,
@@ -421,6 +425,7 @@ class _ListFormState extends State<ListForm> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 widget.onFormChanged?.call();
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
@@ -429,6 +434,9 @@ class _ListFormState extends State<ListForm> {
 >>>>>>> fc4fb8a2 (fix: kondisi button rework)
 =======
 >>>>>>> 55a0e7ec (feat: option rework dyeing)
+=======
+                                widget.onFormChanged?.call();
+>>>>>>> 77ccb664 (fix: kondisi button rework)
                               },
                             ),
                             if (typeValue == 'perbaikan_warna' && isSelected)
@@ -489,6 +497,7 @@ class _ListFormState extends State<ListForm> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 widget.onFormChanged?.call();
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
@@ -497,6 +506,9 @@ class _ListFormState extends State<ListForm> {
 >>>>>>> fc4fb8a2 (fix: kondisi button rework)
 =======
 >>>>>>> 55a0e7ec (feat: option rework dyeing)
+=======
+                widget.onFormChanged?.call();
+>>>>>>> 77ccb664 (fix: kondisi button rework)
               },
             );
           }).toList(),

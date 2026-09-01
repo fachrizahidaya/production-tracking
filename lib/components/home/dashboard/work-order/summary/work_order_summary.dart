@@ -236,12 +236,12 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Perkembangan Proses Produksi',
+                          'Status Proses Produksi',
                           style:
                               TextStyle(fontSize: CustomTheme().fontSize('lg')),
                         ),
                         Text(
-                          'Status setiap tahapan Work Order',
+                          'Tracking progress setiap tahap Work Order',
                           style: TextStyle(
                               fontSize: CustomTheme().fontSize('md'),
                               color: CustomTheme().colors('text-secondary')),

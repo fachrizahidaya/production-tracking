@@ -14,7 +14,6 @@ import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/long_sitting.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/long-sitting/%5Blong_sitting_id%5D.dart';
@@ -131,14 +130,6 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
     _loadMore();
   }
 
-  Future<void> _submitFilter() async {
-    Navigator.pop(context);
-    setState(() {
-      _isFiltered = _checkIsFiltered();
-    });
-    _loadMore();
-  }
-
   Future<void> _loadMore() async {
     if (params['page'] == '0') {
       setState(() {
@@ -162,14 +153,12 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
     if (loadData.isEmpty) {
       setState(() {
         _firstLoading = false;
-        _isLoadMore = false;
         _hasMore = false;
       });
     } else {
       setState(() {
         _dataList.addAll(loadData);
         _firstLoading = false;
-        _isLoadMore = false;
       });
     }
   }
@@ -205,6 +194,7 @@ class _LongSittingScreenState extends State<LongSittingScreen> {
           no: item['ls_no'].toString(),
           canDelete: _canDelete,
           canUpdate: _canUpdate,
+          openUpdateOnStart: openUpdateOnStart,
         ),
       ),
     );

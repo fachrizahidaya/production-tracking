@@ -24,7 +24,6 @@ class ReworkDyeingManual extends StatefulWidget {
   final Map<String, dynamic>? data;
   final Map<String, dynamic>? form;
   final handleSubmit;
-  final handleChangeInput;
   final dyeingId;
 
   const ReworkDyeingManual(
@@ -33,7 +32,6 @@ class ReworkDyeingManual extends StatefulWidget {
       this.data,
       this.form,
       this.handleSubmit,
-      this.handleChangeInput,
       this.dyeingId});
 
   @override
@@ -487,7 +485,6 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                   isLoading: _firstLoading,
                   form: widget.form,
                   formKey: _formKey,
-                  handleSubmit: widget.handleSubmit,
                   handleSelectMachine: _selectMachine,
                   handleSelectWorkOrder: _selectWorkOrder,
                   handleSelectReworkCategory: _selectReworkCategory,

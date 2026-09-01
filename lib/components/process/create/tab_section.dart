@@ -30,6 +30,7 @@ class TabSection extends StatefulWidget {
   final selectWorkOrder;
   final onFormChanged;
   final spkDocuments;
+  final handleChangeInput;
 
   const TabSection(
       {super.key,
@@ -51,7 +52,8 @@ class TabSection extends StatefulWidget {
       this.woData,
       this.processData,
       this.isMaklon,
-      this.spkDocuments});
+      this.spkDocuments,
+      this.handleChangeInput});
 
   @override
   State<TabSection> createState() => _TabSectionState();
@@ -234,6 +236,7 @@ class _TabSectionState extends State<TabSection> {
                         withOnlyMaklon: widget.withOnlyMaklon,
                         withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
                         isMaklon: widget.isMaklon,
+                        handleChangeInput: widget.handleChangeInput,
                       ),
                       NoteAttachmentSpk(
                         documents: widget.spkDocuments,

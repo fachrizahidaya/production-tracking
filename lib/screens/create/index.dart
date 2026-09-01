@@ -75,7 +75,13 @@ class _CreateProcessState extends State<CreateProcess> {
     'machine_ids': [],
     'semifinished_products': [],
     'items': [],
-    'spk_documents': []
+    'spk_documents': [],
+    /**
+     * Phase 2
+     */
+    'beam_weight': null,
+    'greige_weight': null,
+    'waste_weight': null
   };
 
   @override

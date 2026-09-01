@@ -21,6 +21,8 @@ class ListForm extends StatefulWidget {
   final withOnlyMaklon;
   final withNoMaklonOrMachine;
   final label;
+  final data;
+  final handleChangeInput;
 
   const ListForm(
       {super.key,
@@ -35,7 +37,9 @@ class ListForm extends StatefulWidget {
       this.withMaklonOrMachine = false,
       this.withOnlyMaklon = false,
       this.withNoMaklonOrMachine = false,
-      this.label});
+      this.label,
+      this.data,
+      this.handleChangeInput});
 
   @override
   State<ListForm> createState() => _ListFormState();

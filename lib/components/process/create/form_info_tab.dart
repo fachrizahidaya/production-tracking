@@ -23,6 +23,7 @@ class FormInfoTab extends StatefulWidget {
   final withMaklonOrMachine;
   final withOnlyMaklon;
   final withNoMaklonOrMachine;
+  final handleChangeInput;
 
   const FormInfoTab(
       {super.key,
@@ -40,7 +41,8 @@ class FormInfoTab extends StatefulWidget {
       this.maklonName,
       this.withMaklonOrMachine,
       this.withNoMaklonOrMachine,
-      this.withOnlyMaklon});
+      this.withOnlyMaklon,
+      this.handleChangeInput});
 
   @override
   State<FormInfoTab> createState() => _FormInfoTabState();
@@ -78,11 +80,12 @@ class _FormInfoTabState extends State<FormInfoTab> {
                 selectMachine: widget.handleSelectMachine,
                 onFormChanged: widget.onFormChanged,
                 id: widget.id,
-                isLoading: widget.isLoading,
                 withMaklonOrMachine: widget.withMaklonOrMachine,
                 withOnlyMaklon: widget.withOnlyMaklon,
                 withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
                 label: widget.label,
+                data: widget.processData,
+                handleChangeInput: widget.handleChangeInput,
               ),
               if (widget.form?['wo_id'] != null) ...[
                 InfoTab(

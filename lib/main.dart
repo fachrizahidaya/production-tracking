@@ -14,6 +14,7 @@ import 'package:textile_tracking/models/dashboard/work_order_chart.dart';
 import 'package:textile_tracking/models/dashboard/work_order_process.dart';
 import 'package:textile_tracking/models/dashboard/work_order_stats.dart';
 import 'package:textile_tracking/models/option/option_dyeing.dart';
+import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
@@ -40,6 +41,8 @@ import 'package:textile_tracking/screens/account/eula.dart';
 import 'package:textile_tracking/screens/account/privacy_policy.dart';
 import 'package:textile_tracking/screens/account/terms_conditions.dart';
 import 'package:textile_tracking/screens/cross-cutting/index.dart';
+import 'package:textile_tracking/screens/dyeing-preparation/list/index.dart';
+import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
 import 'package:textile_tracking/screens/dyeing/index.dart';
 import 'package:textile_tracking/screens/embroidery/index.dart';
 import 'package:textile_tracking/screens/home/index.dart';
@@ -51,10 +54,18 @@ import 'package:textile_tracking/screens/press-tumbler/index.dart';
 import 'package:textile_tracking/screens/printing/index.dart';
 import 'package:textile_tracking/screens/profile/index.dart';
 import 'package:textile_tracking/screens/sewing/index.dart';
+import 'package:textile_tracking/screens/shearing/list/index.dart';
+import 'package:textile_tracking/screens/shearing/model/shearing.dart';
+import 'package:textile_tracking/screens/sizing/list/index.dart';
+import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 import 'package:textile_tracking/screens/sorting/index.dart';
 import 'package:textile_tracking/screens/stenter/index.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/screens/tumbler/index.dart';
+import 'package:textile_tracking/screens/warping/list/index.dart';
+import 'package:textile_tracking/screens/warping/model/warping.dart';
+import 'package:textile_tracking/screens/weaving/list/index.dart';
+import 'package:textile_tracking/screens/weaving/model/weaving.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -76,11 +87,17 @@ void main() async {
     ChangeNotifierProvider(create: (_) => PrintingService()),
     ChangeNotifierProvider(create: (_) => SortingService()),
     ChangeNotifierProvider(create: (_) => PackingService()),
+    ChangeNotifierProvider(create: (_) => WeavingService()),
+    ChangeNotifierProvider(create: (_) => SizingService()),
+    ChangeNotifierProvider(create: (_) => WarpingService()),
+    ChangeNotifierProvider(create: (_) => ShearingService()),
+    ChangeNotifierProvider(create: (_) => DyeingPreparationService()),
     ChangeNotifierProvider(create: (_) => UnitService()),
     ChangeNotifierProvider(create: (_) => OptionUnitService()),
     ChangeNotifierProvider(create: (_) => OptionMachineService()),
     ChangeNotifierProvider(create: (_) => OptionItemTypeService()),
     ChangeNotifierProvider(create: (_) => OptionWorkOrderService()),
+    ChangeNotifierProvider(create: (_) => OptionGreigeOrderService()),
     ChangeNotifierProvider(create: (_) => OptionItemGradeService()),
     ChangeNotifierProvider(create: (_) => OptionMasterItemGradeService()),
     ChangeNotifierProvider(create: (_) => OptionDyeingService()),
@@ -144,6 +161,11 @@ class MyApp extends StatelessWidget {
         '/sortings': (context) => SortingScreen(),
         '/packings': (context) => PackingScreen(),
         '/printings': (context) => PrintingScreen(),
+        '/weavings': (context) => WeavingScreen(),
+        '/sizings': (context) => SizingScreen(),
+        '/warpings': (context) => WarpingScreen(),
+        '/shearings': (context) => ShearingScreen(),
+        '/dyeing-preparations': (context) => DyeingPreparationScreen(),
         '/account': (context) => Account(),
         '/eula': (context) => Eula(),
         '/privacy-policy': (context) => PrivacyPolicy(),

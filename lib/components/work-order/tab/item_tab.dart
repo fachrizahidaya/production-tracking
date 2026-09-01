@@ -46,7 +46,7 @@ class _ItemTabState extends State<ItemTab> {
     return TemplateCard(
       title: 'Material',
       icon: Icons.inventory_2_outlined,
-      child: widget.data.isEmpty
+      child: widget.data.isEmpty || items.isEmpty
           ? NoData()
           : Column(
               children: [

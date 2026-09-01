@@ -13,7 +13,6 @@ import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:provider/provider.dart';
@@ -121,6 +120,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
   Future<void> _handleFilter(key, value) async {
     setState(() {
       params['page'] = '0';
+
       if (value.toString() != '') {
         params[key.toString()] = value.toString();
       } else {
@@ -130,14 +130,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
 
     _isFiltered = _checkIsFiltered();
 
-    _loadMore();
-  }
-
-  Future<void> _submitFilter() async {
-    Navigator.pop(context);
-    setState(() {
-      _isFiltered = _checkIsFiltered();
-    });
     _loadMore();
   }
 
@@ -164,14 +156,12 @@ class _DyeingScreenState extends State<DyeingScreen> {
     if (loadData.isEmpty) {
       setState(() {
         _firstLoading = false;
-        _isLoadMore = false;
         _hasMore = false;
       });
     } else {
       setState(() {
         _dataList.addAll(loadData);
         _firstLoading = false;
-        _isLoadMore = false;
       });
     }
   }
@@ -207,6 +197,7 @@ class _DyeingScreenState extends State<DyeingScreen> {
           no: item['dyeing_no'].toString(),
           canDelete: _canDelete,
           canUpdate: _canUpdate,
+          openUpdateOnStart: openUpdateOnStart,
         ),
       ),
     );

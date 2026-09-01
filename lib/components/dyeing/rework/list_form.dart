@@ -9,8 +9,6 @@ class ListForm extends StatefulWidget {
   final formKey;
   final id;
   final form;
-  final data;
-  final attachments;
   final selectWorkOrder;
   final selectMachine;
   final selectReworkCategory;

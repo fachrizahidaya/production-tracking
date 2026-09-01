@@ -6,15 +6,12 @@ import 'package:textile_tracking/components/dyeing/rework/list_form.dart';
 class CreateForm extends StatefulWidget {
   final formKey;
   final form;
-  final handleSubmit;
-  final data;
   final selectWorkOrder;
   final selectMachine;
   final selectReworkCategory;
   final reworkCategoryOption;
   final onFormChanged;
   final id;
-  final isLoading;
 
   const CreateForm(
       {super.key,
@@ -90,14 +87,10 @@ class _CreateFormState extends State<CreateForm> {
 
   @override
   Widget build(BuildContext context) {
-    final attachments = (widget.form['attachments'] as List?) ?? [];
-
     return ListForm(
       formKey: widget.formKey,
       id: widget.id,
       form: widget.form,
-      data: widget.data,
-      attachments: attachments,
       selectWorkOrder: widget.selectWorkOrder,
       selectMachine: widget.selectMachine,
       selectReworkCategory: widget.selectReworkCategory,

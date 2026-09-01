@@ -371,6 +371,17 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
     );
   }
 
+  Future<void> fetchDyeingPreparationOptions({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+  }) async {
+    await _fetchOptionsGeneric(
+      isInitialLoad: isInitialLoad,
+      type: 'persiapan_dyeing',
+      searchQuery: searchQuery,
+    );
+  }
+
   Future<void> fetchPackingOptions({
     bool isInitialLoad = false,
     String searchQuery = '',

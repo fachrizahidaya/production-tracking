@@ -109,7 +109,8 @@ class _HomeState extends State<Home> {
               menu['name'] != 'Material' &&
               menu['name'] != 'Grade Material' &&
               menu['name'] != 'Master Data' &&
-              menu['name'] != 'User Management')
+              menu['name'] != 'User Management' &&
+              menu['name'] != 'Persiapan Dyeing')
           .toList();
 
       return filteredData

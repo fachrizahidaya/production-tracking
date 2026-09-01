@@ -14,7 +14,6 @@ import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/item_field.dart';
 import 'package:textile_tracking/models/process/press_tumbler.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/press-tumbler/%5Bpress_tumbler_id%5D.dart';
@@ -131,14 +130,6 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
     _loadMore();
   }
 
-  Future<void> _submitFilter() async {
-    Navigator.pop(context);
-    setState(() {
-      _isFiltered = _checkIsFiltered();
-    });
-    _loadMore();
-  }
-
   Future<void> _loadMore() async {
     if (params['page'] == '0') {
       setState(() {
@@ -162,14 +153,12 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
     if (loadData.isEmpty) {
       setState(() {
         _firstLoading = false;
-        _isLoadMore = false;
         _hasMore = false;
       });
     } else {
       setState(() {
         _dataList.addAll(loadData);
         _firstLoading = false;
-        _isLoadMore = false;
       });
     }
   }
@@ -205,6 +194,7 @@ class _PressTumblerScreenState extends State<PressTumblerScreen> {
           no: item['press_no'].toString(),
           canDelete: _canDelete,
           canUpdate: _canUpdate,
+          openUpdateOnStart: openUpdateOnStart,
         ),
       ),
     );

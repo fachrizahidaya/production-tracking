@@ -255,7 +255,11 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     await _handleFetchMachine();
     await _handleFetchItemGrade();
     await _handleFetchFinishedGrbMaterial();
+    if (!mounted) return;
+
     await _handleFetchFinishedGoodMaterial();
+    if (!mounted) return;
+
     _syncGradesWithOptions();
     _syncDefectsWithOptions();
 

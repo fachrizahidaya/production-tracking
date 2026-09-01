@@ -8,6 +8,7 @@ import 'package:textile_tracking/components/master/form/packing_number_form.dart
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
+import 'package:textile_tracking/components/process/finish/process/form_helpers.dart';
 import 'package:textile_tracking/components/process/finish/process/long_hemming_weight.dart';
 import 'package:textile_tracking/components/process/finish/process/process_item_qty.dart';
 import 'package:textile_tracking/components/process/finish/process/qty_weight.dart';
@@ -64,6 +65,7 @@ class FormItems extends StatefulWidget {
   final getMachineStatus;
   final handleSelectMachine;
   final newMachines;
+  final handleItemQtyWarning;
 
   const FormItems(
       {super.key,
@@ -109,7 +111,8 @@ class FormItems extends StatefulWidget {
       this.isInitializing,
       this.getMachineStatus,
       this.handleSelectMachine,
-      this.newMachines});
+      this.newMachines,
+      this.handleItemQtyWarning});
 
   @override
   State<FormItems> createState() => _FormItemsState();
@@ -978,6 +981,57 @@ class _FormItemsState extends State<FormItems>
                       'items',
                       items,
                     );
+
+                    if (key == 'qty') {
+                      bool hasWarning = false;
+
+                      final workOrders =
+                          widget.processData['work_orders']?['items'];
+
+                      if (workOrders is List) {
+                        for (final item in items) {
+                          final woItemId = item['wo_item_id'];
+                          final itemCode = item['finished_product']?['code'];
+
+                          Map<String, dynamic>? matched;
+
+                          for (final raw in workOrders) {
+                            if (raw is! Map) continue;
+
+                            if (raw['id'].toString() == woItemId?.toString() &&
+                                raw['item_code'].toString() ==
+                                    itemCode?.toString()) {
+                              matched = Map<String, dynamic>.from(raw);
+                              break;
+                            }
+                          }
+
+                          if (matched == null) continue;
+
+                          final referenceQty = double.tryParse(
+                                matched['qty']?.toString() ?? '0',
+                              ) ??
+                              0;
+
+                          final inputQty = double.tryParse(
+                                item['qty']?.toString() ?? '0',
+                              ) ??
+                              0;
+
+                          if (referenceQty <= 0) continue;
+
+                          final lowerLimit = referenceQty * 0.90;
+                          final upperLimit = referenceQty * 1.10;
+
+                          if (inputQty < lowerLimit || inputQty > upperLimit) {
+                            hasWarning = true;
+                            break;
+                          }
+                        }
+                      }
+
+                      widget.handleItemQtyWarning?.call(hasWarning);
+                    }
                   },
                 ),
             if (widget.label != 'Long Hemming' &&
@@ -1118,6 +1172,7 @@ class _FormItemsState extends State<FormItems>
                   finishedItem: widget.finishedItem,
                   woData: widget.woData,
                   isInitializing: widget.isInitializing,
+                  onQtyWarning: widget.handleItemQtyWarning,
                 ),
               if (widget.label == 'Packing')
                 DefaultTabController(

@@ -256,7 +256,7 @@ class _DashboardState extends State<Dashboard> {
       }
     });
 
-    // _handleFetchSummary();
+    _handleFetchSummary();
   }
 
   void _handleProcessFilter(String key, dynamic value) {

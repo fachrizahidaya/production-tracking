@@ -223,7 +223,7 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
                   child: const TabBar(
                     tabs: [
                       Tab(text: 'Form'),
-                      Tab(text: 'Greige Order'),
+                      Tab(text: 'Order Greige'),
                     ],
                   ),
                 ),

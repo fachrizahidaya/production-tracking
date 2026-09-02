@@ -285,7 +285,7 @@ class _CreateGreigeOrderProcessManualState
       useSafeArea: true,
       builder: (BuildContext context) {
         return SelectDialog(
-          label: 'Greige Order',
+          label: 'Order Greige',
           options: greigeOrderOption,
           selected: widget.form?['order_greige_id']?.toString() ?? '',
           handleChangeValue: (selected) async {

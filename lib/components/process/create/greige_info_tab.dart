@@ -133,7 +133,7 @@ class GreigeInfoTab extends StatelessWidget {
             child: _buildWorkOrderBox(),
           ),
           TemplateCard(
-            title: 'Detail Greige Order',
+            title: 'Detail Order Greige',
             icon: Icons.info_outline,
             child: _buildDetailGrid(),
           ),
@@ -537,7 +537,7 @@ class GreigeInfoTab extends StatelessWidget {
         DataColumn(label: Text('LEBAR BEAM')),
         DataColumn(label: Text('NO. MC')),
         DataColumn(label: Text('BEAM A/B')),
-        DataColumn(label: Text('ATRIBUT TAMBAHAN')),
+        // DataColumn(label: Text('ATRIBUT TAMBAHAN')),
       ],
       rows: items
           .map(
@@ -548,7 +548,7 @@ class GreigeInfoTab extends StatelessWidget {
                 DataCell(_richUnit(item['beam_width'], 'M')),
                 DataCell(Text(_display(item['machine_no']))),
                 DataCell(Text(_display(item['beam_ab']))),
-                DataCell(Text(_display(item['extra_attributes']))),
+                // DataCell(Text(_display(item['extra_attributes']))),
               ],
             ),
           )

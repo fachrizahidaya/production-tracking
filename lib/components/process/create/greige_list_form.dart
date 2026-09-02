@@ -83,16 +83,11 @@ class _GreigeListFormState extends State<GreigeListForm> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.account_tree_outlined,
-            size: 18,
-            color: CustomTheme().buttonColor('primary'),
-          ),
           Text(
             label,
             style: TextStyle(
               color: CustomTheme().buttonColor('primary'),
-              fontSize: CustomTheme().fontSize('sm'),
+              fontSize: CustomTheme().fontSize('md'),
               fontWeight: CustomTheme().fontWeight('bold'),
             ),
           ),
@@ -140,36 +135,33 @@ class _GreigeListFormState extends State<GreigeListForm> {
           if (widget.form?['order_greige_id'] != null)
             Column(
               children: [
+                TemplateCard(
+                  title: 'Mesin',
+                  icon: Icons.local_laundry_service_outlined,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // if (widget.form?['wo_id'] != null)
+                      //   Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [_buildMultiMesin()]
+                      //         .separatedBy(CustomTheme().vGap('xl')),
+                      //   )
+                      // else if (widget.form?['wo_id'] != null)
+                      //   _buildMultiMesin()
+                      // else
+                      SelectForm(
+                        label: 'Mesin',
+                        onTap: () => widget.selectMachine(),
+                        selectedLabel: widget.form['nama_mesin'] ?? '',
+                        selectedValue: widget.form['machine_id'].toString(),
+                        required: true,
+                      ),
+                    ].separatedBy(CustomTheme().vGap('xl')),
+                  ),
+                ),
                 Row(
                   children: [
-                    Expanded(
-                      child: TemplateCard(
-                        title: 'Mesin',
-                        icon: Icons.local_laundry_service_outlined,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // if (widget.form?['wo_id'] != null)
-                            //   Column(
-                            //     crossAxisAlignment: CrossAxisAlignment.start,
-                            //     children: [_buildMultiMesin()]
-                            //         .separatedBy(CustomTheme().vGap('xl')),
-                            //   )
-                            // else if (widget.form?['wo_id'] != null)
-                            //   _buildMultiMesin()
-                            // else
-                            SelectForm(
-                              label: 'Mesin',
-                              onTap: () => widget.selectMachine(),
-                              selectedLabel: widget.form['nama_mesin'] ?? '',
-                              selectedValue:
-                                  widget.form['machine_id'].toString(),
-                              required: true,
-                            ),
-                          ].separatedBy(CustomTheme().vGap('xl')),
-                        ),
-                      ),
-                    ),
                     if (widget.label == 'Warping')
                       Expanded(
                         child: WarpingSection(
@@ -200,15 +192,15 @@ class _GreigeListFormState extends State<GreigeListForm> {
                       ),
                   ].separatedBy(CustomTheme().hGap('xl')),
                 ),
-                NoteEditor(
-                  controller: widget.note,
-                  formKey: 'notes',
-                  label: 'Catatan',
-                  form: widget.form,
-                  onChanged: (value) {
-                    widget.handleChangeInput('notes', value);
-                  },
-                )
+                // NoteEditor(
+                //   controller: widget.note,
+                //   formKey: 'notes',
+                //   label: 'Catatan',
+                //   form: widget.form,
+                //   onChanged: (value) {
+                //     widget.handleChangeInput('notes', value);
+                //   },
+                // )
               ].separatedBy(CustomTheme().vGap('2xl')),
             ),
         ].separatedBy(CustomTheme().vGap('2xl')),

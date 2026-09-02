@@ -164,20 +164,43 @@ class _LoginState extends State<Login> {
           ),
           Scaffold(
             backgroundColor: Colors.transparent,
+            resizeToAvoidBottomInset: true,
             body: SafeArea(
-              child: Center(
-                child: SingleChildScrollView(
-                  child: LoginForm(
-                    key: _key,
-                    username: _username,
-                    password: _password,
-                    isDisabled: !_isFormValid,
-                    isLoading: _isLoading,
-                    handlePress: () {
-                      _handleSubmit(context);
-                    },
-                  ),
-                ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final width = constraints.maxWidth;
+                  final height = constraints.maxHeight;
+
+                  final isMobile = width < 600;
+                  final isSmallMobile = width < 400;
+
+                  return SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isMobile ? 20 : 24,
+                      vertical: isMobile ? 20 : 32,
+                    ),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: height - (isMobile ? 40 : 64),
+                      ),
+                      child: Center(
+                        child: LoginForm(
+                          key: _key,
+                          username: _username,
+                          password: _password,
+                          isDisabled: !_isFormValid,
+                          isLoading: _isLoading,
+                          isMobile: isMobile,
+                          isSmallMobile: isSmallMobile,
+                          handlePress: () {
+                            _handleSubmit(context);
+                          },
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),

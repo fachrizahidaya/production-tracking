@@ -114,18 +114,24 @@ class _SummaryCardState extends State<SummaryCard>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => _animationController.forward(),
-      onTapUp: (_) => _animationController.reverse(),
-      onTapCancel: () => _animationController.reverse(),
-      onTap: widget.onTap,
-      child: SizedBox(
-        width: double.infinity,
-        child: ScaleTransition(
-          scale: _scaleAnimation,
-          child: _buildCard(widget.isMobile),
-        ),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isTablet = constraints.maxWidth > 400;
+
+        return GestureDetector(
+          onTapDown: (_) => _animationController.forward(),
+          onTapUp: (_) => _animationController.reverse(),
+          onTapCancel: () => _animationController.reverse(),
+          onTap: widget.onTap,
+          child: SizedBox(
+            width: double.infinity,
+            child: ScaleTransition(
+              scale: _scaleAnimation,
+              child: _buildCard(isTablet),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -138,8 +144,11 @@ class _SummaryCardState extends State<SummaryCard>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+>>>>>>> d5a67e50 (fix: filter summary)
   Widget _buildCard(bool isTablet) {
     return Container(
 <<<<<<< HEAD
@@ -175,6 +184,7 @@ class _SummaryCardState extends State<SummaryCard>
 =======
   Widget _buildCard(bool isMobile) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   Widget _buildCard(bool isTablet) {
 >>>>>>> 3bba1171 (fix: filter summary)
@@ -198,6 +208,11 @@ class _SummaryCardState extends State<SummaryCard>
 >>>>>>> b167f1b0 (fix: filter summary)
 =======
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+=======
+  Widget _buildCard(bool isTablet) {
+>>>>>>> 887d25a (fix: filter summary)
+>>>>>>> d5a67e50 (fix: filter summary)
     final Map<String, dynamic> summary =
         (widget.data['summary'] as Map<String, dynamic>?) ??
             {
@@ -210,6 +225,7 @@ class _SummaryCardState extends State<SummaryCard>
     final statusColor = _getSummaryColor(summary);
 
     return AnimatedContainer(
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
@@ -247,9 +263,13 @@ class _SummaryCardState extends State<SummaryCard>
         borderRadius: BorderRadius.circular(8),
 =======
       duration: const Duration(milliseconds: 200),
+=======
+      width: double.infinity,
+      duration: Duration(milliseconds: 200),
+>>>>>>> d5a67e50 (fix: filter summary)
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: widget.isSelected
               ? CustomTheme().buttonColor('primary')
@@ -261,24 +281,32 @@ class _SummaryCardState extends State<SummaryCard>
             color: widget.isSelected
                 ? CustomTheme().buttonColor('primary').withOpacity(0.15)
                 : Colors.black.withOpacity(0.05),
-            blurRadius: widget.isSelected ? 12 : 8,
-            offset: const Offset(0, 2),
+            blurRadius: widget.isSelected ? 12 : 10,
+            offset: Offset(0, 2),
           ),
         ],
       ),
       child: ClipRRect(
+<<<<<<< HEAD
         borderRadius: BorderRadius.circular(10),
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+        borderRadius: BorderRadius.circular(8),
+>>>>>>> d5a67e50 (fix: filter summary)
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             CardHeader(
               data: widget.data,
 <<<<<<< HEAD
+<<<<<<< HEAD
               isTablet: isTablet,
 =======
               isTablet: !isMobile,
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+              isTablet: isTablet,
+>>>>>>> d5a67e50 (fix: filter summary)
               statusColor: statusColor,
               filter: widget.filter,
               getTotalCount: _getTotalCount,
@@ -287,10 +315,14 @@ class _SummaryCardState extends State<SummaryCard>
               data: widget.data,
               filter: widget.filter,
 <<<<<<< HEAD
+<<<<<<< HEAD
               isTablet: isTablet,
 =======
               isTablet: !isMobile,
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+              isTablet: isTablet,
+>>>>>>> d5a67e50 (fix: filter summary)
               showProgress: widget.showProgress,
               showWorkOrdersByStatusDialog: _showWorkOrdersByStatusDialog,
             ),

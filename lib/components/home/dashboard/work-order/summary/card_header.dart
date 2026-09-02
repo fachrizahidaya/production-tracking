@@ -44,10 +44,13 @@ class CardHeader extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
 =======
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+>>>>>>> d5a67e50 (fix: filter summary)
     return Row(
       children: [
         Expanded(
@@ -106,6 +109,7 @@ class CardHeader extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 3bba1171 (fix: filter summary)
 =======
@@ -138,6 +142,23 @@ class CardHeader extends StatelessWidget {
       onTap: () {
         _navigateToProcess(context);
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+=======
+>>>>>>> 887d25a (fix: filter summary)
+    return InkWell(
+      onTap: () {
+        final String name = data['name']?.toString() ?? '';
+
+        final String slug = name.toLowerCase().replaceAll(' ', '-');
+
+        final String routeName = slug == 'press'
+            ? '/press'
+            : slug == 'embroidery'
+                ? '/embroideries'
+                : '/${slug}s';
+
+        Navigator.pushNamed(context, routeName);
+>>>>>>> d5a67e50 (fix: filter summary)
       },
       child: Container(
         padding: CustomTheme().padding('card'),
@@ -184,12 +205,18 @@ class CardHeader extends StatelessWidget {
               child: Icon(
                 _getProcessIcon(data['name']),
 <<<<<<< HEAD
+<<<<<<< HEAD
                 size: isTablet
                     ? CustomTheme().iconSize('3xl')
                     : CustomTheme().iconSize('2xl'),
 =======
                 size: CustomTheme().iconSize('3xl'),
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+                size: isTablet
+                    ? CustomTheme().iconSize('3xl')
+                    : CustomTheme().iconSize('2xl'),
+>>>>>>> d5a67e50 (fix: filter summary)
                 color: statusColor,
               ),
             ),
@@ -200,10 +227,14 @@ class CardHeader extends StatelessWidget {
                     displayTitle ?? '-',
                     style: TextStyle(
 <<<<<<< HEAD
+<<<<<<< HEAD
                       fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
 =======
                       fontSize: CustomTheme().fontSize('lg'),
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+                      fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
+>>>>>>> d5a67e50 (fix: filter summary)
                       fontWeight: CustomTheme().fontWeight('bold'),
                       color: Colors.grey[800],
                     ),
@@ -215,6 +246,7 @@ class CardHeader extends StatelessWidget {
                     size: CustomTheme().iconSize('xl'),
                     color: Colors.grey[500],
                   ),
+<<<<<<< HEAD
 <<<<<<< HEAD
                 ].separatedBy(CustomTheme().hGap('sm')),
               ),
@@ -318,6 +350,13 @@ class CardHeader extends StatelessWidget {
             ),
           ],
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+                ].separatedBy(CustomTheme().hGap('sm')),
+              ),
+            ),
+            _buildTotalBadge(total, statusColor, isTablet),
+          ].separatedBy(CustomTheme().hGap('xl')),
+>>>>>>> d5a67e50 (fix: filter summary)
         ),
       ),
     );

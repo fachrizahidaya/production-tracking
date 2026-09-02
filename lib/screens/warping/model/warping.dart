@@ -229,18 +229,19 @@ class Warping {
 
   factory Warping.fromJson(Map<String, dynamic> json) {
     return Warping(
-        id: json['id'],
-        warpingNo: json['warping_no'],
-        machineId: json['machine_id'],
-        orderGreigeId: json['order_greige_id'],
-        warpingType: json['warping_type'],
-        yarnQty: json['yarn_qty'],
-        notes: json['notes'],
-        lengths: json['lengths'] != null
-            ? List<dynamic>.from(json['lengths'])
-            : null,
-        section: json['section'],
-        beamQty: json['beam_qty']);
+      id: json['id'],
+      warpingNo: json['warping_no'],
+      machineId: json['machine_id'],
+      orderGreigeId: json['order_greige_id'],
+      warpingType: json['warping_type'],
+      yarnQty: json['yarn_qty'],
+      notes: json['notes'],
+      lengths:
+          json['lengths'] != null ? List<dynamic>.from(json['lengths']) : null,
+      section: json['section'],
+      beamQty: json['beam_qty'],
+      attachments: json['attachments'] ?? [],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -255,7 +256,8 @@ class Warping {
       'notes': notes,
       'lengths': lengths,
       'section': section,
-      'beam_qty': beamQty
+      'beam_qty': beamQty,
+      'attachments': attachments,
     };
 <<<<<<< HEAD
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)

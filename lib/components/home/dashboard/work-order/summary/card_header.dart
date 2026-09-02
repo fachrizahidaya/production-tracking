@@ -35,43 +35,19 @@ class CardHeader extends StatelessWidget {
 
     final displayTitle = data['name'] == 'Sorting' ? 'Sortir' : data['name'];
 
-    if (!isTablet) {
-      return _buildMobileHeader(
-        context,
-        displayTitle,
-        total,
-      );
-    }
-
-    return _buildTabletHeader(
-      context,
-      displayTitle,
-      total,
-    );
-  }
-
-  void _navigateToProcess(BuildContext context) {
-    final String name = data['name']?.toString() ?? '';
-
-    final String slug = name.toLowerCase().replaceAll(' ', '-');
-
-    final String routeName = slug == 'press'
-        ? '/press'
-        : slug == 'embroidery'
-            ? '/embroideries'
-            : '/${slug}s';
-
-    Navigator.pushNamed(context, routeName);
-  }
-
-  Widget _buildTabletHeader(
-    BuildContext context,
-    String displayTitle,
-    int total,
-  ) {
     return InkWell(
       onTap: () {
-        _navigateToProcess(context);
+        final String name = data['name']?.toString() ?? '';
+
+        final String slug = name.toLowerCase().replaceAll(' ', '-');
+
+        final String routeName = slug == 'press'
+            ? '/press'
+            : slug == 'embroidery'
+                ? '/embroideries'
+                : '/${slug}s';
+
+        Navigator.pushNamed(context, routeName);
       },
       child: Container(
         padding: CustomTheme().padding('card'),
@@ -101,7 +77,9 @@ class CardHeader extends StatelessWidget {
               ),
               child: Icon(
                 _getProcessIcon(data['name']),
-                size: CustomTheme().iconSize('3xl'),
+                size: isTablet
+                    ? CustomTheme().iconSize('3xl')
+                    : CustomTheme().iconSize('2xl'),
                 color: statusColor,
               ),
             ),
@@ -111,7 +89,7 @@ class CardHeader extends StatelessWidget {
                   Text(
                     displayTitle ?? '-',
                     style: TextStyle(
-                      fontSize: CustomTheme().fontSize('lg'),
+                      fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
                       fontWeight: CustomTheme().fontWeight('bold'),
                       color: Colors.grey[800],
                     ),
@@ -123,101 +101,11 @@ class CardHeader extends StatelessWidget {
                     size: CustomTheme().iconSize('xl'),
                     color: Colors.grey[500],
                   ),
-                ],
+                ].separatedBy(CustomTheme().hGap('sm')),
               ),
             ),
-            _buildTotalBadge(
-              total,
-              statusColor,
-              true,
-            ),
-          ].separatedBy(
-            CustomTheme().hGap('xl'),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMobileHeader(
-    BuildContext context,
-    String displayTitle,
-    int total,
-  ) {
-    return InkWell(
-      onTap: () {
-        _navigateToProcess(context);
-      },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              statusColor.withOpacity(0.15),
-              statusColor.withOpacity(0.05),
-            ],
-          ),
-          border: Border(
-            bottom: BorderSide(
-              color: statusColor.withOpacity(0.2),
-            ),
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: statusColor.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                _getProcessIcon(data['name']),
-                size: 22,
-                color: statusColor,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          displayTitle ?? '-',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: CustomTheme().fontWeight('bold'),
-                            color: Colors.grey[800],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Icon(
-                        Icons.chevron_right,
-                        size: 18,
-                        color: Colors.grey[500],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    '$total Work Order',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            _buildTotalBadge(total, statusColor, isTablet),
+          ].separatedBy(CustomTheme().hGap('xl')),
         ),
       ),
     );

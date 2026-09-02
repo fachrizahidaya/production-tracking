@@ -254,6 +254,7 @@ class GreigeProcessDetailList extends StatelessWidget {
             icon: Icons.account_tree_outlined,
             child: _buildResultInfo(false),
           ),
+          _buildPasangSection(false),
           _buildSectionCard(
             title: 'Kebutuhan Benang',
             icon: Icons.layers_outlined,
@@ -297,6 +298,7 @@ class GreigeProcessDetailList extends StatelessWidget {
                 icon: Icons.account_tree_outlined,
                 child: _buildResultInfo(true),
               ),
+              _buildPasangSection(true),
               _buildSectionCard(
                 title: 'Timeline Proses',
                 icon: Icons.timeline_outlined,
@@ -852,8 +854,13 @@ class GreigeProcessDetailList extends StatelessWidget {
           'icon': Icons.straighten_outlined
         },
         {
-          'label': 'Jumlah Section',
-          'value': _withUnit(data['section'], ''),
+          'label':
+              data['warping_type'] == 'single_warping' ? 'Beam' : 'Section',
+          'value': _withUnit(
+              data['warping_type'] == 'single_warping'
+                  ? data['beam_qty']
+                  : data['section'],
+              ''),
           'icon': Icons.view_column_outlined
         },
       ];
@@ -901,6 +908,86 @@ class GreigeProcessDetailList extends StatelessWidget {
         'icon': Icons.scale_outlined
       },
     ];
+  }
+
+  Widget _buildPasangSection(bool isTablet) {
+    final pasangs = _listValue(data['pasangs']);
+
+    if (pasangs.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return _buildSectionCard(
+      title: 'Panjang Pasang',
+      icon: Icons.straighten_outlined,
+      child: _buildPasangList(pasangs, isTablet),
+    );
+  }
+
+  Widget _buildPasangList(
+    List<Map<String, dynamic>> pasangs,
+    bool isTablet,
+  ) {
+    return Column(
+      children: pasangs.asMap().entries.map((entry) {
+        final index = entry.key;
+        final pasang = entry.value;
+
+        final pasangNo = pasang['pasang_no'] ?? index + 1;
+        final length = pasang['length'];
+
+        return Container(
+          margin: EdgeInsets.only(
+            bottom: index == pasangs.length - 1 ? 0 : 10,
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 12,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: Colors.grey.shade200,
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.grey.shade100,
+                ),
+                child: Center(
+                  child: Text(
+                    '$pasangNo',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Pasang $pasangNo',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Text(
+                _withUnit(length, 'M'),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
   }
 }
 

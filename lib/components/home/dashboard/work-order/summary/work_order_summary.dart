@@ -452,7 +452,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
         child: Center(
           child: Padding(
             padding: CustomTheme().padding('content'),
-            child: const CircularProgressIndicator(),
+            child: CircularProgressIndicator(),
           ),
         ),
       );
@@ -565,8 +565,8 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: isSingleItem
-          ? const NeverScrollableScrollPhysics()
-          : const BouncingScrollPhysics(),
+          ? NeverScrollableScrollPhysics()
+          : BouncingScrollPhysics(),
       child: Row(
         children: _activeData.map<Widget>((item) {
           final mappedItem = _mapApiToSummaryCard(item);
@@ -574,7 +574,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
           return Padding(
             padding: CustomTheme().padding('card'),
             child: SizedBox(
-              width: isSingleItem ? screenWidthTablet : 500,
+              width: isSingleItem ? screenWidth : 500,
               child: SummaryCard(
                 data: mappedItem,
                 showProgress: _showProgress,

@@ -1,5 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
@@ -10,12 +13,18 @@ import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/greige_info_tab.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
+import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/warping/model/warping.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
 
 class FinishWarpingProcessManual extends StatefulWidget {
   final dynamic id;
@@ -59,6 +68,10 @@ class _FinishWarpingProcessManualState
   Map<String, dynamic> processData = {};
   String? processId;
 
+  late List<Map<String, dynamic>> allAttachments;
+
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +79,15 @@ class _FinishWarpingProcessManualState
     processId = widget.processId?.toString();
     woData = Map<String, dynamic>.from(widget.data ?? {});
     _noteController.text = widget.form?['notes']?.toString() ?? '';
+
+    final existing = List<Map<String, dynamic>>.from(
+      widget.form?['attachments'] ?? [],
+    );
+
+    allAttachments = [
+      ...existing,
+      {'is_add_button': true},
+    ];
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _postInit();
@@ -139,6 +161,9 @@ class _FinishWarpingProcessManualState
       await _warpingService.getDataView(context, id);
 
       final data = _warpingService.dataView['data'];
+      final attachments = List<Map<String, dynamic>>.from(
+        data['attachments'] ?? [],
+      );
 
       // ambil jumlah form dari WO
       final int pasangQty =
@@ -173,6 +198,12 @@ class _FinishWarpingProcessManualState
         widget.form?['no_og'] =
             data['order_greige']?['og_no'] ?? widget.form?['no_og'];
         widget.form?['notes'] = data['notes']?.toString() ?? '';
+        widget.form?['attachments'] = attachments;
+
+        allAttachments = [
+          ...attachments,
+          {'is_add_button': true},
+        ];
 
         // simpan list length ke form
         widget.form?['lengths'] =
@@ -279,6 +310,147 @@ class _FinishWarpingProcessManualState
     );
   }
 
+  Future<File?> compressImage(String path) async {
+    if (kIsWeb) {
+      return File(path);
+    }
+
+    final dir = await getTemporaryDirectory();
+
+    final targetPath =
+        '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+    final result = await FlutterImageCompress.compressAndGetFile(
+      path,
+      targetPath,
+      quality: 70,
+    );
+
+    return result != null ? File(result.path) : null;
+  }
+
+  Future<void> _pickAttachments() async {
+    try {
+      final picker = ImagePicker();
+
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.camera,
+      );
+
+      if (image == null) return;
+
+      final compressedFile = await compressImage(image.path);
+
+      if (compressedFile == null) return;
+
+      setState(() {
+        // Hapus tombol tambah sementara
+        allAttachments.removeWhere(
+          (e) => e['is_add_button'] == true,
+        );
+
+        final newFile = {
+          'name': compressedFile.path.split('/').last,
+          'path': compressedFile.path,
+          'extension': compressedFile.path.split('.').last,
+          'isNew': true,
+        };
+
+        allAttachments.add(newFile);
+
+        // Tambahkan kembali tombol tambah
+        allAttachments.add({
+          'is_add_button': true,
+        });
+
+        widget.form?['attachments'] =
+            allAttachments.where((e) => e['is_add_button'] != true).toList();
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: e.toString(),
+      );
+    }
+  }
+
+  void showImageDialog(
+    BuildContext context,
+    bool isNew,
+    String filePath,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          insetPadding: CustomTheme().padding('content'),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.6,
+            padding: CustomTheme().padding('process-content'),
+            child: InteractiveViewer(
+              minScale: 1,
+              maxScale: 4,
+              child: isNew
+                  ? Image.file(
+                      File(filePath),
+                      fit: BoxFit.contain,
+                    )
+                  : Image.network(
+                      filePath,
+                      fit: BoxFit.contain,
+                    ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<bool?> _handleDeleteAttachment(Map item) async {
+    if (!context.mounted) return false;
+
+    final completer = Completer<bool?>();
+
+    showConfirmationDialog(
+      context: context,
+      isLoading: _isLoading,
+      title: 'Hapus Lampiran',
+      message: 'Apakah Anda yakin ingin menghapus lampiran ini?',
+      buttonBackground: CustomTheme().buttonColor('danger'),
+      onConfirm: () async {
+        await Future.delayed(
+          const Duration(milliseconds: 200),
+        );
+
+        if (!mounted) {
+          completer.complete(false);
+          return;
+        }
+
+        setState(() {
+          allAttachments.remove(item);
+
+          widget.form?['attachments'] =
+              allAttachments.where((e) => e['is_add_button'] != true).toList();
+        });
+
+        Navigator.pop(context);
+
+        completer.complete(true);
+      },
+    );
+
+    return completer.future;
+  }
+
   @override
   void dispose() {
     widget.form?.clear();
@@ -288,6 +460,7 @@ class _FinishWarpingProcessManualState
     for (final controller in _lengthControllers) {
       controller.dispose();
     }
+    _beamQtyController.dispose();
     _sectionController.dispose();
     super.dispose();
   }
@@ -327,7 +500,7 @@ class _FinishWarpingProcessManualState
                       text: 'Form',
                     ),
                     Tab(
-                      text: 'Info Greige Order',
+                      text: 'Info Order Greige',
                     ),
                   ]),
                 ),
@@ -341,10 +514,10 @@ class _FinishWarpingProcessManualState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TemplateCard(
-                                title: 'Greige Order',
+                                title: 'Order Greige',
                                 icon: Icons.assignment_outlined,
                                 child: SelectForm(
-                                  label: 'Greige Order',
+                                  label: 'Order Greige',
                                   onTap: _selectWorkOrder,
                                   selectedLabel: widget.form?['no_og'] ?? '',
                                   selectedValue: widget.form?['order_greige_id']
@@ -356,6 +529,18 @@ class _FinishWarpingProcessManualState
                               if (widget.form?['order_greige_id'] != null) ...[
                                 _buildBeamWeightSection(),
                                 _buildPanjangSection(),
+                                AttachmentPicker(
+                                  attachments: allAttachments,
+                                  onAddAttachment: _pickAttachments,
+                                  onDeleteAttachment: _handleDeleteAttachment,
+                                  onPreviewImage: (isNew, filePath) {
+                                    showImageDialog(
+                                      context,
+                                      isNew,
+                                      filePath,
+                                    );
+                                  },
+                                ),
                                 NoteEditor(
                                   controller: _noteController,
                                   formKey: 'notes',
@@ -420,7 +605,7 @@ class _FinishWarpingProcessManualState
             children: [
               Expanded(
                 child: TextForm(
-                  label: 'Jumlah Benang (KG)',
+                  label: 'Qty Benang (KG)',
                   controller: _yarnQtyController,
                   req: false,
                   isNumber: true,
@@ -433,8 +618,8 @@ class _FinishWarpingProcessManualState
               Expanded(
                 child: TextForm(
                   label: widget.form?['warping_type'] == 'single_warping'
-                      ? 'Jumlah Beam'
-                      : 'Jumlah Section',
+                      ? 'Berapa Beam'
+                      : 'Berapa Section',
                   controller: widget.form?['warping_type'] == 'single_warping'
                       ? _beamQtyController
                       : _sectionController,
@@ -461,23 +646,34 @@ class _FinishWarpingProcessManualState
     return TemplateCard(
       title: 'Panjang',
       icon: Icons.rule,
-      child: Column(
-        children: List.generate(
-          _lengthControllers.length,
-          (index) => Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: TextForm(
-              label: 'Jumlah Panjang ${index + 1} (M)',
-              controller: _lengthControllers[index],
-              req: false,
-              isNumber: true,
-              isSorting: true,
-              handleChange: (value) {
-                widget.form?['lengths'][index] = value;
-              },
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const spacing = 24.0;
+
+          // 3 item dalam satu baris
+          final itemWidth = (constraints.maxWidth - (spacing * 2)) / 3;
+
+          return Wrap(
+            spacing: spacing,
+            runSpacing: 16,
+            children: List.generate(
+              _lengthControllers.length,
+              (index) => SizedBox(
+                width: itemWidth,
+                child: TextForm(
+                  label: 'Panjang Pasang ${index + 1} (M)',
+                  controller: _lengthControllers[index],
+                  req: false,
+                  isNumber: true,
+                  isSorting: true,
+                  handleChange: (value) {
+                    widget.form?['lengths'][index] = value;
+                  },
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

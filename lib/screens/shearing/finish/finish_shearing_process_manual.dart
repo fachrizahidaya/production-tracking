@@ -254,7 +254,7 @@ class _FinishShearingProcessManualState
                       text: 'Form',
                     ),
                     Tab(
-                      text: 'Info Greige Order',
+                      text: 'Info Order Greige',
                     ),
                   ]),
                 ),
@@ -268,10 +268,10 @@ class _FinishShearingProcessManualState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TemplateCard(
-                                title: 'Greige Order',
+                                title: 'Order Greige',
                                 icon: Icons.assignment_outlined,
                                 child: SelectForm(
-                                  label: 'Greige Order',
+                                  label: 'Order Greige',
                                   onTap: _selectWorkOrder,
                                   selectedLabel: widget.form?['no_og'] ?? '',
                                   selectedValue: widget.form?['order_greige_id']

@@ -33,6 +33,7 @@ class _FinishSizingState extends State<FinishSizing> {
     'machine_id': null,
     'roll_length': null,
     'notes': '',
+    'attachments': []
   };
 
   @override
@@ -62,6 +63,7 @@ class _FinishSizingState extends State<FinishSizing> {
           orderGreigeId:
               int.tryParse(form['order_greige_id']?.toString() ?? ''),
           machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
+          attachments: form['attachments'],
         );
 
         final message = await Provider.of<SizingService>(context, listen: false)

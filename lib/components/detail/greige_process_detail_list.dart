@@ -428,7 +428,11 @@ class GreigeProcessDetailList extends StatelessWidget {
 =======
             child: _buildResultInfo(false),
           ),
+<<<<<<< HEAD
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+          _buildPasangSection(false),
+>>>>>>> 663098db (fix: detail warping)
           _buildSectionCard(
             title: 'Kebutuhan Benang',
             icon: Icons.layers_outlined,
@@ -506,7 +510,11 @@ class GreigeProcessDetailList extends StatelessWidget {
 =======
                 child: _buildResultInfo(true),
               ),
+<<<<<<< HEAD
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+              _buildPasangSection(true),
+>>>>>>> 663098db (fix: detail warping)
               _buildSectionCard(
                 title: 'Timeline Proses',
                 icon: Icons.timeline_outlined,
@@ -1638,8 +1646,13 @@ class GreigeProcessDetailList extends StatelessWidget {
           'icon': Icons.straighten_outlined
         },
         {
-          'label': 'Jumlah Section',
-          'value': _withUnit(data['section'], ''),
+          'label':
+              data['warping_type'] == 'single_warping' ? 'Beam' : 'Section',
+          'value': _withUnit(
+              data['warping_type'] == 'single_warping'
+                  ? data['beam_qty']
+                  : data['section'],
+              ''),
           'icon': Icons.view_column_outlined
         },
 <<<<<<< HEAD
@@ -1697,6 +1710,9 @@ class GreigeProcessDetailList extends StatelessWidget {
     ];
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 663098db (fix: detail warping)
 
   Widget _buildPasangSection(bool isTablet) {
     final pasangs = _listValue(data['pasangs']);
@@ -1777,8 +1793,11 @@ class GreigeProcessDetailList extends StatelessWidget {
       }).toList(),
     );
   }
+<<<<<<< HEAD
 =======
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+>>>>>>> 663098db (fix: detail warping)
 }
 
 Map<String, dynamic> _mapValue(dynamic value) {

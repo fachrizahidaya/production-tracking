@@ -508,10 +508,14 @@ class _FinishWeavingProcessManualState
                     ),
                     Tab(
 <<<<<<< HEAD
+<<<<<<< HEAD
                       text: 'Info Order Greige',
 =======
                       text: 'Info Greige Order',
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+                      text: 'Info Order Greige',
+>>>>>>> 64274789 (fix: selesai warping-shearing)
                     ),
                   ]),
                 ),
@@ -526,6 +530,7 @@ class _FinishWeavingProcessManualState
                             children: [
                               TemplateCard(
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 title: 'Order Greige',
                                 icon: Icons.assignment_outlined,
                                 child: SelectForm(
@@ -536,6 +541,12 @@ class _FinishWeavingProcessManualState
                                 child: SelectForm(
                                   label: 'Greige Order',
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+                                title: 'Order Greige',
+                                icon: Icons.assignment_outlined,
+                                child: SelectForm(
+                                  label: 'Order Greige',
+>>>>>>> 64274789 (fix: selesai warping-shearing)
                                   onTap: _selectWorkOrder,
                                   selectedLabel: widget.form?['no_og'] ?? '',
                                   selectedValue: widget.form?['order_greige_id']

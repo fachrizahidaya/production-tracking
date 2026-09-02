@@ -60,6 +60,7 @@ class _FinishSizingState extends State<FinishSizing> {
     'machine_id': null,
     'roll_length': null,
     'notes': '',
+<<<<<<< HEAD
     'attachments': [],
     'machines': [],
 =======
@@ -86,6 +87,9 @@ class _FinishSizingState extends State<FinishSizing> {
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+    'attachments': []
+>>>>>>> 64274789 (fix: selesai warping-shearing)
   };
 
   @override
@@ -144,11 +148,15 @@ class _FinishSizingState extends State<FinishSizing> {
               int.tryParse(form['order_greige_id']?.toString() ?? ''),
           machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
           attachments: form['attachments'],
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+          attachments: form['attachments'],
+>>>>>>> 64274789 (fix: selesai warping-shearing)
         );
 
         final message = await Provider.of<SizingService>(context, listen: false)

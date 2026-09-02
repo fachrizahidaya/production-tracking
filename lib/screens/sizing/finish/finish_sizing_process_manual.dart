@@ -1,11 +1,17 @@
 // ignore_for_file: use_build_context_synchronously
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:async';
 import 'dart:io';
 
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+import 'dart:async';
+import 'dart:io';
+
+>>>>>>> 64274789 (fix: selesai warping-shearing)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
@@ -16,6 +22,7 @@ import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/greige_info_tab.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -31,13 +38,24 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
 =======
+=======
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+>>>>>>> 64274789 (fix: selesai warping-shearing)
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
+import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
+<<<<<<< HEAD
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
+>>>>>>> 64274789 (fix: selesai warping-shearing)
 
 class FinishSizingProcessManual extends StatefulWidget {
   final dynamic id;
@@ -80,12 +98,18 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
   String? processId;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
   late List<Map<String, dynamic>> allAttachments;
 
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
+<<<<<<< HEAD
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
   @override
   void initState() {
     super.initState();
@@ -95,6 +119,9 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
     _noteController.text = widget.form?['notes']?.toString() ?? '';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
     final existing = List<Map<String, dynamic>>.from(
       widget.form?['attachments'] ?? [],
     );
@@ -104,8 +131,11 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
       {'is_add_button': true},
     ];
 
+<<<<<<< HEAD
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _postInit();
     });
@@ -210,10 +240,14 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
       await _sizingService.getDataView(context, id);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
       final data = _sizingService.dataView['data'];
       final attachments = List<Map<String, dynamic>>.from(
         data['attachments'] ?? [],
       );
+<<<<<<< HEAD
       setState(() {
         processData = data;
         widget.form?['process_id'] = processData['id']?.toString();
@@ -225,6 +259,8 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
             _readWarpingType(woData) ??
             _readWarpingType(widget.form?['warping_type']);
 =======
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
       setState(() {
         processData = _sizingService.dataView['data'];
         widget.form?['process_id'] = processData['id']?.toString();
@@ -236,6 +272,7 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
             processData['order_greige']?['og_no'] ?? widget.form?['no_og'];
         widget.form?['notes'] = processData['notes']?.toString() ?? '';
 <<<<<<< HEAD
+<<<<<<< HEAD
         widget.form?['attachments'] = attachments;
         allAttachments = [
           ...attachments,
@@ -243,6 +280,9 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
         ];
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+        widget.form?['attachments'] = attachments;
+>>>>>>> 64274789 (fix: selesai warping-shearing)
 
         _lengthController.text = processData['roll_length']?.toString() ?? '';
         _noteController.text = processData['notes']?.toString() ??
@@ -355,6 +395,9 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
   Future<File?> compressImage(String path) async {
     if (kIsWeb) {
       return File(path);
@@ -374,12 +417,20 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
     return result != null ? File(result.path) : null;
   }
 
+<<<<<<< HEAD
   Future<void> _pickAttachments(ImageSource source) async {
+=======
+  Future<void> _pickAttachments() async {
+>>>>>>> 64274789 (fix: selesai warping-shearing)
     try {
       final picker = ImagePicker();
 
       final XFile? image = await picker.pickImage(
+<<<<<<< HEAD
         source: source,
+=======
+        source: ImageSource.camera,
+>>>>>>> 64274789 (fix: selesai warping-shearing)
       );
 
       if (image == null) return;
@@ -496,8 +547,11 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
     return completer.future;
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
   @override
   void dispose() {
     widget.form?.clear();
@@ -540,10 +594,14 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
                     ),
                     Tab(
 <<<<<<< HEAD
+<<<<<<< HEAD
                       text: 'Info Order Greige',
 =======
                       text: 'Info Greige Order',
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+                      text: 'Info Order Greige',
+>>>>>>> 64274789 (fix: selesai warping-shearing)
                     ),
                   ]),
                 ),
@@ -558,6 +616,7 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
                             children: [
                               TemplateCard(
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 title: 'Order Greige',
                                 icon: Icons.assignment_outlined,
                                 child: SelectForm(
@@ -568,6 +627,12 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
                                 child: SelectForm(
                                   label: 'Greige Order',
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+                                title: 'Order Greige',
+                                icon: Icons.assignment_outlined,
+                                child: SelectForm(
+                                  label: 'Order Greige',
+>>>>>>> 64274789 (fix: selesai warping-shearing)
                                   onTap: _selectWorkOrder,
                                   selectedLabel: widget.form?['no_og'] ?? '',
                                   selectedValue: widget.form?['order_greige_id']
@@ -614,9 +679,12 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
                                     );
                                   },
                                 ),
+<<<<<<< HEAD
 =======
                                 _buildBeamWeightSection(),
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
                                 NoteEditor(
                                   controller: _noteController,
                                   formKey: 'notes',

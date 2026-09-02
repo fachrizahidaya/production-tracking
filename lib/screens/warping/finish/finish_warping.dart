@@ -93,7 +93,11 @@ class _FinishWarpingState extends State<FinishWarping> {
 >>>>>>> 5d1f483f (fix: warping, sizing)
 =======
     'lengths': [],
+<<<<<<< HEAD
 >>>>>>> e02e3ffb (fix: finish warping)
+=======
+    'attachments': []
+>>>>>>> 64274789 (fix: selesai warping-shearing)
   };
 
   @override
@@ -162,19 +166,31 @@ class _FinishWarpingState extends State<FinishWarping> {
           machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
           warpingType: form['warping_type']?.toString(),
           yarnQty: num.tryParse(form['yarn_qty']?.toString() ?? '0') ?? 0,
-          section: int.tryParse(form['section']?.toString() ?? '0') ?? 0,
+          section: form['section'] == null
+              ? null
+              : int.tryParse(form['section'].toString()),
           notes: form['notes']?.toString() ?? '',
           orderGreigeId:
               int.tryParse(form['order_greige_id']?.toString() ?? ''),
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 5d1f483f (fix: warping, sizing)
 =======
           beamQty: int.tryParse(form['beam_qty']?.toString() ?? '0') ?? 0,
+=======
+          beamQty: form['beam_qty'] == null
+              ? null
+              : int.tryParse(form['beam_qty'].toString()),
+>>>>>>> 64274789 (fix: selesai warping-shearing)
           lengths: (form['lengths'] as List?)
                   ?.map((e) => num.tryParse(e.toString()) ?? 0)
                   .toList() ??
               [],
+<<<<<<< HEAD
 >>>>>>> e02e3ffb (fix: finish warping)
+=======
+          attachments: form['attachments'],
+>>>>>>> 64274789 (fix: selesai warping-shearing)
         );
 
         final message =

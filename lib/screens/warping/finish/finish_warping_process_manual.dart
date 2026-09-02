@@ -1,11 +1,17 @@
 // ignore_for_file: use_build_context_synchronously
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:async';
 import 'dart:io';
 
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+import 'dart:async';
+import 'dart:io';
+
+>>>>>>> 64274789 (fix: selesai warping-shearing)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
@@ -16,6 +22,7 @@ import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/greige_info_tab.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -32,13 +39,24 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
 =======
+=======
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+>>>>>>> 64274789 (fix: selesai warping-shearing)
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
+import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/warping/model/warping.dart';
+<<<<<<< HEAD
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
+>>>>>>> 64274789 (fix: selesai warping-shearing)
 
 class FinishWarpingProcessManual extends StatefulWidget {
   final dynamic id;
@@ -95,12 +113,18 @@ class _FinishWarpingProcessManualState
   String? processId;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
   late List<Map<String, dynamic>> allAttachments;
 
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
+<<<<<<< HEAD
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
   @override
   void initState() {
     super.initState();
@@ -110,6 +134,9 @@ class _FinishWarpingProcessManualState
     _noteController.text = widget.form?['notes']?.toString() ?? '';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
     final existing = List<Map<String, dynamic>>.from(
       widget.form?['attachments'] ?? [],
     );
@@ -119,8 +146,11 @@ class _FinishWarpingProcessManualState
       {'is_add_button': true},
     ];
 
+<<<<<<< HEAD
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _postInit();
     });
@@ -408,6 +438,9 @@ class _FinishWarpingProcessManualState
 >>>>>>> 5d1f483f (fix: warping, sizing)
 =======
       final data = _warpingService.dataView['data'];
+      final attachments = List<Map<String, dynamic>>.from(
+        data['attachments'] ?? [],
+      );
 
       // ambil jumlah form dari WO
       final int pasangQty =
@@ -442,6 +475,12 @@ class _FinishWarpingProcessManualState
         widget.form?['no_og'] =
             data['order_greige']?['og_no'] ?? widget.form?['no_og'];
         widget.form?['notes'] = data['notes']?.toString() ?? '';
+        widget.form?['attachments'] = attachments;
+
+        allAttachments = [
+          ...attachments,
+          {'is_add_button': true},
+        ];
 
         // simpan list length ke form
         widget.form?['lengths'] =
@@ -600,6 +639,7 @@ class _FinishWarpingProcessManualState
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   dynamic _getMachineStatus(dynamic machineId) {
     final machines = List<Map<String, dynamic>>.from(
       processData['machines'] ?? [],
@@ -621,6 +661,8 @@ class _FinishWarpingProcessManualState
         machines.every((machine) => machine?['status'] == 'Selesai');
   }
 
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
   Future<File?> compressImage(String path) async {
     if (kIsWeb) {
       return File(path);
@@ -640,12 +682,20 @@ class _FinishWarpingProcessManualState
     return result != null ? File(result.path) : null;
   }
 
+<<<<<<< HEAD
   Future<void> _pickAttachments(ImageSource source) async {
+=======
+  Future<void> _pickAttachments() async {
+>>>>>>> 64274789 (fix: selesai warping-shearing)
     try {
       final picker = ImagePicker();
 
       final XFile? image = await picker.pickImage(
+<<<<<<< HEAD
         source: source,
+=======
+        source: ImageSource.camera,
+>>>>>>> 64274789 (fix: selesai warping-shearing)
       );
 
       if (image == null) return;
@@ -762,8 +812,11 @@ class _FinishWarpingProcessManualState
     return completer.future;
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 64274789 (fix: selesai warping-shearing)
   @override
   void dispose() {
     widget.form?.clear();
@@ -787,7 +840,11 @@ class _FinishWarpingProcessManualState
     for (final controller in _lengthControllers) {
       controller.dispose();
     }
+<<<<<<< HEAD
 >>>>>>> e02e3ffb (fix: finish warping)
+=======
+    _beamQtyController.dispose();
+>>>>>>> 64274789 (fix: selesai warping-shearing)
     _sectionController.dispose();
     super.dispose();
   }
@@ -853,10 +910,14 @@ class _FinishWarpingProcessManualState
                     ),
                     Tab(
 <<<<<<< HEAD
+<<<<<<< HEAD
                       text: 'Info Order Greige',
 =======
                       text: 'Info Greige Order',
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+                      text: 'Info Order Greige',
+>>>>>>> 64274789 (fix: selesai warping-shearing)
                     ),
                   ]),
                 ),
@@ -871,6 +932,7 @@ class _FinishWarpingProcessManualState
                             children: [
                               TemplateCard(
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 title: 'Order Greige',
                                 icon: Icons.assignment_outlined,
                                 child: SelectForm(
@@ -881,6 +943,12 @@ class _FinishWarpingProcessManualState
                                 child: SelectForm(
                                   label: 'Greige Order',
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+                                title: 'Order Greige',
+                                icon: Icons.assignment_outlined,
+                                child: SelectForm(
+                                  label: 'Order Greige',
+>>>>>>> 64274789 (fix: selesai warping-shearing)
                                   onTap: _selectWorkOrder,
                                   selectedLabel: widget.form?['no_og'] ?? '',
                                   selectedValue: widget.form?['order_greige_id']
@@ -935,7 +1003,22 @@ class _FinishWarpingProcessManualState
 >>>>>>> 5d1f483f (fix: warping, sizing)
 =======
                                 _buildPanjangSection(),
+<<<<<<< HEAD
 >>>>>>> e02e3ffb (fix: finish warping)
+=======
+                                AttachmentPicker(
+                                  attachments: allAttachments,
+                                  onAddAttachment: _pickAttachments,
+                                  onDeleteAttachment: _handleDeleteAttachment,
+                                  onPreviewImage: (isNew, filePath) {
+                                    showImageDialog(
+                                      context,
+                                      isNew,
+                                      filePath,
+                                    );
+                                  },
+                                ),
+>>>>>>> 64274789 (fix: selesai warping-shearing)
                                 NoteEditor(
                                   controller: _noteController,
                                   formKey: 'notes',
@@ -1002,6 +1085,7 @@ class _FinishWarpingProcessManualState
             children: [
               Expanded(
                 child: TextForm(
+<<<<<<< HEAD
                   label: 'Jumlah Panjang (M)',
                   controller: _lengthController,
                   req: false,
@@ -1155,6 +1239,9 @@ class _FinishWarpingProcessManualState
               Expanded(
                 child: TextForm(
                   label: 'Jumlah Benang (KG)',
+=======
+                  label: 'Qty Benang (KG)',
+>>>>>>> 64274789 (fix: selesai warping-shearing)
                   controller: _yarnQtyController,
                   req: false,
                   isNumber: true,
@@ -1167,8 +1254,8 @@ class _FinishWarpingProcessManualState
               Expanded(
                 child: TextForm(
                   label: widget.form?['warping_type'] == 'single_warping'
-                      ? 'Jumlah Beam'
-                      : 'Jumlah Section',
+                      ? 'Berapa Beam'
+                      : 'Berapa Section',
                   controller: widget.form?['warping_type'] == 'single_warping'
                       ? _beamQtyController
                       : _sectionController,
@@ -1195,21 +1282,33 @@ class _FinishWarpingProcessManualState
     return TemplateCard(
       title: 'Panjang',
       icon: Icons.rule,
-      child: Column(
-        children: List.generate(
-          _lengthControllers.length,
-          (index) => Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: TextForm(
-              label: 'Jumlah Panjang ${index + 1} (M)',
-              controller: _lengthControllers[index],
-              req: false,
-              isNumber: true,
-              isSorting: true,
-              handleChange: (value) {
-                widget.form?['lengths'][index] = value;
-              },
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const spacing = 24.0;
+
+          // 3 item dalam satu baris
+          final itemWidth = (constraints.maxWidth - (spacing * 2)) / 3;
+
+          return Wrap(
+            spacing: spacing,
+            runSpacing: 16,
+            children: List.generate(
+              _lengthControllers.length,
+              (index) => SizedBox(
+                width: itemWidth,
+                child: TextForm(
+                  label: 'Panjang Pasang ${index + 1} (M)',
+                  controller: _lengthControllers[index],
+                  req: false,
+                  isNumber: true,
+                  isSorting: true,
+                  handleChange: (value) {
+                    widget.form?['lengths'][index] = value;
+                  },
+                ),
+              ),
             ),
+<<<<<<< HEAD
           ),
 <<<<<<< HEAD
           Expanded(
@@ -1241,6 +1340,10 @@ class _FinishWarpingProcessManualState
 =======
         ),
 >>>>>>> e02e3ffb (fix: finish warping)
+=======
+          );
+        },
+>>>>>>> 64274789 (fix: selesai warping-shearing)
       ),
     );
   }

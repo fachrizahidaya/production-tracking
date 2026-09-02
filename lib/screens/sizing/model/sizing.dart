@@ -14,8 +14,6 @@ class Sizing {
   final notes;
   final panjangGulungan;
   final attachments;
-  final machines;
-  final machine_ids;
 
   Sizing(
       {this.id,
@@ -27,9 +25,7 @@ class Sizing {
       this.yarnQty,
       this.notes,
       this.panjangGulungan,
-      this.attachments,
-      this.machine_ids,
-      this.machines});
+      this.attachments});
 
   factory Sizing.fromJson(Map<String, dynamic> json) {
     return Sizing(

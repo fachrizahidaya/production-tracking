@@ -98,6 +98,7 @@ class _FinishWarpingState extends State<FinishWarping> {
 =======
     'lengths': [],
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> e02e3ffb (fix: finish warping)
 =======
     'attachments': []
@@ -105,6 +106,9 @@ class _FinishWarpingState extends State<FinishWarping> {
 =======
     'lengths': [],
 >>>>>>> 11f11e32 (fix: finish warping)
+=======
+    'attachments': []
+>>>>>>> ad866b29 (fix: selesai warping-shearing)
   };
 
   @override
@@ -149,7 +153,9 @@ class _FinishWarpingState extends State<FinishWarping> {
           machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
           warpingType: form['warping_type']?.toString(),
           yarnQty: num.tryParse(form['yarn_qty']?.toString() ?? '0') ?? 0,
-          section: int.tryParse(form['section']?.toString() ?? '0') ?? 0,
+          section: form['section'] == null
+              ? null
+              : int.tryParse(form['section'].toString()),
           notes: form['notes']?.toString() ?? '',
 <<<<<<< HEAD
           length: num.tryParse(form['length']?.toString() ?? ''),
@@ -192,12 +198,19 @@ class _FinishWarpingState extends State<FinishWarping> {
 =======
           orderGreigeId:
               int.tryParse(form['order_greige_id']?.toString() ?? ''),
+<<<<<<< HEAD
           beamQty: int.tryParse(form['beam_qty']?.toString() ?? '0') ?? 0,
 >>>>>>> 11f11e32 (fix: finish warping)
+=======
+          beamQty: form['beam_qty'] == null
+              ? null
+              : int.tryParse(form['beam_qty'].toString()),
+>>>>>>> ad866b29 (fix: selesai warping-shearing)
           lengths: (form['lengths'] as List?)
                   ?.map((e) => num.tryParse(e.toString()) ?? 0)
                   .toList() ??
               [],
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> e02e3ffb (fix: finish warping)
@@ -214,6 +227,9 @@ class _FinishWarpingState extends State<FinishWarping> {
 >>>>>>> 3562ec45 (fix: selesai warping - shearing)
 =======
 >>>>>>> 11f11e32 (fix: finish warping)
+=======
+          attachments: form['attachments'],
+>>>>>>> ad866b29 (fix: selesai warping-shearing)
         );
 
         final message =

@@ -12,6 +12,7 @@ class DyeingPreparation {
   final items;
   final notes;
   final attachments;
+<<<<<<< HEAD
   final attachmentIds;
 
   DyeingPreparation(
@@ -47,24 +48,39 @@ class DyeingPreparation {
   final items;
   final notes;
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+>>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 
-  DyeingPreparation({this.id, this.woId, this.items, this.notes});
+  DyeingPreparation(
+      {this.id, this.woId, this.items, this.notes, this.attachments});
 
   factory DyeingPreparation.fromJson(Map<String, dynamic> json) {
     return DyeingPreparation(
-        id: json['id'],
-        woId: json['wo_id'],
-        items: json['items'] ?? [],
-        notes: json['notes']);
+      id: json['id'],
+      woId: json['wo_id'],
+      items: json['items'] ?? [],
+      notes: json['notes'],
+      attachments: json['attachments'] ?? [],
+    );
   }
 
   Map<String, dynamic> toJson() {
+<<<<<<< HEAD
 <<<<<<< HEAD
     final data = {'id': id, 'wo_id': woId};
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
     final data = {'id': id, 'wo_id': woId, 'items': items, 'notes': notes};
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
+=======
+    final data = {
+      'id': id,
+      'wo_id': woId,
+      'items': items,
+      'notes': notes,
+      'attachments': attachments
+    };
+>>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 
     data.removeWhere((key, value) => value == null);
 

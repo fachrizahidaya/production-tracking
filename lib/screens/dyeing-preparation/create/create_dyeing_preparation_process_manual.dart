@@ -12,6 +12,8 @@ import 'dart:io';
 >>>>>>> b70754b7 (feat: persiapan dyeing)
 =======
 import 'dart:convert';
+import 'dart:async';
+import 'dart:io';
 
 >>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
 import 'package:flutter/material.dart';
@@ -20,15 +22,22 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/models/master/spk.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/create/dyeing_preparation_form_section.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
+<<<<<<< HEAD
 =======
 =======
 import 'dart:convert';
@@ -59,6 +68,8 @@ import 'package:path_provider/path_provider.dart';
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
 
 class CreateDyeingPreparationProcessManual extends StatefulWidget {
   final dynamic id;
@@ -94,6 +105,7 @@ class _CreateDyeingPreparationProcessManualState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   late List<Map<String, dynamic>> allAttachments;
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
@@ -112,6 +124,9 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> 514dc398 (feat: persiapan dyeing)
 =======
 >>>>>>> c0b3008b (feat: buat persiapan dyeing)
+=======
+  late List<Map<String, dynamic>> allAttachments;
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
 
   bool _firstLoading = false;
   bool _isFetchingWorkOrder = false;
@@ -517,6 +532,7 @@ class _CreateDyeingPreparationProcessManualState
   List<Map<String, dynamic>> existingItems = [];
   List<Map<String, dynamic>> greigeItemOptions = [];
   String? greigeInfoMessage;
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   int? _toInt(dynamic value) {
     if (value is int) return value;
@@ -710,8 +726,11 @@ class _CreateDyeingPreparationProcessManualState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
     _noteController.text = widget.form?['notes']?.toString() ?? '';
 
     final existing = List<Map<String, dynamic>>.from(
@@ -723,8 +742,11 @@ class _CreateDyeingPreparationProcessManualState
       {'is_add_button': true},
     ];
 
+<<<<<<< HEAD
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchWorkOrder();
       _hydrateInitialData();
@@ -1180,8 +1202,11 @@ class _CreateDyeingPreparationProcessManualState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
   Future<File?> compressImage(String path) async {
     if (kIsWeb) {
       return File(path);
@@ -1203,6 +1228,7 @@ class _CreateDyeingPreparationProcessManualState
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   Future<void> _pickAttachments(ImageSource source) async {
     try {
       final picker = ImagePicker();
@@ -1214,15 +1240,23 @@ class _CreateDyeingPreparationProcessManualState
 =======
   Future<void> _pickAttachments(ImageSource source) async {
 >>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
+=======
+  Future<void> _pickAttachments() async {
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
     try {
       final picker = ImagePicker();
 
       final XFile? image = await picker.pickImage(
+<<<<<<< HEAD
         source: source,
       );
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 =======
 >>>>>>> ae89df7c (fix: persiapan dyeing)
+=======
+        source: ImageSource.camera,
+      );
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
 
       if (image == null) return;
 
@@ -1231,6 +1265,7 @@ class _CreateDyeingPreparationProcessManualState
       if (compressedFile == null) return;
 
       setState(() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         allAttachments.removeWhere((e) => e['is_add_button'] == true);
@@ -1242,6 +1277,11 @@ class _CreateDyeingPreparationProcessManualState
 =======
         allAttachments.removeWhere((e) => e['is_add_button'] == true);
 >>>>>>> ae89df7c (fix: persiapan dyeing)
+=======
+        allAttachments.removeWhere(
+          (e) => e['is_add_button'] == true,
+        );
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
 
         final newFile = {
           'name': compressedFile.path.split('/').last,
@@ -1254,11 +1294,14 @@ class _CreateDyeingPreparationProcessManualState
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         allAttachments.add({'is_add_button': true});
 
         widget.form?['attachments'] =
             allAttachments.where((e) => e['is_add_button'] != true).toList();
 =======
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
         allAttachments.add({
           'is_add_button': true,
         });
@@ -1268,6 +1311,7 @@ class _CreateDyeingPreparationProcessManualState
               (e) => e['is_add_button'] != true,
             )
             .toList();
+<<<<<<< HEAD
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 =======
         allAttachments.add({'is_add_button': true});
@@ -1275,6 +1319,8 @@ class _CreateDyeingPreparationProcessManualState
         widget.form?['attachments'] =
             allAttachments.where((e) => e['is_add_button'] != true).toList();
 >>>>>>> ae89df7c (fix: persiapan dyeing)
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
       });
     } catch (e) {
       if (!mounted) return;
@@ -1289,17 +1335,23 @@ class _CreateDyeingPreparationProcessManualState
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   void showImageDialog(BuildContext context, bool isNew, String filePath) {
 =======
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
   void showImageDialog(
     BuildContext context,
     bool isNew,
     String filePath,
   ) {
+<<<<<<< HEAD
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 =======
   void showImageDialog(BuildContext context, bool isNew, String filePath) {
 >>>>>>> ae89df7c (fix: persiapan dyeing)
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
     showDialog(
       context: context,
       builder: (context) {
@@ -1319,9 +1371,12 @@ class _CreateDyeingPreparationProcessManualState
               child: isNew
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                   ? Image.file(File(filePath), fit: BoxFit.contain)
                   : Image.network(filePath, fit: BoxFit.contain),
 =======
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
                   ? Image.file(
                       File(filePath),
                       fit: BoxFit.contain,
@@ -1330,11 +1385,14 @@ class _CreateDyeingPreparationProcessManualState
                       filePath,
                       fit: BoxFit.contain,
                     ),
+<<<<<<< HEAD
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 =======
                   ? Image.file(File(filePath), fit: BoxFit.contain)
                   : Image.network(filePath, fit: BoxFit.contain),
 >>>>>>> ae89df7c (fix: persiapan dyeing)
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
             ),
           ),
         );
@@ -1356,6 +1414,7 @@ class _CreateDyeingPreparationProcessManualState
       onConfirm: () async {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         await Future.delayed(const Duration(milliseconds: 200));
 =======
         await Future.delayed(
@@ -1365,6 +1424,11 @@ class _CreateDyeingPreparationProcessManualState
 =======
         await Future.delayed(const Duration(milliseconds: 200));
 >>>>>>> ae89df7c (fix: persiapan dyeing)
+=======
+        await Future.delayed(
+          const Duration(milliseconds: 200),
+        );
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
 
         if (!mounted) {
           completer.complete(false);
@@ -1376,19 +1440,25 @@ class _CreateDyeingPreparationProcessManualState
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           widget.form?['attachments'] =
               allAttachments.where((e) => e['is_add_button'] != true).toList();
 =======
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
           widget.form?['attachments'] = allAttachments
               .where(
                 (e) => e['is_add_button'] != true,
               )
               .toList();
+<<<<<<< HEAD
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 =======
           widget.form?['attachments'] =
               allAttachments.where((e) => e['is_add_button'] != true).toList();
 >>>>>>> ae89df7c (fix: persiapan dyeing)
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
         });
 
         Navigator.pop(context);
@@ -1401,6 +1471,7 @@ class _CreateDyeingPreparationProcessManualState
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
@@ -1411,10 +1482,13 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> b70754b7 (feat: persiapan dyeing)
 =======
 >>>>>>> c0b3008b (feat: buat persiapan dyeing)
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
   @override
   void dispose() {
     widget.form?.clear();
     _isSubmitting.dispose();
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1428,6 +1502,11 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+    _noteController.dispose();
+    _isSubmitting.dispose();
+    _isLoading.dispose();
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
     super.dispose();
   }
 
@@ -1531,7 +1610,20 @@ class _CreateDyeingPreparationProcessManualState
       note: _noteController,
       isEdit: false,
       disableWorkOrder: false,
+<<<<<<< HEAD
 >>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
+=======
+      attachments: allAttachments,
+      onAddAttachment: _pickAttachments,
+      onDeleteAttachment: _handleDeleteAttachment,
+      onPreviewImage: (isNew, filePath) {
+        showImageDialog(
+          context,
+          isNew,
+          filePath,
+        );
+      },
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
     );
   }
 }

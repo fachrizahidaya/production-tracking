@@ -55,6 +55,7 @@ class CreateDyeingPreparation extends StatelessWidget {
       items: form['items'] ?? [],
       notes: form['notes']?.toString() ?? '',
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
 =======
       attachments: form['attachments'],
@@ -65,6 +66,9 @@ class CreateDyeingPreparation extends StatelessWidget {
       items: form['items'] ?? [],
       notes: form['notes']?.toString() ?? '',
 >>>>>>> c0b3008b (feat: buat persiapan dyeing)
+=======
+      attachments: form['attachments'],
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
     );
 
     final message =

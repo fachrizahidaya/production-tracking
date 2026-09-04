@@ -23,6 +23,7 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 <<<<<<< HEAD
@@ -31,6 +32,9 @@ import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 =======
 >>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
+=======
+import 'package:textile_tracking/helpers/util/attachment_picker.dart';
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
 import 'package:textile_tracking/helpers/util/note_editor.dart';
 =======
 =======
@@ -80,6 +84,7 @@ class DyeingPreparationFormSection extends StatefulWidget {
   final onAddAttachment;
   final onDeleteAttachment;
   final onPreviewImage;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   final greigeReady;
@@ -194,6 +199,8 @@ class DyeingPreparationFormSection extends StatefulWidget {
   final handleChangeInput;
   final isEdit;
   final disableWorkOrder;
+=======
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
 
   const DyeingPreparationFormSection(
       {super.key,
@@ -216,8 +223,16 @@ class DyeingPreparationFormSection extends StatefulWidget {
 =======
       this.note,
       this.disableWorkOrder,
+<<<<<<< HEAD
       this.isEdit});
 >>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
+=======
+      this.isEdit,
+      this.attachments,
+      this.onAddAttachment,
+      this.onDeleteAttachment,
+      this.onPreviewImage});
+>>>>>>> e467a136 (fix: attachment for dyeing preparation)
 
   @override
   State<DyeingPreparationFormSection> createState() =>
@@ -1590,15 +1605,27 @@ class _DyeingPreparationFormSectionState
                               _buildGreigeItemsForm(isTablet)
                             else if (widget.greigeInfoMessage != null)
                               _buildGreigeInfo(),
-                            NoteEditor(
-                              controller: widget.note,
-                              formKey: 'notes',
-                              label: 'Catatan',
-                              form: widget.form,
-                              onChanged: (value) {
-                                widget.handleChangeInput('notes', value);
-                              },
-                            )
+                            if ((widget.itemOptions?.isNotEmpty == true
+                                    ? widget.itemOptions!
+                                    : widget.existingItems)
+                                .isNotEmpty) ...[
+                              AttachmentPicker(
+                                  attachments: widget.attachments,
+                                  onAddAttachment: widget.onAddAttachment,
+                                  onDeleteAttachment: widget.onDeleteAttachment,
+                                  onPreviewImage: (isNew, filePath) {
+                                    widget.onPreviewImage(isNew, filePath);
+                                  }),
+                              NoteEditor(
+                                controller: widget.note,
+                                formKey: 'notes',
+                                label: 'Catatan',
+                                form: widget.form,
+                                onChanged: (value) {
+                                  widget.handleChangeInput('notes', value);
+                                },
+                              ),
+                            ]
                           ].separatedBy(CustomTheme().vGap('2xl')),
                         ),
 >>>>>>> 514dc398 (feat: persiapan dyeing)

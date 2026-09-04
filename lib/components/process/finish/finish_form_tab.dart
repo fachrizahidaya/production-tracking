@@ -47,6 +47,7 @@ class FinishFormTab extends StatefulWidget {
   final reworkCategoryOption;
   final onMachineChanged;
   final handleItemQtyWarning;
+  final onAttachmentChanged;
 
   const FinishFormTab(
       {super.key,
@@ -157,6 +158,7 @@ class _FinishFormTabState extends State<FinishFormTab>
                   reworkCategoryOption: widget.reworkCategoryOption,
                   onMachineChanged: widget.onMachineChanged,
                   handleItemQtyWarning: widget.handleItemQtyWarning,
+                  onAttachmentChanged: widget.onAttachmentChanged,
                 ),
               ],
             ),

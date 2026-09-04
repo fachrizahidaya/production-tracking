@@ -17,6 +17,7 @@ class CreateDyeingPreparation extends StatelessWidget {
       woId: int.tryParse(form['wo_id']?.toString() ?? ''),
       items: form['items'] ?? [],
       notes: form['notes']?.toString() ?? '',
+      attachments: form['attachments'],
     );
 
     final message =

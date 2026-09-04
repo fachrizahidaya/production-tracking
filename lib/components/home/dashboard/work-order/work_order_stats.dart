@@ -33,6 +33,8 @@ class WorkOrderStats extends StatefulWidget {
 }
 
 class _WorkOrderStatsState extends State<WorkOrderStats> {
+  static const double tabletBreakpoint = 600;
+
   Color getBorderColor(int i) {
     switch (i) {
       case 0:

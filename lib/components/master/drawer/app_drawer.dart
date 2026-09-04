@@ -68,6 +68,7 @@ class _AppDrawerState extends State<AppDrawer> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     'Produksi',
     'Pesanan',
     'Order Greige',
@@ -107,6 +108,11 @@ class _AppDrawerState extends State<AppDrawer> {
 =======
     'Laporan',
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+    'Produksi',
+    'Pesanan',
+    // 'Laporan',
+>>>>>>> 44aea830 (fix: dashboard)
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {

@@ -695,6 +695,11 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final isMobile = screenWidth < 600;
+    final isTablet = screenWidth >= 600 && screenWidth < 1024;
+
     return Column(
       children: [
         Column(

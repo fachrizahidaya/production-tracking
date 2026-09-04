@@ -10,6 +10,7 @@ import 'dart:io';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:textile_tracking/models/report/gsm.dart';
 import 'package:textile_tracking/models/report/production_summary.dart';
 import 'package:http/http.dart' as http;
 <<<<<<< HEAD
@@ -20,6 +21,7 @@ import 'package:textile_tracking/models/report/production_trend.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
 import 'package:textile_tracking/models/report/bs.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/models/report/gsm.dart';
 <<<<<<< HEAD
 =======
@@ -27,6 +29,8 @@ import 'package:textile_tracking/models/report/bs.dart';
 >>>>>>> 58857212 (feat: notifikasi evaluasi bs)
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+>>>>>>> 4f0b2fa5 (feat: report)
 import 'package:textile_tracking/models/report/rework.dart';
 =======
 >>>>>>> 5ad2d445 (feat: temporarily)
@@ -47,9 +51,6 @@ import 'package:textile_tracking/models/report/spk_list.dart';
 import 'package:textile_tracking/models/report/spk_summary.dart';
 import 'package:textile_tracking/models/report/top_bs.dart';
 import 'package:textile_tracking/models/report/wo_list.dart';
-
-class ReportService {
-  final String baseUrl = dotenv.env['API_URL'] ?? '';
 
   String _formatDate(DateTime date) {
     return '${date.year.toString().padLeft(4, '0')}-'

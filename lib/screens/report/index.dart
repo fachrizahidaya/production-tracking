@@ -36,7 +36,7 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
-  final ReportService _reportService = ReportService();
+  final ReportService _reportService = ReportSer();
   final Map<String, bool> _reportWidgets = {
     'sortingDetail': true,
     'sortingResult': true,

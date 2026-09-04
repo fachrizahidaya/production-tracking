@@ -53,6 +53,7 @@ import 'package:textile_tracking/screens/packing/index.dart';
 import 'package:textile_tracking/screens/press-tumbler/index.dart';
 import 'package:textile_tracking/screens/printing/index.dart';
 import 'package:textile_tracking/screens/profile/index.dart';
+import 'package:textile_tracking/screens/report/index.dart';
 import 'package:textile_tracking/screens/sewing/index.dart';
 import 'package:textile_tracking/screens/shearing/list/index.dart';
 import 'package:textile_tracking/screens/shearing/model/shearing.dart';
@@ -170,6 +171,7 @@ class MyApp extends StatelessWidget {
         '/eula': (context) => Eula(),
         '/privacy-policy': (context) => PrivacyPolicy(),
         '/terms-conditions': (context) => TermsConditions(),
+        '/report-production': (context) => ReportScreen(),
       },
     );
   }

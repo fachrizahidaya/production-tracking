@@ -34,13 +34,16 @@ class _AppDrawerState extends State<AppDrawer> {
     'Printing',
     'Sorting',
     'Packing',
+    'Laporan',
   ];
 
   final List<String> hiddenMenus = [
     'SPK',
     'Work Order',
     'Proses Produksi',
-    'Laporan',
+    'Produksi',
+    'Pesanan',
+    // 'Laporan',
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
@@ -176,7 +179,9 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                 ? Icons.content_cut_outlined
                                                                                                 : item.title == 'Persiapan Dyeing'
                                                                                                     ? Icons.format_color_fill_outlined
-                                                                                                    : Icons.menu,
+                                                                                                    : item.title == 'Laporan'
+                                                                                                        ? Icons.file_copy_outlined
+                                                                                                        : Icons.menu,
                           ),
                           onTap: () {
                             Navigator.pop(context);

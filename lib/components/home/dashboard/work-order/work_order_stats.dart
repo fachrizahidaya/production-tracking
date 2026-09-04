@@ -5,16 +5,22 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderStats extends StatefulWidget {
-  final data;
-  final isFetching;
+  final dynamic data;
+  final bool isFetching;
 
-  const WorkOrderStats({super.key, this.data, this.isFetching});
+  const WorkOrderStats({
+    super.key,
+    this.data,
+    this.isFetching = false,
+  });
 
   @override
   State<WorkOrderStats> createState() => _WorkOrderStatsState();
 }
 
 class _WorkOrderStatsState extends State<WorkOrderStats> {
+  static const double tabletBreakpoint = 600;
+
   Color getBorderColor(int i) {
     switch (i) {
       case 0:
@@ -26,10 +32,6 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
       default:
         return CustomTheme().colors('secondary');
     }
-  }
-
-  Color getIconBgColor(int i) {
-    return getBorderColor(i);
   }
 
   IconData getIcon(int i) {
@@ -45,81 +47,154 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
     }
   }
 
-  Color getBadgeColor(int i) {
-    switch (i) {
-      case 0:
-        return CustomTheme().statusColor('Total Work Orders');
-      case 1:
-        return CustomTheme().statusColor('Selesai');
-      case 2:
-        return CustomTheme().statusColor('Diproses');
-      default:
-        return CustomTheme().statusColor('Menunggu Diproses');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (widget.data?.length == 0) return SizedBox();
+    if (widget.data == null || widget.data.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
-    return widget.isFetching == true
-        ? Center(
-            child: Padding(
-              padding: CustomTheme().padding('content'),
-              child: CircularProgressIndicator(),
-            ),
-          )
-        : Wrap(
-            spacing: 16,
-            runSpacing: 8,
-            children: [
-              for (int i = 0; i < widget.data?.length; i++)
-                SizedBox(
-                  width: (MediaQuery.of(context).size.width - 48) / 2,
-                  child: buildStatsCard(i),
-                ),
-            ],
-          );
-  }
+    if (widget.isFetching) {
+      return Padding(
+        padding: CustomTheme().padding('content'),
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
-  Widget buildStatsCard(int i) {
-    final item = widget.data[i];
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
 
-    return StatsCard(
-      bottomBorderColor: getBorderColor(i),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: getIconBgColor(i),
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                ),
-                padding: CustomTheme().padding('badge'),
-                child: Icon(
-                  getIcon(i),
-                  color: Colors.white,
-                  size: CustomTheme().iconSize('2xl'),
+        // Tablet = 2 kolom
+        // Mobile = 1 kolom
+        final isTablet = width >= tabletBreakpoint;
+
+        final columnCount = isTablet ? 2 : 1;
+        const spacing = 16.0;
+
+        final cardWidth =
+            columnCount == 1 ? width : (width - spacing) / columnCount;
+
+        return Wrap(
+          spacing: spacing,
+          runSpacing: 16,
+          children: [
+            for (int i = 0; i < widget.data.length; i++)
+              SizedBox(
+                width: cardWidth,
+                child: _buildStatsCard(
+                  context,
+                  i,
+                  isTablet: isTablet,
                 ),
               ),
-              Text(
-                item['value'].toString(),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildStatsCard(
+    BuildContext context,
+    int index, {
+    required bool isTablet,
+  }) {
+    final item = widget.data[index];
+
+    final label = item['label']?.toString() ?? '';
+    final value = item['value']?.toString() ?? '0';
+
+    return StatsCard(
+      bottomBorderColor: getBorderColor(index),
+      child: SizedBox(
+        // Tinggi dibuat konsisten agar 2 card tablet
+        // terlihat rapi sejajar.
+        height: isTablet ? 120 : 80,
+        child: Stack(
+          children: [
+            // =========================
+            // LABEL
+            // =========================
+            Positioned(
+              left: 0,
+              top: 0,
+              right: 75,
+              child: Text(
+                label,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: CustomTheme().fontSize('2xl'),
-                  fontWeight: CustomTheme().fontWeight('bold'),
+                  fontSize: isTablet ? 22 : 20,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF4A566A),
+                  height: 1.2,
                 ),
-              )
-            ].separatedBy(CustomTheme().hGap('lg')),
-          ),
-          CustomBadge(
-            title: item['label'],
-            withStatus: i == 0 ? false : true,
-            status: item['label'],
-          )
-        ],
+              ),
+            ),
+
+            // =========================
+            // ICON
+            // =========================
+            Positioned(
+              top: 0,
+              right: 0,
+              child: _buildIcon(index),
+            ),
+
+            // =========================
+            // VALUE
+            // =========================
+            Positioned(
+              left: 0,
+              bottom: 0,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: isTablet ? 32 : 24,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF101828),
+                      height: 0.9,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'WO',
+                    style: TextStyle(
+                      fontSize: isTablet ? 16 : 14,
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xFF98A2B3),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIcon(int index) {
+    return Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        color: getBorderColor(index),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.white,
+          width: 2,
+        ),
+      ),
+      child: Icon(
+        getIcon(index),
+        color: Colors.white,
+        size: 24,
       ),
     );
   }

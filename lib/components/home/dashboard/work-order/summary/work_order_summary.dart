@@ -139,6 +139,77 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     return waiting.any((wo) => wo['overdue'] == true);
   }
 
+  bool _isMobile(BuildContext context) {
+    return MediaQuery.of(context).size.width < 600;
+  }
+
+  bool _isTablet(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return width >= 600 && width < 1024;
+  }
+
+  String _formatDate(dynamic date) {
+    if (date == null) return '-';
+
+    DateTime? parsedDate;
+
+    if (date is DateTime) {
+      parsedDate = date;
+    } else {
+      parsedDate = DateTime.tryParse(date.toString());
+    }
+
+    if (parsedDate == null) {
+      return date.toString();
+    }
+
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
+    return '${parsedDate.day} '
+        '${months[parsedDate.month - 1]} '
+        '${parsedDate.year}';
+  }
+
+  Widget _buildDateRange() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.calendar_month_outlined,
+          size: 30,
+          color: CustomTheme().colors('text-secondary'),
+        ),
+        const SizedBox(width: 12),
+        Flexible(
+          child: Text(
+            '${_formatDate(widget.dariTanggal)} - '
+            '${_formatDate(widget.sampaiTanggal)}',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('lg'),
+              fontWeight: CustomTheme().fontWeight('semibold'),
+              color: CustomTheme().colors('text-primary'),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildSwipeContent() {
     if (widget.isFetching == true) {
       return SizedBox(
@@ -221,62 +292,284 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final isMobile = screenWidth < 600;
+    final isTablet = screenWidth >= 600 && screenWidth < 1024;
+
     return Column(
       children: [
         DashboardCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: CustomTheme().padding('card'),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Perkembangan Proses Produksi',
-                          style:
-                              TextStyle(fontSize: CustomTheme().fontSize('lg')),
-                        ),
-                        Text(
-                          'Status setiap tahapan Work Order',
-                          style: TextStyle(
-                              fontSize: CustomTheme().fontSize('md'),
-                              color: CustomTheme().colors('text-secondary')),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.refresh_outlined,
-                          ),
-                          onPressed: () {
-                            widget.handleRefetch();
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.tune,
-                          ),
-                          onPressed: () {
-                            _openFilter();
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              _buildHeader(
+                context,
+                isMobile: isMobile,
+                isTablet: isTablet,
               ),
-              Divider(),
-              _buildSwipeContent()
+              const Divider(),
+              _buildSwipeContent(),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildHeader(
+    BuildContext context, {
+    required bool isMobile,
+    required bool isTablet,
+  }) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        isMobile ? 16 : 20,
+        isMobile ? 16 : 20,
+        isMobile ? 16 : 20,
+        isMobile ? 16 : 20,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // =========================
+          // TITLE
+          // =========================
+          Text(
+            'Perkembangan Proses Produksi',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: isMobile
+                  ? 16
+                  : isTablet
+                      ? 18
+                      : 24,
+              fontWeight: CustomTheme().fontWeight('bold'),
+              color: CustomTheme().colors('text-primary'),
+            ),
+          ),
+
+          const SizedBox(height: 4),
+
+          // =========================
+          // SUBTITLE
+          // =========================
+          Text(
+            'Status tahapan work order',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: isMobile
+                  ? 12
+                  : isTablet
+                      ? 16
+                      : 14,
+              color: CustomTheme().colors('text-secondary'),
+            ),
+          ),
+
+          SizedBox(
+            height: isMobile ? 24 : 28,
+          ),
+
+          // =========================
+          // DATE RANGE
+          // =========================
+          // Center(
+          //   child: _buildDateRange(),
+          // ),
+
+          SizedBox(
+            height: isMobile ? 20 : 24,
+          ),
+
+          // =========================
+          // FILTER + REFRESH
+          // =========================
+          Center(
+            child: _buildActionButtons(
+              isMobile: isMobile,
+              isTablet: isTablet,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButtons({
+    required bool isMobile,
+    required bool isTablet,
+  }) {
+    final buttonWidth = isMobile
+        ? 130.0
+        : isTablet
+            ? 140.0
+            : 150.0;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: buttonWidth,
+          height: 44,
+          child: OutlinedButton.icon(
+            onPressed: _openFilter,
+            icon: const Icon(
+              Icons.tune_outlined,
+              size: 20,
+            ),
+            label: const Text(
+              'Filter',
+            ),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              side: BorderSide(
+                color: Colors.grey.shade300,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        SizedBox(
+          width: buttonWidth,
+          height: 44,
+          child: OutlinedButton.icon(
+            onPressed: widget.handleRefetch,
+            icon: const Icon(
+              Icons.refresh_outlined,
+              size: 20,
+            ),
+            label: const Text(
+              'Refresh',
+            ),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              side: BorderSide(
+                color: Colors.grey.shade300,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // =========================
+          // TITLE
+          // =========================
+          Text(
+            'Status Proses Produksi',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: CustomTheme().fontWeight('bold'),
+              color: CustomTheme().colors('text-primary'),
+            ),
+          ),
+
+          const SizedBox(height: 4),
+
+          Text(
+            'Tracking progres setiap tahap work order',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 16,
+              color: CustomTheme().colors('text-secondary'),
+            ),
+          ),
+
+          const SizedBox(height: 28),
+
+          // =========================
+          // DATE
+          // =========================
+          // Center(
+          //   child: _buildDateRange(),
+          // ),
+
+          const SizedBox(height: 20),
+
+          // =========================
+          // FILTER + REFRESH
+          // =========================
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildFilterButton(),
+              const SizedBox(width: 10),
+              _buildRefreshButton(),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterButton() {
+    return OutlinedButton.icon(
+      onPressed: _openFilter,
+      icon: const Icon(
+        Icons.tune_outlined,
+        size: 20,
+      ),
+      label: const Text('Filter'),
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(120, 44),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 10,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        side: BorderSide(
+          color: Colors.grey.shade300,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRefreshButton() {
+    return OutlinedButton.icon(
+      onPressed: widget.handleRefetch,
+      icon: const Icon(
+        Icons.refresh_outlined,
+        size: 20,
+      ),
+      label: const Text('Refresh'),
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(120, 44),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 10,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        side: BorderSide(
+          color: Colors.grey.shade300,
+        ),
+      ),
     );
   }
 }

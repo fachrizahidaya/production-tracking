@@ -44,7 +44,9 @@ class _AppDrawerState extends State<AppDrawer> {
     'SPK',
     'Work Order',
     'Proses Produksi',
-    'Laporan',
+    'Produksi',
+    'Pesanan',
+    // 'Laporan',
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {

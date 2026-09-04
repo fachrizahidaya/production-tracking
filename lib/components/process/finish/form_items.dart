@@ -374,7 +374,7 @@ class _FormItemsState extends State<FormItems>
       return;
     }
 
-    final rawGsm = (beratLusin * 10000000) / (12 * 70 * 140);
+    final rawGsm = (beratLusin * 10000000) / (12 * panjang * lebar);
 
     final rounded = customRound(rawGsm);
 

@@ -8,6 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/models/report/production_summary.dart';
 import 'package:http/http.dart' as http;
+<<<<<<< HEAD
 import 'package:textile_tracking/models/report/production_trend.dart';
 <<<<<<< HEAD
 import 'package:textile_tracking/models/report/bs.dart';
@@ -16,11 +17,9 @@ import 'package:textile_tracking/models/report/rework.dart';
 =======
 >>>>>>> 5ad2d445 (feat: temporarily)
 import 'package:textile_tracking/models/report/rework_comparison.dart';
+=======
+>>>>>>> d30fcf21 (feat: report)
 import 'package:textile_tracking/models/report/sorting_result.dart';
-import 'package:textile_tracking/models/report/spk_list.dart';
-import 'package:textile_tracking/models/report/spk_summary.dart';
-import 'package:textile_tracking/models/report/top_bs.dart';
-import 'package:textile_tracking/models/report/wo_list.dart';
 
 class ReportService {
   final String baseUrl = dotenv.env['API_URL'] ?? '';
@@ -144,6 +143,7 @@ class ReportService {
       return SortingResult.fromJson(data);
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     throw Exception(
       'Failed to load sorting result : '
@@ -1461,6 +1461,9 @@ class ReportService {
         '-';
 =======
     throw Exception('Failed to load sorting result : '
+=======
+    throw Exception('Failed to load production summary : '
+>>>>>>> d30fcf21 (feat: report)
         '${response.statusCode} ${response.body}');
 >>>>>>> 5ad2d445 (feat: temporarily)
   }

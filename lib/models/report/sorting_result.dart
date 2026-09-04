@@ -32,7 +32,6 @@ class SortingResult {
 }
 
 class SortingResultItem {
-  final workOrderId;
   final woNo;
   final gradeA;
   final gradeB;
@@ -42,8 +41,7 @@ class SortingResultItem {
   final diff;
 
   SortingResultItem(
-      {this.workOrderId,
-      this.woNo,
+      {this.woNo,
       this.gradeA,
       this.gradeB,
       this.gradeBS,
@@ -53,7 +51,6 @@ class SortingResultItem {
 
   factory SortingResultItem.fromJson(Map<String, dynamic> json) {
     return SortingResultItem(
-        workOrderId: json['wo_id'] ?? '',
         woNo: json['wo_no'] ?? '',
         gradeA: json['grade_a'] ?? 0,
         gradeB: json['grade_b'] ?? '',

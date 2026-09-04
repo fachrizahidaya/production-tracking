@@ -9,12 +9,16 @@ class MachineSection extends StatelessWidget {
   final List<dynamic> data;
   final bool isPortrait;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final dynamic status;
   final bool isMobile;
   final bool showStatus;
   final bool compact;
 =======
   final status;
+=======
+  final dynamic status;
+>>>>>>> 260d45ce (fix: dashboard)
   final bool isMobile;
 >>>>>>> 83d26bbb (fix: UI mobile dashboard)
 
@@ -61,7 +65,11 @@ class MachineSection extends StatelessWidget {
 =======
                 size: isMobile ? 20 : null,
               ),
+<<<<<<< HEAD
 >>>>>>> 83d26bbb (fix: UI mobile dashboard)
+=======
+              const SizedBox(width: 8),
+>>>>>>> 260d45ce (fix: dashboard)
               Expanded(
                 child: Text(
                   '$title (${data.length})',
@@ -118,16 +126,8 @@ class MachineSection extends StatelessWidget {
             height: isMobile ? 120 : 200,
             child: NoData(),
           )
-        else if (isMobile)
-          Column(
-            children: data.map<Widget>((machine) {
-              return MachineCard(
-                data: machine,
-                isPortrait: true,
-              );
-            }).toList(),
-          )
         else
+<<<<<<< HEAD
           Expanded(
             child: ListView.builder(
               physics: const ClampingScrollPhysics(),
@@ -141,6 +141,29 @@ class MachineSection extends StatelessWidget {
               },
             ),
           ),
+=======
+          isMobile
+              ? Column(
+                  children: data.map<Widget>((machine) {
+                    return MachineCard(
+                      data: machine,
+                      isPortrait: true,
+                    );
+                  }).toList(),
+                )
+              : Expanded(
+                  child: ListView.builder(
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      return MachineCard(
+                        data: data[index],
+                        isPortrait: isPortrait,
+                      );
+                    },
+                  ),
+                ),
+>>>>>>> 260d45ce (fix: dashboard)
       ],
     );
   }

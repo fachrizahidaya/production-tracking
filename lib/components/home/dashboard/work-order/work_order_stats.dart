@@ -5,13 +5,19 @@ import 'package:textile_tracking/components/master/theme.dart';
 class WorkOrderStats extends StatefulWidget {
   final dynamic data;
   final bool isFetching;
+<<<<<<< HEAD
   final bool isMobile;
+=======
+>>>>>>> 260d45ce (fix: dashboard)
 
   const WorkOrderStats({
     super.key,
     this.data,
     this.isFetching = false,
+<<<<<<< HEAD
     this.isMobile = true,
+=======
+>>>>>>> 260d45ce (fix: dashboard)
   });
 
   @override
@@ -19,6 +25,8 @@ class WorkOrderStats extends StatefulWidget {
 }
 
 class _WorkOrderStatsState extends State<WorkOrderStats> {
+  static const double tabletBreakpoint = 600;
+
   Color getBorderColor(int i) {
     switch (i) {
       case 0:
@@ -47,6 +55,7 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -318,36 +327,90 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
           );
 >>>>>>> 0f73a2e7 (fix: UI dashboard)
   }
+=======
+    if (widget.data == null || widget.data.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
-  Widget buildStatsCard(int i) {
-    final item = widget.data[i];
+    if (widget.isFetching) {
+      return Padding(
+        padding: CustomTheme().padding('content'),
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+>>>>>>> 260d45ce (fix: dashboard)
 
-    return StatsCard(
-      bottomBorderColor: getBorderColor(i),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: getIconBgColor(i),
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                ),
-                padding: CustomTheme().padding('badge'),
-                child: Icon(
-                  getIcon(i),
-                  color: Colors.white,
-                  size: CustomTheme().iconSize('2xl'),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+
+        // Tablet = 2 kolom
+        // Mobile = 1 kolom
+        final isTablet = width >= tabletBreakpoint;
+
+        final columnCount = isTablet ? 2 : 1;
+        const spacing = 16.0;
+
+        final cardWidth =
+            columnCount == 1 ? width : (width - spacing) / columnCount;
+
+        return Wrap(
+          spacing: spacing,
+          runSpacing: 16,
+          children: [
+            for (int i = 0; i < widget.data.length; i++)
+              SizedBox(
+                width: cardWidth,
+                child: _buildStatsCard(
+                  context,
+                  i,
+                  isTablet: isTablet,
                 ),
               ),
-              Text(
-                item['value'].toString(),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildStatsCard(
+    BuildContext context,
+    int index, {
+    required bool isTablet,
+  }) {
+    final item = widget.data[index];
+
+    final label = item['label']?.toString() ?? '';
+    final value = item['value']?.toString() ?? '0';
+
+    return StatsCard(
+      bottomBorderColor: getBorderColor(index),
+      child: SizedBox(
+        // Tinggi dibuat konsisten agar 2 card tablet
+        // terlihat rapi sejajar.
+        height: isTablet ? 120 : 80,
+        child: Stack(
+          children: [
+            // =========================
+            // LABEL
+            // =========================
+            Positioned(
+              left: 0,
+              top: 0,
+              right: 75,
+              child: Text(
+                label,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: CustomTheme().fontSize('2xl'),
-                  fontWeight: CustomTheme().fontWeight('bold'),
+                  fontSize: isTablet ? 22 : 20,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF4A566A),
+                  height: 1.2,
                 ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -374,6 +437,54 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
         ),
       ],
 >>>>>>> d86a31e7 (fix: UI mobile dashboard)
+=======
+              ),
+            ),
+
+            // =========================
+            // ICON
+            // =========================
+            Positioned(
+              top: 0,
+              right: 0,
+              child: _buildIcon(index),
+            ),
+
+            // =========================
+            // VALUE
+            // =========================
+            Positioned(
+              left: 0,
+              bottom: 0,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: isTablet ? 32 : 24,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF101828),
+                      height: 0.9,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'WO',
+                    style: TextStyle(
+                      fontSize: isTablet ? 16 : 14,
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xFF98A2B3),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+>>>>>>> 260d45ce (fix: dashboard)
     );
   }
 
@@ -393,6 +504,7 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
         getIcon(index),
         color: Colors.white,
         size: 24,
+<<<<<<< HEAD
       ),
 =======
               )
@@ -404,6 +516,8 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
             status: item['label'],
           )
         ],
+=======
+>>>>>>> 260d45ce (fix: dashboard)
       ),
 >>>>>>> 46f4802b (fix: UI dashboard)
 =======

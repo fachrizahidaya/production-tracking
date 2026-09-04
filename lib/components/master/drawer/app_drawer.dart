@@ -231,6 +231,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                             : item.title == 'Shearing'
                                                                                                 ? Icons.content_cut_outlined
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                                                                 : item.title == 'Persiapan Dyeing'
                                                                                                     ? Icons.format_color_fill_outlined
                                                                                                     : item.title == 'Laporan Produksi'
@@ -264,6 +265,12 @@ class _AppDrawerState extends State<AppDrawer> {
 =======
                                                                                                     : item.title == 'Persiapan Dyeing'
                                                                                                         ? Icons.format_color_fill_outlined
+=======
+                                                                                                : item.title == 'Persiapan Dyeing'
+                                                                                                    ? Icons.format_color_fill_outlined
+                                                                                                    : item.title == 'Laporan'
+                                                                                                        ? Icons.file_copy_outlined
+>>>>>>> 260d45ce (fix: dashboard)
                                                                                                         : Icons.menu,
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
                           ),

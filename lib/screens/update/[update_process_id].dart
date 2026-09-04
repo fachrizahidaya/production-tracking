@@ -360,7 +360,7 @@ class _UpdateProcessState extends State<UpdateProcess>
       return;
     }
 
-    final rawGsm = (beratLusin * 10000000) / (12 * 70 * 140);
+    final rawGsm = (beratLusin * 10000000) / (12 * panjang * lebar);
 
     final rounded = customRound(rawGsm);
 

@@ -1,6 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -8,10 +10,17 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/models/master/spk.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/create/dyeing_preparation_form_section.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CreateDyeingPreparationProcessManual extends StatefulWidget {
   final dynamic id;
@@ -40,6 +49,7 @@ class _CreateDyeingPreparationProcessManualState
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
   final String baseUrl = dotenv.env['API_URL'] ?? '';
   final TextEditingController _noteController = TextEditingController();
+  late List<Map<String, dynamic>> allAttachments;
 
   bool _firstLoading = false;
   bool _isFetchingWorkOrder = false;
@@ -48,6 +58,7 @@ class _CreateDyeingPreparationProcessManualState
   List<Map<String, dynamic>> existingItems = [];
   List<Map<String, dynamic>> greigeItemOptions = [];
   String? greigeInfoMessage;
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   int? _toInt(dynamic value) {
     if (value is int) return value;
@@ -236,6 +247,17 @@ class _CreateDyeingPreparationProcessManualState
     if (widget.data != null && widget.data!.isNotEmpty) {
       woData = widget.data!;
     }
+
+    _noteController.text = widget.form?['notes']?.toString() ?? '';
+
+    final existing = List<Map<String, dynamic>>.from(
+      widget.form?['attachments'] ?? [],
+    );
+
+    allAttachments = [
+      ...existing,
+      {'is_add_button': true},
+    ];
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchWorkOrder();
@@ -429,10 +451,158 @@ class _CreateDyeingPreparationProcessManualState
     });
   }
 
+  Future<File?> compressImage(String path) async {
+    if (kIsWeb) {
+      return File(path);
+    }
+
+    final dir = await getTemporaryDirectory();
+
+    final targetPath =
+        '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+    final result = await FlutterImageCompress.compressAndGetFile(
+      path,
+      targetPath,
+      quality: 70,
+    );
+
+    return result != null ? File(result.path) : null;
+  }
+
+  Future<void> _pickAttachments() async {
+    try {
+      final picker = ImagePicker();
+
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.camera,
+      );
+
+      if (image == null) return;
+
+      final compressedFile = await compressImage(image.path);
+
+      if (compressedFile == null) return;
+
+      setState(() {
+        allAttachments.removeWhere(
+          (e) => e['is_add_button'] == true,
+        );
+
+        final newFile = {
+          'name': compressedFile.path.split('/').last,
+          'path': compressedFile.path,
+          'extension': compressedFile.path.split('.').last,
+          'isNew': true,
+        };
+
+        allAttachments.add(newFile);
+
+        allAttachments.add({
+          'is_add_button': true,
+        });
+
+        widget.form?['attachments'] = allAttachments
+            .where(
+              (e) => e['is_add_button'] != true,
+            )
+            .toList();
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: e.toString(),
+      );
+    }
+  }
+
+  void showImageDialog(
+    BuildContext context,
+    bool isNew,
+    String filePath,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          insetPadding: CustomTheme().padding('content'),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.6,
+            padding: CustomTheme().padding('process-content'),
+            child: InteractiveViewer(
+              minScale: 1,
+              maxScale: 4,
+              child: isNew
+                  ? Image.file(
+                      File(filePath),
+                      fit: BoxFit.contain,
+                    )
+                  : Image.network(
+                      filePath,
+                      fit: BoxFit.contain,
+                    ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<bool?> _handleDeleteAttachment(Map item) async {
+    if (!context.mounted) return false;
+
+    final completer = Completer<bool?>();
+
+    showConfirmationDialog(
+      context: context,
+      isLoading: _isLoading,
+      title: 'Hapus Lampiran',
+      message: 'Apakah Anda yakin ingin menghapus lampiran ini?',
+      buttonBackground: CustomTheme().buttonColor('danger'),
+      onConfirm: () async {
+        await Future.delayed(
+          const Duration(milliseconds: 200),
+        );
+
+        if (!mounted) {
+          completer.complete(false);
+          return;
+        }
+
+        setState(() {
+          allAttachments.remove(item);
+
+          widget.form?['attachments'] = allAttachments
+              .where(
+                (e) => e['is_add_button'] != true,
+              )
+              .toList();
+        });
+
+        Navigator.pop(context);
+
+        completer.complete(true);
+      },
+    );
+
+    return completer.future;
+  }
+
   @override
   void dispose() {
     widget.form?.clear();
     _isSubmitting.dispose();
+    _noteController.dispose();
+    _isSubmitting.dispose();
+    _isLoading.dispose();
     super.dispose();
   }
 
@@ -457,6 +627,16 @@ class _CreateDyeingPreparationProcessManualState
       note: _noteController,
       isEdit: false,
       disableWorkOrder: false,
+      attachments: allAttachments,
+      onAddAttachment: _pickAttachments,
+      onDeleteAttachment: _handleDeleteAttachment,
+      onPreviewImage: (isNew, filePath) {
+        showImageDialog(
+          context,
+          isNew,
+          filePath,
+        );
+      },
     );
   }
 }

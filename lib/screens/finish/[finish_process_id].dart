@@ -1670,11 +1670,17 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                                 });
                               },
 <<<<<<< HEAD
+<<<<<<< HEAD
                               onAttachmentChanged: () {
                                 _updateAttachmentStatus();
                               },
 =======
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+                              onAttachmentChanged: () {
+                                _updateAttachmentStatus();
+                              },
+>>>>>>> eeae9f55 (fix: attachment mandatory for packing)
                             ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],
@@ -1709,9 +1715,13 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             label: widget.label,
             hasItemQtyWarning: _hasItemQtyWarning,
 <<<<<<< HEAD
+<<<<<<< HEAD
             hasAttachment: _hasAttachment,
 =======
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+            hasAttachment: _hasAttachment,
+>>>>>>> eeae9f55 (fix: attachment mandatory for packing)
           ),
         ),
       ),

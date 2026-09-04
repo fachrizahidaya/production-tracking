@@ -63,9 +63,12 @@ class FinishSection extends StatefulWidget {
 >>>>>>> b2f13701 (fix: kondisi button finish process)
   final handleItemQtyWarning;
   final onAttachmentChanged;
+<<<<<<< HEAD
 =======
   final handleItemQtyWarning;
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+>>>>>>> eeae9f55 (fix: attachment mandatory for packing)
 
   const FinishSection(
       {super.key,
@@ -122,6 +125,7 @@ class FinishSection extends StatefulWidget {
       this.reworkCategoryOption,
       this.onMachineChanged,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.handleItemQtyWarning,
       this.onAttachmentChanged});
 =======
@@ -132,6 +136,10 @@ class FinishSection extends StatefulWidget {
 >>>>>>> b2f13701 (fix: kondisi button finish process)
       this.handleItemQtyWarning});
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+      this.handleItemQtyWarning,
+      this.onAttachmentChanged});
+>>>>>>> eeae9f55 (fix: attachment mandatory for packing)
 
   @override
   State<FinishSection> createState() => _FinishSectionState();

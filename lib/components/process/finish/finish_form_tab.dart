@@ -56,9 +56,12 @@ class FinishFormTab extends StatefulWidget {
 >>>>>>> b2f13701 (fix: kondisi button finish process)
   final handleItemQtyWarning;
   final onAttachmentChanged;
+<<<<<<< HEAD
 =======
   final handleItemQtyWarning;
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+>>>>>>> eeae9f55 (fix: attachment mandatory for packing)
 
   const FinishFormTab(
       {super.key,
@@ -203,9 +206,12 @@ class _FinishFormTabState extends State<FinishFormTab>
 >>>>>>> b2f13701 (fix: kondisi button finish process)
                   handleItemQtyWarning: widget.handleItemQtyWarning,
                   onAttachmentChanged: widget.onAttachmentChanged,
+<<<<<<< HEAD
 =======
                   handleItemQtyWarning: widget.handleItemQtyWarning,
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+>>>>>>> eeae9f55 (fix: attachment mandatory for packing)
                 ),
               ],
             ),

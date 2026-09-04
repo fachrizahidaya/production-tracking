@@ -24,10 +24,15 @@ class ProcessButton extends StatefulWidget {
   final label;
   final hasItemQtyWarning;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final attachments;
   final hasAttachment;
 =======
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+  final attachments;
+  final hasAttachment;
+>>>>>>> eeae9f55 (fix: attachment mandatory for packing)
 
   const ProcessButton(
       {super.key,
@@ -49,12 +54,18 @@ class ProcessButton extends StatefulWidget {
       this.isAllMachineDone,
       this.label,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.hasItemQtyWarning = false,
       this.attachments,
       this.hasAttachment});
 =======
       this.hasItemQtyWarning = false});
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+      this.hasItemQtyWarning = false,
+      this.attachments,
+      this.hasAttachment});
+>>>>>>> eeae9f55 (fix: attachment mandatory for packing)
 
   @override
   State<ProcessButton> createState() => _ProcessButtonState();
@@ -194,6 +205,9 @@ class _ProcessButtonState extends State<ProcessButton> {
             : false;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> eeae9f55 (fix: attachment mandatory for packing)
     final bool hasPackingAttachmentError = widget.label == 'Packing' &&
         ((widget.attachments == null) ||
             (widget.attachments is! List) ||
@@ -207,6 +221,7 @@ class _ProcessButtonState extends State<ProcessButton> {
         hasDyeingReworkError() ||
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // hasPackingAttachmentError ||
 =======
     final bool isDisabled = hasBasicError ||
@@ -218,6 +233,9 @@ class _ProcessButtonState extends State<ProcessButton> {
 >>>>>>> b2f13701 (fix: kondisi button finish process)
 =======
 >>>>>>> 9965df4b (fix: hilangkan cek status mesin saat selesai)
+=======
+        hasPackingAttachmentError ||
+>>>>>>> eeae9f55 (fix: attachment mandatory for packing)
         widget.hasItemQtyWarning == true;
 
     return SafeArea(

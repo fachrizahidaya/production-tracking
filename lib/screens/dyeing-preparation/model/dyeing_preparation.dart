@@ -5,19 +5,29 @@ class DyeingPreparation {
   final woId;
   final items;
   final notes;
+  final attachments;
 
-  DyeingPreparation({this.id, this.woId, this.items, this.notes});
+  DyeingPreparation(
+      {this.id, this.woId, this.items, this.notes, this.attachments});
 
   factory DyeingPreparation.fromJson(Map<String, dynamic> json) {
     return DyeingPreparation(
-        id: json['id'],
-        woId: json['wo_id'],
-        items: json['items'] ?? [],
-        notes: json['notes']);
+      id: json['id'],
+      woId: json['wo_id'],
+      items: json['items'] ?? [],
+      notes: json['notes'],
+      attachments: json['attachments'] ?? [],
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final data = {'id': id, 'wo_id': woId, 'items': items, 'notes': notes};
+    final data = {
+      'id': id,
+      'wo_id': woId,
+      'items': items,
+      'notes': notes,
+      'attachments': attachments
+    };
 
     data.removeWhere((key, value) => value == null);
 

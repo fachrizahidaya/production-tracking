@@ -98,6 +98,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   bool _isInitializingSorting = false;
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+  final ValueNotifier<bool> _hasAttachment = ValueNotifier(false);
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _listFormKey = GlobalKey();
@@ -237,6 +238,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     });
 
     _handleChangeInput('defects', _defects);
+  }
+
+  void _updateAttachmentStatus() {
+    final attachments = widget.form?['attachments'];
+
+    _hasAttachment.value = attachments is List && attachments.isNotEmpty;
   }
 
   Future<void> _handleFetchWorkOrder() async {
@@ -645,6 +652,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       }
       if (data['attachments'] != null) {
         widget.form?['attachments'] = List.from(data['attachments']);
+        _updateAttachmentStatus();
       }
       if (data['items'] != null) {
         widget.form?['items'] = List.from(data['items']);
@@ -1487,6 +1495,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   @override
   void dispose() {
+    _hasAttachment.dispose();
     if (widget.form != null) {
       widget.form!.clear();
     }
@@ -1591,6 +1600,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                                   _hasItemQtyWarning = hasWarning;
                                 });
                               },
+                              onAttachmentChanged: () {
+                                _updateAttachmentStatus();
+                              },
                             ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],
@@ -1624,6 +1636,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             isAllMachineDone: isAllMachineDone,
             label: widget.label,
             hasItemQtyWarning: _hasItemQtyWarning,
+            hasAttachment: _hasAttachment,
           ),
         ),
       ),

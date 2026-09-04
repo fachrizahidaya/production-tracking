@@ -54,6 +54,7 @@ class FinishSection extends StatefulWidget {
   final reworkCategoryOption;
   final onMachineChanged;
   final handleItemQtyWarning;
+  final onAttachmentChanged;
 
   const FinishSection(
       {super.key,
@@ -97,7 +98,8 @@ class FinishSection extends StatefulWidget {
       this.isInitializing,
       this.reworkCategoryOption,
       this.onMachineChanged,
-      this.handleItemQtyWarning});
+      this.handleItemQtyWarning,
+      this.onAttachmentChanged});
 
   @override
   State<FinishSection> createState() => _FinishSectionState();
@@ -186,6 +188,8 @@ class _FinishSectionState extends State<FinishSection> {
 
           widget.form['attachments'] =
               allAttachments.where((e) => e['is_add_button'] != true).toList();
+
+          widget.onAttachmentChanged?.call();
         });
       }
     } catch (e) {
@@ -255,6 +259,8 @@ class _FinishSectionState extends State<FinishSection> {
 
           widget.form['attachments'] =
               allAttachments.where((e) => e['is_add_button'] != true).toList();
+
+          widget.onAttachmentChanged?.call();
         });
 
         Navigator.pop(context);

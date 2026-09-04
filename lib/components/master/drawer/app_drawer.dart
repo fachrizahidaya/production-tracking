@@ -185,10 +185,10 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                             ? Icons.grid_on
                                                                                             : item.title == 'Shearing'
                                                                                                 ? Icons.content_cut_outlined
-                                                                                                : item.title == 'Laporan Produksi'
-                                                                                                    ? Icons.file_copy_outlined
-                                                                                                    : item.title == 'Persiapan Dyeing'
-                                                                                                        ? Icons.format_color_fill_outlined
+                                                                                                : item.title == 'Persiapan Dyeing'
+                                                                                                    ? Icons.format_color_fill_outlined
+                                                                                                    : item.title == 'Laporan'
+                                                                                                        ? Icons.file_copy_outlined
                                                                                                         : Icons.menu,
                           ),
                           onTap: () {

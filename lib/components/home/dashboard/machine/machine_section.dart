@@ -8,10 +8,10 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 class MachineSection extends StatelessWidget {
   final String title;
   final IconData icon;
-  final headerColor;
+  final dynamic headerColor;
   final List<dynamic> data;
   final bool isPortrait;
-  final status;
+  final dynamic status;
   final bool isMobile;
 
   const MachineSection({
@@ -40,6 +40,7 @@ class MachineSection extends StatelessWidget {
                 color: status,
                 size: isMobile ? 20 : null,
               ),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   '$title (${data.length})',
@@ -60,28 +61,28 @@ class MachineSection extends StatelessWidget {
             height: isMobile ? 120 : 200,
             child: NoData(),
           )
-        else if (isMobile)
-          Column(
-            children: data.map<Widget>((machine) {
-              return MachineCard(
-                data: machine,
-                isPortrait: true,
-              );
-            }).toList(),
-          )
         else
-          Expanded(
-            child: ListView.builder(
-              physics: const ClampingScrollPhysics(),
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return MachineCard(
-                  data: data[index],
-                  isPortrait: isPortrait,
-                );
-              },
-            ),
-          ),
+          isMobile
+              ? Column(
+                  children: data.map<Widget>((machine) {
+                    return MachineCard(
+                      data: machine,
+                      isPortrait: true,
+                    );
+                  }).toList(),
+                )
+              : Expanded(
+                  child: ListView.builder(
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      return MachineCard(
+                        data: data[index],
+                        isPortrait: isPortrait,
+                      );
+                    },
+                  ),
+                ),
       ],
     );
   }

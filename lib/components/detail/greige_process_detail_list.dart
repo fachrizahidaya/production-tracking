@@ -1953,13 +1953,8 @@ class GreigeProcessDetailList extends StatelessWidget {
           'icon': Icons.straighten_outlined
         },
         {
-          'label':
-              data['warping_type'] == 'single_warping' ? 'Beam' : 'Section',
-          'value': _withUnit(
-              data['warping_type'] == 'single_warping'
-                  ? data['beam_qty']
-                  : data['section'],
-              ''),
+          'label': 'Jumlah Section',
+          'value': _withUnit(data['section'], ''),
           'icon': Icons.view_column_outlined
         },
 <<<<<<< HEAD

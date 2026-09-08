@@ -59,6 +59,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
 =======
   final processName;
   final processNoKey;
+  final List<Widget> Function(BuildContext)? handleBuildAttachment;
 
   const DyeingPreparationDetailList(
       {super.key,
@@ -69,8 +70,13 @@ class DyeingPreparationDetailList extends StatelessWidget {
       required this.onDelete,
       required this.onEdit,
       this.processName,
+<<<<<<< HEAD
       this.processNoKey});
 >>>>>>> bdffbd30 (fix: detail persiapan dyeing)
+=======
+      this.processNoKey,
+      this.handleBuildAttachment});
+>>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +98,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
                 _buildOrderGreigeInfo(context, isTablet),
                 if (isTablet)
                   _buildTabletLayout(context, isLargeTablet)
+<<<<<<< HEAD
 =======
                 _buildTopBar(context, isTablet),
 =======
@@ -101,6 +108,8 @@ class DyeingPreparationDetailList extends StatelessWidget {
                 if (isTablet)
                   _buildTabletLayout(isLargeTablet)
 >>>>>>> 252dc540 (feat: persiapan dyeing detail)
+=======
+>>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
                 else
                   _buildMobileLayout(),
               ],
@@ -376,10 +385,14 @@ class DyeingPreparationDetailList extends StatelessWidget {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Widget _buildTabletLayout(BuildContext context, bool isLargeTablet) {
 =======
   Widget _buildTabletLayout(bool isLargeTablet) {
 >>>>>>> 252dc540 (feat: persiapan dyeing detail)
+=======
+  Widget _buildTabletLayout(BuildContext context, bool isLargeTablet) {
+>>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
     return Padding(
       padding: CustomTheme().padding('card-detail'),
       child: Column(
@@ -414,6 +427,9 @@ class DyeingPreparationDetailList extends StatelessWidget {
               ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
               if ((data['attachments'] as List? ?? []).isNotEmpty)
                 _buildSectionCard(
                   title: 'Lampiran',

@@ -9,6 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -29,6 +30,8 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
+=======
+>>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -351,6 +354,7 @@ class _DyeingPreparationDetailScreenState
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   Widget _buildAttachmentSection(BuildContext context) {
     final attachments = (_data['attachments'] ?? []) as List<dynamic>;
@@ -377,6 +381,8 @@ class _DyeingPreparationDetailScreenState
   }
 
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
   Future _handleDelete(dynamic _) async {
     final data = _data;
 
@@ -534,9 +540,13 @@ class _DyeingPreparationDetailScreenState
                       canUpdate: widget.canUpdate,
                       onDelete: () => _handleDelete(data),
 <<<<<<< HEAD
+<<<<<<< HEAD
                       handleBuildAttachment: _buildAttachmentList,
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+                      handleBuildAttachment: _buildAttachmentList,
+>>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
                       onEdit: () async {
                         final result = await Navigator.push(
                           context,
@@ -637,7 +647,6 @@ class _DyeingPreparationDetailScreenState
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
                     ),
                   ),
-                  _buildAttachmentSection(context),
                 ],
               );
             },

@@ -856,7 +856,7 @@ class _CreateDyeingPreparationProcessManualState
         greigeItemOptions = options;
         existingItems = _mapExistingItems(items, options);
         greigeInfoMessage = items.isEmpty
-            ? 'Greige belum tersedia untuk item Work Order ini.'
+            ? 'Order Greige ${woData['items'][0]['order_greige']['og_no']} sudah selesai. Stok SAP belum ter-update WO bisa lanjut ke Persiapan Dyeing setelah stok greige mencukupi.'
             : null;
       });
     } catch (e) {
@@ -870,8 +870,13 @@ class _CreateDyeingPreparationProcessManualState
 =======
         existingItems = [];
         greigeItemOptions = [];
+<<<<<<< HEAD
         greigeInfoMessage = 'Greige belum tersedia untuk item Work Order ini.';
 >>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
+=======
+        greigeInfoMessage =
+            'Order Greige ${woData['items'][0]['order_greige']['og_no']} sudah selesai. Stok SAP belum ter-update WO bisa lanjut ke Persiapan Dyeing setelah stok greige mencukupi.';
+>>>>>>> 95e1119c (fix: button untuk persiapan dyeing)
       });
     } finally {
       if (mounted) {
@@ -960,6 +965,7 @@ class _CreateDyeingPreparationProcessManualState
           greigeInfoMessage =
               'Order Greige ${woData['items'][0]['order_greige']['og_no']} sudah selesai. Stok SAP belum ter-update WO bisa lanjut ke Persiapan Dyeing setelah stok greige mencukupi.';
 <<<<<<< HEAD
+<<<<<<< HEAD
         } else {
           greigeItemOptions = options;
           existingItems = _mapExistingItems(availableItems, options);
@@ -1002,6 +1008,8 @@ class _CreateDyeingPreparationProcessManualState
           greigeItemOptions = [];
           greigeInfoMessage =
               'Greige belum tersedia untuk item Work Order ini.';
+=======
+>>>>>>> 95e1119c (fix: button untuk persiapan dyeing)
         } else {
           greigeItemOptions = options;
           existingItems = _mapExistingItems(availableItems, options);
@@ -1507,7 +1515,6 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> b70754b7 (feat: persiapan dyeing)
 =======
     _noteController.dispose();
-    _isSubmitting.dispose();
     _isLoading.dispose();
 >>>>>>> e467a136 (fix: attachment for dyeing preparation)
     super.dispose();

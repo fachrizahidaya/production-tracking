@@ -1484,6 +1484,7 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final isDisabled = widget.form?['wo_id'] == null || !widget.greigeReady;
 =======
     final isDisabled = widget.form?['wo_id'] == null;
@@ -1494,6 +1495,9 @@ class _DyeingPreparationFormSectionState
 =======
     final isDisabled = widget.form?['wo_id'] == null;
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+    final isDisabled = widget.form?['wo_id'] == null || !widget.greigeReady;
+>>>>>>> 95e1119c (fix: button untuk persiapan dyeing)
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,

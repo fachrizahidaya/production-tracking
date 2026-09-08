@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/process/create/greige_tab_section.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
@@ -319,6 +320,20 @@ class _CreateGreigeOrderProcessManualState
   }
 
   Future<void> _selectMachine() async {
+    if (_isFetchingMachine) {
+      return;
+    }
+
+    if (machineOption.isEmpty) {
+      showAlertDialog(
+        context: context,
+        title: 'Mesin Tidak Tersedia',
+        message:
+            'Saat ini tidak ada mesin yang tersedia atau seluruh mesin sedang dipakai.',
+      );
+      return;
+    }
+
     showSelectDialog(
       context: context,
       title: 'Mesin',
@@ -326,11 +341,21 @@ class _CreateGreigeOrderProcessManualState
       option: machineOption,
       handleChangeValue: (selected) {
         setState(() {
-          widget.form?['machine_id'] = selected['value'].toString();
-          widget.form?['nama_mesin'] = selected['label'].toString();
+          final machines = widget.form?['machines'] as List? ?? [];
+          final isExist =
+              machines.any((machine) => machine['value'] == selected['value']);
+
+          if (!isExist) {
+            machines.add({
+              'value': selected['value'],
+              'label': selected['label'],
+            });
+          }
+
+          widget.form?['machines'] = machines;
         });
       },
-      selected: widget.form?['machine_id']?.toString() ?? '',
+      selected: '',
     );
   }
 

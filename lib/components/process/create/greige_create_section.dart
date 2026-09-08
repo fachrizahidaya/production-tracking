@@ -21,6 +21,7 @@ class GreigeCreateSection extends StatefulWidget {
   final yarnQty;
   final beamQty;
   final section;
+  final onFormChanged;
 
   const GreigeCreateSection(
       {super.key,
@@ -40,7 +41,8 @@ class GreigeCreateSection extends StatefulWidget {
       this.note,
       this.yarnQty,
       this.beamQty,
-      this.section});
+      this.section,
+      this.onFormChanged});
 
   @override
   State<GreigeCreateSection> createState() => _GreigeCreateSectionState();
@@ -54,6 +56,7 @@ class _GreigeCreateSectionState extends State<GreigeCreateSection> {
       isMaklon: widget.isMaklon,
       id: widget.id,
       form: widget.form,
+      onFormChanged: widget.onFormChanged,
       maklonName: widget.maklonName,
       selectGreigeOrder: widget.selectGreigeOrder,
       selectMachine: widget.selectMachine,

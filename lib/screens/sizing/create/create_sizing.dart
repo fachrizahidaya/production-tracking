@@ -17,6 +17,11 @@ class CreateSizing extends StatelessWidget {
       notes: form['notes'],
       orderGreigeId: int.tryParse(form['order_greige_id']?.toString() ?? ''),
       machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
+      machine_ids: (form['machines'] as List?)
+          ?.map((e) => int.tryParse(e['value'].toString()))
+          .where((e) => e != null)
+          .cast<int>()
+          .toList(),
     );
 
     final message = await Provider.of<SizingService>(context, listen: false)

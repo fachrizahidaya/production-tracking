@@ -187,20 +187,11 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
         : 'section';
     final warpingValue = widget.form?[warpingValueKey]?.toString().trim() ?? '';
 
-    if (widget.withOnlyMaklon == true) {
-      isDisabled = widget.form?['order_greige_id'] == null;
-    } else if (widget.withNoMaklonOrMachine == true) {
-      isDisabled = widget.form?['order_greige_id'] == null;
-    } else if (widget.label == 'Long Hemming' ||
-        widget.label == 'Cross Cutting' ||
-        widget.label == 'Sewing') {
-      isDisabled = widget.form?['order_greige_id'] == null || machines.isEmpty;
-    } else {
-      isDisabled = widget.form?['order_greige_id'] == null ||
-          widget.form?['machine_id'] == null ||
-          (widget.label == 'Warping' &&
-              (yarnQty.isEmpty || warpingValue.isEmpty));
-    }
+    isDisabled = widget.form?['order_greige_id'] == null || machines.isEmpty
+        // ||
+        // yarnQty.isEmpty ||
+        // warpingValue.isEmpty
+        ;
 
     return DefaultTabController(
       length: 2,
@@ -233,6 +224,7 @@ class _GreigeTabSectionState extends State<GreigeTabSection> {
                       GreigeFormInfoTab(
                         data: widget.greigeOrderData,
                         processData: widget.processData,
+                        onFormChanged: () => setState(() {}),
                         id: widget.id,
                         isLoading: widget.firstLoading,
                         label: widget.label,

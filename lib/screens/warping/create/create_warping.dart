@@ -25,6 +25,11 @@ class CreateWarping extends StatelessWidget {
           isSingle ? num.tryParse(form['beam_qty']?.toString() ?? '') : null,
       section:
           !isSingle ? num.tryParse(form['section']?.toString() ?? '') : null,
+      machine_ids: (form['machines'] as List?)
+          ?.map((e) => int.tryParse(e['value'].toString()))
+          .where((e) => e != null)
+          .cast<int>()
+          .toList(),
     );
 
     final message = await Provider.of<WarpingService>(context, listen: false)

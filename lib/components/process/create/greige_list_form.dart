@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
+import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -39,6 +40,7 @@ class GreigeListForm extends StatefulWidget {
   final beamQty;
   final section;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final onFormChanged;
 =======
 >>>>>>> a1ea7df (feat: warping)
@@ -47,6 +49,9 @@ class GreigeListForm extends StatefulWidget {
 >>>>>>> 1e3750ac (fix: create process)
 =======
 >>>>>>> 6aaef7aa (fix: create warping)
+=======
+  final onFormChanged;
+>>>>>>> d0509dba (fix: mulai warping - shearing)
 
   const GreigeListForm(
       {super.key,
@@ -70,6 +75,7 @@ class GreigeListForm extends StatefulWidget {
       this.beamQty,
       this.section,
       this.onFormChanged});
+<<<<<<< HEAD
 =======
       this.note});
 >>>>>>> a1ea7df (feat: warping)
@@ -83,6 +89,8 @@ class GreigeListForm extends StatefulWidget {
       this.beamQty,
       this.section});
 >>>>>>> 6aaef7aa (fix: create warping)
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
 
   @override
   State<GreigeListForm> createState() => _GreigeListFormState();
@@ -284,47 +292,31 @@ class _GreigeListFormState extends State<GreigeListForm> {
                   icon: Icons.local_laundry_service_outlined,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // if (widget.form?['wo_id'] != null)
-                      //   Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [_buildMultiMesin()]
-                      //         .separatedBy(CustomTheme().vGap('xl')),
-                      //   )
-                      // else if (widget.form?['wo_id'] != null)
-                      //   _buildMultiMesin()
-                      // else
-                      SelectForm(
-                        label: 'Mesin',
-                        onTap: () => widget.selectMachine(),
-                        selectedLabel: widget.form['nama_mesin'] ?? '',
-                        selectedValue: widget.form['machine_id'].toString(),
-                        required: true,
-                      ),
-                    ].separatedBy(CustomTheme().vGap('xl')),
+                    children: [_buildMultiMesin()]
+                        .separatedBy(CustomTheme().vGap('xl')),
                   ),
                 ),
                 Row(
                   children: [
-                    if (widget.label == 'Warping')
-                      Expanded(
-                        child: WarpingSection(
-                          controller: widget.yarnQty,
-                          onChange: (value) {
-                            widget.handleChangeInput('yarn_qty', value);
-                          },
-                          form: widget.form,
-                          valueController:
-                              isSingleWarping ? widget.beamQty : widget.section,
-                          onValueChange: (value) {
-                            widget.handleChangeInput(
-                              isSingleWarping ? 'beam_qty' : 'section',
-                              value,
-                            );
-                          },
-                          extraTitle: isSingleWarping ? 'Beam' : 'Section',
-                        ),
-                      ),
+                    // if (widget.label == 'Warping')
+                    //   Expanded(
+                    //     child: WarpingSection(
+                    //       controller: widget.yarnQty,
+                    //       onChange: (value) {
+                    //         widget.handleChangeInput('yarn_qty', value);
+                    //       },
+                    //       form: widget.form,
+                    //       valueController:
+                    //           isSingleWarping ? widget.beamQty : widget.section,
+                    //       onValueChange: (value) {
+                    //         widget.handleChangeInput(
+                    //           isSingleWarping ? 'beam_qty' : 'section',
+                    //           value,
+                    //         );
+                    //       },
+                    //       extraTitle: isSingleWarping ? 'Beam' : 'Section',
+                    //     ),
+                    //   ),
                     if (widget.label == 'Weaving')
                       Expanded(
                         child: WeavingSection(
@@ -371,9 +363,13 @@ class _GreigeListFormState extends State<GreigeListForm> {
     );
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+
+>>>>>>> d0509dba (fix: mulai warping - shearing)
   Widget _buildMultiMesin() {
     final machines = widget.form['machines'] as List? ?? [];
 
@@ -452,6 +448,7 @@ class _GreigeListFormState extends State<GreigeListForm> {
           ),
         ].separatedBy(CustomTheme().vGap('lg')),
       ),
+<<<<<<< HEAD
 =======
   Widget _buildMaklonForm() {
     return Column(
@@ -579,4 +576,8 @@ class _GreigeListFormState extends State<GreigeListForm> {
   }
 =======
 >>>>>>> 1e3750ac (fix: create process)
+=======
+    );
+  }
+>>>>>>> d0509dba (fix: mulai warping - shearing)
 }

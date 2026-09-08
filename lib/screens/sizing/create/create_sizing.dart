@@ -42,6 +42,7 @@ class CreateSizing extends StatelessWidget {
           .where((e) => e != null)
           .cast<int>()
           .toList(),
+<<<<<<< HEAD
 =======
       status: form['status'],
       attachments: form['attachments'],
@@ -50,6 +51,8 @@ class CreateSizing extends StatelessWidget {
       orderGreigeId: int.tryParse(form['order_greige_id']?.toString() ?? ''),
       machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
     );
 
     final message = await Provider.of<SizingService>(context, listen: false)

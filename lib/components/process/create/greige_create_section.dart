@@ -24,6 +24,7 @@ class GreigeCreateSection extends StatefulWidget {
   final beamQty;
   final section;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final onFormChanged;
 =======
 >>>>>>> a1ea7df (feat: warping)
@@ -32,6 +33,9 @@ class GreigeCreateSection extends StatefulWidget {
 >>>>>>> 1e3750ac (fix: create process)
 =======
 >>>>>>> 6aaef7aa (fix: create warping)
+=======
+  final onFormChanged;
+>>>>>>> d0509dba (fix: mulai warping - shearing)
 
   const GreigeCreateSection(
       {super.key,
@@ -55,6 +59,7 @@ class GreigeCreateSection extends StatefulWidget {
       this.beamQty,
       this.section,
       this.onFormChanged});
+<<<<<<< HEAD
 =======
       this.note});
 >>>>>>> a1ea7df (feat: warping)
@@ -68,6 +73,8 @@ class GreigeCreateSection extends StatefulWidget {
       this.beamQty,
       this.section});
 >>>>>>> 6aaef7aa (fix: create warping)
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
 
   @override
   State<GreigeCreateSection> createState() => _GreigeCreateSectionState();
@@ -82,9 +89,13 @@ class _GreigeCreateSectionState extends State<GreigeCreateSection> {
       id: widget.id,
       form: widget.form,
 <<<<<<< HEAD
+<<<<<<< HEAD
       onFormChanged: widget.onFormChanged,
 =======
 >>>>>>> a1ea7df (feat: warping)
+=======
+      onFormChanged: widget.onFormChanged,
+>>>>>>> d0509dba (fix: mulai warping - shearing)
       maklonName: widget.maklonName,
       selectGreigeOrder: widget.selectGreigeOrder,
       selectMachine: widget.selectMachine,

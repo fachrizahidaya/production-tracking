@@ -1,8 +1,13 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // ignore_for_file: non_constant_identifier_names
 
 =======
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+// ignore_for_file: non_constant_identifier_names
+
+>>>>>>> d0509dba (fix: mulai warping - shearing)
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 
 class Sizing {
@@ -48,6 +53,8 @@ class Sizing {
   final notes;
   final panjangGulungan;
   final attachments;
+  final machines;
+  final machine_ids;
 
 <<<<<<< HEAD
   final List<dynamic> attachments;
@@ -146,10 +153,13 @@ class Sizing {
       this.yarnQty,
       this.notes,
       this.panjangGulungan,
-      this.attachments});
+      this.attachments,
+      this.machine_ids,
+      this.machines});
 
   factory Sizing.fromJson(Map<String, dynamic> json) {
     return Sizing(
+<<<<<<< HEAD
         id: json['id'],
         sizingNo: json['sizing_no'],
         machineId: json['machine_id'],
@@ -160,6 +170,20 @@ class Sizing {
         section: json['section'],
         panjangGulungan: json['roll_length']);
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+      id: json['id'],
+      sizingNo: json['sizing_no'],
+      machineId: json['machine_id'],
+      orderGreigeId: json['order_greige_id'],
+      yarnQty: json['yarn_qty'],
+      notes: json['notes'],
+      length: json['length'],
+      section: json['section'],
+      panjangGulungan: json['roll_length'],
+      machines: json['machines'] ?? [],
+      machine_ids: json['machine_ids'] ?? [],
+    );
+>>>>>>> d0509dba (fix: mulai warping - shearing)
   }
 
   Map<String, dynamic> toJson() {
@@ -177,6 +201,7 @@ class Sizing {
       'roll_length': panjangGulungan,
       'machines': machines,
       'machine_ids': machine_ids,
+<<<<<<< HEAD
 =======
       'wo_id': woId,
 =======
@@ -206,6 +231,8 @@ class Sizing {
       'section': section,
       'roll_length': panjangGulungan
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
     };
   }
 }

@@ -46,6 +46,7 @@ class CreateShearing extends StatelessWidget {
           .where((e) => e != null)
           .cast<int>()
           .toList(),
+<<<<<<< HEAD
 =======
       status: form['status'],
       attachments: form['attachments'],
@@ -54,6 +55,8 @@ class CreateShearing extends StatelessWidget {
       orderGreigeId: int.tryParse(form['order_greige_id']?.toString() ?? ''),
       machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
     );
 
     final message = await Provider.of<ShearingService>(context, listen: false)

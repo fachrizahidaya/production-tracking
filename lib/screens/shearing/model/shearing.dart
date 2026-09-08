@@ -1,8 +1,13 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // ignore_for_file: non_constant_identifier_names
 
 =======
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+// ignore_for_file: non_constant_identifier_names
+
+>>>>>>> d0509dba (fix: mulai warping - shearing)
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 
 class Shearing {
@@ -30,6 +35,7 @@ class Shearing {
       this.machines,
       this.machine_ids,
       this.attachments});
+<<<<<<< HEAD
 =======
   final int? woId;
 =======
@@ -96,6 +102,8 @@ class Shearing {
       this.qty,
       this.weight});
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
 
   factory Shearing.fromJson(Map<String, dynamic> json) {
     return Shearing(
@@ -111,6 +119,7 @@ class Shearing {
       machines: json['machines'] ?? [],
       machine_ids: json['machine_ids'] ?? [],
       attachments: json['attachments'] ?? [],
+<<<<<<< HEAD
 =======
       woId: json['wo_id'],
 =======
@@ -141,6 +150,8 @@ class Shearing {
       qty: json['qty'],
       weight: json['weight'],
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
     );
   }
 
@@ -158,6 +169,7 @@ class Shearing {
       'machines': machines,
       'machine_ids': machine_ids,
       'attachments': attachments,
+<<<<<<< HEAD
 =======
       'wo_id': woId,
 =======
@@ -185,6 +197,8 @@ class Shearing {
       'qty': qty,
       'weight': weight
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
     };
   }
 }

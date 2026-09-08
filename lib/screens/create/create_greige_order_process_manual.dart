@@ -5,6 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/process/create/greige_tab_section.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
@@ -537,6 +540,9 @@ class _CreateGreigeOrderProcessManualState
 
   Future<void> _selectMachine() async {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
     if (_isFetchingMachine) {
       return;
     }
@@ -551,8 +557,11 @@ class _CreateGreigeOrderProcessManualState
       return;
     }
 
+<<<<<<< HEAD
 =======
 >>>>>>> a1ea7df (feat: warping)
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
     showSelectDialog(
       context: context,
       title: 'Mesin',
@@ -561,6 +570,9 @@ class _CreateGreigeOrderProcessManualState
       handleChangeValue: (selected) {
         setState(() {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
           final machines = widget.form?['machines'] as List? ?? [];
           final isExist =
               machines.any((machine) => machine['value'] == selected['value']);
@@ -573,6 +585,7 @@ class _CreateGreigeOrderProcessManualState
           }
 
           widget.form?['machines'] = machines;
+<<<<<<< HEAD
         });
       },
       selected: '',
@@ -583,6 +596,11 @@ class _CreateGreigeOrderProcessManualState
       },
       selected: widget.form?['machine_id']?.toString() ?? '',
 >>>>>>> a1ea7df (feat: warping)
+=======
+        });
+      },
+      selected: '',
+>>>>>>> d0509dba (fix: mulai warping - shearing)
     );
   }
 

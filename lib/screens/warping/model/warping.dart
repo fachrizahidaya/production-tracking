@@ -1,9 +1,13 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 import 'package:textile_tracking/providers/api_client.dart';
 
@@ -43,7 +47,10 @@ class Warping {
       this.weight,
       this.brokenYarns});
 =======
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
+import 'package:textile_tracking/providers/api_client.dart';
 
 class Warping {
   final id;
@@ -57,6 +64,11 @@ class Warping {
   final lengths;
   final section;
   final attachments;
+  final machines;
+  final machine_ids;
+  final length;
+  final weight;
+  final brokenYarns;
 
 <<<<<<< HEAD
   final bool? canDelete;
@@ -194,7 +206,12 @@ class Warping {
       this.lengths,
       this.section,
       this.beamQty,
-      this.attachments});
+      this.attachments,
+      this.machine_ids,
+      this.machines,
+      this.length,
+      this.weight,
+      this.brokenYarns});
 
   factory Warping.fromJson(Map<String, dynamic> json) {
     return Warping(
@@ -210,6 +227,11 @@ class Warping {
       section: json['section'],
       beamQty: json['beam_qty'],
       attachments: json['attachments'] ?? [],
+      machines: json['machines'] ?? [],
+      machine_ids: json['machine_ids'] ?? [],
+      length: json['length'],
+      weight: json['weight'],
+      brokenYarns: json['broken_yarns'] ?? [],
     );
   }
 
@@ -227,6 +249,11 @@ class Warping {
       'section': section,
       'beam_qty': beamQty,
       'attachments': attachments,
+      'machines': machines,
+      'machine_ids': machine_ids,
+      'length': length,
+      'weight': weight,
+      'broken_yarns': brokenYarns,
     };
 <<<<<<< HEAD
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
@@ -264,6 +291,7 @@ class WarpingService extends BaseCrudService<Warping> {
 
     throw decoded['message'] ?? 'Gagal mengambil jenis benang putus';
   }
+<<<<<<< HEAD
 =======
           endpoint: 'warping',
 =======
@@ -273,4 +301,6 @@ class WarpingService extends BaseCrudService<Warping> {
           toJson: (item) => item.toJson(),
         );
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+>>>>>>> d0509dba (fix: mulai warping - shearing)
 }

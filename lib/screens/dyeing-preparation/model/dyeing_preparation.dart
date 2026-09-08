@@ -1,7 +1,11 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:flutter/material.dart';
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+import 'package:flutter/material.dart';
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 
 class DyeingPreparation {
@@ -12,6 +16,7 @@ class DyeingPreparation {
   final items;
   final notes;
   final attachments;
+<<<<<<< HEAD
 <<<<<<< HEAD
   final attachmentIds;
 
@@ -50,9 +55,17 @@ class DyeingPreparation {
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
 =======
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
+=======
+  final attachmentIds;
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 
   DyeingPreparation(
-      {this.id, this.woId, this.items, this.notes, this.attachments});
+      {this.id,
+      this.woId,
+      this.items,
+      this.notes,
+      this.attachments,
+      this.attachmentIds});
 
   factory DyeingPreparation.fromJson(Map<String, dynamic> json) {
     return DyeingPreparation(
@@ -61,6 +74,7 @@ class DyeingPreparation {
       items: json['items'] ?? [],
       notes: json['notes'],
       attachments: json['attachments'] ?? [],
+      attachmentIds: json['attachment_ids'] ?? [],
     );
   }
 
@@ -78,7 +92,8 @@ class DyeingPreparation {
       'wo_id': woId,
       'items': items,
       'notes': notes,
-      'attachments': attachments
+      'attachments': attachments,
+      'attachment_ids': attachmentIds,
     };
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 
@@ -96,6 +111,9 @@ class DyeingPreparationService extends BaseCrudService<DyeingPreparation> {
           toJson: (item) => item.toJson(),
         );
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 
   Future<void> fetchPreparationList(
     BuildContext context,
@@ -142,6 +160,9 @@ class DyeingPreparationService extends BaseCrudService<DyeingPreparation> {
       isSubmitting,
     );
   }
+<<<<<<< HEAD
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 }

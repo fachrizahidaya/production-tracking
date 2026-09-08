@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, unused_element, unused_element_parameter
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -18,16 +19,29 @@ import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_prepara
 import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 =======
+=======
+import 'dart:io';
+
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
+import 'package:textile_tracking/helpers/util/format_bytes.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/detail/edit_dyeing_preparation.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
+<<<<<<< HEAD
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 
 class DyeingPreparationDetailScreen extends StatefulWidget {
   final id;
@@ -92,16 +106,20 @@ class _DyeingPreparationDetailScreenState
     });
 
     try {
-      final warpingService =
+      final dyeingPreparationService =
           Provider.of<DyeingPreparationService>(context, listen: false);
 
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
       await dyeingPreparationService.fetchPreparationDetail(
         context,
         widget.id,
       );
+<<<<<<< HEAD
 
       final detail = _detailData(dyeingPreparationService.dataView);
 =======
@@ -109,6 +127,10 @@ class _DyeingPreparationDetailScreenState
 
       final detail = _detailData(warpingService.dataView);
 >>>>>>> 27570e76 (fix: detail persiapan dyeing)
+=======
+
+      final detail = _detailData(dyeingPreparationService.dataView);
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 
       setState(() {
         _data = detail;
@@ -171,6 +193,9 @@ class _DyeingPreparationDetailScreenState
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
   int _fileSize(dynamic value) {
     if (value is int) return value;
     if (value is num) return value.toInt();
@@ -325,6 +350,33 @@ class _DyeingPreparationDetailScreenState
     }).toList();
   }
 
+<<<<<<< HEAD
+=======
+  Widget _buildAttachmentSection(BuildContext context) {
+    final attachments = (_data['attachments'] ?? []) as List<dynamic>;
+
+    if (attachments.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: CustomTheme().padding('content'),
+      child: TemplateCard(
+        icon: Icons.attachment_outlined,
+        title: 'Lampiran',
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 260),
+          child: SingleChildScrollView(
+            child: Column(
+              children: _buildAttachmentList(context),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
   Future _handleDelete(dynamic _) async {
     final data = _data;
 
@@ -481,7 +533,10 @@ class _DyeingPreparationDetailScreenState
                       canDelete: widget.canDelete,
                       canUpdate: widget.canUpdate,
                       onDelete: () => _handleDelete(data),
+<<<<<<< HEAD
                       handleBuildAttachment: _buildAttachmentList,
+=======
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
                       onEdit: () async {
                         final result = await Navigator.push(
                           context,
@@ -498,6 +553,7 @@ class _DyeingPreparationDetailScreenState
                           Navigator.pop(context, true);
                         }
                       },
+<<<<<<< HEAD
                     ),
                   ),
                 ],
@@ -577,15 +633,12 @@ class _DyeingPreparationDetailScreenState
                       builder: (_) => EditDyeingPreparationScreen(
                         id: widget.id,
                       ),
+=======
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
                     ),
-                  );
-
-                  if (!mounted) return;
-
-                  if (result == true) {
-                    Navigator.pop(context, true);
-                  }
-                },
+                  ),
+                  _buildAttachmentSection(context),
+                ],
               );
             },
           ),

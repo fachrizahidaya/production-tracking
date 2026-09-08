@@ -162,10 +162,16 @@ class WorkOrderService extends BaseService<WorkOrder> {
     String token = prefs.getString('access_token').toString();
 
     try {
+<<<<<<< HEAD
       final response = await http.get(
         url,
         headers: {'Authorization': 'Bearer $token'},
       );
+=======
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 
       final responseData = json.decode(response.body);
 

@@ -61,6 +61,7 @@ class DyeingPreparationFormSection extends StatefulWidget {
   final onDeleteAttachment;
   final onPreviewImage;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final greigeReady;
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
@@ -142,6 +143,34 @@ class DyeingPreparationFormSection extends StatefulWidget {
       this.onDeleteAttachment,
       this.onPreviewImage});
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
+=======
+  final greigeReady;
+
+  const DyeingPreparationFormSection({
+    super.key,
+    this.id,
+    required this.title,
+    required this.form,
+    required this.formKey,
+    required this.woData,
+    required this.handleSubmit,
+    required this.isSubmitting,
+    required this.selectWorkOrder,
+    required this.firstLoading,
+    this.existingItems = const [],
+    this.itemOptions,
+    this.greigeInfoMessage,
+    this.handleChangeInput,
+    this.note,
+    this.disableWorkOrder,
+    this.isEdit,
+    this.attachments,
+    this.onAddAttachment,
+    this.onDeleteAttachment,
+    this.onPreviewImage,
+    this.greigeReady = false,
+  });
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 
   @override
   State<DyeingPreparationFormSection> createState() =>
@@ -166,6 +195,7 @@ class _DyeingPreparationFormSectionState
 
   @override
 <<<<<<< HEAD
+<<<<<<< HEAD
   void didUpdateWidget(
     covariant DyeingPreparationFormSection oldWidget,
   ) {
@@ -179,6 +209,15 @@ class _DyeingPreparationFormSectionState
 
     if (oldWidget.existingItems != widget.existingItems) {
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
+=======
+  void didUpdateWidget(
+    covariant DyeingPreparationFormSection oldWidget,
+  ) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.existingItems != widget.existingItems ||
+        oldWidget.greigeReady != widget.greigeReady) {
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
       _setGreigeForms(widget.existingItems);
     }
   }
@@ -376,11 +415,15 @@ class _DyeingPreparationFormSectionState
     _disposeGreigeForms();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
     if (items.isEmpty) {
       _syncGreigeItemsToForm();
       return;
     }
 
+<<<<<<< HEAD
     for (var index = 0; index < items.length; index++) {
       greigeForms.add(
         _createGreigeForm(
@@ -392,6 +435,15 @@ class _DyeingPreparationFormSectionState
     for (var index = 0; index < items.length; index++) {
       greigeForms.add(_createGreigeForm(items[index], index));
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
+=======
+    for (var index = 0; index < items.length; index++) {
+      greigeForms.add(
+        _createGreigeForm(
+          items[index],
+          index,
+        ),
+      );
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
     }
 
     _syncGreigeItemsToForm();
@@ -413,10 +465,14 @@ class _DyeingPreparationFormSectionState
         workOrderItemId,
         () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
           "wo_item_id": workOrderItemId,
 =======
           "work_order_item_id": workOrderItemId,
 >>>>>>> eb21d940 (fix: buat persiapan dyeing)
+=======
+          "wo_item_id": workOrderItemId,
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
           "notes": null,
           "greige_items": <Map<String, dynamic>>[],
         },
@@ -984,6 +1040,7 @@ class _DyeingPreparationFormSectionState
                             _buildWorkOrderForm(),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                             if (widget.greigeReady)
                               _buildGreigeItemsForm(isTablet)
                             else if (widget.greigeInfoMessage != null)
@@ -1050,20 +1107,26 @@ class _DyeingPreparationFormSectionState
                                     : widget.existingItems)
                                 .isNotEmpty)
 >>>>>>> b35f25c0 (feat: edit persiapan dyeing)
+=======
+                            if (widget.greigeReady)
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
                               _buildGreigeItemsForm(isTablet)
                             else if (widget.greigeInfoMessage != null)
                               _buildGreigeInfo(),
-                            if ((widget.itemOptions?.isNotEmpty == true
-                                    ? widget.itemOptions!
-                                    : widget.existingItems)
-                                .isNotEmpty) ...[
+                            if (widget.greigeReady) ...[
                               AttachmentPicker(
-                                  attachments: widget.attachments,
-                                  onAddAttachment: widget.onAddAttachment,
-                                  onDeleteAttachment: widget.onDeleteAttachment,
-                                  onPreviewImage: (isNew, filePath) {
-                                    widget.onPreviewImage(isNew, filePath);
-                                  }),
+                                attachments: widget.attachments ?? [],
+                                onAddAttachment:
+                                    widget.onAddAttachment ?? () {},
+                                onDeleteAttachment: widget.onDeleteAttachment ??
+                                    (_) async => false,
+                                onPreviewImage: (isNew, filePath) {
+                                  widget.onPreviewImage?.call(
+                                    isNew,
+                                    filePath,
+                                  );
+                                },
+                              ),
                               NoteEditor(
                                 controller: widget.note,
                                 formKey: 'notes',

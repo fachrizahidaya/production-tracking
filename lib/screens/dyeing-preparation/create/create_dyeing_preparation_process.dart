@@ -128,11 +128,15 @@ class _CreateDyeingPreparationProcessState
       }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       final data = await _workOrderService.getFormInfo(woId);
 =======
       await _workOrderService.getDataView(woId);
       final data = _workOrderService.dataView;
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+      final data = await _workOrderService.getFormInfo(woId);
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 
       _form['wo_id'] = data['id']?.toString() ?? woId;
       _form['no_wo'] =

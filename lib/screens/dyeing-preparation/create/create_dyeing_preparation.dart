@@ -12,6 +12,9 @@ class CreateDyeingPreparation extends StatelessWidget {
   const CreateDyeingPreparation({super.key});
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
   List<Map<String, dynamic>> _mapCreateItems(dynamic items) {
     return List<dynamic>.from(items ?? []).map<Map<String, dynamic>>((rawItem) {
       final item = Map<String, dynamic>.from(rawItem);
@@ -24,14 +27,20 @@ class CreateDyeingPreparation extends StatelessWidget {
     }).toList();
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
     final dyeingPreparation = DyeingPreparation(
       woId: int.tryParse(form['wo_id']?.toString() ?? ''),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
       items: _mapCreateItems(form['items']),
       notes: form['notes']?.toString() ?? '',
       attachments: form['attachments'],
@@ -50,10 +59,14 @@ class CreateDyeingPreparation extends StatelessWidget {
     final message =
         await Provider.of<DyeingPreparationService>(context, listen: false)
 <<<<<<< HEAD
+<<<<<<< HEAD
             .createPreparation(context, dyeingPreparation, isLoading);
 =======
             .addItem(context, dyeingPreparation, isLoading);
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+            .createPreparation(context, dyeingPreparation, isLoading);
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 
     Navigator.pushNamedAndRemoveUntil(
         context, '/dyeing-preparations', (route) => false);

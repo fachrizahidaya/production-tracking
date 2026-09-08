@@ -294,7 +294,14 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         for (final file in attachments) {
           if (file is File) {
             request.files.add(
+<<<<<<< HEAD
               await http.MultipartFile.fromPath('attachments[]', file.path),
+=======
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+              ),
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
             );
           } else if (file is XFile) {
             request.files.add(
@@ -325,10 +332,17 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final res = jsonDecode(response.body);
 
+<<<<<<< HEAD
         await getDyeingPreparationDataList(context, {
           'page': '1',
           'search': '',
         });
+=======
+        await getDyeingPreparationDataList(
+          context,
+          {'page': '1', 'search': ''},
+        );
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 
         return '${res['message']}.';
       }
@@ -415,7 +429,14 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         for (final file in attachments) {
           if (file is File) {
             request.files.add(
+<<<<<<< HEAD
               await http.MultipartFile.fromPath('attachments[]', file.path),
+=======
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+              ),
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
             );
           } else if (file is XFile) {
             request.files.add(
@@ -446,10 +467,17 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final res = jsonDecode(response.body);
 
+<<<<<<< HEAD
         await getDyeingPreparationDataList(context, {
           'page': '1',
           'search': '',
         });
+=======
+        await getDyeingPreparationDataList(
+          context,
+          {'page': '1', 'search': ''},
+        );
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 
         return res['message']?.toString() ?? 'Persiapan Dyeing berhasil diubah';
       }
@@ -463,12 +491,17 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
+<<<<<<< HEAD
   Future<String> updateItem(
     BuildContext context,
     String id,
     T updatedItem,
     ValueNotifier<bool> isSubmitting,
   ) async {
+=======
+  Future<String> updateItem(BuildContext context, String id, T updatedItem,
+      ValueNotifier<bool> isSubmitting) async {
+>>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
     isSubmitting.value = true;
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();

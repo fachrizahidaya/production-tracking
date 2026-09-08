@@ -54,13 +54,17 @@ class CreateWarping extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d0509dba (fix: mulai warping - shearing)
+=======
+>>>>>>> fea54dd8 (fix: mulai warping - shearing)
       machine_ids: (form['machines'] as List?)
           ?.map((e) => int.tryParse(e['value'].toString()))
           .where((e) => e != null)
           .cast<int>()
           .toList(),
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     final warping = Warping(
@@ -82,6 +86,8 @@ class CreateWarping extends StatelessWidget {
 >>>>>>> d0509dba (fix: mulai warping - shearing)
 =======
 >>>>>>> a0d8b327 (fix: create warping)
+=======
+>>>>>>> fea54dd8 (fix: mulai warping - shearing)
     );
 
     final message = await Provider.of<WarpingService>(context, listen: false)

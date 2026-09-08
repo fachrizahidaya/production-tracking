@@ -241,6 +241,11 @@ class Warping {
       section: json['section'],
       beamQty: json['beam_qty'],
       attachments: json['attachments'] ?? [],
+      machines: json['machines'] ?? [],
+      machine_ids: json['machine_ids'] ?? [],
+      length: json['length'],
+      weight: json['weight'],
+      brokenYarns: json['broken_yarns'] ?? [],
     );
   }
 
@@ -258,6 +263,11 @@ class Warping {
       'section': section,
       'beam_qty': beamQty,
       'attachments': attachments,
+      'machines': machines,
+      'machine_ids': machine_ids,
+      'length': length,
+      'weight': weight,
+      'broken_yarns': brokenYarns,
     };
 <<<<<<< HEAD
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)

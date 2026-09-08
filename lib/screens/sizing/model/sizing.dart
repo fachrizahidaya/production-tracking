@@ -24,6 +24,8 @@ class Sizing {
   final notes;
   final panjangGulungan;
   final attachments;
+  final machines;
+  final machine_ids;
 
   Sizing(
       {this.id,
@@ -35,6 +37,7 @@ class Sizing {
       this.yarnQty,
       this.notes,
       this.panjangGulungan,
+<<<<<<< HEAD
 <<<<<<< HEAD
       this.attachments,
       this.machine_ids,
@@ -100,6 +103,11 @@ class Sizing {
 =======
       this.attachments});
 >>>>>>> faebfd26 (fix: mulai warping)
+=======
+      this.attachments,
+      this.machine_ids,
+      this.machines});
+>>>>>>> fea54dd8 (fix: mulai warping - shearing)
 
   factory Sizing.fromJson(Map<String, dynamic> json) {
     return Sizing(

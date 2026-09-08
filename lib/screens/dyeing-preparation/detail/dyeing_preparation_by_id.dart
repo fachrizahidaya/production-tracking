@@ -1,14 +1,22 @@
 // ignore_for_file: use_build_context_synchronously, unused_element, unused_element_parameter
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
+import 'package:textile_tracking/helpers/util/format_bytes.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/detail/edit_dyeing_preparation.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
+import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DyeingPreparationDetailScreen extends StatefulWidget {
   final id;
@@ -59,12 +67,15 @@ class _DyeingPreparationDetailScreenState
     });
 
     try {
-      final warpingService =
+      final dyeingPreparationService =
           Provider.of<DyeingPreparationService>(context, listen: false);
 
-      await warpingService.getDataView(context, widget.id);
+      await dyeingPreparationService.fetchPreparationDetail(
+        context,
+        widget.id,
+      );
 
-      final detail = _detailData(warpingService.dataView);
+      final detail = _detailData(dyeingPreparationService.dataView);
 
       setState(() {
         _data = detail;
@@ -86,6 +97,184 @@ class _DyeingPreparationDetailScreenState
     final data = response['data'];
     if (data is Map<String, dynamic>) return data;
     return response;
+  }
+
+  int _fileSize(dynamic value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? 0;
+
+    return 0;
+  }
+
+  List<Widget> _buildAttachmentList(BuildContext context) {
+    final existingAttachments = (_data['attachments'] ?? []) as List<dynamic>;
+    final baseUrl = dotenv.env['IMAGE_URL'] ?? '';
+
+    return existingAttachments.map<Widget>((item) {
+      final attachment = Map<String, dynamic>.from(item);
+      final bool isNew = attachment.containsKey('path');
+      final String? filePath =
+          isNew ? attachment['path'] : attachment['file_path'];
+      final String fileName = isNew
+          ? attachment['name']
+          : (attachment['file_name'] ?? filePath?.split('/').last ?? '');
+      final String extension = fileName.split('.').last.toLowerCase();
+      final bool isPdf = extension == 'pdf';
+      final bool isImage =
+          ['png', 'jpg', 'jpeg', 'gif', 'webp'].contains(extension);
+
+      String fileSizeText = '';
+
+      if (isNew && filePath != null) {
+        final file = File(filePath);
+
+        if (file.existsSync()) {
+          final bytes = file.lengthSync();
+          fileSizeText = formatBytes(bytes);
+        }
+      } else {
+        if (attachment['file_size'] != null) {
+          fileSizeText = formatBytes(_fileSize(attachment['file_size']));
+        } else {
+          fileSizeText = 'Unknown size';
+        }
+      }
+
+      Widget preview;
+
+      if (isImage && isNew && filePath != null) {
+        preview = Image.file(
+          File(filePath),
+          fit: BoxFit.cover,
+        );
+      } else if (isImage && filePath != null) {
+        preview = Image.network(
+          '$baseUrl$filePath',
+          fit: BoxFit.cover,
+          errorBuilder: (context, _, __) =>
+              const Icon(Icons.broken_image, size: 40),
+        );
+      } else {
+        preview = Icon(
+          Icons.description_outlined,
+          size: 40,
+          color: Colors.grey.shade700,
+        );
+      }
+
+      return GestureDetector(
+        onTap: filePath == null
+            ? null
+            : () async {
+                if (isImage) {
+                  showImageDialog(
+                    context: context,
+                    isNew: isNew,
+                    filePath: isNew ? filePath : '$baseUrl$filePath',
+                  );
+
+                  return;
+                }
+
+                if (isPdf) {
+                  final url = '$baseUrl$filePath';
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PdfViewerScreen(
+                        url: url,
+                        fileName: fileName,
+                      ),
+                    ),
+                  );
+
+                  return;
+                }
+
+                final url = '$baseUrl$filePath';
+
+                await launchUrl(
+                  Uri.parse(url),
+                  mode: LaunchMode.externalApplication,
+                );
+              },
+        child: Container(
+          padding: CustomTheme().padding('card'),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  color: Colors.grey.shade100,
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: preview,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      fileName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      fileSizeText,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }).toList();
+  }
+
+  Widget _buildAttachmentSection(BuildContext context) {
+    final attachments = (_data['attachments'] ?? []) as List<dynamic>;
+
+    if (attachments.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: CustomTheme().padding('content'),
+      child: TemplateCard(
+        icon: Icons.attachment_outlined,
+        title: 'Lampiran',
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 260),
+          child: SingleChildScrollView(
+            child: Column(
+              children: _buildAttachmentList(context),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Future _handleDelete(dynamic _) async {
@@ -202,30 +391,37 @@ class _DyeingPreparationDetailScreenState
                 _detailData(service.dataView),
               );
 
-              return DyeingPreparationDetailList(
-                data: data,
-                processName: 'Persiapan Dyeing',
-                processNoKey: 'prep_no',
-                onRefresh: _fetchDetail,
-                canDelete: widget.canDelete,
-                canUpdate: widget.canUpdate,
-                onDelete: () => _handleDelete(data),
-                onEdit: () async {
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => EditDyeingPreparationScreen(
-                        id: widget.id,
-                      ),
+              return Column(
+                children: [
+                  Expanded(
+                    child: DyeingPreparationDetailList(
+                      data: data,
+                      processName: 'Persiapan Dyeing',
+                      processNoKey: 'prep_no',
+                      onRefresh: _fetchDetail,
+                      canDelete: widget.canDelete,
+                      canUpdate: widget.canUpdate,
+                      onDelete: () => _handleDelete(data),
+                      onEdit: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => EditDyeingPreparationScreen(
+                              id: widget.id,
+                            ),
+                          ),
+                        );
+
+                        if (!mounted) return;
+
+                        if (result == true) {
+                          Navigator.pop(context, true);
+                        }
+                      },
                     ),
-                  );
-
-                  if (!mounted) return;
-
-                  if (result == true) {
-                    Navigator.pop(context, true);
-                  }
-                },
+                  ),
+                  _buildAttachmentSection(context),
+                ],
               );
             },
           ),

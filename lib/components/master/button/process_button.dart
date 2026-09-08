@@ -150,7 +150,7 @@ class _ProcessButtonState extends State<ProcessButton> {
         hasWeightItemError ||
         hasQtyItemError ||
         hasDyeingReworkError() ||
-        hasPackingAttachmentError ||
+        // hasPackingAttachmentError ||
         widget.hasItemQtyWarning == true;
 
     return SafeArea(

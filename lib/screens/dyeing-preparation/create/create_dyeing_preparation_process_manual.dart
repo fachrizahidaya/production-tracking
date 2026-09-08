@@ -288,14 +288,15 @@ class _CreateDyeingPreparationProcessManualState
         greigeItemOptions = options;
         existingItems = _mapExistingItems(items, options);
         greigeInfoMessage = items.isEmpty
-            ? 'Greige belum tersedia untuk item Work Order ini.'
+            ? 'Order Greige ${woData['items'][0]['order_greige']['og_no']} sudah selesai. Stok SAP belum ter-update WO bisa lanjut ke Persiapan Dyeing setelah stok greige mencukupi.'
             : null;
       });
     } catch (e) {
       setState(() {
         existingItems = [];
         greigeItemOptions = [];
-        greigeInfoMessage = 'Greige belum tersedia untuk item Work Order ini.';
+        greigeInfoMessage =
+            'Order Greige ${woData['items'][0]['order_greige']['og_no']} sudah selesai. Stok SAP belum ter-update WO bisa lanjut ke Persiapan Dyeing setelah stok greige mencukupi.';
       });
     } finally {
       if (mounted) {
@@ -358,7 +359,7 @@ class _CreateDyeingPreparationProcessManualState
           existingItems = [];
           greigeItemOptions = [];
           greigeInfoMessage =
-              'Greige belum tersedia untuk item Work Order ini.';
+              'Order Greige ${woData['items'][0]['order_greige']['og_no']} sudah selesai. Stok SAP belum ter-update WO bisa lanjut ke Persiapan Dyeing setelah stok greige mencukupi.';
         } else {
           greigeItemOptions = options;
           existingItems = _mapExistingItems(availableItems, options);
@@ -587,7 +588,6 @@ class _CreateDyeingPreparationProcessManualState
     widget.form?.clear();
     _isSubmitting.dispose();
     _noteController.dispose();
-    _isSubmitting.dispose();
     _isLoading.dispose();
     super.dispose();
   }

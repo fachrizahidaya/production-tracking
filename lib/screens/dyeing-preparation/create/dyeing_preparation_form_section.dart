@@ -488,7 +488,7 @@ class _DyeingPreparationFormSectionState
 
   @override
   Widget build(BuildContext context) {
-    final isDisabled = widget.form?['wo_id'] == null;
+    final isDisabled = widget.form?['wo_id'] == null || !widget.greigeReady;
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,

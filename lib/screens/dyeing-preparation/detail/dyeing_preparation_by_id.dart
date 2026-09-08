@@ -7,7 +7,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -253,30 +252,6 @@ class _DyeingPreparationDetailScreenState
     }).toList();
   }
 
-  Widget _buildAttachmentSection(BuildContext context) {
-    final attachments = (_data['attachments'] ?? []) as List<dynamic>;
-
-    if (attachments.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: CustomTheme().padding('content'),
-      child: TemplateCard(
-        icon: Icons.attachment_outlined,
-        title: 'Lampiran',
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxHeight: 260),
-          child: SingleChildScrollView(
-            child: Column(
-              children: _buildAttachmentList(context),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Future _handleDelete(dynamic _) async {
     final data = _data;
 
@@ -402,6 +377,7 @@ class _DyeingPreparationDetailScreenState
                       canDelete: widget.canDelete,
                       canUpdate: widget.canUpdate,
                       onDelete: () => _handleDelete(data),
+                      handleBuildAttachment: _buildAttachmentList,
                       onEdit: () async {
                         final result = await Navigator.push(
                           context,
@@ -420,7 +396,6 @@ class _DyeingPreparationDetailScreenState
                       },
                     ),
                   ),
-                  _buildAttachmentSection(context),
                 ],
               );
             },

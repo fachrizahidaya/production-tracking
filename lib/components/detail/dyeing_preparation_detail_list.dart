@@ -21,6 +21,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
   final VoidCallback onEdit;
   final processName;
   final processNoKey;
+  final List<Widget> Function(BuildContext)? handleBuildAttachment;
 
   const DyeingPreparationDetailList(
       {super.key,
@@ -31,7 +32,8 @@ class DyeingPreparationDetailList extends StatelessWidget {
       required this.onDelete,
       required this.onEdit,
       this.processName,
-      this.processNoKey});
+      this.processNoKey,
+      this.handleBuildAttachment});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
                 // _buildTopBar(context, isTablet),
                 _buildOrderGreigeInfo(context, isTablet),
                 if (isTablet)
-                  _buildTabletLayout(isLargeTablet)
+                  _buildTabletLayout(context, isLargeTablet)
                 else
                   _buildMobileLayout(),
               ],
@@ -264,7 +266,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
     );
   }
 
-  Widget _buildTabletLayout(bool isLargeTablet) {
+  Widget _buildTabletLayout(BuildContext context, bool isLargeTablet) {
     return Padding(
       padding: CustomTheme().padding('card-detail'),
       child: Column(
@@ -287,6 +289,14 @@ class DyeingPreparationDetailList extends StatelessWidget {
                 icon: Icons.timeline_outlined,
                 child: _buildTimelineInfo(true),
               ),
+              if ((data['attachments'] as List? ?? []).isNotEmpty)
+                _buildSectionCard(
+                  title: 'Lampiran',
+                  icon: Icons.attachment_outlined,
+                  child: Column(
+                    children: handleBuildAttachment?.call(context) ?? [],
+                  ),
+                ),
               _buildSectionCard(
                 title: 'Catatan $processName',
                 icon: Icons.note_outlined,

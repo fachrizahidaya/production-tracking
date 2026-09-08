@@ -63,8 +63,11 @@ class _FinishWarpingState extends State<FinishWarping> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 3562ec45 (fix: selesai warping - shearing)
+=======
+>>>>>>> dc33b21a (fix: selesai warping - shearing)
     'length': null,
     'weight': null,
     'broken_yarns': [],
@@ -150,18 +153,19 @@ class _FinishWarpingState extends State<FinishWarping> {
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
         final warping = Warping(
-          machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
-          warpingType: form['warping_type']?.toString(),
-          yarnQty: num.tryParse(form['yarn_qty']?.toString() ?? '0') ?? 0,
           section: form['section'] == null
               ? null
               : int.tryParse(form['section'].toString()),
           notes: form['notes']?.toString() ?? '',
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dc33b21a (fix: selesai warping - shearing)
           length: num.tryParse(form['length']?.toString() ?? ''),
           brokenYarns: List<Map<String, dynamic>>.from(
             form['broken_yarns'] ?? [],
           ),
+<<<<<<< HEAD
           attachments: form['attachments'],
           weight: num.tryParse(form['weight']?.toString() ?? '0') ?? 0,
 =======
@@ -230,6 +234,10 @@ class _FinishWarpingState extends State<FinishWarping> {
 =======
           attachments: form['attachments'],
 >>>>>>> ad866b29 (fix: selesai warping-shearing)
+=======
+          attachments: form['attachments'],
+          weight: num.tryParse(form['weight']?.toString() ?? '0') ?? 0,
+>>>>>>> dc33b21a (fix: selesai warping - shearing)
         );
 
         final message =

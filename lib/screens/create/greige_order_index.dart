@@ -48,6 +48,7 @@ class _CreateGreigeOrderProcessState extends State<CreateGreigeOrderProcess> {
   final Map<String, dynamic> _form = {
     'order_greige_id': null,
     'machine_id': null,
+    'machines': [],
     'warping_type': '',
     'yarn_qty': null,
     'notes': '',

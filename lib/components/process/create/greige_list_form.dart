@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
+import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/process/warping.dart';
@@ -27,6 +28,7 @@ class GreigeListForm extends StatefulWidget {
   final yarnQty;
   final beamQty;
   final section;
+  final onFormChanged;
 
   const GreigeListForm(
       {super.key,
@@ -46,7 +48,8 @@ class GreigeListForm extends StatefulWidget {
       this.note,
       this.yarnQty,
       this.beamQty,
-      this.section});
+      this.section,
+      this.onFormChanged});
 
   @override
   State<GreigeListForm> createState() => _GreigeListFormState();
@@ -140,47 +143,31 @@ class _GreigeListFormState extends State<GreigeListForm> {
                   icon: Icons.local_laundry_service_outlined,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // if (widget.form?['wo_id'] != null)
-                      //   Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [_buildMultiMesin()]
-                      //         .separatedBy(CustomTheme().vGap('xl')),
-                      //   )
-                      // else if (widget.form?['wo_id'] != null)
-                      //   _buildMultiMesin()
-                      // else
-                      SelectForm(
-                        label: 'Mesin',
-                        onTap: () => widget.selectMachine(),
-                        selectedLabel: widget.form['nama_mesin'] ?? '',
-                        selectedValue: widget.form['machine_id'].toString(),
-                        required: true,
-                      ),
-                    ].separatedBy(CustomTheme().vGap('xl')),
+                    children: [_buildMultiMesin()]
+                        .separatedBy(CustomTheme().vGap('xl')),
                   ),
                 ),
                 Row(
                   children: [
-                    if (widget.label == 'Warping')
-                      Expanded(
-                        child: WarpingSection(
-                          controller: widget.yarnQty,
-                          onChange: (value) {
-                            widget.handleChangeInput('yarn_qty', value);
-                          },
-                          form: widget.form,
-                          valueController:
-                              isSingleWarping ? widget.beamQty : widget.section,
-                          onValueChange: (value) {
-                            widget.handleChangeInput(
-                              isSingleWarping ? 'beam_qty' : 'section',
-                              value,
-                            );
-                          },
-                          extraTitle: isSingleWarping ? 'Beam' : 'Section',
-                        ),
-                      ),
+                    // if (widget.label == 'Warping')
+                    //   Expanded(
+                    //     child: WarpingSection(
+                    //       controller: widget.yarnQty,
+                    //       onChange: (value) {
+                    //         widget.handleChangeInput('yarn_qty', value);
+                    //       },
+                    //       form: widget.form,
+                    //       valueController:
+                    //           isSingleWarping ? widget.beamQty : widget.section,
+                    //       onValueChange: (value) {
+                    //         widget.handleChangeInput(
+                    //           isSingleWarping ? 'beam_qty' : 'section',
+                    //           value,
+                    //         );
+                    //       },
+                    //       extraTitle: isSingleWarping ? 'Beam' : 'Section',
+                    //     ),
+                    //   ),
                     if (widget.label == 'Weaving')
                       Expanded(
                         child: WeavingSection(
@@ -204,6 +191,87 @@ class _GreigeListFormState extends State<GreigeListForm> {
               ].separatedBy(CustomTheme().vGap('2xl')),
             ),
         ].separatedBy(CustomTheme().vGap('2xl')),
+      ),
+    );
+  }
+
+  Widget _buildMultiMesin() {
+    final machines = widget.form['machines'] as List? ?? [];
+
+    return GroupForm(
+      label: 'Mesin',
+      req: true,
+      formControl: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: machines
+                  .map(
+                    (machine) => Container(
+                      margin: const EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            machine['label']?.toString() ??
+                                machine['name']?.toString() ??
+                                '',
+                          ),
+                          const SizedBox(width: 8),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                machines.removeWhere(
+                                  (item) =>
+                                      (item['value'] ?? item['id'])
+                                          .toString() ==
+                                      (machine['value'] ?? machine['id'])
+                                          .toString(),
+                                );
+                                widget.form['machines'] = machines;
+                              });
+                              widget.onFormChanged?.call();
+                            },
+                            child: const Icon(
+                              Icons.close,
+                              color: Colors.red,
+                              size: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+          GestureDetector(
+            onTap: () async {
+              await widget.selectMachine();
+            },
+            child: Container(
+              height: 48,
+              margin: const EdgeInsets.only(top: 8),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Center(
+                child: Text('+ Tambah Mesin'),
+              ),
+            ),
+          ),
+        ].separatedBy(CustomTheme().vGap('lg')),
       ),
     );
   }

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 
 class Weaving {
@@ -11,18 +13,23 @@ class Weaving {
   final dynamic waste;
   final String? notes;
   final skipShearing;
+  final machines;
+  final machine_ids;
+  final attachments;
 
-  Weaving({
-    this.id,
-    this.weavingNo,
-    this.machineId,
-    this.qty,
-    this.notes,
-    this.orderGreigeId,
-    this.skipShearing,
-    this.waste,
-    this.weight,
-  });
+  Weaving(
+      {this.id,
+      this.weavingNo,
+      this.machineId,
+      this.qty,
+      this.notes,
+      this.orderGreigeId,
+      this.skipShearing,
+      this.waste,
+      this.weight,
+      this.machine_ids,
+      this.machines,
+      this.attachments});
 
   factory Weaving.fromJson(Map<String, dynamic> json) {
     return Weaving(
@@ -35,6 +42,9 @@ class Weaving {
       skipShearing: json['skip_shearing'],
       waste: json['waste'],
       weight: json['weight'],
+      machines: json['machines'] ?? [],
+      machine_ids: json['machine_ids'] ?? [],
+      attachments: json['attachments'] ?? [],
     );
   }
 
@@ -48,7 +58,10 @@ class Weaving {
       'order_greige_id': orderGreigeId,
       'skip_shearing': skipShearing,
       'waste': waste,
-      'weight': weight
+      'weight': weight,
+      'machines': machines,
+      'machine_ids': machine_ids,
+      'attachments': attachments,
     };
   }
 }

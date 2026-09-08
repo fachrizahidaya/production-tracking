@@ -28,6 +28,7 @@ class GreigeFormInfoTab extends StatefulWidget {
   final yarnQty;
   final beamQty;
   final section;
+  final onFormChanged;
 
   const GreigeFormInfoTab(
       {super.key,
@@ -49,7 +50,8 @@ class GreigeFormInfoTab extends StatefulWidget {
       this.note,
       this.yarnQty,
       this.beamQty,
-      this.section});
+      this.section,
+      this.onFormChanged});
 
   @override
   State<GreigeFormInfoTab> createState() => _GreigeFormInfoTabState();
@@ -159,6 +161,7 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
               GreigeCreateSection(
                 formKey: widget.formKey,
                 form: widget.form,
+                onFormChanged: widget.onFormChanged,
                 maklonName: widget.maklonName,
                 isMaklon: widget.isMaklon,
                 selectGreigeOrder: widget.handleSelectGreigeOrder,

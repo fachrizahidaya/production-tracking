@@ -17,7 +17,12 @@ class CreateWeavng extends StatelessWidget {
         notes: form['notes'],
         machineId: int.tryParse(form['machine_id']?.toString() ?? ''),
         orderGreigeId: int.tryParse(form['order_greige_id']?.toString() ?? ''),
-        skipShearing: form['skip_shearing']);
+        skipShearing: form['skip_shearing'],
+        machine_ids: (form['machines'] as List?)
+            ?.map((e) => int.tryParse(e['value'].toString()))
+            .where((e) => e != null)
+            .cast<int>()
+            .toList());
 
     final message = await Provider.of<WeavingService>(context, listen: false)
         .addItem(context, weaving, isLoading);

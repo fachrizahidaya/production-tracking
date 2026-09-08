@@ -229,6 +229,8 @@ class _WeavingDetailScreenState extends State<WeavingDetailScreen> {
                 data: data,
                 processName: 'Weaving',
                 processNoKey: 'weaving_no',
+                withMultiMachine: true,
+                withAttachments: true,
                 onRefresh: _fetchDetail,
                 canDelete: widget.canDelete,
                 canUpdate: widget.canUpdate,

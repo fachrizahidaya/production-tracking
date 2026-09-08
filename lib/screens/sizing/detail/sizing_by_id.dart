@@ -229,6 +229,7 @@ class _SizingDetailScreenState extends State<SizingDetailScreen> {
                 data: data,
                 processName: 'Sizing',
                 processNoKey: 'sizing_no',
+                withMultiMachine: true,
                 onRefresh: _fetchDetail,
                 canDelete: widget.canDelete,
                 canUpdate: widget.canUpdate,

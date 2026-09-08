@@ -231,6 +231,8 @@ class _ShearingDetailScreenState extends State<ShearingDetailScreen> {
                 data: data,
                 processName: 'Shearing',
                 processNoKey: 'shearing_no',
+                withMultiMachine: true,
+                withAttachments: true,
                 onRefresh: _fetchDetail,
                 canDelete: widget.canDelete,
                 canUpdate: widget.canUpdate,

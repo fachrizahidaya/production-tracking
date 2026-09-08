@@ -1,16 +1,23 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/button/action_button.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
+import 'package:textile_tracking/helpers/util/format_bytes.dart';
 import 'package:textile_tracking/helpers/util/format_html.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
 import 'package:textile_tracking/screens/greige-order/%5Bgreige_order_id%5D.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GreigeProcessDetailList extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -21,6 +28,9 @@ class GreigeProcessDetailList extends StatelessWidget {
   final bool canUpdate;
   final VoidCallback onDelete;
   final VoidCallback onEdit;
+  final bool withMultiMachine;
+  final bool withBrokenYarns;
+  final bool withAttachments;
 
   const GreigeProcessDetailList(
       {super.key,
@@ -31,7 +41,10 @@ class GreigeProcessDetailList extends StatelessWidget {
       required this.canDelete,
       required this.onDelete,
       required this.onEdit,
-      required this.canUpdate});
+      required this.canUpdate,
+      this.withMultiMachine = false,
+      this.withBrokenYarns = false,
+      this.withAttachments = false});
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +63,9 @@ class GreigeProcessDetailList extends StatelessWidget {
                 // _buildTopBar(context, isTablet),
                 _buildOrderGreigeInfo(context, isTablet),
                 if (isTablet)
-                  _buildTabletLayout(isLargeTablet)
+                  _buildTabletLayout(context, isLargeTablet)
                 else
-                  _buildMobileLayout(),
+                  _buildMobileLayout(context),
               ],
             ),
           ),
@@ -233,12 +246,18 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileLayout() {
+  Widget _buildMobileLayout(BuildContext context) {
     return Padding(
       padding: CustomTheme().padding('card-detail'),
       child: Column(
         children: [
           _buildHeaderSection(false),
+          if (withMultiMachine)
+            _buildSectionCard(
+              title: 'Informasi Mesin',
+              icon: Icons.local_laundry_service_outlined,
+              child: _buildMachine(context, false),
+            ),
           _buildSectionCard(
             title: 'Informasi Proses',
             icon: Icons.info_outline,
@@ -254,6 +273,18 @@ class GreigeProcessDetailList extends StatelessWidget {
             icon: Icons.account_tree_outlined,
             child: _buildResultInfo(false),
           ),
+          if (withBrokenYarns)
+            _buildSectionCard(
+              title: 'Catatan Benang Putus',
+              icon: Icons.content_cut_outlined,
+              child: _buildBrokenYarns(false),
+            ),
+          if (withAttachments)
+            _buildSectionCard(
+              title: 'Lampiran',
+              icon: Icons.attachment_outlined,
+              child: _buildAttachmentList(context),
+            ),
           _buildPasangSection(false),
           _buildSectionCard(
             title: 'Kebutuhan Benang',
@@ -280,12 +311,18 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
-  Widget _buildTabletLayout(bool isLargeTablet) {
+  Widget _buildTabletLayout(BuildContext context, bool isLargeTablet) {
     return Padding(
       padding: CustomTheme().padding('card-detail'),
       child: Column(
         children: [
           _buildHeaderSection(true),
+          if (withMultiMachine)
+            _buildSectionCard(
+              title: 'Informasi Mesin',
+              icon: Icons.local_laundry_service_outlined,
+              child: _buildMachine(context, true),
+            ),
           Column(
             children: [
               // _buildSectionCard(
@@ -298,6 +335,18 @@ class GreigeProcessDetailList extends StatelessWidget {
                 icon: Icons.account_tree_outlined,
                 child: _buildResultInfo(true),
               ),
+              if (withBrokenYarns)
+                _buildSectionCard(
+                  title: 'Catatan Benang Putus',
+                  icon: Icons.content_cut_outlined,
+                  child: _buildBrokenYarns(true),
+                ),
+              if (withAttachments)
+                _buildSectionCard(
+                  title: 'Lampiran',
+                  icon: Icons.attachment_outlined,
+                  child: _buildAttachmentList(context),
+                ),
               _buildPasangSection(true),
               _buildSectionCard(
                 title: 'Timeline Proses',
@@ -381,7 +430,7 @@ class GreigeProcessDetailList extends StatelessWidget {
               ),
             ],
           ),
-          _buildQuickInfoRow(isTablet),
+          if (!withMultiMachine) _buildQuickInfoRow(isTablet),
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
@@ -467,6 +516,215 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
+  Widget _buildMachine(BuildContext context, bool isTablet) {
+    final machines = data['machines'] as List? ?? [];
+
+    if (machines.isEmpty) return NoData();
+
+    return Wrap(
+      alignment: WrapAlignment.start,
+      runAlignment: WrapAlignment.start,
+      spacing: 16,
+      runSpacing: 16,
+      children: machines.map((machine) {
+        return Container(
+          width: machines.length > 1
+              ? (MediaQuery.of(context).size.width - 80) / 2
+              : double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (machine['machine'] != null)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${machine['machine']['code']} - ${machine['machine']['name']}',
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        Text('Lokasi: ${machine['location']}'),
+                      ],
+                    ),
+                    CustomBadge(
+                      title: machine['status'],
+                      rework: true,
+                      status: machine['status'] == 'Selesai'
+                          ? 'Selesai'
+                          : 'Diproses',
+                      withStatus: true,
+                    ),
+                  ],
+                ),
+              const Divider(),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Mulai: ${machine['start_time'] != null ? DateFormat('dd MMM yyyy, HH:mm').format(DateTime.parse(machine['start_time']).toLocal()) : '-'}',
+                  ),
+                  Text(
+                    'Selesai: ${machine['end_time'] != null ? DateFormat('dd MMM yyyy, HH:mm').format(DateTime.parse(machine['end_time']).toLocal()) : '-'}',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildAttachmentList(BuildContext context) {
+    final attachments = _listValue(data['attachments']);
+    if (attachments.isEmpty) return NoData();
+
+    final baseUrl = dotenv.env['IMAGE_URL'] ?? '';
+
+    return Wrap(
+      spacing: 16,
+      runSpacing: 8,
+      children: attachments.map((item) {
+        final isNew = item.containsKey('path');
+        final filePath = (isNew ? item['path'] : item['file_path'])?.toString();
+        final fileName = isNew
+            ? item['name']?.toString() ?? ''
+            : item['file_name']?.toString() ?? filePath?.split('/').last ?? '';
+        final extension = fileName.split('.').last.toLowerCase();
+        final isPdf = extension == 'pdf';
+        final isImage =
+            ['png', 'jpg', 'jpeg', 'gif', 'webp'].contains(extension);
+        final remotePath = filePath == null ||
+                filePath.startsWith('http://') ||
+                filePath.startsWith('https://')
+            ? filePath
+            : '$baseUrl$filePath';
+
+        var fileSizeText = 'Unknown size';
+        if (isNew && filePath != null) {
+          final file = File(filePath);
+          if (file.existsSync()) {
+            fileSizeText = formatBytes(file.lengthSync());
+          }
+        } else {
+          final fileSize = int.tryParse(item['file_size']?.toString() ?? '');
+          if (fileSize != null) {
+            fileSizeText = formatBytes(fileSize);
+          }
+        }
+
+        Widget preview;
+        if (isImage && isNew && filePath != null) {
+          preview = Image.file(File(filePath), fit: BoxFit.cover);
+        } else if (isImage && remotePath != null) {
+          preview = Image.network(
+            remotePath,
+            fit: BoxFit.cover,
+            errorBuilder: (context, _, __) =>
+                const Icon(Icons.broken_image, size: 40),
+          );
+        } else {
+          preview = Icon(
+            Icons.description_outlined,
+            size: 40,
+            color: Colors.grey.shade700,
+          );
+        }
+
+        return GestureDetector(
+          onTap: filePath == null
+              ? null
+              : () async {
+                  if (isImage) {
+                    showImageDialog(
+                      context: context,
+                      isNew: isNew,
+                      filePath: isNew ? filePath : remotePath!,
+                    );
+                    return;
+                  }
+
+                  if (isPdf) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PdfViewerScreen(
+                          url: remotePath!,
+                          fileName: fileName,
+                        ),
+                      ),
+                    );
+                    return;
+                  }
+
+                  await launchUrl(
+                    Uri.parse(remotePath!),
+                    mode: LaunchMode.externalApplication,
+                  );
+                },
+          child: Container(
+            width: 320,
+            padding: CustomTheme().padding('card'),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: Colors.grey.shade100,
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: preview,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        fileName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        fileSizeText,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
   Widget _buildSectionCard({
     required String title,
     required IconData icon,
@@ -520,7 +778,34 @@ class GreigeProcessDetailList extends StatelessWidget {
     return _buildInfoGrid(rows, isTablet);
   }
 
-  Widget _buildInfoGrid(List<Map<String, dynamic>> items, bool isTablet) {
+  Widget _buildBrokenYarns(bool isTablet) {
+    final brokenYarns = _listValue(data['broken_yarns'])
+      ..sort(
+        (a, b) => (a['sort_order'] as num? ?? 0)
+            .compareTo(b['sort_order'] as num? ?? 0),
+      );
+
+    if (brokenYarns.isEmpty) {
+      return NoData();
+    }
+
+    final rows = brokenYarns
+        .map(
+          (item) => <String, dynamic>{
+            'label': _display(item['label']),
+            'value': formatNumber(item['qty']),
+          },
+        )
+        .toList();
+
+    return _buildInfoGrid(rows, isTablet, showIcon: false);
+  }
+
+  Widget _buildInfoGrid(
+    List<Map<String, dynamic>> items,
+    bool isTablet, {
+    bool showIcon = true,
+  }) {
     if (items.isEmpty) {
       return NoData();
     }
@@ -541,11 +826,12 @@ class GreigeProcessDetailList extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(
-                item['icon'] as IconData,
-                size: 20,
-                color: CustomTheme().colors('primary'),
-              ),
+              if (showIcon)
+                Icon(
+                  item['icon'] as IconData,
+                  size: 20,
+                  color: CustomTheme().colors('primary'),
+                ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -840,28 +1126,23 @@ class GreigeProcessDetailList extends StatelessWidget {
       return [
         {
           'label': 'Jenis Warping',
-          'value': _formatType(data['warping_type']),
+          'value': _formatType(data['order_greige']['warping_type']),
           'icon': Icons.category_outlined
         },
         {
-          'label': 'Qty Benang',
-          'value': _withUnit(data['yarn_qty'], 'KG'),
-          'icon': Icons.layers_outlined
-        },
-        {
-          'label': 'Panjang',
-          'value': _withUnit(data['length'], 'M'),
+          'label': 'Jumlah Panjang',
+          'value': _withUnit(data['length'], ''),
           'icon': Icons.straighten_outlined
         },
         {
-          'label':
-              data['warping_type'] == 'single_warping' ? 'Beam' : 'Section',
-          'value': _withUnit(
-              data['warping_type'] == 'single_warping'
-                  ? data['beam_qty']
-                  : data['section'],
-              ''),
+          'label': 'Jumlah Section',
+          'value': _withUnit(data['section'], ''),
           'icon': Icons.view_column_outlined
+        },
+        {
+          'label': 'Jumlah Berat',
+          'value': _withUnit(data['weight'], 'KG'),
+          'icon': Icons.layers_outlined
         },
       ];
     }

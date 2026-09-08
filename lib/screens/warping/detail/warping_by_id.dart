@@ -495,6 +495,8 @@ class _ErrorView extends StatelessWidget {
                 data: data,
                 processName: 'Warping',
                 processNoKey: 'warping_no',
+                withMultiMachine: true,
+                withBrokenYarns: true,
                 onRefresh: _fetchDetail,
                 canDelete: widget.canDelete,
                 canUpdate: widget.canUpdate,

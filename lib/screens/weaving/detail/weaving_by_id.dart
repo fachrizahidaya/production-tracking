@@ -524,6 +524,8 @@ class _WarpingDetailHeader extends StatelessWidget {
                 data: data,
                 processName: 'Weaving',
                 processNoKey: 'weaving_no',
+                withMultiMachine: true,
+                withAttachments: true,
                 onRefresh: _fetchDetail,
                 canDelete: widget.canDelete,
                 canUpdate: widget.canUpdate,

@@ -497,6 +497,7 @@ class _WarpingDetailHeader extends StatelessWidget {
                 data: data,
                 processName: 'Sizing',
                 processNoKey: 'sizing_no',
+                withMultiMachine: true,
                 onRefresh: _fetchDetail,
                 canDelete: widget.canDelete,
                 canUpdate: widget.canUpdate,

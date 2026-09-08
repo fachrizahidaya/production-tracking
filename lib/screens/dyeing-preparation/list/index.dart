@@ -165,6 +165,7 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final service =
         Provider.of<DyeingPreparationService>(context, listen: false);
     await service.fetchPreparationList(context, params);
@@ -191,6 +192,13 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
     List<dynamic> loadData =
         Provider.of<DyeingPreparationService>(context, listen: false).items;
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+    final service =
+        Provider.of<DyeingPreparationService>(context, listen: false);
+    await service.fetchPreparationList(context, params);
+
+    List<dynamic> loadData = service.items;
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 
     if (loadData.isEmpty) {
       setState(() {
@@ -357,6 +365,7 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                       await service.fetchPreparationList(context, params);
 =======
                       await service.getDataList(context, params);
@@ -367,6 +376,9 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
 =======
                       await service.getDataList(context, params);
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+                      await service.fetchPreparationList(context, params);
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
                       return service.items;
                     },
                     isLoadMore: _isLoadMore,

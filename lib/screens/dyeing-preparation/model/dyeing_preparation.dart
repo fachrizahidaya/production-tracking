@@ -20,15 +20,24 @@ class DyeingPreparation {
   final attachments;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   final attachmentIds;
 =======
 >>>>>>> c0b3008b (feat: buat persiapan dyeing)
 =======
   final attachments;
 >>>>>>> e467a136 (fix: attachment for dyeing preparation)
+=======
+  final attachmentIds;
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 
   DyeingPreparation(
-      {this.id, this.woId, this.items, this.notes, this.attachments});
+      {this.id,
+      this.woId,
+      this.items,
+      this.notes,
+      this.attachments,
+      this.attachmentIds});
 
   factory DyeingPreparation.fromJson(Map<String, dynamic> json) {
     return DyeingPreparation(
@@ -37,6 +46,7 @@ class DyeingPreparation {
       items: json['items'] ?? [],
       notes: json['notes'],
       attachments: json['attachments'] ?? [],
+      attachmentIds: json['attachment_ids'] ?? [],
     );
   }
 
@@ -50,6 +60,7 @@ class DyeingPreparation {
       'wo_id': woId,
       'items': items,
       'notes': notes,
+<<<<<<< HEAD
 <<<<<<< HEAD
       'attachments': attachments,
       'attachment_ids': attachmentIds,
@@ -107,6 +118,10 @@ class DyeingPreparation {
 >>>>>>> c0b3008b (feat: buat persiapan dyeing)
 =======
       'attachments': attachments
+=======
+      'attachments': attachments,
+      'attachment_ids': attachmentIds,
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
     };
 >>>>>>> e467a136 (fix: attachment for dyeing preparation)
 

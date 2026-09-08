@@ -3,11 +3,17 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:io';
 
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+import 'dart:io';
+
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -15,6 +21,7 @@ import 'package:textile_tracking/components/detail/dyeing_preparation_detail_lis
 <<<<<<< HEAD
 <<<<<<< HEAD
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 =======
@@ -27,11 +34,17 @@ import 'package:textile_tracking/components/detail/greige_process_detail_list.da
 =======
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 >>>>>>> f93a876f (fix: detail persiapan dyeing)
+=======
+import 'package:textile_tracking/components/master/container/template.dart';
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
+import 'package:textile_tracking/helpers/util/format_bytes.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/detail/edit_dyeing_preparation.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -63,6 +76,10 @@ import 'package:url_launcher/url_launcher.dart';
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 
 class DyeingPreparationDetailScreen extends StatefulWidget {
   final id;
@@ -140,7 +157,7 @@ class _DyeingPreparationDetailScreenState
     });
 
     try {
-      final warpingService =
+      final dyeingPreparationService =
           Provider.of<DyeingPreparationService>(context, listen: false);
 
 <<<<<<< HEAD
@@ -150,12 +167,16 @@ class _DyeingPreparationDetailScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
       await dyeingPreparationService.fetchPreparationDetail(
         context,
         widget.id,
       );
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
       await dyeingPreparationService.getDataView(context, widget.id);
@@ -244,8 +265,10 @@ class _DyeingPreparationDetailScreenState
 >>>>>>> b70754b7 (feat: persiapan dyeing)
 =======
       await warpingService.getDataView(context, widget.id);
+=======
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 
-      final detail = _detailData(warpingService.dataView);
+      final detail = _detailData(dyeingPreparationService.dataView);
 
       setState(() {
         _data = detail;
@@ -275,8 +298,11 @@ class _DyeingPreparationDetailScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
   int _fileSize(dynamic value) {
     if (value is int) return value;
     if (value is num) return value.toInt();
@@ -433,7 +459,10 @@ class _DyeingPreparationDetailScreenState
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
   Widget _buildAttachmentSection(BuildContext context) {
     final attachments = (_data['attachments'] ?? []) as List<dynamic>;
 
@@ -458,9 +487,12 @@ class _DyeingPreparationDetailScreenState
     );
   }
 
+<<<<<<< HEAD
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 =======
 >>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
+=======
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
   Future _handleDelete(dynamic _) async {
     final data = _data;
 
@@ -841,30 +873,37 @@ class _DyeingPreparationDetailScreenState
                 _detailData(service.dataView),
               );
 
-              return DyeingPreparationDetailList(
-                data: data,
-                processName: 'Persiapan Dyeing',
-                processNoKey: 'prep_no',
-                onRefresh: _fetchDetail,
-                canDelete: widget.canDelete,
-                canUpdate: widget.canUpdate,
-                onDelete: () => _handleDelete(data),
-                onEdit: () async {
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => EditDyeingPreparationScreen(
-                        id: widget.id,
-                      ),
+              return Column(
+                children: [
+                  Expanded(
+                    child: DyeingPreparationDetailList(
+                      data: data,
+                      processName: 'Persiapan Dyeing',
+                      processNoKey: 'prep_no',
+                      onRefresh: _fetchDetail,
+                      canDelete: widget.canDelete,
+                      canUpdate: widget.canUpdate,
+                      onDelete: () => _handleDelete(data),
+                      onEdit: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => EditDyeingPreparationScreen(
+                              id: widget.id,
+                            ),
+                          ),
+                        );
+
+                        if (!mounted) return;
+
+                        if (result == true) {
+                          Navigator.pop(context, true);
+                        }
+                      },
                     ),
-                  );
-
-                  if (!mounted) return;
-
-                  if (result == true) {
-                    Navigator.pop(context, true);
-                  }
-                },
+                  ),
+                  _buildAttachmentSection(context),
+                ],
               );
             },
           ),

@@ -87,6 +87,7 @@ class DyeingPreparationFormSection extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   final greigeReady;
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
@@ -176,6 +177,10 @@ class DyeingPreparationFormSection extends StatefulWidget {
   final List<Map<String, dynamic>> existingItems;
 >>>>>>> 514dc398 (feat: persiapan dyeing)
 
+=======
+  final greigeReady;
+
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
   const DyeingPreparationFormSection({
     super.key,
     this.id,
@@ -188,6 +193,7 @@ class DyeingPreparationFormSection extends StatefulWidget {
     required this.selectWorkOrder,
     required this.firstLoading,
     this.existingItems = const [],
+<<<<<<< HEAD
   });
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 =======
@@ -233,6 +239,20 @@ class DyeingPreparationFormSection extends StatefulWidget {
       this.onDeleteAttachment,
       this.onPreviewImage});
 >>>>>>> e467a136 (fix: attachment for dyeing preparation)
+=======
+    this.itemOptions,
+    this.greigeInfoMessage,
+    this.handleChangeInput,
+    this.note,
+    this.disableWorkOrder,
+    this.isEdit,
+    this.attachments,
+    this.onAddAttachment,
+    this.onDeleteAttachment,
+    this.onPreviewImage,
+    this.greigeReady = false,
+  });
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 
   @override
   State<DyeingPreparationFormSection> createState() =>
@@ -263,6 +283,7 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   void didUpdateWidget(
     covariant DyeingPreparationFormSection oldWidget,
   ) {
@@ -290,6 +311,15 @@ class _DyeingPreparationFormSectionState
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 =======
 >>>>>>> 514dc398 (feat: persiapan dyeing)
+=======
+  void didUpdateWidget(
+    covariant DyeingPreparationFormSection oldWidget,
+  ) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.existingItems != widget.existingItems ||
+        oldWidget.greigeReady != widget.greigeReady) {
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
       _setGreigeForms(widget.existingItems);
     }
   }
@@ -579,13 +609,17 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
     if (items.isEmpty) {
       _syncGreigeItemsToForm();
       return;
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     for (var index = 0; index < items.length; index++) {
       greigeForms.add(
@@ -600,17 +634,23 @@ class _DyeingPreparationFormSectionState
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
 =======
     for (var index = 0; index < items.length; index++) {
+=======
+    for (var index = 0; index < items.length; index++) {
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
       greigeForms.add(
         _createGreigeForm(
           items[index],
           index,
         ),
       );
+<<<<<<< HEAD
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 =======
     for (var index = 0; index < items.length; index++) {
       greigeForms.add(_createGreigeForm(items[index], index));
 >>>>>>> 514dc398 (feat: persiapan dyeing)
+=======
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
     }
 
     _syncGreigeItemsToForm();
@@ -638,6 +678,7 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           "wo_item_id": workOrderItemId,
 =======
           "work_order_item_id": workOrderItemId,
@@ -648,6 +689,9 @@ class _DyeingPreparationFormSectionState
 =======
           "work_order_item_id": workOrderItemId,
 >>>>>>> cc9a0d2c (fix: buat persiapan dyeing)
+=======
+          "wo_item_id": workOrderItemId,
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
           "notes": null,
           "greige_items": <Map<String, dynamic>>[],
         },
@@ -1488,6 +1532,7 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                             if (widget.greigeReady)
                               _buildGreigeItemsForm(isTablet)
                             else if (widget.greigeInfoMessage != null)
@@ -1602,20 +1647,26 @@ class _DyeingPreparationFormSectionState
                             if (widget.existingItems.isNotEmpty)
 =======
 >>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
+=======
+                            if (widget.greigeReady)
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
                               _buildGreigeItemsForm(isTablet)
                             else if (widget.greigeInfoMessage != null)
                               _buildGreigeInfo(),
-                            if ((widget.itemOptions?.isNotEmpty == true
-                                    ? widget.itemOptions!
-                                    : widget.existingItems)
-                                .isNotEmpty) ...[
+                            if (widget.greigeReady) ...[
                               AttachmentPicker(
-                                  attachments: widget.attachments,
-                                  onAddAttachment: widget.onAddAttachment,
-                                  onDeleteAttachment: widget.onDeleteAttachment,
-                                  onPreviewImage: (isNew, filePath) {
-                                    widget.onPreviewImage(isNew, filePath);
-                                  }),
+                                attachments: widget.attachments ?? [],
+                                onAddAttachment:
+                                    widget.onAddAttachment ?? () {},
+                                onDeleteAttachment: widget.onDeleteAttachment ??
+                                    (_) async => false,
+                                onPreviewImage: (isNew, filePath) {
+                                  widget.onPreviewImage?.call(
+                                    isNew,
+                                    filePath,
+                                  );
+                                },
+                              ),
                               NoteEditor(
                                 controller: widget.note,
                                 formKey: 'notes',

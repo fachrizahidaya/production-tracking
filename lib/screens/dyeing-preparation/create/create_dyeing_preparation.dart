@@ -14,8 +14,11 @@ class CreateDyeingPreparation extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
   List<Map<String, dynamic>> _mapCreateItems(dynamic items) {
     return List<dynamic>.from(items ?? []).map<Map<String, dynamic>>((rawItem) {
       final item = Map<String, dynamic>.from(rawItem);
@@ -29,12 +32,15 @@ class CreateDyeingPreparation extends StatelessWidget {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
     final dyeingPreparation = DyeingPreparation(
@@ -44,8 +50,11 @@ class CreateDyeingPreparation extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
       items: _mapCreateItems(form['items']),
       notes: form['notes']?.toString() ?? '',
       attachments: form['attachments'],
@@ -76,6 +85,7 @@ class CreateDyeingPreparation extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             .createPreparation(context, dyeingPreparation, isLoading);
 =======
             .addItem(context, dyeingPreparation, isLoading);
@@ -86,6 +96,9 @@ class CreateDyeingPreparation extends StatelessWidget {
 =======
             .addItem(context, dyeingPreparation, isLoading);
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+            .createPreparation(context, dyeingPreparation, isLoading);
+>>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 
     Navigator.pushNamedAndRemoveUntil(
         context, '/dyeing-preparations', (route) => false);

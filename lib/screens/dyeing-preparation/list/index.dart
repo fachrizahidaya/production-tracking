@@ -144,11 +144,11 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
       params['page'] = newPage;
     });
 
-    await Provider.of<DyeingPreparationService>(context, listen: false)
-        .getDataList(context, params);
+    final service =
+        Provider.of<DyeingPreparationService>(context, listen: false);
+    await service.fetchPreparationList(context, params);
 
-    List<dynamic> loadData =
-        Provider.of<DyeingPreparationService>(context, listen: false).items;
+    List<dynamic> loadData = service.items;
 
     if (loadData.isEmpty) {
       setState(() {
@@ -312,7 +312,7 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
                       final service = Provider.of<DyeingPreparationService>(
                           context,
                           listen: false);
-                      await service.getDataList(context, params);
+                      await service.fetchPreparationList(context, params);
                       return service.items;
                     },
                     isLoadMore: _isLoadMore,

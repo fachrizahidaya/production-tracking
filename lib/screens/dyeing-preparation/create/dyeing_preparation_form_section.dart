@@ -35,29 +35,32 @@ class DyeingPreparationFormSection extends StatefulWidget {
   final onAddAttachment;
   final onDeleteAttachment;
   final onPreviewImage;
+  final greigeReady;
 
-  const DyeingPreparationFormSection(
-      {super.key,
-      this.id,
-      required this.title,
-      required this.form,
-      required this.formKey,
-      required this.woData,
-      required this.handleSubmit,
-      required this.isSubmitting,
-      required this.selectWorkOrder,
-      required this.firstLoading,
-      this.existingItems = const [],
-      this.itemOptions,
-      this.greigeInfoMessage,
-      this.handleChangeInput,
-      this.note,
-      this.disableWorkOrder,
-      this.isEdit,
-      this.attachments,
-      this.onAddAttachment,
-      this.onDeleteAttachment,
-      this.onPreviewImage});
+  const DyeingPreparationFormSection({
+    super.key,
+    this.id,
+    required this.title,
+    required this.form,
+    required this.formKey,
+    required this.woData,
+    required this.handleSubmit,
+    required this.isSubmitting,
+    required this.selectWorkOrder,
+    required this.firstLoading,
+    this.existingItems = const [],
+    this.itemOptions,
+    this.greigeInfoMessage,
+    this.handleChangeInput,
+    this.note,
+    this.disableWorkOrder,
+    this.isEdit,
+    this.attachments,
+    this.onAddAttachment,
+    this.onDeleteAttachment,
+    this.onPreviewImage,
+    this.greigeReady = false,
+  });
 
   @override
   State<DyeingPreparationFormSection> createState() =>
@@ -77,10 +80,13 @@ class _DyeingPreparationFormSectionState
   }
 
   @override
-  void didUpdateWidget(covariant DyeingPreparationFormSection oldWidget) {
+  void didUpdateWidget(
+    covariant DyeingPreparationFormSection oldWidget,
+  ) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.existingItems != widget.existingItems) {
+    if (oldWidget.existingItems != widget.existingItems ||
+        oldWidget.greigeReady != widget.greigeReady) {
       _setGreigeForms(widget.existingItems);
     }
   }
@@ -185,8 +191,18 @@ class _DyeingPreparationFormSectionState
   void _setGreigeForms(List<Map<String, dynamic>> items) {
     _disposeGreigeForms();
 
+    if (items.isEmpty) {
+      _syncGreigeItemsToForm();
+      return;
+    }
+
     for (var index = 0; index < items.length; index++) {
-      greigeForms.add(_createGreigeForm(items[index], index));
+      greigeForms.add(
+        _createGreigeForm(
+          items[index],
+          index,
+        ),
+      );
     }
 
     _syncGreigeItemsToForm();
@@ -203,7 +219,7 @@ class _DyeingPreparationFormSectionState
       groupedItems.putIfAbsent(
         workOrderItemId,
         () => {
-          "work_order_item_id": workOrderItemId,
+          "wo_item_id": workOrderItemId,
           "notes": null,
           "greige_items": <Map<String, dynamic>>[],
         },
@@ -498,24 +514,24 @@ class _DyeingPreparationFormSectionState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildWorkOrderForm(),
-                            if ((widget.itemOptions?.isNotEmpty == true
-                                    ? widget.itemOptions!
-                                    : widget.existingItems)
-                                .isNotEmpty)
+                            if (widget.greigeReady)
                               _buildGreigeItemsForm(isTablet)
                             else if (widget.greigeInfoMessage != null)
                               _buildGreigeInfo(),
-                            if ((widget.itemOptions?.isNotEmpty == true
-                                    ? widget.itemOptions!
-                                    : widget.existingItems)
-                                .isNotEmpty) ...[
+                            if (widget.greigeReady) ...[
                               AttachmentPicker(
-                                  attachments: widget.attachments,
-                                  onAddAttachment: widget.onAddAttachment,
-                                  onDeleteAttachment: widget.onDeleteAttachment,
-                                  onPreviewImage: (isNew, filePath) {
-                                    widget.onPreviewImage(isNew, filePath);
-                                  }),
+                                attachments: widget.attachments ?? [],
+                                onAddAttachment:
+                                    widget.onAddAttachment ?? () {},
+                                onDeleteAttachment: widget.onDeleteAttachment ??
+                                    (_) async => false,
+                                onPreviewImage: (isNew, filePath) {
+                                  widget.onPreviewImage?.call(
+                                    isNew,
+                                    filePath,
+                                  );
+                                },
+                              ),
                               NoteEditor(
                                 controller: widget.note,
                                 formKey: 'notes',

@@ -115,6 +115,40 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
+  Future<void> getDyeingPreparationDataView(
+    BuildContext context,
+    dynamic id,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final url = Uri.parse('$baseUrl/$endpoint/$id');
+
+    try {
+      _dataView = {};
+      notifyListeners();
+
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      final responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        _dataView = Map<String, dynamic>.from(responseData);
+        notifyListeners();
+        return;
+      }
+
+      throw responseData['message'] ?? 'Gagal mengambil data Persiapan Dyeing';
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> getDataList(
     BuildContext context,
     Map<String, String> params,
@@ -147,6 +181,41 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
+  Future<void> getDyeingPreparationDataList(
+    BuildContext context,
+    Map<String, String> params,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final url =
+        Uri.parse('$baseUrl/$endpoint').replace(queryParameters: params);
+
+    try {
+      items.clear();
+      notifyListeners();
+
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      final responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        items = List<dynamic>.from(responseData['data'] ?? []);
+        notifyListeners();
+        return;
+      }
+
+      throw responseData['message'] ?? 'Gagal mengambil data Persiapan Dyeing';
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<String> addItem(
       BuildContext context, T newItem, ValueNotifier<bool> isSubmitting) async {
     isSubmitting.value = true;
@@ -169,6 +238,239 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       }
     } catch (e) {
       throw ('$e');
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
+  Future<String> addDyeingPreparationItem(
+    BuildContext context,
+    T newItem,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
+    isSubmitting.value = true;
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('access_token');
+      final data = toJson(newItem);
+      final attachments = data['attachments'];
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('$baseUrl/$endpoint'),
+      );
+
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      });
+
+      void addField(String key, dynamic value) {
+        if (value == null) return;
+
+        request.fields[key] = value.toString();
+      }
+
+      addField('wo_id', data['wo_id']);
+      addField('notes', data['notes'] ?? '');
+
+      final items = data['items'];
+
+      if (items is List) {
+        for (var i = 0; i < items.length; i++) {
+          final item = Map<String, dynamic>.from(items[i]);
+          final woItemId = item['wo_item_id'] ?? item['work_order_item_id'];
+          final greigeItems = item['greige_items'];
+
+          addField('items[$i][wo_item_id]', woItemId);
+          addField('items[$i][notes]', item['notes']);
+
+          if (greigeItems is List) {
+            for (var j = 0; j < greigeItems.length; j++) {
+              final greigeItem = Map<String, dynamic>.from(greigeItems[j]);
+
+              greigeItem.forEach((key, value) {
+                addField('items[$i][greige_items][$j][$key]', value);
+              });
+            }
+          }
+        }
+      }
+
+      if (attachments is List) {
+        for (final file in attachments) {
+          if (file is File) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+              ),
+            );
+          } else if (file is XFile) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+                filename: file.name,
+              ),
+            );
+          } else if (file is Map &&
+              file['path'] != null &&
+              file['path'].toString().isNotEmpty &&
+              file['isNew'] == true) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file['path'].toString(),
+                filename: file['name']?.toString() ?? 'file',
+              ),
+            );
+          }
+        }
+      }
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final res = jsonDecode(response.body);
+
+        await getDyeingPreparationDataList(
+          context,
+          {'page': '1', 'search': ''},
+        );
+
+        return '${res['message']}.';
+      }
+
+      try {
+        final error = jsonDecode(response.body);
+
+        throw error['message'] ?? 'Gagal menambahkan Persiapan Dyeing';
+      } catch (_) {
+        throw 'Gagal menambahkan Persiapan Dyeing (${response.statusCode})';
+      }
+    } catch (e) {
+      throw '$e';
+    } finally {
+      isSubmitting.value = false;
+    }
+  }
+
+  Future<String> updateDyeingPreparationItem(
+    BuildContext context,
+    String id,
+    T updatedItem,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
+    isSubmitting.value = true;
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('access_token');
+      final data = toJson(updatedItem);
+      final attachments = data['attachments'];
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('$baseUrl/$endpoint/$id'),
+      );
+
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      });
+
+      void addField(String key, dynamic value) {
+        if (value == null) return;
+
+        request.fields[key] = value.toString();
+      }
+
+      addField('_method', 'PATCH');
+      addField('wo_id', data['wo_id']);
+      addField('notes', data['notes'] ?? '');
+
+      final attachmentIds = data['attachment_ids'];
+
+      if (attachmentIds is List) {
+        for (var i = 0; i < attachmentIds.length; i++) {
+          addField('attachment_ids[$i]', attachmentIds[i]);
+        }
+      }
+
+      final items = data['items'];
+
+      if (items is List) {
+        for (var i = 0; i < items.length; i++) {
+          final item = Map<String, dynamic>.from(items[i]);
+          final woItemId = item['wo_item_id'] ?? item['work_order_item_id'];
+          final greigeItems = item['greige_items'];
+
+          addField('items[$i][wo_item_id]', woItemId);
+          addField('items[$i][notes]', item['notes']);
+
+          if (greigeItems is List) {
+            for (var j = 0; j < greigeItems.length; j++) {
+              final greigeItem = Map<String, dynamic>.from(greigeItems[j]);
+
+              greigeItem.forEach((key, value) {
+                addField('items[$i][greige_items][$j][$key]', value);
+              });
+            }
+          }
+        }
+      }
+
+      if (attachments is List) {
+        for (final file in attachments) {
+          if (file is File) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+              ),
+            );
+          } else if (file is XFile) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+                filename: file.name,
+              ),
+            );
+          } else if (file is Map &&
+              file['path'] != null &&
+              file['path'].toString().isNotEmpty &&
+              file['isNew'] == true) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file['path'].toString(),
+                filename: file['name']?.toString() ?? 'file',
+              ),
+            );
+          }
+        }
+      }
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final res = jsonDecode(response.body);
+
+        await getDyeingPreparationDataList(
+          context,
+          {'page': '1', 'search': ''},
+        );
+
+        return res['message']?.toString() ?? 'Persiapan Dyeing berhasil diubah';
+      }
+
+      final error = jsonDecode(response.body);
+      throw error['message'] ?? 'Gagal mengubah Persiapan Dyeing';
+    } catch (e) {
+      throw '$e';
     } finally {
       isSubmitting.value = false;
     }

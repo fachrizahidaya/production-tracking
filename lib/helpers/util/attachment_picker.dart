@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 
@@ -19,6 +20,16 @@ class AttachmentPicker extends StatelessWidget {
     required this.onDeleteAttachment,
     required this.onPreviewImage,
   });
+
+  String _remoteFileUrl(String path) {
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+
+    final baseUrl = dotenv.env['IMAGE_URL'] ?? '';
+
+    return '$baseUrl$path';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +99,12 @@ class AttachmentPicker extends StatelessWidget {
             } else if (isNew && filePath != null) {
               preview = Image.file(File(filePath), fit: BoxFit.cover);
             } else if (filePath != null) {
-              preview = Image.network(filePath, fit: BoxFit.cover);
+              preview = Image.network(
+                _remoteFileUrl(filePath),
+                fit: BoxFit.cover,
+                errorBuilder: (context, _, __) =>
+                    const Icon(Icons.broken_image, size: 40),
+              );
             } else {
               preview = Icon(Icons.insert_drive_file);
             }
@@ -98,9 +114,13 @@ class AttachmentPicker extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    if (['png', 'jpg', 'jpeg', 'gif'].contains(extension) &&
+                    if (['png', 'jpg', 'jpeg', 'gif', 'webp']
+                            .contains(extension) &&
                         filePath != null) {
-                      onPreviewImage(isNew, filePath);
+                      onPreviewImage(
+                        isNew,
+                        isNew ? filePath : _remoteFileUrl(filePath),
+                      );
                     }
                   },
                   child: Container(

@@ -151,6 +151,33 @@ class WorkOrderService extends BaseService<WorkOrder> {
     }
   }
 
+  Future<Map<String, dynamic>> getFormInfo(id) async {
+    final url = Uri.parse('$baseUrl/$id/form-info?process=persiapan_dyeing');
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token').toString();
+
+    try {
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
+
+      final responseData = json.decode(response.body);
+
+      if (response.statusCode == 200) {
+        final data = responseData is Map<String, dynamic> &&
+                responseData['data'] is Map<String, dynamic>
+            ? responseData['data']
+            : responseData;
+
+        return Map<String, dynamic>.from(data);
+      }
+
+      throw responseData['message'];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> getDataList(Map<String, dynamic> params) async {
     final url = Uri.parse(baseUrl).replace(queryParameters: params);
     final SharedPreferences prefs = await SharedPreferences.getInstance();

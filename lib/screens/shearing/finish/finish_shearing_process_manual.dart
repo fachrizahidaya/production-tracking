@@ -1,6 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
 import 'dart:async';
 import 'dart:io';
 
@@ -9,9 +12,12 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+<<<<<<< HEAD
 =======
 import 'package:flutter/material.dart';
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
@@ -22,6 +28,7 @@ import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/greige_info_tab.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
@@ -31,12 +38,20 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/update/process/machine.dart';
 =======
+=======
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
+import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
+<<<<<<< HEAD
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+import 'package:textile_tracking/screens/update/process/machine.dart';
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
 import 'package:textile_tracking/screens/shearing/model/shearing.dart';
 
 class FinishShearingProcessManual extends StatefulWidget {
@@ -79,10 +94,15 @@ class _FinishShearingProcessManualState
   Map<String, dynamic> processData = {};
   String? processId;
 <<<<<<< HEAD
+<<<<<<< HEAD
   late List<Map<String, dynamic>> allAttachments;
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 =======
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+  late List<Map<String, dynamic>> allAttachments;
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
 
   @override
   void initState() {
@@ -92,6 +112,9 @@ class _FinishShearingProcessManualState
     woData = Map<String, dynamic>.from(widget.data ?? {});
     _noteController.text = widget.form?['notes']?.toString() ?? '';
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
     final existing = List<Map<String, dynamic>>.from(
       widget.form?['attachments'] ?? [],
     );
@@ -99,8 +122,11 @@ class _FinishShearingProcessManualState
       ...existing,
       {'is_add_button': true},
     ];
+<<<<<<< HEAD
 =======
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _postInit();
@@ -206,6 +232,7 @@ class _FinishShearingProcessManualState
       await _shearingService.getDataView(context, id);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       final attachments = List<Map<String, dynamic>>.from(
         _shearingService.dataView['data']['attachments'] ?? [],
       );
@@ -225,6 +252,18 @@ class _FinishShearingProcessManualState
         widget.form?['process_id'] = processData['id']?.toString();
         widget.form?['machine_id'] = processData['machine']['id'];
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+      final attachments = List<Map<String, dynamic>>.from(
+        _shearingService.dataView['data']['attachments'] ?? [],
+      );
+      setState(() {
+        processData = _shearingService.dataView['data'];
+        widget.form?['process_id'] = processData['id']?.toString();
+        widget.form?['machines'] = List<Map<String, dynamic>>.from(
+          processData['machines'] ?? [],
+        );
+        widget.form?['machine_id'] = processData['machine']?['id'];
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
         widget.form?['qty'] = processData['qty'];
         widget.form?['weight'] = processData['weight'];
         widget.form?['order_greige_id'] = processData['order_greige_id'];
@@ -232,13 +271,19 @@ class _FinishShearingProcessManualState
             processData['order_greige']?['og_no'] ?? widget.form?['no_og'];
         widget.form?['notes'] = processData['notes']?.toString() ?? '';
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
         widget.form?['attachments'] = attachments;
         allAttachments = [
           ...attachments,
           {'is_add_button': true},
         ];
+<<<<<<< HEAD
 =======
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
 
         _qtyController.text = processData['qty']?.toString() ?? '';
         _weightController.text = processData['weight']?.toString() ?? '';
@@ -290,6 +335,9 @@ class _FinishShearingProcessManualState
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
   dynamic _getMachineStatus(dynamic machineId) {
     final machines = List<Map<String, dynamic>>.from(
       processData['machines'] ?? [],
@@ -321,9 +369,15 @@ class _FinishShearingProcessManualState
     return result != null ? File(result.path) : null;
   }
 
+<<<<<<< HEAD
   Future<void> _pickAttachments(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
+=======
+  Future<void> _pickAttachments() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
       if (image == null) return;
 
       final compressedFile = await compressImage(image.path);
@@ -412,8 +466,11 @@ class _FinishShearingProcessManualState
     return completer.future;
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
   Future<void> _handleSubmit(BuildContext context) async {
     final id = processId ?? widget.form?['process_id']?.toString();
 
@@ -473,9 +530,12 @@ class _FinishShearingProcessManualState
   Widget build(BuildContext context) {
     final isDisabled = widget.form?['order_greige_id'] == null ||
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         widget.form?['machine_id'] == null ||
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
         widget.form?['qty'] == null ||
         widget.form?['weight'] == null;
 
@@ -559,6 +619,9 @@ class _FinishShearingProcessManualState
                               ),
                               if (widget.form?['order_greige_id'] != null) ...[
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
                                 TemplateCard(
                                   title: 'Mesin',
                                   icon: Icons.local_laundry_service_outlined,
@@ -568,8 +631,11 @@ class _FinishShearingProcessManualState
                                     getMachineStatus: _getMachineStatus,
                                     newMachines: <Map<String, dynamic>>[],
                                     withAddMachine: false,
+<<<<<<< HEAD
                                     columns: 2,
                                     compactDisplay: true,
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
                                     onMachineChanged: () => setState(() {}),
                                   ),
                                 ),
@@ -586,9 +652,12 @@ class _FinishShearingProcessManualState
                                     );
                                   },
                                 ),
+<<<<<<< HEAD
 =======
                                 _buildBeamWeightSection(),
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
                                 NoteEditor(
                                   controller: _noteController,
                                   formKey: 'notes',

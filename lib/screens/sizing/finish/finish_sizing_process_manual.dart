@@ -262,10 +262,17 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
 =======
 >>>>>>> 64274789 (fix: selesai warping-shearing)
       setState(() {
-        processData = _sizingService.dataView['data'];
+        processData = data;
         widget.form?['process_id'] = processData['id']?.toString();
+<<<<<<< HEAD
         widget.form?['machine_id'] = processData['machine']['id'];
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+        widget.form?['machines'] = List<Map<String, dynamic>>.from(
+          processData['machines'] ?? [],
+        );
+        widget.form?['machine_id'] = processData['machine']?['id'];
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
         widget.form?['roll_length'] = processData['roll_length'];
         widget.form?['order_greige_id'] = processData['order_greige_id'];
         widget.form?['no_og'] =
@@ -333,6 +340,9 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
   dynamic _getMachineStatus(dynamic machineId) {
     final machines = List<Map<String, dynamic>>.from(
       processData['machines'] ?? [],
@@ -347,8 +357,11 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
     return null;
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
   Future<void> _handleSubmit(BuildContext context) async {
     final id = processId ?? widget.form?['process_id']?.toString();
 
@@ -567,9 +580,12 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
   Widget build(BuildContext context) {
     final isDisabled = widget.form?['order_greige_id'] == null ||
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         widget.form?['machine_id'] == null ||
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
         widget.form?['roll_length'] == null;
 
     return DefaultTabController(
@@ -652,6 +668,9 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
                               ),
                               if (widget.form?['order_greige_id'] != null) ...[
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
                                 TemplateCard(
                                   title: 'Mesin',
                                   icon: Icons.local_laundry_service_outlined,
@@ -661,8 +680,11 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
                                     getMachineStatus: _getMachineStatus,
                                     newMachines: <Map<String, dynamic>>[],
                                     withAddMachine: false,
+<<<<<<< HEAD
                                     columns: 2,
                                     compactDisplay: true,
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
                                     onMachineChanged: () => setState(() {}),
                                   ),
                                 ),

@@ -62,6 +62,7 @@ class _FinishWeavingState extends State<FinishWeaving> {
     'skip_shearing': '',
     'machines': [],
     'attachments': [],
+<<<<<<< HEAD
 =======
     'wo_id': null,
 =======
@@ -89,6 +90,8 @@ class _FinishWeavingState extends State<FinishWeaving> {
     'waste': null,
     'skip_shearing': ''
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
   };
 
   @override
@@ -137,6 +140,7 @@ class _FinishWeavingState extends State<FinishWeaving> {
           waste: num.tryParse(form['waste']?.toString() ?? '0') ?? 0,
           orderGreigeId:
               int.tryParse(form['order_greige_id']?.toString() ?? ''),
+<<<<<<< HEAD
 =======
         forDyeing: false,
         withItemGrade: false,
@@ -159,6 +163,9 @@ class _FinishWeavingState extends State<FinishWeaving> {
           orderGreigeId:
               int.tryParse(form['order_greige_id']?.toString() ?? ''),
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+          attachments: form['attachments'],
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
         );
 
         final message =

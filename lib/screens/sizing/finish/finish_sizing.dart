@@ -61,6 +61,7 @@ class _FinishSizingState extends State<FinishSizing> {
     'roll_length': null,
     'notes': '',
 <<<<<<< HEAD
+<<<<<<< HEAD
     'attachments': [],
     'machines': [],
 =======
@@ -90,6 +91,10 @@ class _FinishSizingState extends State<FinishSizing> {
 =======
     'attachments': []
 >>>>>>> 64274789 (fix: selesai warping-shearing)
+=======
+    'attachments': [],
+    'machines': [],
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
   };
 
   @override

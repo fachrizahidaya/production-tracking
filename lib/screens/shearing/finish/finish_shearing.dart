@@ -60,6 +60,7 @@ class _FinishShearingState extends State<FinishShearing> {
     'notes': '',
     'machines': [],
     'attachments': [],
+<<<<<<< HEAD
 =======
     'wo_id': null,
 =======
@@ -85,6 +86,8 @@ class _FinishShearingState extends State<FinishShearing> {
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
 =======
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
   };
 
   @override
@@ -148,6 +151,7 @@ class _FinishShearingState extends State<FinishShearing> {
           weight: num.tryParse(form['weight']?.toString() ?? '0') ?? 0,
           orderGreigeId:
               int.tryParse(form['order_greige_id']?.toString() ?? ''),
+<<<<<<< HEAD
 =======
         forDyeing: false,
         withItemGrade: false,
@@ -169,6 +173,9 @@ class _FinishShearingState extends State<FinishShearing> {
           orderGreigeId:
               int.tryParse(form['order_greige_id']?.toString() ?? ''),
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+          attachments: form['attachments'],
+>>>>>>> 3562ec45 (fix: selesai warping - shearing)
         );
 
         final message =

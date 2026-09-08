@@ -13,7 +13,6 @@ import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
-import 'package:textile_tracking/models/master/spk.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_work_order.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/create/dyeing_preparation_form_section.dart';
@@ -45,7 +44,6 @@ class _CreateDyeingPreparationProcessManualState
     extends State<CreateDyeingPreparationProcessManual> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final WorkOrderService _workOrderService = WorkOrderService();
-  final SpkService _spkService = SpkService();
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
   final String baseUrl = dotenv.env['API_URL'] ?? '';
   final TextEditingController _noteController = TextEditingController();
@@ -60,17 +58,20 @@ class _CreateDyeingPreparationProcessManualState
   String? greigeInfoMessage;
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
-  int? _toInt(dynamic value) {
-    if (value is int) return value;
-    if (value is String) return int.tryParse(value);
-
-    return null;
-  }
-
   String _baseCode(String? code) {
     if (code == null || code.isEmpty) return '';
 
     return code.split('-').first;
+  }
+
+  bool _isGreigeReady(dynamic value) {
+    if (value is bool) return value;
+    if (value is num) return value == 1;
+    if (value is String) {
+      return value.toLowerCase() == 'true' || value == '1';
+    }
+
+    return false;
   }
 
   Future<List<Map<String, dynamic>>> _fetchGreigeItemOptions(
@@ -273,19 +274,28 @@ class _CreateDyeingPreparationProcessManualState
     });
 
     try {
-      final items = List<dynamic>.from(widget.data!['items'] ?? []);
+      final data = widget.data!['id'] != null
+          ? await _workOrderService.getFormInfo(widget.data!['id'])
+          : widget.data!;
+      final items = List<dynamic>.from(data['items'] ?? [])
+          .map((rawItem) => Map<String, dynamic>.from(rawItem))
+          .where((item) => _isGreigeReady(item['greige_ready']))
+          .toList();
       final options = await _fetchGreigeItemOptions(items);
 
       setState(() {
+        woData = data;
         greigeItemOptions = options;
         existingItems = _mapExistingItems(items, options);
+        greigeInfoMessage = items.isEmpty
+            ? 'Greige belum tersedia untuk item Work Order ini.'
+            : null;
       });
     } catch (e) {
       setState(() {
-        existingItems = _mapExistingItems(
-          List<dynamic>.from(widget.data!['items'] ?? []),
-          const [],
-        );
+        existingItems = [];
+        greigeItemOptions = [];
+        greigeInfoMessage = 'Greige belum tersedia untuk item Work Order ini.';
       });
     } finally {
       if (mounted) {
@@ -326,9 +336,7 @@ class _CreateDyeingPreparationProcessManualState
     });
 
     try {
-      await _workOrderService.getDataView(id);
-
-      final data = _workOrderService.dataView;
+      final data = await _workOrderService.getFormInfo(id);
 
       final List<dynamic> items = List<dynamic>.from(data['items'] ?? []);
 
@@ -336,33 +344,10 @@ class _CreateDyeingPreparationProcessManualState
         throw 'Item tidak ditemukan.';
       }
 
-      final List<Map<String, dynamic>> availableItems = [];
-
-      for (final rawItem in items) {
-        final item = Map<String, dynamic>.from(rawItem);
-
-        final spkItemId = _toInt(item['spk_item_id']);
-
-        if (spkItemId == null) {
-          continue;
-        }
-
-        final stock = await _spkService.checkStock(
-          spkItemId: spkItemId,
-        );
-
-        final stockData = Map<String, dynamic>.from(
-          stock['data'] ?? stock,
-        );
-
-        final bool available = stockData['available'] == true;
-
-        final bool greigeAvailable = item['greige_available'] == true;
-
-        if (available && greigeAvailable) {
-          availableItems.add(item);
-        }
-      }
+      final availableItems = items
+          .map((rawItem) => Map<String, dynamic>.from(rawItem))
+          .where((item) => _isGreigeReady(item['greige_ready']))
+          .toList();
 
       final options = await _fetchGreigeItemOptions(availableItems);
 
@@ -372,7 +357,8 @@ class _CreateDyeingPreparationProcessManualState
         if (availableItems.isEmpty) {
           existingItems = [];
           greigeItemOptions = [];
-          greigeInfoMessage = 'Masih diproses atau greige tidak tersedia.';
+          greigeInfoMessage =
+              'Greige belum tersedia untuk item Work Order ini.';
         } else {
           greigeItemOptions = options;
           existingItems = _mapExistingItems(availableItems, options);
@@ -614,7 +600,7 @@ class _CreateDyeingPreparationProcessManualState
       form: widget.form,
       formKey: _formKey,
       woData: widget.data != null && widget.data!.isNotEmpty
-          ? widget.data!
+          ? (woData.isNotEmpty ? woData : widget.data!)
           : woData,
       handleSubmit: widget.handleSubmit ?? () async {},
       isSubmitting: _isSubmitting,
@@ -623,6 +609,7 @@ class _CreateDyeingPreparationProcessManualState
       existingItems: existingItems,
       itemOptions: greigeItemOptions.isEmpty ? null : greigeItemOptions,
       greigeInfoMessage: greigeInfoMessage,
+      greigeReady: existingItems.isNotEmpty,
       handleChangeInput: _handleChangeInput,
       note: _noteController,
       isEdit: false,

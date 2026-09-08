@@ -35,7 +35,9 @@ class _FinishWeavingState extends State<FinishWeaving> {
     'qty': null,
     'weight': null,
     'waste': null,
-    'skip_shearing': ''
+    'skip_shearing': '',
+    'machines': [],
+    'attachments': [],
   };
 
   @override
@@ -67,6 +69,7 @@ class _FinishWeavingState extends State<FinishWeaving> {
           waste: num.tryParse(form['waste']?.toString() ?? '0') ?? 0,
           orderGreigeId:
               int.tryParse(form['order_greige_id']?.toString() ?? ''),
+          attachments: form['attachments'],
         );
 
         final message =

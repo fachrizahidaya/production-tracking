@@ -33,7 +33,8 @@ class _FinishSizingState extends State<FinishSizing> {
     'machine_id': null,
     'roll_length': null,
     'notes': '',
-    'attachments': []
+    'attachments': [],
+    'machines': [],
   };
 
   @override

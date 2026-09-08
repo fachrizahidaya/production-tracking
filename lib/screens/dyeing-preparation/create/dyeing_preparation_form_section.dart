@@ -27,6 +27,7 @@ import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
@@ -35,6 +36,8 @@ import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 =======
 import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 >>>>>>> e467a136 (fix: attachment for dyeing preparation)
+=======
+>>>>>>> e46ec579 (fix: rumus persiapan dyeing untuk qty dan berat)
 import 'package:textile_tracking/helpers/util/note_editor.dart';
 =======
 =======
@@ -391,6 +394,20 @@ class _DyeingPreparationFormSectionState
 >>>>>>> cc9a0d2c (fix: buat persiapan dyeing)
   }
 
+  double? _parseSourceNumber(dynamic value) {
+    if (value is num) return value.toDouble();
+
+    final text = value?.toString().trim() ?? '';
+    return double.tryParse(text) ?? double.tryParse(_normalizeNumber(text));
+  }
+
+  String _formatInputNumber(dynamic value) {
+    if (value == null || value.toString().trim().isEmpty) return '';
+
+    final number = _parseSourceNumber(value);
+    return number == null ? value.toString() : formatNumber(number);
+  }
+
   Map<String, dynamic> _createGreigeForm(
     Map<String, dynamic> item,
     int index,
@@ -547,11 +564,11 @@ class _DyeingPreparationFormSectionState
       ),
 
       "qty": TextEditingController(
-        text: item["qty"]?.toString() ?? "",
+        text: _formatInputNumber(item["qty"]),
       ),
 
       "weight": TextEditingController(
-        text: item["weight"]?.toString() ?? "",
+        text: _formatInputNumber(item["weight"]),
       ),
     };
   }
@@ -562,13 +579,8 @@ class _DyeingPreparationFormSectionState
   void _calculateGreigeWeight(int index) {
     final item = greigeForms[index];
 
-    final sourceQty = double.tryParse(
-      _normalizeNumber(item["source_qty"]?.toString() ?? ""),
-    );
-
-    final sourceWeight = double.tryParse(
-      _normalizeNumber(item["source_weight"]?.toString() ?? ""),
-    );
+    final sourceQty = _parseSourceNumber(item["source_qty"]);
+    final sourceWeight = _parseSourceNumber(item["source_weight"]);
 
     final qtyGreige = double.tryParse(
       _normalizeNumber(
@@ -586,11 +598,9 @@ class _DyeingPreparationFormSectionState
 
     final weightGreige = (sourceWeight / sourceQty) * qtyGreige;
 
-    (item["weight"] as TextEditingController).text =
-        weightGreige.toStringAsFixed(2).replaceFirst(
-              RegExp(r'\.?0+$'),
-              '',
-            );
+    (item["weight"] as TextEditingController).text = formatNumber(
+      double.parse(weightGreige.toStringAsFixed(2)),
+    );
   }
 
 >>>>>>> a89827fd (fix: rumus otomatis berat greige persiapan dyeing)
@@ -1163,6 +1173,7 @@ class _DyeingPreparationFormSectionState
               (formItem["qty"] as TextEditingController).text =
                   _formatInputNumber(selectedItem["qty"]);
 <<<<<<< HEAD
+<<<<<<< HEAD
               (formItem["weight"] as TextEditingController).text =
                   _formatInputNumber(selectedItem["weight"]);
 
@@ -1190,6 +1201,10 @@ class _DyeingPreparationFormSectionState
               (formItem["weight"] as TextEditingController).text =
                   _formatInputNumber(selectedItem["weight"]);
 >>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
+=======
+              (formItem["weight"] as TextEditingController).text =
+                  _formatInputNumber(selectedItem["weight"]);
+>>>>>>> e46ec579 (fix: rumus persiapan dyeing untuk qty dan berat)
 
 >>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
 =======

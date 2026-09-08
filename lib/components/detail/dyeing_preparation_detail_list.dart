@@ -42,10 +42,13 @@ class DyeingPreparationDetailList extends StatelessWidget {
   final processName;
   final processNoKey;
   final List<Widget> Function(BuildContext)? handleBuildAttachment;
+<<<<<<< HEAD
 =======
   final processName;
   final processNoKey;
 >>>>>>> fa574d36 (fix: detail persiapan dyeing)
+=======
+>>>>>>> e46ec579 (fix: rumus persiapan dyeing untuk qty dan berat)
 
   const DyeingPreparationDetailList(
       {super.key,
@@ -56,6 +59,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
       required this.onDelete,
       required this.onEdit,
       this.processName,
+<<<<<<< HEAD
 <<<<<<< HEAD
       this.processNoKey,
       this.handleBuildAttachment});
@@ -101,6 +105,10 @@ class DyeingPreparationDetailList extends StatelessWidget {
 =======
       this.processNoKey});
 >>>>>>> fa574d36 (fix: detail persiapan dyeing)
+=======
+      this.processNoKey,
+      this.handleBuildAttachment});
+>>>>>>> e46ec579 (fix: rumus persiapan dyeing untuk qty dan berat)
 
   @override
   Widget build(BuildContext context) {
@@ -125,6 +133,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
                 if (isTablet)
                   _buildTabletLayout(context, isLargeTablet)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 _buildTopBar(context, isTablet),
 =======
@@ -145,6 +154,8 @@ class DyeingPreparationDetailList extends StatelessWidget {
                 if (isTablet)
                   _buildTabletLayout(isLargeTablet)
 >>>>>>> 96e137ef (feat: persiapan dyeing detail)
+=======
+>>>>>>> e46ec579 (fix: rumus persiapan dyeing untuk qty dan berat)
                 else
                   _buildMobileLayout(),
               ],
@@ -483,6 +494,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   Widget _buildTabletLayout(BuildContext context, bool isLargeTablet) {
 =======
   Widget _buildTabletLayout(bool isLargeTablet) {
@@ -493,6 +505,9 @@ class DyeingPreparationDetailList extends StatelessWidget {
 =======
   Widget _buildTabletLayout(bool isLargeTablet) {
 >>>>>>> 96e137ef (feat: persiapan dyeing detail)
+=======
+  Widget _buildTabletLayout(BuildContext context, bool isLargeTablet) {
+>>>>>>> e46ec579 (fix: rumus persiapan dyeing untuk qty dan berat)
     return Padding(
       padding: CustomTheme().padding('card-detail'),
       child: Column(
@@ -540,8 +555,11 @@ class DyeingPreparationDetailList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
+=======
+>>>>>>> e46ec579 (fix: rumus persiapan dyeing untuk qty dan berat)
               if ((data['attachments'] as List? ?? []).isNotEmpty)
                 _buildSectionCard(
                   title: 'Lampiran',
@@ -550,6 +568,7 @@ class DyeingPreparationDetailList extends StatelessWidget {
                     children: handleBuildAttachment?.call(context) ?? [],
                   ),
                 ),
+<<<<<<< HEAD
 =======
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
@@ -558,6 +577,8 @@ class DyeingPreparationDetailList extends StatelessWidget {
 >>>>>>> 96e137ef (feat: persiapan dyeing detail)
 =======
 >>>>>>> fa574d36 (fix: detail persiapan dyeing)
+=======
+>>>>>>> e46ec579 (fix: rumus persiapan dyeing untuk qty dan berat)
               _buildSectionCard(
                 title: 'Catatan $processName',
                 icon: Icons.note_outlined,

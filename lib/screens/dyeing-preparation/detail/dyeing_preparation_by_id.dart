@@ -23,6 +23,7 @@ import 'package:textile_tracking/components/detail/dyeing_preparation_detail_lis
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
@@ -37,6 +38,8 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 =======
 import 'package:textile_tracking/components/master/container/template.dart';
 >>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> e46ec579 (fix: rumus persiapan dyeing untuk qty dan berat)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -460,6 +463,7 @@ class _DyeingPreparationDetailScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
@@ -493,6 +497,8 @@ class _DyeingPreparationDetailScreenState
 >>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
 =======
 >>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> e46ec579 (fix: rumus persiapan dyeing untuk qty dan berat)
   Future _handleDelete(dynamic _) async {
     final data = _data;
 
@@ -884,6 +890,7 @@ class _DyeingPreparationDetailScreenState
                       canDelete: widget.canDelete,
                       canUpdate: widget.canUpdate,
                       onDelete: () => _handleDelete(data),
+                      handleBuildAttachment: _buildAttachmentList,
                       onEdit: () async {
                         final result = await Navigator.push(
                           context,
@@ -902,7 +909,6 @@ class _DyeingPreparationDetailScreenState
                       },
                     ),
                   ),
-                  _buildAttachmentSection(context),
                 ],
               );
             },

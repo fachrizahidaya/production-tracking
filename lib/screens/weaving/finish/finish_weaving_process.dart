@@ -55,7 +55,9 @@ class _FinishWeavingProcessState extends State<FinishWeavingProcess> {
     'qty': null,
     'weight': null,
     'waste': null,
-    'skip_shearing': ''
+    'skip_shearing': '',
+    'machines': [],
+    'attachments': [],
   };
 
   @override

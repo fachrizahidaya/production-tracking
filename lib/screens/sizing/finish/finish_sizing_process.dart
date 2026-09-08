@@ -53,6 +53,7 @@ class _FinishSizingProcessState extends State<FinishSizingProcess> {
     'machine_id': null,
     'roll_length': null,
     'notes': '',
+    'machines': [],
   };
 
   @override

@@ -56,7 +56,10 @@ class _FinishWarpingProcessState extends State<FinishWarpingProcess> {
     'warping_type': '',
     'beam_qty': null,
     'section': null,
-    'lengths': [],
+    'length': null,
+    'weight': null,
+    'broken_yarns': [],
+    'machines': [],
   };
 
   @override

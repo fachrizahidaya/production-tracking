@@ -34,6 +34,8 @@ class _FinishShearingState extends State<FinishShearing> {
     'qty': null,
     'weight': null,
     'notes': '',
+    'machines': [],
+    'attachments': [],
   };
 
   @override
@@ -71,6 +73,7 @@ class _FinishShearingState extends State<FinishShearing> {
           weight: num.tryParse(form['weight']?.toString() ?? '0') ?? 0,
           orderGreigeId:
               int.tryParse(form['order_greige_id']?.toString() ?? ''),
+          attachments: form['attachments'],
         );
 
         final message =

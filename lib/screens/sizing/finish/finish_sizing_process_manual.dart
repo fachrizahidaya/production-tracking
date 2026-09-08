@@ -20,6 +20,7 @@ import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
+import 'package:textile_tracking/screens/update/process/machine.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -146,9 +147,12 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
         data['attachments'] ?? [],
       );
       setState(() {
-        processData = _sizingService.dataView['data'];
+        processData = data;
         widget.form?['process_id'] = processData['id']?.toString();
-        widget.form?['machine_id'] = processData['machine']['id'];
+        widget.form?['machines'] = List<Map<String, dynamic>>.from(
+          processData['machines'] ?? [],
+        );
+        widget.form?['machine_id'] = processData['machine']?['id'];
         widget.form?['roll_length'] = processData['roll_length'];
         widget.form?['order_greige_id'] = processData['order_greige_id'];
         widget.form?['no_og'] =
@@ -194,6 +198,20 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
         }
       },
     );
+  }
+
+  dynamic _getMachineStatus(dynamic machineId) {
+    final machines = List<Map<String, dynamic>>.from(
+      processData['machines'] ?? [],
+    );
+
+    for (final item in machines) {
+      if (item['machine']?['id']?.toString() == machineId.toString()) {
+        return item['status'];
+      }
+    }
+
+    return null;
   }
 
   Future<void> _handleSubmit(BuildContext context) async {
@@ -396,7 +414,6 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
   @override
   Widget build(BuildContext context) {
     final isDisabled = widget.form?['order_greige_id'] == null ||
-        widget.form?['machine_id'] == null ||
         widget.form?['roll_length'] == null;
 
     return DefaultTabController(
@@ -447,6 +464,18 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
                                 ),
                               ),
                               if (widget.form?['order_greige_id'] != null) ...[
+                                TemplateCard(
+                                  title: 'Mesin',
+                                  icon: Icons.local_laundry_service_outlined,
+                                  child: MachineEditSection(
+                                    data: processData,
+                                    form: widget.form,
+                                    getMachineStatus: _getMachineStatus,
+                                    newMachines: <Map<String, dynamic>>[],
+                                    withAddMachine: false,
+                                    onMachineChanged: () => setState(() {}),
+                                  ),
+                                ),
                                 _buildBeamWeightSection(),
                                 AttachmentPicker(
                                   attachments: allAttachments,

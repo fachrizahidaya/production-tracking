@@ -1005,10 +1005,14 @@ class _DyeingPreparationFormSectionState
   @override
   Widget build(BuildContext context) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     final isDisabled = widget.form?['wo_id'] == null || !widget.greigeReady;
 =======
     final isDisabled = widget.form?['wo_id'] == null;
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+    final isDisabled = widget.form?['wo_id'] == null || !widget.greigeReady;
+>>>>>>> 6578af90 (fix: button untuk persiapan dyeing)
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,

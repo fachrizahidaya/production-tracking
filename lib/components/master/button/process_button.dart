@@ -222,6 +222,7 @@ class _ProcessButtonState extends State<ProcessButton> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // hasPackingAttachmentError ||
 =======
     final bool isDisabled = hasBasicError ||
@@ -236,6 +237,9 @@ class _ProcessButtonState extends State<ProcessButton> {
 =======
         hasPackingAttachmentError ||
 >>>>>>> eeae9f55 (fix: attachment mandatory for packing)
+=======
+        // hasPackingAttachmentError ||
+>>>>>>> 6578af90 (fix: button untuk persiapan dyeing)
         widget.hasItemQtyWarning == true;
 
     return SafeArea(

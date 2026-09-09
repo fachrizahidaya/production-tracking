@@ -47,7 +47,9 @@ class _WeavingDetailScreenState extends State<WeavingDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchDetail();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchDetail();
+    });
   }
 
   @override

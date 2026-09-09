@@ -13,6 +13,7 @@ class SummaryCard extends StatefulWidget {
   final bool isSelected;
   final showProgress;
   final filter;
+  final bool isGreige;
 
   const SummaryCard(
       {super.key,
@@ -20,7 +21,8 @@ class SummaryCard extends StatefulWidget {
       this.onTap,
       this.isSelected = false,
       this.showProgress,
-      this.filter});
+      this.filter,
+      this.isGreige = false});
 
   @override
   State<SummaryCard> createState() => _SummaryCardState();
@@ -53,6 +55,7 @@ class _SummaryCardState extends State<SummaryCard>
         return CardDialog(
           title: title,
           woList: woList,
+          isGreige: widget.isGreige,
         );
       },
     );

@@ -6,6 +6,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 
 class WorkOrderSummary extends StatefulWidget {
   final data;
+  final greigeData;
   final handleRefetch;
   final dariTanggal;
   final sampaiTanggal;
@@ -15,6 +16,7 @@ class WorkOrderSummary extends StatefulWidget {
   const WorkOrderSummary(
       {super.key,
       this.data,
+      this.greigeData,
       this.handleRefetch,
       this.dariTanggal,
       this.filterWidget,
@@ -29,7 +31,9 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     with TickerProviderStateMixin {
   String selectedProcess = 'All';
   late TabController _tabController;
+  late TabController _summaryTabController;
   int selectedIndex = 0;
+  int selectedSummaryIndex = 0;
 
   @override
   void initState() {
@@ -37,6 +41,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       length: processFilters.length,
       vsync: this,
     );
+    _summaryTabController = TabController(length: 2, vsync: this);
 
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) return;
@@ -46,6 +51,13 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       });
 
       _refetchByTab(_tabController.index);
+    });
+    _summaryTabController.addListener(() {
+      if (_summaryTabController.indexIsChanging) return;
+
+      setState(() {
+        selectedSummaryIndex = _summaryTabController.index;
+      });
     });
     super.initState();
   }
@@ -105,7 +117,13 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
   @override
   void dispose() {
     _tabController.dispose();
+    _summaryTabController.dispose();
     super.dispose();
+  }
+
+  List<dynamic> get _activeData {
+    final data = selectedSummaryIndex == 0 ? widget.data : widget.greigeData;
+    return data is List ? data : [];
   }
 
   bool get _showProgress {
@@ -223,11 +241,11 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       );
     }
 
-    if (widget.data == null || widget.data!.isEmpty) {
+    if (_activeData.isEmpty) {
       return NoData();
     }
 
-    final isSingleItem = widget.data!.length == 1;
+    final isSingleItem = _activeData.length == 1;
     final screenWidth = MediaQuery.of(context).size.width * 0.95;
 
     return SingleChildScrollView(
@@ -236,7 +254,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
           ? NeverScrollableScrollPhysics()
           : BouncingScrollPhysics(),
       child: Row(
-        children: widget.data!.map<Widget>((item) {
+        children: _activeData.map<Widget>((item) {
           final mappedItem = _mapApiToSummaryCard(item);
 
           return Padding(
@@ -247,6 +265,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                 data: mappedItem,
                 showProgress: _showProgress,
                 filter: processFilters[selectedIndex],
+                isGreige: selectedSummaryIndex == 1,
               ),
             ),
           );
@@ -273,6 +292,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                 isMobile: isMobile,
                 isTablet: isTablet,
               ),
+              _buildSummaryTabs(),
               const Divider(),
               _buildSwipeContent(),
             ],
@@ -321,7 +341,9 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
           // SUBTITLE
           // =========================
           Text(
-            'Status tahapan work order',
+            selectedSummaryIndex == 0
+                ? 'Status tahapan work order'
+                : 'Status tahapan order greige',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
@@ -358,6 +380,19 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
               isTablet: isTablet,
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryTabs() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: TabBar(
+        controller: _summaryTabController,
+        tabs: const [
+          Tab(text: 'Produksi'),
+          Tab(text: 'Greige'),
         ],
       ),
     );

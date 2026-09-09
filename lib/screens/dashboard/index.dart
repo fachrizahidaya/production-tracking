@@ -32,6 +32,7 @@ class _DashboardState extends State<Dashboard> {
   List<dynamic> chartList = [];
   List<dynamic> pieList = [];
   List<dynamic> summaryList = [];
+  List<dynamic> greigeSummaryList = [];
   Map<String, dynamic> machineList = {};
   final List<dynamic> _dataList = [];
   List<dynamic> menus = [];
@@ -113,7 +114,7 @@ class _DashboardState extends State<Dashboard> {
         menus = result;
       });
     } catch (e) {
-      debugPrint('Error fetch menu: $e');
+      throw ('Error fetch menu: $e');
     }
   }
 
@@ -144,9 +145,8 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _safeFetch(Future<void> Function() callback) async {
     try {
       await callback();
-    } catch (e, s) {
-      debugPrint(e.toString());
-      debugPrintStack(stackTrace: s);
+    } catch (e) {
+      throw (e.toString());
     }
   }
 
@@ -180,9 +180,8 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         machineList = service.dataList;
       });
-    } catch (e, s) {
+    } catch (e) {
       debugPrint('Machine Error: $e');
-      debugPrintStack(stackTrace: s);
 
       if (!mounted) return;
 
@@ -216,27 +215,32 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       isSummaryLoading = true;
       summaryList = [];
+      greigeSummaryList = [];
     });
 
     try {
       final service =
           Provider.of<WorkOrderSummaryService>(context, listen: false);
 
-      await service.getDataList(context, summaryParams);
+      await Future.wait([
+        service.getDataList(context, summaryParams),
+        service.getPreDataList(context, summaryParams),
+      ]);
 
       if (!mounted) return;
 
       setState(() {
         summaryList = service.dataList;
+        greigeSummaryList = service.preDataList;
       });
-    } catch (e, s) {
+    } catch (e) {
       debugPrint('Summary Error: $e');
-      debugPrintStack(stackTrace: s);
 
       if (!mounted) return;
 
       setState(() {
         summaryList = [];
+        greigeSummaryList = [];
       });
     } finally {
       if (!mounted) return;
@@ -380,6 +384,7 @@ class _DashboardState extends State<Dashboard> {
                     WorkOrderStats(data: statsList, isFetching: isStatsLoading),
                     WorkOrderSummary(
                       data: summaryList,
+                      greigeData: greigeSummaryList,
                       handleRefetch: _handleFetchSummary,
                       isFetching: isSummaryLoading,
                       filterWidget: SummaryFilter(

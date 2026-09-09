@@ -7,6 +7,7 @@ import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/components/master/form/select_form.dart';
 <<<<<<< HEAD
@@ -14,10 +15,13 @@ import 'package:textile_tracking/components/master/form/text_form.dart';
 >>>>>>> 5d1f483f (fix: warping, sizing)
 =======
 >>>>>>> 877fb015 (fix: edit warping)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/screens/update/process/machine.dart';
@@ -30,6 +34,10 @@ import 'package:textile_tracking/models/option/option_machine.dart';
 =======
 import 'package:textile_tracking/screens/update/process/warping.dart';
 >>>>>>> 877fb015 (fix: edit warping)
+=======
+import 'package:textile_tracking/models/option/option_machine.dart';
+import 'package:textile_tracking/screens/update/process/machine.dart';
+>>>>>>> 80dec51b (fix: edit warping-shearing)
 import 'package:textile_tracking/screens/warping/model/warping.dart';
 
 class EditWarpingScreen extends StatefulWidget {
@@ -48,6 +56,7 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   final TextEditingController _yarnQtyController = TextEditingController();
   final TextEditingController _warpingTypeController = TextEditingController();
@@ -58,19 +67,24 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
   final TextEditingController _beamQtyController = TextEditingController();
   final TextEditingController _sectionController = TextEditingController();
 >>>>>>> 877fb015 (fix: edit warping)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
 
   bool _isLoading = true;
   bool _isFetchingMachine = false;
-  bool get _isSingleWarping => _form['warping_type'] == 'single_warping';
   String? _errorMessage;
 
   Map<String, dynamic> _data = {};
   final Map<String, dynamic> _form = {};
   List<dynamic> _machineOption = [];
 <<<<<<< HEAD
+<<<<<<< HEAD
   final List<Map<String, dynamic>> _newMachines = [];
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+  final List<Map<String, dynamic>> _newMachines = [];
+>>>>>>> 80dec51b (fix: edit warping-shearing)
 
   @override
   void initState() {
@@ -84,6 +98,7 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
   void dispose() {
     _isSubmitting.dispose();
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     _yarnQtyController.dispose();
     _warpingTypeController.dispose();
@@ -94,6 +109,8 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
     _beamQtyController.dispose();
     _sectionController.dispose();
 >>>>>>> 877fb015 (fix: edit warping)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
     super.dispose();
   }
 
@@ -113,16 +130,22 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
           : Map<String, dynamic>.from(response);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       final orderGreige = _mapValue(detail['order_greige']);
       final machines = _normalizeMachines(detail['machines']);
 =======
       final machine = _mapValue(detail['machine']);
       final orderGreige = _mapValue(detail['order_greige']);
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+      final orderGreige = _mapValue(detail['order_greige']);
+      final machines = _normalizeMachines(detail['machines']);
+>>>>>>> 80dec51b (fix: edit warping-shearing)
 
       _form
         ..clear()
         ..addAll({
+<<<<<<< HEAD
 <<<<<<< HEAD
           'yarn_qty': detail['yarn_qty']?.toString() ?? '',
           'beam_qty': detail['beam_qty']?.toString() ?? '',
@@ -144,6 +167,8 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
 =======
           'machine_id': detail['machine_id']?.toString(),
           'nama_mesin': _machineLabel(machine),
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
           'yarn_qty': detail['yarn_qty']?.toString() ?? '',
           'beam_qty': detail['beam_qty']?.toString() ?? '',
           'section': detail['section']?.toString() ?? '',
@@ -151,21 +176,21 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
           'no_greige_order': orderGreige['og_no']?.toString() ?? '',
           'warping_type': detail['warping_type']?.toString() ?? '',
           'notes': detail['notes']?.toString() ?? '',
+          'machines': machines,
+          'machine_ids': List<dynamic>.from(detail['machine_ids'] ?? []),
         });
-
-      _yarnQtyController.text = detail['yarn_qty']?.toString() ?? '';
-      _beamQtyController.text = detail['beam_qty']?.toString() ?? '';
-      _sectionController.text = detail['section']?.toString() ?? '';
-      _notesController.text = detail['notes']?.toString() ?? '';
-
-      _notesController.text = detail['notes']?.toString() ?? '';
 
       setState(() {
         _data = detail;
+        _data['machines'] = machines;
       });
 
+<<<<<<< HEAD
       await _fetchMachine(detail['machine_id']);
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+      await _fetchMachine(_machineIds(machines));
+>>>>>>> 80dec51b (fix: edit warping-shearing)
     } catch (e) {
       setState(() => _errorMessage = e.toString());
     } finally {
@@ -176,21 +201,29 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Future<void> _fetchMachine(List<dynamic> currentMachineIds) async {
 =======
   Future<void> _fetchMachine(dynamic currentMachineId) async {
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+  Future<void> _fetchMachine(List<dynamic> currentMachineIds) async {
+>>>>>>> 80dec51b (fix: edit warping-shearing)
     setState(() => _isFetchingMachine = true);
 
     try {
       final service = Provider.of<OptionMachineService>(context, listen: false);
       await service.fetchOptionsWarping(
 <<<<<<< HEAD
+<<<<<<< HEAD
         currentMachineIds: currentMachineIds,
 =======
         currentMachineIds:
             currentMachineId == null ? null : [currentMachineId.toString()],
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+        currentMachineIds: currentMachineIds,
+>>>>>>> 80dec51b (fix: edit warping-shearing)
       );
 
       setState(() {
@@ -208,18 +241,25 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
   Future<Map<String, dynamic>?> _selectMachine() async {
     Map<String, dynamic>? result;
 
     await showSelectDialog(
+<<<<<<< HEAD
 =======
   Future<void> _selectMachine() async {
     showSelectDialog(
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
       context: context,
       title: 'Mesin',
       isFetching: _isFetchingMachine,
       option: _machineOption,
+<<<<<<< HEAD
 <<<<<<< HEAD
       selected: '',
       handleChangeValue: (selected) {
@@ -239,22 +279,24 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
     return (_data['machines'] as List? ?? []).isEmpty;
 =======
       selected: _form['machine_id']?.toString() ?? '',
+=======
+      selected: '',
+>>>>>>> 80dec51b (fix: edit warping-shearing)
       handleChangeValue: (selected) {
-        setState(() {
-          _form['machine_id'] = selected['value']?.toString();
-          _form['nama_mesin'] = selected['label']?.toString() ?? '';
-        });
+        result = {
+          'id': selected['value'],
+          'name': selected['label'],
+          'code': selected['code'],
+          'status': selected['status'] ?? 'Tersedia',
+        };
       },
     );
-  }
 
-  void _handleChangeInput(String key, dynamic value) {
-    setState(() {
-      _form[key] = value;
-    });
+    return result;
   }
 
   bool get _isFormInvalid {
+<<<<<<< HEAD
 <<<<<<< HEAD
     return (_form['machine_id'] == null ||
             _form['machine_id'].toString().isEmpty) ||
@@ -275,6 +317,9 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
 
     return _form['section'] == null || _form['section'].toString().isEmpty;
 >>>>>>> 877fb015 (fix: edit warping)
+=======
+    return (_data['machines'] as List? ?? []).isEmpty;
+>>>>>>> 80dec51b (fix: edit warping-shearing)
   }
 
   Future<void> _handleSubmit() async {
@@ -308,14 +353,21 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
     final isSingle = _form['warping_type'] == 'single_warping';
 
     final warping = Warping(
-      machineId: int.tryParse(_form['machine_id']),
       orderGreigeId: int.tryParse(_form['order_greige_id']),
       warpingType: _form['warping_type'],
       notes: _form['notes'],
       yarnQty: num.tryParse(_form['yarn_qty'] ?? ''),
       beamQty: isSingle ? num.tryParse(_form['beam_qty'] ?? '') : null,
       section: !isSingle ? num.tryParse(_form['section'] ?? '') : null,
+<<<<<<< HEAD
 >>>>>>> 877fb015 (fix: edit warping)
+=======
+      machines: List<Map<String, dynamic>>.from(_data['machines'] ?? []),
+      machine_ids: _newMachines
+          .map((item) => item['machine']?['id'])
+          .where((id) => id != null)
+          .toList(),
+>>>>>>> 80dec51b (fix: edit warping-shearing)
     );
 
     try {
@@ -366,6 +418,7 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
       formKey: _formKey,
       formSections: [
 <<<<<<< HEAD
+<<<<<<< HEAD
         _buildMachineCard(),
 =======
         Row(
@@ -383,12 +436,16 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
         ),
         _buildAdditionalCard(),
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+        _buildMachineCard(),
+>>>>>>> 80dec51b (fix: edit warping-shearing)
       ],
       submitSection: _buildSubmitSection(),
       greigeOrderData: _mapValue(_data['order_greige']),
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
   Widget _buildSummaryCard() {
@@ -423,17 +480,23 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
   }
 
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
   Widget _buildMachineCard() {
     return TemplateCard(
       title: 'Mesin',
       icon: Icons.local_laundry_service_outlined,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
       child: MachineEditSection(
         data: _data,
         form: _form,
         handleSelectMachine: _selectMachine,
         getMachineStatus: _getMachineStatus,
         newMachines: _newMachines,
+<<<<<<< HEAD
 =======
       child: SelectForm(
         label: 'Mesin',
@@ -442,15 +505,21 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
         selectedValue: _form['machine_id']?.toString() ?? '',
         required: true,
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
       ),
     );
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
   String _getMachineStatus(dynamic machineId) {
     final option = _machineOption.firstWhere(
       (item) => item['value'].toString() == machineId.toString(),
       orElse: () => null,
+<<<<<<< HEAD
     );
     return option?['status']?.toString() ?? 'Tersedia';
   }
@@ -490,9 +559,13 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
         );
       },
       extraTitle: isSingle ? 'Beam' : 'Section',
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
     );
+    return option?['status']?.toString() ?? 'Tersedia';
   }
 
+<<<<<<< HEAD
   Widget _buildAdditionalCard() {
     return Column(
       children: [
@@ -508,6 +581,25 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
       ],
     );
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+  List<dynamic> _machineIds(List<Map<String, dynamic>> machines) {
+    return machines
+        .map((item) => item['machine']?['id'] ?? item['id'])
+        .where((id) => id != null)
+        .toList();
+  }
+
+  List<Map<String, dynamic>> _normalizeMachines(dynamic value) {
+    return (value as List? ?? []).map<Map<String, dynamic>>((item) {
+      final machine = Map<String, dynamic>.from(item);
+      if (machine['machine'] is Map) return machine;
+
+      return {
+        'machine': machine,
+        'status': machine['status'] ?? 'Tersedia',
+      };
+    }).toList();
+>>>>>>> 80dec51b (fix: edit warping-shearing)
   }
 
   Widget _buildSubmitSection() {
@@ -521,10 +613,14 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
                 label: 'Batal',
                 onPressed: () => Navigator.pop(context),
 <<<<<<< HEAD
+<<<<<<< HEAD
                 customHeight: 56.0,
 =======
                 customHeight: 50.0,
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+                customHeight: 56.0,
+>>>>>>> 80dec51b (fix: edit warping-shearing)
               ),
             ),
             const SizedBox(width: 12),
@@ -534,10 +630,14 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
                 isLoading: isSubmitting,
                 isDisabled: _isFormInvalid,
 <<<<<<< HEAD
+<<<<<<< HEAD
                 customHeight: 56.0,
 =======
                 customHeight: 50.0,
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+                customHeight: 56.0,
+>>>>>>> 80dec51b (fix: edit warping-shearing)
                 onPressed: _handleSubmit,
               ),
             ),
@@ -548,6 +648,7 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
   }
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 class _InfoLine extends StatelessWidget {
@@ -588,11 +689,14 @@ class _InfoLine extends StatelessWidget {
 }
 
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
 Map<String, dynamic> _mapValue(dynamic value) {
   if (value is Map<String, dynamic>) return value;
   if (value is Map) return Map<String, dynamic>.from(value);
   return <String, dynamic>{};
 }
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -611,3 +715,5 @@ String _display(dynamic value) {
   return value.toString();
 }
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)

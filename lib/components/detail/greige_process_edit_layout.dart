@@ -60,10 +60,14 @@ class GreigeProcessEditLayout extends StatelessWidget {
                             child: const TabBar(
                               tabs: [
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 Tab(text: 'Mesin'),
                                 Tab(text: 'Info Order Greige'),
 =======
                                 Tab(text: 'Form Edit'),
+=======
+                                Tab(text: 'Mesin'),
+>>>>>>> 80dec51b (fix: edit warping-shearing)
                                 Tab(text: 'Info Greige Order'),
 >>>>>>> 230afad3 (feat: greige order detail)
                               ],

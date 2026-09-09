@@ -7,13 +7,17 @@ import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/components/master/form/select_form.dart';
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
@@ -24,6 +28,11 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+import 'package:textile_tracking/models/option/option_machine.dart';
+import 'package:textile_tracking/screens/sizing/model/sizing.dart';
+import 'package:textile_tracking/screens/update/process/machine.dart';
+>>>>>>> 80dec51b (fix: edit warping-shearing)
 
 class EditSizingScreen extends StatefulWidget {
   final dynamic id;
@@ -41,9 +50,12 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   final TextEditingController _notesController = TextEditingController();
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
 
   bool _isLoading = true;
   bool _isFetchingMachine = false;
@@ -53,9 +65,13 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
   final Map<String, dynamic> _form = {};
   List<dynamic> _machineOption = [];
 <<<<<<< HEAD
+<<<<<<< HEAD
   final List<Map<String, dynamic>> _newMachines = [];
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+  final List<Map<String, dynamic>> _newMachines = [];
+>>>>>>> 80dec51b (fix: edit warping-shearing)
 
   @override
   void initState() {
@@ -69,9 +85,12 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
   void dispose() {
     _isSubmitting.dispose();
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     _notesController.dispose();
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
     super.dispose();
   }
 
@@ -91,26 +110,35 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
           : Map<String, dynamic>.from(response);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       final orderGreige = _mapValue(detail['order_greige']);
       final machines = _normalizeMachines(detail['machines']);
 =======
       final machine = _mapValue(detail['machine']);
       final orderGreige = _mapValue(detail['order_greige']);
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+      final orderGreige = _mapValue(detail['order_greige']);
+      final machines = _normalizeMachines(detail['machines']);
+>>>>>>> 80dec51b (fix: edit warping-shearing)
 
       _form
         ..clear()
         ..addAll({
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
           'machine_id': detail['machine_id']?.toString(),
           'nama_mesin': _machineLabel(machine),
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
           'order_greige_id': detail['order_greige_id']?.toString(),
           'no_greige_order': orderGreige['og_no']?.toString() ?? '',
 
           // tambahkan ini
           'notes': detail['notes']?.toString() ?? '',
+<<<<<<< HEAD
 <<<<<<< HEAD
           'machines': machines,
           'machine_ids': List<dynamic>.from(detail['machine_ids'] ?? []),
@@ -123,16 +151,23 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
 
       await _fetchMachine(_machineIds(machines));
 =======
+=======
+          'machines': machines,
+          'machine_ids': List<dynamic>.from(detail['machine_ids'] ?? []),
+>>>>>>> 80dec51b (fix: edit warping-shearing)
         });
-
-      _notesController.text = detail['notes']?.toString() ?? '';
 
       setState(() {
         _data = detail;
+        _data['machines'] = machines;
       });
 
+<<<<<<< HEAD
       await _fetchMachine(detail['machine_id']);
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+      await _fetchMachine(_machineIds(machines));
+>>>>>>> 80dec51b (fix: edit warping-shearing)
     } catch (e) {
       setState(() => _errorMessage = e.toString());
     } finally {
@@ -143,21 +178,29 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Future<void> _fetchMachine(List<dynamic> currentMachineIds) async {
 =======
   Future<void> _fetchMachine(dynamic currentMachineId) async {
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+  Future<void> _fetchMachine(List<dynamic> currentMachineIds) async {
+>>>>>>> 80dec51b (fix: edit warping-shearing)
     setState(() => _isFetchingMachine = true);
 
     try {
       final service = Provider.of<OptionMachineService>(context, listen: false);
       await service.fetchOptionsSizing(
 <<<<<<< HEAD
+<<<<<<< HEAD
         currentMachineIds: currentMachineIds,
 =======
         currentMachineIds:
             currentMachineId == null ? null : [currentMachineId.toString()],
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+        currentMachineIds: currentMachineIds,
+>>>>>>> 80dec51b (fix: edit warping-shearing)
       );
 
       setState(() {
@@ -175,18 +218,25 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
   Future<Map<String, dynamic>?> _selectMachine() async {
     Map<String, dynamic>? result;
 
     await showSelectDialog(
+<<<<<<< HEAD
 =======
   Future<void> _selectMachine() async {
     showSelectDialog(
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
       context: context,
       title: 'Mesin',
       isFetching: _isFetchingMachine,
       option: _machineOption,
+<<<<<<< HEAD
 <<<<<<< HEAD
       selected: '',
       handleChangeValue: (selected) {
@@ -206,31 +256,37 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
     return (_data['machines'] as List? ?? []).isEmpty;
 =======
       selected: _form['machine_id']?.toString() ?? '',
+=======
+      selected: '',
+>>>>>>> 80dec51b (fix: edit warping-shearing)
       handleChangeValue: (selected) {
-        setState(() {
-          _form['machine_id'] = selected['value']?.toString();
-          _form['nama_mesin'] = selected['label']?.toString() ?? '';
-        });
+        result = {
+          'id': selected['value'],
+          'name': selected['label'],
+          'code': selected['code'],
+          'status': selected['status'] ?? 'Tersedia',
+        };
       },
     );
-  }
 
-  void _handleChangeInput(String key, dynamic value) {
-    setState(() {
-      _form[key] = value;
-    });
+    return result;
   }
 
   bool get _isFormInvalid {
+<<<<<<< HEAD
     return (_form['machine_id'] == null ||
         _form['machine_id'].toString().isEmpty);
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+    return (_data['machines'] as List? ?? []).isEmpty;
+>>>>>>> 80dec51b (fix: edit warping-shearing)
   }
 
   Future<void> _handleSubmit() async {
     if (_isFormInvalid) return;
 
     final sizing = Sizing(
+<<<<<<< HEAD
 <<<<<<< HEAD
       orderGreigeId: int.tryParse(_form['order_greige_id']?.toString() ?? ''),
       notes: _form['notes']?.toString(),
@@ -244,6 +300,15 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
       orderGreigeId: int.tryParse(_form['order_greige_id']?.toString() ?? ''),
       notes: _form['notes']?.toString(),
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+      orderGreigeId: int.tryParse(_form['order_greige_id']?.toString() ?? ''),
+      notes: _form['notes']?.toString(),
+      machines: List<Map<String, dynamic>>.from(_data['machines'] ?? []),
+      machine_ids: _newMachines
+          .map((item) => item['machine']?['id'])
+          .where((id) => id != null)
+          .toList(),
+>>>>>>> 80dec51b (fix: edit warping-shearing)
     );
 
     try {
@@ -294,6 +359,7 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
       formKey: _formKey,
       formSections: [
 <<<<<<< HEAD
+<<<<<<< HEAD
         _buildMachineCard(),
 =======
         _buildSummaryCard(),
@@ -305,12 +371,16 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
         ),
         _buildAdditionalCard(),
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+        _buildMachineCard(),
+>>>>>>> 80dec51b (fix: edit warping-shearing)
       ],
       submitSection: _buildSubmitSection(),
       greigeOrderData: _mapValue(_data['order_greige']),
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
   Widget _buildSummaryCard() {
@@ -345,17 +415,23 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
   }
 
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
   Widget _buildMachineCard() {
     return TemplateCard(
       title: 'Mesin',
       icon: Icons.local_laundry_service_outlined,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
       child: MachineEditSection(
         data: _data,
         form: _form,
         handleSelectMachine: _selectMachine,
         getMachineStatus: _getMachineStatus,
         newMachines: _newMachines,
+<<<<<<< HEAD
 =======
       child: SelectForm(
         label: 'Mesin',
@@ -364,15 +440,21 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
         selectedValue: _form['machine_id']?.toString() ?? '',
         required: true,
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
       ),
     );
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
   String _getMachineStatus(dynamic machineId) {
     final option = _machineOption.firstWhere(
       (item) => item['value'].toString() == machineId.toString(),
       orElse: () => null,
+<<<<<<< HEAD
     );
     return option?['status']?.toString() ?? 'Tersedia';
   }
@@ -410,6 +492,29 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
       ],
     );
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+    );
+    return option?['status']?.toString() ?? 'Tersedia';
+  }
+
+  List<dynamic> _machineIds(List<Map<String, dynamic>> machines) {
+    return machines
+        .map((item) => item['machine']?['id'] ?? item['id'])
+        .where((id) => id != null)
+        .toList();
+  }
+
+  List<Map<String, dynamic>> _normalizeMachines(dynamic value) {
+    return (value as List? ?? []).map<Map<String, dynamic>>((item) {
+      final machine = Map<String, dynamic>.from(item);
+      if (machine['machine'] is Map) return machine;
+
+      return {
+        'machine': machine,
+        'status': machine['status'] ?? 'Tersedia',
+      };
+    }).toList();
+>>>>>>> 80dec51b (fix: edit warping-shearing)
   }
 
   Widget _buildSubmitSection() {
@@ -423,10 +528,14 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
                 label: 'Batal',
                 onPressed: () => Navigator.pop(context),
 <<<<<<< HEAD
+<<<<<<< HEAD
                 customHeight: 56.0,
 =======
                 customHeight: 50.0,
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+                customHeight: 56.0,
+>>>>>>> 80dec51b (fix: edit warping-shearing)
               ),
             ),
             const SizedBox(width: 12),
@@ -436,10 +545,14 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
                 isLoading: isSubmitting,
                 isDisabled: _isFormInvalid,
 <<<<<<< HEAD
+<<<<<<< HEAD
                 customHeight: 56.0,
 =======
                 customHeight: 50.0,
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+                customHeight: 56.0,
+>>>>>>> 80dec51b (fix: edit warping-shearing)
                 onPressed: _handleSubmit,
               ),
             ),
@@ -450,6 +563,7 @@ class _EditSizingScreenState extends State<EditSizingScreen> {
   }
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 class _InfoLine extends StatelessWidget {
@@ -490,11 +604,14 @@ class _InfoLine extends StatelessWidget {
 }
 
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)
 Map<String, dynamic> _mapValue(dynamic value) {
   if (value is Map<String, dynamic>) return value;
   if (value is Map) return Map<String, dynamic>.from(value);
   return <String, dynamic>{};
 }
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -513,3 +630,5 @@ String _display(dynamic value) {
   return value.toString();
 }
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> 80dec51b (fix: edit warping-shearing)

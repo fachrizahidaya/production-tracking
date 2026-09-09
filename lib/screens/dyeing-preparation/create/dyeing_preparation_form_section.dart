@@ -9,6 +9,7 @@ import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
@@ -134,6 +135,8 @@ class _DyeingPreparationFormSectionState
       "work_order_item_id": item["work_order_item_id"],
       "item_id": item["item_id"],
       "spk_item_id": item["spk_item_id"],
+      "source_item_code": item["source_item_code"],
+      "source_item_name": item["source_item_name"],
       "item_code": item["item_code"],
       "item_name": item["item_name"],
       "qty_tolerance": item["qty_tolerance"],
@@ -259,10 +262,13 @@ class _DyeingPreparationFormSectionState
     widget.form?["items"] = groupedItems.values.toList();
   }
 
-  List<Map<String, dynamic>> get _itemOptions {
-    final options = widget.itemOptions?.isNotEmpty == true
+  List<Map<String, dynamic>> _itemOptions(dynamic workOrderItemId) {
+    final allOptions = widget.itemOptions?.isNotEmpty == true
         ? widget.itemOptions!
         : widget.existingItems;
+    final options = allOptions
+        .where((item) => item["work_order_item_id"] == workOrderItemId)
+        .toList();
 
     return options.asMap().entries.map((entry) {
       final index = entry.key;
@@ -283,18 +289,26 @@ class _DyeingPreparationFormSectionState
     );
   }
 
-  void _handleAddGreigeItem() {
+  void _handleAddGreigeItem(Map<String, dynamic> sourceItem) {
     final options = widget.itemOptions?.isNotEmpty == true
         ? widget.itemOptions!
         : widget.existingItems;
+    final matchingOptions = options
+        .where(
+          (item) =>
+              item["work_order_item_id"] == sourceItem["work_order_item_id"],
+        )
+        .toList();
 
-    if (options.isEmpty) {
+    if (matchingOptions.isEmpty) {
       _showStockMoreWarning();
       return;
     }
 
     setState(() {
-      greigeForms.add(_createGreigeForm(options.first, greigeForms.length));
+      greigeForms.add(
+        _createGreigeForm(matchingOptions.first, greigeForms.length),
+      );
       _syncGreigeItemsToForm();
     });
   }
@@ -309,7 +323,7 @@ class _DyeingPreparationFormSectionState
 
         return SelectDialog(
           label: 'Greige Awal',
-          options: _itemOptions,
+          options: _itemOptions(formItem["work_order_item_id"]),
           selected: formItem["item_value"]?.toString() ?? '',
           isAnyAdditionalData: true,
           handleChangeValue: (selected) {
@@ -334,9 +348,16 @@ class _DyeingPreparationFormSectionState
             }
 
             final sourceIndex = selected["source_index"] as int;
-            final options = widget.itemOptions?.isNotEmpty == true
+            final allOptions = widget.itemOptions?.isNotEmpty == true
                 ? widget.itemOptions!
                 : widget.existingItems;
+            final options = allOptions
+                .where(
+                  (item) =>
+                      item["work_order_item_id"] ==
+                      formItem["work_order_item_id"],
+                )
+                .toList();
             final selectedItem = options[sourceIndex];
             final selectedValue = selected["value"]?.toString() ?? "";
             // final isSelectedInAnotherForm = greigeForms.asMap().entries.any(
@@ -355,6 +376,8 @@ class _DyeingPreparationFormSectionState
                   selectedItem["work_order_item_id"];
               formItem["item_id"] = selectedItem["item_id"];
               formItem["spk_item_id"] = selectedItem["spk_item_id"];
+              formItem["source_item_code"] = selectedItem["source_item_code"];
+              formItem["source_item_name"] = selectedItem["source_item_name"];
               formItem["qty_tolerance"] = selectedItem["qty_tolerance"];
               formItem["unit_id"] = selectedItem["unit_id"];
               formItem["weight_unit_id"] = selectedItem["weight_unit_id"];
@@ -381,7 +404,12 @@ class _DyeingPreparationFormSectionState
   }
 
   void _removeGreigeItem(int index) {
-    if (index == 0 || greigeForms.length <= 1) return;
+    final workOrderItemId = greigeForms[index]["work_order_item_id"];
+    final formCount = greigeForms
+        .where((item) => item["work_order_item_id"] == workOrderItemId)
+        .length;
+
+    if (formCount <= 1) return;
 
     setState(() {
       final item = greigeForms.removeAt(index);
@@ -472,6 +500,22 @@ class _DyeingPreparationFormSectionState
 
     if (widget.form?['wo_id'] == null) {
       Navigator.pop(context);
+      return;
+    }
+
+    final attachments = widget.attachments is List
+        ? List<dynamic>.from(widget.attachments)
+        : <dynamic>[];
+    final hasAttachment = attachments.any(
+      (attachment) => attachment is Map && attachment['is_add_button'] != true,
+    );
+
+    if (widget.isEdit != true && !hasAttachment) {
+      await showAlertDialog(
+        context: context,
+        title: 'Peringatan',
+        message: 'Lampiran wajib diisi.',
+      );
       return;
     }
 
@@ -617,52 +661,36 @@ class _DyeingPreparationFormSectionState
   }
 
   Widget _buildGreigeItemsForm(bool isTablet) {
+    final groupedIndexes = <dynamic, List<int>>{};
+
+    for (final entry in greigeForms.asMap().entries) {
+      groupedIndexes
+          .putIfAbsent(
+            entry.value["work_order_item_id"],
+            () => <int>[],
+          )
+          .add(entry.key);
+    }
+
     return TemplateCard(
       icon: Icons.inventory_2_outlined,
       title: "Item",
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ...greigeForms.asMap().entries.map((entry) {
-            return _buildGreigeItem(entry.key, isTablet);
-          }),
-          Align(
-            alignment: Alignment.centerRight,
-            child: OutlinedButton.icon(
-              onPressed: _handleAddGreigeItem,
-              icon: const Icon(Icons.add),
-              label: const Text("Tambah Item"),
-            ),
-          ),
-        ].separatedBy(CustomTheme().vGap('xl')),
+        children: groupedIndexes.values
+            .map((indexes) => _buildGreigeItem(indexes, isTablet))
+            .toList()
+            .separatedBy(CustomTheme().vGap('xl')),
       ),
     );
   }
 
-  Widget _buildGreigeItem(int index, bool isTablet) {
-    final item = greigeForms[index];
-    final fields = [
-      TextForm(
-        label: "No. OP",
-        controller: item["spk_no"],
-        handleChange: (_) => _syncGreigeItemsToForm(),
-      ),
-      TextForm(
-        label: "Qty Greige",
-        controller: item["qty"],
-        isNumber: true,
-        handleChange: (_) {
-          _calculateGreigeWeight(index);
-          _syncGreigeItemsToForm();
-        },
-      ),
-      TextForm(
-        label: "Berat Greige",
-        controller: item["weight"],
-        isNumber: true,
-        handleChange: (_) => _syncGreigeItemsToForm(),
-      ),
-    ];
+  Widget _buildGreigeItem(List<int> indexes, bool isTablet) {
+    final item = greigeForms[indexes.first];
+    final itemCode =
+        item["source_item_code"]?.toString() ?? item["item_code"]?.toString();
+    final itemName =
+        item["source_item_name"]?.toString() ?? item["item_name"]?.toString();
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -673,28 +701,91 @@ class _DyeingPreparationFormSectionState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  "Item ${index + 1}",
-                  style: TextStyle(
-                    fontSize: CustomTheme().fontSize('lg'),
-                    fontWeight: CustomTheme().fontWeight('semibold'),
-                  ),
+          Text(
+            [itemCode, itemName]
+                .where((value) => value != null && value.isNotEmpty)
+                .join(' - '),
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('lg'),
+              fontWeight: CustomTheme().fontWeight('semibold'),
+            ),
+          ),
+          Text(
+            'Batas Maks Qty: ${_formatInputNumber(item["source_qty"])}',
+          ),
+          Text(
+            'Batas Maks Berat: ${_formatInputNumber(item["source_weight"])}',
+          ),
+          ...indexes.map(
+            (index) => _buildGreigeForm(
+              index,
+              isTablet,
+              indexes.length > 1,
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: OutlinedButton.icon(
+              onPressed: () => _handleAddGreigeItem(item),
+              icon: const Icon(Icons.add),
+              label: const Text("Tambah Form"),
+            ),
+          ),
+        ].separatedBy(CustomTheme().vGap('xl')),
+      ),
+    );
+  }
+
+  Widget _buildGreigeForm(
+    int index,
+    bool isTablet,
+    bool canRemove,
+  ) {
+    final item = greigeForms[index];
+    final fields = [
+      TextForm(
+        label: "No. OP",
+        controller: item["spk_no"],
+        handleChange: (_) => _syncGreigeItemsToForm(),
+      ),
+      TextForm(
+        label: "Qty Greige (PCS)",
+        controller: item["qty"],
+        isNumber: true,
+        handleChange: (_) {
+          _calculateGreigeWeight(index);
+          _syncGreigeItemsToForm();
+        },
+      ),
+      TextForm(
+        label: "Berat Greige (KG)",
+        controller: item["weight"],
+        isNumber: true,
+        handleChange: (_) => _syncGreigeItemsToForm(),
+      ),
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (canRemove)
+            Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                tooltip: 'Hapus Form',
+                onPressed: () => _removeGreigeItem(index),
+                icon: const Icon(
+                  Icons.delete_outline_rounded,
+                  color: Colors.red,
                 ),
               ),
-              if (index != 0 && greigeForms.length > 1)
-                IconButton(
-                  tooltip: 'Hapus Item',
-                  onPressed: () => _removeGreigeItem(index),
-                  icon: const Icon(
-                    Icons.delete_outline_rounded,
-                    color: Colors.red,
-                  ),
-                ),
-            ],
-          ),
+            ),
           SelectForm(
             label: "Greige Awal",
             selectedValue: item["item_value"]?.toString() ?? "",

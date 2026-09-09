@@ -17,6 +17,7 @@ import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/helpers/util/attachment_picker.dart';
+import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/note_editor.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/option/option_greige_order.dart';
@@ -164,8 +165,24 @@ class _FinishWarpingProcessManualState
   }
 
   num? _parseBrokenYarnQty(String value) {
-    final parsed = num.tryParse(value.trim().replaceAll(',', '.'));
+    final parsed = num.tryParse(
+      value.trim().replaceAll('.', '').replaceAll(',', '.'),
+    );
     return parsed != null && parsed > 0 ? parsed : null;
+  }
+
+  num get _totalBrokenYarnQty {
+    num total = 0;
+
+    for (final controller in _brokenYarnQtyControllers) {
+      total += _parseBrokenYarnQty(controller.text) ?? 0;
+    }
+
+    for (final entry in _customBrokenYarns) {
+      total += _parseBrokenYarnQty(entry.qtyController.text) ?? 0;
+    }
+
+    return total;
   }
 
   void _syncBrokenYarns() {
@@ -633,8 +650,8 @@ class _FinishWarpingProcessManualState
                                     onMachineChanged: () => setState(() {}),
                                   ),
                                 ),
-                                _buildBeamWeightSection(),
                                 _buildBrokenYarnSection(),
+                                _buildBeamWeightSection(),
                                 AttachmentPicker(
                                   attachments: allAttachments,
                                   onAddAttachment: _pickAttachments,
@@ -770,6 +787,16 @@ class _FinishWarpingProcessManualState
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  'Jumlah Benang Putus: ${formatNumber(_totalBrokenYarnQty)}',
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('md'),
+                    fontWeight: CustomTheme().fontWeight('semibold'),
+                  ),
+                ),
+              ),
               Wrap(
                 spacing: spacing,
                 runSpacing: 16,
@@ -786,6 +813,7 @@ class _FinishWarpingProcessManualState
                       isSorting: true,
                       handleChange: (_) {
                         _syncBrokenYarns();
+                        setState(() {});
                       },
                     ),
                   ),
@@ -817,6 +845,7 @@ class _FinishWarpingProcessManualState
                         isSorting: true,
                         handleChange: (_) {
                           _syncBrokenYarns();
+                          setState(() {});
                         },
                       ),
                     ),

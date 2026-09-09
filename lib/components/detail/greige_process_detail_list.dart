@@ -980,7 +980,9 @@ class GreigeProcessDetailList extends StatelessWidget {
   }
 
   Widget _buildYarnItems(bool isTablet) {
-    final yarnItems = _listValue(_mapValue(data['order_greige'])['yarn_items']);
+    final orderGreige = _mapValue(data['order_greige']);
+    final design = _mapValue(orderGreige['design']);
+    final yarnItems = _listValue(orderGreige['yarn_items']);
 
     if (yarnItems.isEmpty) {
       return NoData();
@@ -996,8 +998,7 @@ class GreigeProcessDetailList extends StatelessWidget {
                     'Jumlah Benang', _withUnit(item['yarn_qty'], 'PCS')),
                 if (item['ne'] != null)
                   _buildInfoLine('Ne', _display(item['ne'])),
-                if (item['lot'] != null)
-                  _buildInfoLine('Lot', _display(item['lot'])),
+                _buildInfoLine('Lot Benang', _display(design['yarn_lot'])),
               ],
             );
           })
@@ -1007,7 +1008,9 @@ class GreigeProcessDetailList extends StatelessWidget {
   }
 
   Widget _buildLoomBeams(bool isTablet) {
-    final loomBeams = _listValue(_mapValue(data['order_greige'])['loom_beams']);
+    final orderGreige = _mapValue(data['order_greige']);
+    final design = _mapValue(orderGreige['design']);
+    final loomBeams = _listValue(orderGreige['loom_beams']);
 
     if (loomBeams.isEmpty) {
       return NoData();
@@ -1020,10 +1023,10 @@ class GreigeProcessDetailList extends StatelessWidget {
               children: [
                 _buildInfoLine('Benang', _withUnit(item['yarn_qty'], 'PCS')),
                 _buildInfoLine(
-                    'Lebar Beam', _withUnit(item['beam_width'], 'M')),
-                _buildInfoLine('Beam A/B', _display(item['beam_ab'])),
+                    'Lebar Beam', _withUnit(design['beam_width'], 'M')),
+                _buildInfoLine('Beam A/B', _display(design['beam_ab'])),
                 _buildInfoLine('Panjang', _withUnit(item['length'], 'M')),
-                _buildInfoLine('No. MC', _display(item['machine_no'])),
+                _buildInfoLine('No. MC', _display(design['machine_no'])),
                 _buildInfoLine('Berat', _withUnit(item['weight'], 'KG')),
                 _buildInfoLine('Majun', _withUnit(item['majun'], 'KG')),
                 _buildInfoLine('Gempor', _withUnit(item['gempor'], 'CNS')),

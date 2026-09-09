@@ -72,7 +72,6 @@ class _EditWarpingScreenState extends State<EditWarpingScreen> {
 
   bool _isLoading = true;
   bool _isFetchingMachine = false;
-  bool get _isSingleWarping => _form['warping_type'] == 'single_warping';
   String? _errorMessage;
 
   Map<String, dynamic> _data = {};

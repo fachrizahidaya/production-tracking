@@ -10,12 +10,16 @@ import 'package:textile_tracking/providers/api_client.dart';
 
 class WorkOrderSummaryService extends BaseService {
   final String baseUrl = '${dotenv.env['API_URL']}/dashboard/wo-summary';
+  final String preWoBaseUrl =
+      '${dotenv.env['API_URL']}/dashboard/pre-wo-summary';
 
   bool _isLoading = false;
   List<dynamic> _dataList = [];
+  List<dynamic> _preDataList = [];
   List<dynamic> _dataSummary = [];
   bool get isLoading => _isLoading;
   List<dynamic> get dataList => _dataList;
+  List<dynamic> get preDataList => _preDataList;
   List<dynamic> get dataSummary => _dataSummary;
 
   @override
@@ -73,6 +77,44 @@ class WorkOrderSummaryService extends BaseService {
         case 200:
           if (responseData['data'] != null) {
             _dataList = responseData['data'];
+          }
+          notifyListeners();
+          break;
+
+        default:
+          throw responseData['message'] ?? 'Unknown error';
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> getPreDataList(
+      BuildContext context, Map<String, String> params) async {
+    final url = Uri.parse(preWoBaseUrl).replace(queryParameters: params);
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
+
+    if (token == null) {
+      throw 'Token not found';
+    }
+
+    try {
+      _preDataList.clear();
+      notifyListeners();
+
+      final response = await ApiClient.instance.get(
+        context,
+        url,
+      );
+
+      final responseData = jsonDecode(response.body);
+
+      switch (response.statusCode) {
+        case 200:
+          if (responseData['data'] != null) {
+            _preDataList = responseData['data'];
           }
           notifyListeners();
           break;

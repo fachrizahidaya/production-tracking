@@ -18,6 +18,7 @@ import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -835,14 +836,22 @@ class _DyeingPreparationFormSectionState
 >>>>>>> cc9a0d2c (fix: buat persiapan dyeing)
   }
 
+<<<<<<< HEAD
   List<Map<String, dynamic>> get _itemOptions {
 <<<<<<< HEAD
     return widget.existingItems.asMap().entries.map((entry) {
 >>>>>>> 514dc398 (feat: persiapan dyeing)
 =======
     final options = widget.itemOptions?.isNotEmpty == true
+=======
+  List<Map<String, dynamic>> _itemOptions(dynamic workOrderItemId) {
+    final allOptions = widget.itemOptions?.isNotEmpty == true
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
         ? widget.itemOptions!
         : widget.existingItems;
+    final options = allOptions
+        .where((item) => item["work_order_item_id"] == workOrderItemId)
+        .toList();
 
     return options.asMap().entries.map((entry) {
 >>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
@@ -867,6 +876,9 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
   void _handleAddGreigeItem(Map<String, dynamic> sourceItem) {
     final options = widget.itemOptions?.isNotEmpty == true
         ? widget.itemOptions!
@@ -879,6 +891,7 @@ class _DyeingPreparationFormSectionState
         .toList();
 
     if (matchingOptions.isEmpty) {
+<<<<<<< HEAD
 =======
   void _handleAddGreigeItem() {
 <<<<<<< HEAD
@@ -891,11 +904,14 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
     if (greigeForms.length >= widget.existingItems.length) {
 >>>>>>> 514dc398 (feat: persiapan dyeing)
+=======
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
       _showStockMoreWarning();
       return;
     }
 
     setState(() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       greigeForms.add(
@@ -985,6 +1001,11 @@ class _DyeingPreparationFormSectionState
 =======
       greigeForms.add(_createGreigeForm(options.first, greigeForms.length));
 >>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
+=======
+      greigeForms.add(
+        _createGreigeForm(matchingOptions.first, greigeForms.length),
+      );
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
       _syncGreigeItemsToForm();
     });
   }
@@ -1002,6 +1023,7 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           options: _itemOptions(formItem["work_order_item_id"]),
 =======
           options: _itemOptions,
@@ -1012,6 +1034,9 @@ class _DyeingPreparationFormSectionState
 =======
           options: _itemOptions,
 >>>>>>> 514dc398 (feat: persiapan dyeing)
+=======
+          options: _itemOptions(formItem["work_order_item_id"]),
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
           selected: formItem["item_value"]?.toString() ?? '',
           isAnyAdditionalData: true,
           handleChangeValue: (selected) {
@@ -1059,8 +1084,11 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
+=======
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
             final allOptions = widget.itemOptions?.isNotEmpty == true
                 ? widget.itemOptions!
                 : widget.existingItems;
@@ -1232,6 +1260,7 @@ class _DyeingPreparationFormSectionState
 
     if (formCount <= 1) return;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   void _removeGreigeItem(int index) {
 <<<<<<< HEAD
@@ -1250,6 +1279,8 @@ class _DyeingPreparationFormSectionState
 =======
     if (index == 0 || greigeForms.length <= 1) return;
 >>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
+=======
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
 
     setState(() {
       final item = greigeForms.removeAt(index);
@@ -1412,8 +1443,11 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
+=======
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
     final attachments = widget.attachments is List
         ? List<dynamic>.from(widget.attachments)
         : <dynamic>[];
@@ -1431,12 +1465,15 @@ class _DyeingPreparationFormSectionState
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
 =======
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
     showConfirmationDialog(
       context: context,
       isLoading: widget.isSubmitting,
@@ -1813,8 +1850,11 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
+=======
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
     final groupedIndexes = <dynamic, List<int>>{};
 
     for (final entry in greigeForms.asMap().entries) {
@@ -1827,6 +1867,9 @@ class _DyeingPreparationFormSectionState
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
     return TemplateCard(
       icon: Icons.inventory_2_outlined,
       title: "Item",
@@ -1836,6 +1879,7 @@ class _DyeingPreparationFormSectionState
             .map((indexes) => _buildGreigeItem(indexes, isTablet))
             .toList()
             .separatedBy(CustomTheme().vGap('xl')),
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
@@ -1875,6 +1919,8 @@ class _DyeingPreparationFormSectionState
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
 =======
 >>>>>>> 514dc398 (feat: persiapan dyeing)
+=======
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
       ),
     );
   }
@@ -1882,14 +1928,18 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
+=======
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
   Widget _buildGreigeItem(List<int> indexes, bool isTablet) {
     final item = greigeForms[indexes.first];
     final itemCode =
         item["source_item_code"]?.toString() ?? item["item_code"]?.toString();
     final itemName =
         item["source_item_name"]?.toString() ?? item["item_name"]?.toString();
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 =======
@@ -1958,6 +2008,8 @@ class _DyeingPreparationFormSectionState
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
 =======
 >>>>>>> 514dc398 (feat: persiapan dyeing)
+=======
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -1972,6 +2024,7 @@ class _DyeingPreparationFormSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           Text(
 <<<<<<< HEAD
             [itemCode, itemName]
@@ -1981,19 +2034,25 @@ class _DyeingPreparationFormSectionState
             "Item ${index + 1}",
 >>>>>>> 4281d8b4 (feat: persiapan dyeing)
 =======
+=======
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
           Text(
             [itemCode, itemName]
                 .where((value) => value != null && value.isNotEmpty)
                 .join(' - '),
+<<<<<<< HEAD
 >>>>>>> 012997f9 (fix: persiapan dyeing attachment)
 =======
           Text(
             "Item ${index + 1}",
 >>>>>>> 514dc398 (feat: persiapan dyeing)
+=======
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
             style: TextStyle(
               fontSize: CustomTheme().fontSize('lg'),
               fontWeight: CustomTheme().fontWeight('semibold'),
             ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -2203,6 +2262,85 @@ class _DyeingPreparationFormSectionState
 >>>>>>> 514dc398 (feat: persiapan dyeing)
 =======
           ),
+=======
+          ),
+          Text(
+            'Batas Maks Qty: ${_formatInputNumber(item["source_qty"])}',
+          ),
+          Text(
+            'Batas Maks Berat: ${_formatInputNumber(item["source_weight"])}',
+          ),
+          ...indexes.map(
+            (index) => _buildGreigeForm(
+              index,
+              isTablet,
+              indexes.length > 1,
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: OutlinedButton.icon(
+              onPressed: () => _handleAddGreigeItem(item),
+              icon: const Icon(Icons.add),
+              label: const Text("Tambah Form"),
+            ),
+          ),
+        ].separatedBy(CustomTheme().vGap('xl')),
+      ),
+    );
+  }
+
+  Widget _buildGreigeForm(
+    int index,
+    bool isTablet,
+    bool canRemove,
+  ) {
+    final item = greigeForms[index];
+    final fields = [
+      TextForm(
+        label: "No. OP",
+        controller: item["spk_no"],
+        handleChange: (_) => _syncGreigeItemsToForm(),
+      ),
+      TextForm(
+        label: "Qty Greige (PCS)",
+        controller: item["qty"],
+        isNumber: true,
+        handleChange: (_) {
+          _calculateGreigeWeight(index);
+          _syncGreigeItemsToForm();
+        },
+      ),
+      TextForm(
+        label: "Berat Greige (KG)",
+        controller: item["weight"],
+        isNumber: true,
+        handleChange: (_) => _syncGreigeItemsToForm(),
+      ),
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (canRemove)
+            Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                tooltip: 'Hapus Form',
+                onPressed: () => _removeGreigeItem(index),
+                icon: const Icon(
+                  Icons.delete_outline_rounded,
+                  color: Colors.red,
+                ),
+              ),
+            ),
+>>>>>>> d7d7c40d (fix: persiapan dyeing attachment)
           SelectForm(
             label: "Greige Awal",
 >>>>>>> cc9a0d2c (fix: buat persiapan dyeing)

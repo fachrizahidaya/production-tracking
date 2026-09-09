@@ -1467,12 +1467,18 @@ class GreigeProcessDetailList extends StatelessWidget {
 
   Widget _buildYarnItems(bool isTablet) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     final orderGreige = _mapValue(data['order_greige']);
     final design = _mapValue(orderGreige['design']);
     final yarnItems = _listValue(orderGreige['yarn_items']);
 =======
     final yarnItems = _listValue(_mapValue(data['order_greige'])['yarn_items']);
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+    final orderGreige = _mapValue(data['order_greige']);
+    final design = _mapValue(orderGreige['design']);
+    final yarnItems = _listValue(orderGreige['yarn_items']);
+>>>>>>> b06a3be7 (fix: detail di order greige)
 
     if (yarnItems.isEmpty) {
       return NoData();
@@ -1510,9 +1516,13 @@ class GreigeProcessDetailList extends StatelessWidget {
                     'Jumlah Benang', _withUnit(item['yarn_qty'], 'PCS')),
                 if (item['ne'] != null)
                   _buildInfoLine('Ne', _display(item['ne'])),
+<<<<<<< HEAD
                 if (item['lot'] != null)
                   _buildInfoLine('Lot', _display(item['lot'])),
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+                _buildInfoLine('Lot Benang', _display(design['yarn_lot'])),
+>>>>>>> b06a3be7 (fix: detail di order greige)
               ],
             );
           })
@@ -1523,12 +1533,18 @@ class GreigeProcessDetailList extends StatelessWidget {
 
   Widget _buildLoomBeams(bool isTablet) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     final orderGreige = _mapValue(data['order_greige']);
     final design = _mapValue(orderGreige['design']);
     final loomBeams = _listValue(orderGreige['loom_beams']);
 =======
     final loomBeams = _listValue(_mapValue(data['order_greige'])['loom_beams']);
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+    final orderGreige = _mapValue(data['order_greige']);
+    final design = _mapValue(orderGreige['design']);
+    final loomBeams = _listValue(orderGreige['loom_beams']);
+>>>>>>> b06a3be7 (fix: detail di order greige)
 
     if (loomBeams.isEmpty) {
       return NoData();
@@ -1552,10 +1568,10 @@ class GreigeProcessDetailList extends StatelessWidget {
 =======
                 _buildInfoLine('Benang', _withUnit(item['yarn_qty'], 'PCS')),
                 _buildInfoLine(
-                    'Lebar Beam', _withUnit(item['beam_width'], 'M')),
-                _buildInfoLine('Beam A/B', _display(item['beam_ab'])),
+                    'Lebar Beam', _withUnit(design['beam_width'], 'M')),
+                _buildInfoLine('Beam A/B', _display(design['beam_ab'])),
                 _buildInfoLine('Panjang', _withUnit(item['length'], 'M')),
-                _buildInfoLine('No. MC', _display(item['machine_no'])),
+                _buildInfoLine('No. MC', _display(design['machine_no'])),
                 _buildInfoLine('Berat', _withUnit(item['weight'], 'KG')),
                 _buildInfoLine('Majun', _withUnit(item['majun'], 'KG')),
                 _buildInfoLine('Gempor', _withUnit(item['gempor'], 'CNS')),

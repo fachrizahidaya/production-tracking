@@ -6,15 +6,13 @@ import 'package:textile_tracking/components/detail/greige_process_edit_layout.da
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
-import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
-import 'package:textile_tracking/helpers/util/note_editor.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/screens/shearing/model/shearing.dart';
+import 'package:textile_tracking/screens/update/process/machine.dart';
 
 class EditShearingScreen extends StatefulWidget {
   final dynamic id;
@@ -31,7 +29,6 @@ class EditShearingScreen extends StatefulWidget {
 class _EditShearingScreenState extends State<EditShearingScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
-  final TextEditingController _notesController = TextEditingController();
 
   bool _isLoading = true;
   bool _isFetchingMachine = false;
@@ -40,6 +37,7 @@ class _EditShearingScreenState extends State<EditShearingScreen> {
   Map<String, dynamic> _data = {};
   final Map<String, dynamic> _form = {};
   List<dynamic> _machineOption = [];
+  final List<Map<String, dynamic>> _newMachines = [];
 
   @override
   void initState() {
@@ -52,7 +50,6 @@ class _EditShearingScreenState extends State<EditShearingScreen> {
   @override
   void dispose() {
     _isSubmitting.dispose();
-    _notesController.dispose();
     super.dispose();
   }
 
@@ -71,28 +68,27 @@ class _EditShearingScreenState extends State<EditShearingScreen> {
           ? Map<String, dynamic>.from(response['data'])
           : Map<String, dynamic>.from(response);
 
-      final machine = _mapValue(detail['machine']);
       final orderGreige = _mapValue(detail['order_greige']);
+      final machines = _normalizeMachines(detail['machines']);
 
       _form
         ..clear()
         ..addAll({
-          'machine_id': detail['machine_id']?.toString(),
-          'nama_mesin': _machineLabel(machine),
           'order_greige_id': detail['order_greige_id']?.toString(),
           'no_greige_order': orderGreige['og_no']?.toString() ?? '',
 
           // tambahkan ini
           'notes': detail['notes']?.toString() ?? '',
+          'machines': machines,
+          'machine_ids': List<dynamic>.from(detail['machine_ids'] ?? []),
         });
-
-      _notesController.text = detail['notes']?.toString() ?? '';
 
       setState(() {
         _data = detail;
+        _data['machines'] = machines;
       });
 
-      await _fetchMachine(detail['machine_id']);
+      await _fetchMachine(_machineIds(machines));
     } catch (e) {
       setState(() => _errorMessage = e.toString());
     } finally {
@@ -102,14 +98,13 @@ class _EditShearingScreenState extends State<EditShearingScreen> {
     }
   }
 
-  Future<void> _fetchMachine(dynamic currentMachineId) async {
+  Future<void> _fetchMachine(List<dynamic> currentMachineIds) async {
     setState(() => _isFetchingMachine = true);
 
     try {
       final service = Provider.of<OptionMachineService>(context, listen: false);
       await service.fetchOptionsShearing(
-        currentMachineIds:
-            currentMachineId == null ? null : [currentMachineId.toString()],
+        currentMachineIds: currentMachineIds,
       );
 
       setState(() {
@@ -126,41 +121,43 @@ class _EditShearingScreenState extends State<EditShearingScreen> {
     }
   }
 
-  Future<void> _selectMachine() async {
-    showSelectDialog(
+  Future<Map<String, dynamic>?> _selectMachine() async {
+    Map<String, dynamic>? result;
+
+    await showSelectDialog(
       context: context,
       title: 'Mesin',
       isFetching: _isFetchingMachine,
       option: _machineOption,
-      selected: _form['machine_id']?.toString() ?? '',
+      selected: '',
       handleChangeValue: (selected) {
-        setState(() {
-          _form['machine_id'] = selected['value']?.toString();
-          _form['nama_mesin'] = selected['label']?.toString() ?? '';
-        });
+        result = {
+          'id': selected['value'],
+          'name': selected['label'],
+          'code': selected['code'],
+          'status': selected['status'] ?? 'Tersedia',
+        };
       },
     );
-  }
 
-  void _handleChangeInput(String key, dynamic value) {
-    setState(() {
-      _form[key] = value;
-    });
+    return result;
   }
 
   bool get _isFormInvalid {
-    return (_form['machine_id'] == null ||
-            _form['machine_id'].toString().isEmpty) ||
-        (_form['yarn_qty'] == null || _form['yarn_qty'].toString().isEmpty);
+    return (_data['machines'] as List? ?? []).isEmpty;
   }
 
   Future<void> _handleSubmit() async {
     if (_isFormInvalid) return;
 
     final shearing = Shearing(
-      machineId: int.tryParse(_form['machine_id']?.toString() ?? ''),
       orderGreigeId: int.tryParse(_form['order_greige_id']?.toString() ?? ''),
       notes: _form['notes']?.toString(),
+      machines: List<Map<String, dynamic>>.from(_data['machines'] ?? []),
+      machine_ids: _newMachines
+          .map((item) => item['machine']?['id'])
+          .where((id) => id != null)
+          .toList(),
     );
 
     try {
@@ -210,49 +207,10 @@ class _EditShearingScreenState extends State<EditShearingScreen> {
       onCancel: _handleCancel,
       formKey: _formKey,
       formSections: [
-        _buildSummaryCard(),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: _buildGreigeCard()),
-            Expanded(child: _buildMachineCard()),
-          ].separatedBy(CustomTheme().hGap('xl')),
-        ),
-        _buildAdditionalCard(),
+        _buildMachineCard(),
       ],
       submitSection: _buildSubmitSection(),
       greigeOrderData: _mapValue(_data['order_greige']),
-    );
-  }
-
-  Widget _buildSummaryCard() {
-    final orderGreige = _mapValue(_data['order_greige']);
-
-    return TemplateCard(
-      title: 'Informasi Shearing',
-      icon: Icons.assignment_outlined,
-      child: Column(
-        children: [
-          _InfoLine('No. Shearing', _display(_data['shearing_no'])),
-          // _InfoLine('Status', _display(_data['status'])),
-          // _InfoLine('Greige Order', _display(orderGreige['og_no'])),
-        ].separatedBy(Divider(height: 18, color: Colors.grey.shade200)),
-      ),
-    );
-  }
-
-  Widget _buildGreigeCard() {
-    return TemplateCard(
-      title: 'Greige Order',
-      icon: Icons.assessment_outlined,
-      child: SelectForm(
-        label: 'Greige Order',
-        onTap: () {},
-        selectedLabel: _form['no_greige_order']?.toString() ?? '',
-        selectedValue: _form['order_greige_id']?.toString() ?? '',
-        required: true,
-        isDisabled: true,
-      ),
     );
   }
 
@@ -260,30 +218,41 @@ class _EditShearingScreenState extends State<EditShearingScreen> {
     return TemplateCard(
       title: 'Mesin',
       icon: Icons.local_laundry_service_outlined,
-      child: SelectForm(
-        label: 'Mesin',
-        onTap: _selectMachine,
-        selectedLabel: _form['nama_mesin']?.toString() ?? '',
-        selectedValue: _form['machine_id']?.toString() ?? '',
-        required: true,
+      child: MachineEditSection(
+        data: _data,
+        form: _form,
+        handleSelectMachine: _selectMachine,
+        getMachineStatus: _getMachineStatus,
+        newMachines: _newMachines,
       ),
     );
   }
 
-  Widget _buildAdditionalCard() {
-    return Column(
-      children: [
-        NoteEditor(
-          controller: _notesController,
-          form: _form,
-          formKey: 'notes',
-          label: 'Catatan',
-          onChanged: (value) {
-            _handleChangeInput('notes', value);
-          },
-        ),
-      ],
+  String _getMachineStatus(dynamic machineId) {
+    final option = _machineOption.firstWhere(
+      (item) => item['value'].toString() == machineId.toString(),
+      orElse: () => null,
     );
+    return option?['status']?.toString() ?? 'Tersedia';
+  }
+
+  List<dynamic> _machineIds(List<Map<String, dynamic>> machines) {
+    return machines
+        .map((item) => item['machine']?['id'] ?? item['id'])
+        .where((id) => id != null)
+        .toList();
+  }
+
+  List<Map<String, dynamic>> _normalizeMachines(dynamic value) {
+    return (value as List? ?? []).map<Map<String, dynamic>>((item) {
+      final machine = Map<String, dynamic>.from(item);
+      if (machine['machine'] is Map) return machine;
+
+      return {
+        'machine': machine,
+        'status': machine['status'] ?? 'Tersedia',
+      };
+    }).toList();
   }
 
   Widget _buildSubmitSection() {
@@ -296,7 +265,7 @@ class _EditShearingScreenState extends State<EditShearingScreen> {
               child: CancelButton(
                 label: 'Batal',
                 onPressed: () => Navigator.pop(context),
-                customHeight: 50.0,
+                customHeight: 56.0,
               ),
             ),
             const SizedBox(width: 12),
@@ -305,7 +274,7 @@ class _EditShearingScreenState extends State<EditShearingScreen> {
                 label: 'Simpan',
                 isLoading: isSubmitting,
                 isDisabled: _isFormInvalid,
-                customHeight: 50.0,
+                customHeight: 56.0,
                 onPressed: _handleSubmit,
               ),
             ),
@@ -316,60 +285,8 @@ class _EditShearingScreenState extends State<EditShearingScreen> {
   }
 }
 
-class _InfoLine extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _InfoLine(this.label, this.value);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            label,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: CustomTheme().fontSize('md'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Flexible(
-          child: Text(
-            value,
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              color: Colors.grey.shade800,
-              fontSize: CustomTheme().fontSize('md'),
-              fontWeight: CustomTheme().fontWeight('bold'),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 Map<String, dynamic> _mapValue(dynamic value) {
   if (value is Map<String, dynamic>) return value;
   if (value is Map) return Map<String, dynamic>.from(value);
   return <String, dynamic>{};
-}
-
-String _machineLabel(Map<String, dynamic> machine) {
-  final code = machine['code']?.toString() ?? '';
-  final name = machine['name']?.toString() ?? '';
-
-  if (code.isEmpty && name.isEmpty) return '';
-  if (code.isEmpty) return name;
-  if (name.isEmpty) return code;
-  return '$code - $name';
-}
-
-String _display(dynamic value) {
-  if (value == null || value.toString().isEmpty) return '-';
-  return value.toString();
 }

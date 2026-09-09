@@ -493,6 +493,7 @@ class _DashboardState extends State<Dashboard> {
       await callback();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     } catch (e) {
       if (mounted) {
         debugPrint('Dashboard request failed: $e');
@@ -507,6 +508,10 @@ class _DashboardState extends State<Dashboard> {
       debugPrint(e.toString());
       debugPrintStack(stackTrace: s);
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+    } catch (e) {
+      throw (e.toString());
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
     }
   }
 
@@ -542,13 +547,16 @@ class _DashboardState extends State<Dashboard> {
       });
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     } catch (e) {
 =======
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
     } catch (e, s) {
+=======
+    } catch (e) {
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
       debugPrint('Machine Error: $e');
-      debugPrintStack(stackTrace: s);
 
 <<<<<<< HEAD
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
@@ -588,6 +596,9 @@ class _DashboardState extends State<Dashboard> {
       summaryList = [];
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
       greigeSummaryList = [];
     });
 
@@ -614,16 +625,24 @@ class _DashboardState extends State<Dashboard> {
       final service =
           Provider.of<WorkOrderSummaryService>(context, listen: false);
 
+<<<<<<< HEAD
       await service.getDataList(context, summaryParams);
 <<<<<<< HEAD
 >>>>>>> 45ea02f (fix: dashboard)
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+      await Future.wait([
+        service.getDataList(context, summaryParams),
+        service.getPreDataList(context, summaryParams),
+      ]);
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
 
       if (!mounted) return;
 
       setState(() {
         summaryList = service.dataList;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         greigeSummaryList = service.preDataList;
@@ -632,10 +651,12 @@ class _DashboardState extends State<Dashboard> {
 =======
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+        greigeSummaryList = service.preDataList;
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
       });
-    } catch (e, s) {
+    } catch (e) {
       debugPrint('Summary Error: $e');
-      debugPrintStack(stackTrace: s);
 
 <<<<<<< HEAD
 >>>>>>> 45ea02f (fix: dashboard)
@@ -647,11 +668,15 @@ class _DashboardState extends State<Dashboard> {
         summaryList = [];
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         greigeSummaryList = [];
 =======
 >>>>>>> 45ea02f (fix: dashboard)
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+        greigeSummaryList = [];
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
       });
     } finally {
       if (!mounted) return;
@@ -1119,6 +1144,7 @@ class _DashboardState extends State<Dashboard> {
                     WorkOrderStats(data: statsList, isFetching: isStatsLoading),
                     WorkOrderSummary(
                       data: summaryList,
+                      greigeData: greigeSummaryList,
                       handleRefetch: _handleFetchSummary,
                       isFetching: isSummaryLoading,
                       filterWidget: SummaryFilter(

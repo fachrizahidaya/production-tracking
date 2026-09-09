@@ -16,6 +16,7 @@ class SummaryCard extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   final bool isGreige;
 =======
   final isMobile;
@@ -27,6 +28,9 @@ class SummaryCard extends StatefulWidget {
 >>>>>>> 73378bdd (fix: UI mobile dashboard)
 =======
 >>>>>>> 51527bb3 (fix: filter summary)
+=======
+  final bool isGreige;
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
 
   const SummaryCard(
       {super.key,
@@ -34,6 +38,7 @@ class SummaryCard extends StatefulWidget {
       this.onTap,
       this.isSelected = false,
       this.showProgress,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -53,6 +58,10 @@ class SummaryCard extends StatefulWidget {
 =======
       this.filter});
 >>>>>>> 51527bb3 (fix: filter summary)
+=======
+      this.filter,
+      this.isGreige = false});
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
 
   @override
   State<SummaryCard> createState() => _SummaryCardState();
@@ -75,6 +84,25 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
+<<<<<<< HEAD
+=======
+  void _showWorkOrdersByStatusDialog({
+    required String title,
+    required List<dynamic> woList,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CardDialog(
+          title: title,
+          woList: woList,
+          isGreige: widget.isGreige,
+        );
+      },
+    );
+  }
+
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
   @override
   void dispose() {
     _animationController.dispose();

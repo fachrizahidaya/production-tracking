@@ -113,9 +113,13 @@ class WorkOrderSummaryService extends BaseService {
   }
 
   Future<void> getPreDataList(
+<<<<<<< HEAD
     BuildContext context,
     Map<String, String> params,
   ) async {
+=======
+      BuildContext context, Map<String, String> params) async {
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
     final url = Uri.parse(preWoBaseUrl).replace(queryParameters: params);
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -129,7 +133,14 @@ class WorkOrderSummaryService extends BaseService {
       _preDataList.clear();
       notifyListeners();
 
+<<<<<<< HEAD
       final response = await ApiClient.instance.get(context, url);
+=======
+      final response = await ApiClient.instance.get(
+        context,
+        url,
+      );
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
 
       final responseData = jsonDecode(response.body);
 

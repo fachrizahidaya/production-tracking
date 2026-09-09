@@ -16,6 +16,7 @@ class WorkOrderSummary extends StatefulWidget {
   final bool isMobile;
   final void Function(String startDate, String endDate)? onDateRangeSelected;
 
+<<<<<<< HEAD
   const WorkOrderSummary({
     super.key,
     this.data,
@@ -28,6 +29,17 @@ class WorkOrderSummary extends StatefulWidget {
     this.isMobile = true,
     this.onDateRangeSelected,
   });
+=======
+  const WorkOrderSummary(
+      {super.key,
+      this.data,
+      this.greigeData,
+      this.handleRefetch,
+      this.dariTanggal,
+      this.filterWidget,
+      this.sampaiTanggal,
+      this.isFetching});
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
 
   @override
   State<WorkOrderSummary> createState() => _WorkOrderSummaryState();
@@ -37,8 +49,13 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     with TickerProviderStateMixin {
   String selectedProcess = 'All';
   late TabController _tabController;
+  late TabController _summaryTabController;
   int selectedIndex = 0;
+<<<<<<< HEAD
   String selectedCategory = 'production';
+=======
+  int selectedSummaryIndex = 0;
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
 
   @override
   void initState() {
@@ -46,6 +63,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       length: processFilters.length,
       vsync: this,
     );
+    _summaryTabController = TabController(length: 2, vsync: this);
 
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) return;
@@ -55,6 +73,13 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       });
 
       _refetchByTab(_tabController.index);
+    });
+    _summaryTabController.addListener(() {
+      if (_summaryTabController.indexIsChanging) return;
+
+      setState(() {
+        selectedSummaryIndex = _summaryTabController.index;
+      });
     });
     super.initState();
   }
@@ -193,9 +218,11 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
   @override
   void dispose() {
     _tabController.dispose();
+    _summaryTabController.dispose();
     super.dispose();
   }
 
+<<<<<<< HEAD
   bool get _isGreigeActive => selectedCategory == 'greige';
 
   bool get _isDateFiltered {
@@ -238,6 +265,13 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     );
   }
 
+=======
+  List<dynamic> get _activeData {
+    final data = selectedSummaryIndex == 0 ? widget.data : widget.greigeData;
+    return data is List ? data : [];
+  }
+
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
   bool get _showProgress {
     final filter = processFilters[selectedIndex];
     return filter == 'Semua';
@@ -424,6 +458,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     }
 
     if (_activeData.isEmpty) {
+<<<<<<< HEAD
       return const SizedBox(
         height: 120,
         child: NoData(),
@@ -518,6 +553,12 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
 =======
 >>>>>>> 51527bb3 (fix: filter summary)
     final isSingleItem = widget.data!.length == 1;
+=======
+      return NoData();
+    }
+
+    final isSingleItem = _activeData.length == 1;
+>>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
     final screenWidth = MediaQuery.of(context).size.width * 0.95;
 
     return SingleChildScrollView(
@@ -526,7 +567,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
           ? NeverScrollableScrollPhysics()
           : BouncingScrollPhysics(),
       child: Row(
-        children: widget.data!.map<Widget>((item) {
+        children: _activeData.map<Widget>((item) {
           final mappedItem = _mapApiToSummaryCard(item);
 
           return Padding(
@@ -537,6 +578,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                 data: mappedItem,
                 showProgress: _showProgress,
                 filter: processFilters[selectedIndex],
+                isGreige: selectedSummaryIndex == 1,
               ),
             ),
 >>>>>>> d86a31e7 (fix: UI mobile dashboard)
@@ -697,6 +739,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                 isMobile: isMobile,
                 isTablet: isTablet,
               ),
+              _buildSummaryTabs(),
               const Divider(),
               _buildSwipeContent(),
 >>>>>>> 260d45ce (fix: dashboard)
@@ -807,7 +850,9 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
           // SUBTITLE
           // =========================
           Text(
-            'Status tahapan work order',
+            selectedSummaryIndex == 0
+                ? 'Status tahapan work order'
+                : 'Status tahapan order greige',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
@@ -844,6 +889,19 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
               isTablet: isTablet,
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryTabs() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: TabBar(
+        controller: _summaryTabController,
+        tabs: const [
+          Tab(text: 'Produksi'),
+          Tab(text: 'Greige'),
         ],
       ),
     );

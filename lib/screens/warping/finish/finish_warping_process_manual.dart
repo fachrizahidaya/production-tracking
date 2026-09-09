@@ -273,11 +273,30 @@ class _FinishWarpingProcessManualState
 
 =======
   num? _parseBrokenYarnQty(String value) {
-    final parsed = num.tryParse(value.trim().replaceAll(',', '.'));
+    final parsed = num.tryParse(
+      value.trim().replaceAll('.', '').replaceAll(',', '.'),
+    );
     return parsed != null && parsed > 0 ? parsed : null;
   }
 
+<<<<<<< HEAD
 >>>>>>> 3562ec45 (fix: selesai warping - shearing)
+=======
+  num get _totalBrokenYarnQty {
+    num total = 0;
+
+    for (final controller in _brokenYarnQtyControllers) {
+      total += _parseBrokenYarnQty(controller.text) ?? 0;
+    }
+
+    for (final entry in _customBrokenYarns) {
+      total += _parseBrokenYarnQty(entry.qtyController.text) ?? 0;
+    }
+
+    return total;
+  }
+
+>>>>>>> ffa19d72 (fix: akumulasi jumlah benang di warping)
   void _syncBrokenYarns() {
     final brokenYarns = <Map<String, dynamic>>[];
 
@@ -1033,9 +1052,12 @@ class _FinishWarpingProcessManualState
                                     onMachineChanged: () => setState(() {}),
                                   ),
                                 ),
-                                _buildBeamWeightSection(),
                                 _buildBrokenYarnSection(),
+<<<<<<< HEAD
 >>>>>>> 3562ec45 (fix: selesai warping - shearing)
+=======
+                                _buildBeamWeightSection(),
+>>>>>>> ffa19d72 (fix: akumulasi jumlah benang di warping)
                                 AttachmentPicker(
                                   attachments: allAttachments,
                                   onAddAttachment: _pickAttachments,
@@ -1206,6 +1228,7 @@ class _FinishWarpingProcessManualState
                   ),
                 ),
               ),
+<<<<<<< HEAD
               Wrap(
                 spacing: spacing,
                 runSpacing: 16,
@@ -1355,6 +1378,8 @@ class _FinishWarpingProcessManualState
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+=======
+>>>>>>> ffa19d72 (fix: akumulasi jumlah benang di warping)
               Wrap(
                 spacing: spacing,
                 runSpacing: 16,
@@ -1371,6 +1396,7 @@ class _FinishWarpingProcessManualState
                       isSorting: true,
                       handleChange: (_) {
                         _syncBrokenYarns();
+                        setState(() {});
                       },
                     ),
                   ),
@@ -1438,6 +1464,7 @@ class _FinishWarpingProcessManualState
                         isSorting: true,
                         handleChange: (_) {
                           _syncBrokenYarns();
+                          setState(() {});
                         },
                       ),
                     ),

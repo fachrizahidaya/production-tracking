@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
@@ -9,6 +7,7 @@ class SortingResultComp extends StatefulWidget {
   final formatNumber;
   final items;
   final loading;
+  final loadingMore;
   final searchController;
   final scrollController;
   final search;
@@ -16,7 +15,6 @@ class SortingResultComp extends StatefulWidget {
   final showFilter;
   final onSearchChaged;
   final onClearSearch;
-  final onSeeAll;
 
   const SortingResultComp(
       {super.key,
@@ -26,11 +24,11 @@ class SortingResultComp extends StatefulWidget {
       this.searchController,
       this.search,
       this.loadResult,
+      this.loadingMore,
       this.scrollController,
       this.showFilter,
       this.onSearchChaged,
-      this.onClearSearch,
-      this.onSeeAll});
+      this.onClearSearch});
 
   @override
   State<SortingResultComp> createState() => _SortingResultCompState();
@@ -39,6 +37,7 @@ class SortingResultComp extends StatefulWidget {
 class _SortingResultCompState extends State<SortingResultComp> {
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
@@ -51,38 +50,69 @@ class _SortingResultCompState extends State<SortingResultComp> {
     final listHeight = isTablet ? 210.0 : 200.0;
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
 
+=======
+>>>>>>> 0cdc2803 (feat: top bs, sorting per grade)
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Container(
           decoration: CustomTheme().cardTheme(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hasil Sortir per WO',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
                   children: [
-                    Text(
-                      'Hasil Sortir per WO',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    Expanded(
+                        flex: 5,
+                        child: Container(
+                          decoration: CustomTheme().cardTheme(),
+                          child: TextField(
+                              controller: widget.searchController,
+                              textInputAction: TextInputAction.search,
+                              decoration: InputDecoration(
+                                hintText: 'Cari...',
+                                prefixIcon: Icon(Icons.search),
+                                suffixIcon:
+                                    widget.searchController.text.isNotEmpty
+                                        ? IconButton(
+                                            onPressed: widget.onClearSearch,
+                                            icon: const Icon(Icons.close),
+                                          )
+                                        : null,
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.all(12),
+                              ),
+                              onChanged: widget.onSearchChaged),
+                        )),
+                    SizedBox(
+                      width: 8,
                     ),
-                    InkWell(
-                      onTap: widget.onSeeAll,
-                      child: const Row(
-                        children: [
-                          Text(
-                            'Lihat semua ',
-                            style: TextStyle(),
+                    Expanded(
+                      child: InkWell(
+                        onTap: widget.showFilter,
+                        child: Container(
+                          decoration: CustomTheme().cardTheme(),
+                          child: Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Icon(
+                              Icons.tune_outlined,
+                              size: 18,
+                            ),
                           ),
-                          Icon(Icons.chevron_right_outlined)
-                        ],
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
+<<<<<<< HEAD
               ),
               SizedBox(
                 height: 8,
@@ -216,27 +246,68 @@ class _SortingResultCompState extends State<SortingResultComp> {
               ),
               const SizedBox(height: 4),
             ],
+=======
+                SizedBox(
+                  height: 8,
+                ),
+                SizedBox(
+                  height: 500,
+                  child: widget.loading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : widget.items.isEmpty
+                          ? NoData()
+                          : ListView.builder(
+                              controller: widget.scrollController,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: widget.items.length +
+                                  (widget.loadingMore ? 1 : 0),
+                              padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                              itemBuilder: (context, index) {
+                                if (index >= widget.items.length) {
+                                  return const Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                }
+
+                                final item = widget.items[index];
+
+                                return _buildSortingResultCard(item);
+                              },
+                            ),
+                )
+              ],
+            ),
+>>>>>>> 0cdc2803 (feat: top bs, sorting per grade)
           )),
     );
   }
 
-  Widget _buildSortingResultCard(SortingResultItem item, {isLast = false}) {
+  Widget _buildSortingResultCard(SortingResultItem item) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(12, 0, isLast ? 16 : 0, 12),
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 12),
       child: Container(
-        width: double.infinity,
-        height: double.infinity,
         decoration: CustomTheme().cardTheme(),
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              item.woNo,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
+        child: Padding(
+          padding: EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    item.woNo,
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ],
               ),
+<<<<<<< HEAD
             ),
             const SizedBox(height: 14),
             Row(
@@ -298,32 +369,127 @@ class _SortingResultCompState extends State<SortingResultComp> {
               ],
             ),
           ],
+=======
+              SizedBox(
+                height: 8,
+              ),
+              _buildSortingRow('Grade A', item.gradeA),
+              SizedBox(
+                height: 6,
+              ),
+              _buildSortingRow(
+                'Grade B',
+                item.gradeB,
+              ),
+              SizedBox(height: 6),
+              _buildSortingRow(
+                'Grade BS',
+                item.gradeBS,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              _buildSortingRow(
+                'Total Qty',
+                item.totalQty,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              _buildSortingRow(
+                'Qty WO',
+                item.woQty,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              _buildSortingRow(
+                'Selisih',
+                item.diff,
+              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text('Total Qty'),
+              //         Row(
+              //           children: [
+              //             Text(formatNumber(item.totalQty)),
+              //             SizedBox(
+              //               width: 2,
+              //             ),
+              //             Text('PCS'),
+              //           ],
+              //         ),
+              //       ],
+              //     ),
+              //     SizedBox(
+              //       width: 12,
+              //     ),
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text('Qty WO'),
+              //         Row(
+              //           children: [
+              //             Text(formatNumber(item.woQty)),
+              //             SizedBox(
+              //               width: 2,
+              //             ),
+              //             Text('PCS'),
+              //           ],
+              //         ),
+              //       ],
+              //     ),
+              //     SizedBox(
+              //       width: 12,
+              //     ),
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text('Selisih'),
+              //         Row(
+              //           children: [
+              //             Text(formatNumber(item.diff)),
+              //             SizedBox(
+              //               width: 2,
+              //             ),
+              //             Text('PCS'),
+              //           ],
+              //         ),
+              //       ],
+              //     ),
+              //   ],
+              // ),
+            ],
+          ),
+>>>>>>> 0cdc2803 (feat: top bs, sorting per grade)
         ),
       ),
     );
   }
 
-  Widget _buildSortingInfo(
-    String label,
-    dynamic value,
+  Widget _buildSortingRow(
+    String title,
+    num value,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value.toString(),
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
+        Text(title),
+        Row(
+          children: [
+            Text(
+              widget.formatNumber(value),
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(width: 2),
+            Text('PCS'),
+          ],
         ),
       ],
     );

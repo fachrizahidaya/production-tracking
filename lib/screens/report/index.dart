@@ -147,6 +147,11 @@ class _ReportScreenState extends State<ReportScreen> {
   num productionTrendGradeBS = 0;
   num productionTrendTotal = 0;
 
+  num productionTrendGradeA = 0;
+  num productionTrendGradeB = 0;
+  num productionTrendGradeBS = 0;
+  num productionTrendTotal = 0;
+
   @override
   void initState() {
     super.initState();
@@ -181,6 +186,10 @@ class _ReportScreenState extends State<ReportScreen> {
     if (!_spkScrollController.hasClients) return;
 
     final position = _spkScrollController.position;
+  }
+
+  void _onTopBsScroll() {
+    if (!_sortingScrollController.hasClients) return;
   }
 
   void _onSortingSearchChanged(String value) {
@@ -1330,6 +1339,701 @@ class _ReportScreenState extends State<ReportScreen> {
         });
         await _loadSpkList();
       },
+    );
+  }
+
+  Widget _buildTopBS() {
+    return Padding(
+        padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+        child: Container(
+          decoration: CustomTheme().cardTheme(),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('WO / Lot BS Tertinggi',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: InkWell(
+                        onTap: () async {
+                          final picked = await showDateRangePicker(
+                              context: context,
+                              firstDate: new DateTime(2019),
+                              lastDate: new DateTime(2045),
+                              initialDateRange: DateTimeRange(
+                                  start: topBsStartDate, end: topBsEndDate));
+
+                          if (picked != null) {
+                            setState(() {
+                              topBsStartDate = picked.start;
+                              topBsEndDate = picked.end;
+                            });
+
+                            await _loadTopBs();
+                          }
+                        },
+                        child: Container(
+                          decoration: CustomTheme().cardTheme(),
+                          child: Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Text(_getDateRangeTopBsText()),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                SizedBox(
+                  height: 500,
+                  child: _topBsLoading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : _topBsItems.isEmpty
+                          ? NoData()
+                          : ListView.builder(
+                              controller: _topBsScrollController,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: _topBsItems.length,
+                              padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                              itemBuilder: (context, index) {
+                                if (index >= _topBsItems.length) {
+                                  return const Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                }
+
+                                final item = _topBsItems[index];
+
+                                return _buildTopBsCard(item);
+                              },
+                            ),
+                )
+              ],
+            ),
+          ),
+        ));
+  }
+
+  Widget _buildSpkSummary() {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: InkWell(
+                      onTap: () async {
+                        final picked = await showDateRangePicker(
+                            context: context,
+                            firstDate: new DateTime(2019),
+                            lastDate: new DateTime(2045),
+                            initialDateRange: DateTimeRange(
+                                start: spkSummaryStartDate,
+                                end: spkSummaryEndDate));
+
+                        if (picked != null) {
+                          setState(() {
+                            spkSummaryStartDate = picked.start;
+                            spkSummaryEndDate = picked.end;
+                          });
+
+                          await _loadSpkSummary();
+                        }
+                      },
+                      child: Container(
+                        decoration: CustomTheme().cardTheme(),
+                        child: Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Text(_getDateRangeSpkSummaryText()),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  decoration: CustomTheme().cardTheme(),
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Total SPK',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          formatNumber(spkSummary?.totalSpk),
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Row(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  formatNumber(spkSummary?.totalActiveSpk),
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text('aktif',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w300))
+                              ],
+                            ),
+                            Text('・'),
+                            Row(
+                              children: [
+                                Text(formatNumber(spkSummary?.totalDoneSpk),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text('selesai',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w300))
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  decoration: CustomTheme().cardTheme(),
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Total Qty SPK',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          formatNumber(spkSummary?.totalQtySpk),
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Container(
+                  decoration: CustomTheme().cardTheme(),
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Melewati Deadline',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  formatNumber(spkSummary?.overdueSpk),
+                                  style: TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  'PCS',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Belum ada Deadline',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  formatNumber(spkSummary?.noDeadlineSpk),
+                                  style: TextStyle(
+                                      color: Colors.orange,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  'PCS',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Belum Diproses',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  formatNumber(spkSummary?.waitingSpk),
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  'PCS',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProductionTrend() {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: InkWell(
+                      onTap: () async {
+                        final picked = await showDateRangePicker(
+                            context: context,
+                            firstDate: new DateTime(2019),
+                            lastDate: new DateTime(2045),
+                            initialDateRange: DateTimeRange(
+                                start: productionTrendStartDate,
+                                end: productionTrendEndDate));
+
+                        if (picked != null) {
+                          setState(() {
+                            productionTrendStartDate = picked.start;
+                            productionTrendEndDate = picked.end;
+                          });
+
+                          await _loadProductionTrend();
+                        }
+                      },
+                      child: Container(
+                        decoration: CustomTheme().cardTheme(),
+                        child: Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Text(_getDateRangeProductionTrendText()),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  decoration: CustomTheme().cardTheme(),
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Hasil Sortir per Grade',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Grade A',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  formatNumber(productionTrendGradeA),
+                                  style: TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  'PCS',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Grade B',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  formatNumber(productionTrendGradeB),
+                                  style: TextStyle(
+                                      color: Colors.orange,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  'PCS',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Grade BS',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  formatNumber(productionTrendGradeBS),
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  'PCS',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNormalAndRework() {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: InkWell(
+                      onTap: () async {
+                        final picked = await showDateRangePicker(
+                            context: context,
+                            firstDate: new DateTime(2019),
+                            lastDate: new DateTime(2045),
+                            initialDateRange: DateTimeRange(
+                                start: productionTrendStartDate,
+                                end: productionTrendEndDate));
+
+                        if (picked != null) {
+                          setState(() {
+                            productionTrendStartDate = picked.start;
+                            productionTrendEndDate = picked.end;
+                          });
+
+                          await _loadProductionTrend();
+                        }
+                      },
+                      child: Container(
+                        decoration: CustomTheme().cardTheme(),
+                        child: Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Text(_getDateRangeProductionTrendText()),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  decoration: CustomTheme().cardTheme(),
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Hasil Sortir per Grade',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Grade A',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  formatNumber(productionTrendGradeA),
+                                  style: TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  'PCS',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Grade B',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  formatNumber(productionTrendGradeB),
+                                  style: TextStyle(
+                                      color: Colors.orange,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  'PCS',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

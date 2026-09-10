@@ -24,6 +24,16 @@ class _ListItemState extends State<ListItem> {
   dynamic get index => widget.index;
   dynamic get withSpk => widget.withSpk;
 
+  dynamic _getVariant(int index) {
+    final variants = item['variants'];
+
+    if (variants is List && index >= 0 && index < variants.length) {
+      return variants[index];
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -249,6 +259,12 @@ class _ListItemState extends State<ListItem> {
 
   /// Additional Info (Category, Supplier, etc.)
   Widget _buildAdditionalInfo(bool isTablet) {
+    final bahan = _getVariant(0);
+    final ukuran = _getVariant(1);
+    final desain = _getVariant(2);
+    final gsm = _getVariant(3);
+    final warna = _getVariant(4);
+
     if (isTablet) {
       return Wrap(
         spacing: 8,
@@ -260,43 +276,41 @@ class _ListItemState extends State<ListItem> {
             label: item['greige_item_op_no']?.toString() ?? '-',
             isTablet: isTablet,
           ),
-          if (item['variants'][2] != null)
+          if (desain != null)
             _buildInfoChip(
               title: 'Desain',
               icon: Icons.design_services_outlined,
-              label: item['variants'][0]['value']?.toString() ?? '-',
+              label: desain['value']?.toString() ?? '-',
               isTablet: isTablet,
             ),
-          if (item['variants'][1] != null)
+          if (ukuran != null)
             _buildInfoChip(
               title: 'Size',
               icon: Icons.numbers_outlined,
-              label: item['variants'][1]['value']?.toString() ?? '-',
+              label: ukuran['value']?.toString() ?? '-',
               isTablet: isTablet,
             ),
-          if (item['variants'][0] != null)
+          if (bahan != null)
             _buildInfoChip(
               title: 'Bahan',
               icon: Icons.cut_outlined,
-              label: item['variants'][2]['value']?.toString() ?? '-',
+              label: bahan['value']?.toString() ?? '-',
               isTablet: isTablet,
             ),
-          if (item['variants'][3] != null) ...[
+          if (gsm != null)
             _buildInfoChip(
               title: 'GSM',
               icon: Icons.numbers_outlined,
-              label: item['variants'][3]['value']?.toString() ?? '-',
+              label: gsm['value']?.toString() ?? '-',
               isTablet: isTablet,
             ),
-          ],
-          if (item['variants'][4] != null) ...[
+          if (warna != null)
             _buildInfoChip(
               title: 'Warna',
               icon: Icons.color_lens_outlined,
-              label: item['variants'][4]['value']?.toString() ?? '-',
+              label: warna['value']?.toString() ?? '-',
               isTablet: isTablet,
             ),
-          ],
         ],
       );
     }
@@ -308,43 +322,41 @@ class _ListItemState extends State<ListItem> {
         spacing: 8,
         runSpacing: 8,
         children: [
-          if (item['variants'][2] != null)
+          if (desain != null)
             _buildInfoChip(
               title: 'Desain',
               icon: Icons.design_services_outlined,
-              label: item['variants'][2]['value']?.toString() ?? '-',
+              label: desain['value']?.toString() ?? '-',
               isTablet: isTablet,
             ),
-          if (item['variants'][0] != null)
+          if (ukuran != null)
+            _buildInfoChip(
+              title: 'Size',
+              icon: Icons.numbers_outlined,
+              label: ukuran['value']?.toString() ?? '-',
+              isTablet: isTablet,
+            ),
+          if (bahan != null)
             _buildInfoChip(
               title: 'Bahan',
               icon: Icons.cut_outlined,
-              label: item['variants'][0]['value']?.toString() ?? '-',
+              label: bahan['value']?.toString() ?? '-',
               isTablet: isTablet,
             ),
-          if (item['variants'][1] != null)
-            _buildInfoChip(
-              title: 'Ukuran',
-              icon: Icons.numbers_outlined,
-              label: item['variants'][1]['value']?.toString() ?? '-',
-              isTablet: isTablet,
-            ),
-          if (item['variants'][3] != null) ...[
+          if (gsm != null)
             _buildInfoChip(
               title: 'GSM',
               icon: Icons.numbers_outlined,
-              label: item['variants'][3]['value']?.toString() ?? '-',
+              label: gsm['value']?.toString() ?? '-',
               isTablet: isTablet,
             ),
-          ],
-          if (item['variants'][4] != null) ...[
+          if (warna != null)
             _buildInfoChip(
               title: 'Warna',
               icon: Icons.color_lens_outlined,
-              label: item['variants'][4]['value']?.toString() ?? '-',
+              label: warna['value']?.toString() ?? '-',
               isTablet: isTablet,
             ),
-          ],
         ],
       ),
     );

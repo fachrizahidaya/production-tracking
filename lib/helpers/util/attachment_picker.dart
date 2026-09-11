@@ -51,6 +51,7 @@ class AttachmentPicker extends StatelessWidget {
     }
   }
 
+<<<<<<< HEAD
   String _remoteUrl(String path) {
     if (path.startsWith('http://') || path.startsWith('https://')) {
       return path;
@@ -61,6 +62,8 @@ class AttachmentPicker extends StatelessWidget {
     return '$baseUrl/$path';
   }
 
+=======
+>>>>>>> 6fcd942e (fix: tambah ambil foto dari galeri)
   @override
   Widget build(BuildContext context) {
     return TemplateCard(

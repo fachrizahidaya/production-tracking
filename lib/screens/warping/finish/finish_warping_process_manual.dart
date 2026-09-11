@@ -724,19 +724,27 @@ class _FinishWarpingProcessManualState
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Future<void> _pickAttachments(ImageSource source) async {
 =======
   Future<void> _pickAttachments() async {
 >>>>>>> 64274789 (fix: selesai warping-shearing)
+=======
+  Future<void> _pickAttachments(ImageSource source) async {
+>>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
     try {
       final picker = ImagePicker();
 
       final XFile? image = await picker.pickImage(
 <<<<<<< HEAD
+<<<<<<< HEAD
         source: source,
 =======
         source: ImageSource.camera,
 >>>>>>> 64274789 (fix: selesai warping-shearing)
+=======
+        source: source,
+>>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
       );
 
       if (image == null) return;

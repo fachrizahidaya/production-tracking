@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/screens/env_config.dart';
@@ -22,14 +22,33 @@ class AttachmentPicker extends StatelessWidget {
     required this.onPreviewImage,
   });
 
-  String _remoteFileUrl(String path) {
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-      return path;
+  Future<void> _showSourcePicker(BuildContext context) async {
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.camera_alt_outlined),
+                title: Text('Kamera'),
+                onTap: () => Navigator.pop(context, ImageSource.camera),
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_library_outlined),
+                title: Text('Galeri'),
+                onTap: () => Navigator.pop(context, ImageSource.gallery),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (source != null) {
+      await onAddAttachment(source);
     }
-
-    final baseUrl = dotenv.env['IMAGE_URL'] ?? '';
-
-    return '$baseUrl$path';
   }
 
 <<<<<<< HEAD
@@ -118,6 +137,7 @@ class AttachmentPicker extends StatelessWidget {
               preview = Image.file(File(filePath), fit: BoxFit.cover);
             } else if (filePath != null) {
 <<<<<<< HEAD
+<<<<<<< HEAD
               preview = Image.network(_remoteUrl(filePath), fit: BoxFit.cover);
 =======
               preview = Image.network(
@@ -127,6 +147,9 @@ class AttachmentPicker extends StatelessWidget {
                     const Icon(Icons.broken_image, size: 40),
               );
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+              preview = Image.network(filePath, fit: BoxFit.cover);
+>>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
             } else {
               preview = Icon(Icons.insert_drive_file);
             }
@@ -136,9 +159,9 @@ class AttachmentPicker extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    if (['png', 'jpg', 'jpeg', 'gif', 'webp']
-                            .contains(extension) &&
+                    if (['png', 'jpg', 'jpeg', 'gif'].contains(extension) &&
                         filePath != null) {
+<<<<<<< HEAD
                       onPreviewImage(
                         isNew,
 <<<<<<< HEAD
@@ -147,6 +170,9 @@ class AttachmentPicker extends StatelessWidget {
                         isNew ? filePath : _remoteFileUrl(filePath),
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
                       );
+=======
+                      onPreviewImage(isNew, filePath);
+>>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
                     }
                   },
                   child: Container(

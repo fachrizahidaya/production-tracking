@@ -850,6 +850,7 @@ class _CreateDyeingPreparationProcessManualState
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Future<void> _pickAttachments(ImageSource source) async {
     try {
       final picker = ImagePicker();
@@ -857,11 +858,14 @@ class _CreateDyeingPreparationProcessManualState
       final XFile? image = await picker.pickImage(source: source);
 =======
   Future<void> _pickAttachments() async {
+=======
+  Future<void> _pickAttachments(ImageSource source) async {
+>>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
     try {
       final picker = ImagePicker();
 
       final XFile? image = await picker.pickImage(
-        source: ImageSource.camera,
+        source: source,
       );
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
 

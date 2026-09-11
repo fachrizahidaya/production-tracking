@@ -285,11 +285,14 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
           ...attachments,
           {'is_add_button': true},
         ];
+<<<<<<< HEAD
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
 =======
         widget.form?['attachments'] = attachments;
 >>>>>>> 64274789 (fix: selesai warping-shearing)
+=======
+>>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
 
         _lengthController.text = processData['roll_length']?.toString() ?? '';
         _noteController.text = processData['notes']?.toString() ??
@@ -431,19 +434,27 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Future<void> _pickAttachments(ImageSource source) async {
 =======
   Future<void> _pickAttachments() async {
 >>>>>>> 64274789 (fix: selesai warping-shearing)
+=======
+  Future<void> _pickAttachments(ImageSource source) async {
+>>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
     try {
       final picker = ImagePicker();
 
       final XFile? image = await picker.pickImage(
 <<<<<<< HEAD
+<<<<<<< HEAD
         source: source,
 =======
         source: ImageSource.camera,
 >>>>>>> 64274789 (fix: selesai warping-shearing)
+=======
+        source: source,
+>>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
       );
 
       if (image == null) return;

@@ -374,6 +374,7 @@ class _FinishWeavingProcessManualState
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Future<void> _pickAttachments(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
@@ -382,6 +383,11 @@ class _FinishWeavingProcessManualState
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.camera);
 >>>>>>> 3562ec45 (fix: selesai warping - shearing)
+=======
+  Future<void> _pickAttachments(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+>>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
       if (image == null) return;
 
       final compressedFile = await compressImage(image.path);

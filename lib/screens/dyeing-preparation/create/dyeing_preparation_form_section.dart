@@ -1600,6 +1600,7 @@ class _DyeingPreparationFormSectionState
                                   await widget.onAddAttachment?.call(source);
                                 },
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 onDeleteAttachment: widget.onDeleteAttachment ??
                                     (_) async => false,
                                 onPreviewImage: (isNew, filePath) {
@@ -1714,6 +1715,8 @@ class _DyeingPreparationFormSectionState
                                 attachments: widget.attachments ?? [],
                                 onAddAttachment:
                                     widget.onAddAttachment ?? () {},
+=======
+>>>>>>> 812c53d8 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
                                 onDeleteAttachment: widget.onDeleteAttachment ??
                                     (_) async => false,
                                 onPreviewImage: (isNew, filePath) {

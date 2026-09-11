@@ -794,6 +794,7 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   Future<void> _pickAttachments(ImageSource source) async {
     try {
       final picker = ImagePicker();
@@ -814,10 +815,13 @@ class _EditDyeingPreparationScreenState
 >>>>>>> ae89df7c (fix: persiapan dyeing)
 =======
   Future<void> _pickAttachments() async {
+=======
+  Future<void> _pickAttachments(ImageSource source) async {
+>>>>>>> 812c53d8 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
     try {
       final picker = ImagePicker();
       final XFile? image = await picker.pickImage(
-        source: ImageSource.camera,
+        source: source,
       );
 >>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 

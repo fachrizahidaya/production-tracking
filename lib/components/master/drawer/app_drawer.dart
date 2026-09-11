@@ -62,8 +62,21 @@ class _AppDrawerState extends State<AppDrawer> {
     'Notifikasi'
 =======
     'Laporan',
+<<<<<<< HEAD
     'Persiapan Dyeing'
 >>>>>>> a1ea7df (feat: warping)
+=======
+    'Produksi',
+    'Pesanan',
+    'Order Greige',
+    'Desain',
+    'Warping',
+    'Sizing',
+    'Weaving',
+    'Shearing',
+    'Persiapan Dyeing',
+    'Anomali Data'
+>>>>>>> f6b18dcd (fix: adjust drawer)
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {

@@ -784,6 +784,22 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
 
     if (context.mounted) {
+      final attachments = widget.form?['attachments'];
+      final hasAttachment = attachments is List &&
+          attachments.any(
+            (attachment) =>
+                attachment is Map && attachment['is_add_button'] != true,
+          );
+
+      if (widget.label == 'Packing' && !hasAttachment) {
+        await showAlertDialog(
+          context: context,
+          title: 'Peringatan',
+          message: 'Lampiran wajib diisi.',
+        );
+        return;
+      }
+
       widget.form?['good_weight'] = safeToApi(_weightGoodController.text);
       widget.form?['bs_weight'] = safeToApi(_weightDefectController.text);
       widget.form?['combing'] = safeToApi(_combingController.text);

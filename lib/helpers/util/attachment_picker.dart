@@ -9,7 +9,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 
 class AttachmentPicker extends StatelessWidget {
   final List attachments;
-  final VoidCallback onAddAttachment;
+  final Future<void> Function(ImageSource source) onAddAttachment;
   final Future<bool?> Function(Map item) onDeleteAttachment;
   final void Function(bool isNew, String path) onPreviewImage;
 
@@ -48,7 +48,7 @@ class AttachmentPicker extends StatelessWidget {
 
             if (item['is_add_button'] == true) {
               return GestureDetector(
-                onTap: onAddAttachment,
+                onTap: () => _showSourcePicker(context),
                 child: Container(
                   width: 100,
                   height: 100,

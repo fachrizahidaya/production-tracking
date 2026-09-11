@@ -163,10 +163,10 @@ class _FinishSectionState extends State<FinishSection> {
     return result != null ? File(result.path) : null;
   }
 
-  Future<void> _pickAttachments() async {
+  Future<void> _pickAttachments(ImageSource source) async {
     try {
       final picker = ImagePicker();
-      final XFile? image = await picker.pickImage(source: ImageSource.camera);
+      final XFile? image = await picker.pickImage(source: source);
 
       if (image != null) {
         final compressedFile = await compressImage(image.path);

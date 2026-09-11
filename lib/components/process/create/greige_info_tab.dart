@@ -1035,6 +1035,7 @@ class GreigeInfoTab extends StatelessWidget {
 
     final design = _mapValue(data['design']);
 
+<<<<<<< HEAD
     return _buildDataTable(
       columns: const [
         DataColumn(label: Text('KODE WARNA')),
@@ -1451,21 +1452,38 @@ class _DetailItem {
   Widget _buildYarnTable(List<Map<String, dynamic>> items) {
     if (items.isEmpty) return NoData();
 
+=======
+>>>>>>> e29028fd (fix: kebutuhan loom beam di greige order detail)
     return _buildDataTable(
       columns: const [
         DataColumn(label: Text('KODE WARNA')),
         DataColumn(label: Text('JML. BNG')),
         DataColumn(label: Text('NE')),
-        DataColumn(label: Text('LOT')),
+        DataColumn(label: Text('LOT BENANG')),
       ],
       rows: items
           .map(
             (item) => DataRow(
               cells: [
-                DataCell(Text(_display(item['color_code']))),
-                DataCell(_richUnit(item['yarn_qty'], 'PCS')),
-                DataCell(Text(_display(item['ne']))),
-                DataCell(Text(_display(item['lot']))),
+                // Dari yarn_items
+                DataCell(
+                  Text(_display(item['color_code'])),
+                ),
+
+                // Dari yarn_items
+                DataCell(
+                  _richUnit(item['yarn_qty'], 'PCS'),
+                ),
+
+                // Dari yarn_items
+                DataCell(
+                  Text(_display(item['ne'])),
+                ),
+
+                // Dari design
+                DataCell(
+                  Text(_display(design['yarn_lot'])),
+                ),
               ],
             ),
           )
@@ -1476,6 +1494,8 @@ class _DetailItem {
   Widget _buildLoomBeamTable(List<Map<String, dynamic>> items) {
     if (items.isEmpty) return NoData();
 
+    final design = _mapValue(data['design']);
+
     return _buildDataTable(
       columns: const [
         DataColumn(label: Text('BENANG')),
@@ -1483,18 +1503,35 @@ class _DetailItem {
         DataColumn(label: Text('LEBAR BEAM')),
         DataColumn(label: Text('NO. MC')),
         DataColumn(label: Text('BEAM A/B')),
-        // DataColumn(label: Text('ATRIBUT TAMBAHAN')),
       ],
       rows: items
           .map(
             (item) => DataRow(
               cells: [
-                DataCell(_richUnit(item['yarn_qty'], 'PCS')),
-                DataCell(_richUnit(item['length'], 'M')),
-                DataCell(_richUnit(item['beam_width'], 'M')),
-                DataCell(Text(_display(item['machine_no']))),
-                DataCell(Text(_display(item['beam_ab']))),
-                // DataCell(Text(_display(item['extra_attributes']))),
+                // Dari loom_beams
+                DataCell(
+                  _richUnit(item['yarn_qty'], 'PCS'),
+                ),
+
+                // Dari loom_beams
+                DataCell(
+                  _richUnit(item['length'], 'M'),
+                ),
+
+                // Dari design
+                DataCell(
+                  _richUnit(design['beam_width'], 'M'),
+                ),
+
+                // Dari design
+                DataCell(
+                  Text(_display(design['machine_no'])),
+                ),
+
+                // Dari design
+                DataCell(
+                  Text(_display(design['beam_ab'])),
+                ),
               ],
             ),
           )

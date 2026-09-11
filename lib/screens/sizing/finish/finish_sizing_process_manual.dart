@@ -159,6 +159,10 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
             processData['order_greige']?['og_no'] ?? widget.form?['no_og'];
         widget.form?['notes'] = processData['notes']?.toString() ?? '';
         widget.form?['attachments'] = attachments;
+        allAttachments = [
+          ...attachments,
+          {'is_add_button': true},
+        ];
 
         _lengthController.text = processData['roll_length']?.toString() ?? '';
         _noteController.text = processData['notes']?.toString() ??
@@ -278,12 +282,12 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
     return result != null ? File(result.path) : null;
   }
 
-  Future<void> _pickAttachments() async {
+  Future<void> _pickAttachments(ImageSource source) async {
     try {
       final picker = ImagePicker();
 
       final XFile? image = await picker.pickImage(
-        source: ImageSource.camera,
+        source: source,
       );
 
       if (image == null) return;

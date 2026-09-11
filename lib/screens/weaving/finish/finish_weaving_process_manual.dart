@@ -236,9 +236,9 @@ class _FinishWeavingProcessManualState
     return result != null ? File(result.path) : null;
   }
 
-  Future<void> _pickAttachments() async {
+  Future<void> _pickAttachments(ImageSource source) async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+      final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
 
       final compressedFile = await compressImage(image.path);

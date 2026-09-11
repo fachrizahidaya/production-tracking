@@ -143,8 +143,7 @@ class AttachmentPicker extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    if (['png', 'jpg', 'jpeg', 'gif', 'webp']
-                            .contains(extension) &&
+                    if (['png', 'jpg', 'jpeg', 'gif'].contains(extension) &&
                         filePath != null) {
                       onPreviewImage(
                         isNew,

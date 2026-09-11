@@ -573,8 +573,9 @@ class _DyeingPreparationFormSectionState
                             if (widget.greigeReady) ...[
                               AttachmentPicker(
                                 attachments: widget.attachments ?? [],
-                                onAddAttachment:
-                                    widget.onAddAttachment ?? () {},
+                                onAddAttachment: (source) async {
+                                  await widget.onAddAttachment?.call(source);
+                                },
                                 onDeleteAttachment: widget.onDeleteAttachment ??
                                     (_) async => false,
                                 onPreviewImage: (isNew, filePath) {

@@ -357,11 +357,11 @@ class _EditDyeingPreparationScreenState
     return result != null ? File(result.path) : null;
   }
 
-  Future<void> _pickAttachments() async {
+  Future<void> _pickAttachments(ImageSource source) async {
     try {
       final picker = ImagePicker();
       final XFile? image = await picker.pickImage(
-        source: ImageSource.camera,
+        source: source,
       );
 
       if (image == null) return;

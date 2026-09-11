@@ -2008,7 +2008,8 @@ class _FormItemsState extends State<FormItems>
                 ),
               AttachmentPicker(
                 attachments: widget.allAttachments,
-                onAddAttachment: widget.handlePickAttachments,
+                onAddAttachment: (source) =>
+                    widget.handlePickAttachments(source),
                 onDeleteAttachment: widget.handleDeleteAttachment,
                 onPreviewImage: (isNew, filePath) {
                   widget.showImageDialog(context, isNew, filePath);

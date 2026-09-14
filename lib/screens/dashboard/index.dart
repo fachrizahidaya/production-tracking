@@ -36,6 +36,7 @@ class _DashboardState extends State<Dashboard> {
   Map<String, dynamic> machineList = {};
   final List<dynamic> _dataList = [];
   List<dynamic> menus = [];
+  Set<String> menuProcessNames = {};
 
   String dariTanggalSummary = '';
   String sampaiTanggalSummary = '';
@@ -112,10 +113,31 @@ class _DashboardState extends State<Dashboard> {
 
       setState(() {
         menus = result;
+        menuProcessNames = _getMenuProcessNames(result);
       });
     } catch (e) {
       throw ('Error fetch menu: $e');
     }
+  }
+
+  Set<String> _getMenuProcessNames(List<dynamic> menuList) {
+    final processNames = <String>{};
+
+    for (final menu in menuList) {
+      if (menu is! Map) continue;
+
+      final name = (menu['name'] ?? '').toString().trim();
+      if (name.isNotEmpty) {
+        processNames.add(name);
+      }
+
+      final children = menu['children'];
+      if (children is List) {
+        processNames.addAll(_getMenuProcessNames(children));
+      }
+    }
+
+    return processNames;
   }
 
   bool _checkIsFiltered() {
@@ -128,8 +150,9 @@ class _DashboardState extends State<Dashboard> {
 
     setState(() => isLoading = true);
 
+    await _safeFetch(_handleFetchMenu);
+
     await Future.wait([
-      _safeFetch(_handleFetchMenu),
       _safeFetch(_handleFetchStats),
       _safeFetch(_handleFetchPie),
       _safeFetch(_handleFetchMachine),
@@ -226,6 +249,7 @@ class _DashboardState extends State<Dashboard> {
         service.getDataList(context, summaryParams),
         service.getPreDataList(context, summaryParams),
       ]);
+      service.filterByProcessNames(menuProcessNames);
 
       if (!mounted) return;
 
@@ -401,6 +425,7 @@ class _DashboardState extends State<Dashboard> {
                         unavailable: machineList['unavailable'],
                         handleRefetch: _handleFetchMachine,
                         isFetching: isMachineLoading,
+                        processNames: menuProcessNames,
                       ),
                     WorkOrderProcessScreen(
                       data: _dataList,

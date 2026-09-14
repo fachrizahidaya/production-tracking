@@ -31,7 +31,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     with TickerProviderStateMixin {
   String selectedProcess = 'All';
   late TabController _tabController;
-  late TabController _summaryTabController;
   int selectedIndex = 0;
   int selectedSummaryIndex = 0;
 
@@ -41,7 +40,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       length: processFilters.length,
       vsync: this,
     );
-    _summaryTabController = TabController(length: 2, vsync: this);
 
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) return;
@@ -51,13 +49,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       });
 
       _refetchByTab(_tabController.index);
-    });
-    _summaryTabController.addListener(() {
-      if (_summaryTabController.indexIsChanging) return;
-
-      setState(() {
-        selectedSummaryIndex = _summaryTabController.index;
-      });
     });
     super.initState();
   }
@@ -117,12 +108,19 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
   @override
   void dispose() {
     _tabController.dispose();
-    _summaryTabController.dispose();
     super.dispose();
   }
 
+  bool get _hasProductionData => widget.data is List && widget.data.isNotEmpty;
+
+  bool get _hasGreigeData =>
+      widget.greigeData is List && widget.greigeData.isNotEmpty;
+
+  bool get _isGreigeActive =>
+      !_hasProductionData || (_hasGreigeData && selectedSummaryIndex == 1);
+
   List<dynamic> get _activeData {
-    final data = selectedSummaryIndex == 0 ? widget.data : widget.greigeData;
+    final data = _isGreigeActive ? widget.greigeData : widget.data;
     return data is List ? data : [];
   }
 
@@ -265,7 +263,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                 data: mappedItem,
                 showProgress: _showProgress,
                 filter: processFilters[selectedIndex],
-                isGreige: selectedSummaryIndex == 1,
+                isGreige: _isGreigeActive,
               ),
             ),
           );
@@ -292,7 +290,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                 isMobile: isMobile,
                 isTablet: isTablet,
               ),
-              _buildSummaryTabs(),
+              if (_hasProductionData && _hasGreigeData) _buildSummaryTabs(),
               const Divider(),
               _buildSwipeContent(),
             ],
@@ -341,7 +339,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
           // SUBTITLE
           // =========================
           Text(
-            selectedSummaryIndex == 0
+            !_isGreigeActive
                 ? 'Status tahapan work order'
                 : 'Status tahapan order greige',
             maxLines: 2,
@@ -388,12 +386,20 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
   Widget _buildSummaryTabs() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: TabBar(
-        controller: _summaryTabController,
-        tabs: const [
-          Tab(text: 'Produksi'),
-          Tab(text: 'Greige'),
-        ],
+      child: DefaultTabController(
+        length: 2,
+        initialIndex: selectedSummaryIndex,
+        child: TabBar(
+          onTap: (index) {
+            setState(() {
+              selectedSummaryIndex = index;
+            });
+          },
+          tabs: const [
+            Tab(text: 'Produksi'),
+            Tab(text: 'Greige'),
+          ],
+        ),
       ),
     );
   }

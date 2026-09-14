@@ -15,6 +15,10 @@ import 'package:textile_tracking/models/report/spk_summary.dart';
 import 'package:textile_tracking/models/report/top_bs.dart';
 import 'package:textile_tracking/models/report/wo_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
+import 'package:textile_tracking/screens/report/sorting-result/sorting_result.dart';
+import 'package:textile_tracking/screens/report/spk-summary/spk_summary.dart';
+import 'package:textile_tracking/screens/report/top-bs/top_bs.dart';
+import 'package:textile_tracking/screens/report/wo-list/wo_list.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -1784,321 +1788,22 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   Widget _buildSortingResult() {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
-      child: Container(
-          decoration: CustomTheme().cardTheme(),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Hasil Sortir per WO',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                        flex: 5,
-                        child: Container(
-                          decoration: CustomTheme().cardTheme(),
-                          child: TextField(
-                              controller: _sortingSearchController,
-                              textInputAction: TextInputAction.search,
-                              decoration: InputDecoration(
-                                hintText: 'Cari...',
-                                prefixIcon: Icon(Icons.search),
-                                suffixIcon:
-                                    _sortingSearchController.text.isNotEmpty
-                                        ? IconButton(
-                                            onPressed: () async {
-                                              _sortingSearchController.clear();
-                                              setState(() {
-                                                sortingSearch = '';
-                                              });
-                                              await _loadSortingResult();
-                                            },
-                                            icon: Icon(Icons.close))
-                                        : null,
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.all(12),
-                              ),
-                              onChanged: _onSortingSearchChanged),
-                        )),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: _showSortingFilter,
-                        child: Container(
-                          decoration: CustomTheme().cardTheme(),
-                          child: Padding(
-                            padding: EdgeInsets.all(12),
-                            child: Icon(
-                              Icons.tune_outlined,
-                              size: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                SizedBox(
-                  height: _sortingLoading || _sortingItems.isEmpty
-                      ? 120
-                      : (_sortingItems.length.clamp(1, 3).toDouble() * 106) + 6,
-                  child: _sortingLoading
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : _sortingItems.isEmpty
-                          ? NoData()
-                          : ListView.builder(
-                              controller: _sortingScrollController,
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: _sortingItems.length +
-                                  (_sortingLoadingMore ? 1 : 0),
-                              padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
-                              itemBuilder: (context, index) {
-                                if (index >= _sortingItems.length) {
-                                  return const Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  );
-                                }
-
-                                final item = _sortingItems[index];
-
-                                return _buildSortingResultCard(item);
-                              },
-                            ),
-                )
-              ],
-            ),
-          )),
-    );
-  }
-
-  Widget _buildSortingResultCard(SortingResultItem item) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 12),
-      child: Container(
-        decoration: CustomTheme().cardTheme(),
-        child: Padding(
-          padding: EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    item.woNo,
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow('Grade A', item.gradeA),
-              SizedBox(
-                height: 6,
-              ),
-              _buildSortingRow(
-                'Grade B',
-                item.gradeB,
-              ),
-              SizedBox(height: 6),
-              _buildSortingRow(
-                'Grade BS',
-                item.gradeBS,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow(
-                'Total Qty',
-                item.totalQty,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow(
-                'Qty WO',
-                item.woQty,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow(
-                'Selisih',
-                item.diff,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTopBsCard(TopBsItem item) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 12),
-      child: Container(
-        decoration: CustomTheme().cardTheme(),
-        child: Padding(
-          padding: EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    item.woNo,
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow('Qty BS', item.bsQty),
-              SizedBox(
-                height: 6,
-              ),
-              _buildSortingRow(
-                'Presentase',
-                item.bsPercentage,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWoListCard(WoListItem item) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 12),
-      child: Container(
-        decoration: CustomTheme().cardTheme(),
-        child: Padding(
-          padding: EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    item.woNo,
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 6,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Tanggal'),
-                  Row(
-                    children: [
-                      Text(
-                        _formatDate(DateTime.parse(item.date)),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 6,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Status'),
-                  Row(
-                    children: [
-                      Text(
-                        (item.status),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 6,
-              ),
-              _buildSortingRow(
-                'Qty WO',
-                item.woQty,
-              ),
-              SizedBox(height: 6),
-              _buildSortingRow(
-                'Total Sortir',
-                item.sortingQty,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow(
-                'Total Packing',
-                item.packingQty,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow(
-                'Berat 1 Lusin',
-                item.weightPerDozen,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow(
-                'Gramasi',
-                item.gsm,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow(
-                'Berat Grade A',
-                item.gradeAWeight,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow(
-                'Total Berat',
-                item.weight,
-              ),
-            ],
-          ),
-        ),
-      ),
+    return SortingResultComp(
+      formatNumber: formatNumber,
+      items: _sortingItems,
+      loading: _sortingLoading,
+      loadingMore: _sortingLoadingMore,
+      searchController: _sortingSearchController,
+      scrollController: _sortingScrollController,
+      showFilter: _showSortingFilter,
+      onSearchChaged: _onSortingSearchChanged,
+      onClearSearch: () async {
+        _sortingSearchController.clear();
+        setState(() {
+          sortingSearch = '';
+        });
+        await _loadSortingResult();
+      },
     );
   }
 
@@ -2160,13 +1865,13 @@ class _ReportScreenState extends State<ReportScreen> {
                 ],
               ),
               SizedBox(
-                height: 6,
+                height: 8,
               ),
               _buildSortingRow(
                 'Qty WO',
                 item.woQty,
               ),
-              SizedBox(height: 6),
+              SizedBox(height: 8),
               _buildSortingRow(
                 'Total Sortir',
                 item.sortingQty,
@@ -2231,95 +1936,33 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   Widget _buildTopBS() {
-    return Padding(
-        padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
-        child: Container(
-          decoration: CustomTheme().cardTheme(),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('WO / Lot BS Tertinggi',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: InkWell(
-                        onTap: () async {
-                          final picked = await showDateRangePicker(
-                              context: context,
-                              firstDate: new DateTime(2019),
-                              lastDate: new DateTime(2045),
-                              initialDateRange: DateTimeRange(
-                                  start: topBsStartDate, end: topBsEndDate));
-
-                          if (picked != null) {
-                            setState(() {
-                              topBsStartDate = picked.start;
-                              topBsEndDate = picked.end;
-                            });
-
-                            await _loadTopBs();
-                          }
-                        },
-                        child: Container(
-                          decoration: CustomTheme().cardTheme(),
-                          child: Padding(
-                            padding: EdgeInsets.all(12),
-                            child: Text(_getDateRangeTopBsText()),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                SizedBox(
-                  height: _topBsLoading || _topBsItems.isEmpty
-                      ? 120
-                      : (_topBsItems.length.clamp(1, 3).toDouble() * 106) + 6,
-                  child: _topBsLoading
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : _topBsItems.isEmpty
-                          ? NoData()
-                          : ListView.builder(
-                              controller: _topBsScrollController,
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: _topBsItems.length,
-                              padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
-                              itemBuilder: (context, index) {
-                                if (index >= _topBsItems.length) {
-                                  return const Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  );
-                                }
-
-                                final item = _topBsItems[index];
-
-                                return _buildTopBsCard(item);
-                              },
-                            ),
-                )
-              ],
-            ),
+    return TopBsComp(
+      items: _topBsItems,
+      loading: _topBsLoading,
+      scrollController: _topBsScrollController,
+      dateRangeText: _getDateRangeTopBsText(),
+      formatNumber: formatNumber,
+      onSelectDateRange: () async {
+        final picked = await showDateRangePicker(
+          context: context,
+          firstDate: DateTime(2019),
+          lastDate: DateTime(2045),
+          initialDateRange: DateTimeRange(
+            start: topBsStartDate,
+            end: topBsEndDate,
           ),
-        ));
+        );
+
+        if (picked != null) {
+          setState(() {
+            topBsStartDate = picked.start;
+            topBsEndDate = picked.end;
+          });
+
+          await _loadTopBs();
+        }
+      },
+    );
   }
 
   Widget _buildSpkSummary() {
@@ -2932,107 +2575,23 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   Widget _buildWoList() {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
-      child: Container(
-          decoration: CustomTheme().cardTheme(),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Work Order',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                        flex: 5,
-                        child: Container(
-                          decoration: CustomTheme().cardTheme(),
-                          child: TextField(
-                              controller: _woSearchController,
-                              textInputAction: TextInputAction.search,
-                              decoration: InputDecoration(
-                                hintText: 'Cari...',
-                                prefixIcon: Icon(Icons.search),
-                                suffixIcon: _woSearchController.text.isNotEmpty
-                                    ? IconButton(
-                                        onPressed: () async {
-                                          _woSearchController.clear();
-                                          setState(() {
-                                            woSearch = '';
-                                          });
-                                          await _loadWoList();
-                                        },
-                                        icon: Icon(Icons.close))
-                                    : null,
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.all(12),
-                              ),
-                              onChanged: _onWoSearchChanged),
-                        )),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: _showWoFilter,
-                        child: Container(
-                          decoration: CustomTheme().cardTheme(),
-                          child: Padding(
-                            padding: EdgeInsets.all(12),
-                            child: Icon(
-                              Icons.tune_outlined,
-                              size: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                SizedBox(
-                  height: 500,
-                  child: _woLoading
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : _woItems.isEmpty
-                          ? NoData()
-                          : ListView.builder(
-                              controller: _woScrollController,
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount:
-                                  _woItems.length + (_woLoadingMore ? 1 : 0),
-                              padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
-                              itemBuilder: (context, index) {
-                                if (index >= _woItems.length) {
-                                  return const Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  );
-                                }
-
-                                final item = _woItems[index];
-
-                                return _buildWoListCard(item);
-                              },
-                            ),
-                )
-              ],
-            ),
-          )),
+    return WoListComp(
+      items: _woItems,
+      loading: _woLoading,
+      loadingMore: _woLoadingMore,
+      searchController: _woSearchController,
+      scrollController: _woScrollController,
+      onSearchChanged: _onWoSearchChanged,
+      showFilter: _showWoFilter,
+      formatDate: _formatDate,
+      formatNumber: formatNumber,
+      onClearSearch: () async {
+        _woSearchController.clear();
+        setState(() {
+          woSearch = '';
+        });
+        await _loadWoList();
+      },
     );
   }
 
@@ -3087,7 +2646,9 @@ class _ReportScreenState extends State<ReportScreen> {
                   height: 8,
                 ),
                 SizedBox(
-                  height: 500,
+                  height: _spkLoading || _spkItems.isEmpty
+                      ? 120
+                      : (_spkItems.length.clamp(1, 3).toDouble() * 106) + 6,
                   child: _spkLoading
                       ? Center(
                           child: CircularProgressIndicator(),

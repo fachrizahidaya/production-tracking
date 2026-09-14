@@ -14,24 +14,24 @@ class WoListComp extends StatelessWidget {
   final VoidCallback showFilter;
   final dynamic formatDate;
   final dynamic formatNumber;
-  final onSeeAll;
 
-  const WoListComp(
-      {super.key,
-      required this.items,
-      required this.loading,
-      required this.loadingMore,
-      required this.searchController,
-      required this.scrollController,
-      required this.onSearchChanged,
-      required this.onClearSearch,
-      required this.showFilter,
-      required this.formatDate,
-      required this.formatNumber,
-      this.onSeeAll});
+  const WoListComp({
+    super.key,
+    required this.items,
+    required this.loading,
+    required this.loadingMore,
+    required this.searchController,
+    required this.scrollController,
+    required this.onSearchChanged,
+    required this.onClearSearch,
+    required this.showFilter,
+    required this.formatDate,
+    required this.formatNumber,
+  });
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
@@ -44,39 +44,22 @@ class WoListComp extends StatelessWidget {
     final listHeight = isTablet ? 250.0 : 280.0;
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
 
+=======
+>>>>>>> ad8e0407 (fix: laporan)
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Container(
         decoration: CustomTheme().cardTheme(),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Work Order',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  InkWell(
-                    onTap: onSeeAll,
-                    child: const Row(
-                      children: [
-                        Text(
-                          'Lihat semua ',
-                          style: TextStyle(),
-                        ),
-                        Icon(Icons.chevron_right_outlined)
-                      ],
-                    ),
-                  )
-                ],
-              ),
+            const Text(
+              'Work Order',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
+<<<<<<< HEAD
             // Row(
             //   children: [
             //     Expanded(
@@ -258,23 +241,47 @@ class WoListComp extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+=======
+>>>>>>> ad8e0407 (fix: laporan)
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: Text(
-                    item.woNo,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                  flex: 5,
+                  child: Container(
+                    decoration: CustomTheme().cardTheme(),
+                    child: TextField(
+                      controller: searchController,
+                      textInputAction: TextInputAction.search,
+                      decoration: InputDecoration(
+                        hintText: 'Cari...',
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: searchController.text.isNotEmpty
+                            ? IconButton(
+                                onPressed: onClearSearch,
+                                icon: const Icon(Icons.close),
+                              )
+                            : null,
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.all(12),
+                      ),
+                      onChanged: onSearchChanged,
                     ),
                   ),
                 ),
                 const SizedBox(width: 8),
-                _buildStatusBadge(item.status),
+                Expanded(
+                  child: InkWell(
+                    onTap: showFilter,
+                    child: Container(
+                      decoration: CustomTheme().cardTheme(),
+                      padding: const EdgeInsets.all(12),
+                      child: const Icon(Icons.tune_outlined, size: 18),
+                    ),
+                  ),
+                ),
               ],
             ),
+<<<<<<< HEAD
             const SizedBox(height: 12),
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -345,6 +352,35 @@ class WoListComp extends StatelessWidget {
 =======
               isTablet ? 3 : 2,
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
+=======
+            const SizedBox(height: 8),
+            SizedBox(
+              height: loading || items.isEmpty
+                  ? 120
+                  : (items.length.clamp(1, 3).toDouble() * 106) + 6,
+              child: loading
+                  ? const Center(child: CircularProgressIndicator())
+                  : items.isEmpty
+                      ? const NoData()
+                      : ListView.builder(
+                          controller: scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: items.length + (loadingMore ? 1 : 0),
+                          padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                          itemBuilder: (context, index) {
+                            if (index >= items.length) {
+                              return const Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            }
+
+                            return _buildWoListCard(items[index]);
+                          },
+                        ),
+>>>>>>> ad8e0407 (fix: laporan)
             ),
           ],
         ),
@@ -352,6 +388,7 @@ class WoListComp extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -369,26 +406,49 @@ class WoListComp extends StatelessWidget {
 
       rows.add(
         Row(
+=======
+  Widget _buildWoListCard(WoListItem item) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        decoration: CustomTheme().cardTheme(),
+        padding: const EdgeInsets.all(12),
+        child: Column(
+>>>>>>> ad8e0407 (fix: laporan)
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(columnCount * 2 - 1, (position) {
-            if (position.isOdd) {
-              return const SizedBox(width: 16);
-            }
-
-            final index = start + (position ~/ 2);
-            return Expanded(
-              child: index < items.length
-                  ? _buildInfoItem(items[index].key, items[index].value)
-                  : const SizedBox.shrink(),
-            );
-          }),
+          children: [
+            Text(
+              item.woNo,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 8),
+            _buildTextRow(
+              'Tanggal',
+              formatDate(DateTime.parse(item.date)),
+            ),
+            const SizedBox(height: 8),
+            _buildTextRow('Status', item.status),
+            const SizedBox(height: 8),
+            _buildNumberRow('Qty WO', item.woQty),
+            const SizedBox(height: 8),
+            _buildNumberRow('Total Sortir', item.sortingQty),
+            const SizedBox(height: 8),
+            _buildNumberRow('Total Packing', item.packingQty),
+            const SizedBox(height: 8),
+            _buildNumberRow('Berat 1 Lusin', item.weightPerDozen),
+            const SizedBox(height: 8),
+            _buildNumberRow('Gramasi', item.gsm),
+            const SizedBox(height: 8),
+            _buildNumberRow('Berat Grade A', item.gradeAWeight),
+            const SizedBox(height: 8),
+            _buildNumberRow('Total Berat', item.weight),
+          ],
         ),
-      );
-    }
-
-    return rows;
+      ),
+    );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 >>>>>>> 5ad2d445 (feat: temporarily)
@@ -397,26 +457,22 @@ class WoListComp extends StatelessWidget {
   Widget _buildInfoItem(String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+=======
+  Widget _buildTextRow(String title, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+>>>>>>> ad8e0407 (fix: laporan)
       children: [
+        Text(title),
         Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-          ),
-        ),
-        const SizedBox(height: 3),
-        Text(
-          (value),
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
+          value,
+          style: const TextStyle(fontWeight: FontWeight.w500),
         ),
       ],
     );
   }
 
+<<<<<<< HEAD
   Widget _buildStatusBadge(String status) {
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -441,27 +497,24 @@ class WoListComp extends StatelessWidget {
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: _getStatusColor(status),
+=======
+  Widget _buildNumberRow(String title, num value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(title),
+        Row(
+          children: [
+            Text(
+              formatNumber(value),
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(width: 2),
+            const Text('PCS'),
+          ],
+>>>>>>> ad8e0407 (fix: laporan)
         ),
-      ),
+      ],
     );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'selesai':
-      case 'completed':
-        return Colors.green;
-      case 'diproses':
-      case 'in_progress':
-        return Colors.orange;
-      case 'menunggu diproses':
-      case 'waiting':
-        return Colors.blue;
-      case 'dilewati':
-      case 'skipped':
-        return Colors.grey;
-      default:
-        return Colors.grey;
-    }
   }
 }

@@ -251,7 +251,9 @@ class _SortingResultCompState extends State<SortingResultComp> {
                   height: 8,
                 ),
                 SizedBox(
-                  height: 500,
+                  height: widget.loading || widget.items.isEmpty
+                      ? 120
+                      : (widget.items.length.clamp(1, 3).toDouble() * 106) + 6,
                   child: widget.loading
                       ? Center(
                           child: CircularProgressIndicator(),
@@ -375,13 +377,13 @@ class _SortingResultCompState extends State<SortingResultComp> {
               ),
               _buildSortingRow('Grade A', item.gradeA),
               SizedBox(
-                height: 6,
+                height: 8,
               ),
               _buildSortingRow(
                 'Grade B',
                 item.gradeB,
               ),
-              SizedBox(height: 6),
+              SizedBox(height: 8),
               _buildSortingRow(
                 'Grade BS',
                 item.gradeBS,
@@ -407,62 +409,6 @@ class _SortingResultCompState extends State<SortingResultComp> {
                 'Selisih',
                 item.diff,
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text('Total Qty'),
-              //         Row(
-              //           children: [
-              //             Text(formatNumber(item.totalQty)),
-              //             SizedBox(
-              //               width: 2,
-              //             ),
-              //             Text('PCS'),
-              //           ],
-              //         ),
-              //       ],
-              //     ),
-              //     SizedBox(
-              //       width: 12,
-              //     ),
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text('Qty WO'),
-              //         Row(
-              //           children: [
-              //             Text(formatNumber(item.woQty)),
-              //             SizedBox(
-              //               width: 2,
-              //             ),
-              //             Text('PCS'),
-              //           ],
-              //         ),
-              //       ],
-              //     ),
-              //     SizedBox(
-              //       width: 12,
-              //     ),
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text('Selisih'),
-              //         Row(
-              //           children: [
-              //             Text(formatNumber(item.diff)),
-              //             SizedBox(
-              //               width: 2,
-              //             ),
-              //             Text('PCS'),
-              //           ],
-              //         ),
-              //       ],
-              //     ),
-              //   ],
-              // ),
             ],
           ),
 >>>>>>> 0cdc2803 (feat: top bs, sorting per grade)

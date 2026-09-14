@@ -25,6 +25,7 @@ class TopBsComp extends StatelessWidget {
   Widget build(BuildContext context) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
     final listHeight = isTablet ? 130.0 : 150.0;
 =======
@@ -35,24 +36,23 @@ class TopBsComp extends StatelessWidget {
     final listHeight = isTablet ? 130.0 : 150.0;
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
 
+=======
+>>>>>>> ad8e0407 (fix: laporan)
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Container(
         decoration: CustomTheme().cardTheme(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-              child: Text(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
                 'WO / Lot BS Tertinggi',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            ),
-            SizedBox(height: 8),
-            Padding(
-              padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-              child: Row(
+              const SizedBox(height: 8),
+              Row(
                 children: [
                   Expanded(
                     flex: 5,
@@ -67,41 +67,38 @@ class TopBsComp extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: loading || items.isEmpty ? 120 : listHeight,
-              child: loading
-                  ? Center(child: CircularProgressIndicator())
-                  : items.isEmpty
-                      ? NoData()
-                      : ListView.builder(
-                          controller: scrollController,
-                          physics: AlwaysScrollableScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: items.length,
-                          padding: EdgeInsets.fromLTRB(0, 6, 0, 0),
-                          itemBuilder: (context, index) {
-                            return SizedBox(
-                                width: 200,
-                                child: _buildTopBsCard(items[index],
-                                    isLast: index == items.length - 1));
-                          },
-                        ),
-            ),
-            const SizedBox(height: 4),
-          ],
+              const SizedBox(height: 8),
+              SizedBox(
+                height: loading || items.isEmpty
+                    ? 120
+                    : (items.length.clamp(1, 3).toDouble() * 106) + 6,
+                child: loading
+                    ? const Center(child: CircularProgressIndicator())
+                    : items.isEmpty
+                        ? const NoData()
+                        : ListView.builder(
+                            controller: scrollController,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: items.length,
+                            padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                            itemBuilder: (context, index) {
+                              return _buildTopBsCard(items[index]);
+                            },
+                          ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildTopBsCard(TopBsItem item, {bool isLast = false}) {
+  Widget _buildTopBsCard(TopBsItem item) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(12, 0, isLast ? 12 : 0, 12),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Container(
         decoration: CustomTheme().cardTheme(),
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

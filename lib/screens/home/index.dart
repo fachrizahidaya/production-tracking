@@ -26,16 +26,77 @@ class _HomeState extends State<Home> {
 
   String user = '';
   String name = '';
+  late Future<String?> _tokenFuture;
+  final Map<String, bool> _dashboardWidgets = {
+    'workOrderSummary': true,
+    'activeMachine': true,
+    'workOrderProcess': true,
+  };
 
   @override
   void initState() {
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
     super.initState();
+    _tokenFuture = SharedPreferences.getInstance()
+        .then((prefs) => prefs.getString('access_token'));
 
     setState(() {
       user = loggedInUser?.username ?? '';
       name = loggedInUser?.name ?? '';
     });
+  }
+
+  void _showDashboardWidgetSettings() {
+    const widgets = {
+      'workOrderSummary': 'Perkembangan Proses Produksi',
+      'activeMachine': 'Status Mesin',
+      'workOrderProcess': 'Work Order',
+    };
+
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'Widget',
+                        style: TextStyle(
+                          fontSize: CustomTheme().fontSize('lg'),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...widgets.entries.map((entry) {
+                      return SwitchListTile(
+                        title: Text(entry.value),
+                        value: _dashboardWidgets[entry.key] ?? true,
+                        onChanged: (value) {
+                          setState(() {
+                            _dashboardWidgets[entry.key] = value;
+                          });
+                          setModalState(() {});
+                        },
+                      );
+                    }),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<void> _handleExit(
@@ -129,8 +190,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String?>(
-        future: SharedPreferences.getInstance()
-            .then((prefs) => prefs.getString('access_token')),
+        future: _tokenFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -152,13 +212,20 @@ class _HomeState extends State<Home> {
               user: user,
               name: name,
               showNameWithAvatar: true,
+              onDashboardSettings: _showDashboardWidgetSettings,
             ),
             drawer: AppDrawer(
               handleLogout: () => _handleLogout(context),
               handleFetchMenu: () => _handleFetchMenu(),
             ),
             body: SafeArea(
-              child: Dashboard(),
+              child: Dashboard(
+                showWorkOrderSummary:
+                    _dashboardWidgets['workOrderSummary'] ?? true,
+                showActiveMachine: _dashboardWidgets['activeMachine'] ?? true,
+                showWorkOrderProcess:
+                    _dashboardWidgets['workOrderProcess'] ?? true,
+              ),
             ),
           );
         });

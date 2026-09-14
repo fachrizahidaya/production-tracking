@@ -208,8 +208,9 @@ class _DashboardState extends State<Dashboard> {
 
     setState(() => isLoading = true);
 
+    await _safeFetch(_handleFetchMenu);
+
     await Future.wait([
-      _safeFetch(_handleFetchMenu),
       _safeFetch(_handleFetchStats),
       _safeFetch(_handleFetchPie),
       _safeFetch(_handleFetchMachine),
@@ -306,6 +307,7 @@ class _DashboardState extends State<Dashboard> {
         service.getDataList(context, summaryParams),
         service.getPreDataList(context, summaryParams),
       ]);
+      service.filterByProcessNames(menuProcessNames);
 
       if (!mounted) return;
 
@@ -584,6 +586,7 @@ class _DashboardState extends State<Dashboard> {
                         unavailable: machineList['unavailable'],
                         handleRefetch: _handleFetchMachine,
                         isFetching: isMachineLoading,
+                        processNames: menuProcessNames,
                       ),
                     WorkOrderProcessScreen(
                       data: _dataList,

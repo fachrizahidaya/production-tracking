@@ -37,7 +37,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     with TickerProviderStateMixin {
   String selectedProcess = 'All';
   late TabController _tabController;
-  late TabController _summaryTabController;
   int selectedIndex = 0;
   String selectedCategory = 'production';
 
@@ -47,7 +46,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       length: processFilters.length,
       vsync: this,
     );
-    _summaryTabController = TabController(length: 2, vsync: this);
 
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) return;
@@ -57,13 +55,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       });
 
       _refetchByTab(_tabController.index);
-    });
-    _summaryTabController.addListener(() {
-      if (_summaryTabController.indexIsChanging) return;
-
-      setState(() {
-        selectedSummaryIndex = _summaryTabController.index;
-      });
     });
     super.initState();
   }
@@ -202,7 +193,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
   @override
   void dispose() {
     _tabController.dispose();
-    _summaryTabController.dispose();
     super.dispose();
   }
 

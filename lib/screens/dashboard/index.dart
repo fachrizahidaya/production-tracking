@@ -588,29 +588,30 @@ class _DashboardState extends State<Dashboard> {
                         isFetching: isMachineLoading,
                         processNames: menuProcessNames,
                       ),
-                    WorkOrderProcessScreen(
-                      data: _dataList,
-                      search: _search,
-                      handleSearch: _handleSearch,
-                      firstLoading: _firstLoading,
-                      hasMore: _hasMore,
-                      handleLoadMore: _loadMore,
-                      handleRefetch: _refetch,
-                      isLoadMore: _isLoadMore,
-                      filterWidget: ProcessFilter(
-                        params: params,
-                        onHandleFilter: _handleProcessFilter,
+                    if (widget.showWorkOrderProcess)
+                      WorkOrderProcessScreen(
+                        data: _dataList,
+                        search: _search,
+                        handleSearch: _handleSearch,
+                        firstLoading: _firstLoading,
+                        hasMore: _hasMore,
+                        handleLoadMore: _loadMore,
+                        handleRefetch: _refetch,
+                        isLoadMore: _isLoadMore,
+                        filterWidget: ProcessFilter(
+                          params: params,
+                          onHandleFilter: _handleProcessFilter,
+                        ),
+                        handleFetchData: (params) async {
+                          final service = Provider.of<WorkOrderProcessService>(
+                              context,
+                              listen: false);
+                          await service.getDataList(context, params);
+                          return service.items;
+                        },
+                        service: WorkOrderProcessService(),
+                        isFiltered: _isFiltered,
                       ),
-                      handleFetchData: (params) async {
-                        final service = Provider.of<WorkOrderProcessService>(
-                            context,
-                            listen: false);
-                        await service.getDataList(context, params);
-                        return service.items;
-                      },
-                      service: WorkOrderProcessService(),
-                      isFiltered: _isFiltered,
-                    ),
                   ].separatedBy(CustomTheme().vGap('2xl')))),
                 ),
               ],

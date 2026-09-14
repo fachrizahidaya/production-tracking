@@ -838,6 +838,59 @@ class _HomeState extends State<Home> {
     );
   }
 
+  void _showDashboardWidgetSettings() {
+    const widgets = {
+      'workOrderSummary': 'Perkembangan Proses Produksi',
+      'activeMachine': 'Status Mesin',
+      'workOrderProcess': 'Work Order',
+    };
+
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'Widget',
+                        style: TextStyle(
+                          fontSize: CustomTheme().fontSize('lg'),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...widgets.entries.map((entry) {
+                      return SwitchListTile(
+                        title: Text(entry.value),
+                        value: _dashboardWidgets[entry.key] ?? true,
+                        onChanged: (value) {
+                          setState(() {
+                            _dashboardWidgets[entry.key] = value;
+                          });
+                          setModalState(() {});
+                        },
+                      );
+                    }),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   Future<void> _handleExit(
     BuildContext context,
     ValueNotifier<bool> isLoading,

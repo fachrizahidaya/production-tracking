@@ -8,11 +8,13 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/models/report/production_summary.dart';
 import 'package:textile_tracking/models/report/production_trend.dart';
+import 'package:textile_tracking/models/report/rework_comparison.dart';
 import 'package:textile_tracking/models/report/sorting_result.dart';
+import 'package:textile_tracking/models/report/spk_list.dart';
 import 'package:textile_tracking/models/report/spk_summary.dart';
 import 'package:textile_tracking/models/report/top_bs.dart';
+import 'package:textile_tracking/models/report/wo_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
-import 'package:textile_tracking/screens/report/sorting-result/sorting_result.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -28,11 +30,18 @@ class _ReportScreenState extends State<ReportScreen> {
   TopBs? topBs;
   SpkSummary? spkSummary;
   ProductionTrend? productionTrend;
+  ReworkComparison? reworkComparison;
+  WoList? woList;
+  SpkList? spkList;
   bool isLoading = false;
   final ScrollController _sortingScrollController = ScrollController();
   final ScrollController _topBsScrollController = ScrollController();
   final TextEditingController _sortingSearchController =
       TextEditingController();
+  final ScrollController _woScrollController = ScrollController();
+  final ScrollController _spkScrollController = ScrollController();
+  final TextEditingController _woSearchController = TextEditingController();
+  final TextEditingController _spkSearchController = TextEditingController();
 
   final DateTime now = DateTime.now();
 
@@ -63,19 +72,56 @@ class _ReportScreenState extends State<ReportScreen> {
     1,
   );
   late DateTime productionTrendEndDate = DateTime(now.year, now.month, now.day);
+  late DateTime reworkComparisonStartDate = DateTime(
+    now.year,
+    now.month,
+    1,
+  );
+  late DateTime reworkComparisonEndDate =
+      DateTime(now.year, now.month, now.day);
+  late DateTime woListStartDate = DateTime(
+    now.year,
+    now.month,
+    1,
+  );
+  late DateTime woListEndDate = DateTime(now.year, now.month, now.day);
+  late DateTime spkListStartDate = DateTime(
+    now.year,
+    now.month,
+    1,
+  );
+  late DateTime spkListEndDate = DateTime(now.year, now.month, now.day);
   Timer? _sortingSearchDebounce;
+  Timer? _woSearchDebounce;
+  Timer? _spkSearchDebounce;
 
   final List<SortingResultItem> _sortingItems = [];
   final List<TopBsItem> _topBsItems = [];
+  final List<ReworkComparisonItem> _reworkComparisonItems = [];
+  final List<WoListItem> _woItems = [];
+  final List<SpkListItem> _spkItems = [];
 
   int _sortingPage = 1;
   bool _sortingLoading = false;
   bool _sortingLoadingMore = false;
-  bool _topBsLoading = false;
-  bool productionTrendLoading = false;
   bool _sortingHasMore = false;
   String sortingSort = 'wo_date';
   String sortingSearch = '';
+  bool _topBsLoading = false;
+  bool productionTrendLoading = false;
+  bool _reworkComparisonLoading = false;
+  int _woPage = 1;
+  bool _woLoading = false;
+  bool _woLoadingMore = false;
+  bool _woHasMore = false;
+  String woSort = 'wo_date';
+  String woSearch = '';
+  int _spkPage = 1;
+  bool _spkLoading = false;
+  bool _spkLoadingMore = false;
+  bool _spkHasMore = false;
+  String spkSort = 'wo_date';
+  String spkSearch = '';
 
   num productionTrendGradeA = 0;
   num productionTrendGradeB = 0;
@@ -88,14 +134,21 @@ class _ReportScreenState extends State<ReportScreen> {
 
     sortingStartDate = startDate;
     sortingEndDate = endDate;
+    woListStartDate = startDate;
+    woListEndDate = endDate;
 
     _sortingScrollController.addListener(_onSortingScroll);
     _topBsScrollController.addListener(_onTopBsScroll);
+    _woScrollController.addListener(_onWoScroll);
+    _spkScrollController.addListener(_onSpkScroll);
     _loadProductionSummary();
     _loadSortingResult();
     _loadTopBs();
     _loadSpkSummary();
     _loadProductionTrend();
+    _loadReworkComparison();
+    _loadWoList();
+    _loadSpkList();
   }
 
   void _onSortingScroll() {
@@ -110,6 +163,26 @@ class _ReportScreenState extends State<ReportScreen> {
 
   void _onTopBsScroll() {
     if (!_sortingScrollController.hasClients) return;
+  }
+
+  void _onWoScroll() {
+    if (!_woScrollController.hasClients) return;
+
+    final position = _woScrollController.position;
+
+    if (position.pixels >= position.maxScrollExtent - 100) {
+      _loadMoreWoList();
+    }
+  }
+
+  void _onSpkScroll() {
+    if (!_spkScrollController.hasClients) return;
+
+    final position = _spkScrollController.position;
+
+    if (position.pixels >= position.maxScrollExtent - 100) {
+      _loadMoreSpkList();
+    }
   }
 
   void _onSortingSearchChanged(String value) {
@@ -131,16 +204,42 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  void _clearSortingSearch() async {
-    _sortingSearchDebounce?.cancel();
+  void _onWoSearchChanged(String value) {
+    _woSearchDebounce?.cancel();
 
-    _sortingSearchController.clear();
+    _woSearchDebounce = Timer(
+      const Duration(milliseconds: 500),
+      () async {
+        final search = value.trim();
 
-    setState(() {
-      sortingSearch = '';
-    });
+        if (search == woSearch) {
+          return;
+        }
 
-    await _loadSortingResult();
+        woSearch = search;
+
+        await _loadWoList();
+      },
+    );
+  }
+
+  void _onSpkSearchChanged(String value) {
+    _spkSearchDebounce?.cancel();
+
+    _spkSearchDebounce = Timer(
+      const Duration(milliseconds: 500),
+      () async {
+        final search = value.trim();
+
+        if (search == spkSearch) {
+          return;
+        }
+
+        spkSearch = search;
+
+        await _loadSpkList();
+      },
+    );
   }
 
   Future<void> _loadMoreSortingResult() async {
@@ -179,6 +278,102 @@ class _ReportScreenState extends State<ReportScreen> {
 
       setState(() {
         _sortingLoadingMore = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Gagal mengambil data berikutnya: $e',
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _loadMoreWoList() async {
+    if (_woLoading || _woLoadingMore || !_woHasMore) {
+      return;
+    }
+
+    setState(() {
+      _woLoadingMore = true;
+    });
+
+    try {
+      final nextPage = _woPage + 1;
+
+      final result = await _reportService.getWoList(
+          startDate: woListStartDate,
+          endDate: woListEndDate,
+          page: nextPage,
+          perPage: 20,
+          sort: woSort,
+          search: woSearch);
+
+      if (!mounted) return;
+
+      setState(() {
+        _woItems.addAll(result.data);
+
+        _woPage = result.currentPage;
+
+        _woHasMore = result.currentPage < result.lastPage;
+
+        _woLoadingMore = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _woLoadingMore = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Gagal mengambil data berikutnya: $e',
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _loadMoreSpkList() async {
+    if (_spkLoading || _spkLoadingMore || !_spkHasMore) {
+      return;
+    }
+
+    setState(() {
+      _spkLoadingMore = true;
+    });
+
+    try {
+      final nextPage = _spkPage + 1;
+
+      final result = await _reportService.getSpkList(
+          startDate: spkSummaryStartDate,
+          endDate: spkSummaryEndDate,
+          page: nextPage,
+          perPage: 20,
+          sort: spkSort,
+          search: spkSearch);
+
+      if (!mounted) return;
+
+      setState(() {
+        _spkItems.addAll(result.data);
+
+        _spkPage = result.currentPage;
+
+        _spkHasMore = result.currentPage < result.lastPage;
+
+        _spkLoadingMore = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _spkLoadingMore = false;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -367,6 +562,119 @@ class _ReportScreenState extends State<ReportScreen> {
           ),
         ),
       );
+    }
+  }
+
+  Future<void> _loadReworkComparison() async {
+    if (_reworkComparisonLoading) return;
+
+    setState(() {
+      _reworkComparisonLoading = true;
+      _reworkComparisonItems.clear();
+    });
+
+    try {
+      final result = await _reportService.getReworkComparison(
+        startDate: reworkComparisonStartDate,
+        endDate: reworkComparisonEndDate,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        reworkComparison = result;
+        _reworkComparisonItems.addAll(result.data);
+
+        _reworkComparisonLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _reworkComparisonLoading = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal mengambil rework comparison: $e')));
+    }
+  }
+
+  Future<void> _loadWoList() async {
+    if (_woLoading) return;
+
+    setState(() {
+      _woLoading = true;
+      _woPage = 1;
+      _woHasMore = true;
+      _woItems.clear();
+    });
+
+    try {
+      final result = await _reportService.getWoList(
+          startDate: woListStartDate,
+          endDate: woListEndDate,
+          page: 1,
+          perPage: 20,
+          sort: woSort,
+          search: woSearch);
+
+      if (!mounted) return;
+
+      setState(() {
+        woList = result;
+        _woItems.addAll(result.data);
+        _woPage = result.currentPage;
+        _woHasMore = result.currentPage < result.lastPage;
+        _woLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _woLoading = false;
+      });
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Gagal mengambil data wo: $e')));
+    }
+  }
+
+  Future<void> _loadSpkList() async {
+    if (_spkLoading) return;
+
+    setState(() {
+      _spkLoading = true;
+      _spkPage = 1;
+      _spkHasMore = true;
+      _spkItems.clear();
+    });
+
+    try {
+      final result = await _reportService.getSpkList(
+          startDate: spkSummaryStartDate,
+          endDate: spkSummaryEndDate,
+          page: 1,
+          perPage: 20,
+          search: spkSearch);
+
+      if (!mounted) return;
+
+      setState(() {
+        spkList = result;
+        _spkItems.addAll(result.data);
+        _spkPage = result.currentPage;
+        _spkHasMore = result.currentPage < result.lastPage;
+        _spkLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _spkLoading = false;
+      });
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Gagal mengambil spk: $e')));
     }
   }
 
@@ -605,12 +913,190 @@ class _ReportScreenState extends State<ReportScreen> {
     await _loadSortingResult();
   }
 
+  Future<void> _showWoFilter() async {
+    DateTime? tempStartDate = woListStartDate ?? startDate;
+    DateTime? tempEndDate = woListEndDate ?? endDate;
+
+    String tempSort = woSort;
+
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
+              ),
+              child: SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: Text(
+                            'Filter Hasil Sortir',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.close),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Periode Tanggal',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    InkWell(
+                      onTap: () async {
+                        final picked = await showDateRangePicker(
+                          context: context,
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime.now(),
+                          initialDateRange:
+                              tempStartDate != null && tempEndDate != null
+                                  ? DateTimeRange(
+                                      start: tempStartDate!,
+                                      end: tempEndDate!,
+                                    )
+                                  : null,
+                        );
+
+                        if (picked != null) {
+                          setModalState(() {
+                            tempStartDate = picked.start;
+                            tempEndDate = picked.end;
+                          });
+                        }
+                      },
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey.shade300,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.date_range_outlined,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Tanggal',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${DateFormat('dd MMM yyyy').format(tempStartDate!)}'
+                                    ' - '
+                                    '${DateFormat('dd MMM yyyy').format(tempEndDate!)}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Icon(
+                              Icons.keyboard_arrow_down,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(
+                            context,
+                            {
+                              'start': tempStartDate,
+                              'end': tempEndDate,
+                              'sort': tempSort,
+                            },
+                          );
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 12,
+                          ),
+                          child: Text('Terapkan'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+
+    if (result == null) return;
+
+    setState(() {
+      woListStartDate = result['start'];
+      woListEndDate = result['end'];
+      woSort = result['sort'];
+    });
+
+    await _loadWoList();
+  }
+
   @override
   void dispose() {
     super.dispose();
     _sortingScrollController.dispose();
+    _woScrollController.dispose();
+    _spkScrollController.dispose();
     _sortingSearchController.dispose();
+    _woSearchController.dispose();
+    _spkSearchController.dispose();
     _sortingSearchDebounce?.cancel();
+    _woSearchDebounce?.cancel();
+    _spkSearchDebounce?.cancel();
   }
 
   @override
@@ -628,22 +1114,12 @@ class _ReportScreenState extends State<ReportScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSortingDetail(),
-//             SortingResultComp(
-// formatNumber: formatNumber,
-// items: _sortingItems,
-// loading: ,
-// loadingMore: ,
-// onClearSearch: ,
-// onSearchChaged: ,
-// scrollController: ,
-// search: ,
-// searchController: ,
-// showFilter: ,
-            // ),
             _buildSortingResult(),
             _buildTopBS(),
+            _buildWoList(),
             _buildSpkSummary(),
-            _buildProductionTrend()
+            _buildProductionTrend(),
+            _buildNormalAndRework(),
           ],
         ),
       )),
@@ -664,6 +1140,10 @@ class _ReportScreenState extends State<ReportScreen> {
 
   String _getDateRangeProductionTrendText() {
     return '${_formatDate(productionTrendStartDate)} - ${_formatDate(productionTrendEndDate)}';
+  }
+
+  String _getDateRangeReworkComparisonText() {
+    return '${_formatDate(reworkComparisonStartDate)} - ${_formatDate(reworkComparisonEndDate)}';
   }
 
   String _formatDate(DateTime date) {
@@ -704,25 +1184,6 @@ class _ReportScreenState extends State<ReportScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: InkWell(
-              //         onTap: () async {},
-              //         child: Container(
-              //           decoration: CustomTheme().cardTheme(),
-              //           child: Padding(
-              //             padding: EdgeInsets.all(12),
-              //             child: Text('Cari...'),
-              //           ),
-              //         ),
-              //       ),
-              //     )
-              //   ],
-              // ),
-              // SizedBox(
-              //   height: 8,
-              // ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -759,24 +1220,6 @@ class _ReportScreenState extends State<ReportScreen> {
                   SizedBox(
                     width: 8,
                   ),
-                  // Expanded(
-                  //   child: InkWell(
-                  //     onTap: () async {},
-                  //     child: Container(
-                  //       decoration: CustomTheme().cardTheme(),
-                  //       child: Padding(
-                  //         padding: EdgeInsets.all(12),
-                  //         child: Icon(
-                  //           Icons.tune_outlined,
-                  //           size: 18,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   width: 8,
-                  // ),
                   Expanded(
                     child: InkWell(
                       onTap: () async {},
@@ -1410,7 +1853,9 @@ class _ReportScreenState extends State<ReportScreen> {
                   height: 8,
                 ),
                 SizedBox(
-                  height: 500,
+                  height: _sortingLoading || _sortingItems.isEmpty
+                      ? 120
+                      : (_sortingItems.length.clamp(1, 3).toDouble() * 106) + 6,
                   child: _sortingLoading
                       ? Center(
                           child: CircularProgressIndicator(),
@@ -1502,62 +1947,6 @@ class _ReportScreenState extends State<ReportScreen> {
                 'Selisih',
                 item.diff,
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text('Total Qty'),
-              //         Row(
-              //           children: [
-              //             Text(formatNumber(item.totalQty)),
-              //             SizedBox(
-              //               width: 2,
-              //             ),
-              //             Text('PCS'),
-              //           ],
-              //         ),
-              //       ],
-              //     ),
-              //     SizedBox(
-              //       width: 12,
-              //     ),
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text('Qty WO'),
-              //         Row(
-              //           children: [
-              //             Text(formatNumber(item.woQty)),
-              //             SizedBox(
-              //               width: 2,
-              //             ),
-              //             Text('PCS'),
-              //           ],
-              //         ),
-              //       ],
-              //     ),
-              //     SizedBox(
-              //       width: 12,
-              //     ),
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text('Selisih'),
-              //         Row(
-              //           children: [
-              //             Text(formatNumber(item.diff)),
-              //             SizedBox(
-              //               width: 2,
-              //             ),
-              //             Text('PCS'),
-              //           ],
-              //         ),
-              //       ],
-              //     ),
-              //   ],
-              // ),
             ],
           ),
         ),
@@ -1594,6 +1983,221 @@ class _ReportScreenState extends State<ReportScreen> {
               _buildSortingRow(
                 'Presentase',
                 item.bsPercentage,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWoListCard(WoListItem item) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 12),
+      child: Container(
+        decoration: CustomTheme().cardTheme(),
+        child: Padding(
+          padding: EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    item.woNo,
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Tanggal'),
+                  Row(
+                    children: [
+                      Text(
+                        _formatDate(DateTime.parse(item.date)),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Status'),
+                  Row(
+                    children: [
+                      Text(
+                        (item.status),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              _buildSortingRow(
+                'Qty WO',
+                item.woQty,
+              ),
+              SizedBox(height: 6),
+              _buildSortingRow(
+                'Total Sortir',
+                item.sortingQty,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              _buildSortingRow(
+                'Total Packing',
+                item.packingQty,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              _buildSortingRow(
+                'Berat 1 Lusin',
+                item.weightPerDozen,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              _buildSortingRow(
+                'Gramasi',
+                item.gsm,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              _buildSortingRow(
+                'Berat Grade A',
+                item.gradeAWeight,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              _buildSortingRow(
+                'Total Berat',
+                item.weight,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSpkListCard(SpkListItem item) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 12),
+      child: Container(
+        decoration: CustomTheme().cardTheme(),
+        child: Padding(
+          padding: EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    item.spkNo,
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Tanggal'),
+                  Row(
+                    children: [
+                      Text(
+                        _formatDate(DateTime.parse(item.date)),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Status'),
+                  Row(
+                    children: [
+                      Text(
+                        (item.status),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              _buildSortingRow(
+                'Qty WO',
+                item.woQty,
+              ),
+              SizedBox(height: 6),
+              _buildSortingRow(
+                'Total Sortir',
+                item.sortingQty,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              _buildSortingRow(
+                'Total Packing',
+                item.packingQty,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              _buildSortingRow(
+                'Berat 1 Lusin',
+                item.dozenWeight,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              _buildSortingRow(
+                'Berat Grade A',
+                item.gradeAWeight,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              _buildSortingRow(
+                'Total Berat',
+                item.weight,
               ),
             ],
           ),
@@ -1681,7 +2285,9 @@ class _ReportScreenState extends State<ReportScreen> {
                   height: 8,
                 ),
                 SizedBox(
-                  height: 500,
+                  height: _topBsLoading || _topBsItems.isEmpty
+                      ? 120
+                      : (_topBsItems.length.clamp(1, 3).toDouble() * 106) + 6,
                   child: _topBsLoading
                       ? Center(
                           child: CircularProgressIndicator(),
@@ -1746,7 +2352,10 @@ class _ReportScreenState extends State<ReportScreen> {
                             spkSummaryEndDate = picked.end;
                           });
 
-                          await _loadSpkSummary();
+                          await Future.wait([
+                            _loadSpkSummary(),
+                            _loadSpkList(),
+                          ]);
                         }
                       },
                       child: Container(
@@ -1986,6 +2595,7 @@ class _ReportScreenState extends State<ReportScreen> {
             ],
           ),
         ),
+        _buildSpkList(),
       ],
     );
   }
@@ -2193,23 +2803,23 @@ class _ReportScreenState extends State<ReportScreen> {
                             firstDate: new DateTime(2019),
                             lastDate: new DateTime(2045),
                             initialDateRange: DateTimeRange(
-                                start: productionTrendStartDate,
-                                end: productionTrendEndDate));
+                                start: reworkComparisonStartDate,
+                                end: reworkComparisonEndDate));
 
                         if (picked != null) {
                           setState(() {
-                            productionTrendStartDate = picked.start;
-                            productionTrendEndDate = picked.end;
+                            reworkComparisonStartDate = picked.start;
+                            reworkComparisonEndDate = picked.end;
                           });
 
-                          await _loadProductionTrend();
+                          await _loadReworkComparison();
                         }
                       },
                       child: Container(
                         decoration: CustomTheme().cardTheme(),
                         child: Padding(
                           padding: EdgeInsets.all(12),
-                          child: Text(_getDateRangeProductionTrendText()),
+                          child: Text(_getDateRangeReworkComparisonText()),
                         ),
                       ),
                     ),
@@ -2234,7 +2844,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Hasil Sortir per Grade',
+                              'WO Normal & Rework',
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),
@@ -2318,6 +2928,198 @@ class _ReportScreenState extends State<ReportScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildWoList() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+      child: Container(
+          decoration: CustomTheme().cardTheme(),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Work Order',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                        flex: 5,
+                        child: Container(
+                          decoration: CustomTheme().cardTheme(),
+                          child: TextField(
+                              controller: _woSearchController,
+                              textInputAction: TextInputAction.search,
+                              decoration: InputDecoration(
+                                hintText: 'Cari...',
+                                prefixIcon: Icon(Icons.search),
+                                suffixIcon: _woSearchController.text.isNotEmpty
+                                    ? IconButton(
+                                        onPressed: () async {
+                                          _woSearchController.clear();
+                                          setState(() {
+                                            woSearch = '';
+                                          });
+                                          await _loadWoList();
+                                        },
+                                        icon: Icon(Icons.close))
+                                    : null,
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.all(12),
+                              ),
+                              onChanged: _onWoSearchChanged),
+                        )),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: _showWoFilter,
+                        child: Container(
+                          decoration: CustomTheme().cardTheme(),
+                          child: Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Icon(
+                              Icons.tune_outlined,
+                              size: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                SizedBox(
+                  height: 500,
+                  child: _woLoading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : _woItems.isEmpty
+                          ? NoData()
+                          : ListView.builder(
+                              controller: _woScrollController,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount:
+                                  _woItems.length + (_woLoadingMore ? 1 : 0),
+                              padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                              itemBuilder: (context, index) {
+                                if (index >= _woItems.length) {
+                                  return const Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                }
+
+                                final item = _woItems[index];
+
+                                return _buildWoListCard(item);
+                              },
+                            ),
+                )
+              ],
+            ),
+          )),
+    );
+  }
+
+  Widget _buildSpkList() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 6, 16, 8),
+      child: Container(
+          decoration: CustomTheme().cardTheme(),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'SPK',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                        flex: 5,
+                        child: Container(
+                          decoration: CustomTheme().cardTheme(),
+                          child: TextField(
+                              controller: _spkSearchController,
+                              textInputAction: TextInputAction.search,
+                              decoration: InputDecoration(
+                                hintText: 'Cari...',
+                                prefixIcon: Icon(Icons.search),
+                                suffixIcon: _spkSearchController.text.isNotEmpty
+                                    ? IconButton(
+                                        onPressed: () async {
+                                          _spkSearchController.clear();
+                                          setState(() {
+                                            spkSearch = '';
+                                          });
+                                          await _loadSpkList();
+                                        },
+                                        icon: Icon(Icons.close))
+                                    : null,
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.all(12),
+                              ),
+                              onChanged: _onSpkSearchChanged),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                SizedBox(
+                  height: 500,
+                  child: _spkLoading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : _spkItems.isEmpty
+                          ? NoData()
+                          : ListView.builder(
+                              controller: _spkScrollController,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount:
+                                  _spkItems.length + (_spkLoadingMore ? 1 : 0),
+                              padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                              itemBuilder: (context, index) {
+                                if (index >= _spkItems.length) {
+                                  return const Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                }
+
+                                final item = _spkItems[index];
+
+                                return _buildSpkListCard(item);
+                              },
+                            ),
+                )
+              ],
+            ),
+          )),
     );
   }
 }

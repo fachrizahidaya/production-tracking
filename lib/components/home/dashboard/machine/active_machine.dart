@@ -4,7 +4,6 @@ import 'package:textile_tracking/components/home/dashboard/machine/machine_secti
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/auth/storage.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class ActiveMachine extends StatefulWidget {
@@ -13,6 +12,7 @@ class ActiveMachine extends StatefulWidget {
   final unavailable;
   final handleRefetch;
   final isFetching;
+  final Iterable<String> processNames;
 
   const ActiveMachine(
       {super.key,
@@ -20,21 +20,41 @@ class ActiveMachine extends StatefulWidget {
       this.available,
       this.unavailable,
       this.handleRefetch,
-      this.isFetching});
+      this.isFetching,
+      this.processNames = const []});
 
   @override
   State<ActiveMachine> createState() => _ActiveMachineState();
 }
 
-class _ActiveMachineState extends State<ActiveMachine>
-    with TickerProviderStateMixin {
+class _ActiveMachineState extends State<ActiveMachine> {
+  static const List<String> _productionProcesses = [
+    'Dyeing',
+    'Press',
+    'Tumbler',
+    'Stenter',
+    'Long Slitting',
+    'Long Hemming',
+    'Cross Cutting',
+    'Sewing',
+  ];
+
+  static const List<String> _greigeProcesses = [
+    'Warping',
+    'Sizing',
+    'Weaving',
+    'Shearing',
+  ];
+
   String get selectedProcess =>
       processFilters.isNotEmpty ? processFilters[selectedIndex] : '';
-  TabController? _tabController;
-  List<String> processFilters = [''];
+  List<String> productionFilters = [];
+  List<String> greigeFilters = [];
+  String selectedCategory = 'production';
   int selectedIndex = 0;
 
-  VoidCallback? _tabListener;
+  List<String> get processFilters =>
+      selectedCategory == 'greige' ? greigeFilters : productionFilters;
 
   @override
   void initState() {
@@ -42,67 +62,63 @@ class _ActiveMachineState extends State<ActiveMachine>
     _loadProcessFilters();
   }
 
-  Future<void> _loadProcessFilters() async {
-    final menus = await Storage.instance.getMenus();
-    if (!mounted) return;
-
-    final productionProcesses = getProductionProcesses(menus);
-
-    final allowedProcesses = [
-      'Dyeing',
-      'Press',
-      'Tumbler',
-      'Stenter',
-      'Long Slitting',
-      'Long Hemming',
-      'Cross Cutting',
-      'Sewing',
-    ];
-
-    final filtered =
-        allowedProcesses.where((p) => productionProcesses.contains(p)).toList();
-
-    _tabController?.removeListener(_tabListener ?? () {});
-    _tabController?.dispose();
-
-    _tabListener = () {
-      if (!mounted) return;
-      if (_tabController!.indexIsChanging) return;
-
-      setState(() {
-        selectedIndex = _tabController!.index;
-      });
-    };
-
-    setState(() {
-      processFilters = filtered;
-
-      _tabController = TabController(
-        length: processFilters.length,
-        vsync: this,
-      )..addListener(_tabListener!);
-    });
-  }
-
-  List<String> getProductionProcesses(List<dynamic> menus) {
-    for (final menu in menus) {
-      if (menu['name'] == 'Produksi') {
-        final children = menu['children'] as List<dynamic>? ?? [];
-        return children.map((e) => e['name'].toString()).toList();
-      }
-    }
-    return [];
-  }
-
   @override
-  void dispose() {
-    _tabController?.removeListener(_tabListener ?? () {});
-    _tabController?.dispose();
-    super.dispose();
+  void didUpdateWidget(covariant ActiveMachine oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.processNames != widget.processNames) {
+      _loadProcessFilters();
+    }
+  }
+
+  void _loadProcessFilters() {
+    final allowedProcessNames =
+        widget.processNames.map((name) => name.trim().toLowerCase()).toSet();
+
+    productionFilters = _productionProcesses
+        .where((process) => allowedProcessNames.contains(process.toLowerCase()))
+        .toList();
+    greigeFilters = _greigeProcesses
+        .where((process) => allowedProcessNames.contains(process.toLowerCase()))
+        .toList();
+
+    if (productionFilters.isEmpty && greigeFilters.isNotEmpty) {
+      selectedCategory = 'greige';
+    } else if (greigeFilters.isEmpty && productionFilters.isNotEmpty) {
+      selectedCategory = 'production';
+    }
+
+    selectedIndex = 0;
   }
 
   bool get _shouldShowProcessFilter {
     return processFilters.length > 1;
+  }
+
+  bool get _shouldShowCategoryTabs {
+    return productionFilters.isNotEmpty && greigeFilters.isNotEmpty;
+  }
+
+  Widget _buildCategoryTabs() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: DefaultTabController(
+        length: 2,
+        initialIndex: selectedCategory == 'greige' ? 1 : 0,
+        child: TabBar(
+          onTap: (index) {
+            setState(() {
+              selectedCategory = index == 0 ? 'production' : 'greige';
+              selectedIndex = 0;
+            });
+          },
+          tabs: const [
+            Tab(text: 'Proses'),
+            Tab(text: 'Greige'),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildProcessFilter() {
@@ -116,7 +132,9 @@ class _ActiveMachineState extends State<ActiveMachine>
 
             return GestureDetector(
               onTap: () {
-                _tabController!.animateTo(index);
+                setState(() {
+                  selectedIndex = index;
+                });
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -217,60 +235,57 @@ class _ActiveMachineState extends State<ActiveMachine>
     // TABLET / DESKTOP
     // ============================================================
 
+    final filteredAvailable = filterByProcess(available, selectedProcess);
+    final filteredUnavailable = filterByProcess(unavailable, selectedProcess);
+
+    if (widget.isFetching == true) {
+      return const SizedBox(
+        height: 600,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return SizedBox(
       height: 600,
-      child: TabBarView(
-        controller: _tabController,
-        children: processFilters.map((process) {
-          final filteredAvailable = filterByProcess(available, process);
-
-          final filteredUnavailable = filterByProcess(unavailable, process);
-
-          if (widget.isFetching == true) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          return Padding(
-            padding: CustomTheme().padding('content'),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: MachineSection(
-                    title: 'Mesin Tersedia',
-                    icon: Icons.task_alt_outlined,
-                    status: Color(0xFF10b981),
-                    headerColor: 'Selesai',
-                    data: filteredAvailable,
-                    isPortrait: isPortrait,
-                    isMobile: false,
-                  ),
-                ),
-                SizedBox(width: 24),
-                Expanded(
-                  child: MachineSection(
-                    title: 'Mesin Digunakan',
-                    icon: Icons.error_outline,
-                    status: Color(0xfff18800),
-                    headerColor: 'Diproses',
-                    data: filteredUnavailable,
-                    isPortrait: isPortrait,
-                    isMobile: false,
-                  ),
-                ),
-              ],
+      child: Padding(
+        padding: CustomTheme().padding('content'),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: MachineSection(
+                title: 'Mesin Tersedia',
+                icon: Icons.task_alt_outlined,
+                status: Color(0xFF10b981),
+                headerColor: 'Selesai',
+                data: filteredAvailable,
+                isPortrait: isPortrait,
+                isMobile: false,
+              ),
             ),
-          );
-        }).toList(),
+            SizedBox(width: 24),
+            Expanded(
+              child: MachineSection(
+                title: 'Mesin Digunakan',
+                icon: Icons.error_outline,
+                status: Color(0xfff18800),
+                headerColor: 'Diproses',
+                data: filteredUnavailable,
+                isPortrait: isPortrait,
+                isMobile: false,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_tabController == null) {
+    if (processFilters.isEmpty) {
       return const SizedBox.shrink();
     }
 
@@ -308,8 +323,18 @@ class _ActiveMachineState extends State<ActiveMachine>
           // ======================================================
           Padding(
             padding: EdgeInsets.all(isMobile ? 12 : 16),
-            child: isMobile ? _buildMobileHeader() : _buildTabletHeader(),
+            child: isMobile
+                ? _buildMobileHeader(
+                    filteredAvailable,
+                    filteredUnavailable,
+                  )
+                : _buildTabletHeader(
+                    filteredAvailable,
+                    filteredUnavailable,
+                  ),
           ),
+
+          if (_shouldShowCategoryTabs) _buildCategoryTabs(),
 
           // ======================================================
           // PROCESS FILTER
@@ -324,8 +349,8 @@ class _ActiveMachineState extends State<ActiveMachine>
           // CONTENT
           // ======================================================
           _buildSwipeContent(
-            filteredAvailable,
-            filteredUnavailable,
+            widget.available,
+            widget.unavailable,
             isPortrait,
           ),
         ],
@@ -454,7 +479,10 @@ class _ActiveMachineState extends State<ActiveMachine>
     );
   }
 
-  Widget _buildMobileHeader() {
+  Widget _buildMobileHeader(
+    List<dynamic> available,
+    List<dynamic> unavailable,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -498,7 +526,7 @@ class _ActiveMachineState extends State<ActiveMachine>
             Expanded(
               child: CustomBadge(
                 withStatus: true,
-                title: '${(widget.available ?? []).length} Tersedia',
+                title: '${available.length} Tersedia',
                 status: 'Selesai',
               ),
             ),
@@ -506,7 +534,7 @@ class _ActiveMachineState extends State<ActiveMachine>
             Expanded(
               child: CustomBadge(
                 withStatus: true,
-                title: '${(widget.unavailable ?? []).length} Digunakan',
+                title: '${unavailable.length} Digunakan',
                 status: 'Diproses',
               ),
             ),
@@ -516,7 +544,10 @@ class _ActiveMachineState extends State<ActiveMachine>
     );
   }
 
-  Widget _buildTabletHeader() {
+  Widget _buildTabletHeader(
+    List<dynamic> available,
+    List<dynamic> unavailable,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -546,12 +577,12 @@ class _ActiveMachineState extends State<ActiveMachine>
             ),
             CustomBadge(
               withStatus: true,
-              title: '${(widget.available ?? []).length} Tersedia',
+              title: '${available.length} Tersedia',
               status: 'Selesai',
             ),
             CustomBadge(
               withStatus: true,
-              title: '${(widget.unavailable ?? []).length} Digunakan',
+              title: '${unavailable.length} Digunakan',
               status: 'Diproses',
             ),
           ].separatedBy(

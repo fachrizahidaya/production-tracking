@@ -22,6 +22,25 @@ class WorkOrderSummaryService extends BaseService {
   List<dynamic> get preDataList => _preDataList;
   List<dynamic> get dataSummary => _dataSummary;
 
+  void filterByProcessNames(Iterable<String> processNames) {
+    final normalizedProcessNames = processNames
+        .map((name) => name.trim().toLowerCase())
+        .where((name) => name.isNotEmpty)
+        .toSet();
+
+    bool isAllowed(dynamic item) {
+      if (item is! Map) return false;
+
+      final processName =
+          (item['process_name'] ?? '').toString().trim().toLowerCase();
+      return normalizedProcessNames.contains(processName);
+    }
+
+    _dataList = _dataList.where(isAllowed).toList();
+    _preDataList = _preDataList.where(isAllowed).toList();
+    notifyListeners();
+  }
+
   @override
   Future<void> fetchItems(
       {bool isInitialLoad = false, String? searchQuery = ''}) async {}

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.dart';
 import 'package:textile_tracking/components/home/dashboard/machine/machine_section.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+<<<<<<< HEAD
+=======
+import 'package:textile_tracking/helpers/util/separated_column.dart';
+>>>>>>> 04b6e1a6 (fix: filter dashboard data by accessible processes)
 
 class ActiveMachine extends StatefulWidget {
   final data;
@@ -10,6 +14,7 @@ class ActiveMachine extends StatefulWidget {
   final handleRefetch;
   final isFetching;
   final Iterable<String> processNames;
+<<<<<<< HEAD
   final bool isMobile;
 
   const ActiveMachine({
@@ -22,6 +27,17 @@ class ActiveMachine extends StatefulWidget {
     this.processNames = const [],
     this.isMobile = true,
   });
+=======
+
+  const ActiveMachine(
+      {super.key,
+      this.data,
+      this.available,
+      this.unavailable,
+      this.handleRefetch,
+      this.isFetching,
+      this.processNames = const []});
+>>>>>>> 04b6e1a6 (fix: filter dashboard data by accessible processes)
 
   @override
   State<ActiveMachine> createState() => _ActiveMachineState();
@@ -69,6 +85,29 @@ class _ActiveMachineState extends State<ActiveMachine> {
     if (oldWidget.processNames != widget.processNames) {
       _loadProcessFilters();
     }
+<<<<<<< HEAD
+=======
+  }
+
+  void _loadProcessFilters() {
+    final allowedProcessNames =
+        widget.processNames.map((name) => name.trim().toLowerCase()).toSet();
+
+    productionFilters = _productionProcesses
+        .where((process) => allowedProcessNames.contains(process.toLowerCase()))
+        .toList();
+    greigeFilters = _greigeProcesses
+        .where((process) => allowedProcessNames.contains(process.toLowerCase()))
+        .toList();
+
+    if (productionFilters.isEmpty && greigeFilters.isNotEmpty) {
+      selectedCategory = 'greige';
+    } else if (greigeFilters.isEmpty && productionFilters.isNotEmpty) {
+      selectedCategory = 'production';
+    }
+
+    selectedIndex = 0;
+>>>>>>> 04b6e1a6 (fix: filter dashboard data by accessible processes)
   }
 
   void _loadProcessFilters() {
@@ -91,6 +130,7 @@ class _ActiveMachineState extends State<ActiveMachine> {
     selectedIndex = 0;
   }
 
+<<<<<<< HEAD
   bool get _shouldShowProcessFilter => processFilters.length > 1;
 
   bool get _shouldShowCategoryFilter =>
@@ -131,6 +171,67 @@ class _ActiveMachineState extends State<ActiveMachine> {
                 style: TextStyle(
                   fontSize: CustomTheme().fontSize('xl'),
                   fontWeight: CustomTheme().fontWeight('bold'),
+=======
+  bool get _shouldShowCategoryTabs {
+    return productionFilters.isNotEmpty && greigeFilters.isNotEmpty;
+  }
+
+  Widget _buildCategoryTabs() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: DefaultTabController(
+        length: 2,
+        initialIndex: selectedCategory == 'greige' ? 1 : 0,
+        child: TabBar(
+          onTap: (index) {
+            setState(() {
+              selectedCategory = index == 0 ? 'production' : 'greige';
+              selectedIndex = 0;
+            });
+          },
+          tabs: const [
+            Tab(text: 'Proses'),
+            Tab(text: 'Greige'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProcessFilter() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Padding(
+        padding: CustomTheme().padding('badge'),
+        child: Row(
+          children: List.generate(processFilters.length, (index) {
+            final isSelected = selectedIndex == index;
+
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedIndex = index;
+                });
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isSelected
+                        ? CustomTheme().buttonColor('primary')
+                        : Colors.grey.shade400,
+                  ),
+                  color: isSelected
+                      ? CustomTheme().buttonColor('primary')
+                      : Colors.white,
+                ),
+                padding: CustomTheme().padding('badge'),
+                child: Text(
+                  processFilters[index],
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black,
+                  ),
+>>>>>>> 04b6e1a6 (fix: filter dashboard data by accessible processes)
                 ),
               ),
               const Divider(height: 24),
@@ -434,53 +535,50 @@ class _ActiveMachineState extends State<ActiveMachine> {
     // TABLET / DESKTOP
     // ============================================================
 
+    final filteredAvailable = filterByProcess(available, selectedProcess);
+    final filteredUnavailable = filterByProcess(unavailable, selectedProcess);
+
+    if (widget.isFetching == true) {
+      return const SizedBox(
+        height: 600,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return SizedBox(
       height: 600,
-      child: TabBarView(
-        controller: _tabController,
-        children: processFilters.map((process) {
-          final filteredAvailable = filterByProcess(available, process);
-
-          final filteredUnavailable = filterByProcess(unavailable, process);
-
-          if (widget.isFetching == true) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          return Padding(
-            padding: CustomTheme().padding('content'),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: MachineSection(
-                    title: 'Mesin Tersedia',
-                    icon: Icons.task_alt_outlined,
-                    status: Color(0xFF10b981),
-                    headerColor: 'Selesai',
-                    data: filteredAvailable,
-                    isPortrait: isPortrait,
-                    isMobile: false,
-                  ),
-                ),
-                SizedBox(width: 24),
-                Expanded(
-                  child: MachineSection(
-                    title: 'Mesin Digunakan',
-                    icon: Icons.error_outline,
-                    status: Color(0xfff18800),
-                    headerColor: 'Diproses',
-                    data: filteredUnavailable,
-                    isPortrait: isPortrait,
-                    isMobile: false,
-                  ),
-                ),
-              ],
+      child: Padding(
+        padding: CustomTheme().padding('content'),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: MachineSection(
+                title: 'Mesin Tersedia',
+                icon: Icons.task_alt_outlined,
+                status: Color(0xFF10b981),
+                headerColor: 'Selesai',
+                data: filteredAvailable,
+                isPortrait: isPortrait,
+                isMobile: false,
+              ),
             ),
-          );
-        }).toList(),
+            SizedBox(width: 24),
+            Expanded(
+              child: MachineSection(
+                title: 'Mesin Digunakan',
+                icon: Icons.error_outline,
+                status: Color(0xfff18800),
+                headerColor: 'Diproses',
+                data: filteredUnavailable,
+                isPortrait: isPortrait,
+                isMobile: false,
+              ),
+            ),
+          ],
+        ),
       ),
 >>>>>>> 83d26bbb (fix: UI mobile dashboard)
     );
@@ -488,6 +586,7 @@ class _ActiveMachineState extends State<ActiveMachine> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
 <<<<<<< HEAD
     if (processFilters.isEmpty) {
       return const SizedBox.shrink();
@@ -499,6 +598,9 @@ class _ActiveMachineState extends State<ActiveMachine> {
 
 =======
     if (_tabController == null) {
+=======
+    if (processFilters.isEmpty) {
+>>>>>>> 04b6e1a6 (fix: filter dashboard data by accessible processes)
       return const SizedBox.shrink();
     }
 
@@ -556,8 +658,18 @@ class _ActiveMachineState extends State<ActiveMachine> {
           // ======================================================
           Padding(
             padding: EdgeInsets.all(isMobile ? 12 : 16),
-            child: isMobile ? _buildMobileHeader() : _buildTabletHeader(),
+            child: isMobile
+                ? _buildMobileHeader(
+                    filteredAvailable,
+                    filteredUnavailable,
+                  )
+                : _buildTabletHeader(
+                    filteredAvailable,
+                    filteredUnavailable,
+                  ),
           ),
+
+          if (_shouldShowCategoryTabs) _buildCategoryTabs(),
 
           // ======================================================
           // PROCESS FILTER
@@ -572,8 +684,8 @@ class _ActiveMachineState extends State<ActiveMachine> {
           // CONTENT
           // ======================================================
           _buildSwipeContent(
-            filteredAvailable,
-            filteredUnavailable,
+            widget.available,
+            widget.unavailable,
             isPortrait,
           ),
         ],
@@ -702,7 +814,10 @@ class _ActiveMachineState extends State<ActiveMachine> {
     );
   }
 
-  Widget _buildMobileHeader() {
+  Widget _buildMobileHeader(
+    List<dynamic> available,
+    List<dynamic> unavailable,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -746,7 +861,7 @@ class _ActiveMachineState extends State<ActiveMachine> {
             Expanded(
               child: CustomBadge(
                 withStatus: true,
-                title: '${(widget.available ?? []).length} Tersedia',
+                title: '${available.length} Tersedia',
                 status: 'Selesai',
               ),
             ),
@@ -754,7 +869,7 @@ class _ActiveMachineState extends State<ActiveMachine> {
             Expanded(
               child: CustomBadge(
                 withStatus: true,
-                title: '${(widget.unavailable ?? []).length} Digunakan',
+                title: '${unavailable.length} Digunakan',
                 status: 'Diproses',
               ),
             ),
@@ -764,7 +879,10 @@ class _ActiveMachineState extends State<ActiveMachine> {
     );
   }
 
-  Widget _buildTabletHeader() {
+  Widget _buildTabletHeader(
+    List<dynamic> available,
+    List<dynamic> unavailable,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -794,12 +912,12 @@ class _ActiveMachineState extends State<ActiveMachine> {
             ),
             CustomBadge(
               withStatus: true,
-              title: '${(widget.available ?? []).length} Tersedia',
+              title: '${available.length} Tersedia',
               status: 'Selesai',
             ),
             CustomBadge(
               withStatus: true,
-              title: '${(widget.unavailable ?? []).length} Digunakan',
+              title: '${unavailable.length} Digunakan',
               status: 'Diproses',
             ),
           ].separatedBy(

@@ -460,6 +460,7 @@ class _DashboardState extends State<Dashboard> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     await _safeFetch(_handleFetchMenu);
 
     await Future.wait([
@@ -471,8 +472,11 @@ class _DashboardState extends State<Dashboard> {
     ]);
 
 =======
+=======
+    await _safeFetch(_handleFetchMenu);
+
+>>>>>>> 04b6e1a6 (fix: filter dashboard data by accessible processes)
     await Future.wait([
-      _safeFetch(_handleFetchMenu),
       _safeFetch(_handleFetchStats),
       _safeFetch(_handleFetchPie),
       _safeFetch(_handleFetchMachine),
@@ -622,6 +626,7 @@ class _DashboardState extends State<Dashboard> {
         service.getPreDataList(context, summaryParams),
       ]);
       service.filterByProcessNames(menuProcessNames);
+<<<<<<< HEAD
 =======
     });
 
@@ -646,6 +651,8 @@ class _DashboardState extends State<Dashboard> {
         service.getPreDataList(context, summaryParams),
       ]);
 >>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
+=======
+>>>>>>> 04b6e1a6 (fix: filter dashboard data by accessible processes)
 
       if (!mounted) return;
 
@@ -1185,6 +1192,7 @@ class _DashboardState extends State<Dashboard> {
                         unavailable: machineList['unavailable'],
                         handleRefetch: _handleFetchMachine,
                         isFetching: isMachineLoading,
+                        processNames: menuProcessNames,
                       ),
                     WorkOrderProcessScreen(
                       data: _dataList,

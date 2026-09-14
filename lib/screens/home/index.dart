@@ -30,6 +30,7 @@ class _HomeState extends State<Home> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
   String user = '';
   String name = '';
+<<<<<<< HEAD
   int _reworkNotificationCount = 0;
   int _bsNotificationCount = 0;
   int _gsmNotificationCount = 0;
@@ -37,14 +38,27 @@ class _HomeState extends State<Home> {
   bool _canViewBsEvaluation = false;
   bool _canViewGsmEvaluation = false;
   late Future<String?> _tokenFuture;
+=======
+  late Future<String?> _tokenFuture;
+  final Map<String, bool> _dashboardWidgets = {
+    'workOrderSummary': true,
+    'activeMachine': true,
+    'workOrderProcess': true,
+  };
+>>>>>>> 5e1caa7c (feat: widget controller)
 
   @override
   void initState() {
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
     super.initState();
+<<<<<<< HEAD
     _tokenFuture = SharedPreferences.getInstance().then(
       (prefs) => prefs.getString('access_token'),
     );
+=======
+    _tokenFuture = SharedPreferences.getInstance()
+        .then((prefs) => prefs.getString('access_token'));
+>>>>>>> 5e1caa7c (feat: widget controller)
 
     setState(() {
       user = loggedInUser?.username ?? '';
@@ -307,6 +321,59 @@ class _HomeState extends State<Home> {
     );
   }
 
+  void _showDashboardWidgetSettings() {
+    const widgets = {
+      'workOrderSummary': 'Perkembangan Proses Produksi',
+      'activeMachine': 'Status Mesin',
+      'workOrderProcess': 'Work Order',
+    };
+
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'Widget',
+                        style: TextStyle(
+                          fontSize: CustomTheme().fontSize('lg'),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...widgets.entries.map((entry) {
+                      return SwitchListTile(
+                        title: Text(entry.value),
+                        value: _dashboardWidgets[entry.key] ?? true,
+                        onChanged: (value) {
+                          setState(() {
+                            _dashboardWidgets[entry.key] = value;
+                          });
+                          setModalState(() {});
+                        },
+                      );
+                    }),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   Future<void> _handleExit(
     BuildContext context,
     ValueNotifier<bool> isLoading,
@@ -441,6 +508,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String?>(
+<<<<<<< HEAD
       future: _tokenFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -449,6 +517,20 @@ class _HomeState extends State<Home> {
         if (snapshot.hasError || !snapshot.hasData) {
           return Center(child: Text('Error fetch token'));
         }
+=======
+        future: _tokenFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError || !snapshot.hasData) {
+            return Center(
+              child: Text('Error fetch token'),
+            );
+          }
+>>>>>>> 5e1caa7c (feat: widget controller)
 
 <<<<<<< HEAD
         final isMobile = AppLayout.resolveIsMobile(context);
@@ -500,6 +582,7 @@ class _HomeState extends State<Home> {
 >>>>>>> d8439a4 (fix: refactor code)
 =======
               showNameWithAvatar: true,
+<<<<<<< HEAD
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
 =======
               showNameWithAvatar: true,
@@ -509,6 +592,25 @@ class _HomeState extends State<Home> {
         );
       },
     );
+=======
+              onDashboardSettings: _showDashboardWidgetSettings,
+            ),
+            drawer: AppDrawer(
+              handleLogout: () => _handleLogout(context),
+              handleFetchMenu: () => _handleFetchMenu(),
+            ),
+            body: SafeArea(
+              child: Dashboard(
+                showWorkOrderSummary:
+                    _dashboardWidgets['workOrderSummary'] ?? true,
+                showActiveMachine: _dashboardWidgets['activeMachine'] ?? true,
+                showWorkOrderProcess:
+                    _dashboardWidgets['workOrderProcess'] ?? true,
+              ),
+            ),
+          );
+        });
+>>>>>>> 5e1caa7c (feat: widget controller)
   }
 }
 

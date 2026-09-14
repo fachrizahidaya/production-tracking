@@ -43,13 +43,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final handleSave;
   final name;
   final bool isLoading;
-  final bool isDashboardSettingsLoading;
   final VoidCallback? onDashboardSettings;
+<<<<<<< HEAD
   final VoidCallback? onReportSettings;
 <<<<<<< HEAD
   final VoidCallback? onEdit;
 =======
 >>>>>>> 7a6aa3b1 (feat: model for report)
+=======
+>>>>>>> 5e1caa7c (feat: widget controller)
 
   const CustomAppBar(
       {super.key,
@@ -103,9 +105,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 =======
       this.handleFinish,
       this.isLoading = false,
-      this.isDashboardSettingsLoading = false,
       this.onDashboardSettings,
-      this.onReportSettings,
       this.showNameWithAvatar = false});
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
 =======
@@ -136,6 +136,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (isWithNotification)
           _buildNotificationButton(
             tooltip: notificationTooltip,
@@ -155,11 +156,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           )
         else if (onDashboardSettings != null)
+=======
+        if (onDashboardSettings != null)
+>>>>>>> 5e1caa7c (feat: widget controller)
           IconButton(
             tooltip: 'Atur widget dashboard',
             onPressed: onDashboardSettings,
             icon: const Icon(Icons.dashboard_customize_outlined),
           ),
+<<<<<<< HEAD
         if (onReportSettings != null)
           IconButton(
             tooltip: 'Atur widget laporan',
@@ -175,6 +180,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
 =======
 >>>>>>> 7a6aa3b1 (feat: model for report)
+=======
+>>>>>>> 5e1caa7c (feat: widget controller)
         if (isWithAccount)
           PopupMenuButton<String>(
             icon: Row(

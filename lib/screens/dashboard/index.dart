@@ -25,6 +25,7 @@ import 'package:textile_tracking/models/dashboard/work_order_summary.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 
 class Dashboard extends StatefulWidget {
+<<<<<<< HEAD
   final bool isMobile;
   final Future<void> Function()? onRefreshReworkNotifications;
 
@@ -32,6 +33,17 @@ class Dashboard extends StatefulWidget {
     super.key,
     required this.isMobile,
     this.onRefreshReworkNotifications,
+=======
+  final bool showWorkOrderSummary;
+  final bool showActiveMachine;
+  final bool showWorkOrderProcess;
+
+  const Dashboard({
+    super.key,
+    this.showWorkOrderSummary = true,
+    this.showActiveMachine = true,
+    this.showWorkOrderProcess = true,
+>>>>>>> 5e1caa7c (feat: widget controller)
   });
 
   @override
@@ -1168,17 +1180,20 @@ class _DashboardState extends State<Dashboard> {
                   sliver: SliverList(
                       delegate: SliverChildListDelegate([
                     WorkOrderStats(data: statsList, isFetching: isStatsLoading),
-                    WorkOrderSummary(
-                      data: summaryList,
-                      greigeData: greigeSummaryList,
-                      handleRefetch: _handleFetchSummary,
-                      isFetching: isSummaryLoading,
-                      filterWidget: SummaryFilter(
-                        dariTanggal: dariTanggalSummary,
-                        sampaiTanggal: sampaiTanggalSummary,
-                        onHandleFilter: _handleSummaryFilter,
-                        params: summaryParams,
+                    if (widget.showWorkOrderSummary)
+                      WorkOrderSummary(
+                        data: summaryList,
+                        greigeData: greigeSummaryList,
+                        handleRefetch: _handleFetchSummary,
+                        isFetching: isSummaryLoading,
+                        filterWidget: SummaryFilter(
+                          dariTanggal: dariTanggalSummary,
+                          sampaiTanggal: sampaiTanggalSummary,
+                          onHandleFilter: _handleSummaryFilter,
+                          params: summaryParams,
+                        ),
                       ),
+<<<<<<< HEAD
 >>>>>>> 0f73a2e7 (fix: UI dashboard)
 =======
 >>>>>>> 8d5fb5bc (fix: UI mobile dashboard)
@@ -1186,6 +1201,9 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> a6b1bf80 (fix: UI dashboard)
                     ),
                     if (!shouldHideActiveMachine)
+=======
+                    if (widget.showActiveMachine && !shouldHideActiveMachine)
+>>>>>>> 5e1caa7c (feat: widget controller)
                       ActiveMachine(
                         data: machineList,
                         available: machineList['available'],
@@ -1194,29 +1212,30 @@ class _DashboardState extends State<Dashboard> {
                         isFetching: isMachineLoading,
                         processNames: menuProcessNames,
                       ),
-                    WorkOrderProcessScreen(
-                      data: _dataList,
-                      search: _search,
-                      handleSearch: _handleSearch,
-                      firstLoading: _firstLoading,
-                      hasMore: _hasMore,
-                      handleLoadMore: _loadMore,
-                      handleRefetch: _refetch,
-                      isLoadMore: _isLoadMore,
-                      filterWidget: ProcessFilter(
-                        params: params,
-                        onHandleFilter: _handleProcessFilter,
+                    if (widget.showWorkOrderProcess)
+                      WorkOrderProcessScreen(
+                        data: _dataList,
+                        search: _search,
+                        handleSearch: _handleSearch,
+                        firstLoading: _firstLoading,
+                        hasMore: _hasMore,
+                        handleLoadMore: _loadMore,
+                        handleRefetch: _refetch,
+                        isLoadMore: _isLoadMore,
+                        filterWidget: ProcessFilter(
+                          params: params,
+                          onHandleFilter: _handleProcessFilter,
+                        ),
+                        handleFetchData: (params) async {
+                          final service = Provider.of<WorkOrderProcessService>(
+                              context,
+                              listen: false);
+                          await service.getDataList(context, params);
+                          return service.items;
+                        },
+                        service: WorkOrderProcessService(),
+                        isFiltered: _isFiltered,
                       ),
-                      handleFetchData: (params) async {
-                        final service = Provider.of<WorkOrderProcessService>(
-                            context,
-                            listen: false);
-                        await service.getDataList(context, params);
-                        return service.items;
-                      },
-                      service: WorkOrderProcessService(),
-                      isFiltered: _isFiltered,
-                    ),
                   ].separatedBy(CustomTheme().vGap('2xl')))),
                 ),
               ],

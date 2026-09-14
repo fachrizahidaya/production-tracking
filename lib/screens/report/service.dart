@@ -1247,4 +1247,126 @@ import 'package:textile_tracking/models/report/wo_list.dart';
         ])?.toString() ??
         '-';
   }
+
+  Future<ReworkComparison> getReworkComparison(
+      {DateTime? startDate,
+      DateTime? endDate,
+      String? sort,
+      int page = 1,
+      int perPage = 20,
+      String? search}) async {
+    final startDateString = _formatDate(startDate!);
+    final endDateString = _formatDate(endDate!);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? token = prefs.getString('access_token');
+
+    final uri = Uri.parse(
+      '$baseUrl/report/production/rework-comparison',
+    ).replace(
+      queryParameters: {
+        'start_date': startDateString,
+        'end_date': endDateString,
+      },
+    );
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return ReworkComparison.fromJson(data);
+    }
+
+    throw Exception('Failed to load rework comparison : '
+        '${response.statusCode} ${response.body}');
+  }
+
+  Future<WoList> getWoList(
+      {DateTime? startDate,
+      DateTime? endDate,
+      String? sort,
+      int page = 1,
+      int perPage = 20,
+      String? search}) async {
+    final startDateString = _formatDate(startDate!);
+    final endDateString = _formatDate(endDate!);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? token = prefs.getString('access_token');
+
+    final uri = Uri.parse(
+      '$baseUrl/report/production/list',
+    ).replace(
+      queryParameters: {
+        'start_date': startDateString,
+        'end_date': endDateString,
+        'sort': sort,
+        'page': page.toString(),
+        'per_page': perPage.toString(),
+        'search': search
+      },
+    );
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return WoList.fromJson(data);
+    }
+
+    throw Exception('Failed to load sorting result : '
+        '${response.statusCode} ${response.body}');
+  }
+
+  Future<SpkList> getSpkList(
+      {DateTime? startDate,
+      DateTime? endDate,
+      String? sort,
+      int page = 1,
+      int perPage = 20,
+      String? search}) async {
+    final startDateString = _formatDate(startDate!);
+    final endDateString = _formatDate(endDate!);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? token = prefs.getString('access_token');
+
+    final uri = Uri.parse(
+      '$baseUrl/report/production/spk-list',
+    ).replace(
+      queryParameters: {
+        'start_date': startDateString,
+        'end_date': endDateString,
+        'sort': sort,
+        'page': page.toString(),
+        'per_page': perPage.toString(),
+        'search': search
+      },
+    );
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return SpkList.fromJson(data);
+    }
+
+    throw Exception('Failed to load sorting result : '
+        '${response.statusCode} ${response.body}');
+  }
 }

@@ -192,6 +192,26 @@ class _ReportScreenState extends State<ReportScreen> {
     if (!_sortingScrollController.hasClients) return;
   }
 
+  void _onWoScroll() {
+    if (!_woScrollController.hasClients) return;
+
+    final position = _woScrollController.position;
+
+    if (position.pixels >= position.maxScrollExtent - 100) {
+      _loadMoreWoList();
+    }
+  }
+
+  void _onSpkScroll() {
+    if (!_spkScrollController.hasClients) return;
+
+    final position = _spkScrollController.position;
+
+    if (position.pixels >= position.maxScrollExtent - 100) {
+      _loadMoreSpkList();
+    }
+  }
+
   void _onSortingSearchChanged(String value) {
     _sortingSearchDebounce?.cancel();
 
@@ -247,6 +267,102 @@ class _ReportScreenState extends State<ReportScreen> {
         await _loadSpkList();
       },
     );
+  }
+
+  Future<void> _loadMoreWoList() async {
+    if (_woLoading || _woLoadingMore || !_woHasMore) {
+      return;
+    }
+
+    setState(() {
+      _woLoadingMore = true;
+    });
+
+    try {
+      final nextPage = _woPage + 1;
+
+      final result = await _reportService.getWoList(
+          startDate: woListStartDate,
+          endDate: woListEndDate,
+          page: nextPage,
+          perPage: 20,
+          sort: woSort,
+          search: woSearch);
+
+      if (!mounted) return;
+
+      setState(() {
+        _woItems.addAll(result.data);
+
+        _woPage = result.currentPage;
+
+        _woHasMore = result.currentPage < result.lastPage;
+
+        _woLoadingMore = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _woLoadingMore = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Gagal mengambil data berikutnya: $e',
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _loadMoreSpkList() async {
+    if (_spkLoading || _spkLoadingMore || !_spkHasMore) {
+      return;
+    }
+
+    setState(() {
+      _spkLoadingMore = true;
+    });
+
+    try {
+      final nextPage = _spkPage + 1;
+
+      final result = await _reportService.getSpkList(
+          startDate: spkSummaryStartDate,
+          endDate: spkSummaryEndDate,
+          page: nextPage,
+          perPage: 20,
+          sort: spkSort,
+          search: spkSearch);
+
+      if (!mounted) return;
+
+      setState(() {
+        _spkItems.addAll(result.data);
+
+        _spkPage = result.currentPage;
+
+        _spkHasMore = result.currentPage < result.lastPage;
+
+        _spkLoadingMore = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _spkLoadingMore = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Gagal mengambil data berikutnya: $e',
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _loadProductionSummary() async {
@@ -463,7 +579,6 @@ class _ReportScreenState extends State<ReportScreen> {
 
     setState(() {
       _woLoading = true;
-
       _woItems.clear();
     });
 
@@ -481,7 +596,6 @@ class _ReportScreenState extends State<ReportScreen> {
       setState(() {
         woList = result;
         _woItems.addAll(result.data);
-
         _woLoading = false;
       });
     } catch (e) {
@@ -501,7 +615,6 @@ class _ReportScreenState extends State<ReportScreen> {
 
     setState(() {
       _spkLoading = true;
-
       _spkItems.clear();
     });
 
@@ -518,7 +631,6 @@ class _ReportScreenState extends State<ReportScreen> {
       setState(() {
         spkList = result;
         _spkItems.addAll(result.data);
-
         _spkLoading = false;
       });
     } catch (e) {
@@ -1532,7 +1644,9 @@ class _ReportScreenState extends State<ReportScreen> {
                   height: 8,
                 ),
                 SizedBox(
-                  height: 500,
+                  height: _topBsLoading || _topBsItems.isEmpty
+                      ? 120
+                      : (_topBsItems.length.clamp(1, 3).toDouble() * 106) + 6,
                   child: _topBsLoading
                       ? Center(
                           child: CircularProgressIndicator(),
@@ -1597,7 +1711,10 @@ class _ReportScreenState extends State<ReportScreen> {
                             spkSummaryEndDate = picked.end;
                           });
 
-                          await _loadSpkSummary();
+                          await Future.wait([
+                            _loadSpkSummary(),
+                            _loadSpkList(),
+                          ]);
                         }
                       },
                       child: Container(
@@ -1837,6 +1954,7 @@ class _ReportScreenState extends State<ReportScreen> {
             ],
           ),
         ),
+        _buildSpkList(),
       ],
     );
   }
@@ -2044,23 +2162,23 @@ class _ReportScreenState extends State<ReportScreen> {
                             firstDate: new DateTime(2019),
                             lastDate: new DateTime(2045),
                             initialDateRange: DateTimeRange(
-                                start: productionTrendStartDate,
-                                end: productionTrendEndDate));
+                                start: reworkComparisonStartDate,
+                                end: reworkComparisonEndDate));
 
                         if (picked != null) {
                           setState(() {
-                            productionTrendStartDate = picked.start;
-                            productionTrendEndDate = picked.end;
+                            reworkComparisonStartDate = picked.start;
+                            reworkComparisonEndDate = picked.end;
                           });
 
-                          await _loadProductionTrend();
+                          await _loadReworkComparison();
                         }
                       },
                       child: Container(
                         decoration: CustomTheme().cardTheme(),
                         child: Padding(
                           padding: EdgeInsets.all(12),
-                          child: Text(_getDateRangeProductionTrendText()),
+                          child: Text(_getDateRangeReworkComparisonText()),
                         ),
                       ),
                     ),
@@ -2085,7 +2203,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Hasil Sortir per Grade',
+                              'WO Normal & Rework',
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),
@@ -2169,6 +2287,198 @@ class _ReportScreenState extends State<ReportScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildWoList() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+      child: Container(
+          decoration: CustomTheme().cardTheme(),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Work Order',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                        flex: 5,
+                        child: Container(
+                          decoration: CustomTheme().cardTheme(),
+                          child: TextField(
+                              controller: _woSearchController,
+                              textInputAction: TextInputAction.search,
+                              decoration: InputDecoration(
+                                hintText: 'Cari...',
+                                prefixIcon: Icon(Icons.search),
+                                suffixIcon: _woSearchController.text.isNotEmpty
+                                    ? IconButton(
+                                        onPressed: () async {
+                                          _woSearchController.clear();
+                                          setState(() {
+                                            woSearch = '';
+                                          });
+                                          await _loadWoList();
+                                        },
+                                        icon: Icon(Icons.close))
+                                    : null,
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.all(12),
+                              ),
+                              onChanged: _onWoSearchChanged),
+                        )),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: _showWoFilter,
+                        child: Container(
+                          decoration: CustomTheme().cardTheme(),
+                          child: Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Icon(
+                              Icons.tune_outlined,
+                              size: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                SizedBox(
+                  height: 500,
+                  child: _woLoading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : _woItems.isEmpty
+                          ? NoData()
+                          : ListView.builder(
+                              controller: _woScrollController,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount:
+                                  _woItems.length + (_woLoadingMore ? 1 : 0),
+                              padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                              itemBuilder: (context, index) {
+                                if (index >= _woItems.length) {
+                                  return const Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                }
+
+                                final item = _woItems[index];
+
+                                return _buildWoListCard(item);
+                              },
+                            ),
+                )
+              ],
+            ),
+          )),
+    );
+  }
+
+  Widget _buildSpkList() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 6, 16, 8),
+      child: Container(
+          decoration: CustomTheme().cardTheme(),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'SPK',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                        flex: 5,
+                        child: Container(
+                          decoration: CustomTheme().cardTheme(),
+                          child: TextField(
+                              controller: _spkSearchController,
+                              textInputAction: TextInputAction.search,
+                              decoration: InputDecoration(
+                                hintText: 'Cari...',
+                                prefixIcon: Icon(Icons.search),
+                                suffixIcon: _spkSearchController.text.isNotEmpty
+                                    ? IconButton(
+                                        onPressed: () async {
+                                          _spkSearchController.clear();
+                                          setState(() {
+                                            spkSearch = '';
+                                          });
+                                          await _loadSpkList();
+                                        },
+                                        icon: Icon(Icons.close))
+                                    : null,
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.all(12),
+                              ),
+                              onChanged: _onSpkSearchChanged),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                SizedBox(
+                  height: 500,
+                  child: _spkLoading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : _spkItems.isEmpty
+                          ? NoData()
+                          : ListView.builder(
+                              controller: _spkScrollController,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount:
+                                  _spkItems.length + (_spkLoadingMore ? 1 : 0),
+                              padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                              itemBuilder: (context, index) {
+                                if (index >= _spkItems.length) {
+                                  return const Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                }
+
+                                final item = _spkItems[index];
+
+                                return _buildSpkListCard(item);
+                              },
+                            ),
+                )
+              ],
+            ),
+          )),
     );
   }
 }

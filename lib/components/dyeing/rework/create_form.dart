@@ -94,6 +94,7 @@ class _CreateFormState extends State<CreateForm> {
       formKey: widget.formKey,
       id: widget.id,
       form: widget.form,
+      data: widget.data,
       selectWorkOrder: widget.selectWorkOrder,
       selectMachine: widget.selectMachine,
       selectReworkCategory: widget.selectReworkCategory,

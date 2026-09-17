@@ -55,6 +55,7 @@ class _ReworkInfoTabState extends State<ReworkInfoTab> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CreateForm(
+                data: widget.data,
                 form: widget.form,
                 formKey: widget.formKey,
                 selectWorkOrder: widget.handleSelectWorkOrder,

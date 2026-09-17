@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
@@ -43,6 +45,8 @@ class ListForm extends StatefulWidget {
 }
 
 class _ListFormState extends State<ListForm> {
+  int _selectedSemiFinishedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -69,6 +73,7 @@ class _ListFormState extends State<ListForm> {
                         )),
                   ),
               ].separatedBy(CustomTheme().hGap('xl'))),
+          if (widget.form?['wo_id'] != null) _buildSemiFinishedProducts(),
           if (widget.form?['wo_id'] != null)
             TemplateCard(
                 title: 'Mesin',
@@ -81,6 +86,96 @@ class _ListFormState extends State<ListForm> {
               child: _buildReworkForm(),
             ),
         ].separatedBy(CustomTheme().vGap('xl')),
+      ),
+    );
+  }
+
+  Widget _buildSemiFinishedProducts() {
+    final products = List<Map<String, dynamic>>.from(
+      widget.data?['semifinished_products'] ?? [],
+    );
+
+    if (products.isEmpty) {
+      return TemplateCard(
+        title: 'Produk Setengah Jadi',
+        icon: Icons.inventory_2_outlined,
+        child: const NoData(),
+      );
+    }
+
+    final selectedIndex = _selectedSemiFinishedIndex >= products.length
+        ? 0
+        : _selectedSemiFinishedIndex;
+    final selectedProduct = products[selectedIndex];
+
+    return TemplateCard(
+      title: 'Produk Setengah Jadi',
+      icon: Icons.inventory_2_outlined,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (products.length > 1)
+            DefaultTabController(
+              length: products.length,
+              initialIndex: selectedIndex,
+              child: TabBar(
+                tabAlignment: TabAlignment.start,
+                isScrollable: true,
+                labelColor: Colors.black,
+                onTap: (index) {
+                  setState(() {
+                    _selectedSemiFinishedIndex = index;
+                  });
+                },
+                tabs: List.generate(
+                  products.length,
+                  (index) => Tab(
+                    text:
+                        products[index]['code']?.toString().split('-').first ??
+                            'Item ${index + 1}',
+                  ),
+                ),
+              ),
+            ),
+          if (products.length > 1) const SizedBox(height: 16),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.white,
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        selectedProduct['code']?.toString() ?? '-',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        selectedProduct['name']?.toString() ?? '-',
+                        style: TextStyle(color: Colors.grey.shade700),
+                      ),
+                    ],
+                  ),
+                ),
+                if ((selectedProduct['spk_no'] ?? '').toString().isNotEmpty)
+                  CustomBadge(
+                    status: 'Rework',
+                    title: selectedProduct['spk_no'],
+                    rework: true,
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

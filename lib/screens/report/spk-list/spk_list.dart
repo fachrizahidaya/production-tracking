@@ -30,8 +30,7 @@ class SpkListComp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isTablet = MediaQuery.sizeOf(context).width >= 600;
-    final listHeight = isTablet ? 320.0 : 350.0;
+    const double listHeight = 380;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -90,51 +89,22 @@ class SpkListComp extends StatelessWidget {
             SizedBox(
               height: loading || items.isEmpty ? 120 : listHeight,
               child: loading
-                  ? const Center(
+                  ? Center(
                       child: CircularProgressIndicator(),
                     )
                   : items.isEmpty
                       ? NoData()
-                      : LayoutBuilder(
-                          builder: (context, constraints) {
-                            final cardWidth =
-                                (constraints.maxWidth * (isTablet ? 0.65 : 0.8))
-                                    .clamp(
-                                      isTablet ? 440.0 : 260.0,
-                                      isTablet ? 520.0 : 300.0,
-                                    )
-                                    .toDouble();
-
-                            return ScrollConfiguration(
-                              behavior: ScrollConfiguration.of(context)
-                                  .copyWith(scrollbars: false),
-                              child: ListView.builder(
-                                controller: scrollController,
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                itemCount: items.length + (loadingMore ? 1 : 0),
-                                padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  if (index >= items.length) {
-                                    return SizedBox(
-                                      width: cardWidth,
-                                      child: const Center(
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    );
-                                  }
-
-                                  return SizedBox(
-                                    width: cardWidth,
-                                    child: _buildSpkListCard(
-                                      items[index],
-                                      isTablet: isTablet,
-                                      isLast: index == items.length - 1,
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
+                      : ListView.builder(
+                          controller: scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: items.length + (loadingMore ? 1 : 0),
+                          padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return SizedBox(
+                                width: 280,
+                                child: _buildSpkListCard(items[index],
+                                    isLast: index == items.length - 1));
                           },
                         ),
             ),
@@ -145,13 +115,9 @@ class SpkListComp extends StatelessWidget {
     );
   }
 
-  Widget _buildSpkListCard(
-    SpkListItem item, {
-    required bool isTablet,
-    isLast = false,
-  }) {
+  Widget _buildSpkListCard(SpkListItem item, {isLast = false}) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(12, 0, isLast ? 16 : 0, 12),
+      padding: EdgeInsets.fromLTRB(12, 0, isLast ? 12 : 0, 12),
       child: Container(
         decoration: CustomTheme().cardTheme(),
         padding: EdgeInsets.all(12),
@@ -176,35 +142,39 @@ class SpkListComp extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 14),
-            ..._buildInfoRows(
-              [
-                MapEntry(
-                  'Tanggal',
-                  formatDate(DateTime.parse(item.date)),
-                ),
-                MapEntry('Qty WO', '${formatNumber(item.woQty)} PCS'),
-                MapEntry(
-                  'Total Sortir',
-                  '${formatNumber(item.sortingQty)} PCS',
-                ),
-                MapEntry(
-                  'Total Packing',
-                  '${formatNumber(item.packingQty)} PCS',
-                ),
-                MapEntry('Grade A', '${formatNumber(item.gradeA)} PCS'),
-                MapEntry('Grade B', '${formatNumber(item.gradeB)} PCS'),
-                MapEntry('Grade BS', '${formatNumber(item.gradeBs)} PCS'),
-                MapEntry(
-                  'Berat 1 Lusin',
-                  '${formatNumber(item.dozenWeight)} KG',
-                ),
-                MapEntry(
-                  'Berat Grade A',
-                  '${formatNumber(item.gradeAWeight)} KG',
-                ),
-                MapEntry('Total Berat', '${formatNumber(item.weight)} KG'),
-              ],
-              isTablet ? 3 : 2,
+            _buildInfoPair(
+              'Tanggal',
+              formatDate(DateTime.parse(item.date)),
+              'Qty WO',
+              formatNumber(item.woQty),
+            ),
+            const SizedBox(height: 14),
+            _buildInfoPair(
+              'Total Sortir',
+              formatNumber(item.sortingQty),
+              'Total Packing',
+              formatNumber(item.packingQty),
+            ),
+            const SizedBox(height: 14),
+            _buildInfoPair(
+              'Grade A',
+              formatNumber(item.gradeA),
+              'Grade B',
+              formatNumber(item.gradeB),
+            ),
+            const SizedBox(height: 14),
+            _buildInfoPair(
+              'Grade BS',
+              formatNumber(item.gradeBs),
+              'Berat 1 Lusin',
+              formatNumber(item.dozenWeight),
+            ),
+            const SizedBox(height: 14),
+            _buildInfoPair(
+              'Berat Grade A',
+              formatNumber(item.gradeAWeight),
+              'Total Berat',
+              formatNumber(item.weight),
             ),
           ],
         ),
@@ -212,37 +182,20 @@ class SpkListComp extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildInfoRows(
-    List<MapEntry<String, String>> items,
-    int columnCount,
+  Widget _buildInfoPair(
+    String firstLabel,
+    dynamic firstValue,
+    String secondLabel,
+    dynamic secondValue,
   ) {
-    final rows = <Widget>[];
-
-    for (var start = 0; start < items.length; start += columnCount) {
-      if (rows.isNotEmpty) {
-        rows.add(const SizedBox(height: 14));
-      }
-
-      rows.add(
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(columnCount * 2 - 1, (position) {
-            if (position.isOdd) {
-              return const SizedBox(width: 16);
-            }
-
-            final index = start + (position ~/ 2);
-            return Expanded(
-              child: index < items.length
-                  ? _buildInfo(items[index].key, items[index].value)
-                  : const SizedBox.shrink(),
-            );
-          }),
-        ),
-      );
-    }
-
-    return rows;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: _buildInfo(firstLabel, firstValue)),
+        const SizedBox(width: 16),
+        Expanded(child: _buildInfo(secondLabel, secondValue)),
+      ],
+    );
   }
 
   Widget _buildInfo(String label, dynamic value) {

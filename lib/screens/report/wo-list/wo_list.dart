@@ -32,9 +32,6 @@ class WoListComp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isSingleSearchResult =
-        searchController.text.isNotEmpty && items.length == 1;
-
     const double listHeight = 280;
 
     return Padding(

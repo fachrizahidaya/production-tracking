@@ -87,6 +87,15 @@ class SortingDetailGradeList extends StatelessWidget {
     }
 
     final items = groupedItems.values.toList();
+    final hasBsType = items.any(
+      (item) => (item['grades'] as List).any(
+        (grade) =>
+            grade['code'] == 'BS' &&
+            (grade['defects'] as List?)?.isNotEmpty == true,
+      ),
+    );
+    const minHeight = 650.0;
+    const maxHeight = 800.0;
 
     /// semua grade ada tapi items kosong
     if (items.isEmpty) {
@@ -137,7 +146,7 @@ class SortingDetailGradeList extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 800,
+            height: hasBsType ? maxHeight : minHeight,
             child: TabBarView(
               children: [
                 for (final item in items)

@@ -136,6 +136,7 @@ class _ListFormState extends State<ListForm> {
 >>>>>>> 7429ce6e (fix: rework dyeing)
               ].separatedBy(CustomTheme().hGap('xl'))),
           if (widget.form?['wo_id'] != null) _buildSemiFinishedProducts(),
+<<<<<<< HEAD
           if (widget.form?['wo_id'] != null)
             TemplateCard(
                 title: 'Mesin',
@@ -153,6 +154,8 @@ class _ListFormState extends State<ListForm> {
 >>>>>>> ae9b2985 (fix: rework dyeing)
               ].separatedBy(CustomTheme().hGap('xl'))),
 >>>>>>> 11b79f06 (feat: option rework dyeing)
+=======
+>>>>>>> a2e7ae57 (fix: rework dyeing)
           if (widget.form?['wo_id'] != null)
             TemplateCard(
                 title: 'Mesin',
@@ -170,6 +173,9 @@ class _ListFormState extends State<ListForm> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a2e7ae57 (fix: rework dyeing)
   Widget _buildSemiFinishedProducts() {
     final products = List<Map<String, dynamic>>.from(
       widget.data?['semifinished_products'] ?? [],
@@ -260,8 +266,11 @@ class _ListFormState extends State<ListForm> {
     );
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 11b79f06 (feat: option rework dyeing)
+=======
+>>>>>>> a2e7ae57 (fix: rework dyeing)
   Widget _buildMultiMesin() {
     final machines = widget.form['machines'] as List? ?? [];
 

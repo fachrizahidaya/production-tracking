@@ -188,6 +188,9 @@ class _CreateFormState extends State<CreateForm> {
       id: widget.id,
       form: widget.form,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a2e7ae57 (fix: rework dyeing)
       data: widget.data,
       selectWorkOrder: widget.selectWorkOrder,
       selectMachine: widget.selectMachine,

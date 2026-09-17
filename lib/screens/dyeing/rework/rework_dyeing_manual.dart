@@ -230,6 +230,8 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
 
     setState(() {
       dyeingData = _dyeingService.dataView;
+      woData['semifinished_products'] =
+          List.from(dyeingData['semifinished_products'] ?? []);
     });
   }
 

@@ -27,6 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final name;
   final bool isLoading;
   final VoidCallback? onDashboardSettings;
+  final VoidCallback? onReportSettings;
 
   const CustomAppBar(
       {super.key,
@@ -52,6 +53,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.handleFinish,
       this.isLoading = false,
       this.onDashboardSettings,
+      this.onReportSettings,
       this.showNameWithAvatar = false});
 
   @override
@@ -79,6 +81,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(
             tooltip: 'Atur widget dashboard',
             onPressed: onDashboardSettings,
+            icon: const Icon(Icons.dashboard_customize_outlined),
+          ),
+        if (onReportSettings != null)
+          IconButton(
+            tooltip: 'Atur widget laporan',
+            onPressed: onReportSettings,
             icon: const Icon(Icons.dashboard_customize_outlined),
           ),
         if (isWithAccount)

@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        'Widget',
+                        'Widget Dashboard',
                         style: TextStyle(
                           fontSize: CustomTheme().fontSize('lg'),
                           fontWeight: FontWeight.w600,

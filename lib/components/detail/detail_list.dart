@@ -1961,7 +1961,9 @@ Catatan WO
                 ? 250
                 : widget.label == 'Long Hemming'
                     ? 250
-                    : 150,
+                    : isQtyProcess
+                        ? 200
+                        : 150,
             child: TabBarView(
               children: items.map((item) {
                 return buildItem(item);

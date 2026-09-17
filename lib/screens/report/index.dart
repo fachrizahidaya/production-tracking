@@ -174,22 +174,12 @@ class _ReportScreenState extends State<ReportScreen> {
 
   void _onWoScroll() {
     if (!_woScrollController.hasClients) return;
-
-    final position = _woScrollController.position;
-
-    if (position.pixels >= position.maxScrollExtent - 100) {
-      _loadMoreWoList();
-    }
   }
 
   void _onSpkScroll() {
     if (!_spkScrollController.hasClients) return;
 
     final position = _spkScrollController.position;
-
-    if (position.pixels >= position.maxScrollExtent - 100) {
-      _loadMoreSpkList();
-    }
   }
 
   void _onSortingSearchChanged(String value) {
@@ -247,102 +237,6 @@ class _ReportScreenState extends State<ReportScreen> {
         await _loadSpkList();
       },
     );
-  }
-
-  Future<void> _loadMoreWoList() async {
-    if (_woLoading || _woLoadingMore || !_woHasMore) {
-      return;
-    }
-
-    setState(() {
-      _woLoadingMore = true;
-    });
-
-    try {
-      final nextPage = _woPage + 1;
-
-      final result = await _reportService.getWoList(
-          startDate: woListStartDate,
-          endDate: woListEndDate,
-          page: nextPage,
-          perPage: 20,
-          sort: woSort,
-          search: woSearch);
-
-      if (!mounted) return;
-
-      setState(() {
-        _woItems.addAll(result.data);
-
-        _woPage = result.currentPage;
-
-        _woHasMore = result.currentPage < result.lastPage;
-
-        _woLoadingMore = false;
-      });
-    } catch (e) {
-      if (!mounted) return;
-
-      setState(() {
-        _woLoadingMore = false;
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Gagal mengambil data berikutnya: $e',
-          ),
-        ),
-      );
-    }
-  }
-
-  Future<void> _loadMoreSpkList() async {
-    if (_spkLoading || _spkLoadingMore || !_spkHasMore) {
-      return;
-    }
-
-    setState(() {
-      _spkLoadingMore = true;
-    });
-
-    try {
-      final nextPage = _spkPage + 1;
-
-      final result = await _reportService.getSpkList(
-          startDate: spkSummaryStartDate,
-          endDate: spkSummaryEndDate,
-          page: nextPage,
-          perPage: 20,
-          sort: spkSort,
-          search: spkSearch);
-
-      if (!mounted) return;
-
-      setState(() {
-        _spkItems.addAll(result.data);
-
-        _spkPage = result.currentPage;
-
-        _spkHasMore = result.currentPage < result.lastPage;
-
-        _spkLoadingMore = false;
-      });
-    } catch (e) {
-      if (!mounted) return;
-
-      setState(() {
-        _spkLoadingMore = false;
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Gagal mengambil data berikutnya: $e',
-          ),
-        ),
-      );
-    }
   }
 
   Future<void> _loadProductionSummary() async {
@@ -597,8 +491,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
     setState(() {
       _spkLoading = true;
-      _spkPage = 1;
-      _spkHasMore = true;
+
       _spkItems.clear();
     });
 
@@ -607,7 +500,7 @@ class _ReportScreenState extends State<ReportScreen> {
           startDate: spkSummaryStartDate,
           endDate: spkSummaryEndDate,
           page: 1,
-          perPage: 20,
+          perPage: 10,
           search: spkSearch);
 
       if (!mounted) return;
@@ -615,8 +508,7 @@ class _ReportScreenState extends State<ReportScreen> {
       setState(() {
         spkList = result;
         _spkItems.addAll(result.data);
-        _spkPage = result.currentPage;
-        _spkHasMore = result.currentPage < result.lastPage;
+
         _spkLoading = false;
       });
     } catch (e) {

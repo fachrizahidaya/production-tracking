@@ -44,6 +44,7 @@ class SortingDetailComp extends StatelessWidget {
                   ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 2261585c (fix: report axis horizontal)
                   // const SizedBox(width: 8),
@@ -59,6 +60,8 @@ class SortingDetailComp extends StatelessWidget {
                   // ),
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 65038198 (feat:)
                   const SizedBox(width: 8),
                   Expanded(
                     child: InkWell(
@@ -70,9 +73,12 @@ class SortingDetailComp extends StatelessWidget {
                       ),
                     ),
                   ),
+<<<<<<< HEAD
 >>>>>>> 5ad2d445 (feat: temporarily)
 =======
 >>>>>>> 2261585c (fix: report axis horizontal)
+=======
+>>>>>>> 65038198 (feat:)
                 ],
               ),
             ),
@@ -91,14 +97,14 @@ class SortingDetailComp extends StatelessWidget {
                         _buildInlineValue(data?.totalDoneWO, 'selesai'),
                       ],
                     ),
-                    showChevron: false,
+                    showChevron: true,
                   ),
                   const SizedBox(height: 12),
                   _buildSummaryCard(
                     title: 'WO / Lot Aktif',
                     value: data?.totalActiveWO,
                     subtitle: const Text('Sedang diproses'),
-                    showChevron: false,
+                    showChevron: true,
                   ),
                   const SizedBox(height: 12),
                   _buildSummaryCard(
@@ -122,15 +128,15 @@ class SortingDetailComp extends StatelessWidget {
                         ),
                       ],
                     ),
-                    showChevron: false,
+                    showChevron: true,
                   ),
                   const SizedBox(height: 12),
                   _buildSummaryCard(
                     title: 'WO / Lot Aktif',
                     value: data?.reworkCount,
                     valueColor: Colors.red,
-                    subtitle: const Text('Dari total WO / Lot'),
-                    showChevron: false,
+                    subtitle: const Text('Dari total Wo / Lot'),
+                    showChevron: true,
                   ),
                   const SizedBox(height: 12),
                   _buildSummaryCard(

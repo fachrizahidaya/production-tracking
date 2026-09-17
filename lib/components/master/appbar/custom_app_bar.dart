@@ -45,6 +45,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isLoading;
   final VoidCallback? onDashboardSettings;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final VoidCallback? onReportSettings;
 <<<<<<< HEAD
   final VoidCallback? onEdit;
@@ -52,6 +53,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 >>>>>>> 7a6aa3b1 (feat: model for report)
 =======
 >>>>>>> 5e1caa7c (feat: widget controller)
+=======
+  final VoidCallback? onReportSettings;
+>>>>>>> 65038198 (feat:)
 
   const CustomAppBar(
       {super.key,
@@ -106,6 +110,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.handleFinish,
       this.isLoading = false,
       this.onDashboardSettings,
+      this.onReportSettings,
       this.showNameWithAvatar = false});
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
 =======
@@ -165,12 +170,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: const Icon(Icons.dashboard_customize_outlined),
           ),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 65038198 (feat:)
         if (onReportSettings != null)
           IconButton(
             tooltip: 'Atur widget laporan',
             onPressed: onReportSettings,
             icon: const Icon(Icons.dashboard_customize_outlined),
           ),
+<<<<<<< HEAD
 <<<<<<< HEAD
         if (onEdit != null)
           IconButton(
@@ -182,6 +191,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 >>>>>>> 7a6aa3b1 (feat: model for report)
 =======
 >>>>>>> 5e1caa7c (feat: widget controller)
+=======
+>>>>>>> 65038198 (feat:)
         if (isWithAccount)
           PopupMenuButton<String>(
             icon: Row(

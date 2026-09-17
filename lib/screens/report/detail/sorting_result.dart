@@ -7,7 +7,6 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/models/report/sorting_result.dart';
 import 'package:textile_tracking/screens/report/service.dart';
-import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class SortingResultDetailScreen extends StatefulWidget {
   final DateTime startDate;
@@ -424,13 +423,12 @@ class _SortingResultDetailScreenState extends State<SortingResultDetailScreen> {
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: Row(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
                   Expanded(
                     flex: 5,
@@ -471,9 +469,8 @@ class _SortingResultDetailScreenState extends State<SortingResultDetailScreen> {
                     child: InkWell(
                       onTap: _showFilter,
                       child: Container(
-                        height: 51,
                         decoration: CustomTheme().cardTheme(),
-                        child: Padding(
+                        child: const Padding(
                           padding: EdgeInsets.all(12),
                           child: Icon(
                             Icons.tune_outlined,
@@ -485,21 +482,21 @@ class _SortingResultDetailScreenState extends State<SortingResultDetailScreen> {
                   ),
                 ],
               ),
-            ),
-            Expanded(
-              child: _loading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : _items.isEmpty
-                      ? const NoData()
-                      : Padding(
-                          padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                          child: ListView.builder(
+              const SizedBox(
+                height: 8,
+              ),
+              Expanded(
+                child: _loading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : _items.isEmpty
+                        ? const NoData()
+                        : ListView.builder(
                             controller: _scrollController,
                             physics: const AlwaysScrollableScrollPhysics(),
                             itemCount: _items.length + (_loadingMore ? 1 : 0),
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
                             itemBuilder: (context, index) {
                               if (index >= _items.length) {
                                 return const Padding(
@@ -510,11 +507,83 @@ class _SortingResultDetailScreenState extends State<SortingResultDetailScreen> {
                                 );
                               }
 
-                              return _buildSortingResultCard(_items[index],
-                                  isFirst: index == 0);
+                              return _buildSortingResultCard(_items[index]);
                             },
                           ),
-                        ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSortingResultCard(SortingResultItem item) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        decoration: CustomTheme().cardTheme(),
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              item.woNo,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 14),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildSortingInfo(
+                    'Grade A',
+                    widget.formatNumber(item.gradeA),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildSortingInfo(
+                    'Grade B',
+                    widget.formatNumber(item.gradeB),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildSortingInfo(
+                    'Grade BS',
+                    widget.formatNumber(item.gradeBS),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildSortingInfo(
+                    'Total Qty',
+                    widget.formatNumber(item.totalQty),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildSortingInfo(
+                    'Qty WO',
+                    widget.formatNumber(item.woQty),
+                  ),
+                ),
+                Expanded(
+                  child: _buildSortingInfo(
+                    'Selisih',
+                    widget.formatNumber(item.diff),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -522,166 +591,29 @@ class _SortingResultDetailScreenState extends State<SortingResultDetailScreen> {
     );
   }
 
-  Widget _buildSortingResultCard(SortingResultItem item, {isFirst = false}) {
-    final workOrderId = item.workOrderId?.toString() ?? '';
-
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),
-      child: Container(
-        decoration: CustomTheme().cardTheme(),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: workOrderId.isEmpty
-                  ? null
-                  : () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => WorkOrderDetail(
-                            id: workOrderId,
-                          ),
-                        ),
-                      );
-                    },
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.woNo,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    _buildSortingInfo(
-                      'Grade A',
-                      widget.formatNumber(item.gradeA),
-                      unit: 'PCS',
-                      percentage:
-                          _getGradePercentage(item.gradeA, item.totalQty),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildSortingInfo(
-                      'Grade B',
-                      widget.formatNumber(item.gradeB),
-                      unit: 'PCS',
-                      percentage:
-                          _getGradePercentage(item.gradeB, item.totalQty),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildSortingInfo(
-                      'Grade BS',
-                      widget.formatNumber(item.gradeBS),
-                      unit: 'PCS',
-                      percentage:
-                          _getGradePercentage(item.gradeBS, item.totalQty),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildSortingInfo(
-                      'Total Qty',
-                      widget.formatNumber(item.totalQty),
-                      unit: 'PCS',
-                    ),
-                    const SizedBox(height: 12),
-                    _buildSortingInfo(
-                      'Qty WO',
-                      widget.formatNumber(item.woQty),
-                      unit: 'PCS',
-                    ),
-                    const SizedBox(height: 12),
-                    _buildSortingInfo(
-                      'Selisih',
-                      widget.formatNumber(item.diff),
-                      unit: 'PCS',
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  double _getGradePercentage(dynamic gradeQty, dynamic totalQty) {
-    final grade = double.tryParse(gradeQty?.toString() ?? '') ?? 0;
-    final total = double.tryParse(totalQty?.toString() ?? '') ?? 0;
-
-    if (total == 0) return 0;
-
-    return grade / total * 100;
-  }
-
   Widget _buildSortingInfo(
     String label,
-    String value, {
-    String? unit,
-    double? percentage,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    dynamic value,
+  ) {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.shade600,
-            ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey.shade600,
           ),
         ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Flexible(
-                child: Text(
-                  unit == null ? value : '$value $unit',
-                  textAlign: TextAlign.end,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              if (percentage != null) ...[
-                const SizedBox(width: 8),
-                _buildPercentageBadge(percentage),
-              ],
-            ],
+        const SizedBox(height: 4),
+        Text(
+          value.toString(),
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildPercentageBadge(double percentage) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 4,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.blue.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        '${percentage.toStringAsFixed(2)}%',
-        style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: Colors.blue,
-        ),
-      ),
     );
   }
 }

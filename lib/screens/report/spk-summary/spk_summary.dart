@@ -18,40 +18,47 @@ class SpkSummaryComp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 5,
-                child: InkWell(
-                  onTap: onSelectDateRange,
-                  child: Container(
-                    decoration: CustomTheme().cardTheme(),
-                    padding: const EdgeInsets.all(12),
-                    child: Text(dateRangeText),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+      child: Container(
+        decoration: CustomTheme().cardTheme(),
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: InkWell(
+                      onTap: onSelectDateRange,
+                      child: Container(
+                        decoration: CustomTheme().cardTheme(),
+                        padding: const EdgeInsets.all(12),
+                        child: Text(dateRangeText),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildTotalSpkCard(),
+                  const SizedBox(height: 12),
+                  _buildTotalQuantityCard(),
+                  const SizedBox(height: 12),
+                  _buildStatusCard(),
+                ],
+              ),
+            ),
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTotalSpkCard(),
-              const SizedBox(height: 12),
-              _buildTotalQuantityCard(),
-              const SizedBox(height: 12),
-              _buildStatusCard(),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -102,6 +109,7 @@ class SpkSummaryComp extends StatelessWidget {
 
   Widget _buildTotalQuantityCard() {
     return Container(
+      width: double.infinity,
       decoration: CustomTheme().cardTheme(),
       padding: const EdgeInsets.all(12),
       child: Column(

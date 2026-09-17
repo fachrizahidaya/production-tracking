@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
@@ -7,7 +9,6 @@ class SortingResultComp extends StatefulWidget {
   final formatNumber;
   final items;
   final loading;
-  final loadingMore;
   final searchController;
   final scrollController;
   final search;
@@ -15,6 +16,7 @@ class SortingResultComp extends StatefulWidget {
   final showFilter;
   final onSearchChaged;
   final onClearSearch;
+  final onSeeAll;
 
   const SortingResultComp(
       {super.key,
@@ -24,11 +26,11 @@ class SortingResultComp extends StatefulWidget {
       this.searchController,
       this.search,
       this.loadResult,
-      this.loadingMore,
       this.scrollController,
       this.showFilter,
       this.onSearchChaged,
-      this.onClearSearch});
+      this.onClearSearch,
+      this.onSeeAll});
 
   @override
   State<SortingResultComp> createState() => _SortingResultCompState();
@@ -37,6 +39,7 @@ class SortingResultComp extends StatefulWidget {
 class _SortingResultCompState extends State<SortingResultComp> {
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -52,67 +55,46 @@ class _SortingResultCompState extends State<SortingResultComp> {
 
 =======
 >>>>>>> 0cdc2803 (feat: top bs, sorting per grade)
+=======
+    const double listHeight = 180;
+
+>>>>>>> 65038198 (feat:)
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Container(
           decoration: CustomTheme().cardTheme(),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Hasil Sortir per WO',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                        flex: 5,
-                        child: Container(
-                          decoration: CustomTheme().cardTheme(),
-                          child: TextField(
-                              controller: widget.searchController,
-                              textInputAction: TextInputAction.search,
-                              decoration: InputDecoration(
-                                hintText: 'Cari...',
-                                prefixIcon: Icon(Icons.search),
-                                suffixIcon:
-                                    widget.searchController.text.isNotEmpty
-                                        ? IconButton(
-                                            onPressed: widget.onClearSearch,
-                                            icon: const Icon(Icons.close),
-                                          )
-                                        : null,
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.all(12),
-                              ),
-                              onChanged: widget.onSearchChaged),
-                        )),
-                    SizedBox(
-                      width: 8,
+                    Text(
+                      'Hasil Sortir per WO',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: widget.showFilter,
-                        child: Container(
-                          decoration: CustomTheme().cardTheme(),
-                          child: Padding(
-                            padding: EdgeInsets.all(12),
-                            child: Icon(
-                              Icons.tune_outlined,
-                              size: 18,
-                            ),
+                    InkWell(
+                      onTap: widget.onSeeAll,
+                      child: const Row(
+                        children: [
+                          Text(
+                            'Lihat semua ',
+                            style: TextStyle(),
                           ),
-                        ),
+                          Icon(Icons.chevron_right_outlined)
+                        ],
                       ),
-                    ),
+                    )
                   ],
                 ),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 65038198 (feat:)
               ),
               SizedBox(
                 height: 8,
@@ -170,6 +152,7 @@ class _SortingResultCompState extends State<SortingResultComp> {
                 child: widget.loading
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     ? const Center(
 =======
                     ? Center(
@@ -177,10 +160,14 @@ class _SortingResultCompState extends State<SortingResultComp> {
 =======
                     ? const Center(
 >>>>>>> 2261585c (fix: report axis horizontal)
+=======
+                    ? Center(
+>>>>>>> 65038198 (feat:)
                         child: CircularProgressIndicator(),
                       )
                     : widget.items.isEmpty
                         ? NoData()
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -225,6 +212,8 @@ class _SortingResultCompState extends State<SortingResultComp> {
                                 },
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 65038198 (feat:)
                         : ListView.builder(
                             controller: widget.scrollController,
                             scrollDirection: Axis.horizontal,
@@ -233,6 +222,7 @@ class _SortingResultCompState extends State<SortingResultComp> {
                             padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
                             itemBuilder: (context, index) {
                               return SizedBox(
+<<<<<<< HEAD
                                 width: 360,
                                 child: _buildSortingResultCard(
                                     widget.items[index],
@@ -240,12 +230,19 @@ class _SortingResultCompState extends State<SortingResultComp> {
 >>>>>>> 5ad2d445 (feat: temporarily)
 =======
 >>>>>>> 2261585c (fix: report axis horizontal)
+=======
+                                width: 280,
+                                child: _buildSortingResultCard(
+                                    widget.items[index],
+                                    isLast: index == widget.items?.length - 1),
+>>>>>>> 65038198 (feat:)
                               );
                             },
                           ),
               ),
               const SizedBox(height: 4),
             ],
+<<<<<<< HEAD
 =======
                 SizedBox(
                   height: 8,
@@ -286,27 +283,40 @@ class _SortingResultCompState extends State<SortingResultComp> {
               ],
             ),
 >>>>>>> 0cdc2803 (feat: top bs, sorting per grade)
+=======
+>>>>>>> 65038198 (feat:)
           )),
     );
   }
 
-  Widget _buildSortingResultCard(SortingResultItem item) {
+  Widget _buildSortingResultCard(SortingResultItem item, {isLast = false}) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 12),
+      padding: EdgeInsets.fromLTRB(12, 0, isLast ? 12 : 0, 12),
       child: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: CustomTheme().cardTheme(),
-        child: Padding(
-          padding: EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    item.woNo,
-                    style: TextStyle(fontWeight: FontWeight.w600),
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              item.woNo,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 14),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildSortingInfo(
+                    'Grade A',
+                    widget.formatNumber(item.gradeA),
                   ),
+<<<<<<< HEAD
                 ],
               ),
 <<<<<<< HEAD
@@ -320,19 +330,29 @@ class _SortingResultCompState extends State<SortingResultComp> {
                     'Grade A',
                     '${widget.formatNumber(item.gradeA)} PCS',
                   ),
+=======
+>>>>>>> 65038198 (feat:)
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildSortingInfo(
                     'Grade B',
+<<<<<<< HEAD
                     '${widget.formatNumber(item.gradeB)} PCS',
+=======
+                    widget.formatNumber(item.gradeB),
+>>>>>>> 65038198 (feat:)
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildSortingInfo(
                     'Grade BS',
+<<<<<<< HEAD
                     '${widget.formatNumber(item.gradeBS)} PCS',
+=======
+                    widget.formatNumber(item.gradeBS),
+>>>>>>> 65038198 (feat:)
                   ),
                 ),
               ],
@@ -344,13 +364,18 @@ class _SortingResultCompState extends State<SortingResultComp> {
                 Expanded(
                   child: _buildSortingInfo(
                     'Total Qty',
+<<<<<<< HEAD
                     '${widget.formatNumber(item.totalQty)} PCS',
+=======
+                    widget.formatNumber(item.totalQty),
+>>>>>>> 65038198 (feat:)
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildSortingInfo(
                     'Qty WO',
+<<<<<<< HEAD
                     '${widget.formatNumber(item.woQty)} PCS',
                   ),
                 ),
@@ -366,11 +391,21 @@ class _SortingResultCompState extends State<SortingResultComp> {
                   child: _buildSortingInfo(
                     'Selisih',
                     '${widget.formatNumber(item.diff)}',
+=======
+                    widget.formatNumber(item.woQty),
+                  ),
+                ),
+                Expanded(
+                  child: _buildSortingInfo(
+                    'Selisih',
+                    widget.formatNumber(item.diff),
+>>>>>>> 65038198 (feat:)
                   ),
                 ),
               ],
             ),
           ],
+<<<<<<< HEAD
 =======
               SizedBox(
                 height: 8,
@@ -412,30 +447,34 @@ class _SortingResultCompState extends State<SortingResultComp> {
             ],
           ),
 >>>>>>> 0cdc2803 (feat: top bs, sorting per grade)
+=======
+>>>>>>> 65038198 (feat:)
         ),
       ),
     );
   }
 
-  Widget _buildSortingRow(
-    String title,
-    num value,
+  Widget _buildSortingInfo(
+    String label,
+    dynamic value,
   ) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title),
-        Row(
-          children: [
-            Text(
-              widget.formatNumber(value),
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(width: 2),
-            Text('PCS'),
-          ],
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey.shade600,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value.toString(),
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ],
     );

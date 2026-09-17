@@ -1234,7 +1234,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         _weightWarningValidationMessage =
             'Berat ${berat < greigeQty ? 'kurang' : 'lebih'} '
             '${diffPercent.abs().toStringAsFixed(2)}% '
-            '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
+            '(Batas: ${formatNumber(lowerLimit)} – ${formatNumber(upperLimit)})';
       });
     } else {
       setState(() {
@@ -1282,7 +1282,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         _itemWarningValidationMessage =
             'Qty ${inputQty < qty ? 'kurang' : 'lebih'} '
             '${diffPercent.abs().toStringAsFixed(2)}% '
-            '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
+            '(Batas: ${formatNumber(lowerLimit)} – ${formatNumber(upperLimit)})';
       });
     } else {
       setState(() {

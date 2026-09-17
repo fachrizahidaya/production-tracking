@@ -762,8 +762,8 @@ class _SortingSectionState extends State<SortingSection> {
 
       return 'Total hasil sortir ${totalSorting < referenceQty ? 'kurang' : 'lebih'} '
           '${differencePercent.abs().toStringAsFixed(2)}% '
-          '(Batas: ${lowerLimit.toStringAsFixed(0)} – '
-          '${upperLimit.toStringAsFixed(0)})';
+          '(Batas: ${formatNumber(lowerLimit)} – '
+          '${formatNumber(upperLimit)})';
     }
 
     return null;
@@ -836,8 +836,6 @@ class _SortingSectionState extends State<SortingSection> {
 */
           _buildGlobalSummary(),
           SizedBox(height: 16),
-          _buildSortingWarning(),
-          SizedBox(height: 16),
           Container(
             height: 50,
             decoration: BoxDecoration(
@@ -909,6 +907,7 @@ class _SortingSectionState extends State<SortingSection> {
     final item = _items[itemIndex];
 
     final grades = item['grades'] ?? [];
+    final qtyWarning = _validateSortingQty(itemIndex);
 
     return Container(
       padding: EdgeInsets.all(16),
@@ -918,6 +917,7 @@ class _SortingSectionState extends State<SortingSection> {
       ),
       child: Column(
         children: [
+          if (qtyWarning != null) _buildQtyWarning(qtyWarning),
           /*
       |--------------------------------------------------------------------------
       | GRADES
@@ -1783,68 +1783,7 @@ class _SortingSectionState extends State<SortingSection> {
     );
   }
 
-  Widget _buildQtyWarning() {
-    String? warning;
-
-    for (int i = 0; i < _items.length; i++) {
-      warning = _validateSortingQty(i);
-
-      if (warning != null) {
-        break;
-      }
-    }
-
-    if (warning == null) {
-      return const SizedBox.shrink();
-    }
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.orange.shade50,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Colors.orange.shade200,
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            Icons.warning_amber_rounded,
-            color: Colors.orange.shade700,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              warning,
-              style: TextStyle(
-                color: Colors.orange.shade900,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSortingWarning() {
-    String? warning;
-
-    for (int i = 0; i < _items.length; i++) {
-      warning = _validateSortingQty(i);
-
-      if (warning != null) {
-        break;
-      }
-    }
-
-    if (warning == null) {
-      return const SizedBox.shrink();
-    }
-
+  Widget _buildQtyWarning(String warning) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),

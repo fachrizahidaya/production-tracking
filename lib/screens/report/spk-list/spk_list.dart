@@ -32,6 +32,7 @@ class SpkListComp extends StatelessWidget {
   Widget build(BuildContext context) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
     final listHeight = isTablet ? 320.0 : 350.0;
 =======
@@ -41,6 +42,9 @@ class SpkListComp extends StatelessWidget {
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
     final listHeight = isTablet ? 320.0 : 350.0;
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
+=======
+    const double listHeight = 380;
+>>>>>>> 1d5490b7 (feat: spk)
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -101,6 +105,7 @@ class SpkListComp extends StatelessWidget {
               child: loading
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                   ? const Center(
 =======
                   ? Center(
@@ -108,10 +113,14 @@ class SpkListComp extends StatelessWidget {
 =======
                   ? const Center(
 >>>>>>> 2261585c (fix: report axis horizontal)
+=======
+                  ? Center(
+>>>>>>> 1d5490b7 (feat: spk)
                       child: CircularProgressIndicator(),
                     )
                   : items.isEmpty
                       ? NoData()
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                       : LayoutBuilder(
@@ -180,6 +189,8 @@ class SpkListComp extends StatelessWidget {
                             );
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 1d5490b7 (feat: spk)
                       : ListView.builder(
                           controller: scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
@@ -188,12 +199,18 @@ class SpkListComp extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             return SizedBox(
+<<<<<<< HEAD
                                 width: 360,
                                 child: _buildSpkListCard(items[index],
                                     isLast: index == items.length - 1));
 >>>>>>> 5ad2d445 (feat: temporarily)
 =======
 >>>>>>> 2261585c (fix: report axis horizontal)
+=======
+                                width: 280,
+                                child: _buildSpkListCard(items[index],
+                                    isLast: index == items.length - 1));
+>>>>>>> 1d5490b7 (feat: spk)
                           },
                         ),
             ),
@@ -204,6 +221,7 @@ class SpkListComp extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -219,8 +237,11 @@ class SpkListComp extends StatelessWidget {
 >>>>>>> 5ad2d445 (feat: temporarily)
 =======
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
+=======
+  Widget _buildSpkListCard(SpkListItem item, {isLast = false}) {
+>>>>>>> 1d5490b7 (feat: spk)
     return Padding(
-      padding: EdgeInsets.fromLTRB(12, 0, isLast ? 16 : 0, 12),
+      padding: EdgeInsets.fromLTRB(12, 0, isLast ? 12 : 0, 12),
       child: Container(
         decoration: CustomTheme().cardTheme(),
         padding: EdgeInsets.all(12),
@@ -245,6 +266,7 @@ class SpkListComp extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 14),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -280,42 +302,72 @@ class SpkListComp extends StatelessWidget {
               isTablet ? 3 : 2,
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 1d5490b7 (feat: spk)
             _buildInfoPair(
               'Tanggal',
               formatDate(DateTime.parse(item.date)),
               'Qty WO',
+<<<<<<< HEAD
               '${formatNumber(item.woQty)} PCS',
+=======
+              formatNumber(item.woQty),
+>>>>>>> 1d5490b7 (feat: spk)
             ),
             const SizedBox(height: 14),
             _buildInfoPair(
               'Total Sortir',
+<<<<<<< HEAD
               '${formatNumber(item.sortingQty)} PCS',
               'Total Packing',
               '${formatNumber(item.packingQty)} PCS',
+=======
+              formatNumber(item.sortingQty),
+              'Total Packing',
+              formatNumber(item.packingQty),
+>>>>>>> 1d5490b7 (feat: spk)
             ),
             const SizedBox(height: 14),
             _buildInfoPair(
               'Grade A',
+<<<<<<< HEAD
               '${formatNumber(item.gradeA)} PCS',
               'Grade B',
               '${formatNumber(item.gradeB)} PCS',
+=======
+              formatNumber(item.gradeA),
+              'Grade B',
+              formatNumber(item.gradeB),
+>>>>>>> 1d5490b7 (feat: spk)
             ),
             const SizedBox(height: 14),
             _buildInfoPair(
               'Grade BS',
+<<<<<<< HEAD
               '${formatNumber(item.gradeBs)} PCS',
               'Berat 1 Lusin',
               '${formatNumber(item.dozenWeight)} KG',
+=======
+              formatNumber(item.gradeBs),
+              'Berat 1 Lusin',
+              formatNumber(item.dozenWeight),
+>>>>>>> 1d5490b7 (feat: spk)
             ),
             const SizedBox(height: 14),
             _buildInfoPair(
               'Berat Grade A',
+<<<<<<< HEAD
               '${formatNumber(item.gradeAWeight)} KG',
               'Total Berat',
               '${formatNumber(item.weight)} KG',
 >>>>>>> 5ad2d445 (feat: temporarily)
 =======
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
+=======
+              formatNumber(item.gradeAWeight),
+              'Total Berat',
+              formatNumber(item.weight),
+>>>>>>> 1d5490b7 (feat: spk)
             ),
           ],
         ),
@@ -323,6 +375,7 @@ class SpkListComp extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   List<Widget> _buildInfoRows(
@@ -363,6 +416,14 @@ class SpkListComp extends StatelessWidget {
     String secondLabel,
     dynamic secondValue,
   ) {
+=======
+  Widget _buildInfoPair(
+    String firstLabel,
+    dynamic firstValue,
+    String secondLabel,
+    dynamic secondValue,
+  ) {
+>>>>>>> 1d5490b7 (feat: spk)
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -371,6 +432,7 @@ class SpkListComp extends StatelessWidget {
         Expanded(child: _buildInfo(secondLabel, secondValue)),
       ],
     );
+<<<<<<< HEAD
 >>>>>>> 5ad2d445 (feat: temporarily)
 =======
   List<Widget> _buildInfoRows(
@@ -405,6 +467,8 @@ class SpkListComp extends StatelessWidget {
 
     return rows;
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
+=======
+>>>>>>> 1d5490b7 (feat: spk)
   }
 
   Widget _buildInfo(String label, dynamic value) {

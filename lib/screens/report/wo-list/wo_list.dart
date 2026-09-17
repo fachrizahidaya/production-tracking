@@ -36,6 +36,7 @@ class WoListComp extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
     final listHeight = isTablet ? 250.0 : 280.0;
 =======
@@ -52,6 +53,8 @@ class WoListComp extends StatelessWidget {
     final bool isSingleSearchResult =
         searchController.text.isNotEmpty && items.length == 1;
 
+=======
+>>>>>>> 1d5490b7 (feat: spk)
     const double listHeight = 280;
 
 >>>>>>> 65038198 (feat:)

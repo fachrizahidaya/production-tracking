@@ -42,17 +42,17 @@ class SortingDetailComp extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // const SizedBox(width: 8),
-                  // Expanded(
-                  //   child: InkWell(
-                  //     onTap: onDownload,
-                  //     child: Container(
-                  //       decoration: CustomTheme().cardTheme(),
-                  //       padding: const EdgeInsets.all(12),
-                  //       child: const Icon(Icons.download_outlined, size: 18),
-                  //     ),
-                  //   ),
-                  // ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: InkWell(
+                      onTap: onDownload,
+                      child: Container(
+                        decoration: CustomTheme().cardTheme(),
+                        padding: const EdgeInsets.all(12),
+                        child: const Icon(Icons.download_outlined, size: 18),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -71,14 +71,14 @@ class SortingDetailComp extends StatelessWidget {
                         _buildInlineValue(data?.totalDoneWO, 'selesai'),
                       ],
                     ),
-                    showChevron: false,
+                    showChevron: true,
                   ),
                   const SizedBox(height: 12),
                   _buildSummaryCard(
                     title: 'WO / Lot Aktif',
                     value: data?.totalActiveWO,
                     subtitle: const Text('Sedang diproses'),
-                    showChevron: false,
+                    showChevron: true,
                   ),
                   const SizedBox(height: 12),
                   _buildSummaryCard(
@@ -102,15 +102,15 @@ class SortingDetailComp extends StatelessWidget {
                         ),
                       ],
                     ),
-                    showChevron: false,
+                    showChevron: true,
                   ),
                   const SizedBox(height: 12),
                   _buildSummaryCard(
                     title: 'WO / Lot Aktif',
                     value: data?.reworkCount,
                     valueColor: Colors.red,
-                    subtitle: const Text('Dari total WO / Lot'),
-                    showChevron: false,
+                    subtitle: const Text('Dari total Wo / Lot'),
+                    showChevron: true,
                   ),
                   const SizedBox(height: 12),
                   _buildSummaryCard(

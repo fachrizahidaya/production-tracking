@@ -26,6 +26,7 @@ import 'package:textile_tracking/screens/auth/user_menu.dart';
 
 class Dashboard extends StatefulWidget {
 <<<<<<< HEAD
+<<<<<<< HEAD
   final bool isMobile;
   final Future<void> Function()? onRefreshReworkNotifications;
 
@@ -44,6 +45,17 @@ class Dashboard extends StatefulWidget {
     this.showActiveMachine = true,
     this.showWorkOrderProcess = true,
 >>>>>>> 5e1caa7c (feat: widget controller)
+=======
+  final bool showProcessSummary;
+  final bool showMachineStatus;
+  final bool showWorkOrderList;
+
+  const Dashboard({
+    super.key,
+    this.showProcessSummary = true,
+    this.showMachineStatus = true,
+    this.showWorkOrderList = true,
+>>>>>>> 5e1b7ecb (fix: dashboard)
   });
 
   @override
@@ -1180,7 +1192,7 @@ class _DashboardState extends State<Dashboard> {
                   sliver: SliverList(
                       delegate: SliverChildListDelegate([
                     WorkOrderStats(data: statsList, isFetching: isStatsLoading),
-                    if (widget.showWorkOrderSummary)
+                    if (widget.showProcessSummary)
                       WorkOrderSummary(
                         data: summaryList,
                         greigeData: greigeSummaryList,
@@ -1194,6 +1206,7 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 0f73a2e7 (fix: UI dashboard)
 =======
 >>>>>>> 8d5fb5bc (fix: UI mobile dashboard)
@@ -1204,6 +1217,9 @@ class _DashboardState extends State<Dashboard> {
 =======
                     if (widget.showActiveMachine && !shouldHideActiveMachine)
 >>>>>>> 5e1caa7c (feat: widget controller)
+=======
+                    if (widget.showMachineStatus && !shouldHideActiveMachine)
+>>>>>>> 5e1b7ecb (fix: dashboard)
                       ActiveMachine(
                         data: machineList,
                         available: machineList['available'],
@@ -1212,7 +1228,7 @@ class _DashboardState extends State<Dashboard> {
                         isFetching: isMachineLoading,
                         processNames: menuProcessNames,
                       ),
-                    if (widget.showWorkOrderProcess)
+                    if (widget.showWorkOrderList)
                       WorkOrderProcessScreen(
                         data: _dataList,
                         search: _search,

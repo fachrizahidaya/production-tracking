@@ -43,6 +43,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final handleSave;
   final name;
   final bool isLoading;
+  final bool isDashboardSettingsLoading;
   final VoidCallback? onDashboardSettings;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -109,6 +110,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 =======
       this.handleFinish,
       this.isLoading = false,
+      this.isDashboardSettingsLoading = false,
       this.onDashboardSettings,
       this.onReportSettings,
       this.showNameWithAvatar = false});
@@ -142,6 +144,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (isWithNotification)
           _buildNotificationButton(
             tooltip: notificationTooltip,
@@ -151,6 +154,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
 =======
 >>>>>>> 7a6aa3b1 (feat: model for report)
+=======
+>>>>>>> 5e1b7ecb (fix: dashboard)
         if (isDashboardSettingsLoading)
           const Padding(
             padding: EdgeInsets.all(14),
@@ -161,9 +166,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           )
         else if (onDashboardSettings != null)
+<<<<<<< HEAD
 =======
         if (onDashboardSettings != null)
 >>>>>>> 5e1caa7c (feat: widget controller)
+=======
+>>>>>>> 5e1b7ecb (fix: dashboard)
           IconButton(
             tooltip: 'Atur widget dashboard',
             onPressed: onDashboardSettings,

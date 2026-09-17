@@ -28,6 +28,15 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+<<<<<<< HEAD
+=======
+  static const Set<String> _supportedDashboardWidgets = {
+    'process_summary',
+    'machine_status',
+    'wo_list',
+  };
+
+>>>>>>> 5e1b7ecb (fix: dashboard)
   String user = '';
   String name = '';
 <<<<<<< HEAD
@@ -41,11 +50,17 @@ class _HomeState extends State<Home> {
 =======
   late Future<String?> _tokenFuture;
   final Map<String, bool> _dashboardWidgets = {
-    'workOrderSummary': true,
-    'activeMachine': true,
-    'workOrderProcess': true,
+    'process_summary': false,
+    'machine_status': false,
+    'wo_list': false,
   };
+<<<<<<< HEAD
 >>>>>>> 5e1caa7c (feat: widget controller)
+=======
+  List<Map<String, dynamic>> _dashboardWidgetOptions = [];
+  bool _isDashboardWidgetsLoading = true;
+  bool _isDashboardWidgetsUpdating = false;
+>>>>>>> 5e1b7ecb (fix: dashboard)
 
   @override
   void initState() {
@@ -66,6 +81,7 @@ class _HomeState extends State<Home> {
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+<<<<<<< HEAD
       _initializeMenuAccess();
     });
   }
@@ -319,21 +335,149 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+=======
+      _fetchDashboardWidgets();
+    });
+  }
+
+  Future<Map<String, String>> _getAuthHeaders() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    if (token == null) {
+      throw Exception('Unauthenticated');
+    }
+
+    return {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+  }
+
+  Future<void> _fetchDashboardWidgets() async {
+    if (mounted) {
+      setState(() {
+        _isDashboardWidgetsLoading = true;
+      });
+    }
+
+    try {
+      final baseUrl = dotenv.env['API_URL'] ?? '';
+      final headers = await _getAuthHeaders();
+      final keysResponse = await http.get(
+        Uri.parse('$baseUrl/dashboard/widget-keys'),
+        headers: headers,
+      );
+
+      if (keysResponse.statusCode != 200) {
+        throw Exception('Gagal mengambil daftar widget dashboard');
+      }
+
+      final widgetsResponse = await http.get(
+        Uri.parse('$baseUrl/dashboard/widgets'),
+        headers: headers,
+      );
+
+      if (widgetsResponse.statusCode != 200) {
+        throw Exception('Gagal mengambil pengaturan widget dashboard');
+      }
+
+      final keyData = List<Map<String, dynamic>>.from(
+        jsonDecode(keysResponse.body)['data'] ?? [],
+      );
+      final widgetData = List<Map<String, dynamic>>.from(
+        jsonDecode(widgetsResponse.body)['data'] ?? [],
+      );
+      final visibilityByValue = {
+        for (final widget in widgetData)
+          widget['value']?.toString() ?? '': widget['is_visible'] == true,
+      };
+      final supportedOptions = keyData
+          .where(
+            (widget) => _supportedDashboardWidgets.contains(
+              widget['value']?.toString(),
+            ),
+          )
+          .toList();
+
+      if (!mounted) return;
+
+      setState(() {
+        _dashboardWidgetOptions = supportedOptions;
+
+        for (final option in supportedOptions) {
+          final value = option['value']?.toString();
+
+          if (value != null) {
+            _dashboardWidgets[value] = visibilityByValue[value] ?? false;
+          }
+        }
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isDashboardWidgetsLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _updateDashboardWidget(
+    String widgetValue,
+    bool isVisible,
+  ) async {
+    final baseUrl = dotenv.env['API_URL'] ?? '';
+    final headers = await _getAuthHeaders();
+    final response = await http.patch(
+      Uri.parse('$baseUrl/dashboard/widgets'),
+      headers: headers,
+      body: jsonEncode({
+        'widgets': [
+          {
+            'value': widgetValue,
+            'is_visible': isVisible,
+          },
+        ],
+      }),
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      dynamic responseData;
+
+      try {
+        responseData = jsonDecode(response.body);
+      } catch (_) {
+        responseData = null;
+      }
+
+      throw Exception(
+        responseData is Map
+            ? responseData['message'] ?? 'Gagal mengubah widget dashboard'
+            : 'Gagal mengubah widget dashboard',
+      );
+    }
+>>>>>>> 5e1b7ecb (fix: dashboard)
   }
 
   void _showDashboardWidgetSettings() {
-    const widgets = {
-      'workOrderSummary': 'Perkembangan Proses Produksi',
-      'activeMachine': 'Status Mesin',
-      'workOrderProcess': 'Work Order',
-    };
+    if (_dashboardWidgetOptions.isEmpty) {
+      _fetchDashboardWidgets();
+      return;
+    }
 
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
-      builder: (context) {
+      builder: (modalContext) {
         return StatefulBuilder(
-          builder: (context, setModalState) {
+          builder: (modalContext, setModalState) {
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 16),
@@ -352,16 +496,51 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    ...widgets.entries.map((entry) {
+                    ..._dashboardWidgetOptions.map((option) {
+                      final value = option['value']?.toString() ?? '';
+
                       return SwitchListTile(
-                        title: Text(entry.value),
-                        value: _dashboardWidgets[entry.key] ?? true,
-                        onChanged: (value) {
-                          setState(() {
-                            _dashboardWidgets[entry.key] = value;
-                          });
-                          setModalState(() {});
-                        },
+                        title: Text(option['label']?.toString() ?? ''),
+                        value: _dashboardWidgets[value] ?? false,
+                        onChanged: _isDashboardWidgetsUpdating
+                            ? null
+                            : (isVisible) async {
+                                final previousValue =
+                                    _dashboardWidgets[value] ?? false;
+
+                                setState(() {
+                                  _dashboardWidgets[value] = isVisible;
+                                  _isDashboardWidgetsUpdating = true;
+                                });
+                                if (modalContext.mounted) {
+                                  setModalState(() {});
+                                }
+
+                                try {
+                                  await _updateDashboardWidget(
+                                    value,
+                                    isVisible,
+                                  );
+                                } catch (e) {
+                                  if (!mounted) return;
+
+                                  setState(() {
+                                    _dashboardWidgets[value] = previousValue;
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(e.toString())),
+                                  );
+                                } finally {
+                                  if (mounted) {
+                                    setState(() {
+                                      _isDashboardWidgetsUpdating = false;
+                                    });
+                                    if (modalContext.mounted) {
+                                      setModalState(() {});
+                                    }
+                                  }
+                                }
+                              },
                       );
                     }),
                   ],
@@ -594,6 +773,7 @@ class _HomeState extends State<Home> {
     );
 =======
               onDashboardSettings: _showDashboardWidgetSettings,
+              isDashboardSettingsLoading: _isDashboardWidgetsLoading,
             ),
             drawer: AppDrawer(
               handleLogout: () => _handleLogout(context),
@@ -601,11 +781,10 @@ class _HomeState extends State<Home> {
             ),
             body: SafeArea(
               child: Dashboard(
-                showWorkOrderSummary:
-                    _dashboardWidgets['workOrderSummary'] ?? true,
-                showActiveMachine: _dashboardWidgets['activeMachine'] ?? true,
-                showWorkOrderProcess:
-                    _dashboardWidgets['workOrderProcess'] ?? true,
+                showProcessSummary:
+                    _dashboardWidgets['process_summary'] ?? false,
+                showMachineStatus: _dashboardWidgets['machine_status'] ?? false,
+                showWorkOrderList: _dashboardWidgets['wo_list'] ?? false,
               ),
             ),
           );

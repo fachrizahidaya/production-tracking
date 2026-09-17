@@ -1619,8 +1619,6 @@ Catatan WO
           ) ??
           0;
 
-
-
       final weight = double.tryParse(
             item['weight_grade_a']?.toString() ?? '0',
           ) ??

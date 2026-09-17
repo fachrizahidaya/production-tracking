@@ -143,6 +143,15 @@ class SortingDetailGradeList extends StatelessWidget {
     }
 
     final items = groupedItems.values.toList();
+    final hasBsType = items.any(
+      (item) => (item['grades'] as List).any(
+        (grade) =>
+            grade['code'] == 'BS' &&
+            (grade['defects'] as List?)?.isNotEmpty == true,
+      ),
+    );
+    const minHeight = 650.0;
+    const maxHeight = 800.0;
 
     /// semua grade ada tapi items kosong
     if (items.isEmpty) {
@@ -792,12 +801,10 @@ class SortingDetailGradeList extends StatelessWidget {
 
   Widget _buildRepairBox(
     String title,
-    dynamic value,
-    {
+    dynamic value, {
     String valuePrefix = '',
     Color? valueColor,
-  }
-  ) {
+  }) {
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),

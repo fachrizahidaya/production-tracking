@@ -61,7 +61,6 @@ class SortingDetailGradeList extends StatelessWidget {
       final items = grade['items'] ?? [];
 
       for (final item in items) {
-        final itemId = item['item_id'];
         final uniqueKey =
             '${item['wo_item_id']}_${item['finished_product']?['code']}';
 
@@ -88,6 +87,15 @@ class SortingDetailGradeList extends StatelessWidget {
     }
 
     final items = groupedItems.values.toList();
+    final hasBsType = items.any(
+      (item) => (item['grades'] as List).any(
+        (grade) =>
+            grade['code'] == 'BS' &&
+            (grade['defects'] as List?)?.isNotEmpty == true,
+      ),
+    );
+    const minHeight = 650.0;
+    const maxHeight = 800.0;
 
     /// semua grade ada tapi items kosong
     if (items.isEmpty) {
@@ -96,8 +104,6 @@ class SortingDetailGradeList extends StatelessWidget {
           icon: Icons.inventory_2_outlined,
           child: NoData());
     }
-
-    final woItems = sortingData['work_orders']?['items'] ?? [];
 
     return DefaultTabController(
       length: items.length,
@@ -140,7 +146,7 @@ class SortingDetailGradeList extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 800,
+            height: hasBsType ? maxHeight : minHeight,
             child: TabBarView(
               children: [
                 for (final item in items)

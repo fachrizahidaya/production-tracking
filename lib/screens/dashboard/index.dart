@@ -1564,7 +1564,7 @@ class _DashboardState extends State<Dashboard> {
                         isFetching: isMachineLoading,
                         processNames: menuProcessNames,
                       ),
-                    if (widget.showWorkOrderProcess)
+                    if (widget.showWorkOrderList)
                       WorkOrderProcessScreen(
                         data: _dataList,
                         search: _search,

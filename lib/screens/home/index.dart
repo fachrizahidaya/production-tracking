@@ -308,18 +308,17 @@ class _HomeState extends State<Home> {
   }
 
   void _showDashboardWidgetSettings() {
-    const widgets = {
-      'workOrderSummary': 'Perkembangan Proses Produksi',
-      'activeMachine': 'Status Mesin',
-      'workOrderProcess': 'Work Order',
-    };
+    if (_dashboardWidgetOptions.isEmpty) {
+      _fetchDashboardWidgets();
+      return;
+    }
 
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
-      builder: (context) {
+      builder: (modalContext) {
         return StatefulBuilder(
-          builder: (context, setModalState) {
+          builder: (modalContext, setModalState) {
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 16),
@@ -338,16 +337,51 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    ...widgets.entries.map((entry) {
+                    ..._dashboardWidgetOptions.map((option) {
+                      final value = option['value']?.toString() ?? '';
+
                       return SwitchListTile(
-                        title: Text(entry.value),
-                        value: _dashboardWidgets[entry.key] ?? true,
-                        onChanged: (value) {
-                          setState(() {
-                            _dashboardWidgets[entry.key] = value;
-                          });
-                          setModalState(() {});
-                        },
+                        title: Text(option['label']?.toString() ?? ''),
+                        value: _dashboardWidgets[value] ?? false,
+                        onChanged: _isDashboardWidgetsUpdating
+                            ? null
+                            : (isVisible) async {
+                                final previousValue =
+                                    _dashboardWidgets[value] ?? false;
+
+                                setState(() {
+                                  _dashboardWidgets[value] = isVisible;
+                                  _isDashboardWidgetsUpdating = true;
+                                });
+                                if (modalContext.mounted) {
+                                  setModalState(() {});
+                                }
+
+                                try {
+                                  await _updateDashboardWidget(
+                                    value,
+                                    isVisible,
+                                  );
+                                } catch (e) {
+                                  if (!mounted) return;
+
+                                  setState(() {
+                                    _dashboardWidgets[value] = previousValue;
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(e.toString())),
+                                  );
+                                } finally {
+                                  if (mounted) {
+                                    setState(() {
+                                      _isDashboardWidgetsUpdating = false;
+                                    });
+                                    if (modalContext.mounted) {
+                                      setModalState(() {});
+                                    }
+                                  }
+                                }
+                              },
                       );
                     }),
                   ],

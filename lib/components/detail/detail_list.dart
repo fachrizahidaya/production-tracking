@@ -2110,6 +2110,7 @@ Catatan WO
                         text: 'Item ${index + 1}',
 >>>>>>> 12b70b7 (fix: mulai weaving)
                       ),
+<<<<<<< HEAD
                     ),
                   ),
                   buildItem(item),
@@ -2118,6 +2119,31 @@ Catatan WO
             },
           );
         },
+=======
+                    );
+                  },
+                ).toList(),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: isPacking
+                ? 250
+                : widget.label == 'Long Hemming'
+                    ? 250
+                    : isQtyProcess
+                        ? 200
+                        : 150,
+            child: TabBarView(
+              children: items.map((item) {
+                return buildItem(item);
+              }).toList(),
+            ),
+          ),
+        ].separatedBy(
+          CustomTheme().vGap('lg'),
+        ),
+>>>>>>> 95f19e13 (fix: bug detail process)
       ),
     );
   }

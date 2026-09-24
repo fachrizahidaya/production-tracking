@@ -310,69 +310,69 @@ class _SpkListDetailScreenState extends State<SpkListDetailScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Urutkan Berdasarkan',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey.shade300,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        children: [
-                          RadioListTile<String>(
-                            value: 'wo_date',
-                            groupValue: tempSort,
-                            title: const Text(
-                              'Tanggal WO',
-                            ),
-                            subtitle: const Text(
-                              'Urutan default',
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                            ),
-                            onChanged: (value) {
-                              if (value == null) return;
+                    // const SizedBox(height: 20),
+                    // const Text(
+                    //   'Urutkan Berdasarkan',
+                    //   style: TextStyle(
+                    //     fontWeight: FontWeight.w500,
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     border: Border.all(
+                    //       color: Colors.grey.shade300,
+                    //     ),
+                    //     borderRadius: BorderRadius.circular(10),
+                    //   ),
+                    //   child: Column(
+                    //     children: [
+                    //       RadioListTile<String>(
+                    //         value: 'wo_date',
+                    //         groupValue: tempSort,
+                    //         title: const Text(
+                    //           'Tanggal WO',
+                    //         ),
+                    //         subtitle: const Text(
+                    //           'Urutan default',
+                    //         ),
+                    //         contentPadding: const EdgeInsets.symmetric(
+                    //           horizontal: 8,
+                    //         ),
+                    //         onChanged: (value) {
+                    //           if (value == null) return;
 
-                              setModalState(() {
-                                tempSort = value;
-                              });
-                            },
-                          ),
-                          const Divider(
-                            height: 1,
-                          ),
-                          RadioListTile<String>(
-                            value: 'diff_qty_abs',
-                            groupValue: tempSort,
-                            title: const Text(
-                              'Minus Qty Terbanyak',
-                            ),
-                            subtitle: const Text(
-                              'Selisih qty terbesar terlebih dahulu',
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                            ),
-                            onChanged: (value) {
-                              if (value == null) return;
+                    //           setModalState(() {
+                    //             tempSort = value;
+                    //           });
+                    //         },
+                    //       ),
+                    //       const Divider(
+                    //         height: 1,
+                    //       ),
+                    //       RadioListTile<String>(
+                    //         value: 'diff_qty_abs',
+                    //         groupValue: tempSort,
+                    //         title: const Text(
+                    //           'Minus Qty Terbanyak',
+                    //         ),
+                    //         subtitle: const Text(
+                    //           'Selisih qty terbesar terlebih dahulu',
+                    //         ),
+                    //         contentPadding: const EdgeInsets.symmetric(
+                    //           horizontal: 8,
+                    //         ),
+                    //         onChanged: (value) {
+                    //           if (value == null) return;
 
-                              setModalState(() {
-                                tempSort = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                    //           setModalState(() {
+                    //             tempSort = value;
+                    //           });
+                    //         },
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     const SizedBox(height: 24),
                     SizedBox(
                       width: double.infinity,
@@ -424,12 +424,13 @@ class _SpkListDetailScreenState extends State<SpkListDetailScreen> {
       ),
       backgroundColor: Color(0xFFf9fafc),
       body: SafeArea(
-          child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            color: Colors.white,
+            padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: Row(
               children: [
                 Expanded(
                   flex: 5,
@@ -468,27 +469,30 @@ class _SpkListDetailScreenState extends State<SpkListDetailScreen> {
                   child: InkWell(
                     onTap: _showFilter,
                     child: Container(
+                      height: 51,
                       decoration: CustomTheme().cardTheme(),
-                      padding: const EdgeInsets.all(12),
-                      child: const Icon(Icons.tune_outlined, size: 18),
+                      padding: EdgeInsets.all(12),
+                      child: Icon(Icons.tune_outlined, size: 18),
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: _loading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : _items.isEmpty
-                      ? NoData()
-                      : ListView.builder(
+          ),
+          Expanded(
+            child: _loading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : _items.isEmpty
+                    ? NoData()
+                    : Padding(
+                        padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                        child: ListView.builder(
                           controller: _scrollController,
                           physics: AlwaysScrollableScrollPhysics(),
                           itemCount: _items.length + (_loadingMore ? 1 : 0),
-                          padding: EdgeInsets.fromLTRB(0, 6, 0, 0),
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                           itemBuilder: (context, index) {
                             if (index >= _items.length) {
                               return const Padding(
@@ -499,19 +503,20 @@ class _SpkListDetailScreenState extends State<SpkListDetailScreen> {
                               );
                             }
 
-                            return _buildSpkListCard(_items[index]);
+                            return _buildSpkListCard(_items[index],
+                                isFirst: index == 0);
                           },
                         ),
-            )
-          ],
-        ),
+                      ),
+          )
+        ],
       )),
     );
   }
 
-  Widget _buildSpkListCard(SpkListItem item) {
+  Widget _buildSpkListCard(SpkListItem item, {isFirst = false}) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),
       child: Container(
         decoration: CustomTheme().cardTheme(),
         padding: const EdgeInsets.all(12),
@@ -534,79 +539,146 @@ class _SpkListDetailScreenState extends State<SpkListDetailScreen> {
                 _buildStatusBadge(item.status),
               ],
             ),
-            const SizedBox(height: 14),
-            _buildInfoPair(
+            const SizedBox(height: 12),
+            _buildInfo(
               'Tanggal',
               widget.formatDate(DateTime.parse(item.date)),
+            ),
+            const SizedBox(height: 12),
+            _buildInfo(
               'Qty WO',
               widget.formatNumber(item.woQty),
+              unit: 'PCS',
             ),
-            const SizedBox(height: 14),
-            _buildInfoPair(
+            const SizedBox(height: 12),
+            _buildInfo(
               'Total Sortir',
               widget.formatNumber(item.sortingQty),
+              unit: 'PCS',
+            ),
+            const SizedBox(height: 12),
+            _buildInfo(
               'Total Packing',
               widget.formatNumber(item.packingQty),
+              unit: 'PCS',
             ),
-            const SizedBox(height: 14),
-            _buildInfoPair(
+            const SizedBox(height: 12),
+            _buildInfo(
               'Grade A',
               widget.formatNumber(item.gradeA),
+              unit: 'PCS',
+              percentage: _getGradePercentage(item.gradeA, item.sortingQty),
+            ),
+            const SizedBox(height: 12),
+            _buildInfo(
               'Grade B',
               widget.formatNumber(item.gradeB),
+              unit: 'PCS',
+              percentage: _getGradePercentage(item.gradeB, item.sortingQty),
             ),
-            const SizedBox(height: 14),
-            _buildInfoPair(
+            const SizedBox(height: 12),
+            _buildInfo(
               'Grade BS',
               widget.formatNumber(item.gradeBs),
+              unit: 'PCS',
+              percentage: _getGradePercentage(item.gradeBs, item.sortingQty),
+            ),
+            const SizedBox(height: 12),
+            _buildInfo(
               'Berat 1 Lusin',
               widget.formatNumber(item.dozenWeight),
+              unit: 'KG',
             ),
-            const SizedBox(height: 14),
-            _buildInfoPair(
+            const SizedBox(height: 12),
+            _buildInfo(
               'Berat Grade A',
               widget.formatNumber(item.gradeAWeight),
+              unit: 'KG',
+            ),
+            const SizedBox(height: 12),
+            _buildInfo(
               'Total Berat',
               widget.formatNumber(item.weight),
+              unit: 'KG',
             ),
-            // const SizedBox(height: 14),
-            // _buildTotalWeight(item.weight),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildInfoPair(
-    String firstLabel,
-    dynamic firstValue,
-    String secondLabel,
-    dynamic secondValue,
-  ) {
+  double _getGradePercentage(dynamic gradeQty, dynamic totalSorting) {
+    final grade = double.tryParse(gradeQty?.toString() ?? '') ?? 0;
+    final total = double.tryParse(totalSorting?.toString() ?? '') ?? 0;
+
+    if (total == 0) return 0;
+
+    return grade / total * 100;
+  }
+
+  Widget _buildInfo(
+    String label,
+    String value, {
+    String? unit,
+    double? percentage,
+  }) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: _buildInfo(firstLabel, firstValue)),
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey.shade600,
+            ),
+          ),
+        ),
         const SizedBox(width: 16),
-        Expanded(child: _buildInfo(secondLabel, secondValue)),
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Flexible(
+                child: Text(
+                  unit == null ? value : '$value $unit',
+                  textAlign: TextAlign.end,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              if (percentage != null) ...[
+                const SizedBox(width: 8),
+                _buildPercentageBadge(percentage),
+              ],
+            ],
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildInfo(String label, dynamic value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+  Widget _buildPercentageBadge(double percentage) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8,
+        vertical: 4,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.blue.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        '${percentage.toStringAsFixed(2)}%',
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: Colors.blue,
         ),
-        const SizedBox(height: 4),
-        Text(
-          value.toString(),
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-        ),
-      ],
+      ),
     );
   }
 

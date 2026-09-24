@@ -33,6 +33,7 @@ class SpkListComp extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
     final listHeight = isTablet ? 320.0 : 350.0;
 =======
@@ -45,6 +46,9 @@ class SpkListComp extends StatelessWidget {
 =======
     const double listHeight = 380;
 >>>>>>> 1d5490b7 (feat: spk)
+=======
+    const double listHeight = 350;
+>>>>>>> 31883749 (fix: report)
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -241,7 +245,7 @@ class SpkListComp extends StatelessWidget {
   Widget _buildSpkListCard(SpkListItem item, {isLast = false}) {
 >>>>>>> 1d5490b7 (feat: spk)
     return Padding(
-      padding: EdgeInsets.fromLTRB(12, 0, isLast ? 12 : 0, 12),
+      padding: EdgeInsets.fromLTRB(12, 0, isLast ? 16 : 0, 12),
       child: Container(
         decoration: CustomTheme().cardTheme(),
         padding: EdgeInsets.all(12),

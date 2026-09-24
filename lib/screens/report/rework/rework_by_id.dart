@@ -185,11 +185,15 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     return Scaffold(
       appBar: CustomAppBar(
 <<<<<<< HEAD
+<<<<<<< HEAD
         title: 'Detail Evaluasi Rework',
         onReturn: () => Navigator.pop(context),
         onEdit: _isCompleted ? _openEditScreen : null,
 =======
         title: 'Evaluasi Rework',
+=======
+        title: 'Detail Rework',
+>>>>>>> a7b8052a (feat: rework report)
         onReturn: () => Navigator.pop(context),
 >>>>>>> 5ad2d445 (feat: temporarily)
       ),

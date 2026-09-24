@@ -432,10 +432,14 @@ class _ReworkListState extends State<ReworkList> {
     return Scaffold(
       appBar: CustomAppBar(
 <<<<<<< HEAD
+<<<<<<< HEAD
         title: 'Evaluasi Rework',
 =======
         title: 'Report Rework',
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+        title: 'Rework',
+>>>>>>> a7b8052a (feat: rework report)
         onReturn: () => Navigator.pop(context),
       ),
       backgroundColor: const Color(0xFFf9fafc),

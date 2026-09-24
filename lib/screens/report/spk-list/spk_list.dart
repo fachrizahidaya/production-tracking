@@ -30,7 +30,7 @@ class SpkListComp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double listHeight = 380;
+    const double listHeight = 350;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -117,7 +117,7 @@ class SpkListComp extends StatelessWidget {
 
   Widget _buildSpkListCard(SpkListItem item, {isLast = false}) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(12, 0, isLast ? 12 : 0, 12),
+      padding: EdgeInsets.fromLTRB(12, 0, isLast ? 16 : 0, 12),
       child: Container(
         decoration: CustomTheme().cardTheme(),
         padding: EdgeInsets.all(12),

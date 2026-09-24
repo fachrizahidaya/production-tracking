@@ -135,7 +135,7 @@ class WoListComp extends StatelessWidget {
 
   Widget _buildWoListCard(WoListItem item, {isLast = false}) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(12, 0, isLast ? 12 : 0, 12),
+      padding: EdgeInsets.fromLTRB(12, 0, isLast ? 16 : 0, 12),
       child: Container(
         decoration: CustomTheme().cardTheme(),
         padding: EdgeInsets.all(12),

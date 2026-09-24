@@ -585,7 +585,6 @@ class _SortingResultDetailScreenState extends State<SortingResultDetailScreen> {
                     const SizedBox(height: 12),
                     _buildSortingInfo(
                       'Total Qty',
-                      widget.formatNumber(item.totalQty),
                       unit: 'PCS',
                     ),
                     const SizedBox(height: 12),
@@ -672,16 +671,3 @@ class _SortingResultDetailScreenState extends State<SortingResultDetailScreen> {
       ),
       decoration: BoxDecoration(
         color: Colors.blue.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        '${percentage.toStringAsFixed(2)}%',
-        style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: Colors.blue,
-        ),
-      ),
-    );
-  }
-}

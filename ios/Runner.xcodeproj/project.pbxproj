@@ -91,6 +91,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 =======
 >>>>>>> 309725d4 (chore: ios)
@@ -99,6 +100,9 @@
 >>>>>>> 593bbd5e (chore: for iOS)
 =======
 >>>>>>> ec16694a (chore: ios)
+=======
+				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
+>>>>>>> eb172918 (chore: for iOS)
 				09F5357FD9E348129068D101 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -238,8 +242,6 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
-				1DD1FA939E4E846AB735AF66 /* [CP] Embed Pods Frameworks */,
-				FC8DD28A70D3E52D14136F56 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -339,6 +341,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 		1DD1FA939E4E846AB735AF66 /* [CP] Embed Pods Frameworks */ = {
 =======
@@ -392,6 +395,8 @@
 >>>>>>> fe8c7222 (chore: package)
 =======
 >>>>>>> ec16694a (chore: ios)
+=======
+>>>>>>> eb172918 (chore: for iOS)
 		2D602E86E0E22BDD068B4E92 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -470,6 +475,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> ec16694a (chore: ios)
@@ -496,6 +502,8 @@
 >>>>>>> 593bbd5e (chore: for iOS)
 =======
 >>>>>>> ec16694a (chore: ios)
+=======
+>>>>>>> eb172918 (chore: for iOS)
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */

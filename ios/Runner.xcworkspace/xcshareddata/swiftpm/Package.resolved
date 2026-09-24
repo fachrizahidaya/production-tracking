@@ -1,6 +1,7 @@
 {
   "pins" : [
     {
+<<<<<<< HEAD
       "identity" : "abseil-cpp-binary",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/abseil-cpp-binary.git",
@@ -19,6 +20,8 @@
       }
     },
     {
+=======
+>>>>>>> 593bbd5e (chore: for iOS)
       "identity" : "dkcamera",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zhangao0086/DKCamera",
@@ -46,6 +49,7 @@
       }
     },
     {
+<<<<<<< HEAD
       "identity" : "firebase-ios-sdk",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk",
@@ -127,6 +131,8 @@
       }
     },
     {
+=======
+>>>>>>> 593bbd5e (chore: for iOS)
       "identity" : "libwebp-xcode",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/libwebp-Xcode.git",
@@ -136,6 +142,7 @@
       }
     },
     {
+<<<<<<< HEAD
       "identity" : "nanopb",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/nanopb.git",
@@ -154,6 +161,8 @@
       }
     },
     {
+=======
+>>>>>>> 593bbd5e (chore: for iOS)
       "identity" : "sdwebimage",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage",

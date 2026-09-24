@@ -81,9 +81,13 @@
 			buildActionMask = 2147483647;
 			files = (
 <<<<<<< HEAD
+<<<<<<< HEAD
 				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 =======
 >>>>>>> 309725d4 (chore: ios)
+=======
+				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
+>>>>>>> 593bbd5e (chore: for iOS)
 				09F5357FD9E348129068D101 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -216,8 +220,6 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
-				1DD1FA939E4E846AB735AF66 /* [CP] Embed Pods Frameworks */,
-				FC8DD28A70D3E52D14136F56 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -261,7 +263,11 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
+<<<<<<< HEAD
 				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */,
+=======
+				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */,
+>>>>>>> 593bbd5e (chore: for iOS)
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -297,6 +303,7 @@
 
 /* Begin PBXShellScriptBuildPhase section */
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 		1DD1FA939E4E846AB735AF66 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -316,6 +323,8 @@
 			showEnvVarsInLog = 0;
 		};
 >>>>>>> 309725d4 (chore: ios)
+=======
+>>>>>>> 593bbd5e (chore: for iOS)
 		2D602E86E0E22BDD068B4E92 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -392,6 +401,7 @@
 			showEnvVarsInLog = 0;
 		};
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 		FC8DD28A70D3E52D14136F56 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -411,6 +421,8 @@
 			showEnvVarsInLog = 0;
 		};
 >>>>>>> 309725d4 (chore: ios)
+=======
+>>>>>>> 593bbd5e (chore: for iOS)
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -807,7 +819,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+<<<<<<< HEAD
 		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */ = {
+=======
+		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */ = {
+>>>>>>> 593bbd5e (chore: for iOS)
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage;
 		};

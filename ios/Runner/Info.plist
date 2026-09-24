@@ -29,7 +29,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>We need camera access to scan QR codes</string>
 	<key>NSPhotoLibraryUsageDescription</key>
+<<<<<<< HEAD
 	<string>This app needs photos access to get photo library</string>
+=======
+	<string>This app needs photos access to get QR code from photo library</string>
+>>>>>>> 593bbd5e (chore: for iOS)
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -53,10 +57,13 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+<<<<<<< HEAD
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
 	</array>
+=======
+>>>>>>> 593bbd5e (chore: for iOS)
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

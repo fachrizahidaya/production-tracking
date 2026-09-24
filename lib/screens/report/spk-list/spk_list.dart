@@ -204,6 +204,7 @@ class SpkListComp extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return SizedBox(
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 width: 360,
                                 child: _buildSpkListCard(items[index],
                                     isLast: index == items.length - 1));
@@ -212,6 +213,9 @@ class SpkListComp extends StatelessWidget {
 >>>>>>> 2261585c (fix: report axis horizontal)
 =======
                                 width: 280,
+=======
+                                width: 360,
+>>>>>>> 183ac4f1 (fix: report)
                                 child: _buildSpkListCard(items[index],
                                     isLast: index == items.length - 1));
 >>>>>>> 1d5490b7 (feat: spk)
@@ -313,14 +317,19 @@ class SpkListComp extends StatelessWidget {
               formatDate(DateTime.parse(item.date)),
               'Qty WO',
 <<<<<<< HEAD
+<<<<<<< HEAD
               '${formatNumber(item.woQty)} PCS',
 =======
               formatNumber(item.woQty),
 >>>>>>> 1d5490b7 (feat: spk)
+=======
+              '${formatNumber(item.woQty)} PCS',
+>>>>>>> 183ac4f1 (fix: report)
             ),
             const SizedBox(height: 14),
             _buildInfoPair(
               'Total Sortir',
+<<<<<<< HEAD
 <<<<<<< HEAD
               '${formatNumber(item.sortingQty)} PCS',
               'Total Packing',
@@ -330,10 +339,16 @@ class SpkListComp extends StatelessWidget {
               'Total Packing',
               formatNumber(item.packingQty),
 >>>>>>> 1d5490b7 (feat: spk)
+=======
+              '${formatNumber(item.sortingQty)} PCS',
+              'Total Packing',
+              '${formatNumber(item.packingQty)} PCS',
+>>>>>>> 183ac4f1 (fix: report)
             ),
             const SizedBox(height: 14),
             _buildInfoPair(
               'Grade A',
+<<<<<<< HEAD
 <<<<<<< HEAD
               '${formatNumber(item.gradeA)} PCS',
               'Grade B',
@@ -343,10 +358,16 @@ class SpkListComp extends StatelessWidget {
               'Grade B',
               formatNumber(item.gradeB),
 >>>>>>> 1d5490b7 (feat: spk)
+=======
+              '${formatNumber(item.gradeA)} PCS',
+              'Grade B',
+              '${formatNumber(item.gradeB)} PCS',
+>>>>>>> 183ac4f1 (fix: report)
             ),
             const SizedBox(height: 14),
             _buildInfoPair(
               'Grade BS',
+<<<<<<< HEAD
 <<<<<<< HEAD
               '${formatNumber(item.gradeBs)} PCS',
               'Berat 1 Lusin',
@@ -356,10 +377,16 @@ class SpkListComp extends StatelessWidget {
               'Berat 1 Lusin',
               formatNumber(item.dozenWeight),
 >>>>>>> 1d5490b7 (feat: spk)
+=======
+              '${formatNumber(item.gradeBs)} PCS',
+              'Berat 1 Lusin',
+              '${formatNumber(item.dozenWeight)} KG',
+>>>>>>> 183ac4f1 (fix: report)
             ),
             const SizedBox(height: 14),
             _buildInfoPair(
               'Berat Grade A',
+<<<<<<< HEAD
 <<<<<<< HEAD
               '${formatNumber(item.gradeAWeight)} KG',
               'Total Berat',
@@ -372,6 +399,11 @@ class SpkListComp extends StatelessWidget {
               'Total Berat',
               formatNumber(item.weight),
 >>>>>>> 1d5490b7 (feat: spk)
+=======
+              '${formatNumber(item.gradeAWeight)} KG',
+              'Total Berat',
+              '${formatNumber(item.weight)} KG',
+>>>>>>> 183ac4f1 (fix: report)
             ),
           ],
         ),

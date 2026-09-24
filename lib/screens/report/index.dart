@@ -18,6 +18,7 @@ import 'package:textile_tracking/screens/report/detail/spk_list.dart';
 import 'package:textile_tracking/screens/report/detail/wo_list.dart';
 import 'package:textile_tracking/screens/report/normal-rework/normal_rework.dart';
 import 'package:textile_tracking/screens/report/production-trend/production_trend.dart';
+import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 import 'package:textile_tracking/screens/report/sorting-detail/sorting_detail.dart';
 import 'package:textile_tracking/screens/report/detail/sorting_result.dart';
@@ -1021,6 +1022,7 @@ class _ReportScreenState extends State<ReportScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             // Padding(
             //   padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
@@ -1073,6 +1075,56 @@ class _ReportScreenState extends State<ReportScreen> {
 >>>>>>> 5ad2d445 (feat: temporarily)
 =======
 >>>>>>> 65038198 (feat:)
+=======
+            Padding(
+              padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
+              child: Container(
+                decoration: CustomTheme().cardTheme(),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ReworkList()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text('Ke Report Rework'),
+                        Icon(Icons.chevron_right),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
+              child: Container(
+                decoration: CustomTheme().cardTheme(),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ReworkList()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text('Ke Report Packing'),
+                        Icon(Icons.chevron_right),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+>>>>>>> 183ac4f1 (fix: report)
             if (_reportWidgets['sortingDetail'] == true) _buildSortingDetail(),
             if (_reportWidgets['sortingResult'] == true) _buildSortingResult(),
             if (_reportWidgets['topBs'] == true) _buildTopBS(),

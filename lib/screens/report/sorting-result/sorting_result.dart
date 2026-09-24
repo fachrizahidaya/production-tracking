@@ -223,6 +223,7 @@ class _SortingResultCompState extends State<SortingResultComp> {
                             itemBuilder: (context, index) {
                               return SizedBox(
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 width: 360,
                                 child: _buildSortingResultCard(
                                     widget.items[index],
@@ -232,6 +233,9 @@ class _SortingResultCompState extends State<SortingResultComp> {
 >>>>>>> 2261585c (fix: report axis horizontal)
 =======
                                 width: 280,
+=======
+                                width: 360,
+>>>>>>> 183ac4f1 (fix: report)
                                 child: _buildSortingResultCard(
                                     widget.items[index],
                                     isLast: index == widget.items?.length - 1),
@@ -314,7 +318,7 @@ class _SortingResultCompState extends State<SortingResultComp> {
                 Expanded(
                   child: _buildSortingInfo(
                     'Grade A',
-                    widget.formatNumber(item.gradeA),
+                    '${widget.formatNumber(item.gradeA)} PCS',
                   ),
 <<<<<<< HEAD
                 ],
@@ -338,10 +342,14 @@ class _SortingResultCompState extends State<SortingResultComp> {
                   child: _buildSortingInfo(
                     'Grade B',
 <<<<<<< HEAD
+<<<<<<< HEAD
                     '${widget.formatNumber(item.gradeB)} PCS',
 =======
                     widget.formatNumber(item.gradeB),
 >>>>>>> 65038198 (feat:)
+=======
+                    '${widget.formatNumber(item.gradeB)} PCS',
+>>>>>>> 183ac4f1 (fix: report)
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -349,10 +357,14 @@ class _SortingResultCompState extends State<SortingResultComp> {
                   child: _buildSortingInfo(
                     'Grade BS',
 <<<<<<< HEAD
+<<<<<<< HEAD
                     '${widget.formatNumber(item.gradeBS)} PCS',
 =======
                     widget.formatNumber(item.gradeBS),
 >>>>>>> 65038198 (feat:)
+=======
+                    '${widget.formatNumber(item.gradeBS)} PCS',
+>>>>>>> 183ac4f1 (fix: report)
                   ),
                 ),
               ],
@@ -365,16 +377,21 @@ class _SortingResultCompState extends State<SortingResultComp> {
                   child: _buildSortingInfo(
                     'Total Qty',
 <<<<<<< HEAD
+<<<<<<< HEAD
                     '${widget.formatNumber(item.totalQty)} PCS',
 =======
                     widget.formatNumber(item.totalQty),
 >>>>>>> 65038198 (feat:)
+=======
+                    '${widget.formatNumber(item.totalQty)} PCS',
+>>>>>>> 183ac4f1 (fix: report)
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildSortingInfo(
                     'Qty WO',
+<<<<<<< HEAD
 <<<<<<< HEAD
                     '${widget.formatNumber(item.woQty)} PCS',
                   ),
@@ -393,13 +410,20 @@ class _SortingResultCompState extends State<SortingResultComp> {
                     '${widget.formatNumber(item.diff)}',
 =======
                     widget.formatNumber(item.woQty),
+=======
+                    '${widget.formatNumber(item.woQty)} PCS',
+>>>>>>> 183ac4f1 (fix: report)
                   ),
                 ),
                 Expanded(
                   child: _buildSortingInfo(
                     'Selisih',
+<<<<<<< HEAD
                     widget.formatNumber(item.diff),
 >>>>>>> 65038198 (feat:)
+=======
+                    '${widget.formatNumber(item.diff)}',
+>>>>>>> 183ac4f1 (fix: report)
                   ),
                 ),
               ],

@@ -32,6 +32,7 @@ class SpkList {
 }
 
 class SpkListItem {
+  final spkId;
   final spkNo;
   final date;
   final status;
@@ -48,7 +49,8 @@ class SpkListItem {
   final gradeBs;
 
   SpkListItem(
-      {this.date,
+      {this.spkId,
+      this.date,
       this.gradeAWeight,
       this.packingQty,
       this.sortingQty,
@@ -65,6 +67,7 @@ class SpkListItem {
 
   factory SpkListItem.fromJson(Map<String, dynamic> json) {
     return SpkListItem(
+        spkId: json['spk_id'] ?? '',
         date: json['spk_date'] ?? '',
         gradeAWeight: json['weight_grade_a'] ?? 0,
         packingQty: json['total_packing'] ?? 0,

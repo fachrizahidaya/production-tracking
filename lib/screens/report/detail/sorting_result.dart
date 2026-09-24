@@ -7,6 +7,7 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/models/report/sorting_result.dart';
 import 'package:textile_tracking/screens/report/service.dart';
+import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class SortingResultDetailScreen extends StatefulWidget {
   final DateTime startDate;
@@ -522,61 +523,88 @@ class _SortingResultDetailScreenState extends State<SortingResultDetailScreen> {
   }
 
   Widget _buildSortingResultCard(SortingResultItem item, {isFirst = false}) {
+    final workOrderId = item.workOrderId?.toString() ?? '';
+
     return Padding(
       padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),
       child: Container(
         decoration: CustomTheme().cardTheme(),
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              item.woNo,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: workOrderId.isEmpty
+                  ? null
+                  : () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WorkOrderDetail(
+                            id: workOrderId,
+                          ),
+                        ),
+                      );
+                    },
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.woNo,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _buildSortingInfo(
+                      'Grade A',
+                      widget.formatNumber(item.gradeA),
+                      unit: 'PCS',
+                      percentage:
+                          _getGradePercentage(item.gradeA, item.totalQty),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildSortingInfo(
+                      'Grade B',
+                      widget.formatNumber(item.gradeB),
+                      unit: 'PCS',
+                      percentage:
+                          _getGradePercentage(item.gradeB, item.totalQty),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildSortingInfo(
+                      'Grade BS',
+                      widget.formatNumber(item.gradeBS),
+                      unit: 'PCS',
+                      percentage:
+                          _getGradePercentage(item.gradeBS, item.totalQty),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildSortingInfo(
+                      'Total Qty',
+                      widget.formatNumber(item.totalQty),
+                      unit: 'PCS',
+                    ),
+                    const SizedBox(height: 12),
+                    _buildSortingInfo(
+                      'Qty WO',
+                      widget.formatNumber(item.woQty),
+                      unit: 'PCS',
+                    ),
+                    const SizedBox(height: 12),
+                    _buildSortingInfo(
+                      'Selisih',
+                      widget.formatNumber(item.diff),
+                      unit: 'PCS',
+                    ),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 14),
-            _buildSortingInfo(
-              'Grade A',
-              widget.formatNumber(item.gradeA),
-              unit: 'PCS',
-              percentage: _getGradePercentage(item.gradeA, item.totalQty),
-            ),
-            const SizedBox(height: 12),
-            _buildSortingInfo(
-              'Grade B',
-              widget.formatNumber(item.gradeB),
-              unit: 'PCS',
-              percentage: _getGradePercentage(item.gradeB, item.totalQty),
-            ),
-            const SizedBox(height: 12),
-            _buildSortingInfo(
-              'Grade BS',
-              widget.formatNumber(item.gradeBS),
-              unit: 'PCS',
-              percentage: _getGradePercentage(item.gradeBS, item.totalQty),
-            ),
-            const SizedBox(height: 12),
-            _buildSortingInfo(
-              'Total Qty',
-              widget.formatNumber(item.totalQty),
-              unit: 'PCS',
-            ),
-            const SizedBox(height: 12),
-            _buildSortingInfo(
-              'Qty WO',
-              widget.formatNumber(item.woQty),
-              unit: 'PCS',
-            ),
-            const SizedBox(height: 12),
-            _buildSortingInfo(
-              'Selisih',
-              widget.formatNumber(item.diff),
-              unit: 'PCS',
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -141,7 +141,7 @@ class _SortingResultCompState extends State<SortingResultComp> {
                             padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
                             itemBuilder: (context, index) {
                               return SizedBox(
-                                width: 280,
+                                width: 360,
                                 child: _buildSortingResultCard(
                                     widget.items[index],
                                     isLast: index == widget.items?.length - 1),
@@ -180,21 +180,21 @@ class _SortingResultCompState extends State<SortingResultComp> {
                 Expanded(
                   child: _buildSortingInfo(
                     'Grade A',
-                    widget.formatNumber(item.gradeA),
+                    '${widget.formatNumber(item.gradeA)} PCS',
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildSortingInfo(
                     'Grade B',
-                    widget.formatNumber(item.gradeB),
+                    '${widget.formatNumber(item.gradeB)} PCS',
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildSortingInfo(
                     'Grade BS',
-                    widget.formatNumber(item.gradeBS),
+                    '${widget.formatNumber(item.gradeBS)} PCS',
                   ),
                 ),
               ],
@@ -206,20 +206,20 @@ class _SortingResultCompState extends State<SortingResultComp> {
                 Expanded(
                   child: _buildSortingInfo(
                     'Total Qty',
-                    widget.formatNumber(item.totalQty),
+                    '${widget.formatNumber(item.totalQty)} PCS',
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildSortingInfo(
                     'Qty WO',
-                    widget.formatNumber(item.woQty),
+                    '${widget.formatNumber(item.woQty)} PCS',
                   ),
                 ),
                 Expanded(
                   child: _buildSortingInfo(
                     'Selisih',
-                    widget.formatNumber(item.diff),
+                    '${widget.formatNumber(item.diff)}',
                   ),
                 ),
               ],

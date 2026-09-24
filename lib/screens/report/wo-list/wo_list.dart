@@ -120,7 +120,7 @@ class WoListComp extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             return SizedBox(
-                                width: 280,
+                                width: 360,
                                 child: _buildWoListCard(items[index],
                                     isLast: index == items.length - 1));
                           },
@@ -173,7 +173,7 @@ class WoListComp extends StatelessWidget {
                 Expanded(
                   child: _buildInfoItem(
                     'Qty WO',
-                    formatNumber(item.woQty),
+                    '${formatNumber(item.woQty)} PCS',
                   ),
                 ),
               ],
@@ -185,14 +185,14 @@ class WoListComp extends StatelessWidget {
                 Expanded(
                   child: _buildInfoItem(
                     'Total Sortir',
-                    formatNumber(item.sortingQty),
+                    '${formatNumber(item.sortingQty)} PCS',
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildInfoItem(
                     'Total Packing',
-                    formatNumber(item.packingQty),
+                    '${formatNumber(item.packingQty)} PCS',
                   ),
                 ),
               ],
@@ -204,14 +204,14 @@ class WoListComp extends StatelessWidget {
                 Expanded(
                   child: _buildInfoItem(
                     'Berat 1 Lusin',
-                    formatNumber(item.weightPerDozen),
+                    '${formatNumber(item.weightPerDozen)} KG',
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildInfoItem(
                     'Gramasi',
-                    formatNumber(item.gsm),
+                    '${formatNumber(item.gsm)} GSM',
                   ),
                 ),
               ],
@@ -223,14 +223,14 @@ class WoListComp extends StatelessWidget {
                 Expanded(
                   child: _buildInfoItem(
                     'Berat Grade A',
-                    formatNumber(item.gradeAWeight),
+                    '${formatNumber(item.gradeAWeight)} KG',
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildInfoItem(
                     'Total Berat',
-                    formatNumber(item.weight),
+                    '${formatNumber(item.weight)} KG',
                   ),
                 ),
               ],

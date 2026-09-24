@@ -32,6 +32,7 @@ class WoList {
 }
 
 class WoListItem {
+  final workOrderId;
   final woNo;
   final spkNo;
   final date;
@@ -48,7 +49,8 @@ class WoListItem {
   final sortingGrades;
 
   WoListItem(
-      {this.date,
+      {this.workOrderId,
+      this.date,
       this.gradeAWeight,
       this.gsm,
       this.materialCode,
@@ -65,6 +67,7 @@ class WoListItem {
 
   factory WoListItem.fromJson(Map<String, dynamic> json) {
     return WoListItem(
+        workOrderId: json['wo_id'] ?? '',
         date: json['wo_date'] ?? '',
         gradeAWeight: json['weight_grade_a'] ?? 0,
         gsm: json['total_gsm'] ?? 0,

@@ -7,6 +7,7 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/models/report/wo_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
+import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class WoListDetailScreen extends StatefulWidget {
   final DateTime startDate;
@@ -514,93 +515,117 @@ class _WoListDetailScreenState extends State<WoListDetailScreen> {
   }
 
   Widget _buildWoListCard(WoListItem item, {isFirst = false}) {
+    final workOrderId = item.workOrderId?.toString() ?? '';
+
     return Padding(
       padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),
       child: Container(
         decoration: CustomTheme().cardTheme(),
-        padding: EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    item.woNo,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: workOrderId.isEmpty
+                  ? null
+                  : () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WorkOrderDetail(
+                            id: workOrderId,
+                          ),
+                        ),
+                      );
+                    },
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item.woNo,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        _buildStatusBadge(item.status),
+                      ],
                     ),
-                  ),
+                    const SizedBox(height: 12),
+                    _buildInfoItem(
+                      'Tanggal',
+                      widget.formatDate(DateTime.parse(item.date)),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildInfoItem(
+                      'Qty WO',
+                      widget.formatNumber(item.woQty),
+                      unit: 'PCS',
+                    ),
+                    const SizedBox(height: 12),
+                    _buildInfoItem(
+                      'Grade A',
+                      widget.formatNumber(_getSortingGradeQty(item, 'A')),
+                      unit: 'PCS',
+                      percentage: _getSortingGradePercentage(item, 'A'),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildInfoItem(
+                      'Grade BS',
+                      widget.formatNumber(_getSortingGradeQty(item, 'BS')),
+                      unit: 'PCS',
+                      percentage: _getSortingGradePercentage(item, 'BS'),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildInfoItem(
+                      'Total Sortir',
+                      widget.formatNumber(item.sortingQty),
+                      unit: 'PCS',
+                    ),
+                    const SizedBox(height: 12),
+                    _buildInfoItem(
+                      'Total Packing',
+                      widget.formatNumber(item.packingQty),
+                      unit: 'PCS',
+                    ),
+                    const SizedBox(height: 12),
+                    _buildInfoItem(
+                      'Berat 1 Lusin',
+                      widget.formatNumber(item.weightPerDozen),
+                      unit: 'KG',
+                    ),
+                    const SizedBox(height: 12),
+                    _buildInfoItem(
+                      'Gramasi',
+                      widget.formatNumber(item.gsm),
+                      unit: 'GSM',
+                    ),
+                    const SizedBox(height: 12),
+                    _buildInfoItem(
+                      'Berat Grade A',
+                      widget.formatNumber(item.gradeAWeight),
+                      unit: 'KG',
+                    ),
+                    const SizedBox(height: 12),
+                    _buildInfoItem(
+                      'Total Berat',
+                      widget.formatNumber(item.weight),
+                      unit: 'KG',
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                _buildStatusBadge(item.status),
-              ],
+              ),
             ),
-            const SizedBox(height: 12),
-            _buildInfoItem(
-              'Tanggal',
-              widget.formatDate(DateTime.parse(item.date)),
-            ),
-            const SizedBox(height: 12),
-            _buildInfoItem(
-              'Qty WO',
-              widget.formatNumber(item.woQty),
-              unit: 'PCS',
-            ),
-            const SizedBox(height: 12),
-            _buildInfoItem(
-              'Grade A',
-              widget.formatNumber(_getSortingGradeQty(item, 'A')),
-              unit: 'PCS',
-              percentage: _getSortingGradePercentage(item, 'A'),
-            ),
-            const SizedBox(height: 12),
-            _buildInfoItem(
-              'Grade BS',
-              widget.formatNumber(_getSortingGradeQty(item, 'BS')),
-              unit: 'PCS',
-              percentage: _getSortingGradePercentage(item, 'BS'),
-            ),
-            const SizedBox(height: 12),
-            _buildInfoItem(
-              'Total Sortir',
-              widget.formatNumber(item.sortingQty),
-              unit: 'PCS',
-            ),
-            const SizedBox(height: 12),
-            _buildInfoItem(
-              'Total Packing',
-              widget.formatNumber(item.packingQty),
-              unit: 'PCS',
-            ),
-            const SizedBox(height: 12),
-            _buildInfoItem(
-              'Berat 1 Lusin',
-              widget.formatNumber(item.weightPerDozen),
-              unit: 'KG',
-            ),
-            const SizedBox(height: 12),
-            _buildInfoItem(
-              'Gramasi',
-              widget.formatNumber(item.gsm),
-              unit: 'GSM',
-            ),
-            const SizedBox(height: 12),
-            _buildInfoItem(
-              'Berat Grade A',
-              widget.formatNumber(item.gradeAWeight),
-              unit: 'KG',
-            ),
-            const SizedBox(height: 12),
-            _buildInfoItem(
-              'Total Berat',
-              widget.formatNumber(item.weight),
-              unit: 'KG',
-            ),
-          ],
+          ),
         ),
       ),
     );

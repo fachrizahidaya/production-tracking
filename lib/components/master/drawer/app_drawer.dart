@@ -117,8 +117,13 @@ class _AppDrawerState extends State<AppDrawer> {
 =======
     'Order Greige',
     'Anomali Data',
+<<<<<<< HEAD
     'Desain'
 >>>>>>> bce73725 (fix: hidden in drawer)
+=======
+    'Desain',
+    'Notifikasi'
+>>>>>>> 91183a33 (fix: rework)
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {

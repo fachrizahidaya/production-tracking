@@ -291,6 +291,31 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
   final TextEditingController _preventivePlanController =
       TextEditingController();
+  final ReportService _reportService = ReportService();
+  List<Map<String, dynamic>> _reasonOptions = [];
+  List<Map<String, dynamic>> _selectedReasons = [];
+  bool _loadingReasons = false;
+  bool _saving = false;
+  int _waitingStep = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _reasonController.text = widget.data['reason']?.toString() ?? '';
+    _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
+    _preventivePlanController.text =
+        widget.data['preventivePlan']?.toString() ?? '';
+    final reasons = widget.data['reasons'];
+    if (reasons is List) {
+      _selectedReasons = reasons
+          .map((reason) => {
+                'value': reason.toString(),
+                'label': reason.toString(),
+              })
+          .toList();
+    }
+    if (_isWaiting) _loadReasonOptions();
+  }
 
   @override
   void initState() {
@@ -392,6 +417,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 >>>>>>> 82bef6eb (fix: hide unnecessary)
         onReturn: () => Navigator.pop(context),
         onEdit: _isCompleted ? _openEditScreen : null,
+<<<<<<< HEAD
 =======
         title: 'Evaluasi Rework',
 =======
@@ -415,6 +441,9 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+=======
+      backgroundColor: const Color(0xFFf9fafc),
+>>>>>>> 91183a33 (fix: rework)
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

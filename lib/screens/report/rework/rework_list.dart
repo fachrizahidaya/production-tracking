@@ -433,6 +433,7 @@ class _ReworkListState extends State<ReworkList> {
       appBar: CustomAppBar(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         title: 'Evaluasi Rework',
 =======
         title: 'Report Rework',
@@ -440,6 +441,9 @@ class _ReworkListState extends State<ReworkList> {
 =======
         title: 'Rework',
 >>>>>>> a7b8052a (feat: rework report)
+=======
+        title: 'Report Rework',
+>>>>>>> 82bef6eb (fix: hide unnecessary)
         onReturn: () => Navigator.pop(context),
       ),
       backgroundColor: const Color(0xFFf9fafc),

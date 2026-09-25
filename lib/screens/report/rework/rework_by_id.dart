@@ -186,7 +186,11 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       appBar: CustomAppBar(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         title: 'Detail Evaluasi Rework',
+=======
+        title: 'Evaluasi Rework',
+>>>>>>> 82bef6eb (fix: hide unnecessary)
         onReturn: () => Navigator.pop(context),
         onEdit: _isCompleted ? _openEditScreen : null,
 =======

@@ -58,7 +58,7 @@ class _ReworkListState extends State<ReworkList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Rework',
+        title: 'Report Rework',
         onReturn: () => Navigator.pop(context),
       ),
       backgroundColor: const Color(0xFFf9fafc),

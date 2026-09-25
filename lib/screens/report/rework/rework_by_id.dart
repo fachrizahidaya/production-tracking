@@ -31,7 +31,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Detail Rework',
+        title: 'Evaluasi Rework',
         onReturn: () => Navigator.pop(context),
       ),
       backgroundColor: const Color(0xFFf9fafc),

@@ -46,13 +46,8 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   int _visibleStep = 1;
   List<Map<String, dynamic>> _reasonOptions = [];
   List<Map<String, dynamic>> _selectedReasons = [];
-  List<Map<String, dynamic>> _attachments = [];
 
   String get _draftType => 'rework';
-
-  @override
-  void initState() {
-    super.initState();
     final reasons = widget.data['reasons'];
     if (reasons is List) {
       _selectedReasons = reasons

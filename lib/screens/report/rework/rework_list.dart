@@ -763,8 +763,10 @@ class _ReworkListState extends State<ReworkList> {
               ),
             ],
           ),
-        ),
-      ],
+          const TextSpan(text: ' · dari '),
+          TextSpan(text: _reworkReferenceNo(item)),
+        ],
+      ),
     );
   }
 

@@ -123,6 +123,31 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   final TextEditingController _reasonController = TextEditingController();
   final TextEditingController _preventivePlanController =
       TextEditingController();
+  final ReportService _reportService = ReportService();
+  List<Map<String, dynamic>> _reasonOptions = [];
+  List<Map<String, dynamic>> _selectedReasons = [];
+  bool _loadingReasons = false;
+  bool _saving = false;
+  int _waitingStep = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _reasonController.text = widget.data['reason']?.toString() ?? '';
+    _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
+    _preventivePlanController.text =
+        widget.data['preventivePlan']?.toString() ?? '';
+    final reasons = widget.data['reasons'];
+    if (reasons is List) {
+      _selectedReasons = reasons
+          .map((reason) => {
+                'value': reason.toString(),
+                'label': reason.toString(),
+              })
+          .toList();
+    }
+    if (_isWaiting) _loadReasonOptions();
+  }
 
   @override
   void initState() {
@@ -167,11 +192,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         title: 'Detail Evaluasi Rework',
         onReturn: () => Navigator.pop(context),
         onEdit: _isCompleted ? _openEditScreen : null,
-      ),
       backgroundColor: const Color(0xFFf9fafc),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -30,6 +30,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 version: 2.4.1+132
 =======
 version: 1.2.2+105
@@ -73,6 +74,9 @@ version: 1.2.2+121
 =======
 version: 1.2.2+122
 >>>>>>> f9e74159 (chore: update version)
+=======
+version: 1.2.2+123
+>>>>>>> 34849df6 (chore: update version)
 
 environment:
   sdk: ^3.6.0

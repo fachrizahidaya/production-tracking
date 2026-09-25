@@ -1019,6 +1019,57 @@ class _ReportScreenState extends State<ReportScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+<<<<<<< HEAD
+=======
+            // Padding(
+            //   padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
+            //   child: Container(
+            //     decoration: CustomTheme().cardTheme(),
+            //     child: InkWell(
+            //       onTap: () {
+            //         Navigator.push(
+            //           context,
+            //           MaterialPageRoute(builder: (context) => ReworkList()),
+            //         );
+            //       },
+            //       child: Padding(
+            //         padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            //         child: Row(
+            //           crossAxisAlignment: CrossAxisAlignment.center,
+            //           children: [
+            //             Text('Ke Report Rework'),
+            //             Icon(Icons.chevron_right),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // Padding(
+            //   padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
+            //   child: Container(
+            //     decoration: CustomTheme().cardTheme(),
+            //     child: InkWell(
+            //       onTap: () {
+            //         Navigator.push(
+            //           context,
+            //           MaterialPageRoute(builder: (context) => ReworkList()),
+            //         );
+            //       },
+            //       child: Padding(
+            //         padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            //         child: Row(
+            //           crossAxisAlignment: CrossAxisAlignment.center,
+            //           children: [
+            //             Text('Ke Report Packing'),
+            //             Icon(Icons.chevron_right),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+>>>>>>> 5ad2d445 (feat: temporarily)
             if (_reportWidgets['sortingDetail'] == true) _buildSortingDetail(),
             if (_reportWidgets['sortingResult'] == true) _buildSortingResult(),
             if (_reportWidgets['topBs'] == true) _buildTopBS(),

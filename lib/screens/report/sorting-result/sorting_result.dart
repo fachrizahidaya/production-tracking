@@ -39,8 +39,12 @@ class SortingResultComp extends StatefulWidget {
 class _SortingResultCompState extends State<SortingResultComp> {
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
     final listHeight = isTablet ? 210.0 : 200.0;
+=======
+    const double listHeight = 180;
+>>>>>>> 5ad2d445 (feat: temporarily)
 
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -129,11 +133,16 @@ class _SortingResultCompState extends State<SortingResultComp> {
                 height:
                     widget.loading || widget.items.isEmpty ? 120 : listHeight,
                 child: widget.loading
+<<<<<<< HEAD
                     ? const Center(
+=======
+                    ? Center(
+>>>>>>> 5ad2d445 (feat: temporarily)
                         child: CircularProgressIndicator(),
                       )
                     : widget.items.isEmpty
                         ? NoData()
+<<<<<<< HEAD
                         : LayoutBuilder(
                             builder: (context, constraints) {
                               // Keep the next card partially visible so the
@@ -161,6 +170,20 @@ class _SortingResultCompState extends State<SortingResultComp> {
                                     ),
                                   );
                                 },
+=======
+                        : ListView.builder(
+                            controller: widget.scrollController,
+                            scrollDirection: Axis.horizontal,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: widget.items.length,
+                            padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                            itemBuilder: (context, index) {
+                              return SizedBox(
+                                width: 360,
+                                child: _buildSortingResultCard(
+                                    widget.items[index],
+                                    isLast: index == widget.items?.length - 1),
+>>>>>>> 5ad2d445 (feat: temporarily)
                               );
                             },
                           ),
@@ -232,7 +255,10 @@ class _SortingResultCompState extends State<SortingResultComp> {
                     '${widget.formatNumber(item.woQty)} PCS',
                   ),
                 ),
+<<<<<<< HEAD
                 const SizedBox(width: 12),
+=======
+>>>>>>> 5ad2d445 (feat: temporarily)
                 Expanded(
                   child: _buildSortingInfo(
                     'Selisih',

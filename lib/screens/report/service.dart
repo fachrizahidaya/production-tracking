@@ -1,14 +1,20 @@
 import 'dart:convert';
+<<<<<<< HEAD
 import 'dart:io';
+=======
+>>>>>>> 5ad2d445 (feat: temporarily)
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/models/report/production_summary.dart';
 import 'package:http/http.dart' as http;
 import 'package:textile_tracking/models/report/production_trend.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/models/report/bs.dart';
 import 'package:textile_tracking/models/report/gsm.dart';
 import 'package:textile_tracking/models/report/rework.dart';
+=======
+>>>>>>> 5ad2d445 (feat: temporarily)
 import 'package:textile_tracking/models/report/rework_comparison.dart';
 import 'package:textile_tracking/models/report/sorting_result.dart';
 import 'package:textile_tracking/models/report/spk_list.dart';
@@ -35,16 +41,31 @@ class ReportService {
 
     String? token = prefs.getString('access_token');
 
+<<<<<<< HEAD
     final uri = Uri.parse('$baseUrl/report/production/summary').replace(
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
+=======
+    final uri = Uri.parse(
+      '$baseUrl/report/production/summary',
+    ).replace(
+      queryParameters: {
+        'start_date': startDateString,
+        'end_date': endDateString
+>>>>>>> 5ad2d445 (feat: temporarily)
       },
     );
 
     final response = await http.get(
       uri,
+<<<<<<< HEAD
       headers: {'Authorization': 'Bearer $token'},
+=======
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+>>>>>>> 5ad2d445 (feat: temporarily)
     );
 
     if (response.statusCode == 200) {
@@ -52,6 +73,7 @@ class ReportService {
       return ProductionSummary.fromJson(data);
     }
 
+<<<<<<< HEAD
     throw Exception(
       'Failed to load production summary : '
       '${response.statusCode} ${response.body}',
@@ -66,26 +88,55 @@ class ReportService {
     int perPage = 20,
     String? search,
   }) async {
+=======
+    throw Exception('Failed to load production summary : '
+        '${response.statusCode} ${response.body}');
+  }
+
+  Future<SortingResult> getSortingResult(
+      {DateTime? startDate,
+      DateTime? endDate,
+      String? sort,
+      int page = 1,
+      int perPage = 20,
+      String? search}) async {
+>>>>>>> 5ad2d445 (feat: temporarily)
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? token = prefs.getString('access_token');
 
+<<<<<<< HEAD
     final uri = Uri.parse('$baseUrl/report/production/sorting-result').replace(
+=======
+    final uri = Uri.parse(
+      '$baseUrl/report/production/sorting-result',
+    ).replace(
+>>>>>>> 5ad2d445 (feat: temporarily)
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
         'sort': sort,
         'page': page.toString(),
         'per_page': perPage.toString(),
+<<<<<<< HEAD
         'search': search,
+=======
+        'search': search
+>>>>>>> 5ad2d445 (feat: temporarily)
       },
     );
 
     final response = await http.get(
       uri,
+<<<<<<< HEAD
       headers: {'Authorization': 'Bearer $token'},
+=======
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+>>>>>>> 5ad2d445 (feat: temporarily)
     );
 
     if (response.statusCode == 200) {
@@ -93,6 +144,7 @@ class ReportService {
       return SortingResult.fromJson(data);
     }
 
+<<<<<<< HEAD
     throw Exception(
       'Failed to load sorting result : '
       '${response.statusCode} ${response.body}',
@@ -107,13 +159,32 @@ class ReportService {
     int perPage = 20,
     String? search,
   }) async {
+=======
+    throw Exception('Failed to load sorting result : '
+        '${response.statusCode} ${response.body}');
+  }
+
+  Future<TopBs> getTopBs(
+      {DateTime? startDate,
+      DateTime? endDate,
+      String? sort,
+      int page = 1,
+      int perPage = 20,
+      String? search}) async {
+>>>>>>> 5ad2d445 (feat: temporarily)
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? token = prefs.getString('access_token');
 
+<<<<<<< HEAD
     final uri = Uri.parse('$baseUrl/report/production/top-bs-wo').replace(
+=======
+    final uri = Uri.parse(
+      '$baseUrl/report/production/top-bs-wo',
+    ).replace(
+>>>>>>> 5ad2d445 (feat: temporarily)
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
@@ -122,7 +193,13 @@ class ReportService {
 
     final response = await http.get(
       uri,
+<<<<<<< HEAD
       headers: {'Authorization': 'Bearer $token'},
+=======
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+>>>>>>> 5ad2d445 (feat: temporarily)
     );
 
     if (response.statusCode == 200) {
@@ -130,10 +207,15 @@ class ReportService {
       return TopBs.fromJson(data);
     }
 
+<<<<<<< HEAD
     throw Exception(
       'Failed to load top BS : '
       '${response.statusCode} ${response.body}',
     );
+=======
+    throw Exception('Failed to load top BS : '
+        '${response.statusCode} ${response.body}');
+>>>>>>> 5ad2d445 (feat: temporarily)
   }
 
   Future<SpkSummary> getSpkSummary({
@@ -146,16 +228,31 @@ class ReportService {
 
     String? token = prefs.getString('access_token');
 
+<<<<<<< HEAD
     final uri = Uri.parse('$baseUrl/report/production/spk-summary').replace(
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
+=======
+    final uri = Uri.parse(
+      '$baseUrl/report/production/spk-summary',
+    ).replace(
+      queryParameters: {
+        'start_date': startDateString,
+        'end_date': endDateString
+>>>>>>> 5ad2d445 (feat: temporarily)
       },
     );
 
     final response = await http.get(
       uri,
+<<<<<<< HEAD
       headers: {'Authorization': 'Bearer $token'},
+=======
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+>>>>>>> 5ad2d445 (feat: temporarily)
     );
 
     if (response.statusCode == 200) {
@@ -163,6 +260,7 @@ class ReportService {
       return SpkSummary.fromJson(data);
     }
 
+<<<<<<< HEAD
     throw Exception(
       'Failed to load spk summary : '
       '${response.statusCode} ${response.body}',
@@ -177,14 +275,33 @@ class ReportService {
     int perPage = 20,
     String? search,
   }) async {
+=======
+    throw Exception('Failed to load spk summary : '
+        '${response.statusCode} ${response.body}');
+  }
+
+  Future<ProductionTrend> getProductionTrend(
+      {DateTime? startDate,
+      DateTime? endDate,
+      String? sort,
+      int page = 1,
+      int perPage = 20,
+      String? search}) async {
+>>>>>>> 5ad2d445 (feat: temporarily)
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? token = prefs.getString('access_token');
 
+<<<<<<< HEAD
     final uri =
         Uri.parse('$baseUrl/report/production/production-trend').replace(
+=======
+    final uri = Uri.parse(
+      '$baseUrl/report/production/production-trend',
+    ).replace(
+>>>>>>> 5ad2d445 (feat: temporarily)
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
@@ -193,7 +310,13 @@ class ReportService {
 
     final response = await http.get(
       uri,
+<<<<<<< HEAD
       headers: {'Authorization': 'Bearer $token'},
+=======
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+>>>>>>> 5ad2d445 (feat: temporarily)
     );
 
     if (response.statusCode == 200) {
@@ -201,6 +324,7 @@ class ReportService {
       return ProductionTrend.fromJson(data);
     }
 
+<<<<<<< HEAD
     throw Exception(
       'Failed to load production trend : '
       '${response.statusCode} ${response.body}',
@@ -215,14 +339,33 @@ class ReportService {
     int perPage = 20,
     String? search,
   }) async {
+=======
+    throw Exception('Failed to load production trend : '
+        '${response.statusCode} ${response.body}');
+  }
+
+  Future<ReworkComparison> getReworkComparison(
+      {DateTime? startDate,
+      DateTime? endDate,
+      String? sort,
+      int page = 1,
+      int perPage = 20,
+      String? search}) async {
+>>>>>>> 5ad2d445 (feat: temporarily)
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? token = prefs.getString('access_token');
 
+<<<<<<< HEAD
     final uri =
         Uri.parse('$baseUrl/report/production/rework-comparison').replace(
+=======
+    final uri = Uri.parse(
+      '$baseUrl/report/production/rework-comparison',
+    ).replace(
+>>>>>>> 5ad2d445 (feat: temporarily)
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
@@ -231,7 +374,13 @@ class ReportService {
 
     final response = await http.get(
       uri,
+<<<<<<< HEAD
       headers: {'Authorization': 'Bearer $token'},
+=======
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+>>>>>>> 5ad2d445 (feat: temporarily)
     );
 
     if (response.statusCode == 200) {
@@ -239,6 +388,7 @@ class ReportService {
       return ReworkComparison.fromJson(data);
     }
 
+<<<<<<< HEAD
     throw Exception(
       'Failed to load rework comparison : '
       '${response.statusCode} ${response.body}',
@@ -253,26 +403,55 @@ class ReportService {
     int perPage = 20,
     String? search,
   }) async {
+=======
+    throw Exception('Failed to load rework comparison : '
+        '${response.statusCode} ${response.body}');
+  }
+
+  Future<WoList> getWoList(
+      {DateTime? startDate,
+      DateTime? endDate,
+      String? sort,
+      int page = 1,
+      int perPage = 20,
+      String? search}) async {
+>>>>>>> 5ad2d445 (feat: temporarily)
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? token = prefs.getString('access_token');
 
+<<<<<<< HEAD
     final uri = Uri.parse('$baseUrl/report/production/list').replace(
+=======
+    final uri = Uri.parse(
+      '$baseUrl/report/production/list',
+    ).replace(
+>>>>>>> 5ad2d445 (feat: temporarily)
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
         'sort': sort,
         'page': page.toString(),
         'per_page': perPage.toString(),
+<<<<<<< HEAD
         'search': search,
+=======
+        'search': search
+>>>>>>> 5ad2d445 (feat: temporarily)
       },
     );
 
     final response = await http.get(
       uri,
+<<<<<<< HEAD
       headers: {'Authorization': 'Bearer $token'},
+=======
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+>>>>>>> 5ad2d445 (feat: temporarily)
     );
 
     if (response.statusCode == 200) {
@@ -280,6 +459,7 @@ class ReportService {
       return WoList.fromJson(data);
     }
 
+<<<<<<< HEAD
     throw Exception(
       'Failed to load sorting result : '
       '${response.statusCode} ${response.body}',
@@ -294,26 +474,55 @@ class ReportService {
     int perPage = 20,
     String? search,
   }) async {
+=======
+    throw Exception('Failed to load sorting result : '
+        '${response.statusCode} ${response.body}');
+  }
+
+  Future<SpkList> getSpkList(
+      {DateTime? startDate,
+      DateTime? endDate,
+      String? sort,
+      int page = 1,
+      int perPage = 20,
+      String? search}) async {
+>>>>>>> 5ad2d445 (feat: temporarily)
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? token = prefs.getString('access_token');
 
+<<<<<<< HEAD
     final uri = Uri.parse('$baseUrl/report/production/spk-list').replace(
+=======
+    final uri = Uri.parse(
+      '$baseUrl/report/production/spk-list',
+    ).replace(
+>>>>>>> 5ad2d445 (feat: temporarily)
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
         'sort': sort,
         'page': page.toString(),
         'per_page': perPage.toString(),
+<<<<<<< HEAD
         'search': search,
+=======
+        'search': search
+>>>>>>> 5ad2d445 (feat: temporarily)
       },
     );
 
     final response = await http.get(
       uri,
+<<<<<<< HEAD
       headers: {'Authorization': 'Bearer $token'},
+=======
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+>>>>>>> 5ad2d445 (feat: temporarily)
     );
 
     if (response.statusCode == 200) {
@@ -321,6 +530,7 @@ class ReportService {
       return SpkList.fromJson(data);
     }
 
+<<<<<<< HEAD
     throw Exception(
       'Failed to load sorting result : '
       '${response.statusCode} ${response.body}',
@@ -1249,5 +1459,9 @@ class ReportService {
           'semiFinishedProduct',
         ])?.toString() ??
         '-';
+=======
+    throw Exception('Failed to load sorting result : '
+        '${response.statusCode} ${response.body}');
+>>>>>>> 5ad2d445 (feat: temporarily)
   }
 }

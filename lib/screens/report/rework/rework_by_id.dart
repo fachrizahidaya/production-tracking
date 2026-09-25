@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
@@ -109,6 +110,12 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
     );
   }
 }
+=======
+import 'package:flutter_html/flutter_html.dart';
+import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/text_editor.dart';
+>>>>>>> 5ad2d445 (feat: temporarily)
 
 class ReworkDetailScreen extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -121,10 +128,15 @@ class ReworkDetailScreen extends StatefulWidget {
 
 class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   final TextEditingController _reasonController = TextEditingController();
+<<<<<<< HEAD
+=======
+  final TextEditingController _actionPlanController = TextEditingController();
+>>>>>>> 5ad2d445 (feat: temporarily)
   final TextEditingController _preventivePlanController =
       TextEditingController();
 
   @override
+<<<<<<< HEAD
   void initState() {
     super.initState();
     _reasonController.text = widget.data['reason']?.toString() ?? '';
@@ -135,10 +147,16 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   @override
   void dispose() {
     _reasonController.dispose();
+=======
+  void dispose() {
+    _reasonController.dispose();
+    _actionPlanController.dispose();
+>>>>>>> 5ad2d445 (feat: temporarily)
     _preventivePlanController.dispose();
     super.dispose();
   }
 
+<<<<<<< HEAD
   bool get _isCompleted {
     final status = widget.data['status']?.toString().toLowerCase();
     return status == 'direview' ||
@@ -160,17 +178,25 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     }
   }
 
+=======
+>>>>>>> 5ad2d445 (feat: temporarily)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
+<<<<<<< HEAD
         title: 'Detail Evaluasi Rework',
         onReturn: () => Navigator.pop(context),
         onEdit: _isCompleted ? _openEditScreen : null,
+=======
+        title: 'Evaluasi Rework',
+        onReturn: () => Navigator.pop(context),
+>>>>>>> 5ad2d445 (feat: temporarily)
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
         child: SingleChildScrollView(
+<<<<<<< HEAD
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -594,10 +620,90 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 ),
           ],
         ],
+=======
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                decoration: CustomTheme().cardTheme(),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            widget.data['reworkNo'],
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        _buildStatusBadge(widget.data['status']),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    _buildInfoItem('No. WO', widget.data['woNo']),
+                    const Divider(height: 24),
+                    _buildInfoItem(
+                      'No. Proses Dyeing',
+                      widget.data['dyeingProcessNo'],
+                    ),
+                    const Divider(height: 24),
+                    _buildInfoItem(
+                      'Waktu Mulai Rework',
+                      widget.data['startedAt'],
+                    ),
+                    const Divider(height: 24),
+                    _buildInfoItem('Qty', widget.data['qty']),
+                    const Divider(height: 24),
+                    _buildInfoItem(
+                      'Produk Setengah Jadi',
+                      widget.data['semiFinishedProduct'],
+                    ),
+                    const Divider(height: 24),
+                    _buildInfoItem(
+                      'Kategori Rework',
+                      widget.data['category'],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              _buildFormCard(
+                label: 'Alasan',
+                child: TextField(
+                  controller: _reasonController,
+                  minLines: 3,
+                  maxLines: 5,
+                  decoration: CustomTheme().inputDecoration(
+                    'Masukkan alasan rework',
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Action Plan',
+                controller: _actionPlanController,
+              ),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Preventif Plan',
+                controller: _preventivePlanController,
+              ),
+            ],
+          ),
+        ),
+>>>>>>> 5ad2d445 (feat: temporarily)
       ),
     );
   }
 
+<<<<<<< HEAD
   List<Map<String, dynamic>> _reworkCategories() {
     final dyeing = widget.data['dyeing'];
     final raw = widget.data['rework_categories'] ??
@@ -679,6 +785,24 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           child: Text(
             text,
             style: TextStyle(color: color, fontSize: fontSize),
+=======
+  Widget _buildInfoItem(String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+>>>>>>> 5ad2d445 (feat: temporarily)
           ),
         ),
       ],
@@ -686,6 +810,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
   Widget _buildStatusBadge(String status) {
+<<<<<<< HEAD
     final backgroundColor = _getStatusColor(status);
 
     return Container(
@@ -695,6 +820,15 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       ),
       decoration: BoxDecoration(
         color: backgroundColor,
+=======
+    final color =
+        status.toLowerCase() == 'selesai' ? Colors.green : Colors.orange;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+>>>>>>> 5ad2d445 (feat: temporarily)
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -702,12 +836,17 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
+<<<<<<< HEAD
           color: _getStatusTextColor(status),
+=======
+          color: color,
+>>>>>>> 5ad2d445 (feat: temporarily)
         ),
       ),
     );
   }
 
+<<<<<<< HEAD
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
@@ -837,10 +976,28 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
             ],
           ),
         ),
+=======
+  Widget _buildFormCard({required String label, required Widget child}) {
+    return Container(
+      width: double.infinity,
+      decoration: CustomTheme().cardTheme(),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 12),
+          child,
+        ],
+>>>>>>> 5ad2d445 (feat: temporarily)
       ),
     );
   }
 
+<<<<<<< HEAD
   List<Map<String, dynamic>> get _histories {
     final raw = widget.data['histories'];
     if (raw is! List) return [];
@@ -926,5 +1083,54 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       return value.map((item) => item.toString()).join(', ').trim();
     }
     return value.toString().trim();
+=======
+  Widget _buildEditorForm({
+    required String label,
+    required TextEditingController controller,
+  }) {
+    return _buildFormCard(
+      label: label,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () async {
+          final result = await Navigator.push<String>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TextEditor(
+                initialHtml:
+                    controller.text.isEmpty ? '<p></p>' : controller.text,
+                label: label,
+              ),
+            ),
+          );
+
+          if (result != null) {
+            setState(() {
+              controller.text = result;
+            });
+          }
+        },
+        child: Container(
+          width: double.infinity,
+          constraints: const BoxConstraints(minHeight: 120),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: controller.text.isEmpty
+              ? Text(
+                  'Tambahkan $label',
+                  style: TextStyle(color: Colors.grey.shade500),
+                )
+              : Html(
+                  data: controller.text,
+                  style: {'*': Style(margin: Margins.zero)},
+                ),
+        ),
+      ),
+    );
+>>>>>>> 5ad2d445 (feat: temporarily)
   }
 }

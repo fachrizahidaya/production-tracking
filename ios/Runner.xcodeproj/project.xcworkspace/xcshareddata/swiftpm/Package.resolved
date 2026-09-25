@@ -50,6 +50,7 @@
     },
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
       "identity" : "firebase-ios-sdk",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk",
@@ -163,21 +164,14 @@
     {
 =======
 >>>>>>> 593bbd5e (chore: for iOS)
+=======
+>>>>>>> fe56e883 (chore: update necessary)
       "identity" : "sdwebimage",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage",
       "state" : {
         "revision" : "2de3a496eaf6df9a1312862adcfd54acd73c39c0",
         "version" : "5.21.7"
-      }
-    },
-    {
-      "identity" : "sdwebimagewebpcoder",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SDWebImage/SDWebImageWebPCoder.git",
-      "state" : {
-        "revision" : "12d83edbcc795fb7b5c0c3cb74d739108d3357d2",
-        "version" : "0.15.0"
       }
     },
     {

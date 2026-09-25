@@ -43,7 +43,10 @@ class ReworkListItem {
   final dyeing;
   final reworkReference;
   final reworkCategories;
+<<<<<<< HEAD
   final item;
+=======
+>>>>>>> 41ded02d (fix: rework)
   final startDate;
   final endDate;
 
@@ -59,14 +62,20 @@ class ReworkListItem {
       this.dyeing,
       this.reworkReference,
       this.reworkCategories,
+<<<<<<< HEAD
       this.item,
+=======
+>>>>>>> 41ded02d (fix: rework)
       this.endDate,
       this.startDate});
 
   factory ReworkListItem.fromJson(Map<String, dynamic> json) {
+<<<<<<< HEAD
     final wo = json['work_order'] ?? {};
     final woItems = wo is Map ? wo['items'] : null;
     final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
+=======
+>>>>>>> 41ded02d (fix: rework)
     return ReworkListItem(
         id: json['id'] ?? '',
         reworkNo: json['rework_no'] ??
@@ -76,7 +85,11 @@ class ReworkListItem {
             '',
         startDate: json['created_at'] ?? '',
         endDate: json['completed_at'] ?? '',
+<<<<<<< HEAD
         wo: wo,
+=======
+        wo: json['work_order'] ?? {},
+>>>>>>> 41ded02d (fix: rework)
         actionPlan: json['action_plan'] ?? '',
         preventivePlan: json['preventive_plan'] ?? '',
         reason: json['reasons'] ?? [],
@@ -85,7 +98,10 @@ class ReworkListItem {
         reworkCategories: json['rework_categories'] ??
             json['dyeing']?['rework_categories'] ??
             [],
+<<<<<<< HEAD
         item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
+=======
+>>>>>>> 41ded02d (fix: rework)
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});
   }

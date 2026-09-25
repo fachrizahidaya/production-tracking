@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -28,6 +29,16 @@ ButtonStyle _secondarySheetButtonStyle() => OutlinedButton.styleFrom(
       ),
     );
 
+=======
+import 'package:flutter/material.dart';
+import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/dialog/multi_select_dialog.dart';
+import 'package:textile_tracking/components/master/dialog/reason_option_dialog.dart';
+import 'package:textile_tracking/components/master/form/multi_select_form.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/screens/report/service.dart';
+
+>>>>>>> 41ded02d (fix: rework)
 class ReworkEditScreen extends StatefulWidget {
   final Map<String, dynamic> data;
 
@@ -39,16 +50,25 @@ class ReworkEditScreen extends StatefulWidget {
 
 class _ReworkEditScreenState extends State<ReworkEditScreen> {
   final ReportService _reportService = ReportService();
+<<<<<<< HEAD
+=======
+  final TextEditingController _actionPlanController = TextEditingController();
+>>>>>>> 41ded02d (fix: rework)
   final TextEditingController _preventivePlanController =
       TextEditingController();
   bool _saving = false;
   bool _loadingReasons = true;
+<<<<<<< HEAD
   int _visibleStep = 1;
   List<Map<String, dynamic>> _reasonOptions = [];
   List<Map<String, dynamic>> _selectedReasons = [];
   List<Map<String, dynamic>> _attachments = [];
 
   String get _draftType => 'rework';
+=======
+  List<Map<String, dynamic>> _reasonOptions = [];
+  List<Map<String, dynamic>> _selectedReasons = [];
+>>>>>>> 41ded02d (fix: rework)
 
   @override
   void initState() {
@@ -56,6 +76,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     final reasons = widget.data['reasons'];
     if (reasons is List) {
       _selectedReasons = reasons
+<<<<<<< HEAD
           .where((reason) => reason.toString().trim().isNotEmpty)
           .map(
             (reason) => <String, dynamic>{
@@ -71,16 +92,32 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     _visibleStep = _stepFromValues();
     _preventivePlanController.addListener(_persistDraft);
     _loadDraft();
+=======
+          .map((reason) => {
+                'value': reason.toString(),
+                'label': reason.toString(),
+              })
+          .toList();
+    }
+    _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
+    _preventivePlanController.text =
+        widget.data['preventivePlan']?.toString() ?? '';
+>>>>>>> 41ded02d (fix: rework)
     _loadReasonOptions();
   }
 
   @override
   void dispose() {
+<<<<<<< HEAD
     _preventivePlanController.removeListener(_persistDraft);
+=======
+    _actionPlanController.dispose();
+>>>>>>> 41ded02d (fix: rework)
     _preventivePlanController.dispose();
     super.dispose();
   }
 
+<<<<<<< HEAD
   String _textValue(dynamic value) {
     final text = value?.toString().trim() ?? '';
     return text == '-' ? '' : text;
@@ -155,10 +192,19 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
     try {
       final message = await _reportService.updateReworkDetail(
+=======
+  Future<void> _save() async {
+    if (_saving) return;
+    setState(() => _saving = true);
+
+    try {
+      await _reportService.updateReworkDetail(
+>>>>>>> 41ded02d (fix: rework)
         id: widget.data['id'],
         reasons: _selectedReasons
             .map((reason) => reason['value'].toString())
             .toList(),
+<<<<<<< HEAD
         actionPlan: '',
         preventivePlan: _preventivePlanController.text,
         attachments: _attachments,
@@ -174,10 +220,24 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         context: context,
         title: 'Gagal Menyimpan',
         message: _errorMessage(e),
+=======
+        actionPlan: _actionPlanController.text,
+        preventivePlan: _preventivePlanController.text,
+      );
+
+      if (!mounted) return;
+      Navigator.pop(context, true);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _saving = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal menyimpan perubahan: $e')),
+>>>>>>> 41ded02d (fix: rework)
       );
     }
   }
 
+<<<<<<< HEAD
   String _errorMessage(Object error) {
     return error.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
   }
@@ -197,6 +257,8 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     return 'Rencana Pencegahan minimal 8 karakter.';
   }
 
+=======
+>>>>>>> 41ded02d (fix: rework)
   Future<void> _loadReasonOptions() async {
     try {
       final options = await _reportService.getReworkReasonOptions();
@@ -206,10 +268,14 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
           .toList();
       if (!mounted) return;
       setState(() {
+<<<<<<< HEAD
         _reasonOptions = List<Map<String, dynamic>>.from([
           ...options,
           ...selectedOnly,
         ]);
+=======
+        _reasonOptions = [...options, ...selectedOnly];
+>>>>>>> 41ded02d (fix: rework)
         _loadingReasons = false;
       });
     } catch (e) {
@@ -227,6 +293,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     final selectedValues =
         _selectedReasons.map((reason) => reason['value'].toString()).toSet();
     final availableOptions = _reasonOptions
+<<<<<<< HEAD
         .where(
           (option) => !selectedValues.contains(option['value'].toString()),
         )
@@ -526,6 +593,52 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(_errorMessage(e))),
+=======
+        .where((option) => !selectedValues.contains(option['value']))
+        .toList();
+
+    final selected = await showDialog<List<dynamic>>(
+      context: context,
+      builder: (context) => MultiSelectDialog(
+        items: availableOptions,
+        initialSelectedIds: const [],
+        title: 'Pilih Alasan Rework',
+      ),
+    );
+
+    if (selected == null || !mounted) return;
+    setState(() {
+      for (final value in selected) {
+        final option = availableOptions.firstWhere(
+          (item) => item['value'] == value,
+          orElse: () => {'value': value, 'label': value},
+        );
+        if (!_selectedReasons.any((item) => item['value'] == option['value'])) {
+          _selectedReasons.add(option);
+        }
+      }
+    });
+  }
+
+  Future<void> _addReasonOption() async {
+    final label = await showDialog<String>(
+      context: context,
+      builder: (context) => const ReasonOptionDialog(),
+    );
+
+    if (label == null || label.trim().isEmpty || !mounted) return;
+    try {
+      final option = await _reportService.createReworkReasonOption(label);
+      if (!mounted) return;
+      setState(() {
+        _reasonOptions.add(option);
+        _selectedReasons.add(option);
+      });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal menambah alasan: $e')),
+>>>>>>> 41ded02d (fix: rework)
       );
     }
   }
@@ -536,10 +649,22 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       appBar: CustomAppBar(
         title: 'Edit Evaluasi Rework',
         onReturn: () => Navigator.pop(context),
+<<<<<<< HEAD
+=======
+        isLoading: _saving,
+        actions: [
+          IconButton(
+            tooltip: 'Simpan',
+            onPressed: _saving ? null : _save,
+            icon: const Icon(Icons.save_outlined),
+          ),
+        ],
+>>>>>>> 41ded02d (fix: rework)
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
         child: SingleChildScrollView(
+<<<<<<< HEAD
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
             children: [
@@ -579,10 +704,27 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                   child: _buildNextButton(),
                 ),
               ],
+=======
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              _buildReasonForm(),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Action Plan',
+                controller: _actionPlanController,
+              ),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Preventif Plan',
+                controller: _preventivePlanController,
+              ),
+>>>>>>> 41ded02d (fix: rework)
             ],
           ),
         ),
       ),
+<<<<<<< HEAD
       bottomNavigationBar: _buildSaveBar(),
     );
   }
@@ -633,6 +775,11 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         ),
       );
 
+=======
+    );
+  }
+
+>>>>>>> 41ded02d (fix: rework)
   Widget _buildReasonForm() {
     return _buildFormCard(
       label: 'Alasan',
@@ -685,6 +832,11 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
           ),
           const SizedBox(height: 8),
           Wrap(
+<<<<<<< HEAD
+=======
+            spacing: 8,
+            runSpacing: 8,
+>>>>>>> 41ded02d (fix: rework)
             children: _selectedReasons
                 .map(
                   (item) => InputChip(
@@ -695,7 +847,10 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                           (reason) => reason['value'] == item['value'],
                         );
                       });
+<<<<<<< HEAD
                       _persistDraft();
+=======
+>>>>>>> 41ded02d (fix: rework)
                     },
                   ),
                 )
@@ -707,10 +862,27 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   }
 
   Widget _buildFormCard({required String label, required Widget child}) {
+<<<<<<< HEAD
     return TemplateCard(
       title: label,
       icon: Icons.description_outlined,
       child: child,
+=======
+    return Container(
+      width: double.infinity,
+      decoration: CustomTheme().cardTheme(),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label,
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 12),
+          child,
+        ],
+      ),
+>>>>>>> 41ded02d (fix: rework)
     );
   }
 
@@ -728,6 +900,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       ),
     );
   }
+<<<<<<< HEAD
 
   List<Map<String, dynamic>> _parseAttachments(dynamic raw) {
     if (raw is! List) return [];
@@ -1723,4 +1896,6 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
       ),
     );
   }
+=======
+>>>>>>> 41ded02d (fix: rework)
 }

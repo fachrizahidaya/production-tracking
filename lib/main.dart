@@ -69,9 +69,12 @@ import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 import 'package:textile_tracking/screens/report/index.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/screens/report/index.dart';
 >>>>>>> 7a6aa3b1 (feat: model for report)
+=======
+>>>>>>> 41ded02d (fix: rework)
 import 'package:textile_tracking/screens/sewing/index.dart';
 import 'package:textile_tracking/screens/shearing/list/index.dart';
 import 'package:textile_tracking/screens/shearing/model/shearing.dart';
@@ -199,22 +202,31 @@ class MyApp extends StatelessWidget {
           '/packings': (context) => PackingScreen(),
           '/printings': (context) => PrintingScreen(),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 41ded02d (fix: rework)
           '/weavings': (context) => WeavingScreen(),
           '/sizings': (context) => SizingScreen(),
           '/warpings': (context) => WarpingScreen(),
           '/shearings': (context) => ShearingScreen(),
           '/dyeing-preparations': (context) => DyeingPreparationScreen(),
+<<<<<<< HEAD
 =======
           '/weaving': (context) => WeavingScreen(),
           '/sizing': (context) => SizingScreen(),
           '/warping': (context) => WarpingScreen(),
           '/shearing': (context) => ShearingScreen(),
 >>>>>>> b8a5267 (chore: internet checker)
+=======
+>>>>>>> 41ded02d (fix: rework)
           '/account': (context) => Account(),
           '/eula': (context) => Eula(),
           '/privacy-policy': (context) => PrivacyPolicy(),
           '/terms-conditions': (context) => TermsConditions(),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 41ded02d (fix: rework)
           '/report-production': (context) => ReportScreen(),
           '/dyeing-rework-evaluations': (context) => ReworkList(),
         },

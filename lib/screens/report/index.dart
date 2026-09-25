@@ -1024,6 +1024,7 @@ class _ReportScreenState extends State<ReportScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 82bef6eb (fix: hide unnecessary)
@@ -1131,6 +1132,8 @@ class _ReportScreenState extends State<ReportScreen> {
 >>>>>>> 183ac4f1 (fix: report)
 =======
 >>>>>>> 82bef6eb (fix: hide unnecessary)
+=======
+>>>>>>> 41ded02d (fix: rework)
             if (_reportWidgets['sortingDetail'] == true) _buildSortingDetail(),
             if (_reportWidgets['sortingResult'] == true) _buildSortingResult(),
             if (_reportWidgets['topBs'] == true) _buildTopBS(),

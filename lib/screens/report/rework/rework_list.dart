@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -27,14 +28,37 @@ class ReworkList extends StatefulWidget {
       this.status = '',
       this.savedMessage});
 =======
+=======
+import 'dart:async';
+
+>>>>>>> 41ded02d (fix: rework)
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/models/report/rework.dart';
 import 'package:textile_tracking/screens/report/rework/rework_by_id.dart';
+import 'package:textile_tracking/screens/report/service.dart';
 
 class ReworkList extends StatefulWidget {
+<<<<<<< HEAD
   const ReworkList({super.key});
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final String sort;
+  final String search;
+  final String status;
+
+  const ReworkList(
+      {super.key,
+      this.startDate,
+      this.endDate,
+      this.sort = 'created_at',
+      this.search = '',
+      this.status = 'all'});
+>>>>>>> 41ded02d (fix: rework)
 
   @override
   State<ReworkList> createState() => _ReworkListState();
@@ -42,6 +66,9 @@ class ReworkList extends StatefulWidget {
 
 class _ReworkListState extends State<ReworkList> {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 41ded02d (fix: rework)
   final ReportService _reportService = ReportService();
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
@@ -57,6 +84,7 @@ class _ReworkListState extends State<ReworkList> {
   bool _loading = false;
   bool _loadingMore = false;
   bool _hasMore = false;
+<<<<<<< HEAD
   int? _pendingCount;
   int? _completedCount;
   int? _allCount;
@@ -64,6 +92,8 @@ class _ReworkListState extends State<ReworkList> {
   bool _completedCountLoading = true;
   bool _allCountLoading = true;
   bool _showSavedDialogAfterLoad = false;
+=======
+>>>>>>> 41ded02d (fix: rework)
   int _requestId = 0;
 
   @override
@@ -74,13 +104,20 @@ class _ReworkListState extends State<ReworkList> {
     _endDate = widget.endDate ?? DateTime(now.year, now.month, now.day);
     _sort = widget.sort;
     _search = widget.search;
+<<<<<<< HEAD
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
+=======
+    _status = widget.status;
+>>>>>>> 41ded02d (fix: rework)
     _searchController.text = widget.search;
 
     _scrollController.addListener(_onScroll);
     _loadReworkList();
+<<<<<<< HEAD
     _loadPendingCount();
+=======
+>>>>>>> 41ded02d (fix: rework)
   }
 
   @override
@@ -149,6 +186,7 @@ class _ReworkListState extends State<ReworkList> {
         _hasMore = result.currentPage < result.lastPage;
         _loading = false;
       });
+<<<<<<< HEAD
 
       if (_showSavedDialogAfterLoad) {
         _showSavedDialogAfterLoad = false;
@@ -156,6 +194,8 @@ class _ReworkListState extends State<ReworkList> {
           if (mounted) _showSavedDialog(widget.savedMessage!);
         });
       }
+=======
+>>>>>>> 41ded02d (fix: rework)
     } catch (e) {
       if (!mounted || requestId != _requestId) return;
 
@@ -169,6 +209,7 @@ class _ReworkListState extends State<ReworkList> {
     }
   }
 
+<<<<<<< HEAD
   Future<void> _loadPendingCount() async {
     if (mounted) {
       setState(() {
@@ -204,6 +245,8 @@ class _ReworkListState extends State<ReworkList> {
     }
   }
 
+=======
+>>>>>>> 41ded02d (fix: rework)
   Future<void> _loadMoreReworkList() async {
     if (_loading || _loadingMore || !_hasMore) {
       return;
@@ -373,6 +416,7 @@ class _ReworkListState extends State<ReworkList> {
       _sort = result['sort'] as String;
     });
     await _loadReworkList();
+<<<<<<< HEAD
     await _loadPendingCount();
   }
 
@@ -426,11 +470,15 @@ class _ReworkListState extends State<ReworkList> {
     },
   ];
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+  }
+>>>>>>> 41ded02d (fix: rework)
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -444,16 +492,23 @@ class _ReworkListState extends State<ReworkList> {
 =======
         title: 'Report Rework',
 >>>>>>> 82bef6eb (fix: hide unnecessary)
+=======
+        title: 'Evaluasi Rework',
+>>>>>>> 41ded02d (fix: rework)
         onReturn: () => Navigator.pop(context),
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 41ded02d (fix: rework)
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             color: Colors.white,
+<<<<<<< HEAD
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
             child: Column(
               children: [
@@ -488,10 +543,60 @@ class _ReworkListState extends State<ReworkList> {
                 ),
                 // const SizedBox(height: 12),
                 _buildStatusTabs(),
+=======
+            padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: Container(
+                    decoration: CustomTheme().cardTheme(),
+                    child: TextField(
+                      controller: _searchController,
+                      textInputAction: TextInputAction.search,
+                      decoration: InputDecoration(
+                        hintText: 'Cari...',
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: _searchController.text.isNotEmpty
+                            ? IconButton(
+                                onPressed: () async {
+                                  _searchController.clear();
+                                  setState(() {
+                                    _search = '';
+                                  });
+                                  await _loadReworkList();
+                                },
+                                icon: const Icon(Icons.close),
+                              )
+                            : null,
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.all(12),
+                      ),
+                      onChanged: (value) {
+                        setState(() {});
+                        _onSearchChanged(value);
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: InkWell(
+                    onTap: _showFilter,
+                    child: Container(
+                      height: 51,
+                      decoration: CustomTheme().cardTheme(),
+                      padding: const EdgeInsets.all(12),
+                      child: const Icon(Icons.tune_outlined, size: 18),
+                    ),
+                  ),
+                ),
+>>>>>>> 41ded02d (fix: rework)
               ],
             ),
           ),
           Expanded(
+<<<<<<< HEAD
             child: RefreshIndicator(
               onRefresh: _refreshReworkList,
               child: _loading
@@ -539,6 +644,34 @@ class _ReworkListState extends State<ReworkList> {
                           ),
                         ),
             ),
+=======
+            child: _loading
+                ? Center(child: CircularProgressIndicator())
+                : _items.isEmpty
+                    ? NoData()
+                    : Padding(
+                        padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          physics: AlwaysScrollableScrollPhysics(),
+                          itemCount: _items.length + (_loadingMore ? 1 : 0),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          itemBuilder: (context, index) {
+                            if (index >= _items.length) {
+                              return const Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            }
+
+                            return _buildReworkListCard(_items[index],
+                                isFirst: index == 0);
+                          },
+                        ),
+                      ),
+>>>>>>> 41ded02d (fix: rework)
           ),
           const SizedBox(height: 4),
         ],
@@ -546,6 +679,7 @@ class _ReworkListState extends State<ReworkList> {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildStatusTabs() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
@@ -616,21 +750,98 @@ class _ReworkListState extends State<ReworkList> {
                           const SizedBox(width: 8),
                           _buildStatusBadge(item['status']),
                         ],
+=======
+  Widget _buildReworkListCard(ReworkListItem item, {bool isFirst = false}) {
+    final status = _display(item.status);
+    final completed = _isCompleted(status);
+    final date = completed ? item.endDate : item.startDate;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),
+      child: Container(
+        decoration: CustomTheme().cardTheme(),
+        clipBehavior: Clip.antiAlias,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => _openReworkDetail(item),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _reworkNo(item),
+                          style: const TextStyle(
+                            color: Color(0xFF234393),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 12),
-                      _buildInfoItem('No. WO', item['woNo']),
+                      const Icon(
+                        Icons.chevron_right,
+                        color: Color(0xFF9AA1B2),
+                        size: 28,
+>>>>>>> 41ded02d (fix: rework)
+                      ),
                     ],
                   ),
                 ),
+<<<<<<< HEAD
               ),
             );
           },
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+                Divider(height: 1, color: Colors.grey.shade300),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildReferenceLine(item),
+                      const SizedBox(height: 20),
+                      _buildLabelValue(
+                        'Kategori:',
+                        _categories(item),
+                        maxLines: 1,
+                      ),
+                      if (!_isWaitingStatus(status)) ...[
+                        const SizedBox(height: 18),
+                        _buildLabelValue('Diisi oleh:', _submittedBy(item)),
+                      ],
+                      const SizedBox(height: 24),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              _formatDateTime(date),
+                              style: TextStyle(
+                                color: Colors.grey.shade600,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          _buildStatusBadge(status),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+>>>>>>> 41ded02d (fix: rework)
         ),
       ),
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   Widget _buildStatusTab({
     required String label,
@@ -950,6 +1161,27 @@ class _ReworkListState extends State<ReworkList> {
   }
 
 <<<<<<< HEAD
+=======
+  Widget _buildReferenceLine(ReworkListItem item) {
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+        children: [
+          TextSpan(
+            text: _dyeingNo(item),
+            style: const TextStyle(
+              color: Color(0xFF234393),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const TextSpan(text: ' · dari '),
+          TextSpan(text: _reworkReferenceNo(item)),
+        ],
+      ),
+    );
+  }
+
+>>>>>>> 41ded02d (fix: rework)
   Widget _buildLabelValue(
     String label,
     String value, {
@@ -970,6 +1202,7 @@ class _ReworkListState extends State<ReworkList> {
       ),
     );
   }
+<<<<<<< HEAD
 
   String _display(dynamic value) =>
       value?.toString().trim().isNotEmpty == true ? value.toString() : '-';
@@ -1141,12 +1374,162 @@ class _ReworkListState extends State<ReworkList> {
   Widget _buildStatusBadge(String status) {
     final color =
         status.toLowerCase() == 'selesai' ? Colors.green : Colors.orange;
+=======
+>>>>>>> 41ded02d (fix: rework)
 
+  String _display(dynamic value) =>
+      value?.toString().trim().isNotEmpty == true ? value.toString() : '-';
+
+  Map<String, dynamic> _map(dynamic value) =>
+      value is Map ? Map<String, dynamic>.from(value) : {};
+
+  String _workOrderNo(ReworkListItem item) => _display(
+      _map(item.wo)['wo_no'] ?? _map(item.wo)['number'] ?? _map(item.wo)['no']);
+
+  String _reworkNo(ReworkListItem item) => _display(
+            item.reworkNo,
+          ) ==
+          '-'
+      ? _workOrderNo(item)
+      : _display(item.reworkNo);
+
+  String _dyeingNo(ReworkListItem item) =>
+      _display(_map(item.dyeing)['dyeing_no'] ?? _map(item.dyeing)['no']);
+
+  String _reworkReferenceNo(ReworkListItem item) {
+    final reference = _map(item.reworkReference).isNotEmpty
+        ? _map(item.reworkReference)
+        : _map(_map(item.dyeing)['rework_reference']);
+    return _display(reference['dyeing_no'] ??
+        reference['no'] ??
+        reference['reference_no'] ??
+        item.reworkReference);
+  }
+
+  String _categories(ReworkListItem item) {
+    final values = item.reworkCategories is List
+        ? item.reworkCategories.whereType<Map>().toList()
+        : <Map>[];
+    if (values.isEmpty) return _display(item.reason);
+
+    const repairTypes = {
+      'perbaikan_warna',
+      'perbaikan_noda',
+      'pelemas_ulang',
+    };
+    final isRepair = values.every(
+      (value) => repairTypes.contains(value['type']?.toString()),
+    );
+    final details = <String>[];
+
+    for (final value in values) {
+      final label = value['label']?.toString().trim();
+      if (label == null || label.isEmpty) continue;
+
+      final methods = value['methods'];
+      final methodLabels = methods is List
+          ? methods
+              .whereType<Map>()
+              .map((method) => method['label']?.toString().trim() ?? '')
+              .where((method) => method.isNotEmpty)
+              .toList()
+          : <String>[];
+      details.add(
+          methodLabels.isEmpty ? label : '$label (${methodLabels.join(', ')})');
+    }
+
+    if (details.isEmpty) return '-';
+    return isRepair ? 'Perbaikan · ${details.join(', ')}' : details.join(', ');
+  }
+
+  String _submittedBy(ReworkListItem item) {
+    final submitted = _map(item.submitted);
+    return _display(submitted['name'] ??
+        submitted['full_name'] ??
+        submitted['username'] ??
+        item.submitted);
+  }
+
+  String _formatDateTime(dynamic value) {
+    if (value == null || value.toString().isEmpty) return '-';
+    final parsed = DateTime.tryParse(value.toString());
+    if (parsed == null) return _display(value);
+
+    final local = parsed.toLocal();
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Agu',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Des',
+    ];
+    return '${local.day} ${months[local.month - 1]} ${local.year}, '
+        '${_twoDigits(local.hour)}.${_twoDigits(local.minute)}';
+  }
+
+  String _formatDateOnly(DateTime date) {
+    return '${_twoDigits(date.day)}-${_twoDigits(date.month)}-${date.year}';
+  }
+
+  String _twoDigits(int number) => number.toString().padLeft(2, '0');
+
+  bool _isCompleted(String status) {
+    final normalized = status.toLowerCase();
+    return normalized == 'selesai' ||
+        normalized == 'completed' ||
+        normalized == 'complete';
+  }
+
+  bool _isWaitingStatus(String status) {
+    final normalized = status.toLowerCase();
+    return normalized == 'menunggu' || normalized == 'waiting';
+  }
+
+  Future<void> _openReworkDetail(ReworkListItem item) async {
+    if (item.id == null || item.id.toString().trim().isEmpty) return;
+
+    try {
+      final data = await _reportService.getReworkDetail(item.id);
+      if (!mounted) return;
+
+      final updated = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ReworkDetailScreen(data: data),
+        ),
+      );
+
+      if (updated == true && mounted) {
+        await _loadReworkList();
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal mengambil detail rework: $e')),
+      );
+    }
+  }
+
+  Widget _buildStatusBadge(String status) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 5,
+      ),
       decoration: BoxDecoration(
+<<<<<<< HEAD
         color: color.withValues(alpha: 0.1),
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+        color: _getStatusColor(status).withOpacity(0.1),
+>>>>>>> 41ded02d (fix: rework)
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -1155,14 +1538,19 @@ class _ReworkListState extends State<ReworkList> {
           fontSize: 12,
           fontWeight: FontWeight.w600,
 <<<<<<< HEAD
+<<<<<<< HEAD
           color: _getStatusBadgeTextColor(status),
 =======
           color: color,
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+          color: _getStatusColor(status),
+>>>>>>> 41ded02d (fix: rework)
         ),
       ),
     );
   }
+<<<<<<< HEAD
 <<<<<<< HEAD
 
   Color _getStatusBadgeColor(String status) {
@@ -1199,6 +1587,20 @@ class _ReworkListState extends State<ReworkList> {
       case 'menunggu':
       case 'waiting':
         return const Color(0xFFFFFBEA);
+=======
+
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'selesai':
+      case 'completed':
+        return Colors.green;
+      case 'diproses':
+      case 'in_progress':
+        return Colors.orange;
+      case 'menunggu':
+      case 'waiting':
+        return Colors.blue;
+>>>>>>> 41ded02d (fix: rework)
       case 'dilewati':
       case 'skipped':
         return Colors.grey;
@@ -1206,6 +1608,9 @@ class _ReworkListState extends State<ReworkList> {
         return Colors.grey;
     }
   }
+<<<<<<< HEAD
 =======
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+>>>>>>> 41ded02d (fix: rework)
 }

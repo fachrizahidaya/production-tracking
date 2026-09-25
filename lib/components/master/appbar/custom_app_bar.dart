@@ -46,7 +46,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isDashboardSettingsLoading;
   final VoidCallback? onDashboardSettings;
   final VoidCallback? onReportSettings;
+<<<<<<< HEAD
   final VoidCallback? onEdit;
+=======
+>>>>>>> 7a6aa3b1 (feat: model for report)
 
   const CustomAppBar(
       {super.key,
@@ -100,6 +103,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 =======
       this.handleFinish,
       this.isLoading = false,
+      this.isDashboardSettingsLoading = false,
+      this.onDashboardSettings,
+      this.onReportSettings,
       this.showNameWithAvatar = false});
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
 =======
@@ -129,6 +135,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
+<<<<<<< HEAD
         if (isWithNotification)
           _buildNotificationButton(
             tooltip: notificationTooltip,
@@ -136,6 +143,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             count: notificationCount,
             onPressed: onNotifications,
           ),
+=======
+>>>>>>> 7a6aa3b1 (feat: model for report)
         if (isDashboardSettingsLoading)
           const Padding(
             padding: EdgeInsets.all(14),
@@ -157,12 +166,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: onReportSettings,
             icon: const Icon(Icons.dashboard_customize_outlined),
           ),
+<<<<<<< HEAD
         if (onEdit != null)
           IconButton(
             tooltip: 'Edit',
             onPressed: onEdit,
             icon: const Icon(Icons.edit_outlined),
           ),
+=======
+>>>>>>> 7a6aa3b1 (feat: model for report)
         if (isWithAccount)
           PopupMenuButton<String>(
             icon: Row(

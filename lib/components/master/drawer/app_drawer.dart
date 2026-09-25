@@ -38,15 +38,19 @@ class _AppDrawerState extends State<AppDrawer> {
     'Sorting',
     'Packing',
     'Laporan Produksi',
+<<<<<<< HEAD
     'Evaluasi Rework',
     'Evaluasi BS',
     'Evaluasi GSM',
+=======
+>>>>>>> 7a6aa3b1 (feat: model for report)
   ];
 
   final List<String> hiddenMenus = [
     'SPK',
     'Work Order',
     'Proses Produksi',
+<<<<<<< HEAD
 <<<<<<< HEAD
     'Produksi',
     'Pesanan',
@@ -66,6 +70,8 @@ class _AppDrawerState extends State<AppDrawer> {
     'Persiapan Dyeing'
 >>>>>>> a1ea7df (feat: warping)
 =======
+=======
+>>>>>>> 7a6aa3b1 (feat: model for report)
     'Produksi',
     'Pesanan',
     'Order Greige',
@@ -75,8 +81,13 @@ class _AppDrawerState extends State<AppDrawer> {
     'Weaving',
     'Shearing',
     'Persiapan Dyeing',
+<<<<<<< HEAD
     'Anomali Data'
 >>>>>>> f6b18dcd (fix: adjust drawer)
+=======
+    'Anomali Data',
+    'Notifikasi'
+>>>>>>> 7a6aa3b1 (feat: model for report)
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
@@ -215,6 +226,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                             ? Icons.grid_on
                                                                                             : item.title == 'Shearing'
                                                                                                 ? Icons.content_cut_outlined
+<<<<<<< HEAD
                                                                                                 : item.title == 'Persiapan Dyeing'
                                                                                                     ? Icons.format_color_fill_outlined
                                                                                                     : item.title == 'Laporan Produksi'
@@ -239,6 +251,11 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                 ? Icons.content_cut_outlined
                                                                                                 : Icons.menu,
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
+=======
+                                                                                                : item.title == 'Laporan Produksi'
+                                                                                                    ? Icons.file_copy_outlined
+                                                                                                    : Icons.menu,
+>>>>>>> 7a6aa3b1 (feat: model for report)
                           ),
                           onTap: () {
                             Navigator.pop(context);

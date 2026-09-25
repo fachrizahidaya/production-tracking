@@ -1047,9 +1047,12 @@ class _ReportScreenState extends State<ReportScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 82bef6eb (fix: hide unnecessary)
+=======
+>>>>>>> af7e545f (fix: hide unnecessary)
             // Padding(
             //   padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
             //   child: Container(
@@ -1098,6 +1101,7 @@ class _ReportScreenState extends State<ReportScreen> {
             //     ),
             //   ),
             // ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 5ad2d445 (feat: temporarily)
 =======
@@ -1161,6 +1165,8 @@ class _ReportScreenState extends State<ReportScreen> {
 >>>>>>> 41ded02d (fix: rework)
 =======
 >>>>>>> 923c7753 (fix: report)
+=======
+>>>>>>> af7e545f (fix: hide unnecessary)
             if (_reportWidgets['sortingDetail'] == true) _buildSortingDetail(),
             if (_reportWidgets['sortingResult'] == true) _buildSortingResult(),
             if (_reportWidgets['topBs'] == true) _buildTopBS(),

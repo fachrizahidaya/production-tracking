@@ -199,15 +199,6 @@
       }
     },
     {
-      "identity" : "sdwebimagewebpcoder",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SDWebImage/SDWebImageWebPCoder.git",
-      "state" : {
-        "revision" : "12d83edbcc795fb7b5c0c3cb74d739108d3357d2",
-        "version" : "0.15.0"
-      }
-    },
-    {
       "identity" : "swiftygif",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kirualex/SwiftyGif.git",

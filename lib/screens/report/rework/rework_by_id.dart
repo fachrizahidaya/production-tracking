@@ -82,10 +82,6 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
         title: 'Detail Evaluasi Rework',
         onReturn: widget.returnToList
             ? _replaceWithReworkList
-            : () => Navigator.pop(context),
-      ),
-      backgroundColor: const Color(0xFFf9fafc),
-      body: Center(
         child: _error == null
             ? const CircularProgressIndicator()
             : Padding(
@@ -170,6 +166,117 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         status == 'reviewed' ||
         status == 'selesai' ||
         status == 'completed';
+  }
+
+  Future<List<dynamic>?> _showReasonSelectionSheet(
+    List<Map<String, dynamic>> items,
+  ) {
+    return showModalBottomSheet<List<dynamic>>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        var filteredItems = List<Map<String, dynamic>>.from(items);
+        var selectedIds = <dynamic>[];
+
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            return SafeArea(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.72,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(16, 0, 16, 12),
+                      child: Text(
+                        'Pilih Alasan Rework',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          hintText: 'Cari alasan',
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (value) {
+                          final query = value.trim().toLowerCase();
+                          setSheetState(() {
+                            filteredItems = items
+                                .where((item) => item['label']
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(query))
+                                .toList();
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Expanded(
+                      child: filteredItems.isEmpty
+                          ? const Center(child: Text('Tidak ada alasan'))
+                          : ListView.separated(
+                              itemCount: filteredItems.length,
+                              separatorBuilder: (_, __) =>
+                                  const Divider(height: 1),
+                              itemBuilder: (context, index) {
+                                final item = filteredItems[index];
+                                final id = item['value'];
+                                return CheckboxListTile(
+                                  value: selectedIds.contains(id),
+                                  title: Text(item['label'].toString()),
+                                  activeColor: Colors.green,
+                                  onChanged: (_) {
+                                    setSheetState(() {
+                                      if (selectedIds.contains(id)) {
+                                        selectedIds = List.from(selectedIds)
+                                          ..remove(id);
+                                      } else {
+                                        selectedIds = List.from(selectedIds)
+                                          ..add(id);
+                                      }
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () => Navigator.pop(sheetContext),
+                              child: const Text('Batal'),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () =>
+                                  Navigator.pop(sheetContext, selectedIds),
+                              child: const Text('Terapkan'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<void> _openEditScreen() async {
@@ -729,6 +836,29 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     );
   }
 
+  Widget _buildWorkOrderBadge(String woNo) {
+    const color = Color(0xFF234393);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: 8,
+      ),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        woNo,
+        style: const TextStyle(
+          color: color,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
@@ -947,5 +1077,77 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       return value.map((item) => item.toString()).join(', ').trim();
     }
     return value.toString().trim();
+  }
+}
+
+class _ReasonOptionSheet extends StatefulWidget {
+  const _ReasonOptionSheet();
+
+  @override
+  State<_ReasonOptionSheet> createState() => _ReasonOptionSheetState();
+}
+
+class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+
+    return AnimatedPadding(
+      duration: const Duration(milliseconds: 200),
+      padding: EdgeInsets.only(bottom: bottomInset),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Tambah Alasan',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _controller,
+                autofocus: true,
+                textInputAction: TextInputAction.done,
+                decoration: CustomTheme().inputDecoration(
+                  'Masukkan alasan rework',
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Batal'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(
+                        context,
+                        _controller.text.trim(),
+                      ),
+                      child: const Text('Tambah'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

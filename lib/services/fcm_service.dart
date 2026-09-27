@@ -27,6 +27,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/screens/report/bs/bs_by_id.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_by_id.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/screens/report/bs/bs_by_id.dart';
 >>>>>>> 58857212 (feat: notifikasi evaluasi bs)
@@ -41,6 +42,8 @@ import 'package:textile_tracking/screens/report/rework/rework_by_id.dart';
 >>>>>>> e4d7831b (fix: handle firebase notification)
 
 final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
+=======
+>>>>>>> 9c9cafca (feat: fcm notification)
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {

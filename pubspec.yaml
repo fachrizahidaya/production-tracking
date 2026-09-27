@@ -177,6 +177,7 @@ dependencies:
 =======
   connectivity_plus: ^6.0.5
   internet_connection_checker_plus: ^3.1.1
+<<<<<<< HEAD
 >>>>>>> b8a5267 (chore: internet checker)
 =======
   flutter_local_notifications: ^19.4.0
@@ -185,6 +186,12 @@ dependencies:
   connectivity_plus: ^6.0.5
   internet_connection_checker_plus: ^3.1.1
 >>>>>>> 7731bab3 (chore: install package)
+=======
+  firebase_core: ^4.1.1
+  firebase_messaging: ^16.0.2
+  device_info_plus: ^12.1.0
+  flutter_local_notifications: ^19.4.0
+>>>>>>> 9c9cafca (feat: fcm notification)
 
 dev_dependencies:
   flutter_test:

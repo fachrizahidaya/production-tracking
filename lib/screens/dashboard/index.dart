@@ -686,6 +686,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
     } catch (e) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
@@ -709,6 +710,8 @@ class _DashboardState extends State<Dashboard> {
       debugPrint('Machine Error: $e');
 
 >>>>>>> b1c3b09b (fix: user name di appbar)
+=======
+>>>>>>> 9c9cafca (feat: fcm notification)
       if (!mounted) return;
 
       setState(() {
@@ -820,6 +823,7 @@ class _DashboardState extends State<Dashboard> {
       });
     } catch (e) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
@@ -845,6 +849,8 @@ class _DashboardState extends State<Dashboard> {
       debugPrint('Summary Error: $e');
 
 >>>>>>> 17fd914c (fix: dashboard)
+=======
+>>>>>>> 9c9cafca (feat: fcm notification)
       if (!mounted) return;
 
       setState(() {

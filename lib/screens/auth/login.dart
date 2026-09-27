@@ -13,6 +13,7 @@ import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:textile_tracking/services/fcm_service.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -56,6 +57,8 @@ class _LoginState extends State<Login> {
     );
 
     Navigator.pushReplacementNamed(context, '/dashboard');
+    FcmService.instance.registerForCurrentUser();
+    FcmService.instance.flushPendingNavigation();
   }
 
   Future<void> _handleCheckLogin() async {
@@ -73,6 +76,8 @@ class _LoginState extends State<Login> {
       );
 
       Navigator.pushReplacementNamed(context, '/dashboard');
+      FcmService.instance.registerForCurrentUser();
+      FcmService.instance.flushPendingNavigation();
     }
   }
 

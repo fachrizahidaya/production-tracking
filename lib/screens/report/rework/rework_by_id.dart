@@ -1,11 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/dialog/multi_select_dialog.dart';
-import 'package:textile_tracking/components/master/dialog/reason_option_dialog.dart';
 import 'package:textile_tracking/components/master/form/multi_select_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/screens/report/rework/rework_edit.dart';
 import 'package:textile_tracking/screens/report/service.dart';
+
+class ReworkDetailLoadingScreen extends StatefulWidget {
+  final dynamic id;
+
+  const ReworkDetailLoadingScreen({super.key, required this.id});
+
+  @override
+  State<ReworkDetailLoadingScreen> createState() =>
+      _ReworkDetailLoadingScreenState();
+}
+
+class _ReworkDetailLoadingScreenState
+    extends State<ReworkDetailLoadingScreen> {
+  final ReportService _reportService = ReportService();
+  Object? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDetail();
+  }
+
+  Future<void> _loadDetail() async {
+    setState(() => _error = null);
+
+    try {
+      final data = await _reportService.getReworkDetail(widget.id);
+      if (!mounted) return;
+
+      await Navigator.pushReplacement<bool, bool>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ReworkDetailScreen(data: data),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _error = error);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomAppBar(
+        title: 'Detail Evaluasi Rework',
+        onReturn: () => Navigator.pop(context),
+      ),
+      backgroundColor: const Color(0xFFf9fafc),
+      body: Center(
+        child: _error == null
+            ? const CircularProgressIndicator()
+            : Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Gagal mengambil detail rework',
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _loadDetail,
+                      child: const Text('Coba Lagi'),
+                    ),
+                  ],
+                ),
+              ),
+      ),
+    );
+  }
+}
 
 class ReworkDetailScreen extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -98,14 +169,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     final available = _reasonOptions
         .where((item) => !selectedValues.contains(item['value']))
         .toList();
-    final selected = await showDialog<List<dynamic>>(
-      context: context,
-      builder: (context) => MultiSelectDialog(
-        items: available,
-        initialSelectedIds: const [],
-        title: 'Pilih Alasan Rework',
-      ),
-    );
+    final selected = await _showReasonSelectionSheet(available);
     if (selected == null || !mounted) return;
 
     final updated = [..._selectedReasons];
@@ -152,9 +216,11 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
   Future<void> _addReasonOption() async {
-    final label = await showDialog<String>(
+    final label = await showModalBottomSheet<String>(
       context: context,
-      builder: (context) => const ReasonOptionDialog(),
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (_) => const _ReasonOptionSheet(),
     );
 
     if (label == null || label.trim().isEmpty || !mounted) return;
@@ -169,6 +235,117 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         SnackBar(content: Text('Gagal menambah alasan: $e')),
       );
     }
+  }
+
+  Future<List<dynamic>?> _showReasonSelectionSheet(
+    List<Map<String, dynamic>> items,
+  ) {
+    return showModalBottomSheet<List<dynamic>>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        var filteredItems = List<Map<String, dynamic>>.from(items);
+        var selectedIds = <dynamic>[];
+
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            return SafeArea(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.72,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(16, 0, 16, 12),
+                      child: Text(
+                        'Pilih Alasan Rework',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          hintText: 'Cari alasan',
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (value) {
+                          final query = value.trim().toLowerCase();
+                          setSheetState(() {
+                            filteredItems = items
+                                .where((item) => item['label']
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(query))
+                                .toList();
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Expanded(
+                      child: filteredItems.isEmpty
+                          ? const Center(child: Text('Tidak ada alasan'))
+                          : ListView.separated(
+                              itemCount: filteredItems.length,
+                              separatorBuilder: (_, __) =>
+                                  const Divider(height: 1),
+                              itemBuilder: (context, index) {
+                                final item = filteredItems[index];
+                                final id = item['value'];
+                                return CheckboxListTile(
+                                  value: selectedIds.contains(id),
+                                  title: Text(item['label'].toString()),
+                                  activeColor: Colors.green,
+                                  onChanged: (_) {
+                                    setSheetState(() {
+                                      if (selectedIds.contains(id)) {
+                                        selectedIds = List.from(selectedIds)
+                                          ..remove(id);
+                                      } else {
+                                        selectedIds = List.from(selectedIds)
+                                          ..add(id);
+                                      }
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () => Navigator.pop(sheetContext),
+                              child: const Text('Batal'),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () =>
+                                  Navigator.pop(sheetContext, selectedIds),
+                              child: const Text('Terapkan'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<void> _openEditScreen() async {
@@ -200,56 +377,13 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Container(
-                  decoration: CustomTheme().cardTheme(),
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: _buildSummaryRow(
-                              'WO / Lot',
-                              _value('woNo'),
-                              valueColor: const Color(0xFF234393),
-                              valueWeight: FontWeight.w600,
-                            ),
-                          ),
-                          // if (_useEditScreen) _buildEditButton(),
-                        ],
-                      ),
-                      const SizedBox(height: 18),
-                      _buildSummaryRow(
-                        'Dyeing',
-                        _value('dyeingProcessNo'),
-                        valueColor: const Color(0xFF234393),
-                        valueWeight: FontWeight.w600,
-                      ),
-                      const SizedBox(height: 18),
-                      _buildSummaryRow(
-                        'Tgl rework',
-                        _formatDateTime(
-                          _value(_isCompleted ? 'completedAt' : 'startedAt'),
-                        ),
-                      ),
-                      const SizedBox(height: 18),
-                      _buildSummaryRow(
-                        'Status',
-                        '',
-                        trailing: _buildStatusBadge(_value('status')),
-                      ),
-                      const SizedBox(height: 18),
-                      _buildSummaryRow(
-                        'Diisi oleh',
-                        _value('submittedBy'),
-                      ),
-                      const SizedBox(height: 26),
-                      _buildCategoryCard(),
-                    ],
-                  ),
-                ),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: _buildOverviewCard(),
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: _buildCategoryCard(),
               ),
               const SizedBox(height: 16),
               _useEditScreen
@@ -291,6 +425,74 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildOverviewCard() {
+    return Container(
+      decoration: CustomTheme().cardTheme(),
+      clipBehavior: Clip.antiAlias,
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildWorkOrderBadge(_value('woNo')),
+          const SizedBox(height: 14),
+          _buildDyeingReferenceLine(),
+          const SizedBox(height: 28),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text(
+                  _formatDateTime(
+                    _value(_isCompleted ? 'completedAt' : 'startedAt'),
+                  ),
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              _buildStatusBadge(_value('status')),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDyeingReferenceLine() {
+    final reference = _detailReferenceNo;
+
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+        children: [
+          TextSpan(
+            text: _value('dyeingProcessNo'),
+            style: const TextStyle(
+              color: Color(0xFF234393),
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          if (reference != '-') ...[
+            const TextSpan(text: ' · dari '),
+            TextSpan(text: reference),
+          ],
+        ],
+      ),
+    );
+  }
+
+  String get _detailReferenceNo {
+    final dyeing = widget.data['dyeing'];
+    final raw = widget.data['rework_reference'] ??
+        (dyeing is Map ? dyeing['rework_reference'] : null);
+    final reference = raw is Map ? raw : <String, dynamic>{};
+    final value =
+        reference['dyeing_no'] ?? reference['no'] ?? reference['reference_no'];
+    return value?.toString().trim().isNotEmpty == true ? value.toString() : '-';
   }
 
   String _value(String key) => widget.data[key]?.toString() ?? '-';
@@ -473,48 +675,13 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     }
   }
 
-  Widget _buildSummaryRow(
-    String label,
-    String value, {
-    Color? valueColor,
-    FontWeight? valueWeight,
-    Widget? trailing,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: 168,
-          child: Text(
-            label,
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
-          ),
-        ),
-        Expanded(
-          child: trailing ??
-              Text(
-                value,
-                style: TextStyle(
-                  color: valueColor ?? const Color(0xFF292A2F),
-                  fontSize: 16,
-                  fontWeight: valueWeight,
-                ),
-              ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildCategoryCard() {
     final categories = _reworkCategories();
 
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(14),
-      ),
+      decoration: CustomTheme().cardTheme(),
       child: Column(
         children: [
           Row(
@@ -689,6 +856,29 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     );
   }
 
+  Widget _buildWorkOrderBadge(String woNo) {
+    const color = Color(0xFF234393);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: 8,
+      ),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        woNo,
+        style: const TextStyle(
+          color: color,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'selesai':
@@ -803,6 +993,78 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
             footer,
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _ReasonOptionSheet extends StatefulWidget {
+  const _ReasonOptionSheet();
+
+  @override
+  State<_ReasonOptionSheet> createState() => _ReasonOptionSheetState();
+}
+
+class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+
+    return AnimatedPadding(
+      duration: const Duration(milliseconds: 200),
+      padding: EdgeInsets.only(bottom: bottomInset),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Tambah Alasan',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _controller,
+                autofocus: true,
+                textInputAction: TextInputAction.done,
+                decoration: CustomTheme().inputDecoration(
+                  'Masukkan alasan rework',
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Batal'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(
+                        context,
+                        _controller.text.trim(),
+                      ),
+                      child: const Text('Tambah'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

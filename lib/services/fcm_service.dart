@@ -12,9 +12,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/screens/report/bs/bs_by_id.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_by_id.dart';
-import 'package:textile_tracking/screens/report/rework/rework_by_id.dart';
-
-final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {

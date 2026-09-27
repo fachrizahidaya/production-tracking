@@ -758,15 +758,16 @@ class _ReworkListState extends State<ReworkList> {
 
     return Padding(
       padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),
-      child: Container(
-        decoration: CustomTheme().cardTheme(),
-        clipBehavior: Clip.antiAlias,
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () => _openReworkDetail(item),
+      child: InkWell(
+        onTap: () => _openReworkDetail(item),
+        child: Container(
+          decoration: CustomTheme().cardTheme(),
+          clipBehavior: Clip.antiAlias,
+          child: Padding(
+            padding: EdgeInsets.all(12),
             child: Column(
               children: [
+<<<<<<< HEAD
                 Padding(
                   padding: EdgeInsets.all(16),
                   child: Row(
@@ -824,13 +825,56 @@ class _ReworkListState extends State<ReworkList> {
                                 color: Colors.grey.shade600,
                                 fontSize: 16,
                               ),
+=======
+                Row(
+                  children: [
+                    // Expanded(
+                    //   child: Text(
+                    //     _reworkNo(item),
+                    //     style: const TextStyle(
+                    //       color: Color(0xFF234393),
+                    //       fontSize: 18,
+                    //       fontWeight: FontWeight.w600,
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(width: 8),
+                    _buildWorkOrderBadge(_workOrderNo(item)),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildReferenceLine(item),
+                    const SizedBox(height: 8),
+                    _buildLabelValue(
+                      'Kategori:',
+                      _categories(item),
+                      maxLines: 1,
+                    ),
+                    if (!_isWaitingStatus(status)) ...[
+                      const SizedBox(height: 18),
+                      _buildLabelValue('Diisi oleh:', _submittedBy(item)),
+                    ],
+                    const SizedBox(height: 16),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            _formatDateTime(date),
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 16,
+>>>>>>> bf6ce5bc (fix: rework)
                             ),
                           ),
-                          _buildStatusBadge(status),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                        _buildStatusBadge(status),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -1495,25 +1539,15 @@ class _ReworkListState extends State<ReworkList> {
   Future<void> _openReworkDetail(ReworkListItem item) async {
     if (item.id == null || item.id.toString().trim().isEmpty) return;
 
-    try {
-      final data = await _reportService.getReworkDetail(item.id);
-      if (!mounted) return;
+    final updated = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ReworkDetailLoadingScreen(id: item.id),
+      ),
+    );
 
-      final updated = await Navigator.push<bool>(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ReworkDetailScreen(data: data),
-        ),
-      );
-
-      if (updated == true && mounted) {
-        await _loadReworkList();
-      }
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal mengambil detail rework: $e')),
-      );
+    if (updated == true && mounted) {
+      await _loadReworkList();
     }
   }
 
@@ -1588,6 +1622,29 @@ class _ReworkListState extends State<ReworkList> {
       case 'waiting':
         return const Color(0xFFFFFBEA);
 =======
+
+  Widget _buildWorkOrderBadge(String woNo) {
+    const color = Color(0xFF234393);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 5,
+      ),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        woNo,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: color,
+        ),
+      ),
+    );
+  }
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {

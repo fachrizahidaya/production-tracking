@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/auth/auth_check.dart';
@@ -67,11 +68,18 @@ import 'package:textile_tracking/screens/tumbler/index.dart';
 import 'package:textile_tracking/screens/warping/list/index.dart';
 import 'package:textile_tracking/screens/warping/model/warping.dart';
 import 'package:textile_tracking/screens/weaving/list/index.dart';
+import 'package:textile_tracking/services/fcm_service.dart';
 import 'package:textile_tracking/screens/weaving/model/weaving.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
+  try {
+    await Firebase.initializeApp();
+    await FcmService.instance.initialize();
+  } catch (error) {
+    debugPrint('Firebase initialization failed: $error');
+  }
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.edgeToEdge,
   );
@@ -122,6 +130,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: appNavigatorKey,
       title: 'TexTrack',
       theme: ThemeData(
         primarySwatch: Colors.blue,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:textile_tracking/helpers/service/token_service.dart';
 import 'package:textile_tracking/screens/auth/login.dart';
+import 'package:textile_tracking/services/fcm_service.dart';
 
 class AuthCheck extends StatefulWidget {
   const AuthCheck({super.key});
@@ -28,6 +29,10 @@ class _AuthCheckState extends State<AuthCheck> {
       setState(() {
         _isAuthenticated = token != null;
       });
+      if (token != null) {
+        FcmService.instance.registerForCurrentUser();
+        FcmService.instance.flushPendingNavigation();
+      }
     }
   }
 

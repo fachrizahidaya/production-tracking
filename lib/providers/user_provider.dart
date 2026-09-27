@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/helpers/auth/storage.dart';
 import 'package:textile_tracking/models/master/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:textile_tracking/services/fcm_service.dart';
 
 class UserProvider with ChangeNotifier {
   User? _user;
@@ -60,6 +61,7 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> handleLogout() async {
+    await FcmService.instance.unregisterCurrentDevice();
     _user = null;
     _token = null;
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "636050696776",
+    "project_id": "textrack-e3355",
+    "storage_bucket": "textrack-e3355.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636050696776:android:3f4bebe9a37c729ce4867d",
+        "android_client_info": {
+          "package_name": "com.kss.textile_tracking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIZizuXOFHYItCTMbbehsubq4CzrxiMBI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,236 @@
+import 'dart:convert';
+import 'dart:io' show Platform;
+
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:textile_tracking/screens/report/rework/rework_notification.dart';
+
+final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
+
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // Notification display is handled by FCM when the app is backgrounded.
+  // Data is processed when the user taps the notification.
+}
+
+class FcmService {
+  static final FcmService instance = FcmService._();
+  FcmService._();
+
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
+  String? _deviceId;
+  bool _initialized = false;
+  Map<String, dynamic>? _pendingNavigation;
+
+  Future<void> initialize() async {
+    if (_initialized || kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) {
+      return;
+    }
+
+    try {
+      await _messaging.requestPermission(alert: true, badge: true, sound: true);
+      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+      await _initializeLocalNotifications();
+
+      FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageTap);
+      FirebaseMessaging.onMessage.listen(_showForegroundNotification);
+      final initialMessage = await _messaging.getInitialMessage();
+      if (initialMessage != null) {
+        _handleMessageTap(initialMessage);
+      }
+
+      _messaging.onTokenRefresh.listen((_) => registerForCurrentUser());
+      _initialized = true;
+    } catch (error) {
+      // Firebase configuration is supplied per environment. Keep the app usable
+      // on builds that do not yet contain the native Firebase config files.
+      debugPrint('FCM initialization failed: $error');
+    }
+  }
+
+  Future<void> _initializeLocalNotifications() async {
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const iosSettings = DarwinInitializationSettings();
+    await _localNotifications.initialize(
+      const InitializationSettings(
+        android: androidSettings,
+        iOS: iosSettings,
+      ),
+      onDidReceiveNotificationResponse: (response) {
+        final payload = response.payload;
+        if (payload == null || payload.isEmpty) return;
+        final data = jsonDecode(payload);
+        if (data is Map) {
+          _handleMessageTap(
+              RemoteMessage(data: Map<String, dynamic>.from(data)));
+        }
+      },
+    );
+
+    final androidPlugin =
+        _localNotifications.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+    await androidPlugin?.createNotificationChannel(
+      const AndroidNotificationChannel(
+        'default_notifications',
+        'Default notifications',
+        description: 'Notifications from TexTrack',
+        importance: Importance.high,
+      ),
+    );
+  }
+
+  Future<void> _showForegroundNotification(RemoteMessage message) async {
+    final title =
+        message.notification?.title ?? message.data['title']?.toString();
+    final body = message.notification?.body ?? message.data['body']?.toString();
+    if ((title == null || title.isEmpty) && (body == null || body.isEmpty)) {
+      return;
+    }
+
+    await _localNotifications.show(
+      message.hashCode,
+      title ?? 'TexTrack',
+      body ?? '',
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'default_notifications',
+          'Default notifications',
+          channelDescription: 'Notifications from TexTrack',
+          importance: Importance.high,
+          priority: Priority.high,
+          icon: '@mipmap/ic_launcher',
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      payload: jsonEncode(message.data),
+    );
+  }
+
+  Future<void> registerForCurrentUser() async {
+    if (!_initialized) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString('access_token');
+    if (accessToken == null || accessToken.isEmpty) return;
+
+    final token = await _messaging.getToken();
+    print('token: $token');
+    debugPrint('FCM token received: ${token == null ? 'null' : 'available'}');
+    if (token == null || token.isEmpty) return;
+
+    final deviceId = await _getDeviceId();
+    final platform = Platform.isIOS ? 'ios' : 'android';
+    final response = await http.post(
+      Uri.parse('${dotenv.env['API_URL']}/device-tokens'),
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode({
+        'token': token,
+        'platform': platform,
+        'device_id': deviceId,
+      }),
+    );
+    debugPrint('FCM registration response: ${response.statusCode}');
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      await prefs.setString('fcm_token', token);
+      await prefs.setString('fcm_device_id', deviceId);
+    } else {
+      debugPrint('FCM token registration failed: ${response.statusCode}');
+    }
+  }
+
+  Future<void> unregisterCurrentDevice() async {
+    if (!_initialized) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString('access_token');
+    final token = prefs.getString('fcm_token') ?? await _messaging.getToken();
+    final deviceId = prefs.getString('fcm_device_id') ?? await _getDeviceId();
+    if (accessToken == null || token == null) return;
+
+    try {
+      await http.delete(
+        Uri.parse('${dotenv.env['API_URL']}/device-tokens'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({'token': token, 'device_id': deviceId}),
+      );
+    } catch (error) {
+      debugPrint('FCM token removal failed: $error');
+    } finally {
+      await prefs.remove('fcm_token');
+      await prefs.remove('fcm_device_id');
+    }
+  }
+
+  Future<String> _getDeviceId() async {
+    if (_deviceId != null) return _deviceId!;
+    final info = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      _deviceId = (await info.androidInfo).id;
+    } else {
+      _deviceId = (await info.iosInfo).identifierForVendor ?? 'ios-device';
+    }
+    return _deviceId!;
+  }
+
+  void _handleMessageTap(RemoteMessage message) {
+    final data = message.data;
+    final route = data['route']?.toString();
+    final type = data['type']?.toString();
+    final id = data['id']?.toString();
+    if (route == null && type == null) return;
+
+    _pendingNavigation = {'route': route, 'type': type, 'id': id};
+    _flushPendingNavigation();
+  }
+
+  void flushPendingNavigation() => _flushPendingNavigation();
+
+  void _flushPendingNavigation() {
+    final navigation = _pendingNavigation;
+    final navigator = appNavigatorKey.currentState;
+    if (navigation == null || navigator == null) return;
+
+    final route = navigation['route'] as String?;
+    final type = navigation['type'] as String?;
+    final id = navigation['id'] as String?;
+    final target = route ??
+        (type == 'dyeing_rework_evaluation'
+            ? '/dyeing-rework-evaluations'
+            : '/notification');
+
+    // The API may send a detail URL that this app does not expose as a named
+    // route yet. Open the closest supported screen and pass the original data.
+    if (target.startsWith('/dyeing-rework-evaluations/') && id != null) {
+      navigator.push(MaterialPageRoute(
+        builder: (_) => ReworkNotificationScreen(id: id),
+      ));
+    } else {
+      navigator.pushNamed(target, arguments: {'id': id, 'type': type});
+    }
+    _pendingNavigation = null;
+  }
+}

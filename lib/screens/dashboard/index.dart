@@ -213,8 +213,6 @@ class _DashboardState extends State<Dashboard> {
         machineList = service.dataList;
       });
     } catch (e) {
-      debugPrint('Machine Error: $e');
-
       if (!mounted) return;
 
       setState(() {
@@ -267,8 +265,6 @@ class _DashboardState extends State<Dashboard> {
         greigeSummaryList = service.preDataList;
       });
     } catch (e) {
-      debugPrint('Summary Error: $e');
-
       if (!mounted) return;
 
       setState(() {

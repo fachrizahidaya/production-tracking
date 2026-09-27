@@ -61,7 +61,11 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> handleLogout() async {
+<<<<<<< HEAD
     FcmService.instance.clearPendingNavigation();
+=======
+    await FcmService.instance.unregisterCurrentDevice();
+>>>>>>> 16778356 (feat: fcm notification)
     _user = null;
     _token = null;
 

@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io' show Platform;
 
+<<<<<<< HEAD
 import 'package:android_id/android_id.dart';
+=======
+>>>>>>> 16778356 (feat: fcm notification)
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -10,21 +13,32 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/report/bs/bs_by_id.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_by_id.dart';
 import 'package:textile_tracking/screens/report/rework/rework_by_id.dart';
+=======
+import 'package:textile_tracking/screens/report/rework/rework_notification.dart';
+>>>>>>> 16778356 (feat: fcm notification)
 
 final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+<<<<<<< HEAD
   debugPrint('FCM background data: ${message.data}');
 
+=======
+>>>>>>> 16778356 (feat: fcm notification)
   // Notification display is handled by FCM when the app is backgrounded.
   // Data is processed when the user taps the notification.
 }
 
+<<<<<<< HEAD
 class FcmService with WidgetsBindingObserver {
+=======
+class FcmService {
+>>>>>>> 16778356 (feat: fcm notification)
   static final FcmService instance = FcmService._();
   FcmService._();
 
@@ -55,8 +69,11 @@ class FcmService with WidgetsBindingObserver {
 
       _messaging.onTokenRefresh.listen((_) => registerForCurrentUser());
       _initialized = true;
+<<<<<<< HEAD
       WidgetsBinding.instance.addObserver(this);
       await clearNotifications();
+=======
+>>>>>>> 16778356 (feat: fcm notification)
     } catch (error) {
       // Firebase configuration is supplied per environment. Keep the app usable
       // on builds that do not yet contain the native Firebase config files.
@@ -64,6 +81,7 @@ class FcmService with WidgetsBindingObserver {
     }
   }
 
+<<<<<<< HEAD
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
@@ -83,14 +101,29 @@ class FcmService with WidgetsBindingObserver {
     const iosSettings = DarwinInitializationSettings();
     await _localNotifications.initialize(
       const InitializationSettings(android: androidSettings, iOS: iosSettings),
+=======
+  Future<void> _initializeLocalNotifications() async {
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const iosSettings = DarwinInitializationSettings();
+    await _localNotifications.initialize(
+      const InitializationSettings(
+        android: androidSettings,
+        iOS: iosSettings,
+      ),
+>>>>>>> 16778356 (feat: fcm notification)
       onDidReceiveNotificationResponse: (response) {
         final payload = response.payload;
         if (payload == null || payload.isEmpty) return;
         final data = jsonDecode(payload);
         if (data is Map) {
           _handleMessageTap(
+<<<<<<< HEAD
             RemoteMessage(data: Map<String, dynamic>.from(data)),
           );
+=======
+              RemoteMessage(data: Map<String, dynamic>.from(data)));
+>>>>>>> 16778356 (feat: fcm notification)
         }
       },
     );
@@ -109,7 +142,10 @@ class FcmService with WidgetsBindingObserver {
   }
 
   Future<void> _showForegroundNotification(RemoteMessage message) async {
+<<<<<<< HEAD
     debugPrint('FCM foreground data: ${message.data}');
+=======
+>>>>>>> 16778356 (feat: fcm notification)
     final title =
         message.notification?.title ?? message.data['title']?.toString();
     final body = message.notification?.body ?? message.data['body']?.toString();
@@ -128,7 +164,11 @@ class FcmService with WidgetsBindingObserver {
           channelDescription: 'Notifications from TexTrack',
           importance: Importance.high,
           priority: Priority.high,
+<<<<<<< HEAD
           icon: 'ic_stat_notification',
+=======
+          icon: '@mipmap/ic_launcher',
+>>>>>>> 16778356 (feat: fcm notification)
         ),
         iOS: DarwinNotificationDetails(
           presentAlert: true,
@@ -148,6 +188,11 @@ class FcmService with WidgetsBindingObserver {
     if (accessToken == null || accessToken.isEmpty) return;
 
     final token = await _messaging.getToken();
+<<<<<<< HEAD
+=======
+    print('token: $token');
+    debugPrint('FCM token received: ${token == null ? 'null' : 'available'}');
+>>>>>>> 16778356 (feat: fcm notification)
     if (token == null || token.isEmpty) return;
 
     final deviceId = await _getDeviceId();
@@ -165,6 +210,10 @@ class FcmService with WidgetsBindingObserver {
         'device_id': deviceId,
       }),
     );
+<<<<<<< HEAD
+=======
+    debugPrint('FCM registration response: ${response.statusCode}');
+>>>>>>> 16778356 (feat: fcm notification)
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       await prefs.setString('fcm_token', token);
@@ -174,6 +223,7 @@ class FcmService with WidgetsBindingObserver {
     }
   }
 
+<<<<<<< HEAD
   Future<Map<String, String?>> getCurrentDeviceData() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('fcm_token');
@@ -202,6 +252,41 @@ class FcmService with WidgetsBindingObserver {
           : 'android-device';
     } else {
       final info = DeviceInfoPlugin();
+=======
+  Future<void> unregisterCurrentDevice() async {
+    if (!_initialized) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString('access_token');
+    final token = prefs.getString('fcm_token') ?? await _messaging.getToken();
+    final deviceId = prefs.getString('fcm_device_id') ?? await _getDeviceId();
+    if (accessToken == null || token == null) return;
+
+    try {
+      await http.delete(
+        Uri.parse('${dotenv.env['API_URL']}/device-tokens'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({'token': token, 'device_id': deviceId}),
+      );
+    } catch (error) {
+      debugPrint('FCM token removal failed: $error');
+    } finally {
+      await prefs.remove('fcm_token');
+      await prefs.remove('fcm_device_id');
+    }
+  }
+
+  Future<String> _getDeviceId() async {
+    if (_deviceId != null) return _deviceId!;
+    final info = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      _deviceId = (await info.androidInfo).id;
+    } else {
+>>>>>>> 16778356 (feat: fcm notification)
       _deviceId = (await info.iosInfo).identifierForVendor ?? 'ios-device';
     }
     return _deviceId!;
@@ -220,15 +305,20 @@ class FcmService with WidgetsBindingObserver {
 
   void flushPendingNavigation() => _flushPendingNavigation();
 
+<<<<<<< HEAD
   void clearPendingNavigation() {
     _pendingNavigation = null;
   }
 
   Future<void> _flushPendingNavigation() async {
+=======
+  void _flushPendingNavigation() {
+>>>>>>> 16778356 (feat: fcm notification)
     final navigation = _pendingNavigation;
     final navigator = appNavigatorKey.currentState;
     if (navigation == null || navigator == null) return;
 
+<<<<<<< HEAD
     final prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('access_token');
     // Keep pending while logged out so Login/AuthCheck can flush after auth.
@@ -311,5 +401,25 @@ class FcmService with WidgetsBindingObserver {
         arguments: {'id': id, 'type': type},
       );
     }
+=======
+    final route = navigation['route'] as String?;
+    final type = navigation['type'] as String?;
+    final id = navigation['id'] as String?;
+    final target = route ??
+        (type == 'dyeing_rework_evaluation'
+            ? '/dyeing-rework-evaluations'
+            : '/notification');
+
+    // The API may send a detail URL that this app does not expose as a named
+    // route yet. Open the closest supported screen and pass the original data.
+    if (target.startsWith('/dyeing-rework-evaluations/') && id != null) {
+      navigator.push(MaterialPageRoute(
+        builder: (_) => ReworkNotificationScreen(id: id),
+      ));
+    } else {
+      navigator.pushNamed(target, arguments: {'id': id, 'type': type});
+    }
+    _pendingNavigation = null;
+>>>>>>> 16778356 (feat: fcm notification)
   }
 }

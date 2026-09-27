@@ -61,6 +61,7 @@ class _LoginState extends State<Login> {
 
     Navigator.pushReplacementNamed(context, '/dashboard');
     FcmService.instance.registerForCurrentUser();
+<<<<<<< HEAD
     _flushPendingNavigationAfterDashboard();
   }
 
@@ -70,6 +71,9 @@ class _LoginState extends State<Login> {
         FcmService.instance.flushPendingNavigation();
       });
     });
+=======
+    FcmService.instance.flushPendingNavigation();
+>>>>>>> 16778356 (feat: fcm notification)
   }
 
   Future<void> _handleCheckLogin() async {
@@ -88,7 +92,11 @@ class _LoginState extends State<Login> {
 
       Navigator.pushReplacementNamed(context, '/dashboard');
       FcmService.instance.registerForCurrentUser();
+<<<<<<< HEAD
       _flushPendingNavigationAfterDashboard();
+=======
+      FcmService.instance.flushPendingNavigation();
+>>>>>>> 16778356 (feat: fcm notification)
     }
   }
 

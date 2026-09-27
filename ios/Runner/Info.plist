@@ -58,12 +58,18 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 16778356 (feat: fcm notification)
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
 	</array>
+<<<<<<< HEAD
 =======
 >>>>>>> 593bbd5e (chore: for iOS)
+=======
+>>>>>>> 16778356 (feat: fcm notification)
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

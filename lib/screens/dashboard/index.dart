@@ -586,6 +586,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
     } catch (e) {
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
@@ -599,6 +600,8 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+>>>>>>> 16778356 (feat: fcm notification)
       if (!mounted) return;
 
       setState(() {
@@ -688,6 +691,7 @@ class _DashboardState extends State<Dashboard> {
         greigeSummaryList = service.preDataList;
       });
     } catch (e) {
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
@@ -702,6 +706,8 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 45ea02f (fix: dashboard)
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+>>>>>>> 16778356 (feat: fcm notification)
       if (!mounted) return;
 
       setState(() {

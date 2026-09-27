@@ -1158,6 +1158,12 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     }
   }
 
+  bool get _canSave {
+    return _selectedReasons.isNotEmpty &&
+        _actionPlanController.text.trim().isNotEmpty &&
+        _preventivePlanController.text.trim().isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1626,6 +1632,80 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         minLines: 6,
         maxLines: 12,
         decoration: CustomTheme().inputDecoration('Masukkan $label'),
+        onChanged: (_) => setState(() {}),
+      ),
+    );
+  }
+}
+
+class _EditReasonOptionSheet extends StatefulWidget {
+  const _EditReasonOptionSheet();
+
+  @override
+  State<_EditReasonOptionSheet> createState() => _EditReasonOptionSheetState();
+}
+
+class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+
+    return AnimatedPadding(
+      duration: const Duration(milliseconds: 200),
+      padding: EdgeInsets.only(bottom: bottomInset),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Tambah Alasan',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _controller,
+                autofocus: true,
+                textInputAction: TextInputAction.done,
+                decoration: const InputDecoration(
+                  hintText: 'Masukkan alasan rework',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Batal'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(
+                        context,
+                        _controller.text.trim(),
+                      ),
+                      child: const Text('Tambah'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

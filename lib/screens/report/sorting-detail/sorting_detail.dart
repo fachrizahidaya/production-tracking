@@ -42,17 +42,17 @@ class SortingDetailComp extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: InkWell(
-                      onTap: onDownload,
-                      child: Container(
-                        decoration: CustomTheme().cardTheme(),
-                        padding: const EdgeInsets.all(12),
-                        child: const Icon(Icons.download_outlined, size: 18),
-                      ),
-                    ),
-                  ),
+                  // const SizedBox(width: 8),
+                  // Expanded(
+                  //   child: InkWell(
+                  //     onTap: onDownload,
+                  //     child: Container(
+                  //       decoration: CustomTheme().cardTheme(),
+                  //       padding: const EdgeInsets.all(12),
+                  //       child: const Icon(Icons.download_outlined, size: 18),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

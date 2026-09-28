@@ -128,23 +128,34 @@ class _SortingResultCompState extends State<SortingResultComp> {
                 height:
                     widget.loading || widget.items.isEmpty ? 120 : listHeight,
                 child: widget.loading
-                    ? Center(
+                    ? const Center(
                         child: CircularProgressIndicator(),
                       )
                     : widget.items.isEmpty
                         ? NoData()
-                        : ListView.builder(
-                            controller: widget.scrollController,
-                            scrollDirection: Axis.horizontal,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemCount: widget.items.length,
-                            padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
-                            itemBuilder: (context, index) {
-                              return SizedBox(
-                                width: 360,
-                                child: _buildSortingResultCard(
-                                    widget.items[index],
-                                    isLast: index == widget.items?.length - 1),
+                        : LayoutBuilder(
+                            builder: (context, constraints) {
+                              // Keep the next card partially visible so the
+                              // horizontal scrolling behavior is discoverable.
+                              final cardWidth = (constraints.maxWidth * 0.8)
+                                  .clamp(260.0, 300.0)
+                                  .toDouble();
+
+                              return ListView.builder(
+                                controller: widget.scrollController,
+                                scrollDirection: Axis.horizontal,
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemCount: widget.items.length,
+                                padding: const EdgeInsets.fromLTRB(0, 6, 0, 12),
+                                itemBuilder: (context, index) {
+                                  return SizedBox(
+                                    width: cardWidth,
+                                    child: _buildSortingResultCard(
+                                      widget.items[index],
+                                      isLast: index == widget.items.length - 1,
+                                    ),
+                                  );
+                                },
                               );
                             },
                           ),
@@ -216,6 +227,7 @@ class _SortingResultCompState extends State<SortingResultComp> {
                     '${widget.formatNumber(item.woQty)} PCS',
                   ),
                 ),
+                const SizedBox(width: 12),
                 Expanded(
                   child: _buildSortingInfo(
                     'Selisih',

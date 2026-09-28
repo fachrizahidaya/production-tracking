@@ -60,6 +60,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   int _visibleStep = 1;
   List<Map<String, dynamic>> _reasonOptions = [];
   List<Map<String, dynamic>> _selectedReasons = [];
+<<<<<<< HEAD
   List<Map<String, dynamic>> _attachments = [];
 
   String get _draftType => 'rework';
@@ -67,6 +68,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   List<Map<String, dynamic>> _reasonOptions = [];
   List<Map<String, dynamic>> _selectedReasons = [];
 >>>>>>> 41ded02d (fix: rework)
+=======
+  int _editStep = 0;
+>>>>>>> fcd6e08b (fix: rework)
 
   @override
   void initState() {
@@ -236,6 +240,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   String _errorMessage(Object error) {
     return error.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
   }
@@ -257,6 +262,14 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
 =======
 >>>>>>> 41ded02d (fix: rework)
+=======
+  bool get _canSave {
+    return _selectedReasons.isNotEmpty &&
+        _actionPlanController.text.trim().isNotEmpty &&
+        _preventivePlanController.text.trim().isNotEmpty;
+  }
+
+>>>>>>> fcd6e08b (fix: rework)
   Future<void> _loadReasonOptions() async {
     try {
       final options = await _reportService.getReworkReasonOptions();
@@ -747,18 +760,13 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     }
   }
 
-  bool get _canSave {
-    return _selectedReasons.isNotEmpty &&
-        _actionPlanController.text.trim().isNotEmpty &&
-        _preventivePlanController.text.trim().isNotEmpty;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Edit Evaluasi Rework',
         onReturn: () => Navigator.pop(context),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -782,10 +790,13 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
           ),
         ],
 >>>>>>> 41ded02d (fix: rework)
+=======
+>>>>>>> fcd6e08b (fix: rework)
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
         child: SingleChildScrollView(
+<<<<<<< HEAD
 <<<<<<< HEAD
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
@@ -844,6 +855,10 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 >>>>>>> 41ded02d (fix: rework)
             ],
           ),
+=======
+          padding: EdgeInsets.all(16),
+          child: _buildEditStep(),
+>>>>>>> fcd6e08b (fix: rework)
         ),
       ),
 <<<<<<< HEAD
@@ -887,6 +902,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     );
   }
 
+<<<<<<< HEAD
   ButtonStyle get _primaryActionButtonStyle => ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF4561DB),
         foregroundColor: Colors.white,
@@ -903,6 +919,81 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
 >>>>>>> 41ded02d (fix: rework)
   Widget _buildReasonForm() {
+=======
+  Widget _buildEditStep() {
+    switch (_editStep) {
+      case 1:
+        return _buildEditorForm(
+          label: 'Action Plan',
+          controller: _actionPlanController,
+          footer: _buildStepButtons(
+            nextLabel: 'Selanjutnya',
+            nextEnabled: _actionPlanController.text.trim().isNotEmpty,
+            onNext: () => setState(() => _editStep = 2),
+          ),
+        );
+      case 2:
+        return _buildEditorForm(
+          label: 'Preventif Plan',
+          controller: _preventivePlanController,
+          footer: _buildStepButtons(
+            nextLabel: 'Simpan',
+            nextEnabled:
+                _preventivePlanController.text.trim().isNotEmpty && !_saving,
+            onNext: _save,
+          ),
+        );
+      default:
+        return _buildReasonForm(
+          footer: _buildReasonStepButton(),
+        );
+    }
+  }
+
+  Widget _buildReasonStepButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: _selectedReasons.isEmpty
+            ? null
+            : () => setState(() => _editStep = 1),
+        child: const Text('Selanjutnya'),
+      ),
+    );
+  }
+
+  Widget _buildStepButtons({
+    required String nextLabel,
+    required bool nextEnabled,
+    required VoidCallback onNext,
+  }) {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton(
+            onPressed: _saving ? null : () => setState(() => _editStep--),
+            child: const Text('Kembali'),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: ElevatedButton(
+            onPressed: nextEnabled ? onNext : null,
+            child: _saving && nextLabel == 'Simpan'
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Text(nextLabel),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReasonForm({Widget? footer}) {
+>>>>>>> fcd6e08b (fix: rework)
     return _buildFormCard(
       label: 'Alasan',
       child: Column(
@@ -928,6 +1019,10 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
               label: const Text('Tambah alasan baru'),
             ),
           ),
+          if (footer != null) ...[
+            const SizedBox(height: 8),
+            footer,
+          ],
         ],
       ),
     );
@@ -1011,15 +1106,24 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   Widget _buildEditorForm({
     required String label,
     required TextEditingController controller,
+    Widget? footer,
   }) {
     return _buildFormCard(
       label: label,
-      child: TextField(
-        controller: controller,
-        minLines: 6,
-        maxLines: 12,
-        decoration: CustomTheme().inputDecoration('Masukkan $label'),
-        onChanged: (_) => setState(() {}),
+      child: Column(
+        children: [
+          TextField(
+            controller: controller,
+            minLines: 6,
+            maxLines: 12,
+            decoration: CustomTheme().inputDecoration('Masukkan $label'),
+            onChanged: (_) => setState(() {}),
+          ),
+          if (footer != null) ...[
+            const SizedBox(height: 16),
+            footer,
+          ],
+        ],
       ),
     );
   }
@@ -1034,6 +1138,7 @@ class _EditReasonOptionSheet extends StatefulWidget {
 
 class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
   final TextEditingController _controller = TextEditingController();
+  String? _errorMessage;
 
   @override
   void dispose() {
@@ -1067,7 +1172,12 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
                 decoration: const InputDecoration(
                   hintText: 'Masukkan alasan rework',
                   border: OutlineInputBorder(),
-                ),
+                ).copyWith(errorText: _errorMessage),
+                onChanged: (_) {
+                  if (_errorMessage != null) {
+                    setState(() => _errorMessage = null);
+                  }
+                },
               ),
               const SizedBox(height: 16),
               Row(
@@ -1081,10 +1191,16 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () => Navigator.pop(
-                        context,
-                        _controller.text.trim(),
-                      ),
+                      onPressed: () {
+                        final value = _controller.text.trim();
+                        if (value.length < 3) {
+                          setState(
+                            () => _errorMessage = 'Minimal 3 karakter',
+                          );
+                          return;
+                        }
+                        Navigator.pop(context, value);
+                      },
                       child: const Text('Tambah'),
                     ),
                   ),

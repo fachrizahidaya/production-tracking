@@ -28,11 +28,15 @@ class Dashboard extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   final bool isMobile;
+=======
+>>>>>>> 9dacc402 (fix: responsive UI to mobile)
   final Future<void> Function()? onRefreshReworkNotifications;
 
   const Dashboard({
     super.key,
+<<<<<<< HEAD
     required this.isMobile,
     this.onRefreshReworkNotifications,
 =======
@@ -61,6 +65,10 @@ class Dashboard extends StatefulWidget {
 =======
   const Dashboard({super.key});
 >>>>>>> 1155687b (fix: widget dashboard)
+=======
+    this.onRefreshReworkNotifications,
+  });
+>>>>>>> 9dacc402 (fix: responsive UI to mobile)
 
   @override
   State<Dashboard> createState() => _DashboardState();

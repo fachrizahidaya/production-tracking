@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -45,12 +47,16 @@ class _HomeState extends State<Home> {
   String user = '';
   String name = '';
 <<<<<<< HEAD
+<<<<<<< HEAD
   int _reworkNotificationCount = 0;
   int _bsNotificationCount = 0;
   int _gsmNotificationCount = 0;
   bool _canViewReworkEvaluation = false;
   bool _canViewBsEvaluation = false;
   bool _canViewGsmEvaluation = false;
+=======
+  int _reworkNotificationCount = 0;
+>>>>>>> 9dacc402 (fix: responsive UI to mobile)
   late Future<String?> _tokenFuture;
 =======
   late Future<String?> _tokenFuture;
@@ -87,6 +93,7 @@ class _HomeState extends State<Home> {
       user = loggedInUser?.username ?? '';
       name = loggedInUser?.name ?? '';
     });
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -133,6 +140,14 @@ class _HomeState extends State<Home> {
     return false;
   }
 
+=======
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchReworkNotificationCount();
+    });
+  }
+
+>>>>>>> 9dacc402 (fix: responsive UI to mobile)
   Future<void> _fetchReworkNotificationCount() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -156,6 +171,7 @@ class _HomeState extends State<Home> {
     } catch (_) {
       // Badge tetap tersembunyi jika endpoint notifikasi tidak tersedia.
     }
+<<<<<<< HEAD
   }
 
   Future<void> _fetchBsNotificationCount() async {
@@ -562,6 +578,8 @@ class _HomeState extends State<Home> {
     );
 =======
 >>>>>>> 1155687b (fix: widget dashboard)
+=======
+>>>>>>> 9dacc402 (fix: responsive UI to mobile)
   }
 
   Future<void> _handleExit(
@@ -763,10 +781,15 @@ class _HomeState extends State<Home> {
             appBar: CustomAppBar(
               title: 'TexTrack',
               isWithNotification: true,
+              reworkNotificationCount: _reworkNotificationCount,
+              onReworkNotifications: () {
+                Navigator.pushNamed(context, '/dyeing-rework-evaluations');
+              },
               handleLogout: () => _handleLogout(context),
               isWithAccount: true,
               user: user,
               name: name,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> d8439a4 (fix: refactor code)
@@ -788,13 +811,20 @@ class _HomeState extends State<Home> {
               isDashboardSettingsLoading: _isDashboardWidgetsLoading,
 =======
 >>>>>>> 1155687b (fix: widget dashboard)
+=======
+              showAvatar: MediaQuery.sizeOf(context).shortestSide >= 600,
+              showNameWithAvatar:
+                  MediaQuery.sizeOf(context).shortestSide >= 600,
+>>>>>>> 9dacc402 (fix: responsive UI to mobile)
             ),
             drawer: AppDrawer(
               handleLogout: () => _handleLogout(context),
               handleFetchMenu: () => _handleFetchMenu(),
             ),
             body: SafeArea(
-              child: Dashboard(),
+              child: Dashboard(
+                onRefreshReworkNotifications: _fetchReworkNotificationCount,
+              ),
             ),
           );
         });

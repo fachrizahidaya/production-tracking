@@ -20,12 +20,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showAvatar;
 =======
   final bool isWithNotification;
+  final int reworkNotificationCount;
+  final VoidCallback? onReworkNotifications;
   final bool isWithAccount;
+<<<<<<< HEAD
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
 =======
   final bool isWithNotification;
   final bool isWithAccount;
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+  final bool showAvatar;
+>>>>>>> 9dacc402 (fix: responsive UI to mobile)
   final bool showNameWithAvatar;
   final tab;
   final bool? canDelete;
@@ -71,6 +77,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
       this.isWithNotification = false,
+<<<<<<< HEAD
       this.notificationCount = 0,
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
@@ -82,6 +89,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 =======
       this.isWithNotification = false,
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+      this.reworkNotificationCount = 0,
+      this.onReworkNotifications,
+>>>>>>> 9dacc402 (fix: responsive UI to mobile)
       this.isWithAccount = false,
       this.showAvatar = true,
       this.tab,
@@ -150,6 +161,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (isWithNotification)
           _buildNotificationButton(
             tooltip: notificationTooltip,
@@ -161,6 +173,47 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 >>>>>>> 7a6aa3b1 (feat: model for report)
 =======
 >>>>>>> 5e1b7ecb (fix: dashboard)
+=======
+        if (isWithNotification)
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              IconButton(
+                tooltip: 'Evaluasi Rework',
+                onPressed: onReworkNotifications,
+                icon: const Icon(Icons.assignment_late_outlined),
+              ),
+              if (reworkNotificationCount > 0)
+                Positioned(
+                  right: 4,
+                  top: 4,
+                  child: Container(
+                    constraints: const BoxConstraints(
+                      minWidth: 18,
+                      minHeight: 18,
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.white, width: 1.5),
+                    ),
+                    child: Text(
+                      reworkNotificationCount > 99
+                          ? '99+'
+                          : reworkNotificationCount.toString(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+>>>>>>> 9dacc402 (fix: responsive UI to mobile)
         if (isDashboardSettingsLoading)
           const Padding(
             padding: EdgeInsets.all(14),
@@ -229,6 +282,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9dacc402 (fix: responsive UI to mobile)
                   if (showAvatar)
                     CircleAvatar(
                       radius: 16,
@@ -240,6 +296,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           fontWeight: FontWeight.bold,
                           fontSize: CustomTheme().fontSize('sm'),
                         ),
+<<<<<<< HEAD
                       ),
                     )
                   else
@@ -263,6 +320,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+                      ),
+                    )
+                  else
+                    const Icon(Icons.account_circle_outlined),
+>>>>>>> 9dacc402 (fix: responsive UI to mobile)
                 ].separatedBy(CustomTheme().hGap('xl'))),
             color: Colors.white,
             offset: Offset(0, 40),

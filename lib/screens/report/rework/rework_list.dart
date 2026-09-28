@@ -162,11 +162,14 @@ class _ReworkListState extends State<ReworkList> {
 =======
 >>>>>>> 01aa2117 (fix: attachment evaluation)
     _searchController.text = widget.search;
+<<<<<<< HEAD
 
     _scrollController.addListener(_onScroll);
     _loadReworkList();
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+>>>>>>> 9d9abd1e (fix: rework)
     _loadPendingCount();
 =======
 >>>>>>> 41ded02d (fix: rework)

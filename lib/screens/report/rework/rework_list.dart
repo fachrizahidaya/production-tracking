@@ -786,6 +786,7 @@ class _ReworkListState extends State<ReworkList> {
               ),
               const SizedBox(width: 8),
 <<<<<<< HEAD
+<<<<<<< HEAD
               _buildStatusTab(
                 label: 'Direview',
                 status: 'Direview',
@@ -843,6 +844,10 @@ class _ReworkListState extends State<ReworkList> {
                         ],
 =======
 =======
+=======
+              _buildStatusTab(label: 'Selesai', status: 'Selesai'),
+              const SizedBox(width: 8),
+>>>>>>> f248a3d8 (fix: rework)
               _buildStatusTab(label: 'Semua', status: 'all'),
             ],
           ),
@@ -1737,6 +1742,8 @@ class _ReworkListState extends State<ReworkList> {
   }
 
   Widget _buildStatusBadge(String status) {
+    final backgroundColor = _getStatusColor(status);
+
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
@@ -1744,11 +1751,15 @@ class _ReworkListState extends State<ReworkList> {
       ),
       decoration: BoxDecoration(
 <<<<<<< HEAD
+<<<<<<< HEAD
         color: color.withValues(alpha: 0.1),
 >>>>>>> 5ad2d445 (feat: temporarily)
 =======
         color: _getStatusColor(status).withOpacity(0.1),
 >>>>>>> 41ded02d (fix: rework)
+=======
+        color: backgroundColor,
+>>>>>>> f248a3d8 (fix: rework)
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -1758,6 +1769,7 @@ class _ReworkListState extends State<ReworkList> {
           fontWeight: FontWeight.w600,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           color: _getStatusBadgeTextColor(status),
 =======
           color: color,
@@ -1765,6 +1777,9 @@ class _ReworkListState extends State<ReworkList> {
 =======
           color: _getStatusColor(status),
 >>>>>>> 41ded02d (fix: rework)
+=======
+          color: _getStatusTextColor(status),
+>>>>>>> f248a3d8 (fix: rework)
         ),
       ),
     );
@@ -1835,14 +1850,18 @@ class _ReworkListState extends State<ReworkList> {
     switch (status.toLowerCase()) {
       case 'selesai':
       case 'completed':
-        return Colors.green;
+        return const Color(0xFFEBFDF4);
       case 'menunggu':
       case 'waiting':
+<<<<<<< HEAD
 <<<<<<< HEAD
         return Colors.blue;
 >>>>>>> 41ded02d (fix: rework)
 =======
         return Colors.orange;
+=======
+        return const Color(0xFFFFFBEA);
+>>>>>>> f248a3d8 (fix: rework)
 
 >>>>>>> fcd6e08b (fix: rework)
       case 'dilewati':
@@ -1853,8 +1872,24 @@ class _ReworkListState extends State<ReworkList> {
     }
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5ad2d445 (feat: temporarily)
 =======
 >>>>>>> 41ded02d (fix: rework)
+=======
+
+  Color _getStatusTextColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFF15803D);
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFA16207);
+      default:
+        return _getStatusColor(status);
+    }
+  }
+>>>>>>> f248a3d8 (fix: rework)
 }

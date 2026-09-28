@@ -153,12 +153,15 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
       final data = await _reportService.getReworkDetail(widget.id);
       if (!mounted) return;
 
-      await Navigator.pushReplacement<bool, bool>(
+      final updated = await Navigator.push<bool>(
         context,
         MaterialPageRoute(
           builder: (context) => ReworkDetailScreen(data: data),
         ),
       );
+
+      if (!mounted) return;
+      Navigator.pop(context, updated == true);
     } catch (error) {
       if (!mounted) return;
       setState(() => _error = error);
@@ -1565,6 +1568,9 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   Widget _buildStatusBadge(String status) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f248a3d8 (fix: rework)
     final backgroundColor = _getStatusColor(status);
 
     return Container(
@@ -1574,6 +1580,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       ),
       decoration: BoxDecoration(
         color: backgroundColor,
+<<<<<<< HEAD
 =======
     final color =
         status.toLowerCase() == 'selesai' ? Colors.green : Colors.orange;
@@ -1593,6 +1600,8 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 =======
         color: color.withOpacity(0.1),
 >>>>>>> 41ded02d (fix: rework)
+=======
+>>>>>>> f248a3d8 (fix: rework)
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -1601,10 +1610,14 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           fontSize: 12,
           fontWeight: FontWeight.w600,
 <<<<<<< HEAD
+<<<<<<< HEAD
           color: _getStatusTextColor(status),
 =======
           color: color,
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+          color: _getStatusTextColor(status),
+>>>>>>> f248a3d8 (fix: rework)
         ),
       ),
     );
@@ -1650,18 +1663,26 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     switch (status.toLowerCase()) {
       case 'selesai':
       case 'completed':
+<<<<<<< HEAD
         return Colors.green;
 >>>>>>> 41ded02d (fix: rework)
+=======
+        return const Color(0xFFEBFDF4);
+>>>>>>> f248a3d8 (fix: rework)
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
       case 'menunggu':
       case 'waiting':
 <<<<<<< HEAD
+<<<<<<< HEAD
         return const Color(0xFFFFFBEA);
 =======
         return Colors.blue;
 >>>>>>> 41ded02d (fix: rework)
+=======
+        return const Color(0xFFFFFBEA);
+>>>>>>> f248a3d8 (fix: rework)
       case 'dilewati':
       case 'skipped':
         return Colors.grey;
@@ -1670,6 +1691,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     }
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
@@ -1681,13 +1703,26 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       case 'menunggu':
       case 'waiting':
         return const Color(0xFF955B34);
+=======
+  Color _getStatusTextColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFF15803D);
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFA16207);
+>>>>>>> f248a3d8 (fix: rework)
       default:
         return _getStatusColor(status);
     }
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 41ded02d (fix: rework)
+=======
+>>>>>>> f248a3d8 (fix: rework)
   String _formatDateTime(String value) {
     final date = DateTime.tryParse(value);
     if (date == null) return value;

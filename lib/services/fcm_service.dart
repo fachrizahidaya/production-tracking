@@ -35,10 +35,14 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 class FcmService with WidgetsBindingObserver {
 =======
 class FcmService {
 >>>>>>> 16778356 (feat: fcm notification)
+=======
+class FcmService with WidgetsBindingObserver {
+>>>>>>> 64eaac94 (fix: firebase messaging)
   static final FcmService instance = FcmService._();
   FcmService._();
 
@@ -70,10 +74,15 @@ class FcmService {
       _messaging.onTokenRefresh.listen((_) => registerForCurrentUser());
       _initialized = true;
 <<<<<<< HEAD
+<<<<<<< HEAD
       WidgetsBinding.instance.addObserver(this);
       await clearNotifications();
 =======
 >>>>>>> 16778356 (feat: fcm notification)
+=======
+      WidgetsBinding.instance.addObserver(this);
+      await clearNotifications();
+>>>>>>> 64eaac94 (fix: firebase messaging)
     } catch (error) {
       // Firebase configuration is supplied per environment. Keep the app usable
       // on builds that do not yet contain the native Firebase config files.
@@ -82,6 +91,9 @@ class FcmService {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 64eaac94 (fix: firebase messaging)
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
@@ -94,6 +106,7 @@ class FcmService {
     await _localNotifications.cancelAll();
   }
 
+<<<<<<< HEAD
   Future<void> _initializeLocalNotifications() async {
     const androidSettings = AndroidInitializationSettings(
       'ic_stat_notification',
@@ -102,6 +115,8 @@ class FcmService {
     await _localNotifications.initialize(
       const InitializationSettings(android: androidSettings, iOS: iosSettings),
 =======
+=======
+>>>>>>> 64eaac94 (fix: firebase messaging)
   Future<void> _initializeLocalNotifications() async {
     const androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -189,10 +204,13 @@ class FcmService {
 
     final token = await _messaging.getToken();
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     print('token: $token');
     debugPrint('FCM token received: ${token == null ? 'null' : 'available'}');
 >>>>>>> 16778356 (feat: fcm notification)
+=======
+>>>>>>> 64eaac94 (fix: firebase messaging)
     if (token == null || token.isEmpty) return;
 
     final deviceId = await _getDeviceId();
@@ -211,9 +229,12 @@ class FcmService {
       }),
     );
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     debugPrint('FCM registration response: ${response.statusCode}');
 >>>>>>> 16778356 (feat: fcm notification)
+=======
+>>>>>>> 64eaac94 (fix: firebase messaging)
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       await prefs.setString('fcm_token', token);

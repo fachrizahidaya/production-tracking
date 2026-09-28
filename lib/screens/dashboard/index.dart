@@ -25,7 +25,12 @@ import 'package:textile_tracking/models/dashboard/work_order_summary.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  final Future<void> Function()? onRefreshReworkNotifications;
+
+  const Dashboard({
+    super.key,
+    this.onRefreshReworkNotifications,
+  });
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -572,6 +577,7 @@ class _DashboardState extends State<Dashboard> {
           child: RefreshIndicator(
             onRefresh: () async {
               await _loadDashboardData();
+              await widget.onRefreshReworkNotifications?.call();
             },
             child: CustomScrollView(
               physics: const AlwaysScrollableScrollPhysics(),

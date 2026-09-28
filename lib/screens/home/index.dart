@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/drawer/app_drawer.dart';
@@ -25,6 +27,7 @@ class _HomeState extends State<Home> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
   String user = '';
   String name = '';
+  int _reworkNotificationCount = 0;
   late Future<String?> _tokenFuture;
 
   @override
@@ -38,6 +41,35 @@ class _HomeState extends State<Home> {
       user = loggedInUser?.username ?? '';
       name = loggedInUser?.name ?? '';
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchReworkNotificationCount();
+    });
+  }
+
+  Future<void> _fetchReworkNotificationCount() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('access_token');
+      final baseUrl = dotenv.env['API_URL'] ?? '';
+      final response = await http.get(
+        Uri.parse('$baseUrl/dyeing-rework-evaluations/notifications'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode != 200 || !mounted) return;
+
+      final responseData = jsonDecode(response.body);
+      final count = responseData['data']?['count'];
+      setState(() {
+        _reworkNotificationCount = int.tryParse(count?.toString() ?? '') ?? 0;
+      });
+    } catch (_) {
+      // Badge tetap tersembunyi jika endpoint notifikasi tidak tersedia.
+    }
   }
 
   Future<void> _handleExit(
@@ -148,18 +180,26 @@ class _HomeState extends State<Home> {
             appBar: CustomAppBar(
               title: 'TexTrack',
               isWithNotification: true,
+              reworkNotificationCount: _reworkNotificationCount,
+              onReworkNotifications: () {
+                Navigator.pushNamed(context, '/dyeing-rework-evaluations');
+              },
               handleLogout: () => _handleLogout(context),
               isWithAccount: true,
               user: user,
               name: name,
-              showNameWithAvatar: true,
+              showAvatar: MediaQuery.sizeOf(context).shortestSide >= 600,
+              showNameWithAvatar:
+                  MediaQuery.sizeOf(context).shortestSide >= 600,
             ),
             drawer: AppDrawer(
               handleLogout: () => _handleLogout(context),
               handleFetchMenu: () => _handleFetchMenu(),
             ),
             body: SafeArea(
-              child: Dashboard(),
+              child: Dashboard(
+                onRefreshReworkNotifications: _fetchReworkNotificationCount,
+              ),
             ),
           );
         });

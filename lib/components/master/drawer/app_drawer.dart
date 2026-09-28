@@ -95,7 +95,10 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return Drawer(
+      width: isTablet ? 320 : 280,
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
@@ -104,7 +107,7 @@ class _AppDrawerState extends State<AppDrawer> {
               DrawerHeader(
                 child: Image.asset(
                   'assets/images/icon_logo.png',
-                  height: 100,
+                  height: isTablet ? 100 : 72,
                 ),
               ),
               Expanded(

@@ -32,12 +32,15 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
       final data = await _reportService.getReworkDetail(widget.id);
       if (!mounted) return;
 
-      await Navigator.pushReplacement<bool, bool>(
+      final updated = await Navigator.push<bool>(
         context,
         MaterialPageRoute(
           builder: (context) => ReworkDetailScreen(data: data),
         ),
       );
+
+      if (!mounted) return;
+      Navigator.pop(context, updated == true);
     } catch (error) {
       if (!mounted) return;
       setState(() => _error = error);
@@ -873,7 +876,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
   Widget _buildStatusBadge(String status) {
-    final color = _getStatusColor(status);
+    final backgroundColor = _getStatusColor(status);
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -881,7 +884,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         vertical: 5,
       ),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -889,7 +892,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
-          color: color,
+          color: _getStatusTextColor(status),
         ),
       ),
     );
@@ -922,18 +925,31 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     switch (status.toLowerCase()) {
       case 'selesai':
       case 'completed':
-        return Colors.green;
+        return const Color(0xFFEBFDF4);
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
       case 'menunggu':
       case 'waiting':
-        return Colors.blue;
+        return const Color(0xFFFFFBEA);
       case 'dilewati':
       case 'skipped':
         return Colors.grey;
       default:
         return Colors.grey;
+    }
+  }
+
+  Color _getStatusTextColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFF15803D);
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFA16207);
+      default:
+        return _getStatusColor(status);
     }
   }
 

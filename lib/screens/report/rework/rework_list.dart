@@ -461,6 +461,8 @@ class _ReworkListState extends State<ReworkList> {
                 count: _pendingCountLoading ? null : _pendingCount,
               ),
               const SizedBox(width: 8),
+              _buildStatusTab(label: 'Selesai', status: 'Selesai'),
+              const SizedBox(width: 8),
               _buildStatusTab(label: 'Semua', status: 'all'),
             ],
           ),
@@ -797,13 +799,15 @@ class _ReworkListState extends State<ReworkList> {
   }
 
   Widget _buildStatusBadge(String status) {
+    final backgroundColor = _getStatusColor(status);
+
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
         vertical: 5,
       ),
       decoration: BoxDecoration(
-        color: _getStatusColor(status).withOpacity(0.1),
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -811,7 +815,7 @@ class _ReworkListState extends State<ReworkList> {
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
-          color: _getStatusColor(status),
+          color: _getStatusTextColor(status),
         ),
       ),
     );
@@ -844,16 +848,29 @@ class _ReworkListState extends State<ReworkList> {
     switch (status.toLowerCase()) {
       case 'selesai':
       case 'completed':
-        return Colors.green;
+        return const Color(0xFFEBFDF4);
       case 'menunggu':
       case 'waiting':
-        return Colors.orange;
+        return const Color(0xFFFFFBEA);
 
       case 'dilewati':
       case 'skipped':
         return Colors.grey;
       default:
         return Colors.grey;
+    }
+  }
+
+  Color _getStatusTextColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFF15803D);
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFA16207);
+      default:
+        return _getStatusColor(status);
     }
   }
 }

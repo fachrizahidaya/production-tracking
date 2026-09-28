@@ -8,7 +8,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onReturn;
   final List<Widget>? actions;
   final bool isWithNotification;
+  final int reworkNotificationCount;
+  final VoidCallback? onReworkNotifications;
   final bool isWithAccount;
+  final bool showAvatar;
   final bool showNameWithAvatar;
   final tab;
   final bool? canDelete;
@@ -37,7 +40,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onReturn,
       this.actions,
       this.isWithNotification = false,
+      this.reworkNotificationCount = 0,
+      this.onReworkNotifications,
       this.isWithAccount = false,
+      this.showAvatar = true,
       this.tab,
       this.canDelete,
       this.canUpdate,
@@ -81,6 +87,45 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
+        if (isWithNotification)
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              IconButton(
+                tooltip: 'Evaluasi Rework',
+                onPressed: onReworkNotifications,
+                icon: const Icon(Icons.assignment_late_outlined),
+              ),
+              if (reworkNotificationCount > 0)
+                Positioned(
+                  right: 4,
+                  top: 4,
+                  child: Container(
+                    constraints: const BoxConstraints(
+                      minWidth: 18,
+                      minHeight: 18,
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.white, width: 1.5),
+                    ),
+                    child: Text(
+                      reworkNotificationCount > 99
+                          ? '99+'
+                          : reworkNotificationCount.toString(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         if (isDashboardSettingsLoading)
           const Padding(
             padding: EdgeInsets.all(14),
@@ -123,18 +168,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: CustomTheme().colors('primary'),
-                    child: Text(
-                      getInitial(name),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: CustomTheme().fontSize('sm'),
+                  if (showAvatar)
+                    CircleAvatar(
+                      radius: 16,
+                      backgroundColor: CustomTheme().colors('primary'),
+                      child: Text(
+                        getInitial(name),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: CustomTheme().fontSize('sm'),
+                        ),
                       ),
-                    ),
-                  ),
+                    )
+                  else
+                    const Icon(Icons.account_circle_outlined),
                 ].separatedBy(CustomTheme().hGap('xl'))),
             color: Colors.white,
             offset: Offset(0, 40),

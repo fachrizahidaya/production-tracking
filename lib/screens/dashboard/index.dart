@@ -1,10 +1,14 @@
 // ignore_for_file: use_build_context_synchronously, prefer_final_fields, control_flow_in_finally
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/components/home/dashboard/filter/process_filter.dart';
 import 'package:textile_tracking/components/home/dashboard/filter/summary_filter.dart';
 import 'package:textile_tracking/components/home/dashboard/machine/active_machine.dart';
@@ -21,22 +25,28 @@ import 'package:textile_tracking/models/dashboard/work_order_summary.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 
 class Dashboard extends StatefulWidget {
-  final bool showProcessSummary;
-  final bool showMachineStatus;
-  final bool showWorkOrderList;
-
-  const Dashboard({
-    super.key,
-    this.showProcessSummary = true,
-    this.showMachineStatus = true,
-    this.showWorkOrderList = true,
-  });
+  const Dashboard({super.key});
 
   @override
   State<Dashboard> createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
+  static const Set<String> _supportedDashboardWidgets = {
+    'process_summary',
+    'machine_status',
+    'wo_list',
+  };
+
+  final Map<String, bool> _dashboardWidgets = {
+    'process_summary': false,
+    'machine_status': false,
+    'wo_list': false,
+  };
+  List<Map<String, dynamic>> _dashboardWidgetOptions = [];
+  bool _isDashboardWidgetsLoading = true;
+  bool _isDashboardWidgetsUpdating = false;
+
   List<dynamic> statsList = [];
   List<dynamic> chartList = [];
   List<dynamic> pieList = [];
@@ -86,21 +96,181 @@ class _DashboardState extends State<Dashboard> {
     };
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchDashboardWidgets();
       if (mounted) {
         _loadDashboardData();
       }
     });
   }
 
+  Future<Map<String, String>> _getAuthHeaders() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    if (token == null) throw Exception('Unauthenticated');
+
+    return {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+  }
+
+  Future<void> _fetchDashboardWidgets() async {
+    if (mounted) setState(() => _isDashboardWidgetsLoading = true);
+
+    try {
+      final baseUrl = dotenv.env['API_URL'] ?? '';
+      final headers = await _getAuthHeaders();
+      final keysResponse = await http.get(
+        Uri.parse('$baseUrl/dashboard/widget-keys'),
+        headers: headers,
+      );
+      final widgetsResponse = await http.get(
+        Uri.parse('$baseUrl/dashboard/widgets'),
+        headers: headers,
+      );
+
+      if (keysResponse.statusCode != 200 || widgetsResponse.statusCode != 200) {
+        throw Exception('Gagal mengambil pengaturan widget dashboard');
+      }
+
+      final keyData = List<Map<String, dynamic>>.from(
+        jsonDecode(keysResponse.body)['data'] ?? [],
+      );
+      final widgetData = List<Map<String, dynamic>>.from(
+        jsonDecode(widgetsResponse.body)['data'] ?? [],
+      );
+      final visibilityByValue = {
+        for (final widget in widgetData)
+          widget['value']?.toString() ?? '': widget['is_visible'] == true,
+      };
+      final supportedOptions = keyData
+          .where((widget) => _supportedDashboardWidgets.contains(
+                widget['value']?.toString(),
+              ))
+          .toList();
+
+      if (!mounted) return;
+      setState(() {
+        _dashboardWidgetOptions = supportedOptions;
+        for (final option in supportedOptions) {
+          final value = option['value']?.toString();
+          if (value != null) {
+            _dashboardWidgets[value] = visibilityByValue[value] ?? false;
+          }
+        }
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isDashboardWidgetsLoading = false);
+    }
+  }
+
+  Future<void> _updateDashboardWidget(
+      String widgetValue, bool isVisible) async {
+    final baseUrl = dotenv.env['API_URL'] ?? '';
+    final response = await http.patch(
+      Uri.parse('$baseUrl/dashboard/widgets'),
+      headers: await _getAuthHeaders(),
+      body: jsonEncode({
+        'widgets': [
+          {'value': widgetValue, 'is_visible': isVisible},
+        ],
+      }),
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      dynamic responseData;
+      try {
+        responseData = jsonDecode(response.body);
+      } catch (_) {
+        responseData = null;
+      }
+      throw Exception(responseData is Map
+          ? responseData['message'] ?? 'Gagal mengubah widget dashboard'
+          : 'Gagal mengubah widget dashboard');
+    }
+  }
+
+  void _showDashboardWidgetSettings() {
+    if (_dashboardWidgetOptions.isEmpty) {
+      _fetchDashboardWidgets();
+      return;
+    }
+
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (modalContext) => StatefulBuilder(
+        builder: (modalContext, setModalState) => SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Widget Dashboard',
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('lg'),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ..._dashboardWidgetOptions.map((option) {
+                  final value = option['value']?.toString() ?? '';
+                  return SwitchListTile(
+                    title: Text(option['label']?.toString() ?? ''),
+                    value: _dashboardWidgets[value] ?? false,
+                    onChanged: _isDashboardWidgetsUpdating
+                        ? null
+                        : (isVisible) async {
+                            final previousValue =
+                                _dashboardWidgets[value] ?? false;
+                            setState(() {
+                              _dashboardWidgets[value] = isVisible;
+                              _isDashboardWidgetsUpdating = true;
+                            });
+                            setModalState(() {});
+                            try {
+                              await _updateDashboardWidget(value, isVisible);
+                            } catch (e) {
+                              if (!mounted) return;
+                              setState(() =>
+                                  _dashboardWidgets[value] = previousValue);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(e.toString())),
+                              );
+                            } finally {
+                              if (mounted) {
+                                setState(
+                                    () => _isDashboardWidgetsUpdating = false);
+                                if (modalContext.mounted) setModalState(() {});
+                              }
+                            }
+                          },
+                  );
+                }),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   bool get shouldHideActiveMachine {
     bool checkMenus(List<dynamic> menuList) {
       for (final menu in menuList) {
-        final name = (menu['name'] ?? '').toString().toLowerCase();
-
-        // if (name == 'sorting' || name == 'packing') {
-        //   return true;
-        // }
-
         final children = menu['children'];
 
         if (children != null && children is List && checkMenus(children)) {
@@ -397,21 +567,22 @@ class _DashboardState extends State<Dashboard> {
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: Color(0xFFf9fafc),
+        backgroundColor: const Color(0xFFf9fafc),
         body: SafeArea(
           child: RefreshIndicator(
             onRefresh: () async {
               await _loadDashboardData();
             },
             child: CustomScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverPadding(
                   padding: CustomTheme().padding('content'),
                   sliver: SliverList(
                       delegate: SliverChildListDelegate([
+                    _buildDashboardSettingsButton(),
                     WorkOrderStats(data: statsList, isFetching: isStatsLoading),
-                    if (widget.showProcessSummary)
+                    if (_dashboardWidgets['process_summary'] ?? false)
                       WorkOrderSummary(
                         data: summaryList,
                         greigeData: greigeSummaryList,
@@ -424,7 +595,8 @@ class _DashboardState extends State<Dashboard> {
                           params: summaryParams,
                         ),
                       ),
-                    if (widget.showMachineStatus && !shouldHideActiveMachine)
+                    if ((_dashboardWidgets['machine_status'] ?? false) &&
+                        !shouldHideActiveMachine)
                       ActiveMachine(
                         data: machineList,
                         available: machineList['available'],
@@ -433,7 +605,7 @@ class _DashboardState extends State<Dashboard> {
                         isFetching: isMachineLoading,
                         processNames: menuProcessNames,
                       ),
-                    if (widget.showWorkOrderList)
+                    if (_dashboardWidgets['wo_list'] ?? false)
                       WorkOrderProcessScreen(
                         data: _dataList,
                         search: _search,
@@ -462,6 +634,37 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDashboardSettingsButton() {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: _isDashboardWidgetsLoading ? null : _showDashboardWidgetSettings,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: CustomTheme().cardTheme(),
+        child: Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Widget Dashboard',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            _isDashboardWidgetsLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.dashboard_customize_outlined),
+          ],
         ),
       ),
     );

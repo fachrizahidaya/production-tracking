@@ -346,18 +346,20 @@ class ReportService {
 
     String? token = prefs.getString('access_token');
 
-    final uri = Uri.parse(
-      '$baseUrl/dyeing-rework-evaluations',
-    ).replace(
-      queryParameters: {
-        'start_date': startDateString,
-        'end_date': endDateString,
-        'sort': sort,
-        'page': page.toString(),
-        'per_page': perPage.toString(),
-        'search': search,
-        'status': status,
-      },
+    final queryParameters = <String, String>{
+      'start_date': startDateString,
+      'end_date': endDateString,
+      'sort': sort ?? '',
+      'page': page.toString(),
+      'per_page': perPage.toString(),
+      'search': search ?? '',
+    };
+    if (status != null && status.trim().isNotEmpty) {
+      queryParameters['status'] = status;
+    }
+
+    final uri = Uri.parse('$baseUrl/dyeing-rework-evaluations').replace(
+      queryParameters: queryParameters,
     );
 
     final response = await http.get(
@@ -373,6 +375,27 @@ class ReportService {
     }
 
     throw Exception('Failed to load sorting result : '
+        '${response.statusCode} ${response.body}');
+  }
+
+  Future<int> getReworkPendingCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final uri = Uri.parse('$baseUrl/dyeing-rework-evaluations/summary');
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body)['data'];
+      return int.tryParse(data?['pending']?.toString() ?? '') ?? 0;
+    }
+
+    throw Exception('Failed to load rework summary: '
         '${response.statusCode} ${response.body}');
   }
 

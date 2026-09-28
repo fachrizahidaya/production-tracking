@@ -21,7 +21,7 @@ class ReworkList extends StatefulWidget {
       this.endDate,
       this.sort = 'created_at',
       this.search = '',
-      this.status = 'all'});
+      this.status = ''});
 
   @override
   State<ReworkList> createState() => _ReworkListState();
@@ -43,6 +43,8 @@ class _ReworkListState extends State<ReworkList> {
   bool _loading = false;
   bool _loadingMore = false;
   bool _hasMore = false;
+  int? _pendingCount;
+  bool _pendingCountLoading = true;
   int _requestId = 0;
 
   @override
@@ -53,11 +55,12 @@ class _ReworkListState extends State<ReworkList> {
     _endDate = widget.endDate ?? DateTime(now.year, now.month, now.day);
     _sort = widget.sort;
     _search = widget.search;
-    _status = widget.status;
+    _status = widget.status.trim();
     _searchController.text = widget.search;
 
     _scrollController.addListener(_onScroll);
     _loadReworkList();
+    _loadPendingCount();
   }
 
   @override
@@ -136,6 +139,25 @@ class _ReworkListState extends State<ReworkList> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Gagal mengambil data rework: $e')),
       );
+    }
+  }
+
+  Future<void> _loadPendingCount() async {
+    if (mounted) {
+      setState(() => _pendingCountLoading = true);
+    }
+
+    try {
+      final count = await _reportService.getReworkPendingCount();
+      if (!mounted) return;
+      setState(() => _pendingCount = count);
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _pendingCount = null);
+    } finally {
+      if (mounted) {
+        setState(() => _pendingCountLoading = false);
+      }
     }
   }
 
@@ -308,6 +330,14 @@ class _ReworkListState extends State<ReworkList> {
       _sort = result['sort'] as String;
     });
     await _loadReworkList();
+    await _loadPendingCount();
+  }
+
+  Future<void> _refreshReworkList() async {
+    await Future.wait([
+      _loadReworkList(),
+      _loadPendingCount(),
+    ]);
   }
 
   @override
@@ -324,87 +354,167 @@ class _ReworkListState extends State<ReworkList> {
         children: [
           Container(
             color: Colors.white,
-            padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: Row(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+            child: Column(
               children: [
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    decoration: CustomTheme().cardTheme(),
-                    child: TextField(
-                      controller: _searchController,
-                      textInputAction: TextInputAction.search,
-                      decoration: InputDecoration(
-                        hintText: 'Cari...',
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: _searchController.text.isNotEmpty
-                            ? IconButton(
-                                onPressed: () async {
-                                  _searchController.clear();
-                                  setState(() {
-                                    _search = '';
-                                  });
-                                  await _loadReworkList();
-                                },
-                                icon: const Icon(Icons.close),
-                              )
-                            : null,
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.all(12),
-                      ),
-                      onChanged: (value) {
-                        setState(() {});
-                        _onSearchChanged(value);
-                      },
+                Container(
+                  decoration: CustomTheme().cardTheme(),
+                  child: TextField(
+                    controller: _searchController,
+                    textInputAction: TextInputAction.search,
+                    decoration: InputDecoration(
+                      hintText: 'Cari...',
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? IconButton(
+                              onPressed: () async {
+                                _searchController.clear();
+                                setState(() {
+                                  _search = '';
+                                });
+                                await _loadReworkList();
+                              },
+                              icon: const Icon(Icons.close),
+                            )
+                          : null,
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.all(12),
                     ),
+                    onChanged: (value) {
+                      setState(() {});
+                      _onSearchChanged(value);
+                    },
                   ),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: InkWell(
-                    onTap: _showFilter,
-                    child: Container(
-                      height: 51,
-                      decoration: CustomTheme().cardTheme(),
-                      padding: const EdgeInsets.all(12),
-                      child: const Icon(Icons.tune_outlined, size: 18),
-                    ),
-                  ),
-                ),
+                // const SizedBox(height: 12),
+                _buildStatusTabs(),
               ],
             ),
           ),
           Expanded(
-            child: _loading
-                ? Center(child: CircularProgressIndicator())
-                : _items.isEmpty
-                    ? NoData()
-                    : Padding(
-                        padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          physics: AlwaysScrollableScrollPhysics(),
-                          itemCount: _items.length + (_loadingMore ? 1 : 0),
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          itemBuilder: (context, index) {
-                            if (index >= _items.length) {
-                              return const Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            }
-
-                            return _buildReworkListCard(_items[index],
-                                isFirst: index == 0);
-                          },
+            child: RefreshIndicator(
+              onRefresh: _refreshReworkList,
+              child: _loading
+                  ? ListView(
+                      controller: _scrollController,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: const [
+                        SizedBox(
+                          height: 240,
+                          child: Center(child: CircularProgressIndicator()),
                         ),
-                      ),
+                      ],
+                    )
+                  : _items.isEmpty
+                      ? ListView(
+                          controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          children: const [
+                            SizedBox(
+                              height: 240,
+                              child: Center(child: NoData()),
+                            ),
+                          ],
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: _items.length + (_loadingMore ? 1 : 0),
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            itemBuilder: (context, index) {
+                              if (index >= _items.length) {
+                                return const Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              }
+
+                              return _buildReworkListCard(_items[index],
+                                  isFirst: index == 0);
+                            },
+                          ),
+                        ),
+            ),
           ),
           const SizedBox(height: 4),
         ],
       )),
+    );
+  }
+
+  Widget _buildStatusTabs() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+      child: SizedBox(
+        width: double.infinity,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              _buildStatusTab(
+                label: 'Menunggu',
+                status: 'Menunggu',
+                count: _pendingCountLoading ? null : _pendingCount,
+              ),
+              const SizedBox(width: 8),
+              _buildStatusTab(label: 'Semua', status: 'all'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusTab({
+    required String label,
+    required String status,
+    int? count,
+  }) {
+    final selected =
+        _status == status || (status == 'Menunggu' && _status.isEmpty);
+    final color = CustomTheme().colors('primary');
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(24),
+      onTap: selected
+          ? null
+          : () async {
+              setState(() => _status = status);
+              await _loadReworkList();
+            },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: selected ? color : Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                color: selected ? Colors.white : Colors.grey.shade700,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (count != null) ...[
+              const SizedBox(width: 6),
+              Text(
+                '($count)',
+                style: TextStyle(
+                  color: selected ? Colors.white : Colors.grey.shade700,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 
@@ -426,17 +536,6 @@ class _ReworkListState extends State<ReworkList> {
               children: [
                 Row(
                   children: [
-                    // Expanded(
-                    //   child: Text(
-                    //     _reworkNo(item),
-                    //     style: const TextStyle(
-                    //       color: Color(0xFF234393),
-                    //       fontSize: 18,
-                    //       fontWeight: FontWeight.w600,
-                    //     ),
-                    //   ),
-                    // ),
-                    // const SizedBox(width: 8),
                     _buildWorkOrderBadge(_workOrderNo(item)),
                   ],
                 ),
@@ -445,17 +544,17 @@ class _ReworkListState extends State<ReworkList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildReferenceLine(item),
-                    const SizedBox(height: 8),
-                    _buildLabelValue(
-                      'Kategori:',
-                      _categories(item),
-                      maxLines: 1,
-                    ),
+                    // const SizedBox(height: 8),
+                    // _buildLabelValue(
+                    //   'Kategori:',
+                    //   _categories(item),
+                    //   maxLines: 1,
+                    // ),
                     if (!_isWaitingStatus(status)) ...[
                       const SizedBox(height: 18),
                       _buildLabelValue('Diisi oleh:', _submittedBy(item)),
                     ],
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -482,21 +581,66 @@ class _ReworkListState extends State<ReworkList> {
   }
 
   Widget _buildReferenceLine(ReworkListItem item) {
-    return RichText(
-      text: TextSpan(
-        style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
-        children: [
-          TextSpan(
-            text: _dyeingNo(item),
-            style: const TextStyle(
-              color: Color(0xFF234393),
-              fontWeight: FontWeight.w600,
-            ),
+    return Column(
+      children: [
+        _buildReferenceItem(
+          icon: Icons.replay_outlined,
+          label: 'Rework Dyeing',
+          value: _dyeingNo(item),
+          valueColor: const Color(0xFF234393),
+        ),
+        const SizedBox(height: 12),
+        _buildReferenceItem(
+          icon: Icons.link_outlined,
+          label: 'Referensi Dyeing',
+          value: _reworkReferenceNo(item),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReferenceItem({
+    required IconData icon,
+    required String label,
+    required String value,
+    Color? valueColor,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          icon,
+          size: 19,
+          color: Colors.grey.shade500,
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: valueColor ?? const Color(0xFF3E3F49),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
-          const TextSpan(text: ' · dari '),
-          TextSpan(text: _reworkReferenceNo(item)),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -648,6 +792,7 @@ class _ReworkListState extends State<ReworkList> {
 
     if (updated == true && mounted) {
       await _loadReworkList();
+      await _loadPendingCount();
     }
   }
 
@@ -677,8 +822,8 @@ class _ReworkListState extends State<ReworkList> {
 
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 5,
+        horizontal: 8,
+        vertical: 4,
       ),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
@@ -687,7 +832,7 @@ class _ReworkListState extends State<ReworkList> {
       child: Text(
         woNo,
         style: const TextStyle(
-          fontSize: 12,
+          fontSize: 16,
           fontWeight: FontWeight.w600,
           color: color,
         ),
@@ -700,12 +845,10 @@ class _ReworkListState extends State<ReworkList> {
       case 'selesai':
       case 'completed':
         return Colors.green;
-      case 'diproses':
-      case 'in_progress':
-        return Colors.orange;
       case 'menunggu':
       case 'waiting':
-        return Colors.blue;
+        return Colors.orange;
+
       case 'dilewati':
       case 'skipped':
         return Colors.grey;

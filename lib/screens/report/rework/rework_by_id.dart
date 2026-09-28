@@ -15,8 +15,7 @@ class ReworkDetailLoadingScreen extends StatefulWidget {
       _ReworkDetailLoadingScreenState();
 }
 
-class _ReworkDetailLoadingScreenState
-    extends State<ReworkDetailLoadingScreen> {
+class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
   final ReportService _reportService = ReportService();
   Object? _error;
 
@@ -436,9 +435,9 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildWorkOrderBadge(_value('woNo')),
-          const SizedBox(height: 14),
+          const SizedBox(height: 12),
           _buildDyeingReferenceLine(),
-          const SizedBox(height: 28),
+          const SizedBox(height: 12),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -462,26 +461,66 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
   Widget _buildDyeingReferenceLine() {
-    final reference = _detailReferenceNo;
+    return Column(
+      children: [
+        _buildDyeingReferenceItem(
+          icon: Icons.replay_outlined,
+          label: 'Rework Dyeing',
+          value: _value('dyeingProcessNo'),
+          valueColor: const Color(0xFF234393),
+        ),
+        const SizedBox(height: 12),
+        _buildDyeingReferenceItem(
+          icon: Icons.link_outlined,
+          label: 'Referensi Dyeing',
+          value: _detailReferenceNo,
+        ),
+      ],
+    );
+  }
 
-    return RichText(
-      text: TextSpan(
-        style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
-        children: [
-          TextSpan(
-            text: _value('dyeingProcessNo'),
-            style: const TextStyle(
-              color: Color(0xFF234393),
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
+  Widget _buildDyeingReferenceItem({
+    required IconData icon,
+    required String label,
+    required String value,
+    Color? valueColor,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          icon,
+          size: 19,
+          color: Colors.grey.shade500,
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: valueColor ?? const Color(0xFF3E3F49),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
-          if (reference != '-') ...[
-            const TextSpan(text: ' · dari '),
-            TextSpan(text: reference),
-          ],
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -861,8 +900,8 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 14,
-        vertical: 8,
+        horizontal: 8,
+        vertical: 4,
       ),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
@@ -1007,6 +1046,7 @@ class _ReasonOptionSheet extends StatefulWidget {
 
 class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
   final TextEditingController _controller = TextEditingController();
+  String? _errorMessage;
 
   @override
   void dispose() {
@@ -1037,9 +1077,14 @@ class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
                 controller: _controller,
                 autofocus: true,
                 textInputAction: TextInputAction.done,
-                decoration: CustomTheme().inputDecoration(
-                  'Masukkan alasan rework',
-                ),
+                decoration: CustomTheme()
+                    .inputDecoration('Masukkan alasan rework')
+                    .copyWith(errorText: _errorMessage),
+                onChanged: (_) {
+                  if (_errorMessage != null) {
+                    setState(() => _errorMessage = null);
+                  }
+                },
               ),
               const SizedBox(height: 16),
               Row(
@@ -1053,10 +1098,16 @@ class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () => Navigator.pop(
-                        context,
-                        _controller.text.trim(),
-                      ),
+                      onPressed: () {
+                        final value = _controller.text.trim();
+                        if (value.length < 3) {
+                          setState(
+                            () => _errorMessage = 'Minimal 3 karakter',
+                          );
+                          return;
+                        }
+                        Navigator.pop(context, value);
+                      },
                       child: const Text('Tambah'),
                     ),
                   ),

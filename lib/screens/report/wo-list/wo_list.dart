@@ -115,6 +115,7 @@ class WoListComp extends StatelessWidget {
               height: loading || items.isEmpty ? 120 : listHeight,
               child: loading
 <<<<<<< HEAD
+<<<<<<< HEAD
                   ? const Center(child: CircularProgressIndicator())
                   : items.isEmpty
                       ? const NoData()
@@ -174,6 +175,46 @@ class WoListComp extends StatelessWidget {
                                 child: _buildWoListCard(items[index],
                                     isLast: index == items.length - 1));
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+                  ? const Center(child: CircularProgressIndicator())
+                  : items.isEmpty
+                      ? const NoData()
+                      : LayoutBuilder(
+                          builder: (context, constraints) {
+                            final cardWidth = (constraints.maxWidth * 0.8)
+                                .clamp(260.0, 300.0)
+                                .toDouble();
+
+                            return ScrollConfiguration(
+                              behavior: ScrollConfiguration.of(context)
+                                  .copyWith(scrollbars: false),
+                              child: ListView.builder(
+                                controller: scrollController,
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemCount: items.length + (loadingMore ? 1 : 0),
+                                padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  if (index >= items.length) {
+                                    return SizedBox(
+                                      width: cardWidth,
+                                      child: const Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    );
+                                  }
+
+                                  return SizedBox(
+                                    width: cardWidth,
+                                    child: _buildWoListCard(
+                                      items[index],
+                                      isLast: index == items.length - 1,
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+>>>>>>> 2261585c (fix: report axis horizontal)
                           },
                         ),
             ),

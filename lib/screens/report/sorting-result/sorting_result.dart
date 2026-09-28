@@ -134,25 +134,37 @@ class _SortingResultCompState extends State<SortingResultComp> {
                     widget.loading || widget.items.isEmpty ? 120 : listHeight,
                 child: widget.loading
 <<<<<<< HEAD
+<<<<<<< HEAD
                     ? const Center(
 =======
                     ? Center(
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+                    ? const Center(
+>>>>>>> 2261585c (fix: report axis horizontal)
                         child: CircularProgressIndicator(),
                       )
                     : widget.items.isEmpty
                         ? NoData()
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2261585c (fix: report axis horizontal)
                         : LayoutBuilder(
                             builder: (context, constraints) {
                               // Keep the next card partially visible so the
                               // horizontal scrolling behavior is discoverable.
+<<<<<<< HEAD
                               final cardWidth = (constraints.maxWidth *
                                       (isTablet ? 0.65 : 0.8))
                                   .clamp(
                                     isTablet ? 440.0 : 260.0,
                                     isTablet ? 520.0 : 300.0,
                                   )
+=======
+                              final cardWidth = (constraints.maxWidth * 0.8)
+                                  .clamp(260.0, 300.0)
+>>>>>>> 2261585c (fix: report axis horizontal)
                                   .toDouble();
 
                               return ListView.builder(
@@ -170,6 +182,7 @@ class _SortingResultCompState extends State<SortingResultComp> {
                                     ),
                                   );
                                 },
+<<<<<<< HEAD
 =======
                         : ListView.builder(
                             controller: widget.scrollController,
@@ -184,6 +197,8 @@ class _SortingResultCompState extends State<SortingResultComp> {
                                     widget.items[index],
                                     isLast: index == widget.items?.length - 1),
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+>>>>>>> 2261585c (fix: report axis horizontal)
                               );
                             },
                           ),
@@ -256,9 +271,13 @@ class _SortingResultCompState extends State<SortingResultComp> {
                   ),
                 ),
 <<<<<<< HEAD
+<<<<<<< HEAD
                 const SizedBox(width: 12),
 =======
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+                const SizedBox(width: 12),
+>>>>>>> 2261585c (fix: report axis horizontal)
                 Expanded(
                   child: _buildSortingInfo(
                     'Selisih',

@@ -95,14 +95,19 @@ class SpkListComp extends StatelessWidget {
               height: loading || items.isEmpty ? 120 : listHeight,
               child: loading
 <<<<<<< HEAD
+<<<<<<< HEAD
                   ? const Center(
 =======
                   ? Center(
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+                  ? const Center(
+>>>>>>> 2261585c (fix: report axis horizontal)
                       child: CircularProgressIndicator(),
                     )
                   : items.isEmpty
                       ? NoData()
+<<<<<<< HEAD
 <<<<<<< HEAD
                       : LayoutBuilder(
                           builder: (context, constraints) {
@@ -113,6 +118,13 @@ class SpkListComp extends StatelessWidget {
                                       isTablet ? 520.0 : 300.0,
                                     )
                                     .toDouble();
+=======
+                      : LayoutBuilder(
+                          builder: (context, constraints) {
+                            final cardWidth = (constraints.maxWidth * 0.8)
+                                .clamp(260.0, 300.0)
+                                .toDouble();
+>>>>>>> 2261585c (fix: report axis horizontal)
 
                             return ScrollConfiguration(
                               behavior: ScrollConfiguration.of(context)
@@ -137,13 +149,17 @@ class SpkListComp extends StatelessWidget {
                                     width: cardWidth,
                                     child: _buildSpkListCard(
                                       items[index],
+<<<<<<< HEAD
                                       isTablet: isTablet,
+=======
+>>>>>>> 2261585c (fix: report axis horizontal)
                                       isLast: index == items.length - 1,
                                     ),
                                   );
                                 },
                               ),
                             );
+<<<<<<< HEAD
 =======
                       : ListView.builder(
                           controller: scrollController,
@@ -157,6 +173,8 @@ class SpkListComp extends StatelessWidget {
                                 child: _buildSpkListCard(items[index],
                                     isLast: index == items.length - 1));
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+>>>>>>> 2261585c (fix: report axis horizontal)
                           },
                         ),
             ),

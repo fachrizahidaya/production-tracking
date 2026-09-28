@@ -19,7 +19,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // Data is processed when the user taps the notification.
 }
 
-class FcmService {
+class FcmService with WidgetsBindingObserver {
   static final FcmService instance = FcmService._();
   FcmService._();
 
@@ -50,11 +50,25 @@ class FcmService {
 
       _messaging.onTokenRefresh.listen((_) => registerForCurrentUser());
       _initialized = true;
+      WidgetsBinding.instance.addObserver(this);
+      await clearNotifications();
     } catch (error) {
       // Firebase configuration is supplied per environment. Keep the app usable
       // on builds that do not yet contain the native Firebase config files.
       debugPrint('FCM initialization failed: $error');
     }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      clearNotifications();
+    }
+  }
+
+  Future<void> clearNotifications() async {
+    if (!_initialized) return;
+    await _localNotifications.cancelAll();
   }
 
   Future<void> _initializeLocalNotifications() async {
@@ -129,8 +143,6 @@ class FcmService {
     if (accessToken == null || accessToken.isEmpty) return;
 
     final token = await _messaging.getToken();
-    print('token: $token');
-    debugPrint('FCM token received: ${token == null ? 'null' : 'available'}');
     if (token == null || token.isEmpty) return;
 
     final deviceId = await _getDeviceId();
@@ -148,7 +160,6 @@ class FcmService {
         'device_id': deviceId,
       }),
     );
-    debugPrint('FCM registration response: ${response.statusCode}');
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       await prefs.setString('fcm_token', token);

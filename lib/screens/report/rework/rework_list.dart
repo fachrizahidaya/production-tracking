@@ -990,6 +990,8 @@ class _ReworkListState extends State<ReworkList> {
   }
 
   Widget _buildStatusBadge(String status) {
+    final backgroundColor = _getStatusColor(status);
+
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
@@ -1049,6 +1051,19 @@ class _ReworkListState extends State<ReworkList> {
         return Colors.grey;
       default:
         return Colors.grey;
+    }
+  }
+
+  Color _getStatusTextColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFF15803D);
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFA16207);
+      default:
+        return _getStatusColor(status);
     }
   }
 }

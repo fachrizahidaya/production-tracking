@@ -27,6 +27,7 @@ import 'package:textile_tracking/screens/auth/user_menu.dart';
 class Dashboard extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   final bool isMobile;
   final Future<void> Function()? onRefreshReworkNotifications;
 
@@ -57,6 +58,9 @@ class Dashboard extends StatefulWidget {
     this.showWorkOrderList = true,
 >>>>>>> 5e1b7ecb (fix: dashboard)
   });
+=======
+  const Dashboard({super.key});
+>>>>>>> 1155687b (fix: widget dashboard)
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -189,6 +193,7 @@ class _DashboardState extends State<Dashboard> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       if (!mounted) return;
 
       setState(() {
@@ -204,6 +209,9 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+      _fetchDashboardWidgets();
+>>>>>>> 1155687b (fix: widget dashboard)
       if (mounted) {
         _loadDashboardData();
       }
@@ -403,9 +411,175 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
   }
 
+  Future<Map<String, String>> _getAuthHeaders() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    if (token == null) throw Exception('Unauthenticated');
+
+    return {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+  }
+
+  Future<void> _fetchDashboardWidgets() async {
+    if (mounted) setState(() => _isDashboardWidgetsLoading = true);
+
+    try {
+      final baseUrl = dotenv.env['API_URL'] ?? '';
+      final headers = await _getAuthHeaders();
+      final keysResponse = await http.get(
+        Uri.parse('$baseUrl/dashboard/widget-keys'),
+        headers: headers,
+      );
+      final widgetsResponse = await http.get(
+        Uri.parse('$baseUrl/dashboard/widgets'),
+        headers: headers,
+      );
+
+      if (keysResponse.statusCode != 200 || widgetsResponse.statusCode != 200) {
+        throw Exception('Gagal mengambil pengaturan widget dashboard');
+      }
+
+      final keyData = List<Map<String, dynamic>>.from(
+        jsonDecode(keysResponse.body)['data'] ?? [],
+      );
+      final widgetData = List<Map<String, dynamic>>.from(
+        jsonDecode(widgetsResponse.body)['data'] ?? [],
+      );
+      final visibilityByValue = {
+        for (final widget in widgetData)
+          widget['value']?.toString() ?? '': widget['is_visible'] == true,
+      };
+      final supportedOptions = keyData
+          .where((widget) => _supportedDashboardWidgets.contains(
+                widget['value']?.toString(),
+              ))
+          .toList();
+
+      if (!mounted) return;
+      setState(() {
+        _dashboardWidgetOptions = supportedOptions;
+        for (final option in supportedOptions) {
+          final value = option['value']?.toString();
+          if (value != null) {
+            _dashboardWidgets[value] = visibilityByValue[value] ?? false;
+          }
+        }
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isDashboardWidgetsLoading = false);
+    }
+  }
+
+  Future<void> _updateDashboardWidget(
+      String widgetValue, bool isVisible) async {
+    final baseUrl = dotenv.env['API_URL'] ?? '';
+    final response = await http.patch(
+      Uri.parse('$baseUrl/dashboard/widgets'),
+      headers: await _getAuthHeaders(),
+      body: jsonEncode({
+        'widgets': [
+          {'value': widgetValue, 'is_visible': isVisible},
+        ],
+      }),
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      dynamic responseData;
+      try {
+        responseData = jsonDecode(response.body);
+      } catch (_) {
+        responseData = null;
+      }
+      throw Exception(responseData is Map
+          ? responseData['message'] ?? 'Gagal mengubah widget dashboard'
+          : 'Gagal mengubah widget dashboard');
+    }
+  }
+
+  void _showDashboardWidgetSettings() {
+    if (_dashboardWidgetOptions.isEmpty) {
+      _fetchDashboardWidgets();
+      return;
+    }
+
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (modalContext) => StatefulBuilder(
+        builder: (modalContext, setModalState) => SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Widget Dashboard',
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('lg'),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ..._dashboardWidgetOptions.map((option) {
+                  final value = option['value']?.toString() ?? '';
+                  return SwitchListTile(
+                    title: Text(option['label']?.toString() ?? ''),
+                    value: _dashboardWidgets[value] ?? false,
+                    onChanged: _isDashboardWidgetsUpdating
+                        ? null
+                        : (isVisible) async {
+                            final previousValue =
+                                _dashboardWidgets[value] ?? false;
+                            setState(() {
+                              _dashboardWidgets[value] = isVisible;
+                              _isDashboardWidgetsUpdating = true;
+                            });
+                            setModalState(() {});
+                            try {
+                              await _updateDashboardWidget(value, isVisible);
+                            } catch (e) {
+                              if (!mounted) return;
+                              setState(() =>
+                                  _dashboardWidgets[value] = previousValue);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(e.toString())),
+                              );
+                            } finally {
+                              if (mounted) {
+                                setState(
+                                    () => _isDashboardWidgetsUpdating = false);
+                                if (modalContext.mounted) setModalState(() {});
+                              }
+                            }
+                          },
+                  );
+                }),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   bool get shouldHideActiveMachine {
     bool checkMenus(List<dynamic> menuList) {
       for (final menu in menuList) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
         final name = (menu['name'] ?? '').toString().toLowerCase();
@@ -415,6 +589,8 @@ class _DashboardState extends State<Dashboard> {
         // }
 
 >>>>>>> 6a9e309 (fix: show machine)
+=======
+>>>>>>> 1155687b (fix: widget dashboard)
         final children = menu['children'];
 
         if (children != null && children is List && checkMenus(children)) {
@@ -1197,8 +1373,9 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> e29a2ffd (fix: UI dashboard)
                   sliver: SliverList(
                       delegate: SliverChildListDelegate([
+                    _buildDashboardSettingsButton(),
                     WorkOrderStats(data: statsList, isFetching: isStatsLoading),
-                    if (widget.showProcessSummary)
+                    if (_dashboardWidgets['process_summary'] ?? false)
                       WorkOrderSummary(
                         data: summaryList,
                         greigeData: greigeSummaryList,
@@ -1211,6 +1388,7 @@ class _DashboardState extends State<Dashboard> {
                           params: summaryParams,
                         ),
                       ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 0f73a2e7 (fix: UI dashboard)
@@ -1226,6 +1404,10 @@ class _DashboardState extends State<Dashboard> {
 =======
                     if (widget.showMachineStatus && !shouldHideActiveMachine)
 >>>>>>> 5e1b7ecb (fix: dashboard)
+=======
+                    if ((_dashboardWidgets['machine_status'] ?? false) &&
+                        !shouldHideActiveMachine)
+>>>>>>> 1155687b (fix: widget dashboard)
                       ActiveMachine(
                         data: machineList,
                         available: machineList['available'],
@@ -1234,7 +1416,7 @@ class _DashboardState extends State<Dashboard> {
                         isFetching: isMachineLoading,
                         processNames: menuProcessNames,
                       ),
-                    if (widget.showWorkOrderList)
+                    if (_dashboardWidgets['wo_list'] ?? false)
                       WorkOrderProcessScreen(
                         data: _dataList,
                         search: _search,
@@ -1269,6 +1451,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buildDashboardSettingsButton() {
+<<<<<<< HEAD
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: InkWell(
@@ -1294,6 +1477,33 @@ class _DashboardState extends State<Dashboard> {
                   : Icon(Icons.dashboard_customize_outlined),
             ],
           ),
+=======
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: _isDashboardWidgetsLoading ? null : _showDashboardWidgetSettings,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: CustomTheme().cardTheme(),
+        child: Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Widget Dashboard',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            _isDashboardWidgetsLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.dashboard_customize_outlined),
+          ],
+>>>>>>> 1155687b (fix: widget dashboard)
         ),
       ),
     );

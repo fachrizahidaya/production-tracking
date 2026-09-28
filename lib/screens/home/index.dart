@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,9 +13,13 @@ import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/layout/app_layout.dart';
 import 'package:textile_tracking/screens/dashboard/index.dart';
 import 'package:textile_tracking/services/fcm_service.dart';
+=======
+import 'package:textile_tracking/screens/dashboard/index.dart';
+>>>>>>> 1155687b (fix: widget dashboard)
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -29,6 +31,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   static const Set<String> _supportedDashboardWidgets = {
     'process_summary',
@@ -37,6 +40,8 @@ class _HomeState extends State<Home> {
   };
 
 >>>>>>> 5e1b7ecb (fix: dashboard)
+=======
+>>>>>>> 1155687b (fix: widget dashboard)
   String user = '';
   String name = '';
 <<<<<<< HEAD
@@ -49,6 +54,7 @@ class _HomeState extends State<Home> {
   late Future<String?> _tokenFuture;
 =======
   late Future<String?> _tokenFuture;
+<<<<<<< HEAD
   final Map<String, bool> _dashboardWidgets = {
     'process_summary': false,
     'machine_status': false,
@@ -61,6 +67,8 @@ class _HomeState extends State<Home> {
   bool _isDashboardWidgetsLoading = true;
   bool _isDashboardWidgetsUpdating = false;
 >>>>>>> 5e1b7ecb (fix: dashboard)
+=======
+>>>>>>> 1155687b (fix: widget dashboard)
 
   @override
   void initState() {
@@ -79,6 +87,7 @@ class _HomeState extends State<Home> {
       user = loggedInUser?.username ?? '';
       name = loggedInUser?.name ?? '';
     });
+<<<<<<< HEAD
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
 <<<<<<< HEAD
@@ -551,6 +560,8 @@ class _HomeState extends State<Home> {
         );
       },
     );
+=======
+>>>>>>> 1155687b (fix: widget dashboard)
   }
 
   Future<void> _handleExit(
@@ -762,6 +773,7 @@ class _HomeState extends State<Home> {
 =======
               showNameWithAvatar: true,
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
 =======
               showNameWithAvatar: true,
@@ -774,18 +786,15 @@ class _HomeState extends State<Home> {
 =======
               onDashboardSettings: _showDashboardWidgetSettings,
               isDashboardSettingsLoading: _isDashboardWidgetsLoading,
+=======
+>>>>>>> 1155687b (fix: widget dashboard)
             ),
             drawer: AppDrawer(
               handleLogout: () => _handleLogout(context),
               handleFetchMenu: () => _handleFetchMenu(),
             ),
             body: SafeArea(
-              child: Dashboard(
-                showProcessSummary:
-                    _dashboardWidgets['process_summary'] ?? false,
-                showMachineStatus: _dashboardWidgets['machine_status'] ?? false,
-                showWorkOrderList: _dashboardWidgets['wo_list'] ?? false,
-              ),
+              child: Dashboard(),
             ),
           );
         });

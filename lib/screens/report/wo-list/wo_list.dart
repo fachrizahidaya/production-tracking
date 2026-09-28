@@ -439,7 +439,7 @@ class WoListComp extends StatelessWidget {
             SizedBox(
               height: loading || items.isEmpty ? 120 : listHeight,
               child: loading
-                  ? Center(child: CircularProgressIndicator())
+                  ? const Center(child: CircularProgressIndicator())
                   : items.isEmpty
                       ? const NoData()
                       : LayoutBuilder(

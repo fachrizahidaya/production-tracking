@@ -110,6 +110,7 @@ class SpkListComp extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                   ? const Center(
 =======
                   ? Center(
@@ -120,10 +121,14 @@ class SpkListComp extends StatelessWidget {
 =======
                   ? Center(
 >>>>>>> 1d5490b7 (feat: spk)
+=======
+                  ? const Center(
+>>>>>>> 14df3077 (fix: report)
                       child: CircularProgressIndicator(),
                     )
                   : items.isEmpty
                       ? NoData()
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -153,6 +158,13 @@ class SpkListComp extends StatelessWidget {
                                     )
                                     .toDouble();
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
+=======
+                      : LayoutBuilder(
+                          builder: (context, constraints) {
+                            final cardWidth = (constraints.maxWidth * 0.8)
+                                .clamp(260.0, 300.0)
+                                .toDouble();
+>>>>>>> 14df3077 (fix: report)
 
                             return ScrollConfiguration(
                               behavior: ScrollConfiguration.of(context)
@@ -179,18 +191,22 @@ class SpkListComp extends StatelessWidget {
                                       items[index],
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                       isTablet: isTablet,
 =======
 >>>>>>> 2261585c (fix: report axis horizontal)
 =======
                                       isTablet: isTablet,
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
+=======
+>>>>>>> 14df3077 (fix: report)
                                       isLast: index == items.length - 1,
                                     ),
                                   );
                                 },
                               ),
                             );
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 =======
@@ -219,6 +235,8 @@ class SpkListComp extends StatelessWidget {
                                 child: _buildSpkListCard(items[index],
                                     isLast: index == items.length - 1));
 >>>>>>> 1d5490b7 (feat: spk)
+=======
+>>>>>>> 14df3077 (fix: report)
                           },
                         ),
             ),

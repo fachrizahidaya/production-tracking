@@ -45,8 +45,11 @@ class SortingDetailComp extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 2261585c (fix: report axis horizontal)
+=======
+>>>>>>> 14df3077 (fix: report)
                   // const SizedBox(width: 8),
                   // Expanded(
                   //   child: InkWell(
@@ -58,6 +61,7 @@ class SortingDetailComp extends StatelessWidget {
                   //     ),
                   //   ),
                   // ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 =======
@@ -79,6 +83,8 @@ class SortingDetailComp extends StatelessWidget {
 >>>>>>> 2261585c (fix: report axis horizontal)
 =======
 >>>>>>> 65038198 (feat:)
+=======
+>>>>>>> 14df3077 (fix: report)
                 ],
               ),
             ),

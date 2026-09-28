@@ -89,22 +89,46 @@ class SpkListComp extends StatelessWidget {
             SizedBox(
               height: loading || items.isEmpty ? 120 : listHeight,
               child: loading
-                  ? Center(
+                  ? const Center(
                       child: CircularProgressIndicator(),
                     )
                   : items.isEmpty
                       ? NoData()
-                      : ListView.builder(
-                          controller: scrollController,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          itemCount: items.length + (loadingMore ? 1 : 0),
-                          padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return SizedBox(
-                                width: 360,
-                                child: _buildSpkListCard(items[index],
-                                    isLast: index == items.length - 1));
+                      : LayoutBuilder(
+                          builder: (context, constraints) {
+                            final cardWidth = (constraints.maxWidth * 0.8)
+                                .clamp(260.0, 300.0)
+                                .toDouble();
+
+                            return ScrollConfiguration(
+                              behavior: ScrollConfiguration.of(context)
+                                  .copyWith(scrollbars: false),
+                              child: ListView.builder(
+                                controller: scrollController,
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemCount: items.length + (loadingMore ? 1 : 0),
+                                padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  if (index >= items.length) {
+                                    return SizedBox(
+                                      width: cardWidth,
+                                      child: const Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    );
+                                  }
+
+                                  return SizedBox(
+                                    width: cardWidth,
+                                    child: _buildSpkListCard(
+                                      items[index],
+                                      isLast: index == items.length - 1,
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
                           },
                         ),
             ),

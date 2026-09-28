@@ -26,6 +26,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isWithAccount;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
 =======
   final bool isWithNotification;
@@ -36,6 +37,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 >>>>>>> 9dacc402 (fix: responsive UI to mobile)
 =======
 >>>>>>> b1c3b09b (fix: user name di appbar)
+=======
+  final bool showAvatar;
+>>>>>>> aa863171 (fix: responsive UI to mobile)
   final bool showNameWithAvatar;
   final tab;
   final bool? canDelete;
@@ -114,10 +118,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.notificationTooltip = 'Evaluasi',
 >>>>>>> e2884b8b (fix: notification all evaluasi)
       this.isWithAccount = false,
-      this.showAvatar = true,
-      this.tab,
-      this.canDelete,
-      this.canUpdate,
       this.handleDelete,
       this.handleUpdate,
       this.id,
@@ -276,8 +276,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 9dacc402 (fix: responsive UI to mobile)
+=======
+>>>>>>> aa863171 (fix: responsive UI to mobile)
                   if (showAvatar)
                     CircleAvatar(
                       radius: 16,
@@ -289,6 +292,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           fontWeight: FontWeight.bold,
                           fontSize: CustomTheme().fontSize('sm'),
                         ),
+<<<<<<< HEAD
 <<<<<<< HEAD
                       ),
                     )
@@ -333,6 +337,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ),
 >>>>>>> b1c3b09b (fix: user name di appbar)
+=======
+                      ),
+                    )
+                  else
+                    const Icon(Icons.account_circle_outlined),
+>>>>>>> aa863171 (fix: responsive UI to mobile)
                 ].separatedBy(CustomTheme().hGap('xl'))),
             color: Colors.white,
             offset: Offset(0, 40),

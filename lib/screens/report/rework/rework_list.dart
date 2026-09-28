@@ -66,9 +66,6 @@ class _ReworkListState extends State<ReworkList> {
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
     _searchController.text = widget.search;
-
-    _scrollController.addListener(_onScroll);
-    _loadReworkList();
     _loadPendingCount();
   }
 

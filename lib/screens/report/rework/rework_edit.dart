@@ -46,6 +46,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   int _visibleStep = 1;
   List<Map<String, dynamic>> _reasonOptions = [];
   List<Map<String, dynamic>> _selectedReasons = [];
+  int _editStep = 0;
 
   String get _draftType => 'rework';
     final reasons = widget.data['reasons'];
@@ -525,12 +526,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     }
   }
 
-  bool get _canSave {
-    return _selectedReasons.isNotEmpty &&
-        _actionPlanController.text.trim().isNotEmpty &&
-        _preventivePlanController.text.trim().isNotEmpty;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -660,6 +655,10 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
               label: const Text('Tambah alasan baru'),
             ),
           ),
+          if (footer != null) ...[
+            const SizedBox(height: 8),
+            footer,
+          ],
         ],
       ),
     );
@@ -718,15 +717,24 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   Widget _buildEditorForm({
     required String label,
     required TextEditingController controller,
+    Widget? footer,
   }) {
     return _buildFormCard(
       label: label,
-      child: TextField(
-        controller: controller,
-        minLines: 6,
-        maxLines: 12,
-        decoration: CustomTheme().inputDecoration('Masukkan $label'),
-        onChanged: (_) => setState(() {}),
+      child: Column(
+        children: [
+          TextField(
+            controller: controller,
+            minLines: 6,
+            maxLines: 12,
+            decoration: CustomTheme().inputDecoration('Masukkan $label'),
+            onChanged: (_) => setState(() {}),
+          ),
+          if (footer != null) ...[
+            const SizedBox(height: 16),
+            footer,
+          ],
+        ],
       ),
     );
   }
@@ -741,6 +749,7 @@ class _EditReasonOptionSheet extends StatefulWidget {
 
 class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
   final TextEditingController _controller = TextEditingController();
+  String? _errorMessage;
 
   @override
   void dispose() {
@@ -774,7 +783,12 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
                 decoration: const InputDecoration(
                   hintText: 'Masukkan alasan rework',
                   border: OutlineInputBorder(),
-                ),
+                ).copyWith(errorText: _errorMessage),
+                onChanged: (_) {
+                  if (_errorMessage != null) {
+                    setState(() => _errorMessage = null);
+                  }
+                },
               ),
               const SizedBox(height: 16),
               Row(
@@ -788,10 +802,16 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () => Navigator.pop(
-                        context,
-                        _controller.text.trim(),
-                      ),
+                      onPressed: () {
+                        final value = _controller.text.trim();
+                        if (value.length < 3) {
+                          setState(
+                            () => _errorMessage = 'Minimal 3 karakter',
+                          );
+                          return;
+                        }
+                        Navigator.pop(context, value);
+                      },
                       child: const Text('Tambah'),
                     ),
                   ),

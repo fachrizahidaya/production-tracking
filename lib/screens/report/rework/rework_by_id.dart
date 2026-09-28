@@ -841,8 +841,8 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 14,
-        vertical: 8,
+        horizontal: 8,
+        vertical: 4,
       ),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
@@ -1089,6 +1089,7 @@ class _ReasonOptionSheet extends StatefulWidget {
 
 class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
   final TextEditingController _controller = TextEditingController();
+  String? _errorMessage;
 
   @override
   void dispose() {
@@ -1119,9 +1120,14 @@ class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
                 controller: _controller,
                 autofocus: true,
                 textInputAction: TextInputAction.done,
-                decoration: CustomTheme().inputDecoration(
-                  'Masukkan alasan rework',
-                ),
+                decoration: CustomTheme()
+                    .inputDecoration('Masukkan alasan rework')
+                    .copyWith(errorText: _errorMessage),
+                onChanged: (_) {
+                  if (_errorMessage != null) {
+                    setState(() => _errorMessage = null);
+                  }
+                },
               ),
               const SizedBox(height: 16),
               Row(
@@ -1135,10 +1141,16 @@ class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () => Navigator.pop(
-                        context,
-                        _controller.text.trim(),
-                      ),
+                      onPressed: () {
+                        final value = _controller.text.trim();
+                        if (value.length < 3) {
+                          setState(
+                            () => _errorMessage = 'Minimal 3 karakter',
+                          );
+                          return;
+                        }
+                        Navigator.pop(context, value);
+                      },
                       child: const Text('Tambah'),
                     ),
                   ),

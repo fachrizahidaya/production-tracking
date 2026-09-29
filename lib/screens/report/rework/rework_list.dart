@@ -101,8 +101,13 @@ class _ReworkListState extends State<ReworkList> {
 >>>>>>> 41ded02d (fix: rework)
 =======
   int? _pendingCount;
+  int? _completedCount;
   bool _pendingCountLoading = true;
+<<<<<<< HEAD
 >>>>>>> fcd6e08b (fix: rework)
+=======
+  bool _completedCountLoading = true;
+>>>>>>> 24896cd5 (fix: rework)
   int _requestId = 0;
 
   @override
@@ -262,20 +267,36 @@ class _ReworkListState extends State<ReworkList> {
 =======
   Future<void> _loadPendingCount() async {
     if (mounted) {
-      setState(() => _pendingCountLoading = true);
+      setState(() {
+        _pendingCountLoading = true;
+        _completedCountLoading = true;
+      });
     }
 
     try {
-      final count = await _reportService.getReworkPendingCount();
+      final counts = await _reportService.getReworkStatusCounts();
       if (!mounted) return;
-      setState(() => _pendingCount = count);
+      setState(() {
+        _pendingCount = counts['pending'];
+        _completedCount = counts['completed'];
+      });
     } catch (_) {
       if (!mounted) return;
-      setState(() => _pendingCount = null);
+      setState(() {
+        _pendingCount = null;
+        _completedCount = null;
+      });
     } finally {
       if (mounted) {
+<<<<<<< HEAD
         setState(() => _pendingCountLoading = false);
 >>>>>>> fcd6e08b (fix: rework)
+=======
+        setState(() {
+          _pendingCountLoading = false;
+          _completedCountLoading = false;
+        });
+>>>>>>> 24896cd5 (fix: rework)
       }
     }
   }
@@ -787,6 +808,7 @@ class _ReworkListState extends State<ReworkList> {
               const SizedBox(width: 8),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
               _buildStatusTab(
                 label: 'Direview',
                 status: 'Direview',
@@ -846,6 +868,13 @@ class _ReworkListState extends State<ReworkList> {
 =======
 =======
               _buildStatusTab(label: 'Selesai', status: 'Selesai'),
+=======
+              _buildStatusTab(
+                label: 'Selesai',
+                status: 'Selesai',
+                count: _completedCountLoading ? null : _completedCount,
+              ),
+>>>>>>> 24896cd5 (fix: rework)
               const SizedBox(width: 8),
 >>>>>>> f248a3d8 (fix: rework)
               _buildStatusTab(label: 'Semua', status: 'all'),
@@ -983,10 +1012,24 @@ class _ReworkListState extends State<ReworkList> {
 =======
                 Row(
                   children: [
-                    _buildWorkOrderBadge(_workOrderNo(item)),
+                    Expanded(
+                      child: Text(
+                        _workOrderNo(item),
+                        style: const TextStyle(
+                          color: Color(0xFF234393),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const Icon(
+                      Icons.chevron_right,
+                      color: Color(0xFF9AA1B2),
+                      size: 28,
+                    ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                Divider(height: 24, color: Colors.grey.shade300),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1378,12 +1421,12 @@ class _ReworkListState extends State<ReworkList> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
-          icon,
-          size: 19,
-          color: Colors.grey.shade500,
-        ),
-        const SizedBox(width: 10),
+        // Icon(
+        //   icon,
+        //   size: 19,
+        //   color: Colors.grey.shade500,
+        // ),
+        // const SizedBox(width: 10),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1822,29 +1865,6 @@ class _ReworkListState extends State<ReworkList> {
       case 'waiting':
         return const Color(0xFFFFFBEA);
 =======
-
-  Widget _buildWorkOrderBadge(String woNo) {
-    const color = Color(0xFF234393);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 4,
-      ),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        woNo,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: color,
-        ),
-      ),
-    );
-  }
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {

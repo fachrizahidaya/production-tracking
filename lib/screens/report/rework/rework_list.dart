@@ -44,7 +44,9 @@ class _ReworkListState extends State<ReworkList> {
   bool _loadingMore = false;
   bool _hasMore = false;
   int? _pendingCount;
+  int? _completedCount;
   bool _pendingCountLoading = true;
+  bool _completedCountLoading = true;
   int _requestId = 0;
 
   @override
@@ -144,19 +146,31 @@ class _ReworkListState extends State<ReworkList> {
 
   Future<void> _loadPendingCount() async {
     if (mounted) {
-      setState(() => _pendingCountLoading = true);
+      setState(() {
+        _pendingCountLoading = true;
+        _completedCountLoading = true;
+      });
     }
 
     try {
-      final count = await _reportService.getReworkPendingCount();
+      final counts = await _reportService.getReworkStatusCounts();
       if (!mounted) return;
-      setState(() => _pendingCount = count);
+      setState(() {
+        _pendingCount = counts['pending'];
+        _completedCount = counts['completed'];
+      });
     } catch (_) {
       if (!mounted) return;
-      setState(() => _pendingCount = null);
+      setState(() {
+        _pendingCount = null;
+        _completedCount = null;
+      });
     } finally {
       if (mounted) {
-        setState(() => _pendingCountLoading = false);
+        setState(() {
+          _pendingCountLoading = false;
+          _completedCountLoading = false;
+        });
       }
     }
   }
@@ -461,7 +475,11 @@ class _ReworkListState extends State<ReworkList> {
                 count: _pendingCountLoading ? null : _pendingCount,
               ),
               const SizedBox(width: 8),
-              _buildStatusTab(label: 'Selesai', status: 'Selesai'),
+              _buildStatusTab(
+                label: 'Selesai',
+                status: 'Selesai',
+                count: _completedCountLoading ? null : _completedCount,
+              ),
               const SizedBox(width: 8),
               _buildStatusTab(label: 'Semua', status: 'all'),
             ],
@@ -538,10 +556,24 @@ class _ReworkListState extends State<ReworkList> {
               children: [
                 Row(
                   children: [
-                    _buildWorkOrderBadge(_workOrderNo(item)),
+                    Expanded(
+                      child: Text(
+                        _workOrderNo(item),
+                        style: const TextStyle(
+                          color: Color(0xFF234393),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const Icon(
+                      Icons.chevron_right,
+                      color: Color(0xFF9AA1B2),
+                      size: 28,
+                    ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                Divider(height: 24, color: Colors.grey.shade300),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -610,12 +642,12 @@ class _ReworkListState extends State<ReworkList> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
-          icon,
-          size: 19,
-          color: Colors.grey.shade500,
-        ),
-        const SizedBox(width: 10),
+        // Icon(
+        //   icon,
+        //   size: 19,
+        //   color: Colors.grey.shade500,
+        // ),
+        // const SizedBox(width: 10),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -816,29 +848,6 @@ class _ReworkListState extends State<ReworkList> {
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: _getStatusTextColor(status),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWorkOrderBadge(String woNo) {
-    const color = Color(0xFF234393);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 4,
-      ),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        woNo,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: color,
         ),
       ),
     );

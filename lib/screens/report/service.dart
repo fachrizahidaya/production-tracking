@@ -379,6 +379,11 @@ class ReportService {
   }
 
   Future<int> getReworkPendingCount() async {
+    final counts = await getReworkStatusCounts();
+    return counts['pending'] ?? 0;
+  }
+
+  Future<Map<String, int>> getReworkStatusCounts() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
     final uri = Uri.parse('$baseUrl/dyeing-rework-evaluations/summary');
@@ -392,7 +397,16 @@ class ReportService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body)['data'];
-      return int.tryParse(data?['pending']?.toString() ?? '') ?? 0;
+      return {
+        'pending': int.tryParse(data?['pending']?.toString() ?? '') ?? 0,
+        'completed': int.tryParse(
+              data?['completed']?.toString() ??
+                  data?['complete']?.toString() ??
+                  data?['done']?.toString() ??
+                  '',
+            ) ??
+            0,
+      };
     }
 
     throw Exception('Failed to load rework summary: '

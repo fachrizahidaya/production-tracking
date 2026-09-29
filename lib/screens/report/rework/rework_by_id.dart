@@ -491,12 +491,12 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
-          icon,
-          size: 19,
-          color: Colors.grey.shade500,
-        ),
-        const SizedBox(width: 10),
+        // Icon(
+        //   icon,
+        //   size: 19,
+        //   color: Colors.grey.shade500,
+        // ),
+        // const SizedBox(width: 10),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

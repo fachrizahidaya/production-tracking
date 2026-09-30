@@ -49,6 +49,7 @@ class _HomeState extends State<Home> {
 <<<<<<< HEAD
 <<<<<<< HEAD
   int _reworkNotificationCount = 0;
+<<<<<<< HEAD
   int _bsNotificationCount = 0;
   int _gsmNotificationCount = 0;
   bool _canViewReworkEvaluation = false;
@@ -57,6 +58,9 @@ class _HomeState extends State<Home> {
 =======
   int _reworkNotificationCount = 0;
 >>>>>>> 9dacc402 (fix: responsive UI to mobile)
+=======
+  bool _canViewReworkEvaluation = false;
+>>>>>>> e30538ab (fix: notification dan evaluasi rework)
   late Future<String?> _tokenFuture;
 =======
   late Future<String?> _tokenFuture;
@@ -143,11 +147,50 @@ class _HomeState extends State<Home> {
 =======
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _fetchReworkNotificationCount();
+      _initializeMenuAccess();
     });
   }
 
+<<<<<<< HEAD
 >>>>>>> 9dacc402 (fix: responsive UI to mobile)
+=======
+  Future<void> _initializeMenuAccess() async {
+    final userMenu = UserMenu();
+    await userMenu.handleLoadMenu();
+
+    final canViewReworkEvaluation = _hasMobileMenu(
+      userMenu.menus,
+      'Evaluasi Rework',
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      _canViewReworkEvaluation = canViewReworkEvaluation;
+    });
+
+    if (canViewReworkEvaluation) {
+      await _fetchReworkNotificationCount();
+    }
+  }
+
+  bool _hasMobileMenu(List<dynamic> menus, String targetName) {
+    for (final menu in menus) {
+      final name = menu['name']?.toString().toLowerCase();
+      if (name == targetName.toLowerCase()) {
+        return menu['allow_mobile'] == true;
+      }
+
+      final children = menu['children'];
+      if (children is List && _hasMobileMenu(children, targetName)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+>>>>>>> e30538ab (fix: notification dan evaluasi rework)
   Future<void> _fetchReworkNotificationCount() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -741,11 +784,15 @@ class _HomeState extends State<Home> {
 >>>>>>> 5e1caa7c (feat: widget controller)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         final isMobile = AppLayout.resolveIsMobile(context);
 
         return AppLayout(
           isMobile: isMobile,
           child: PopScope(
+=======
+          return PopScope(
+>>>>>>> e30538ab (fix: notification dan evaluasi rework)
             canPop: false,
             onPopInvokedWithResult: (didPop, result) {
               if (!didPop) {
@@ -755,16 +802,30 @@ class _HomeState extends State<Home> {
             child: Scaffold(
               appBar: CustomAppBar(
                 title: 'TexTrack',
+<<<<<<< HEAD
                 isWithNotification: _hasEvaluationAccess,
                 notificationCount: _evaluationNotificationCount,
                 notificationTooltip: _singleEvaluationTooltip,
                 onNotifications: _onEvaluationNotificationsTap,
+=======
+                isWithNotification: _canViewReworkEvaluation,
+                reworkNotificationCount: _reworkNotificationCount,
+                onReworkNotifications: () {
+                  Navigator.pushNamed(context, '/dyeing-rework-evaluations');
+                },
+>>>>>>> e30538ab (fix: notification dan evaluasi rework)
                 handleLogout: () => _handleLogout(context),
                 isWithAccount: true,
                 user: user,
                 name: name,
+<<<<<<< HEAD
                 showAvatar: !isMobile,
                 showNameWithAvatar: !isMobile,
+=======
+                showAvatar: MediaQuery.sizeOf(context).shortestSide >= 600,
+                showNameWithAvatar:
+                    MediaQuery.sizeOf(context).shortestSide >= 600,
+>>>>>>> e30538ab (fix: notification dan evaluasi rework)
               ),
               drawer: AppDrawer(
                 handleLogout: () => _handleLogout(context),
@@ -772,6 +833,7 @@ class _HomeState extends State<Home> {
               ),
               body: SafeArea(
                 child: Dashboard(
+<<<<<<< HEAD
                   isMobile: isMobile,
                   onRefreshReworkNotifications: _refreshEvaluationNotifications,
                 ),
@@ -824,6 +886,10 @@ class _HomeState extends State<Home> {
             body: SafeArea(
               child: Dashboard(
                 onRefreshReworkNotifications: _fetchReworkNotificationCount,
+=======
+                  onRefreshReworkNotifications: _fetchReworkNotificationCount,
+                ),
+>>>>>>> e30538ab (fix: notification dan evaluasi rework)
               ),
             ),
           );

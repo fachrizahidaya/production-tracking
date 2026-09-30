@@ -32,10 +32,15 @@ class _HomeState extends State<Home> {
   String name = '';
   int _reworkNotificationCount = 0;
   int _bsNotificationCount = 0;
+<<<<<<< HEAD
   int _gsmNotificationCount = 0;
   bool _canViewReworkEvaluation = false;
   bool _canViewBsEvaluation = false;
   bool _canViewGsmEvaluation = false;
+=======
+  bool _canViewReworkEvaluation = false;
+  bool _canViewBsEvaluation = false;
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
   late Future<String?> _tokenFuture;
 
   @override
@@ -64,15 +69,25 @@ class _HomeState extends State<Home> {
       userMenu.menus,
       'Evaluasi Rework',
     );
+<<<<<<< HEAD
     final canViewBsEvaluation = _hasMobileMenu(userMenu.menus, 'Evaluasi BS');
     final canViewGsmEvaluation = _hasMobileMenu(userMenu.menus, 'Evaluasi GSM');
+=======
+    final canViewBsEvaluation = _hasMobileMenu(
+      userMenu.menus,
+      'Evaluasi BS',
+    );
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
 
     if (!mounted) return;
 
     setState(() {
       _canViewReworkEvaluation = canViewReworkEvaluation;
       _canViewBsEvaluation = canViewBsEvaluation;
+<<<<<<< HEAD
       _canViewGsmEvaluation = canViewGsmEvaluation;
+=======
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
     });
 
     await _refreshEvaluationNotifications();
@@ -144,6 +159,7 @@ class _HomeState extends State<Home> {
     }
   }
 
+<<<<<<< HEAD
   Future<void> _fetchGsmNotificationCount() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -169,6 +185,8 @@ class _HomeState extends State<Home> {
     }
   }
 
+=======
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
   Future<void> _refreshEvaluationNotifications() async {
     final futures = <Future>[];
     if (_canViewReworkEvaluation) {
@@ -177,14 +195,18 @@ class _HomeState extends State<Home> {
     if (_canViewBsEvaluation) {
       futures.add(_fetchBsNotificationCount());
     }
+<<<<<<< HEAD
     if (_canViewGsmEvaluation) {
       futures.add(_fetchGsmNotificationCount());
     }
+=======
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
     if (futures.isNotEmpty) {
       await Future.wait(futures);
     }
   }
 
+<<<<<<< HEAD
   int get _authorizedEvaluationCount {
     var count = 0;
     if (_canViewReworkEvaluation) count++;
@@ -394,6 +416,8 @@ class _HomeState extends State<Home> {
     );
   }
 
+=======
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
   Future<void> _handleExit(
     BuildContext context,
     ValueNotifier<bool> isLoading,
@@ -536,10 +560,23 @@ class _HomeState extends State<Home> {
             child: Scaffold(
               appBar: CustomAppBar(
                 title: 'TexTrack',
+<<<<<<< HEAD
                 isWithNotification: _hasEvaluationAccess,
                 notificationCount: _evaluationNotificationCount,
                 notificationTooltip: _singleEvaluationTooltip,
                 onNotifications: _onEvaluationNotificationsTap,
+=======
+                isWithNotification: _canViewReworkEvaluation,
+                reworkNotificationCount: _reworkNotificationCount,
+                onReworkNotifications: () {
+                  Navigator.pushNamed(context, '/dyeing-rework-evaluations');
+                },
+                isWithBsNotification: _canViewBsEvaluation,
+                bsNotificationCount: _bsNotificationCount,
+                onBsNotifications: () {
+                  Navigator.pushNamed(context, '/bs-evaluations');
+                },
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
                 handleLogout: () => _handleLogout(context),
                 isWithAccount: true,
                 user: user,
@@ -553,7 +590,10 @@ class _HomeState extends State<Home> {
               ),
               body: SafeArea(
                 child: Dashboard(
+<<<<<<< HEAD
                   isMobile: isMobile,
+=======
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
                   onRefreshReworkNotifications: _refreshEvaluationNotifications,
                 ),
               ),

@@ -8,9 +8,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onReturn;
   final List<Widget>? actions;
   final bool isWithNotification;
+<<<<<<< HEAD
   final int notificationCount;
   final VoidCallback? onNotifications;
   final String notificationTooltip;
+=======
+  final int reworkNotificationCount;
+  final VoidCallback? onReworkNotifications;
+  final bool isWithBsNotification;
+  final int bsNotificationCount;
+  final VoidCallback? onBsNotifications;
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
   final bool isWithAccount;
   final bool showAvatar;
   final bool showNameWithAvatar;
@@ -42,9 +50,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onReturn,
       this.actions,
       this.isWithNotification = false,
+<<<<<<< HEAD
       this.notificationCount = 0,
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
+=======
+      this.reworkNotificationCount = 0,
+      this.onReworkNotifications,
+      this.isWithBsNotification = false,
+      this.bsNotificationCount = 0,
+      this.onBsNotifications,
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
       this.isWithAccount = false,
       this.handleDelete,
       this.handleUpdate,
@@ -88,10 +104,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         if (isWithNotification)
           _buildNotificationButton(
+<<<<<<< HEAD
             tooltip: notificationTooltip,
             icon: Icons.assignment_late_outlined,
             count: notificationCount,
             onPressed: onNotifications,
+=======
+            tooltip: 'Evaluasi Rework',
+            icon: Icons.assignment_late_outlined,
+            count: reworkNotificationCount,
+            onPressed: onReworkNotifications,
+          ),
+        if (isWithBsNotification)
+          _buildNotificationButton(
+            tooltip: 'Evaluasi BS',
+            icon: Icons.report_gmailerrorred_outlined,
+            count: bsNotificationCount,
+            onPressed: onBsNotifications,
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
           ),
         if (isDashboardSettingsLoading)
           const Padding(

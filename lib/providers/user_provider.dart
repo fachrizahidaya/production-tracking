@@ -65,7 +65,11 @@ class UserProvider with ChangeNotifier {
     FcmService.instance.clearPendingNavigation();
 =======
     await FcmService.instance.unregisterCurrentDevice();
+<<<<<<< HEAD
 >>>>>>> 16778356 (feat: fcm notification)
+=======
+    FcmService.instance.clearPendingNavigation();
+>>>>>>> 58857212 (feat: notifikasi evaluasi bs)
     _user = null;
     _token = null;
 

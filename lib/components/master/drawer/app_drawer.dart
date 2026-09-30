@@ -46,12 +46,15 @@ class _AppDrawerState extends State<AppDrawer> {
 <<<<<<< HEAD
     'Evaluasi Rework',
     'Evaluasi BS',
+<<<<<<< HEAD
     'Evaluasi GSM',
 =======
 >>>>>>> 7a6aa3b1 (feat: model for report)
 =======
     'Evaluasi Rework',
 >>>>>>> 41ded02d (fix: rework)
+=======
+>>>>>>> 58857212 (feat: notifikasi evaluasi bs)
   ];
 
   final List<String> hiddenMenus = [
@@ -244,6 +247,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                             ? Icons.restart_alt_outlined
                                                                                                             : item.title == 'Evaluasi BS'
                                                                                                                 ? Icons.production_quantity_limits_outlined
+<<<<<<< HEAD
                                                                                                                 : item.title == 'Evaluasi GSM'
                                                                                                                     ? Icons.inventory_outlined
                                                                                                                     : Icons.menu,
@@ -283,6 +287,9 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                             ? Icons.restart_alt_outlined
                                                                                                             : Icons.menu,
 >>>>>>> 41ded02d (fix: rework)
+=======
+                                                                                                                : Icons.menu,
+>>>>>>> 58857212 (feat: notifikasi evaluasi bs)
                           ),
                           onTap: () {
                             Navigator.pop(context);

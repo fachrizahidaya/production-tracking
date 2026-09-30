@@ -22,6 +22,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isWithNotification;
   final int reworkNotificationCount;
   final VoidCallback? onReworkNotifications;
+  final bool isWithBsNotification;
+  final int bsNotificationCount;
+  final VoidCallback? onBsNotifications;
   final bool isWithAccount;
 <<<<<<< HEAD
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
@@ -92,7 +95,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 =======
       this.reworkNotificationCount = 0,
       this.onReworkNotifications,
+<<<<<<< HEAD
 >>>>>>> 9dacc402 (fix: responsive UI to mobile)
+=======
+      this.isWithBsNotification = false,
+      this.bsNotificationCount = 0,
+      this.onBsNotifications,
+>>>>>>> 58857212 (feat: notifikasi evaluasi bs)
       this.isWithAccount = false,
       this.showAvatar = true,
       this.tab,
@@ -175,43 +184,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 >>>>>>> 5e1b7ecb (fix: dashboard)
 =======
         if (isWithNotification)
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              IconButton(
-                tooltip: 'Evaluasi Rework',
-                onPressed: onReworkNotifications,
-                icon: const Icon(Icons.assignment_late_outlined),
-              ),
-              if (reworkNotificationCount > 0)
-                Positioned(
-                  right: 4,
-                  top: 4,
-                  child: Container(
-                    constraints: const BoxConstraints(
-                      minWidth: 18,
-                      minHeight: 18,
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.white, width: 1.5),
-                    ),
-                    child: Text(
-                      reworkNotificationCount > 99
-                          ? '99+'
-                          : reworkNotificationCount.toString(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
+          _buildNotificationButton(
+            tooltip: 'Evaluasi Rework',
+            icon: Icons.assignment_late_outlined,
+            count: reworkNotificationCount,
+            onPressed: onReworkNotifications,
+          ),
+        if (isWithBsNotification)
+          _buildNotificationButton(
+            tooltip: 'Evaluasi BS',
+            icon: Icons.report_gmailerrorred_outlined,
+            count: bsNotificationCount,
+            onPressed: onBsNotifications,
           ),
 >>>>>>> 9dacc402 (fix: responsive UI to mobile)
         if (isDashboardSettingsLoading)

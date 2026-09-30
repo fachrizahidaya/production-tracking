@@ -62,6 +62,9 @@ class _LoginState extends State<Login> {
     Navigator.pushReplacementNamed(context, '/dashboard');
     FcmService.instance.registerForCurrentUser();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e4d7831b (fix: handle firebase notification)
     _flushPendingNavigationAfterDashboard();
   }
 
@@ -71,9 +74,12 @@ class _LoginState extends State<Login> {
         FcmService.instance.flushPendingNavigation();
       });
     });
+<<<<<<< HEAD
 =======
     FcmService.instance.flushPendingNavigation();
 >>>>>>> 16778356 (feat: fcm notification)
+=======
+>>>>>>> e4d7831b (fix: handle firebase notification)
   }
 
   Future<void> _handleCheckLogin() async {
@@ -93,10 +99,14 @@ class _LoginState extends State<Login> {
       Navigator.pushReplacementNamed(context, '/dashboard');
       FcmService.instance.registerForCurrentUser();
 <<<<<<< HEAD
+<<<<<<< HEAD
       _flushPendingNavigationAfterDashboard();
 =======
       FcmService.instance.flushPendingNavigation();
 >>>>>>> 16778356 (feat: fcm notification)
+=======
+      _flushPendingNavigationAfterDashboard();
+>>>>>>> e4d7831b (fix: handle firebase notification)
     }
   }
 

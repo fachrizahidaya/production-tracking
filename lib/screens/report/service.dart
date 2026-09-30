@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/models/report/production_summary.dart';
 import 'package:http/http.dart' as http;
 import 'package:textile_tracking/models/report/production_trend.dart';
+import 'package:textile_tracking/models/report/bs.dart';
 import 'package:textile_tracking/models/report/rework.dart';
 import 'package:textile_tracking/models/report/rework_comparison.dart';
 import 'package:textile_tracking/models/report/sorting_result.dart';
@@ -606,6 +607,181 @@ class ReportService {
     };
   }
 
+  Future<BsList> getBsList(
+      {DateTime? startDate,
+      DateTime? endDate,
+      String? sort,
+      int page = 1,
+      int perPage = 20,
+      String? search,
+      String? status}) async {
+    final startDateString = _formatDate(startDate!);
+    final endDateString = _formatDate(endDate!);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? token = prefs.getString('access_token');
+
+    final queryParameters = <String, String>{
+      'start_date': startDateString,
+      'end_date': endDateString,
+      'sort': sort ?? '',
+      'page': page.toString(),
+      'per_page': perPage.toString(),
+      'search': search ?? '',
+    };
+    if (status != null && status.trim().isNotEmpty) {
+      queryParameters['status'] = status;
+    }
+
+    final uri = Uri.parse('$baseUrl/bs-evaluations').replace(
+      queryParameters: queryParameters,
+    );
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return BsList.fromJson(data);
+    }
+
+    throw Exception('Failed to load BS list : '
+        '${response.statusCode} ${response.body}');
+  }
+
+  Future<Map<String, int>> getBsStatusCounts() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final uri = Uri.parse('$baseUrl/bs-evaluations/summary');
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body)['data'];
+      final pending = int.tryParse(data?['pending']?.toString() ?? '') ?? 0;
+      final completed = int.tryParse(
+            data?['completed']?.toString() ??
+                data?['complete']?.toString() ??
+                data?['done']?.toString() ??
+                '',
+          ) ??
+          0;
+      final total = int.tryParse(
+            data?['total']?.toString() ??
+                data?['all']?.toString() ??
+                data?['total_count']?.toString() ??
+                '',
+          ) ??
+          pending + completed;
+
+      return {
+        'pending': pending,
+        'completed': completed,
+        'all': total,
+      };
+    }
+
+    throw Exception('Failed to load BS summary: '
+        '${response.statusCode} ${response.body}');
+  }
+
+  Future<Map<String, dynamic>> getBsDetail(dynamic id) async {
+    if (id == null || id.toString().trim().isEmpty) {
+      throw Exception('ID BS tidak ditemukan');
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final uri = Uri.parse('$baseUrl/bs-evaluations/$id');
+
+    final response = await http.get(
+      uri,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load BS detail: '
+          '${response.statusCode} ${response.body}');
+    }
+
+    final decoded = jsonDecode(response.body);
+    final data = decoded is Map && decoded['data'] is Map
+        ? Map<String, dynamic>.from(decoded['data'])
+        : Map<String, dynamic>.from(decoded as Map);
+    final workOrder = _asMap(data['work_order']);
+    final sorting = _asMap(data['sorting']);
+
+    return {
+      ...data,
+      'id': data['id'] ?? id,
+      'status': _first(data, ['status']) ?? '-',
+      'woNo': _first(workOrder, ['wo_no', 'number', 'no']) ?? '-',
+      'sortingNo': _first(data, ['sorting_no', 'no_sorting']) ??
+          _first(sorting, ['sorting_no', 'no', 'number']) ??
+          '-',
+      'qtyBs': _first(data, ['qty_bs', 'bs_qty', 'qty']) ??
+          _first(sorting, ['qty_bs', 'bs_qty', 'qty']) ??
+          '-',
+      'material': _formatBsMaterial(data),
+      'topMaterialCode':
+          data['top_material_code']?.toString().trim().isNotEmpty == true
+              ? data['top_material_code'].toString()
+              : '-',
+      'topMaterialName':
+          data['top_material_name']?.toString().trim().isNotEmpty == true
+              ? data['top_material_name'].toString()
+              : '-',
+      'defects': data['defects'] is List ? data['defects'] : [],
+      'startedAt': _first(data, ['started_at', 'created_at']) ?? '-',
+      'completedAt': _first(data, ['completed_at', 'finished_at']) ?? '-',
+      'submittedBy': _formatSubmittedBy(data['submitted_by']),
+      'reason': _formatDetailValue(data['reason'] ?? data['reasons']),
+      'actionPlan': _formatDetailValue(data['action_plan']),
+      'preventivePlan': _formatDetailValue(data['preventive_plan']),
+    };
+  }
+
+  Future<void> updateBsDetail({
+    required dynamic id,
+    required String reason,
+    required String actionPlan,
+    required String preventivePlan,
+  }) async {
+    if (id == null || id.toString().trim().isEmpty) {
+      throw Exception('ID BS tidak ditemukan');
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final uri = Uri.parse('$baseUrl/bs-evaluations/$id');
+    final response = await http.patch(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'reason': reason,
+        'action_plan': actionPlan,
+        'preventive_plan': preventivePlan,
+      }),
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception('Failed to update BS detail: '
+          '${response.statusCode} ${response.body}');
+    }
+  }
+
   Map<String, dynamic> _asMap(dynamic value) {
     return value is Map ? Map<String, dynamic>.from(value) : {};
   }
@@ -674,5 +850,19 @@ class ReportService {
           .toString();
     }
     return value?.toString() ?? '-';
+  }
+
+  String _formatBsMaterial(Map<String, dynamic> data) {
+    final code = data['top_material_code']?.toString().trim() ?? '';
+    final name = data['top_material_name']?.toString().trim() ?? '';
+    if (code.isNotEmpty && name.isNotEmpty) return '$code - $name';
+    if (code.isNotEmpty) return code;
+    if (name.isNotEmpty) return name;
+    return _first(data, [
+          'material',
+          'semi_finished_product',
+          'semiFinishedProduct',
+        ])?.toString() ??
+        '-';
   }
 }

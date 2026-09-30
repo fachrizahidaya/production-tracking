@@ -54,6 +54,7 @@ import 'package:textile_tracking/screens/packing/index.dart';
 import 'package:textile_tracking/screens/press-tumbler/index.dart';
 import 'package:textile_tracking/screens/printing/index.dart';
 import 'package:textile_tracking/screens/profile/index.dart';
+import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 import 'package:textile_tracking/screens/report/index.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/sewing/index.dart';
@@ -157,15 +158,17 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       onGenerateRoute: (settings) {
         final name = settings.name ?? '';
-        final match = RegExp(
+        final reworkMatch = RegExp(
           r'^/dyeing-rework-evaluations/([^/]+)(?:/edit)?/?$',
         ).firstMatch(name);
-        if (match != null) {
+        final bsMatch = RegExp(
+          r'^/bs-evaluations/([^/]+)(?:/edit)?/?$',
+        ).firstMatch(name);
+        if (reworkMatch != null || bsMatch != null) {
           return MaterialPageRoute(
             settings: settings,
-            // Let AuthCheck establish the dashboard first. FCM's
-            // getInitialMessage then opens the detail with a valid stack:
-            // Dashboard -> ReworkList -> Detail.
+            // Let AuthCheck establish Login or Dashboard first. FCM's
+            // getInitialMessage then opens the detail only after auth.
             builder: (_) => const AuthCheck(),
           );
         }
@@ -199,6 +202,7 @@ class MyApp extends StatelessWidget {
         '/terms-conditions': (context) => TermsConditions(),
         '/report-production': (context) => ReportScreen(),
         '/dyeing-rework-evaluations': (context) => ReworkList(),
+        '/bs-evaluations': (context) => BsList(),
       },
     );
   }

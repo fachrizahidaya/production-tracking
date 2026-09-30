@@ -10,6 +10,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isWithNotification;
   final int reworkNotificationCount;
   final VoidCallback? onReworkNotifications;
+  final bool isWithBsNotification;
+  final int bsNotificationCount;
+  final VoidCallback? onBsNotifications;
   final bool isWithAccount;
   final bool showAvatar;
   final bool showNameWithAvatar;
@@ -42,6 +45,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.isWithNotification = false,
       this.reworkNotificationCount = 0,
       this.onReworkNotifications,
+      this.isWithBsNotification = false,
+      this.bsNotificationCount = 0,
+      this.onBsNotifications,
       this.isWithAccount = false,
       this.showAvatar = true,
       this.tab,
@@ -88,43 +94,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         if (isWithNotification)
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              IconButton(
-                tooltip: 'Evaluasi Rework',
-                onPressed: onReworkNotifications,
-                icon: const Icon(Icons.assignment_late_outlined),
-              ),
-              if (reworkNotificationCount > 0)
-                Positioned(
-                  right: 4,
-                  top: 4,
-                  child: Container(
-                    constraints: const BoxConstraints(
-                      minWidth: 18,
-                      minHeight: 18,
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.white, width: 1.5),
-                    ),
-                    child: Text(
-                      reworkNotificationCount > 99
-                          ? '99+'
-                          : reworkNotificationCount.toString(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
+          _buildNotificationButton(
+            tooltip: 'Evaluasi Rework',
+            icon: Icons.assignment_late_outlined,
+            count: reworkNotificationCount,
+            onPressed: onReworkNotifications,
+          ),
+        if (isWithBsNotification)
+          _buildNotificationButton(
+            tooltip: 'Evaluasi BS',
+            icon: Icons.report_gmailerrorred_outlined,
+            count: bsNotificationCount,
+            onPressed: onBsNotifications,
           ),
         if (isDashboardSettingsLoading)
           const Padding(
@@ -259,6 +240,50 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildNotificationButton({
+    required String tooltip,
+    required IconData icon,
+    required int count,
+    VoidCallback? onPressed,
+  }) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        IconButton(
+          tooltip: tooltip,
+          onPressed: onPressed,
+          icon: Icon(icon),
+        ),
+        if (count > 0)
+          Positioned(
+            right: 4,
+            top: 4,
+            child: Container(
+              constraints: const BoxConstraints(
+                minWidth: 18,
+                minHeight: 18,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.white, width: 1.5),
+              ),
+              child: Text(
+                count > 99 ? '99+' : count.toString(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 

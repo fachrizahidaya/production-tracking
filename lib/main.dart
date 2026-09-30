@@ -155,6 +155,22 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
+      onGenerateRoute: (settings) {
+        final name = settings.name ?? '';
+        final match = RegExp(
+          r'^/dyeing-rework-evaluations/([^/]+)(?:/edit)?/?$',
+        ).firstMatch(name);
+        if (match != null) {
+          return MaterialPageRoute(
+            settings: settings,
+            // Let AuthCheck establish the dashboard first. FCM's
+            // getInitialMessage then opens the detail with a valid stack:
+            // Dashboard -> ReworkList -> Detail.
+            builder: (_) => const AuthCheck(),
+          );
+        }
+        return null;
+      },
       routes: {
         '/': (context) => AuthCheck(),
         '/dashboard': (context) => Home(),

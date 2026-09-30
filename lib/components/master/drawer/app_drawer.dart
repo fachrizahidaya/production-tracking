@@ -44,7 +44,7 @@ class _AppDrawerState extends State<AppDrawer> {
     'Proses Produksi',
     'Produksi',
     'Pesanan',
-    // 'Laporan',
+    'Laporan',
     'Order Greige',
     'Anomali Data',
     'Desain',
@@ -55,10 +55,10 @@ class _AppDrawerState extends State<AppDrawer> {
     final List<MenuItem> result = [];
 
     for (final menu in menus) {
-      if (menu.allowMobile == false) continue;
-
       if (menu.subMenuItems.isEmpty) {
-        result.add(menu);
+        if (menu.allowMobile) {
+          result.add(menu);
+        }
       } else {
         for (final sub in menu.subMenuItems) {
           if (sub.allowMobile == false) continue;

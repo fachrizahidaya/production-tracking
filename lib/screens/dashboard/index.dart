@@ -353,7 +353,9 @@ class _DashboardState extends State<Dashboard> {
     try {
       await callback();
     } catch (e) {
-      throw (e.toString());
+      if (mounted) {
+        debugPrint('Dashboard request failed: $e');
+      }
     }
   }
 

@@ -123,11 +123,11 @@ class _HomeState extends State<Home> {
 
         final res = await http.post(Uri.parse(url),
             headers: {'Authorization': 'Bearer $token'}, body: null);
-        await prefs.remove('access_token');
 
         if (res.statusCode == 200) {
           if (context.mounted) {
-            Provider.of<UserProvider>(context, listen: false).handleLogout();
+            await Provider.of<UserProvider>(context, listen: false)
+                .handleLogout();
 
             await Future.delayed(Duration(milliseconds: 200));
             Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);

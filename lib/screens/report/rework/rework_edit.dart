@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/multi_select_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
@@ -37,7 +38,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   bool _loadingReasons = true;
   List<Map<String, dynamic>> _reasonOptions = [];
   List<Map<String, dynamic>> _selectedReasons = [];
-  int _editStep = 0;
 
   @override
   void initState() {
@@ -290,85 +290,61 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(16),
-          child: _buildEditStep(),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              _buildReasonForm(),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Rencana Tindakan',
+                controller: _actionPlanController,
+              ),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Rencana Pencegahan',
+                controller: _preventivePlanController,
+              ),
+            ],
+          ),
         ),
       ),
+      bottomNavigationBar: _buildSaveBar(),
     );
   }
 
-  Widget _buildEditStep() {
-    switch (_editStep) {
-      case 1:
-        return _buildEditorForm(
-          label: 'Rencana Tindakan',
-          controller: _actionPlanController,
-          footer: _buildStepButtons(
-            nextLabel: 'Selanjutnya',
-            nextEnabled: _actionPlanController.text.trim().isNotEmpty,
-            onNext: () => setState(() => _editStep = 2),
-          ),
-        );
-      case 2:
-        return _buildEditorForm(
-          label: 'Rencana Pencegahan',
-          controller: _preventivePlanController,
-          footer: _buildStepButtons(
-            nextLabel: 'Simpan',
-            nextEnabled:
-                _preventivePlanController.text.trim().isNotEmpty && !_saving,
-            onNext: _save,
-          ),
-        );
-      default:
-        return _buildReasonForm(
-          footer: _buildReasonStepButton(),
-        );
-    }
-  }
-
-  Widget _buildReasonStepButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: _selectedReasons.isEmpty
-            ? null
-            : () => setState(() => _editStep = 1),
-        style: _primaryActionButtonStyle,
-        child: const Text('Selanjutnya'),
-      ),
-    );
-  }
-
-  Widget _buildStepButtons({
-    required String nextLabel,
-    required bool nextEnabled,
-    required VoidCallback onNext,
-  }) {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton(
-            onPressed: _saving ? null : () => setState(() => _editStep--),
-            style: _secondaryActionButtonStyle,
-            child: const Text('Kembali'),
-          ),
+  Widget _buildSaveBar() {
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, -2),
+            ),
+          ],
         ),
-        const SizedBox(width: 12),
-        Expanded(
+        child: SizedBox(
+          width: double.infinity,
+          height: 48,
           child: ElevatedButton(
-            onPressed: nextEnabled ? onNext : null,
+            onPressed: _canSave && !_saving ? _save : null,
             style: _primaryActionButtonStyle,
-            child: _saving && nextLabel == 'Simpan'
+            child: _saving
                 ? const SizedBox(
                     width: 18,
                     height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
                   )
-                : Text(nextLabel),
+                : const Text('Simpan'),
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -382,13 +358,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         ),
       );
 
-  ButtonStyle get _secondaryActionButtonStyle => OutlinedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      );
-
-  Widget _buildReasonForm({Widget? footer}) {
+  Widget _buildReasonForm() {
     return _buildFormCard(
       label: 'Alasan',
       child: Column(
@@ -414,10 +384,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
               label: const Text('Tambah alasan baru'),
             ),
           ),
-          if (footer != null) ...[
-            const SizedBox(height: 8),
-            footer,
-          ],
         ],
       ),
     );
@@ -467,44 +433,25 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   }
 
   Widget _buildFormCard({required String label, required Widget child}) {
-    return Container(
-      width: double.infinity,
-      decoration: CustomTheme().cardTheme(),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label,
-              style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 12),
-          child,
-        ],
-      ),
+    return TemplateCard(
+      title: label,
+      icon: Icons.description_outlined,
+      child: child,
     );
   }
 
   Widget _buildEditorForm({
     required String label,
     required TextEditingController controller,
-    Widget? footer,
   }) {
     return _buildFormCard(
       label: label,
-      child: Column(
-        children: [
-          TextField(
-            controller: controller,
-            minLines: 6,
-            maxLines: 12,
-            decoration: CustomTheme().inputDecoration('Masukkan $label'),
-            onChanged: (_) => setState(() {}),
-          ),
-          if (footer != null) ...[
-            const SizedBox(height: 16),
-            footer,
-          ],
-        ],
+      child: TextField(
+        controller: controller,
+        minLines: 6,
+        maxLines: 12,
+        decoration: CustomTheme().inputDecoration('Masukkan $label'),
+        onChanged: (_) => setState(() {}),
       ),
     );
   }

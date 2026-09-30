@@ -31,7 +31,6 @@ class _AuthCheckState extends State<AuthCheck> {
       });
       if (token != null) {
         FcmService.instance.registerForCurrentUser();
-        FcmService.instance.flushPendingNavigation();
       }
     }
   }
@@ -48,7 +47,11 @@ class _AuthCheckState extends State<AuthCheck> {
   Widget build(BuildContext context) {
     if (_isAuthenticated) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
         Navigator.pushReplacementNamed(context, '/dashboard');
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          FcmService.instance.flushPendingNavigation();
+        });
       });
       return SizedBox.shrink();
     } else {

@@ -9,12 +9,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:textile_tracking/screens/report/rework/rework_notification.dart';
+import 'package:textile_tracking/screens/report/rework/rework_by_id.dart';
 
 final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  debugPrint('FCM background data: ${message.data}');
+
   // Notification display is handled by FCM when the app is backgrounded.
   // Data is processed when the user taps the notification.
 }
@@ -105,6 +107,7 @@ class FcmService with WidgetsBindingObserver {
   }
 
   Future<void> _showForegroundNotification(RemoteMessage message) async {
+    debugPrint('FCM foreground data: ${message.data}');
     final title =
         message.notification?.title ?? message.data['title']?.toString();
     final body = message.notification?.body ?? message.data['body']?.toString();
@@ -228,19 +231,32 @@ class FcmService with WidgetsBindingObserver {
     final route = navigation['route'] as String?;
     final type = navigation['type'] as String?;
     final id = navigation['id'] as String?;
-    final target = route ??
-        (type == 'dyeing_rework_evaluation'
-            ? '/dyeing-rework-evaluations'
-            : '/notification');
-
-    // The API may send a detail URL that this app does not expose as a named
-    // route yet. Open the closest supported screen and pass the original data.
-    if (target.startsWith('/dyeing-rework-evaluations/') && id != null) {
+    // Rework notifications always open the detail screen using the ID from
+    // message.data, regardless of the route string sent by the backend.
+    if (type == 'dyeing_rework_evaluation' && id != null) {
       navigator.push(MaterialPageRoute(
-        builder: (_) => ReworkNotificationScreen(id: id),
+        builder: (_) => ReworkDetailLoadingScreen(
+          id: id,
+          returnToList: true,
+        ),
       ));
+    } else if (route != null &&
+        route.startsWith('/dyeing-rework-evaluations/')) {
+      final segments = route.split('/');
+      final routeId = segments.length > 2 ? segments[2] : null;
+      if (routeId != null && routeId.isNotEmpty) {
+        navigator.push(MaterialPageRoute(
+          builder: (_) => ReworkDetailLoadingScreen(
+            id: routeId,
+            returnToList: true,
+          ),
+        ));
+      } else {
+        navigator.pushNamed('/dyeing-rework-evaluations');
+      }
     } else {
-      navigator.pushNamed(target, arguments: {'id': id, 'type': type});
+      navigator.pushNamed(route ?? '/notification',
+          arguments: {'id': id, 'type': type});
     }
     _pendingNavigation = null;
   }

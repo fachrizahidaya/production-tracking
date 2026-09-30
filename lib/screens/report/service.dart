@@ -397,15 +397,26 @@ class ReportService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body)['data'];
+      final pending = int.tryParse(data?['pending']?.toString() ?? '') ?? 0;
+      final completed = int.tryParse(
+            data?['completed']?.toString() ??
+                data?['complete']?.toString() ??
+                data?['done']?.toString() ??
+                '',
+          ) ??
+          0;
+      final total = int.tryParse(
+            data?['total']?.toString() ??
+                data?['all']?.toString() ??
+                data?['total_count']?.toString() ??
+                '',
+          ) ??
+          pending + completed;
+
       return {
-        'pending': int.tryParse(data?['pending']?.toString() ?? '') ?? 0,
-        'completed': int.tryParse(
-              data?['completed']?.toString() ??
-                  data?['complete']?.toString() ??
-                  data?['done']?.toString() ??
-                  '',
-            ) ??
-            0,
+        'pending': pending,
+        'completed': completed,
+        'all': total,
       };
     }
 

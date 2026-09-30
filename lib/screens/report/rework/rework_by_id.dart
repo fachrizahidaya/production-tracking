@@ -32,6 +32,7 @@ import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 class ReworkDetailLoadingScreen extends StatefulWidget {
   final dynamic id;
   final bool returnToList;
@@ -153,6 +154,8 @@ import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 >>>>>>> 41ded02d (fix: rework)
 
+=======
+>>>>>>> 1de1dd1b (fix: flow submit form evaluasi rework)
 ButtonStyle _primarySheetButtonStyle() => ElevatedButton.styleFrom(
       backgroundColor: const Color(0xFF4561DB),
       foregroundColor: Colors.white,
@@ -167,8 +170,11 @@ ButtonStyle _secondarySheetButtonStyle() => OutlinedButton.styleFrom(
       ),
     );
 
+<<<<<<< HEAD
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+>>>>>>> 1de1dd1b (fix: flow submit form evaluasi rework)
 class ReworkDetailLoadingScreen extends StatefulWidget {
   final dynamic id;
   final bool returnToList;
@@ -442,6 +448,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                           Expanded(
                             child: OutlinedButton(
                               onPressed: () => Navigator.pop(sheetContext),
+                              style: _secondarySheetButtonStyle(),
                               child: const Text('Batal'),
                             ),
                           ),
@@ -450,6 +457,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                             child: ElevatedButton(
                               onPressed: () =>
                                   Navigator.pop(sheetContext, selectedIds),
+                              style: _primarySheetButtonStyle(),
                               child: const Text('Terapkan'),
                             ),
                           ),
@@ -1535,6 +1543,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   Widget _buildWorkOrderBadge(String woNo) {
     const color = Color(0xFF234393);
@@ -1560,6 +1569,8 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
 >>>>>>> b2a4613b (fix: rework)
+=======
+>>>>>>> 1de1dd1b (fix: flow submit form evaluasi rework)
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
@@ -2318,6 +2329,7 @@ class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context),
+                      style: _secondarySheetButtonStyle(),
                       child: const Text('Batal'),
                     ),
                   ),
@@ -2334,6 +2346,7 @@ class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
                         }
                         Navigator.pop(context, value);
                       },
+                      style: _primarySheetButtonStyle(),
                       child: const Text('Tambah'),
                     ),
                   ),

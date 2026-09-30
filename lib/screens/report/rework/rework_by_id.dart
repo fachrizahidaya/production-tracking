@@ -8,6 +8,20 @@ import 'package:textile_tracking/screens/report/rework/rework_edit.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 
+ButtonStyle _primarySheetButtonStyle() => ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFF4561DB),
+      foregroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
+
+ButtonStyle _secondarySheetButtonStyle() => OutlinedButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
+
 class ReworkDetailLoadingScreen extends StatefulWidget {
   final dynamic id;
   final bool returnToList;
@@ -255,6 +269,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                           Expanded(
                             child: OutlinedButton(
                               onPressed: () => Navigator.pop(sheetContext),
+                              style: _secondarySheetButtonStyle(),
                               child: const Text('Batal'),
                             ),
                           ),
@@ -263,6 +278,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                             child: ElevatedButton(
                               onPressed: () =>
                                   Navigator.pop(sheetContext, selectedIds),
+                              style: _primarySheetButtonStyle(),
                               child: const Text('Terapkan'),
                             ),
                           ),
@@ -836,29 +852,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     );
   }
 
-  Widget _buildWorkOrderBadge(String woNo) {
-    const color = Color(0xFF234393);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 4,
-      ),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(
-        woNo,
-        style: const TextStyle(
-          color: color,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
@@ -1135,6 +1128,7 @@ class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context),
+                      style: _secondarySheetButtonStyle(),
                       child: const Text('Batal'),
                     ),
                   ),
@@ -1151,6 +1145,7 @@ class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
                         }
                         Navigator.pop(context, value);
                       },
+                      style: _primarySheetButtonStyle(),
                       child: const Text('Tambah'),
                     ),
                   ),

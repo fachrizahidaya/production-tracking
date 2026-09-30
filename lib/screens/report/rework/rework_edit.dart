@@ -796,6 +796,7 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context),
+                      style: _secondarySheetButtonStyle(),
                       child: const Text('Batal'),
                     ),
                   ),
@@ -812,6 +813,7 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
                         }
                         Navigator.pop(context, value);
                       },
+                      style: _primarySheetButtonStyle(),
                       child: const Text('Tambah'),
                     ),
                   ),

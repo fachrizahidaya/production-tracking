@@ -9,6 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:textile_tracking/screens/report/bs/bs_by_id.dart';
 import 'package:textile_tracking/screens/report/rework/rework_by_id.dart';
 
 final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
@@ -224,19 +225,39 @@ class FcmService with WidgetsBindingObserver {
 
   void flushPendingNavigation() => _flushPendingNavigation();
 
-  void _flushPendingNavigation() {
+  void clearPendingNavigation() {
+    _pendingNavigation = null;
+  }
+
+  Future<void> _flushPendingNavigation() async {
     final navigation = _pendingNavigation;
     final navigator = appNavigatorKey.currentState;
     if (navigation == null || navigator == null) return;
 
+    final prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString('access_token');
+    // Keep pending while logged out so Login/AuthCheck can flush after auth.
+    // Never push detail screens onto the Login stack.
+    if (accessToken == null || accessToken.isEmpty) return;
+    if (_pendingNavigation != navigation) return;
+
+    _pendingNavigation = null;
+
     final route = navigation['route'] as String?;
     final type = navigation['type'] as String?;
     final id = navigation['id'] as String?;
-    // Rework notifications always open the detail screen using the ID from
+    // Rework/BS notifications always open the detail screen using the ID from
     // message.data, regardless of the route string sent by the backend.
     if (type == 'dyeing_rework_evaluation' && id != null) {
       navigator.push(MaterialPageRoute(
         builder: (_) => ReworkDetailLoadingScreen(
+          id: id,
+          returnToList: true,
+        ),
+      ));
+    } else if (type == 'bs_evaluation' && id != null) {
+      navigator.push(MaterialPageRoute(
+        builder: (_) => BsDetailLoadingScreen(
           id: id,
           returnToList: true,
         ),
@@ -255,10 +276,22 @@ class FcmService with WidgetsBindingObserver {
       } else {
         navigator.pushNamed('/dyeing-rework-evaluations');
       }
+    } else if (route != null && route.startsWith('/bs-evaluations/')) {
+      final segments = route.split('/');
+      final routeId = segments.length > 2 ? segments[2] : null;
+      if (routeId != null && routeId.isNotEmpty) {
+        navigator.push(MaterialPageRoute(
+          builder: (_) => BsDetailLoadingScreen(
+            id: routeId,
+            returnToList: true,
+          ),
+        ));
+      } else {
+        navigator.pushNamed('/bs-evaluations');
+      }
     } else {
       navigator.pushNamed(route ?? '/notification',
           arguments: {'id': id, 'type': type});
     }
-    _pendingNavigation = null;
   }
 }

@@ -62,6 +62,7 @@ class UserProvider with ChangeNotifier {
 
   Future<void> handleLogout() async {
     await FcmService.instance.unregisterCurrentDevice();
+    FcmService.instance.clearPendingNavigation();
     _user = null;
     _token = null;
 

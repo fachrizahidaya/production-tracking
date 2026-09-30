@@ -29,7 +29,9 @@ class _HomeState extends State<Home> {
   String user = '';
   String name = '';
   int _reworkNotificationCount = 0;
+  int _bsNotificationCount = 0;
   bool _canViewReworkEvaluation = false;
+  bool _canViewBsEvaluation = false;
   late Future<String?> _tokenFuture;
 
   @override
@@ -57,16 +59,19 @@ class _HomeState extends State<Home> {
       userMenu.menus,
       'Evaluasi Rework',
     );
+    final canViewBsEvaluation = _hasMobileMenu(
+      userMenu.menus,
+      'Evaluasi BS',
+    );
 
     if (!mounted) return;
 
     setState(() {
       _canViewReworkEvaluation = canViewReworkEvaluation;
+      _canViewBsEvaluation = canViewBsEvaluation;
     });
 
-    if (canViewReworkEvaluation) {
-      await _fetchReworkNotificationCount();
-    }
+    await _refreshEvaluationNotifications();
   }
 
   bool _hasMobileMenu(List<dynamic> menus, String targetName) {
@@ -107,6 +112,44 @@ class _HomeState extends State<Home> {
       });
     } catch (_) {
       // Badge tetap tersembunyi jika endpoint notifikasi tidak tersedia.
+    }
+  }
+
+  Future<void> _fetchBsNotificationCount() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('access_token');
+      final baseUrl = dotenv.env['API_URL'] ?? '';
+      final response = await http.get(
+        Uri.parse('$baseUrl/bs-evaluations/notifications'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode != 200 || !mounted) return;
+
+      final responseData = jsonDecode(response.body);
+      final count = responseData['data']?['count'];
+      setState(() {
+        _bsNotificationCount = int.tryParse(count?.toString() ?? '') ?? 0;
+      });
+    } catch (_) {
+      // Badge tetap tersembunyi jika endpoint notifikasi tidak tersedia.
+    }
+  }
+
+  Future<void> _refreshEvaluationNotifications() async {
+    final futures = <Future>[];
+    if (_canViewReworkEvaluation) {
+      futures.add(_fetchReworkNotificationCount());
+    }
+    if (_canViewBsEvaluation) {
+      futures.add(_fetchBsNotificationCount());
+    }
+    if (futures.isNotEmpty) {
+      await Future.wait(futures);
     }
   }
 
@@ -229,6 +272,11 @@ class _HomeState extends State<Home> {
                 onReworkNotifications: () {
                   Navigator.pushNamed(context, '/dyeing-rework-evaluations');
                 },
+                isWithBsNotification: _canViewBsEvaluation,
+                bsNotificationCount: _bsNotificationCount,
+                onBsNotifications: () {
+                  Navigator.pushNamed(context, '/bs-evaluations');
+                },
                 handleLogout: () => _handleLogout(context),
                 isWithAccount: true,
                 user: user,
@@ -243,7 +291,7 @@ class _HomeState extends State<Home> {
               ),
               body: SafeArea(
                 child: Dashboard(
-                  onRefreshReworkNotifications: _fetchReworkNotificationCount,
+                  onRefreshReworkNotifications: _refreshEvaluationNotifications,
                 ),
               ),
             ),

@@ -54,6 +54,7 @@ import 'package:textile_tracking/screens/packing/index.dart';
 import 'package:textile_tracking/screens/press-tumbler/index.dart';
 import 'package:textile_tracking/screens/printing/index.dart';
 import 'package:textile_tracking/screens/profile/index.dart';
+import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 import 'package:textile_tracking/screens/report/index.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/sewing/index.dart';

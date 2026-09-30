@@ -46,7 +46,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   int _visibleStep = 1;
   List<Map<String, dynamic>> _reasonOptions = [];
   List<Map<String, dynamic>> _selectedReasons = [];
-  int _editStep = 0;
 
   String get _draftType => 'rework';
     final reasons = widget.data['reasons'];
@@ -655,10 +654,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
               label: const Text('Tambah alasan baru'),
             ),
           ),
-          if (footer != null) ...[
-            const SizedBox(height: 8),
-            footer,
-          ],
         ],
       ),
     );
@@ -717,24 +712,15 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   Widget _buildEditorForm({
     required String label,
     required TextEditingController controller,
-    Widget? footer,
   }) {
     return _buildFormCard(
       label: label,
-      child: Column(
-        children: [
-          TextField(
-            controller: controller,
-            minLines: 6,
-            maxLines: 12,
-            decoration: CustomTheme().inputDecoration('Masukkan $label'),
-            onChanged: (_) => setState(() {}),
-          ),
-          if (footer != null) ...[
-            const SizedBox(height: 16),
-            footer,
-          ],
-        ],
+      child: TextField(
+        controller: controller,
+        minLines: 6,
+        maxLines: 12,
+        decoration: CustomTheme().inputDecoration('Masukkan $label'),
+        onChanged: (_) => setState(() {}),
       ),
     );
   }

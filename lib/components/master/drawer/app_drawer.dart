@@ -71,6 +71,10 @@ class _AppDrawerState extends State<AppDrawer> {
 <<<<<<< HEAD
     'Produksi',
     'Pesanan',
+<<<<<<< HEAD
+=======
+    'Laporan',
+>>>>>>> a9344ef9 (fix: notification dan evaluasi rework)
     'Order Greige',
     'Desain',
     'Warping',

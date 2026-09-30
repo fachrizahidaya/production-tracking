@@ -816,8 +816,14 @@ class _DashboardState extends State<Dashboard> {
 >>>>>>> 17fd914c (fix: dashboard)
 =======
     } catch (e) {
+<<<<<<< HEAD
       throw (e.toString());
 >>>>>>> 048e231d (fix: dashboard work order summary untuk greige)
+=======
+      if (mounted) {
+        debugPrint('Dashboard request failed: $e');
+      }
+>>>>>>> a9344ef9 (fix: notification dan evaluasi rework)
     }
   }
 

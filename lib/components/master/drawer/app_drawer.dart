@@ -48,6 +48,7 @@ class _AppDrawerState extends State<AppDrawer> {
     'Evaluasi BS',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     'Evaluasi GSM',
 =======
 >>>>>>> 7a6aa3b1 (feat: model for report)
@@ -59,6 +60,11 @@ class _AppDrawerState extends State<AppDrawer> {
 =======
     'Evaluasi GSM',
 >>>>>>> e2884b8b (fix: notification all evaluasi)
+=======
+    'Evaluasi GSM',
+=======
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+>>>>>>> 92623572 (feat: notifikasi evaluasi bs)
   ];
 
   final List<String> hiddenMenus = [
@@ -278,10 +284,14 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                                 ? Icons.production_quantity_limits_outlined
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 92623572 (feat: notifikasi evaluasi bs)
                                                                                                                 : item.title == 'Evaluasi GSM'
                                                                                                                     ? Icons.inventory_outlined
                                                                                                                     : Icons.menu,
 =======
+<<<<<<< HEAD
                                                                                     ? Icons.straighten_outlined
 =======
                                                                                     ? Icons.join_inner_outlined
@@ -325,6 +335,10 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                                     ? Icons.inventory_outlined
                                                                                                                     : Icons.menu,
 >>>>>>> e2884b8b (fix: notification all evaluasi)
+=======
+                                                                                                                : Icons.menu,
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+>>>>>>> 92623572 (feat: notifikasi evaluasi bs)
                           ),
                           onTap: () {
                             Navigator.pop(context);

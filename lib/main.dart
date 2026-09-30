@@ -71,13 +71,19 @@ import 'package:textile_tracking/screens/profile/index.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 >>>>>>> 58857212 (feat: notifikasi evaluasi bs)
 =======
 >>>>>>> e2884b8b (fix: notification all evaluasi)
+=======
+=======
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+>>>>>>> 92623572 (feat: notifikasi evaluasi bs)
 import 'package:textile_tracking/screens/report/index.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 <<<<<<< HEAD
@@ -250,6 +256,27 @@ class MyApp extends StatelessWidget {
 =======
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
+<<<<<<< HEAD
+=======
+      onGenerateRoute: (settings) {
+        final name = settings.name ?? '';
+        final reworkMatch = RegExp(
+          r'^/dyeing-rework-evaluations/([^/]+)(?:/edit)?/?$',
+        ).firstMatch(name);
+        final bsMatch = RegExp(
+          r'^/bs-evaluations/([^/]+)(?:/edit)?/?$',
+        ).firstMatch(name);
+        if (reworkMatch != null || bsMatch != null) {
+          return MaterialPageRoute(
+            settings: settings,
+            // Let AuthCheck establish Login or Dashboard first. FCM's
+            // getInitialMessage then opens the detail only after auth.
+            builder: (_) => const AuthCheck(),
+          );
+        }
+        return null;
+      },
+>>>>>>> 92623572 (feat: notifikasi evaluasi bs)
       routes: {
         '/': (context) => AuthCheck(),
         '/dashboard': (context) => Home(),
@@ -271,16 +298,28 @@ class MyApp extends StatelessWidget {
         '/sizings': (context) => SizingScreen(),
         '/warpings': (context) => WarpingScreen(),
         '/shearings': (context) => ShearingScreen(),
+<<<<<<< HEAD
+=======
+        '/dyeing-preparations': (context) => DyeingPreparationScreen(),
+>>>>>>> 92623572 (feat: notifikasi evaluasi bs)
         '/account': (context) => Account(),
         '/eula': (context) => Eula(),
         '/privacy-policy': (context) => PrivacyPolicy(),
         '/terms-conditions': (context) => TermsConditions(),
+<<<<<<< HEAD
       },
 >>>>>>> 7fd183d (feat: create and finish warping, weaving)
 =======
         },
       ),
 >>>>>>> b8a5267 (chore: internet checker)
+=======
+        '/report-production': (context) => ReportScreen(),
+        '/dyeing-rework-evaluations': (context) => ReworkList(),
+        '/bs-evaluations': (context) => BsList(),
+      },
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+>>>>>>> 92623572 (feat: notifikasi evaluasi bs)
     );
   }
 }

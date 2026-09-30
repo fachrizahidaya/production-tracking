@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:math' as math;
 
 =======
@@ -8,11 +9,18 @@ import 'dart:math' as math;
 import 'dart:math' as math;
 
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+import 'dart:math' as math;
+
+=======
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
@@ -25,6 +33,12 @@ import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
+import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+=======
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
 import 'package:textile_tracking/screens/report/service.dart';
 
 class BsEditScreen extends StatefulWidget {
@@ -41,8 +55,11 @@ class _BsEditScreenState extends State<BsEditScreen> {
   final TextEditingController _reasonController = TextEditingController();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
+=======
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
   final TextEditingController _preventivePlanController =
       TextEditingController();
   bool _saving = false;
@@ -63,18 +80,25 @@ class _BsEditScreenState extends State<BsEditScreen> {
       TextEditingController();
   bool _saving = false;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> b2b87875 (feat: evaluasi bs)
 =======
   int _visibleStep = 1;
 
   String get _draftType => 'bs';
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
 
   @override
   void initState() {
     super.initState();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
     _reasonController.text = _textValue(widget.data['reason']);
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
     _attachments = parseEvaluationAttachments(widget.data['attachments']);
@@ -87,6 +111,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
     _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
+<<<<<<< HEAD
 >>>>>>> b2b87875 (feat: evaluasi bs)
 =======
     _reasonController.text = _textValue(widget.data['reason']);
@@ -97,16 +122,23 @@ class _BsEditScreenState extends State<BsEditScreen> {
     _preventivePlanController.addListener(_persistDraft);
     _loadDraft();
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
   }
 
   @override
   void dispose() {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
     _reasonController.removeListener(_persistDraft);
     _preventivePlanController.removeListener(_persistDraft);
     _reasonController.dispose();
 =======
+<<<<<<< HEAD
 =======
     _reasonController.removeListener(_persistDraft);
     _preventivePlanController.removeListener(_persistDraft);
@@ -117,14 +149,22 @@ class _BsEditScreenState extends State<BsEditScreen> {
 >>>>>>> b2b87875 (feat: evaluasi bs)
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
+=======
+    _reasonController.dispose();
+    _actionPlanController.dispose();
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
     _preventivePlanController.dispose();
     super.dispose();
   }
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
   String _textValue(dynamic value) {
     final text = value?.toString().trim() ?? '';
     return text == '-' ? '' : text;
@@ -286,6 +326,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
       if (!mounted) return;
       Navigator.pop(context, message);
 =======
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
   Future<void> _save() async {
@@ -320,12 +361,30 @@ class _BsEditScreenState extends State<BsEditScreen> {
 =======
       Navigator.pop(context, message);
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+  Future<void> _save() async {
+    if (_saving || !_canSave) return;
+    setState(() => _saving = true);
+
+    try {
+      await _reportService.updateBsDetail(
+        id: widget.data['id'],
+        reason: _reasonController.text,
+        actionPlan: _actionPlanController.text,
+        preventivePlan: _preventivePlanController.text,
+      );
+
+      if (!mounted) return;
+      Navigator.pop(context, true);
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
     } catch (e) {
       if (!mounted) return;
       setState(() => _saving = false);
       await showAlertDialog(
         context: context,
         title: 'Gagal Menyimpan',
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         message: _errorMessage(e),
@@ -335,14 +394,23 @@ class _BsEditScreenState extends State<BsEditScreen> {
 =======
         message: _errorMessage(e),
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+        message: _errorMessage(e),
+=======
+        message: e.toString(),
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
       );
     }
   }
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
   String _errorMessage(Object error) {
     return error.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
   }
@@ -403,6 +471,12 @@ class _BsEditScreenState extends State<BsEditScreen> {
     if (invalid.isEmpty) return null;
     if (invalid.length == 1) return '${invalid.first} minimal 8 karakter.';
     return '${invalid[0]} dan ${invalid[1]} minimal 8 karakter.';
+=======
+  bool get _canSave {
+    return _reasonController.text.trim().isNotEmpty &&
+        _actionPlanController.text.trim().isNotEmpty &&
+        _preventivePlanController.text.trim().isNotEmpty;
+>>>>>>> aa02f1b (feat: evaluasi bs)
   }
 
   @override
@@ -417,6 +491,9 @@ class _BsEditScreenState extends State<BsEditScreen> {
         child: SingleChildScrollView(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
             children: [
@@ -470,6 +547,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
               ],
 =======
           padding: const EdgeInsets.all(16),
+<<<<<<< HEAD
 =======
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
@@ -538,6 +616,25 @@ class _BsEditScreenState extends State<BsEditScreen> {
                 ),
               ],
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+          child: Column(
+            children: [
+              _buildEditorForm(
+                label: 'Alasan dan Penyebab',
+                controller: _reasonController,
+              ),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Rencana Tindakan',
+                controller: _actionPlanController,
+              ),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Rencana Pencegahan',
+                controller: _preventivePlanController,
+              ),
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
             ],
           ),
         ),
@@ -613,8 +710,11 @@ class _BsEditScreenState extends State<BsEditScreen> {
         decoration: CustomTheme().inputDecoration('Masukkan $label'),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
       ),
     );
   }
@@ -1097,6 +1197,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
   }
 =======
         onChanged: (_) => setState(() {}),
+<<<<<<< HEAD
 =======
       height: 48,
       child: ElevatedButton(
@@ -1558,4 +1659,10 @@ class _BsEditScreenState extends State<BsEditScreen> {
         '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
   }
 >>>>>>> 72ffc257 (fix:)
+=======
+      ),
+    );
+  }
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
 }

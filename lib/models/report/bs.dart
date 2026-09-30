@@ -43,19 +43,28 @@ class BsListItem {
   final qtyBs;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
   final bsRate;
   final material;
   final item;
   final topMaterialCode;
   final topMaterialName;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   final material;
 >>>>>>> b2b87875 (feat: evaluasi bs)
 =======
 >>>>>>> 5e38e0f3 (fix:)
+=======
+=======
+  final material;
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
   final defects;
   final startDate;
   final endDate;
@@ -72,19 +81,28 @@ class BsListItem {
       this.qtyBs,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
       this.bsRate,
       this.material,
       this.item,
       this.topMaterialCode,
       this.topMaterialName,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       this.material,
 >>>>>>> b2b87875 (feat: evaluasi bs)
 =======
 >>>>>>> 5e38e0f3 (fix:)
+=======
+=======
+      this.material,
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
       this.defects,
       this.endDate,
       this.startDate});
@@ -93,20 +111,28 @@ class BsListItem {
     final sorting = json['sorting'] ?? {};
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
     final wo = json['work_order'] ?? {};
     final woItems = wo is Map ? wo['items'] : null;
     final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
 =======
+<<<<<<< HEAD
 >>>>>>> b2b87875 (feat: evaluasi bs)
 =======
     final wo = json['work_order'] ?? {};
     final woItems = wo is Map ? wo['items'] : null;
     final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
 >>>>>>> 5e38e0f3 (fix:)
+=======
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
     return BsListItem(
         id: json['id'] ?? '',
         startDate: json['created_at'] ?? '',
         endDate: json['completed_at'] ?? '',
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         wo: wo,
@@ -116,6 +142,12 @@ class BsListItem {
 =======
         wo: wo,
 >>>>>>> 5e38e0f3 (fix:)
+=======
+        wo: wo,
+=======
+        wo: json['work_order'] ?? {},
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
         actionPlan: json['action_plan'] ?? '',
         preventivePlan: json['preventive_plan'] ?? '',
         reason: json['reason'] ?? json['reasons'] ?? '',
@@ -127,8 +159,11 @@ class BsListItem {
             '',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
         bsRate: json['bs_rate'] ?? sorting['bs_rate'] ?? '',
         material: json['material'] ??
             json['semi_finished_product'] ??
@@ -137,13 +172,20 @@ class BsListItem {
         topMaterialCode: json['top_material_code'] ?? '',
         topMaterialName: json['top_material_name'] ?? '',
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
 =======
         material: json['material'] ??
             json['semi_finished_product'] ??
             '',
+<<<<<<< HEAD
 >>>>>>> b2b87875 (feat: evaluasi bs)
 =======
 >>>>>>> 5e38e0f3 (fix:)
+=======
+>>>>>>> aa02f1b (feat: evaluasi bs)
+>>>>>>> 8f5aac6d (feat: evaluasi bs)
         defects: json['defects'] ?? [],
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});

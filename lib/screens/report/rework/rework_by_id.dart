@@ -298,7 +298,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   List<Map<String, dynamic>> _selectedReasons = [];
   bool _loadingReasons = false;
   bool _saving = false;
-  int _waitingStep = 0;
 
   @override
   void initState() {
@@ -596,6 +595,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: _isWaiting ? _buildSaveBar() : null,
     );
   }
 

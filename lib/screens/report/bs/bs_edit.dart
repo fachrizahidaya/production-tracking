@@ -1,12 +1,18 @@
+<<<<<<< HEAD
 import 'dart:math' as math;
 
+=======
+>>>>>>> b2b87875 (feat: evaluasi bs)
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+=======
+>>>>>>> b2b87875 (feat: evaluasi bs)
 import 'package:textile_tracking/screens/report/service.dart';
 
 class BsEditScreen extends StatefulWidget {
@@ -21,6 +27,7 @@ class BsEditScreen extends StatefulWidget {
 class _BsEditScreenState extends State<BsEditScreen> {
   final ReportService _reportService = ReportService();
   final TextEditingController _reasonController = TextEditingController();
+<<<<<<< HEAD
   final TextEditingController _preventivePlanController =
       TextEditingController();
   bool _saving = false;
@@ -28,10 +35,17 @@ class _BsEditScreenState extends State<BsEditScreen> {
   List<Map<String, dynamic>> _attachments = [];
 
   String get _draftType => 'bs';
+=======
+  final TextEditingController _actionPlanController = TextEditingController();
+  final TextEditingController _preventivePlanController =
+      TextEditingController();
+  bool _saving = false;
+>>>>>>> b2b87875 (feat: evaluasi bs)
 
   @override
   void initState() {
     super.initState();
+<<<<<<< HEAD
     _reasonController.text = _textValue(widget.data['reason']);
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
     _attachments = parseEvaluationAttachments(widget.data['attachments']);
@@ -39,17 +53,29 @@ class _BsEditScreenState extends State<BsEditScreen> {
     _reasonController.addListener(_persistDraft);
     _preventivePlanController.addListener(_persistDraft);
     _loadDraft();
+=======
+    _reasonController.text = widget.data['reason']?.toString() ?? '';
+    _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
+    _preventivePlanController.text =
+        widget.data['preventivePlan']?.toString() ?? '';
+>>>>>>> b2b87875 (feat: evaluasi bs)
   }
 
   @override
   void dispose() {
+<<<<<<< HEAD
     _reasonController.removeListener(_persistDraft);
     _preventivePlanController.removeListener(_persistDraft);
     _reasonController.dispose();
+=======
+    _reasonController.dispose();
+    _actionPlanController.dispose();
+>>>>>>> b2b87875 (feat: evaluasi bs)
     _preventivePlanController.dispose();
     super.dispose();
   }
 
+<<<<<<< HEAD
   String _textValue(dynamic value) {
     final text = value?.toString().trim() ?? '';
     return text == '-' ? '' : text;
@@ -129,17 +155,38 @@ class _BsEditScreenState extends State<BsEditScreen> {
 
       if (!mounted) return;
       Navigator.pop(context, message);
+=======
+  Future<void> _save() async {
+    if (_saving || !_canSave) return;
+    setState(() => _saving = true);
+
+    try {
+      await _reportService.updateBsDetail(
+        id: widget.data['id'],
+        reason: _reasonController.text,
+        actionPlan: _actionPlanController.text,
+        preventivePlan: _preventivePlanController.text,
+      );
+
+      if (!mounted) return;
+      Navigator.pop(context, true);
+>>>>>>> b2b87875 (feat: evaluasi bs)
     } catch (e) {
       if (!mounted) return;
       setState(() => _saving = false);
       await showAlertDialog(
         context: context,
         title: 'Gagal Menyimpan',
+<<<<<<< HEAD
         message: _errorMessage(e),
+=======
+        message: e.toString(),
+>>>>>>> b2b87875 (feat: evaluasi bs)
       );
     }
   }
 
+<<<<<<< HEAD
   String _errorMessage(Object error) {
     return error.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
   }
@@ -165,6 +212,12 @@ class _BsEditScreenState extends State<BsEditScreen> {
     if (invalid.isEmpty) return null;
     if (invalid.length == 1) return '${invalid.first} minimal 8 karakter.';
     return '${invalid[0]} dan ${invalid[1]} minimal 8 karakter.';
+=======
+  bool get _canSave {
+    return _reasonController.text.trim().isNotEmpty &&
+        _actionPlanController.text.trim().isNotEmpty &&
+        _preventivePlanController.text.trim().isNotEmpty;
+>>>>>>> b2b87875 (feat: evaluasi bs)
   }
 
   @override
@@ -177,6 +230,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
         child: SingleChildScrollView(
+<<<<<<< HEAD
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
             children: [
@@ -227,6 +281,25 @@ class _BsEditScreenState extends State<BsEditScreen> {
                   child: _buildNextButton(),
                 ),
               ],
+=======
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              _buildEditorForm(
+                label: 'Alasan dan Penyebab',
+                controller: _reasonController,
+              ),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Rencana Tindakan',
+                controller: _actionPlanController,
+              ),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Rencana Pencegahan',
+                controller: _preventivePlanController,
+              ),
+>>>>>>> b2b87875 (feat: evaluasi bs)
             ],
           ),
         ),
@@ -300,6 +373,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
         minLines: 6,
         maxLines: 12,
         decoration: CustomTheme().inputDecoration('Masukkan $label'),
+<<<<<<< HEAD
       ),
     );
   }
@@ -766,4 +840,10 @@ class _BsEditScreenState extends State<BsEditScreen> {
     return '${local.day} ${months[local.month - 1]} ${local.year}, '
         '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
   }
+=======
+        onChanged: (_) => setState(() {}),
+      ),
+    );
+  }
+>>>>>>> b2b87875 (feat: evaluasi bs)
 }

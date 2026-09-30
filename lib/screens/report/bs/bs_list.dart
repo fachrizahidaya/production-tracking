@@ -15,7 +15,11 @@ class BsList extends StatefulWidget {
   final String sort;
   final String search;
   final String status;
+<<<<<<< HEAD
   final String? savedMessage;
+=======
+  final String? savedWoNo;
+>>>>>>> b2b87875 (feat: evaluasi bs)
 
   const BsList(
       {super.key,
@@ -24,7 +28,11 @@ class BsList extends StatefulWidget {
       this.sort = 'created_at',
       this.search = '',
       this.status = '',
+<<<<<<< HEAD
       this.savedMessage});
+=======
+      this.savedWoNo});
+>>>>>>> b2b87875 (feat: evaluasi bs)
 
   @override
   State<BsList> createState() => _BsListState();
@@ -63,8 +71,13 @@ class _BsListState extends State<BsList> {
     _endDate = widget.endDate ?? DateTime(now.year, now.month, now.day);
     _sort = widget.sort;
     _search = widget.search;
+<<<<<<< HEAD
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
+=======
+    _status = widget.status.trim();
+    _showSavedDialogAfterLoad = widget.savedWoNo != null;
+>>>>>>> b2b87875 (feat: evaluasi bs)
     _searchController.text = widget.search;
 
     _scrollController.addListener(_onScroll);
@@ -142,7 +155,11 @@ class _BsListState extends State<BsList> {
       if (_showSavedDialogAfterLoad) {
         _showSavedDialogAfterLoad = false;
         WidgetsBinding.instance.addPostFrameCallback((_) {
+<<<<<<< HEAD
           if (mounted) _showSavedDialog(widget.savedMessage!);
+=======
+          if (mounted) _showSavedDialog(widget.savedWoNo!);
+>>>>>>> b2b87875 (feat: evaluasi bs)
         });
       }
     } catch (e) {
@@ -172,7 +189,11 @@ class _BsListState extends State<BsList> {
       if (!mounted) return;
       setState(() {
         _pendingCount = counts['pending'];
+<<<<<<< HEAD
         _completedCount = counts['reviewed'];
+=======
+        _completedCount = counts['completed'];
+>>>>>>> b2b87875 (feat: evaluasi bs)
         _allCount = counts['all'];
       });
     } catch (_) {
@@ -367,8 +388,13 @@ class _BsListState extends State<BsList> {
               ),
               const SizedBox(width: 8),
               _buildStatusTab(
+<<<<<<< HEAD
                 label: 'Direview',
                 status: 'Direview',
+=======
+                label: 'Selesai',
+                status: 'Selesai',
+>>>>>>> b2b87875 (feat: evaluasi bs)
                 count: _completedCountLoading ? null : _completedCount,
               ),
               const SizedBox(width: 8),
@@ -389,7 +415,12 @@ class _BsListState extends State<BsList> {
     required String status,
     int? count,
   }) {
+<<<<<<< HEAD
     final selected = _status == status;
+=======
+    final selected =
+        _status == status || (status == 'Menunggu' && _status.isEmpty);
+>>>>>>> b2b87875 (feat: evaluasi bs)
     final color = CustomTheme().colors('primary');
 
     return InkWell(
@@ -434,12 +465,18 @@ class _BsListState extends State<BsList> {
 
   Widget _buildBsListCard(BsListItem item, {bool isFirst = false}) {
     final status = _display(item.status);
+<<<<<<< HEAD
+=======
+    final completed = _isCompleted(status);
+    final date = completed ? item.endDate : item.startDate;
+>>>>>>> b2b87875 (feat: evaluasi bs)
 
     return Padding(
       padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),
       child: InkWell(
         onTap: () => _openBsDetail(item),
         child: Container(
+<<<<<<< HEAD
           decoration: CustomTheme().cardTheme().copyWith(
                 color: _getStatusColor(status),
                 border: Border.all(
@@ -447,6 +484,9 @@ class _BsListState extends State<BsList> {
                   width: 1,
                 ),
               ),
+=======
+          decoration: CustomTheme().cardTheme(),
+>>>>>>> b2b87875 (feat: evaluasi bs)
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
@@ -479,6 +519,7 @@ class _BsListState extends State<BsList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildInfoLine(item),
+<<<<<<< HEAD
                     const SizedBox(height: 12),
                     _buildSubmittedByItem(
                       name: _isWaitingStatus(status) ? '-' : _submittedBy(item),
@@ -486,11 +527,18 @@ class _BsListState extends State<BsList> {
                           ? null
                           : _formatDateTime(item.endDate),
                     ),
+=======
+                    if (!_isWaitingStatus(status)) ...[
+                      const SizedBox(height: 18),
+                      _buildLabelValue('Diisi oleh:', _submittedBy(item)),
+                    ],
+>>>>>>> b2b87875 (feat: evaluasi bs)
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
+<<<<<<< HEAD
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -511,6 +559,14 @@ class _BsListState extends State<BsList> {
                                 ),
                               ),
                             ],
+=======
+                          child: Text(
+                            _formatDateTime(date),
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 16,
+                            ),
+>>>>>>> b2b87875 (feat: evaluasi bs)
                           ),
                         ),
                         _buildStatusBadge(status),
@@ -528,7 +584,10 @@ class _BsListState extends State<BsList> {
 
   Widget _buildInfoLine(BsListItem item) {
     return Column(
+<<<<<<< HEAD
       crossAxisAlignment: CrossAxisAlignment.start,
+=======
+>>>>>>> b2b87875 (feat: evaluasi bs)
       children: [
         _buildInfoItem(
           label: 'No. Sortir',
@@ -536,6 +595,7 @@ class _BsListState extends State<BsList> {
           valueColor: const Color(0xFF234393),
         ),
         const SizedBox(height: 12),
+<<<<<<< HEAD
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -611,6 +671,12 @@ class _BsListState extends State<BsList> {
             ),
           ),
         ],
+=======
+        _buildInfoItem(
+          label: 'Qty BS',
+          value: '${_qtyBs(item)} PCS',
+        ),
+>>>>>>> b2b87875 (feat: evaluasi bs)
       ],
     );
   }
@@ -653,6 +719,7 @@ class _BsListState extends State<BsList> {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildSubmittedByItem({
     required String name,
     String? time,
@@ -696,6 +763,8 @@ class _BsListState extends State<BsList> {
     );
   }
 
+=======
+>>>>>>> b2b87875 (feat: evaluasi bs)
   Widget _buildLabelValue(
     String label,
     String value, {
@@ -736,6 +805,7 @@ class _BsListState extends State<BsList> {
 
   String _qtyBs(BsListItem item) => _display(item.qtyBs);
 
+<<<<<<< HEAD
   Map<String, dynamic> _materialItem(BsListItem item) {
     final woItems = _map(item.wo)['items'];
     if (woItems is List && woItems.isNotEmpty) {
@@ -775,6 +845,8 @@ class _BsListState extends State<BsList> {
     );
   }
 
+=======
+>>>>>>> b2b87875 (feat: evaluasi bs)
   String _submittedBy(BsListItem item) {
     final submitted = _map(item.submitted);
     return _display(submitted['name'] ??
@@ -811,9 +883,13 @@ class _BsListState extends State<BsList> {
 
   bool _isCompleted(String status) {
     final normalized = status.toLowerCase();
+<<<<<<< HEAD
     return normalized == 'direview' ||
         normalized == 'reviewed' ||
         normalized == 'selesai' ||
+=======
+    return normalized == 'selesai' ||
+>>>>>>> b2b87875 (feat: evaluasi bs)
         normalized == 'completed' ||
         normalized == 'complete';
   }
@@ -826,38 +902,67 @@ class _BsListState extends State<BsList> {
   Future<void> _openBsDetail(BsListItem item) async {
     if (item.id == null || item.id.toString().trim().isEmpty) return;
 
+<<<<<<< HEAD
     final message = await Navigator.push<String>(
+=======
+    final updated = await Navigator.push<bool>(
+>>>>>>> b2b87875 (feat: evaluasi bs)
       context,
       MaterialPageRoute(
         builder: (context) => BsDetailLoadingScreen(id: item.id),
       ),
     );
 
+<<<<<<< HEAD
     if (message != null && message.trim().isNotEmpty && mounted) {
       await _loadBsList();
       await _loadPendingCount();
       if (mounted) {
         await _showSavedDialog(message);
+=======
+    if (updated == true && mounted) {
+      await _loadBsList();
+      await _loadPendingCount();
+      if (mounted) {
+        await _showSavedDialog(_workOrderNo(item));
+>>>>>>> b2b87875 (feat: evaluasi bs)
       }
     }
   }
 
+<<<<<<< HEAD
   Future<void> _showSavedDialog(String message) {
     return showAlertDialog(
       context: context,
       title: 'Perubahan Tersimpan',
       message: message,
+=======
+  Future<void> _showSavedDialog(String woNo) {
+    return showAlertDialog(
+      context: context,
+      title: 'Perubahan Tersimpan',
+      message: 'Perubahan untuk WO No $woNo sudah tersimpan.',
+>>>>>>> b2b87875 (feat: evaluasi bs)
     );
   }
 
   Widget _buildStatusBadge(String status) {
+<<<<<<< HEAD
+=======
+    final backgroundColor = _getStatusColor(status);
+
+>>>>>>> b2b87875 (feat: evaluasi bs)
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
         vertical: 5,
       ),
       decoration: BoxDecoration(
+<<<<<<< HEAD
         color: _getStatusBadgeColor(status),
+=======
+        color: backgroundColor,
+>>>>>>> b2b87875 (feat: evaluasi bs)
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -865,12 +970,17 @@ class _BsListState extends State<BsList> {
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
+<<<<<<< HEAD
           color: _getStatusBadgeTextColor(status),
+=======
+          color: _getStatusTextColor(status),
+>>>>>>> b2b87875 (feat: evaluasi bs)
         ),
       ),
     );
   }
 
+<<<<<<< HEAD
   Color _getStatusBadgeColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
@@ -902,6 +1012,13 @@ class _BsListState extends State<BsList> {
       case 'selesai':
       case 'completed':
         return const Color(0xFFF2F7FF);
+=======
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFFEBFDF4);
+>>>>>>> b2b87875 (feat: evaluasi bs)
       case 'menunggu':
       case 'waiting':
         return const Color(0xFFFFFBEA);
@@ -912,4 +1029,20 @@ class _BsListState extends State<BsList> {
         return Colors.grey;
     }
   }
+<<<<<<< HEAD
+=======
+
+  Color _getStatusTextColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFF15803D);
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFA16207);
+      default:
+        return _getStatusColor(status);
+    }
+  }
+>>>>>>> b2b87875 (feat: evaluasi bs)
 }

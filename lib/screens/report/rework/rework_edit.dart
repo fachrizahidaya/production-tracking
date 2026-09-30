@@ -79,6 +79,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   List<Map<String, dynamic>> _reasonOptions = [];
   List<Map<String, dynamic>> _selectedReasons = [];
 <<<<<<< HEAD
+<<<<<<< HEAD
   List<Map<String, dynamic>> _attachments = [];
 
   String get _draftType => 'rework';
@@ -89,6 +90,8 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
   int _editStep = 0;
 >>>>>>> fcd6e08b (fix: rework)
+=======
+>>>>>>> 264bcd0f (fix: evaluasi rework)
 
   @override
   void initState() {
@@ -825,6 +828,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         child: SingleChildScrollView(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
             children: [
@@ -865,17 +869,24 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                 ),
               ],
 =======
+=======
+>>>>>>> 264bcd0f (fix: evaluasi rework)
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
               _buildReasonForm(),
               const SizedBox(height: 16),
               _buildEditorForm(
+<<<<<<< HEAD
                 label: 'Action Plan',
+=======
+                label: 'Rencana Tindakan',
+>>>>>>> 264bcd0f (fix: evaluasi rework)
                 controller: _actionPlanController,
               ),
               const SizedBox(height: 16),
               _buildEditorForm(
+<<<<<<< HEAD
                 label: 'Preventif Plan',
                 controller: _preventivePlanController,
               ),
@@ -924,11 +935,20 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                   )
                 : const Text('Simpan'),
           ),
+=======
+                label: 'Rencana Pencegahan',
+                controller: _preventivePlanController,
+              ),
+            ],
+          ),
+>>>>>>> 264bcd0f (fix: evaluasi rework)
         ),
       ),
+      bottomNavigationBar: _buildSaveBar(),
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   ButtonStyle get _primaryActionButtonStyle => ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF4561DB),
@@ -1003,22 +1023,41 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
             style: _secondaryActionButtonStyle,
             child: const Text('Kembali'),
           ),
+=======
+  Widget _buildSaveBar() {
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, -2),
+            ),
+          ],
+>>>>>>> 264bcd0f (fix: evaluasi rework)
         ),
-        const SizedBox(width: 12),
-        Expanded(
+        child: SizedBox(
+          width: double.infinity,
+          height: 48,
           child: ElevatedButton(
-            onPressed: nextEnabled ? onNext : null,
+            onPressed: _canSave && !_saving ? _save : null,
             style: _primaryActionButtonStyle,
-            child: _saving && nextLabel == 'Simpan'
+            child: _saving
                 ? const SizedBox(
                     width: 18,
                     height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
                   )
-                : Text(nextLabel),
+                : const Text('Simpan'),
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -1032,6 +1071,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         ),
       );
 
+<<<<<<< HEAD
   ButtonStyle get _secondaryActionButtonStyle => OutlinedButton.styleFrom(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -1040,6 +1080,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
   Widget _buildReasonForm({Widget? footer}) {
 >>>>>>> fcd6e08b (fix: rework)
+=======
+  Widget _buildReasonForm() {
+>>>>>>> 264bcd0f (fix: evaluasi rework)
     return _buildFormCard(
       label: 'Alasan',
       child: Column(
@@ -1065,10 +1108,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
               label: const Text('Tambah alasan baru'),
             ),
           ),
-          if (footer != null) ...[
-            const SizedBox(height: 8),
-            footer,
-          ],
         ],
       ),
     );
@@ -1126,10 +1165,14 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
   Widget _buildFormCard({required String label, required Widget child}) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 264bcd0f (fix: evaluasi rework)
     return TemplateCard(
       title: label,
       icon: Icons.description_outlined,
       child: child,
+<<<<<<< HEAD
 =======
     return Container(
       width: double.infinity,
@@ -1146,30 +1189,23 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         ],
       ),
 >>>>>>> 41ded02d (fix: rework)
+=======
+>>>>>>> 264bcd0f (fix: evaluasi rework)
     );
   }
 
   Widget _buildEditorForm({
     required String label,
     required TextEditingController controller,
-    Widget? footer,
   }) {
     return _buildFormCard(
       label: label,
-      child: Column(
-        children: [
-          TextField(
-            controller: controller,
-            minLines: 6,
-            maxLines: 12,
-            decoration: CustomTheme().inputDecoration('Masukkan $label'),
-            onChanged: (_) => setState(() {}),
-          ),
-          if (footer != null) ...[
-            const SizedBox(height: 16),
-            footer,
-          ],
-        ],
+      child: TextField(
+        controller: controller,
+        minLines: 6,
+        maxLines: 12,
+        decoration: CustomTheme().inputDecoration('Masukkan $label'),
+        onChanged: (_) => setState(() {}),
       ),
     );
   }

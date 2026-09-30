@@ -987,6 +987,7 @@ class _ReworkListState extends State<ReworkList> {
         child: Container(
           decoration: CustomTheme().cardTheme(),
           clipBehavior: Clip.antiAlias,
+<<<<<<< HEAD
           child: Padding(
             padding: EdgeInsets.all(12),
             child: Column(
@@ -1051,6 +1052,13 @@ class _ReworkListState extends State<ReworkList> {
                               ),
 =======
                 Row(
+=======
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
+                child: Row(
+>>>>>>> 264bcd0f (fix: evaluasi rework)
                   children: [
                     Expanded(
                       child: Text(
@@ -1069,8 +1077,11 @@ class _ReworkListState extends State<ReworkList> {
                     ),
                   ],
                 ),
-                Divider(height: 24, color: Colors.grey.shade300),
-                Column(
+              ),
+              Divider(height: 24, color: Colors.grey.shade300),
+              Padding(
+                padding: EdgeInsets.fromLTRB(12, 0, 12, 12),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildReferenceLine(item),
@@ -1103,8 +1114,8 @@ class _ReworkListState extends State<ReworkList> {
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
 >>>>>>> 41ded02d (fix: rework)
         ),

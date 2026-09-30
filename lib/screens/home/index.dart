@@ -639,6 +639,7 @@ class _HomeState extends State<Home> {
         isLoading.value = true;
         final deviceData = await FcmService.instance.getCurrentDeviceData();
 
+<<<<<<< HEAD
         final res = await http.post(
           Uri.parse(url),
           headers: {
@@ -648,14 +649,23 @@ class _HomeState extends State<Home> {
           },
           body: jsonEncode(deviceData),
         );
+=======
+        final res = await http.post(Uri.parse(url),
+            headers: {'Authorization': 'Bearer $token'}, body: null);
+>>>>>>> 264bcd0f (fix: evaluasi rework)
 
         if (res.statusCode == 200) {
           await FcmService.instance.clearCurrentDeviceData();
           if (context.mounted) {
+<<<<<<< HEAD
             await Provider.of<UserProvider>(
               context,
               listen: false,
             ).handleLogout();
+=======
+            await Provider.of<UserProvider>(context, listen: false)
+                .handleLogout();
+>>>>>>> 264bcd0f (fix: evaluasi rework)
 
             await Future.delayed(Duration(milliseconds: 200));
             Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);

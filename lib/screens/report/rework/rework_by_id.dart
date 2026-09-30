@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/multi_select_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
@@ -140,7 +141,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   List<Map<String, dynamic>> _selectedReasons = [];
   bool _loadingReasons = false;
   bool _saving = false;
-  int _waitingStep = 0;
 
   @override
   void initState() {
@@ -181,6 +181,12 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
   bool get _useEditScreen {
     return _isCompleted;
+  }
+
+  bool get _canSaveWaiting {
+    return _selectedReasons.isNotEmpty &&
+        _actionPlanController.text.trim().isNotEmpty &&
+        _preventivePlanController.text.trim().isNotEmpty;
   }
 
   Future<void> _loadReasonOptions() async {
@@ -431,44 +437,69 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 child: _buildCategoryCard(),
               ),
               const SizedBox(height: 16),
-              _useEditScreen
-                  ? _buildReadOnlyCard(
-                      'Alasan dan Penyebab', _reasonController.text)
-                  : _isWaiting
-                      ? _buildWaitingForm()
-                      : _buildFormCard(
-                          label: 'Alasan',
-                          child: TextField(
-                            controller: _reasonController,
-                            minLines: 3,
-                            maxLines: 5,
-                            decoration: CustomTheme().inputDecoration(
-                              'Masukkan alasan rework',
-                            ),
-                          ),
-                        ),
-              const SizedBox(height: 16),
-              if (!_isWaiting) ...[
-                _useEditScreen
-                    ? _buildReadOnlyCard(
-                        'Rencana Tindakan', _actionPlanController.text)
-                    : _buildEditorForm(
-                        label: 'Rencana Tindakan',
-                        controller: _actionPlanController,
-                      ),
+              if (_useEditScreen) ...[
+                _buildReadOnlyCard(
+                  'Alasan dan Penyebab',
+                  _reasonController.text,
+                  updatedAt: widget.data['reason_updated_at']?.toString(),
+                ),
                 const SizedBox(height: 16),
-                _useEditScreen
-                    ? _buildReadOnlyCard(
-                        'Rencana Pencegahan', _preventivePlanController.text)
-                    : _buildEditorForm(
-                        label: 'Rencana Pencegahan',
-                        controller: _preventivePlanController,
-                      ),
+                _buildReadOnlyCard(
+                  'Rencana Tindakan',
+                  _actionPlanController.text,
+                  updatedAt: widget.data['action_plan_updated_at']?.toString(),
+                ),
+                const SizedBox(height: 16),
+                _buildReadOnlyCard(
+                  'Rencana Pencegahan',
+                  _preventivePlanController.text,
+                  updatedAt:
+                      widget.data['preventive_plan_updated_at']?.toString(),
+                ),
+              ] else if (_isWaiting) ...[
+                _buildWaitingReasonSection(),
+                const SizedBox(height: 16),
+                _buildEditorForm(
+                  label: 'Rencana Tindakan',
+                  controller: _actionPlanController,
+                ),
+                const SizedBox(height: 16),
+                _buildEditorForm(
+                  label: 'Rencana Pencegahan',
+                  controller: _preventivePlanController,
+                ),
+              ] else ...[
+                _buildFormCard(
+                  label: 'Alasan',
+                  child: TextField(
+                    controller: _reasonController,
+                    minLines: 3,
+                    maxLines: 5,
+                    decoration: CustomTheme().inputDecoration(
+                      'Masukkan alasan rework',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildEditorForm(
+                  label: 'Rencana Tindakan',
+                  controller: _actionPlanController,
+                ),
+                const SizedBox(height: 16),
+                _buildEditorForm(
+                  label: 'Rencana Pencegahan',
+                  controller: _preventivePlanController,
+                ),
+              ],
+              if (_histories.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                _buildHistoryCard(),
               ],
             ],
           ),
         ),
       ),
+      bottomNavigationBar: _isWaiting ? _buildSaveBar() : null,
     );
   }
 
@@ -589,18 +620,43 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
   String _value(String key) => widget.data[key]?.toString() ?? '-';
 
-  Widget _buildWaitingForm() {
-    switch (_waitingStep) {
-      case 1:
-        return _buildWaitingActionStep();
-      case 2:
-        return _buildWaitingPreventiveStep();
-      default:
-        return _buildWaitingReasonStep();
-    }
+  Widget _buildSaveBar() {
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: ElevatedButton(
+            onPressed: _canSaveWaiting && !_saving ? _saveWaitingForm : null,
+            style: _primaryActionButtonStyle,
+            child: _saving
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Text('Simpan'),
+          ),
+        ),
+      ),
+    );
   }
 
-  Widget _buildWaitingReasonStep() {
+  Widget _buildWaitingReasonSection() {
     return _buildFormCard(
       label: 'Alasan',
       child: Column(
@@ -625,11 +681,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
               icon: const Icon(Icons.add),
               label: const Text('Tambah alasan baru'),
             ),
-          ),
-          const SizedBox(height: 8),
-          _buildNextButton(
-            enabled: _selectedReasons.isNotEmpty,
-            onPressed: () => setState(() => _waitingStep = 1),
           ),
         ],
       ),
@@ -673,77 +724,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     );
   }
 
-  Widget _buildWaitingActionStep() {
-    return _buildEditorForm(
-      label: 'Rencana Tindakan',
-      controller: _actionPlanController,
-      footer: _buildStepButtons(
-        nextLabel: 'Selanjutnya',
-        nextEnabled: _actionPlanController.text.trim().isNotEmpty,
-        onNext: () => setState(() => _waitingStep = 2),
-      ),
-    );
-  }
-
-  Widget _buildWaitingPreventiveStep() {
-    return _buildEditorForm(
-      label: 'Rencana Pencegahan',
-      controller: _preventivePlanController,
-      footer: _buildStepButtons(
-        nextLabel: 'Simpan',
-        nextEnabled:
-            _preventivePlanController.text.trim().isNotEmpty && !_saving,
-        onNext: _saveWaitingForm,
-      ),
-    );
-  }
-
-  Widget _buildNextButton({
-    required bool enabled,
-    required VoidCallback onPressed,
-  }) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: enabled ? onPressed : null,
-        style: _primaryActionButtonStyle,
-        child: const Text('Selanjutnya'),
-      ),
-    );
-  }
-
-  Widget _buildStepButtons({
-    required String nextLabel,
-    required bool nextEnabled,
-    required VoidCallback onNext,
-  }) {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton(
-            onPressed: _saving ? null : () => setState(() => _waitingStep--),
-            style: _secondaryActionButtonStyle,
-            child: const Text('Kembali'),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: ElevatedButton(
-            onPressed: nextEnabled ? onNext : null,
-            style: _primaryActionButtonStyle,
-            child: _saving && nextLabel == 'Simpan'
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Text(nextLabel),
-          ),
-        ),
-      ],
-    );
-  }
-
   ButtonStyle get _primaryActionButtonStyle => ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF4561DB),
         foregroundColor: Colors.white,
@@ -754,14 +734,8 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         ),
       );
 
-  ButtonStyle get _secondaryActionButtonStyle => OutlinedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      );
-
   Future<void> _saveWaitingForm() async {
-    if (_saving) return;
+    if (_saving || !_canSaveWaiting) return;
     setState(() => _saving = true);
     try {
       await _reportService.updateReworkDetail(
@@ -788,69 +762,29 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   Widget _buildCategoryCard() {
     final categories = _reworkCategories();
 
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(16),
-      decoration: CustomTheme().cardTheme(),
+    return TemplateCard(
+      title: 'Kategori Rework',
+      icon: Icons.local_offer_outlined,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Container(
-              //   width: 64,
-              //   height: 64,
-              //   decoration: BoxDecoration(
-              //     color: const Color(0xFFF9F9FB),
-              //     border: Border.all(color: Colors.grey.shade300),
-              //     borderRadius: BorderRadius.circular(12),
-              //   ),
-              //   child: Icon(Icons.sell_outlined, color: Colors.grey.shade600),
-              // ),
-              // const SizedBox(width: 24),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'KATEGORI REWORK',
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.6,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _categoryTitle(categories),
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          Text(
+            _categoryTitle(categories),
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('md'),
+              fontWeight: CustomTheme().fontWeight('semibold'),
+              color: Colors.grey[800],
+            ),
           ),
-          const SizedBox(height: 8),
-          Divider(height: 1, color: Colors.grey.shade300),
-          if (categories.isNotEmpty)
+          if (categories.isNotEmpty) ...[
+            const SizedBox(height: 8),
             ...categories.asMap().entries.map(
                   (entry) => _buildCategoryItem(
                     entry.value,
                     isLast: entry.key == categories.length - 1,
                   ),
-                )
-          else
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 18),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  _value('category'),
-                  style: const TextStyle(fontSize: 16),
                 ),
-              ),
-            ),
+          ],
         ],
       ),
     );
@@ -897,7 +831,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 18),
+      padding: EdgeInsets.fromLTRB(12, 8, 12, 4),
       decoration: BoxDecoration(
         border: isLast
             ? null
@@ -1022,52 +956,157 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
   Widget _buildFormCard({required String label, required Widget child}) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: Container(
-        width: double.infinity,
-        decoration: CustomTheme().cardTheme(),
-        padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+      child: TemplateCard(
+        title: label,
+        icon: Icons.description_outlined,
+        child: child,
+      ),
+    );
+  }
+
+  Widget _buildReadOnlyCard(
+    String label,
+    String value, {
+    String? updatedAt,
+  }) {
+    final hasUpdatedAt =
+        updatedAt != null && updatedAt.trim().isNotEmpty && updatedAt != '-';
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+      child: TemplateCard(
+        title: label,
+        icon: Icons.description_outlined,
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                value.isEmpty ? '-' : value,
+                style: TextStyle(
+                  fontSize: CustomTheme().fontSize('base'),
+                  fontWeight: CustomTheme().fontWeight('semibold'),
+                  color: Colors.grey[800],
+                ),
+              ),
+              if (hasUpdatedAt) ...[
+                const SizedBox(height: 8),
+                Text(
+                  _formatDateTime(updatedAt),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Map<String, dynamic>> get _histories {
+    final raw = widget.data['histories'];
+    if (raw is! List) return [];
+    return raw
+        .whereType<Map>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .toList();
+  }
+
+  String _historyFieldLabel(String? field) {
+    switch (field) {
+      case 'reason':
+        return 'Alasan dan Penyebab';
+      case 'action_plan':
+        return 'Rencana Tindakan';
+      case 'preventive_plan':
+        return 'Rencana Pencegahan';
+      default:
+        return field?.toString() ?? '-';
+    }
+  }
+
+  Widget _buildHistoryCard() {
+    final histories = _histories;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+      child: TemplateCard(
+        title: 'Riwayat Perubahan',
+        icon: Icons.history_outlined,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              label,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 12),
-            child,
+            for (int i = 0; i < histories.length; i++) ...[
+              if (i > 0) const SizedBox(height: 12),
+              _buildHistoryItem(histories[i]),
+            ],
           ],
         ),
       ),
     );
   }
 
-  Widget _buildReadOnlyCard(String label, String value) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: Container(
-        width: double.infinity,
-        decoration: CustomTheme().cardTheme(),
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label.toUpperCase(),
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5,
+  Widget _buildHistoryItem(Map<String, dynamic> history) {
+    final newValue = history['new_value']?.toString().trim();
+    final changedBy = history['changed_by'];
+    final changedByName =
+        changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
+    final createdAt = history['created_at']?.toString();
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _historyFieldLabel(history['field']?.toString()),
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade600,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            (newValue == null || newValue.isEmpty) ? '-' : newValue,
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('base'),
+              fontWeight: CustomTheme().fontWeight('semibold'),
+              color: Colors.grey[800],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Text(
+                'oleh $changedByName, ',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey.shade700,
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              value.isEmpty ? '-' : value,
-              style: const TextStyle(fontSize: 17, color: Colors.black87),
-            ),
-          ],
-        ),
+              Text(
+                createdAt == null || createdAt.isEmpty
+                    ? '-'
+                    : _formatDateTime(createdAt),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -1075,24 +1114,15 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   Widget _buildEditorForm({
     required String label,
     required TextEditingController controller,
-    Widget? footer,
   }) {
     return _buildFormCard(
       label: label,
-      child: Column(
-        children: [
-          TextField(
-            controller: controller,
-            minLines: 6,
-            maxLines: 12,
-            decoration: CustomTheme().inputDecoration('Masukkan $label'),
-            onChanged: (_) => setState(() {}),
-          ),
-          if (footer != null) ...[
-            const SizedBox(height: 16),
-            footer,
-          ],
-        ],
+      child: TextField(
+        controller: controller,
+        minLines: 6,
+        maxLines: 12,
+        decoration: CustomTheme().inputDecoration('Masukkan $label'),
+        onChanged: (_) => setState(() {}),
       ),
     );
   }

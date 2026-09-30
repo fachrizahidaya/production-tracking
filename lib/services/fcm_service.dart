@@ -173,13 +173,14 @@ class FcmService with WidgetsBindingObserver {
   }
 
   Future<void> unregisterCurrentDevice() async {
-    if (!_initialized) return;
-
     final prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('access_token');
-    final token = prefs.getString('fcm_token') ?? await _messaging.getToken();
+    String? token = prefs.getString('fcm_token');
+    if (token == null && _initialized) {
+      token = await _messaging.getToken();
+    }
     final deviceId = prefs.getString('fcm_device_id') ?? await _getDeviceId();
-    if (accessToken == null || token == null) return;
+    if (accessToken == null || accessToken.isEmpty || token == null) return;
 
     try {
       await http.delete(

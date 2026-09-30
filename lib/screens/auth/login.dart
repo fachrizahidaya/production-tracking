@@ -58,7 +58,15 @@ class _LoginState extends State<Login> {
 
     Navigator.pushReplacementNamed(context, '/dashboard');
     FcmService.instance.registerForCurrentUser();
-    FcmService.instance.flushPendingNavigation();
+    _flushPendingNavigationAfterDashboard();
+  }
+
+  void _flushPendingNavigationAfterDashboard() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FcmService.instance.flushPendingNavigation();
+      });
+    });
   }
 
   Future<void> _handleCheckLogin() async {
@@ -77,7 +85,7 @@ class _LoginState extends State<Login> {
 
       Navigator.pushReplacementNamed(context, '/dashboard');
       FcmService.instance.registerForCurrentUser();
-      FcmService.instance.flushPendingNavigation();
+      _flushPendingNavigationAfterDashboard();
     }
   }
 

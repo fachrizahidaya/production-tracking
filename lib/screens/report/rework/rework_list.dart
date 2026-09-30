@@ -7,6 +7,7 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/models/report/rework.dart';
 import 'package:textile_tracking/screens/report/rework/rework_by_id.dart';
 import 'package:textile_tracking/screens/report/service.dart';
@@ -36,6 +37,8 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+=======
+>>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
 import 'package:textile_tracking/models/report/rework.dart';
 import 'package:textile_tracking/screens/report/rework/rework_by_id.dart';
 import 'package:textile_tracking/screens/report/service.dart';
@@ -50,6 +53,7 @@ class ReworkList extends StatefulWidget {
   final String sort;
   final String search;
   final String status;
+  final String? savedWoNo;
 
   const ReworkList(
       {super.key,
@@ -58,11 +62,16 @@ class ReworkList extends StatefulWidget {
       this.sort = 'created_at',
       this.search = '',
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.status = 'all'});
 >>>>>>> 41ded02d (fix: rework)
 =======
       this.status = ''});
 >>>>>>> fcd6e08b (fix: rework)
+=======
+      this.status = '',
+      this.savedWoNo});
+>>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
 
   @override
   State<ReworkList> createState() => _ReworkListState();
@@ -102,12 +111,18 @@ class _ReworkListState extends State<ReworkList> {
 =======
   int? _pendingCount;
   int? _completedCount;
+  int? _allCount;
   bool _pendingCountLoading = true;
 <<<<<<< HEAD
 >>>>>>> fcd6e08b (fix: rework)
 =======
   bool _completedCountLoading = true;
+<<<<<<< HEAD
 >>>>>>> 24896cd5 (fix: rework)
+=======
+  bool _allCountLoading = true;
+  bool _showSavedDialogAfterLoad = false;
+>>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
   int _requestId = 0;
 
   @override
@@ -127,7 +142,11 @@ class _ReworkListState extends State<ReworkList> {
 >>>>>>> 41ded02d (fix: rework)
 =======
     _status = widget.status.trim();
+<<<<<<< HEAD
 >>>>>>> fcd6e08b (fix: rework)
+=======
+    _showSavedDialogAfterLoad = widget.savedWoNo != null;
+>>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
     _searchController.text = widget.search;
 
     _scrollController.addListener(_onScroll);
@@ -209,15 +228,24 @@ class _ReworkListState extends State<ReworkList> {
         _loading = false;
       });
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
 
       if (_showSavedDialogAfterLoad) {
         _showSavedDialogAfterLoad = false;
         WidgetsBinding.instance.addPostFrameCallback((_) {
+<<<<<<< HEAD
           if (mounted) _showSavedDialog(widget.savedMessage!);
         });
       }
 =======
 >>>>>>> 41ded02d (fix: rework)
+=======
+          if (mounted) _showSavedDialog(widget.savedWoNo!);
+        });
+      }
+>>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
     } catch (e) {
       if (!mounted || requestId != _requestId) return;
 
@@ -270,6 +298,7 @@ class _ReworkListState extends State<ReworkList> {
       setState(() {
         _pendingCountLoading = true;
         _completedCountLoading = true;
+        _allCountLoading = true;
       });
     }
 
@@ -279,12 +308,14 @@ class _ReworkListState extends State<ReworkList> {
       setState(() {
         _pendingCount = counts['pending'];
         _completedCount = counts['completed'];
+        _allCount = counts['all'];
       });
     } catch (_) {
       if (!mounted) return;
       setState(() {
         _pendingCount = null;
         _completedCount = null;
+        _allCount = null;
       });
     } finally {
       if (mounted) {
@@ -295,6 +326,7 @@ class _ReworkListState extends State<ReworkList> {
         setState(() {
           _pendingCountLoading = false;
           _completedCountLoading = false;
+          _allCountLoading = false;
         });
 >>>>>>> 24896cd5 (fix: rework)
       }
@@ -751,8 +783,8 @@ class _ReworkListState extends State<ReworkList> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           children: const [
                             SizedBox(
-                              height: 240,
-                              child: Center(child: NoData()),
+                              height: 600,
+                              child: NoData(),
                             ),
                           ],
                         )
@@ -876,8 +908,16 @@ class _ReworkListState extends State<ReworkList> {
               ),
 >>>>>>> 24896cd5 (fix: rework)
               const SizedBox(width: 8),
+<<<<<<< HEAD
 >>>>>>> f248a3d8 (fix: rework)
               _buildStatusTab(label: 'Semua', status: 'all'),
+=======
+              _buildStatusTab(
+                label: 'Semua',
+                status: 'all',
+                count: _allCountLoading ? null : _allCount,
+              ),
+>>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
             ],
           ),
         ),
@@ -1781,7 +1821,18 @@ class _ReworkListState extends State<ReworkList> {
     if (updated == true && mounted) {
       await _loadReworkList();
       await _loadPendingCount();
+      if (mounted) {
+        await _showSavedDialog(_workOrderNo(item));
+      }
     }
+  }
+
+  Future<void> _showSavedDialog(String woNo) {
+    return showAlertDialog(
+      context: context,
+      title: 'Perubahan Tersimpan',
+      message: 'Perubahan untuk WO No $woNo sudah tersimpan.',
+    );
   }
 
   Widget _buildStatusBadge(String status) {

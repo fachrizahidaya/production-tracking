@@ -46,7 +46,7 @@ class _AppDrawerState extends State<AppDrawer> {
     'Proses Produksi',
     'Produksi',
     'Pesanan',
-    // 'Laporan',
+    'Laporan',
     'Order Greige',
     'Anomali Data',
     'Desain',

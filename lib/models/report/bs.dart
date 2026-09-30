@@ -41,11 +41,15 @@ class BsListItem {
   final submitted;
   final sorting;
   final qtyBs;
+<<<<<<< HEAD
   final bsRate;
   final material;
   final item;
   final topMaterialCode;
   final topMaterialName;
+=======
+  final material;
+>>>>>>> aa02f1b (feat: evaluasi bs)
   final defects;
   final startDate;
   final endDate;
@@ -60,25 +64,36 @@ class BsListItem {
       this.submitted,
       this.sorting,
       this.qtyBs,
+<<<<<<< HEAD
       this.bsRate,
       this.material,
       this.item,
       this.topMaterialCode,
       this.topMaterialName,
+=======
+      this.material,
+>>>>>>> aa02f1b (feat: evaluasi bs)
       this.defects,
       this.endDate,
       this.startDate});
 
   factory BsListItem.fromJson(Map<String, dynamic> json) {
     final sorting = json['sorting'] ?? {};
+<<<<<<< HEAD
     final wo = json['work_order'] ?? {};
     final woItems = wo is Map ? wo['items'] : null;
     final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
+=======
+>>>>>>> aa02f1b (feat: evaluasi bs)
     return BsListItem(
         id: json['id'] ?? '',
         startDate: json['created_at'] ?? '',
         endDate: json['completed_at'] ?? '',
+<<<<<<< HEAD
         wo: wo,
+=======
+        wo: json['work_order'] ?? {},
+>>>>>>> aa02f1b (feat: evaluasi bs)
         actionPlan: json['action_plan'] ?? '',
         preventivePlan: json['preventive_plan'] ?? '',
         reason: json['reason'] ?? json['reasons'] ?? '',
@@ -88,6 +103,7 @@ class BsListItem {
             json['qty'] ??
             sorting['qty_bs'] ??
             '',
+<<<<<<< HEAD
         bsRate: json['bs_rate'] ?? sorting['bs_rate'] ?? '',
         material: json['material'] ??
             json['semi_finished_product'] ??
@@ -95,6 +111,11 @@ class BsListItem {
         item: woItem ?? json['item'] ?? {},
         topMaterialCode: json['top_material_code'] ?? '',
         topMaterialName: json['top_material_name'] ?? '',
+=======
+        material: json['material'] ??
+            json['semi_finished_product'] ??
+            '',
+>>>>>>> aa02f1b (feat: evaluasi bs)
         defects: json['defects'] ?? [],
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});

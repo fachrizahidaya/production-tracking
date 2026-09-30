@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+=======
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
+>>>>>>> aa02f1b (feat: evaluasi bs)
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 
@@ -38,6 +43,7 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
       final data = await _reportService.getBsDetail(widget.id);
       if (!mounted) return;
 
+<<<<<<< HEAD
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
@@ -46,14 +52,29 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
         MaterialPageRoute(
           builder: (context) =>
               isWaiting ? BsEditScreen(data: data) : BsDetailScreen(data: data),
+=======
+      final updated = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BsDetailScreen(data: data),
+>>>>>>> aa02f1b (feat: evaluasi bs)
         ),
       );
 
       if (!mounted) return;
       if (widget.returnToList) {
+<<<<<<< HEAD
         _replaceWithBsList(message: message);
       } else {
         Navigator.pop(context, message);
+=======
+        _replaceWithBsList(
+          saved: updated == true,
+          woNo: data['woNo']?.toString(),
+        );
+      } else {
+        Navigator.pop(context, updated);
+>>>>>>> aa02f1b (feat: evaluasi bs)
       }
     } catch (error) {
       if (!mounted) return;
@@ -61,12 +82,20 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
     }
   }
 
+<<<<<<< HEAD
   void _replaceWithBsList({String? message}) {
+=======
+  void _replaceWithBsList({bool saved = false, String? woNo}) {
+>>>>>>> aa02f1b (feat: evaluasi bs)
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (_) => BsList(
+<<<<<<< HEAD
           savedMessage: message,
+=======
+          savedWoNo: saved ? woNo : null,
+>>>>>>> aa02f1b (feat: evaluasi bs)
         ),
       ),
     );
@@ -118,13 +147,25 @@ class BsDetailScreen extends StatefulWidget {
 
 class _BsDetailScreenState extends State<BsDetailScreen> {
   final TextEditingController _reasonController = TextEditingController();
+<<<<<<< HEAD
   final TextEditingController _preventivePlanController =
       TextEditingController();
+=======
+  final TextEditingController _actionPlanController = TextEditingController();
+  final TextEditingController _preventivePlanController =
+      TextEditingController();
+  final ReportService _reportService = ReportService();
+  bool _saving = false;
+>>>>>>> aa02f1b (feat: evaluasi bs)
 
   @override
   void initState() {
     super.initState();
     _reasonController.text = widget.data['reason']?.toString() ?? '';
+<<<<<<< HEAD
+=======
+    _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
+>>>>>>> aa02f1b (feat: evaluasi bs)
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
   }
@@ -132,12 +173,17 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   @override
   void dispose() {
     _reasonController.dispose();
+<<<<<<< HEAD
+=======
+    _actionPlanController.dispose();
+>>>>>>> aa02f1b (feat: evaluasi bs)
     _preventivePlanController.dispose();
     super.dispose();
   }
 
   bool get _isCompleted {
     final status = widget.data['status']?.toString().toLowerCase();
+<<<<<<< HEAD
     return status == 'direview' ||
         status == 'reviewed' ||
         status == 'selesai' ||
@@ -146,14 +192,62 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 
   Future<void> _openEditScreen() async {
     final message = await Navigator.push<String>(
+=======
+    return status == 'selesai' || status == 'completed';
+  }
+
+  bool get _isWaiting {
+    final status = widget.data['status']?.toString().toLowerCase();
+    return status == 'menunggu' || status == 'waiting';
+  }
+
+  bool get _useEditScreen => _isCompleted;
+
+  bool get _canSaveWaiting {
+    return _reasonController.text.trim().isNotEmpty &&
+        _actionPlanController.text.trim().isNotEmpty &&
+        _preventivePlanController.text.trim().isNotEmpty;
+  }
+
+  Future<void> _openEditScreen() async {
+    final updated = await Navigator.push<bool>(
+>>>>>>> aa02f1b (feat: evaluasi bs)
       context,
       MaterialPageRoute(
         builder: (context) => BsEditScreen(data: widget.data),
       ),
     );
 
+<<<<<<< HEAD
     if (message != null && message.trim().isNotEmpty && mounted) {
       Navigator.pop(context, message);
+=======
+    if (updated == true && mounted) {
+      Navigator.pop(context, true);
+    }
+  }
+
+  Future<void> _saveWaitingForm() async {
+    if (_saving || !_canSaveWaiting) return;
+    setState(() => _saving = true);
+    try {
+      await _reportService.updateBsDetail(
+        id: widget.data['id'],
+        reason: _reasonController.text,
+        actionPlan: _actionPlanController.text,
+        preventivePlan: _preventivePlanController.text,
+      );
+      if (!mounted) return;
+      Navigator.pop(context, true);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _saving = false);
+      await showAlertDialog(
+        context: context,
+        title: 'Gagal Menyimpan',
+        message: e.toString(),
+      );
+>>>>>>> aa02f1b (feat: evaluasi bs)
     }
   }
 
@@ -163,7 +257,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       appBar: CustomAppBar(
         title: 'Detail Evaluasi BS',
         onReturn: () => Navigator.pop(context),
+<<<<<<< HEAD
         onEdit: _isCompleted ? _openEditScreen : null,
+=======
+        onEdit: _useEditScreen ? _openEditScreen : null,
+>>>>>>> aa02f1b (feat: evaluasi bs)
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
@@ -182,6 +280,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 child: _buildCategoryCard(),
               ),
               const SizedBox(height: 16),
+<<<<<<< HEAD
               _buildReadOnlyCard(
                 'Alasan dan Penyebab',
                 _reasonController.text,
@@ -203,10 +302,55 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                   attachments: widget.data['attachments'],
                 ),
               ),
+=======
+              if (_useEditScreen) ...[
+                _buildReadOnlyCard(
+                  'Alasan dan Penyebab',
+                  _reasonController.text,
+                  updatedAt: widget.data['reason_updated_at']?.toString(),
+                ),
+                const SizedBox(height: 16),
+                _buildReadOnlyCard(
+                  'Rencana Tindakan',
+                  _actionPlanController.text,
+                  updatedAt: widget.data['action_plan_updated_at']?.toString(),
+                ),
+                const SizedBox(height: 16),
+                _buildReadOnlyCard(
+                  'Rencana Pencegahan',
+                  _preventivePlanController.text,
+                  updatedAt:
+                      widget.data['preventive_plan_updated_at']?.toString(),
+                ),
+              ] else ...[
+                _buildEditorForm(
+                  label: 'Alasan dan Penyebab',
+                  controller: _reasonController,
+                ),
+                const SizedBox(height: 16),
+                _buildEditorForm(
+                  label: 'Rencana Tindakan',
+                  controller: _actionPlanController,
+                ),
+                const SizedBox(height: 16),
+                _buildEditorForm(
+                  label: 'Rencana Pencegahan',
+                  controller: _preventivePlanController,
+                ),
+              ],
+              if (_histories.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                _buildHistoryCard(),
+              ],
+>>>>>>> aa02f1b (feat: evaluasi bs)
             ],
           ),
         ),
       ),
+<<<<<<< HEAD
+=======
+      bottomNavigationBar: _isWaiting ? _buildSaveBar() : null,
+>>>>>>> aa02f1b (feat: evaluasi bs)
     );
   }
 
@@ -233,6 +377,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             valueColor: const Color(0xFF234393),
           ),
           const SizedBox(height: 12),
+<<<<<<< HEAD
           _buildQtyBsItem(),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
@@ -309,6 +454,35 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           ],
         ),
       ],
+=======
+          _buildOverviewItem(
+            label: 'Qty BS',
+            value: '${_value('qtyBs')} PCS',
+            valueColor: const Color(0xFF234393),
+          ),
+          const SizedBox(height: 12),
+          _buildMaterialItem(),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text(
+                  _formatDateTime(
+                    _value(_isCompleted ? 'completedAt' : 'startedAt'),
+                  ),
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              _buildStatusBadge(_value('status')),
+            ],
+          ),
+        ],
+      ),
+>>>>>>> aa02f1b (feat: evaluasi bs)
     );
   }
 
@@ -343,6 +517,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildSubmittedByItem() {
     final name = _value('submittedBy');
     final time = _formatDateTime(_value('completedAt'));
@@ -385,6 +560,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     );
   }
 
+=======
+>>>>>>> aa02f1b (feat: evaluasi bs)
   Widget _buildMaterialItem() {
     final code = _value('topMaterialCode');
     final name = _value('topMaterialName');
@@ -429,6 +606,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 
   String _value(String key) => widget.data[key]?.toString() ?? '-';
 
+<<<<<<< HEAD
   Widget _buildCategoryCard() {
     final defects = _defects();
 
@@ -508,6 +686,79 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 ],
               ),
             ),
+=======
+  Widget _buildSaveBar() {
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: ElevatedButton(
+            onPressed: _canSaveWaiting && !_saving ? _saveWaitingForm : null,
+            style: _primaryActionButtonStyle,
+            child: _saving
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Text('Simpan'),
+          ),
+        ),
+      ),
+    );
+  }
+
+  ButtonStyle get _primaryActionButtonStyle => ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF4561DB),
+        foregroundColor: Colors.white,
+        disabledBackgroundColor: Colors.grey.shade300,
+        disabledForegroundColor: Colors.grey.shade600,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      );
+
+  Widget _buildCategoryCard() {
+    final defects = _defects();
+
+    return TemplateCard(
+      title: 'Tipe BS',
+      icon: Icons.local_offer_outlined,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (defects.isEmpty)
+            Text(
+              '-',
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize('md'),
+                fontWeight: CustomTheme().fontWeight('semibold'),
+                color: Colors.grey[800],
+              ),
+            )
+          else
+            ...defects.asMap().entries.map(
+                  (entry) => _buildDefectItem(
+                    entry.value,
+                    isLast: entry.key == defects.length - 1,
+                  ),
+                ),
+>>>>>>> aa02f1b (feat: evaluasi bs)
         ],
       ),
     );
@@ -522,11 +773,19 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         .toList();
   }
 
+<<<<<<< HEAD
   Widget _buildDefectItem(Map<String, dynamic> defect) {
+=======
+  Widget _buildDefectItem(
+    Map<String, dynamic> defect, {
+    required bool isLast,
+  }) {
+>>>>>>> aa02f1b (feat: evaluasi bs)
     final name = defect['defect_name']?.toString() ?? '-';
     final qty = defect['qty']?.toString() ?? '-';
 
     return Container(
+<<<<<<< HEAD
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
@@ -548,11 +807,41 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             ),
           ),
           const SizedBox(width: 8),
+=======
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+      decoration: BoxDecoration(
+        border: isLast
+            ? null
+            : Border(bottom: BorderSide(color: Colors.grey.shade200)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            width: 18,
+            child: Text('•', style: TextStyle(fontSize: 20)),
+          ),
+          Expanded(
+            child: Text(
+              name,
+              style: const TextStyle(
+                color: Color(0xFF292A2F),
+                fontSize: 17,
+              ),
+            ),
+          ),
+>>>>>>> aa02f1b (feat: evaluasi bs)
           Text(
             qty,
             style: TextStyle(
               color: Colors.grey.shade700,
+<<<<<<< HEAD
               fontWeight: FontWeight.w700,
+=======
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+>>>>>>> aa02f1b (feat: evaluasi bs)
             ),
           ),
         ],
@@ -585,11 +874,17 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
+<<<<<<< HEAD
       case 'direview':
       case 'reviewed':
       case 'selesai':
       case 'completed':
         return const Color(0xFFF2F7FF);
+=======
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFFEBFDF4);
+>>>>>>> aa02f1b (feat: evaluasi bs)
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
@@ -606,6 +901,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
+<<<<<<< HEAD
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -614,11 +910,20 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       case 'menunggu':
       case 'waiting':
         return const Color(0xFF955B34);
+=======
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFF15803D);
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFA16207);
+>>>>>>> aa02f1b (feat: evaluasi bs)
       default:
         return _getStatusColor(status);
     }
   }
 
+<<<<<<< HEAD
   Map<String, dynamic> get _sorting {
     final sorting = widget.data['sorting'];
     return sorting is Map ? Map<String, dynamic>.from(sorting) : {};
@@ -686,6 +991,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     return _formatDateTime(value);
   }
 
+=======
+>>>>>>> aa02f1b (feat: evaluasi bs)
   String _formatDateTime(String value) {
     final date = DateTime.tryParse(value);
     if (date == null) return value;
@@ -708,10 +1015,25 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
   }
 
+<<<<<<< HEAD
+=======
+  Widget _buildFormCard({required String label, required Widget child}) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+      child: TemplateCard(
+        title: label,
+        icon: Icons.description_outlined,
+        child: child,
+      ),
+    );
+  }
+
+>>>>>>> aa02f1b (feat: evaluasi bs)
   Widget _buildReadOnlyCard(
     String label,
     String value, {
     String? updatedAt,
+<<<<<<< HEAD
     String? historyField,
   }) {
     final hasUpdatedAt =
@@ -728,6 +1050,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final latestMeta = latestVersion != null
         ? _historyActorMeta(latestVersion)
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
+=======
+  }) {
+    final hasUpdatedAt =
+        updatedAt != null && updatedAt.trim().isNotEmpty && updatedAt != '-';
+>>>>>>> aa02f1b (feat: evaluasi bs)
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -739,6 +1066,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+<<<<<<< HEAD
               for (final previous in previousVersions) ...[
                 Text(
                   previous['value'].toString(),
@@ -760,16 +1088,27 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               ],
               Text(
                 current,
+=======
+              Text(
+                value.isEmpty ? '-' : value,
+>>>>>>> aa02f1b (feat: evaluasi bs)
                 style: TextStyle(
                   fontSize: CustomTheme().fontSize('base'),
                   fontWeight: CustomTheme().fontWeight('semibold'),
                   color: Colors.grey[800],
                 ),
               ),
+<<<<<<< HEAD
               if (latestMeta != null) ...[
                 const SizedBox(height: 8),
                 Text(
                   latestMeta,
+=======
+              if (hasUpdatedAt) ...[
+                const SizedBox(height: 8),
+                Text(
+                  _formatDateTime(updatedAt),
+>>>>>>> aa02f1b (feat: evaluasi bs)
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -805,6 +1144,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     }
   }
 
+<<<<<<< HEAD
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -868,5 +1208,102 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       return value.map((item) => item.toString()).join(', ').trim();
     }
     return value.toString().trim();
+=======
+  Widget _buildHistoryCard() {
+    final histories = _histories;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+      child: TemplateCard(
+        title: 'Riwayat Perubahan',
+        icon: Icons.history_outlined,
+        child: Column(
+          children: [
+            for (int i = 0; i < histories.length; i++) ...[
+              if (i > 0) const SizedBox(height: 12),
+              _buildHistoryItem(histories[i]),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHistoryItem(Map<String, dynamic> history) {
+    final newValue = history['new_value']?.toString().trim();
+    final changedBy = history['changed_by'];
+    final changedByName =
+        changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
+    final createdAt = history['created_at']?.toString();
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _historyFieldLabel(history['field']?.toString()),
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade600,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            (newValue == null || newValue.isEmpty) ? '-' : newValue,
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('base'),
+              fontWeight: CustomTheme().fontWeight('semibold'),
+              color: Colors.grey[800],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Text(
+                'oleh $changedByName, ',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey.shade700,
+                ),
+              ),
+              Text(
+                createdAt == null || createdAt.isEmpty
+                    ? '-'
+                    : _formatDateTime(createdAt),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEditorForm({
+    required String label,
+    required TextEditingController controller,
+  }) {
+    return _buildFormCard(
+      label: label,
+      child: TextField(
+        controller: controller,
+        minLines: 6,
+        maxLines: 12,
+        decoration: CustomTheme().inputDecoration('Masukkan $label'),
+        onChanged: (_) => setState(() {}),
+      ),
+    );
+>>>>>>> aa02f1b (feat: evaluasi bs)
   }
 }

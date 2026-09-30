@@ -2,7 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/form/multi_select_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/screens/report/service.dart';
+
+ButtonStyle _primarySheetButtonStyle() => ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFF4561DB),
+      foregroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
+
+ButtonStyle _secondarySheetButtonStyle() => OutlinedButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
 
 class ReworkEditScreen extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -68,8 +83,10 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _saving = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal menyimpan perubahan: $e')),
+      await showAlertDialog(
+        context: context,
+        title: 'Gagal Menyimpan',
+        message: e.toString(),
       );
     }
   }
@@ -213,6 +230,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                           Expanded(
                             child: OutlinedButton(
                               onPressed: () => Navigator.pop(sheetContext),
+                              style: _secondarySheetButtonStyle(),
                               child: const Text('Batal'),
                             ),
                           ),
@@ -221,6 +239,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                             child: ElevatedButton(
                               onPressed: () =>
                                   Navigator.pop(sheetContext, selectedIds),
+                              style: _primarySheetButtonStyle(),
                               child: const Text('Terapkan'),
                             ),
                           ),
@@ -282,7 +301,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     switch (_editStep) {
       case 1:
         return _buildEditorForm(
-          label: 'Action Plan',
+          label: 'Rencana Tindakan',
           controller: _actionPlanController,
           footer: _buildStepButtons(
             nextLabel: 'Selanjutnya',
@@ -292,7 +311,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         );
       case 2:
         return _buildEditorForm(
-          label: 'Preventif Plan',
+          label: 'Rencana Pencegahan',
           controller: _preventivePlanController,
           footer: _buildStepButtons(
             nextLabel: 'Simpan',
@@ -315,6 +334,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         onPressed: _selectedReasons.isEmpty
             ? null
             : () => setState(() => _editStep = 1),
+        style: _primaryActionButtonStyle,
         child: const Text('Selanjutnya'),
       ),
     );
@@ -330,6 +350,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         Expanded(
           child: OutlinedButton(
             onPressed: _saving ? null : () => setState(() => _editStep--),
+            style: _secondaryActionButtonStyle,
             child: const Text('Kembali'),
           ),
         ),
@@ -337,6 +358,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         Expanded(
           child: ElevatedButton(
             onPressed: nextEnabled ? onNext : null,
+            style: _primaryActionButtonStyle,
             child: _saving && nextLabel == 'Simpan'
                 ? const SizedBox(
                     width: 18,
@@ -349,6 +371,22 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       ],
     );
   }
+
+  ButtonStyle get _primaryActionButtonStyle => ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF4561DB),
+        foregroundColor: Colors.white,
+        disabledBackgroundColor: Colors.grey.shade300,
+        disabledForegroundColor: Colors.grey.shade600,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      );
+
+  ButtonStyle get _secondaryActionButtonStyle => OutlinedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      );
 
   Widget _buildReasonForm({Widget? footer}) {
     return _buildFormCard(
@@ -528,6 +566,7 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context),
+                      style: _secondarySheetButtonStyle(),
                       child: const Text('Batal'),
                     ),
                   ),
@@ -544,6 +583,7 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
                         }
                         Navigator.pop(context, value);
                       },
+                      style: _primarySheetButtonStyle(),
                       child: const Text('Tambah'),
                     ),
                   ),

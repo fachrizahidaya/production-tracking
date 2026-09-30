@@ -2,13 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/form/multi_select_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/screens/report/rework/rework_edit.dart';
+import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
+
+ButtonStyle _primarySheetButtonStyle() => ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFF4561DB),
+      foregroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
+
+ButtonStyle _secondarySheetButtonStyle() => OutlinedButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
 
 class ReworkDetailLoadingScreen extends StatefulWidget {
   final dynamic id;
+  final bool returnToList;
 
-  const ReworkDetailLoadingScreen({super.key, required this.id});
+  const ReworkDetailLoadingScreen({
+    super.key,
+    required this.id,
+    this.returnToList = false,
+  });
 
   @override
   State<ReworkDetailLoadingScreen> createState() =>
@@ -40,11 +61,29 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
       );
 
       if (!mounted) return;
-      Navigator.pop(context, updated == true);
+      if (widget.returnToList) {
+        _replaceWithReworkList(
+          saved: updated == true,
+          woNo: data['woNo']?.toString(),
+        );
+      } else {
+        Navigator.pop(context, updated);
+      }
     } catch (error) {
       if (!mounted) return;
       setState(() => _error = error);
     }
+  }
+
+  void _replaceWithReworkList({bool saved = false, String? woNo}) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ReworkList(
+          savedWoNo: saved ? woNo : null,
+        ),
+      ),
+    );
   }
 
   @override
@@ -52,7 +91,9 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Detail Evaluasi Rework',
-        onReturn: () => Navigator.pop(context),
+        onReturn: widget.returnToList
+            ? _replaceWithReworkList
+            : () => Navigator.pop(context),
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: Center(
@@ -326,6 +367,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                           Expanded(
                             child: OutlinedButton(
                               onPressed: () => Navigator.pop(sheetContext),
+                              style: _secondarySheetButtonStyle(),
                               child: const Text('Batal'),
                             ),
                           ),
@@ -334,6 +376,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                             child: ElevatedButton(
                               onPressed: () =>
                                   Navigator.pop(sheetContext, selectedIds),
+                              style: _primarySheetButtonStyle(),
                               child: const Text('Terapkan'),
                             ),
                           ),
@@ -410,7 +453,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                     ? _buildReadOnlyCard(
                         'Rencana Tindakan', _actionPlanController.text)
                     : _buildEditorForm(
-                        label: 'Action Plan',
+                        label: 'Rencana Tindakan',
                         controller: _actionPlanController,
                       ),
                 const SizedBox(height: 16),
@@ -418,7 +461,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                     ? _buildReadOnlyCard(
                         'Rencana Pencegahan', _preventivePlanController.text)
                     : _buildEditorForm(
-                        label: 'Preventif Plan',
+                        label: 'Rencana Pencegahan',
                         controller: _preventivePlanController,
                       ),
               ],
@@ -437,7 +480,14 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildWorkOrderBadge(_value('woNo')),
+          Text(
+            _value('woNo'),
+            style: const TextStyle(
+              color: Color(0xFF234393),
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const SizedBox(height: 12),
           _buildDyeingReferenceLine(),
           const SizedBox(height: 12),
@@ -625,7 +675,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
   Widget _buildWaitingActionStep() {
     return _buildEditorForm(
-      label: 'Action Plan',
+      label: 'Rencana Tindakan',
       controller: _actionPlanController,
       footer: _buildStepButtons(
         nextLabel: 'Selanjutnya',
@@ -637,7 +687,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
   Widget _buildWaitingPreventiveStep() {
     return _buildEditorForm(
-      label: 'Preventif Plan',
+      label: 'Rencana Pencegahan',
       controller: _preventivePlanController,
       footer: _buildStepButtons(
         nextLabel: 'Simpan',
@@ -656,6 +706,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: enabled ? onPressed : null,
+        style: _primaryActionButtonStyle,
         child: const Text('Selanjutnya'),
       ),
     );
@@ -666,33 +717,48 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     required bool nextEnabled,
     required VoidCallback onNext,
   }) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: Row(
-        children: [
-          Expanded(
-            child: OutlinedButton(
-              onPressed: _saving ? null : () => setState(() => _waitingStep--),
-              child: const Text('Kembali'),
-            ),
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton(
+            onPressed: _saving ? null : () => setState(() => _waitingStep--),
+            style: _secondaryActionButtonStyle,
+            child: const Text('Kembali'),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: ElevatedButton(
-              onPressed: nextEnabled ? onNext : null,
-              child: _saving && nextLabel == 'Simpan'
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Text(nextLabel),
-            ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: ElevatedButton(
+            onPressed: nextEnabled ? onNext : null,
+            style: _primaryActionButtonStyle,
+            child: _saving && nextLabel == 'Simpan'
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Text(nextLabel),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
+
+  ButtonStyle get _primaryActionButtonStyle => ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF4561DB),
+        foregroundColor: Colors.white,
+        disabledBackgroundColor: Colors.grey.shade300,
+        disabledForegroundColor: Colors.grey.shade600,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      );
+
+  ButtonStyle get _secondaryActionButtonStyle => OutlinedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      );
 
   Future<void> _saveWaitingForm() async {
     if (_saving) return;
@@ -711,8 +777,10 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _saving = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal menyimpan evaluasi rework: $e')),
+      await showAlertDialog(
+        context: context,
+        title: 'Gagal Menyimpan',
+        message: e.toString(),
       );
     }
   }
@@ -893,29 +961,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: _getStatusTextColor(status),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWorkOrderBadge(String woNo) {
-    const color = Color(0xFF234393);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 4,
-      ),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(
-        woNo,
-        style: const TextStyle(
-          color: color,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
         ),
       ),
     );
@@ -1108,6 +1153,7 @@ class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context),
+                      style: _secondarySheetButtonStyle(),
                       child: const Text('Batal'),
                     ),
                   ),
@@ -1124,6 +1170,7 @@ class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
                         }
                         Navigator.pop(context, value);
                       },
+                      style: _primarySheetButtonStyle(),
                       child: const Text('Tambah'),
                     ),
                   ),

@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/drawer/app_drawer.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
@@ -28,6 +29,7 @@ class _HomeState extends State<Home> {
   String user = '';
   String name = '';
   int _reworkNotificationCount = 0;
+  bool _canViewReworkEvaluation = false;
   late Future<String?> _tokenFuture;
 
   @override
@@ -43,8 +45,44 @@ class _HomeState extends State<Home> {
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _fetchReworkNotificationCount();
+      _initializeMenuAccess();
     });
+  }
+
+  Future<void> _initializeMenuAccess() async {
+    final userMenu = UserMenu();
+    await userMenu.handleLoadMenu();
+
+    final canViewReworkEvaluation = _hasMobileMenu(
+      userMenu.menus,
+      'Evaluasi Rework',
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      _canViewReworkEvaluation = canViewReworkEvaluation;
+    });
+
+    if (canViewReworkEvaluation) {
+      await _fetchReworkNotificationCount();
+    }
+  }
+
+  bool _hasMobileMenu(List<dynamic> menus, String targetName) {
+    for (final menu in menus) {
+      final name = menu['name']?.toString().toLowerCase();
+      if (name == targetName.toLowerCase()) {
+        return menu['allow_mobile'] == true;
+      }
+
+      final children = menu['children'];
+      if (children is List && _hasMobileMenu(children, targetName)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   Future<void> _fetchReworkNotificationCount() async {
@@ -176,29 +214,37 @@ class _HomeState extends State<Home> {
             );
           }
 
-          return Scaffold(
-            appBar: CustomAppBar(
-              title: 'TexTrack',
-              isWithNotification: true,
-              reworkNotificationCount: _reworkNotificationCount,
-              onReworkNotifications: () {
-                Navigator.pushNamed(context, '/dyeing-rework-evaluations');
-              },
-              handleLogout: () => _handleLogout(context),
-              isWithAccount: true,
-              user: user,
-              name: name,
-              showAvatar: MediaQuery.sizeOf(context).shortestSide >= 600,
-              showNameWithAvatar:
-                  MediaQuery.sizeOf(context).shortestSide >= 600,
-            ),
-            drawer: AppDrawer(
-              handleLogout: () => _handleLogout(context),
-              handleFetchMenu: () => _handleFetchMenu(),
-            ),
-            body: SafeArea(
-              child: Dashboard(
-                onRefreshReworkNotifications: _fetchReworkNotificationCount,
+          return PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didPop, result) {
+              if (!didPop) {
+                SystemNavigator.pop();
+              }
+            },
+            child: Scaffold(
+              appBar: CustomAppBar(
+                title: 'TexTrack',
+                isWithNotification: _canViewReworkEvaluation,
+                reworkNotificationCount: _reworkNotificationCount,
+                onReworkNotifications: () {
+                  Navigator.pushNamed(context, '/dyeing-rework-evaluations');
+                },
+                handleLogout: () => _handleLogout(context),
+                isWithAccount: true,
+                user: user,
+                name: name,
+                showAvatar: MediaQuery.sizeOf(context).shortestSide >= 600,
+                showNameWithAvatar:
+                    MediaQuery.sizeOf(context).shortestSide >= 600,
+              ),
+              drawer: AppDrawer(
+                handleLogout: () => _handleLogout(context),
+                handleFetchMenu: () => _handleFetchMenu(),
+              ),
+              body: SafeArea(
+                child: Dashboard(
+                  onRefreshReworkNotifications: _fetchReworkNotificationCount,
+                ),
               ),
             ),
           );

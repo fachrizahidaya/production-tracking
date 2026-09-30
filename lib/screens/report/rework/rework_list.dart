@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/models/report/rework.dart';
 import 'package:textile_tracking/screens/report/rework/rework_by_id.dart';
 import 'package:textile_tracking/screens/report/service.dart';
@@ -14,6 +15,7 @@ class ReworkList extends StatefulWidget {
   final String sort;
   final String search;
   final String status;
+  final String? savedWoNo;
 
   const ReworkList(
       {super.key,
@@ -21,7 +23,8 @@ class ReworkList extends StatefulWidget {
       this.endDate,
       this.sort = 'created_at',
       this.search = '',
-      this.status = ''});
+      this.status = '',
+      this.savedWoNo});
 
   @override
   State<ReworkList> createState() => _ReworkListState();
@@ -45,8 +48,11 @@ class _ReworkListState extends State<ReworkList> {
   bool _hasMore = false;
   int? _pendingCount;
   int? _completedCount;
+  int? _allCount;
   bool _pendingCountLoading = true;
   bool _completedCountLoading = true;
+  bool _allCountLoading = true;
+  bool _showSavedDialogAfterLoad = false;
   int _requestId = 0;
 
   @override
@@ -58,6 +64,7 @@ class _ReworkListState extends State<ReworkList> {
     _sort = widget.sort;
     _search = widget.search;
     _status = widget.status.trim();
+    _showSavedDialogAfterLoad = widget.savedWoNo != null;
     _searchController.text = widget.search;
 
     _scrollController.addListener(_onScroll);
@@ -131,6 +138,13 @@ class _ReworkListState extends State<ReworkList> {
         _hasMore = result.currentPage < result.lastPage;
         _loading = false;
       });
+
+      if (_showSavedDialogAfterLoad) {
+        _showSavedDialogAfterLoad = false;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _showSavedDialog(widget.savedWoNo!);
+        });
+      }
     } catch (e) {
       if (!mounted || requestId != _requestId) return;
 
@@ -149,6 +163,7 @@ class _ReworkListState extends State<ReworkList> {
       setState(() {
         _pendingCountLoading = true;
         _completedCountLoading = true;
+        _allCountLoading = true;
       });
     }
 
@@ -158,18 +173,21 @@ class _ReworkListState extends State<ReworkList> {
       setState(() {
         _pendingCount = counts['pending'];
         _completedCount = counts['completed'];
+        _allCount = counts['all'];
       });
     } catch (_) {
       if (!mounted) return;
       setState(() {
         _pendingCount = null;
         _completedCount = null;
+        _allCount = null;
       });
     } finally {
       if (mounted) {
         setState(() {
           _pendingCountLoading = false;
           _completedCountLoading = false;
+          _allCountLoading = false;
         });
       }
     }
@@ -425,8 +443,8 @@ class _ReworkListState extends State<ReworkList> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           children: const [
                             SizedBox(
-                              height: 240,
-                              child: Center(child: NoData()),
+                              height: 600,
+                              child: NoData(),
                             ),
                           ],
                         )
@@ -481,7 +499,11 @@ class _ReworkListState extends State<ReworkList> {
                 count: _completedCountLoading ? null : _completedCount,
               ),
               const SizedBox(width: 8),
-              _buildStatusTab(label: 'Semua', status: 'all'),
+              _buildStatusTab(
+                label: 'Semua',
+                status: 'all',
+                count: _allCountLoading ? null : _allCount,
+              ),
             ],
           ),
         ),
@@ -827,7 +849,18 @@ class _ReworkListState extends State<ReworkList> {
     if (updated == true && mounted) {
       await _loadReworkList();
       await _loadPendingCount();
+      if (mounted) {
+        await _showSavedDialog(_workOrderNo(item));
+      }
     }
+  }
+
+  Future<void> _showSavedDialog(String woNo) {
+    return showAlertDialog(
+      context: context,
+      title: 'Perubahan Tersimpan',
+      message: 'Perubahan untuk WO No $woNo sudah tersimpan.',
+    );
   }
 
   Widget _buildStatusBadge(String status) {

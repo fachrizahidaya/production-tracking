@@ -3,25 +3,26 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
-import 'package:textile_tracking/screens/report/bs/bs_list.dart';
+import 'package:textile_tracking/helpers/util/format_number.dart';
+import 'package:textile_tracking/screens/report/gsm/gsm_edit.dart';
+import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 
-class BsDetailLoadingScreen extends StatefulWidget {
+class GsmDetailLoadingScreen extends StatefulWidget {
   final dynamic id;
   final bool returnToList;
 
-  const BsDetailLoadingScreen({
+  const GsmDetailLoadingScreen({
     super.key,
     required this.id,
     this.returnToList = false,
   });
 
   @override
-  State<BsDetailLoadingScreen> createState() => _BsDetailLoadingScreenState();
+  State<GsmDetailLoadingScreen> createState() => _GsmDetailLoadingScreenState();
 }
 
-class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
+class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
   final ReportService _reportService = ReportService();
   Object? _error;
 
@@ -35,19 +36,19 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
     setState(() => _error = null);
 
     try {
-      final data = await _reportService.getBsDetail(widget.id);
+      final data = await _reportService.getGsmDetail(widget.id);
       if (!mounted) return;
 
       final updated = await Navigator.push<bool>(
         context,
         MaterialPageRoute(
-          builder: (context) => BsDetailScreen(data: data),
+          builder: (context) => GsmDetailScreen(data: data),
         ),
       );
 
       if (!mounted) return;
       if (widget.returnToList) {
-        _replaceWithBsList(
+        _replaceWithGsmList(
           saved: updated == true,
           woNo: data['woNo']?.toString(),
         );
@@ -60,11 +61,11 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
     }
   }
 
-  void _replaceWithBsList({bool saved = false, String? woNo}) {
+  void _replaceWithGsmList({bool saved = false, String? woNo}) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (_) => BsList(
+        builder: (_) => GsmList(
           savedWoNo: saved ? woNo : null,
         ),
       ),
@@ -75,9 +76,9 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Detail Evaluasi BS',
+        title: 'Detail Evaluasi GSM',
         onReturn: widget.returnToList
-            ? _replaceWithBsList
+            ? _replaceWithGsmList
             : () => Navigator.pop(context),
       ),
       backgroundColor: const Color(0xFFf9fafc),
@@ -90,7 +91,7 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
-                      'Gagal mengambil detail BS',
+                      'Gagal mengambil detail GSM',
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 12),
@@ -106,16 +107,16 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
   }
 }
 
-class BsDetailScreen extends StatefulWidget {
+class GsmDetailScreen extends StatefulWidget {
   final Map<String, dynamic> data;
 
-  const BsDetailScreen({super.key, required this.data});
+  const GsmDetailScreen({super.key, required this.data});
 
   @override
-  State<BsDetailScreen> createState() => _BsDetailScreenState();
+  State<GsmDetailScreen> createState() => _GsmDetailScreenState();
 }
 
-class _BsDetailScreenState extends State<BsDetailScreen> {
+class _GsmDetailScreenState extends State<GsmDetailScreen> {
   final TextEditingController _reasonController = TextEditingController();
   final TextEditingController _actionPlanController = TextEditingController();
   final TextEditingController _preventivePlanController =
@@ -162,7 +163,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final updated = await Navigator.push<bool>(
       context,
       MaterialPageRoute(
-        builder: (context) => BsEditScreen(data: widget.data),
+        builder: (context) => GsmEditScreen(data: widget.data),
       ),
     );
 
@@ -175,7 +176,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     if (_saving || !_canSaveWaiting) return;
     setState(() => _saving = true);
     try {
-      await _reportService.updateBsDetail(
+      await _reportService.updateGsmDetail(
         id: widget.data['id'],
         reason: _reasonController.text,
         actionPlan: _actionPlanController.text,
@@ -198,7 +199,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Detail Evaluasi BS',
+        title: 'Detail Evaluasi GSM',
         onReturn: () => Navigator.pop(context),
         onEdit: _useEditScreen ? _openEditScreen : null,
       ),
@@ -212,11 +213,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: _buildOverviewCard(),
-              ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: _buildCategoryCard(),
               ),
               const SizedBox(height: 16),
               if (_useEditScreen) ...[
@@ -284,15 +280,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           ),
           const SizedBox(height: 12),
           _buildOverviewItem(
-            label: 'No. Sortir',
-            value: _value('sortingNo'),
-            valueColor: const Color(0xFF234393),
+            label: 'Packing GSM',
+            value: _formatGsmNumber(_raw('packingGsm')),
           ),
           const SizedBox(height: 12),
           _buildOverviewItem(
-            label: 'Qty BS',
-            value: '${_value('qtyBs')} PCS',
-            valueColor: const Color(0xFF234393),
+            label: 'Material GSM',
+            value: _formatGsmNumber(_raw('materialGsm')),
           ),
           const SizedBox(height: 12),
           _buildMaterialItem(),
@@ -394,6 +388,17 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 
   String _value(String key) => widget.data[key]?.toString() ?? '-';
 
+  dynamic _raw(String key) => widget.data[key];
+
+  String _formatGsmNumber(dynamic value) {
+    if (value == null || value.toString().trim().isEmpty || value == '-') {
+      return '-';
+    }
+    final parsed = num.tryParse(value.toString().replaceAll(',', '.'));
+    if (parsed == null) return value.toString();
+    return formatNumber(parsed);
+  }
+
   Widget _buildSaveBar() {
     return SafeArea(
       child: Container(
@@ -439,89 +444,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           borderRadius: BorderRadius.circular(12),
         ),
       );
-
-  Widget _buildCategoryCard() {
-    final defects = _defects();
-
-    return TemplateCard(
-      title: 'Tipe BS',
-      icon: Icons.local_offer_outlined,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (defects.isEmpty)
-            Text(
-              '-',
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('md'),
-                fontWeight: CustomTheme().fontWeight('semibold'),
-                color: Colors.grey[800],
-              ),
-            )
-          else
-            ...defects.asMap().entries.map(
-                  (entry) => _buildDefectItem(
-                    entry.value,
-                    isLast: entry.key == defects.length - 1,
-                  ),
-                ),
-        ],
-      ),
-    );
-  }
-
-  List<Map<String, dynamic>> _defects() {
-    final raw = widget.data['defects'];
-    if (raw is! List) return [];
-    return raw
-        .whereType<Map>()
-        .map((item) => Map<String, dynamic>.from(item))
-        .toList();
-  }
-
-  Widget _buildDefectItem(
-    Map<String, dynamic> defect, {
-    required bool isLast,
-  }) {
-    final name = defect['defect_name']?.toString() ?? '-';
-    final qty = defect['qty']?.toString() ?? '-';
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-      decoration: BoxDecoration(
-        border: isLast
-            ? null
-            : Border(bottom: BorderSide(color: Colors.grey.shade200)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            width: 18,
-            child: Text('•', style: TextStyle(fontSize: 20)),
-          ),
-          Expanded(
-            child: Text(
-              name,
-              style: const TextStyle(
-                color: Color(0xFF292A2F),
-                fontSize: 17,
-              ),
-            ),
-          ),
-          Text(
-            qty,
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildStatusBadge(String status) {
     final backgroundColor = _getStatusColor(status);

@@ -5,16 +5,16 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 
-class BsEditScreen extends StatefulWidget {
+class GsmEditScreen extends StatefulWidget {
   final Map<String, dynamic> data;
 
-  const BsEditScreen({super.key, required this.data});
+  const GsmEditScreen({super.key, required this.data});
 
   @override
-  State<BsEditScreen> createState() => _BsEditScreenState();
+  State<GsmEditScreen> createState() => _GsmEditScreenState();
 }
 
-class _BsEditScreenState extends State<BsEditScreen> {
+class _GsmEditScreenState extends State<GsmEditScreen> {
   final ReportService _reportService = ReportService();
   final TextEditingController _reasonController = TextEditingController();
   final TextEditingController _actionPlanController = TextEditingController();
@@ -44,7 +44,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
     setState(() => _saving = true);
 
     try {
-      await _reportService.updateBsDetail(
+      await _reportService.updateGsmDetail(
         id: widget.data['id'],
         reason: _reasonController.text,
         actionPlan: _actionPlanController.text,
@@ -78,7 +78,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Edit Evaluasi BS',
+        title: 'Edit Evaluasi GSM',
         onReturn: () => Navigator.pop(context),
       ),
       backgroundColor: const Color(0xFFf9fafc),

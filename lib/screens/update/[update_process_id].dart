@@ -1,7 +1,14 @@
 // ignore_for_file: file_names, use_build_context_synchronously, deprecated_member_use, prefer_final_fields
 
+import 'dart:async';
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
@@ -14,8 +21,10 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/update/detail_work_order.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/format_idr.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/to_double.dart';
+import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/update/process/cutting_sewing.dart';
@@ -123,6 +132,7 @@ class _UpdateProcessState extends State<UpdateProcess>
   final Map<int, TextEditingController> _gsmControllers = {};
   final Map<int, TextEditingController> _weightGradeAControllers = {};
   final Map<int, TextEditingController> _totalWeightControllers = {};
+  late List<Map<String, dynamic>> _allAttachments;
 
   List<Map<String, dynamic>> _newMachines = [];
 
@@ -141,6 +151,10 @@ class _UpdateProcessState extends State<UpdateProcess>
     _defects = (widget.defects ?? [])
         .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
         .toList();
+    _allAttachments = [
+      ...(widget.form['attachments'] ?? []).cast<Map<String, dynamic>>(),
+      {'is_add_button': true},
+    ];
 
     final items = widget.data['items'] ?? [];
 
@@ -271,6 +285,120 @@ class _UpdateProcessState extends State<UpdateProcess>
 
     widget.handleChangeInput('defects', _defects);
     _updateTotalSorting();
+  }
+
+  Future<File?> _compressImage(String path) async {
+    if (kIsWeb) {
+      return File(path);
+    }
+
+    final dir = await getTemporaryDirectory();
+    final targetPath =
+        '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final result = await FlutterImageCompress.compressAndGetFile(
+      path,
+      targetPath,
+      quality: 70,
+    );
+
+    return result == null ? null : File(result.path);
+  }
+
+  Future<void> _pickAttachments(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+
+      if (image == null) return;
+
+      final compressedFile = await _compressImage(image.path);
+
+      if (compressedFile == null || !mounted) return;
+
+      setState(() {
+        _allAttachments.removeWhere((e) => e['is_add_button'] == true);
+        _allAttachments.add({
+          'name': compressedFile.path.split('/').last,
+          'path': compressedFile.path,
+          'extension': compressedFile.path.split('.').last,
+          'isNew': true,
+        });
+        _allAttachments.add({'is_add_button': true});
+        widget.form['attachments'] =
+            _allAttachments.where((e) => e['is_add_button'] != true).toList();
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: e.toString(),
+      );
+    }
+  }
+
+  void _showImageDialog(
+    BuildContext context,
+    bool isNew,
+    String filePath,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          insetPadding: CustomTheme().padding('content'),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.6,
+            padding: CustomTheme().padding('process-content'),
+            child: InteractiveViewer(
+              minScale: 1,
+              maxScale: 4,
+              child: isNew
+                  ? Image.file(File(filePath), fit: BoxFit.contain)
+                  : Image.network(filePath, fit: BoxFit.contain),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<bool?> _handleDeleteAttachment(Map item) async {
+    if (!mounted) return false;
+
+    final completer = Completer<bool?>();
+
+    showConfirmationDialog(
+      context: context,
+      isLoading: _isLoading,
+      title: 'Hapus Lampiran',
+      message: 'Apakah Anda yakin ingin menghapus lampiran ini?',
+      buttonBackground: CustomTheme().buttonColor('danger'),
+      onConfirm: () async {
+        await Future.delayed(Duration(milliseconds: 200));
+
+        if (!mounted) {
+          completer.complete(false);
+          return;
+        }
+
+        setState(() {
+          _allAttachments.remove(item);
+          widget.form['attachments'] =
+              _allAttachments.where((e) => e['is_add_button'] != true).toList();
+        });
+
+        Navigator.pop(context);
+        completer.complete(true);
+      },
+    );
+
+    return completer.future;
   }
 
   double _calculateTotalVermak() {
@@ -665,6 +793,22 @@ class _UpdateProcessState extends State<UpdateProcess>
 
   Future<void> _handleSubmit(BuildContext context) async {
     if (context.mounted) {
+      final attachments = widget.form['attachments'];
+      final hasAttachment = attachments is List &&
+          attachments.any(
+            (attachment) =>
+                attachment is Map && attachment['is_add_button'] != true,
+          );
+
+      if (widget.label == 'Packing' && !hasAttachment) {
+        await showAlertDialog(
+          context: context,
+          title: 'Peringatan',
+          message: 'Lampiran wajib diisi.',
+        );
+        return;
+      }
+
       showConfirmationDialog(
         context: context,
         isLoading: widget.isSubmitting,
@@ -1647,6 +1791,19 @@ class _UpdateProcessState extends State<UpdateProcess>
                                         ),
                                       ].separatedBy(CustomTheme().vGap('xl')),
                                     ),
+                                  ),
+                                if (widget.label == 'Packing')
+                                  AttachmentPicker(
+                                    attachments: _allAttachments,
+                                    onAddAttachment: _pickAttachments,
+                                    onDeleteAttachment: _handleDeleteAttachment,
+                                    onPreviewImage: (isNew, filePath) {
+                                      _showImageDialog(
+                                        context,
+                                        isNew,
+                                        filePath,
+                                      );
+                                    },
                                   ),
                               ].separatedBy(CustomTheme().vGap('xl'))),
                         )),

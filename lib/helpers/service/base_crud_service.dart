@@ -625,7 +625,14 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         for (final file in attachments) {
           if (file is File) {
             request.files.add(
+<<<<<<< HEAD
               await http.MultipartFile.fromPath('attachments[]', file.path),
+=======
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+              ),
+>>>>>>> 0c03577b (fix: edit packing)
             );
           } else if (file is XFile) {
             request.files.add(

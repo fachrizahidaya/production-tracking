@@ -59,9 +59,13 @@ class _BsEditScreenState extends State<BsEditScreen> {
       await showAlertDialog(
         context: context,
         title: 'Gagal Menyimpan',
-        message: e.toString(),
+        message: _errorMessage(e),
       );
     }
+  }
+
+  String _errorMessage(Object error) {
+    return error.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
   }
 
   bool get _canSave {

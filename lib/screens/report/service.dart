@@ -6,6 +6,7 @@ import 'package:textile_tracking/models/report/production_summary.dart';
 import 'package:http/http.dart' as http;
 import 'package:textile_tracking/models/report/production_trend.dart';
 import 'package:textile_tracking/models/report/bs.dart';
+import 'package:textile_tracking/models/report/gsm.dart';
 import 'package:textile_tracking/models/report/rework.dart';
 import 'package:textile_tracking/models/report/rework_comparison.dart';
 import 'package:textile_tracking/models/report/sorting_result.dart';
@@ -516,8 +517,10 @@ class ReportService {
     );
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception('Failed to update rework detail: '
-          '${response.statusCode} ${response.body}');
+      throw Exception(_apiErrorMessage(
+        response.body,
+        'Gagal memperbarui evaluasi rework',
+      ));
     }
   }
 
@@ -777,9 +780,210 @@ class ReportService {
     );
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception('Failed to update BS detail: '
+      throw Exception(_apiErrorMessage(
+        response.body,
+        'Gagal memperbarui evaluasi BS',
+      ));
+    }
+  }
+
+  Future<GsmList> getGsmList(
+      {DateTime? startDate,
+      DateTime? endDate,
+      String? sort,
+      int page = 1,
+      int perPage = 20,
+      String? search,
+      String? status}) async {
+    final startDateString = _formatDate(startDate!);
+    final endDateString = _formatDate(endDate!);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? token = prefs.getString('access_token');
+
+    final queryParameters = <String, String>{
+      'start_date': startDateString,
+      'end_date': endDateString,
+      'sort': sort ?? '',
+      'page': page.toString(),
+      'per_page': perPage.toString(),
+      'search': search ?? '',
+    };
+    if (status != null && status.trim().isNotEmpty) {
+      queryParameters['status'] = status;
+    }
+
+    final uri = Uri.parse('$baseUrl/gsm-evaluations').replace(
+      queryParameters: queryParameters,
+    );
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return GsmList.fromJson(data);
+    }
+
+    throw Exception('Failed to load GSM list : '
+        '${response.statusCode} ${response.body}');
+  }
+
+  Future<Map<String, int>> getGsmStatusCounts() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final uri = Uri.parse('$baseUrl/gsm-evaluations/summary');
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body)['data'];
+      final pending = int.tryParse(data?['pending']?.toString() ?? '') ?? 0;
+      final completed = int.tryParse(
+            data?['completed']?.toString() ??
+                data?['complete']?.toString() ??
+                data?['done']?.toString() ??
+                '',
+          ) ??
+          0;
+      final total = int.tryParse(
+            data?['total']?.toString() ??
+                data?['all']?.toString() ??
+                data?['total_count']?.toString() ??
+                '',
+          ) ??
+          pending + completed;
+
+      return {
+        'pending': pending,
+        'completed': completed,
+        'all': total,
+      };
+    }
+
+    throw Exception('Failed to load GSM summary: '
+        '${response.statusCode} ${response.body}');
+  }
+
+  Future<Map<String, dynamic>> getGsmDetail(dynamic id) async {
+    if (id == null || id.toString().trim().isEmpty) {
+      throw Exception('ID GSM tidak ditemukan');
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final uri = Uri.parse('$baseUrl/gsm-evaluations/$id');
+
+    final response = await http.get(
+      uri,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load GSM detail: '
           '${response.statusCode} ${response.body}');
     }
+
+    final decoded = jsonDecode(response.body);
+    final data = decoded is Map && decoded['data'] is Map
+        ? Map<String, dynamic>.from(decoded['data'])
+        : Map<String, dynamic>.from(decoded as Map);
+    final workOrder = _asMap(data['work_order']);
+    final packing = _asMap(data['packing']);
+    final packingItem = _asMap(data['packing_item']);
+    final packingItemMaterial = _asMap(packingItem['item']);
+
+    return {
+      ...data,
+      'id': data['id'] ?? id,
+      'status': _first(data, ['status']) ?? '-',
+      'woNo': _first(workOrder, ['wo_no', 'number', 'no']) ?? '-',
+      'packingNo': _first(data, ['packing_no', 'no_packing']) ??
+          _first(packing, ['packing_no', 'no', 'number']) ??
+          '-',
+      'packingGsm': _first(data, ['packing_gsm']) ??
+          _first(packing, ['packing_gsm']) ??
+          _first(packingItem, ['gsm']) ??
+          '-',
+      'materialGsm': _first(data, ['material_gsm']) ??
+          _first(packing, ['material_gsm']) ??
+          '-',
+      'qtyBs': _first(data, ['qty_bs', 'bs_qty', 'qty']) ?? '-',
+      'material':
+          _first(packingItemMaterial, ['code']) ?? _formatBsMaterial(data),
+      'topMaterialCode':
+          packingItemMaterial['code']?.toString().trim().isNotEmpty == true
+              ? packingItemMaterial['code'].toString()
+              : (data['top_material_code']?.toString().trim().isNotEmpty == true
+                  ? data['top_material_code'].toString()
+                  : '-'),
+      'topMaterialName':
+          packingItemMaterial['name']?.toString().trim().isNotEmpty == true
+              ? packingItemMaterial['name'].toString()
+              : (data['top_material_name']?.toString().trim().isNotEmpty == true
+                  ? data['top_material_name'].toString()
+                  : '-'),
+      'startedAt': _first(data, ['started_at', 'created_at']) ?? '-',
+      'completedAt': _first(data, ['completed_at', 'finished_at']) ?? '-',
+      'submittedBy': _formatSubmittedBy(data['submitted_by']),
+      'reason': _formatDetailValue(data['reason'] ?? data['reasons']),
+      'actionPlan': _formatDetailValue(data['action_plan']),
+      'preventivePlan': _formatDetailValue(data['preventive_plan']),
+    };
+  }
+
+  Future<void> updateGsmDetail({
+    required dynamic id,
+    required String reason,
+    required String actionPlan,
+    required String preventivePlan,
+  }) async {
+    if (id == null || id.toString().trim().isEmpty) {
+      throw Exception('ID GSM tidak ditemukan');
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final uri = Uri.parse('$baseUrl/gsm-evaluations/$id');
+    final response = await http.patch(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'reason': reason,
+        'action_plan': actionPlan,
+        'preventive_plan': preventivePlan,
+      }),
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception(_apiErrorMessage(
+        response.body,
+        'Gagal memperbarui evaluasi GSM',
+      ));
+    }
+  }
+
+  String _apiErrorMessage(String body, String fallback) {
+    try {
+      final decoded = jsonDecode(body);
+      if (decoded is Map) {
+        final message = decoded['message']?.toString().trim();
+        if (message != null && message.isNotEmpty) return message;
+      }
+    } catch (_) {}
+    return fallback;
   }
 
   Map<String, dynamic> _asMap(dynamic value) {

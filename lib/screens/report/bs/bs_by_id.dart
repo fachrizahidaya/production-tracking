@@ -189,7 +189,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       await showAlertDialog(
         context: context,
         title: 'Gagal Menyimpan',
-        message: e.toString(),
+        message: e.toString().replaceFirst(RegExp(r'^Exception:\s*'), ''),
       );
     }
   }

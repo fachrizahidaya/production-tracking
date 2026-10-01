@@ -18,9 +18,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 <<<<<<< HEAD
 import 'package:textile_tracking/screens/report/bs/bs_by_id.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_by_id.dart';
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/screens/report/bs/bs_by_id.dart';
 >>>>>>> 58857212 (feat: notifikasi evaluasi bs)
+=======
+>>>>>>> b77e0195 (fix: bs, gsm, rework)
 import 'package:textile_tracking/screens/report/rework/rework_by_id.dart';
 =======
 import 'package:textile_tracking/screens/report/rework/rework_notification.dart';
@@ -456,7 +459,7 @@ class FcmService with WidgetsBindingObserver {
     final route = navigation['route'] as String?;
     final type = navigation['type'] as String?;
     final id = navigation['id'] as String?;
-    // Rework/BS notifications always open the detail screen using the ID from
+    // Rework/BS/GSM notifications always open the detail screen using the ID from
     // message.data, regardless of the route string sent by the backend.
     if (type == 'dyeing_rework_evaluation' && id != null) {
       navigator.push(MaterialPageRoute(
@@ -468,6 +471,13 @@ class FcmService with WidgetsBindingObserver {
     } else if (type == 'bs_evaluation' && id != null) {
       navigator.push(MaterialPageRoute(
         builder: (_) => BsDetailLoadingScreen(
+          id: id,
+          returnToList: true,
+        ),
+      ));
+    } else if (type == 'gsm_evaluation' && id != null) {
+      navigator.push(MaterialPageRoute(
+        builder: (_) => GsmDetailLoadingScreen(
           id: id,
           returnToList: true,
         ),
@@ -498,6 +508,19 @@ class FcmService with WidgetsBindingObserver {
         ));
       } else {
         navigator.pushNamed('/bs-evaluations');
+      }
+    } else if (route != null && route.startsWith('/gsm-evaluations/')) {
+      final segments = route.split('/');
+      final routeId = segments.length > 2 ? segments[2] : null;
+      if (routeId != null && routeId.isNotEmpty) {
+        navigator.push(MaterialPageRoute(
+          builder: (_) => GsmDetailLoadingScreen(
+            id: routeId,
+            returnToList: true,
+          ),
+        ));
+      } else {
+        navigator.pushNamed('/gsm-evaluations');
       }
     } else {
       navigator.pushNamed(route ?? '/notification',

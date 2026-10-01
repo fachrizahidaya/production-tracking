@@ -1422,7 +1422,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       await showAlertDialog(
         context: context,
         title: 'Gagal Menyimpan',
-        message: e.toString(),
+        message: e.toString().replaceFirst(RegExp(r'^Exception:\s*'), ''),
       );
     }
   }

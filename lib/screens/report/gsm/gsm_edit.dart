@@ -1,13 +1,19 @@
+<<<<<<< HEAD
 import 'dart:math' as math;
 
+=======
+>>>>>>> b77e0195 (fix: bs, gsm, rework)
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+=======
+>>>>>>> b77e0195 (fix: bs, gsm, rework)
 import 'package:textile_tracking/screens/report/service.dart';
 
 class GsmEditScreen extends StatefulWidget {
@@ -22,6 +28,7 @@ class GsmEditScreen extends StatefulWidget {
 class _GsmEditScreenState extends State<GsmEditScreen> {
   final ReportService _reportService = ReportService();
   final TextEditingController _reasonController = TextEditingController();
+<<<<<<< HEAD
   final TextEditingController _preventivePlanController =
       TextEditingController();
   bool _saving = false;
@@ -29,10 +36,17 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   List<Map<String, dynamic>> _attachments = [];
 
   String get _draftType => 'gsm';
+=======
+  final TextEditingController _actionPlanController = TextEditingController();
+  final TextEditingController _preventivePlanController =
+      TextEditingController();
+  bool _saving = false;
+>>>>>>> b77e0195 (fix: bs, gsm, rework)
 
   @override
   void initState() {
     super.initState();
+<<<<<<< HEAD
     _reasonController.text = _textValue(widget.data['reason']);
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
     _attachments = parseEvaluationAttachments(widget.data['attachments']);
@@ -40,17 +54,29 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     _reasonController.addListener(_persistDraft);
     _preventivePlanController.addListener(_persistDraft);
     _loadDraft();
+=======
+    _reasonController.text = widget.data['reason']?.toString() ?? '';
+    _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
+    _preventivePlanController.text =
+        widget.data['preventivePlan']?.toString() ?? '';
+>>>>>>> b77e0195 (fix: bs, gsm, rework)
   }
 
   @override
   void dispose() {
+<<<<<<< HEAD
     _reasonController.removeListener(_persistDraft);
     _preventivePlanController.removeListener(_persistDraft);
     _reasonController.dispose();
+=======
+    _reasonController.dispose();
+    _actionPlanController.dispose();
+>>>>>>> b77e0195 (fix: bs, gsm, rework)
     _preventivePlanController.dispose();
     super.dispose();
   }
 
+<<<<<<< HEAD
   String _textValue(dynamic value) {
     final text = value?.toString().trim() ?? '';
     return text == '-' ? '' : text;
@@ -130,6 +156,22 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 
       if (!mounted) return;
       Navigator.pop(context, message);
+=======
+  Future<void> _save() async {
+    if (_saving || !_canSave) return;
+    setState(() => _saving = true);
+
+    try {
+      await _reportService.updateGsmDetail(
+        id: widget.data['id'],
+        reason: _reasonController.text,
+        actionPlan: _actionPlanController.text,
+        preventivePlan: _preventivePlanController.text,
+      );
+
+      if (!mounted) return;
+      Navigator.pop(context, true);
+>>>>>>> b77e0195 (fix: bs, gsm, rework)
     } catch (e) {
       if (!mounted) return;
       setState(() => _saving = false);
@@ -146,6 +188,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   }
 
   bool get _canSave {
+<<<<<<< HEAD
     return _reasonController.text.trim().length >= 8 &&
         _preventivePlanController.text.trim().length >= 8;
   }
@@ -166,6 +209,11 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     if (invalid.isEmpty) return null;
     if (invalid.length == 1) return '${invalid.first} minimal 8 karakter.';
     return '${invalid[0]} dan ${invalid[1]} minimal 8 karakter.';
+=======
+    return _reasonController.text.trim().isNotEmpty &&
+        _actionPlanController.text.trim().isNotEmpty &&
+        _preventivePlanController.text.trim().isNotEmpty;
+>>>>>>> b77e0195 (fix: bs, gsm, rework)
   }
 
   @override
@@ -178,6 +226,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
         child: SingleChildScrollView(
+<<<<<<< HEAD
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
             children: [
@@ -223,6 +272,25 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
                   child: _buildNextButton(),
                 ),
               ],
+=======
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              _buildEditorForm(
+                label: 'Alasan dan Penyebab',
+                controller: _reasonController,
+              ),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Rencana Tindakan',
+                controller: _actionPlanController,
+              ),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Rencana Pencegahan',
+                controller: _preventivePlanController,
+              ),
+>>>>>>> b77e0195 (fix: bs, gsm, rework)
             ],
           ),
         ),
@@ -296,6 +364,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         minLines: 6,
         maxLines: 12,
         decoration: CustomTheme().inputDecoration('Masukkan $label'),
+<<<<<<< HEAD
       ),
     );
   }
@@ -596,4 +665,10 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     return '${local.day} ${months[local.month - 1]} ${local.year}, '
         '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
   }
+=======
+        onChanged: (_) => setState(() {}),
+      ),
+    );
+  }
+>>>>>>> b77e0195 (fix: bs, gsm, rework)
 }

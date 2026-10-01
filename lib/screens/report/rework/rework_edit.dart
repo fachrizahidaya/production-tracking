@@ -261,18 +261,26 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       await showAlertDialog(
         context: context,
         title: 'Gagal Menyimpan',
+<<<<<<< HEAD
         message: e.toString(),
 >>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
+=======
+        message: _errorMessage(e),
+>>>>>>> b77e0195 (fix: bs, gsm, rework)
       );
     }
   }
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b77e0195 (fix: bs, gsm, rework)
   String _errorMessage(Object error) {
     return error.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
   }
 
+<<<<<<< HEAD
   bool get _canSave {
     return _selectedReasons.isNotEmpty &&
         _preventivePlanController.text.trim().length >= 8;
@@ -291,6 +299,8 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
 >>>>>>> 41ded02d (fix: rework)
 =======
+=======
+>>>>>>> b77e0195 (fix: bs, gsm, rework)
   bool get _canSave {
     return _selectedReasons.isNotEmpty &&
         _actionPlanController.text.trim().isNotEmpty &&

@@ -575,6 +575,51 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
               item['total_weight']?.toString() ?? '0';
         }
       }
+
+      final attachments = data['attachments'];
+
+      if (attachments is List) {
+        final attachmentIds = attachments
+            .whereType<Map>()
+            .map((file) => file['id'])
+            .where((id) => id != null)
+            .toList();
+
+        for (int i = 0; i < attachmentIds.length; i++) {
+          request.fields['attachment_ids[$i]'] = attachmentIds[i].toString();
+        }
+
+        for (final file in attachments) {
+          if (file is File) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+              ),
+            );
+          } else if (file is XFile) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file.path,
+                filename: file.name,
+              ),
+            );
+          } else if (file is Map &&
+              file['path'] != null &&
+              file['path'].toString().isNotEmpty &&
+              file['isNew'] == true) {
+            request.files.add(
+              await http.MultipartFile.fromPath(
+                'attachments[]',
+                file['path'].toString(),
+                filename: file['name']?.toString() ?? 'file',
+              ),
+            );
+          }
+        }
+      }
+
       request.fields.addAll(cleaned);
 
       request.headers.addAll({

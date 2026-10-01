@@ -178,19 +178,27 @@ class _BsEditScreenState extends State<BsEditScreen> {
         context: context,
         title: 'Gagal Menyimpan',
 <<<<<<< HEAD
+<<<<<<< HEAD
         message: _errorMessage(e),
 =======
         message: e.toString(),
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+        message: _errorMessage(e),
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
       );
     }
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
   String _errorMessage(Object error) {
     return error.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
   }
 
+<<<<<<< HEAD
   bool get _canSave {
     return _reasonController.text.trim().length >= 8 &&
         _preventivePlanController.text.trim().length >= 8;
@@ -213,6 +221,8 @@ class _BsEditScreenState extends State<BsEditScreen> {
     if (invalid.length == 1) return '${invalid.first} minimal 8 karakter.';
     return '${invalid[0]} dan ${invalid[1]} minimal 8 karakter.';
 =======
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
   bool get _canSave {
     return _reasonController.text.trim().isNotEmpty &&
         _actionPlanController.text.trim().isNotEmpty &&

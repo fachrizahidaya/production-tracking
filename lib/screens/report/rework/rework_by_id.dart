@@ -711,6 +711,148 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
   String _value(String key) => widget.data[key]?.toString() ?? '-';
 
+<<<<<<< HEAD
+=======
+  Widget _buildSaveBar() {
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: ElevatedButton(
+            onPressed: _canSaveWaiting && !_saving ? _saveWaitingForm : null,
+            style: _primaryActionButtonStyle,
+            child: _saving
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Text('Simpan'),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWaitingReasonSection() {
+    return _buildFormCard(
+      label: 'Alasan',
+      child: Column(
+        children: [
+          if (_selectedReasons.isNotEmpty) ...[
+            _buildSelectedReasons(),
+            const SizedBox(height: 12),
+          ],
+          MultiSelectForm(
+            label: 'Alasan Rework',
+            selectedValues:
+                _selectedReasons.map((item) => item['value']).toList(),
+            selectedItems: const [],
+            selectedLabel: '',
+            onTap: _selectReason,
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: _addReasonOption,
+              icon: const Icon(Icons.add),
+              label: const Text('Tambah alasan baru'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSelectedReasons() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Alasan terpilih',
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: _selectedReasons
+                .map(
+                  (item) => InputChip(
+                    label: Text(item['label'].toString()),
+                    onDeleted: () => _removeReason(item),
+                  ),
+                )
+                .toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  ButtonStyle get _primaryActionButtonStyle => ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF4561DB),
+        foregroundColor: Colors.white,
+        disabledBackgroundColor: Colors.grey.shade300,
+        disabledForegroundColor: Colors.grey.shade600,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      );
+
+  Future<void> _saveWaitingForm() async {
+    if (_saving || !_canSaveWaiting) return;
+    setState(() => _saving = true);
+    try {
+      await _reportService.updateReworkDetail(
+        id: widget.data['id'],
+        reasons: _selectedReasons
+            .map((reason) => reason['value'].toString())
+            .toList(),
+        actionPlan: _actionPlanController.text,
+        preventivePlan: _preventivePlanController.text,
+      );
+      if (!mounted) return;
+      Navigator.pop(context, true);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _saving = false);
+      await showAlertDialog(
+        context: context,
+        title: 'Gagal Menyimpan',
+        message: e.toString().replaceFirst(RegExp(r'^Exception:\s*'), ''),
+      );
+    }
+  }
+
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
   Widget _buildCategoryCard() {
     final categories = _reworkCategories();
 

@@ -26,6 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 <<<<<<< HEAD
 import 'package:textile_tracking/screens/report/bs/bs_by_id.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/report/gsm/gsm_by_id.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -48,6 +49,9 @@ final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 >>>>>>> 9c9cafca (feat: fcm notification)
 =======
 =======
+=======
+import 'package:textile_tracking/screens/report/gsm/gsm_by_id.dart';
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
 import 'package:textile_tracking/screens/report/rework/rework_by_id.dart';
 
 final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
@@ -435,6 +439,7 @@ class FcmService with WidgetsBindingObserver {
     final type = navigation['type'] as String?;
     final id = navigation['id'] as String?;
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (type == 'dyeing_rework_reminder') {
       navigator.pushNamed('/dyeing-rework-evaluations');
     } else if (type == 'bs_evaluation_reminder') {
@@ -461,6 +466,9 @@ class FcmService with WidgetsBindingObserver {
       );
 =======
     // Rework/BS notifications always open the detail screen using the ID from
+=======
+    // Rework/BS/GSM notifications always open the detail screen using the ID from
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
     // message.data, regardless of the route string sent by the backend.
     if (type == 'dyeing_rework_evaluation' && id != null) {
       navigator.push(MaterialPageRoute(
@@ -476,7 +484,17 @@ class FcmService with WidgetsBindingObserver {
           returnToList: true,
         ),
       ));
+<<<<<<< HEAD
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+    } else if (type == 'gsm_evaluation' && id != null) {
+      navigator.push(MaterialPageRoute(
+        builder: (_) => GsmDetailLoadingScreen(
+          id: id,
+          returnToList: true,
+        ),
+      ));
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
     } else if (route != null &&
         route.startsWith('/dyeing-rework-evaluations/')) {
       final segments = route.split('/');
@@ -528,7 +546,23 @@ class FcmService with WidgetsBindingObserver {
       } else {
         navigator.pushNamed('/bs-evaluations');
       }
+<<<<<<< HEAD
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+    } else if (route != null && route.startsWith('/gsm-evaluations/')) {
+      final segments = route.split('/');
+      final routeId = segments.length > 2 ? segments[2] : null;
+      if (routeId != null && routeId.isNotEmpty) {
+        navigator.push(MaterialPageRoute(
+          builder: (_) => GsmDetailLoadingScreen(
+            id: routeId,
+            returnToList: true,
+          ),
+        ));
+      } else {
+        navigator.pushNamed('/gsm-evaluations');
+      }
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
     } else {
       navigator.pushNamed(
         route ?? '/notification',

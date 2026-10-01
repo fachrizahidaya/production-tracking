@@ -4,6 +4,7 @@ import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
 <<<<<<< HEAD
@@ -15,6 +16,14 @@ import 'package:textile_tracking/helpers/util/format_number.dart';
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+import 'package:textile_tracking/helpers/util/format_number.dart';
+import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+=======
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/format_number.dart';
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
 import 'package:textile_tracking/screens/report/gsm/gsm_edit.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
@@ -52,6 +61,9 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
@@ -66,6 +78,7 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => GsmDetailScreen(data: data),
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
       final status = data['status']?.toString().toLowerCase() ?? '';
@@ -78,6 +91,9 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
               ? GsmEditScreen(data: data)
               : GsmDetailScreen(data: data),
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
         ),
       );
 
@@ -85,6 +101,9 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
       if (widget.returnToList) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
         _replaceWithGsmList(message: message);
       } else {
         Navigator.pop(context, message);
@@ -95,12 +114,16 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
         );
       } else {
         Navigator.pop(context, updated);
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
         _replaceWithGsmList(message: message);
       } else {
         Navigator.pop(context, message);
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
       }
     } catch (error) {
       if (!mounted) return;
@@ -110,6 +133,7 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   void _replaceWithGsmList({String? message}) {
 =======
   void _replaceWithGsmList({bool saved = false, String? woNo}) {
@@ -117,10 +141,17 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
 =======
   void _replaceWithGsmList({String? message}) {
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+  void _replaceWithGsmList({String? message}) {
+=======
+  void _replaceWithGsmList({bool saved = false, String? woNo}) {
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (_) => GsmList(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
           savedMessage: message,
@@ -130,6 +161,12 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
 =======
           savedMessage: message,
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+          savedMessage: message,
+=======
+          savedWoNo: saved ? woNo : null,
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
         ),
       ),
     );
@@ -183,10 +220,14 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   final TextEditingController _reasonController = TextEditingController();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   final TextEditingController _preventivePlanController =
       TextEditingController();
 =======
   final TextEditingController _actionPlanController = TextEditingController();
+<<<<<<< HEAD
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
   final TextEditingController _preventivePlanController =
@@ -204,6 +245,13 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+  final TextEditingController _preventivePlanController =
+      TextEditingController();
+  final ReportService _reportService = ReportService();
+  bool _saving = false;
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
 
   @override
   void initState() {
@@ -211,11 +259,17 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     _reasonController.text = widget.data['reason']?.toString() ?? '';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
+=======
+=======
+    _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
   }
@@ -225,11 +279,17 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     _reasonController.dispose();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     _actionPlanController.dispose();
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
+=======
+=======
+    _actionPlanController.dispose();
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     _preventivePlanController.dispose();
     super.dispose();
   }
@@ -238,8 +298,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     final status = widget.data['status']?.toString().toLowerCase();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     return status == 'direview' ||
         status == 'reviewed' ||
         status == 'selesai' ||
@@ -251,6 +314,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     final message = await Navigator.push<String>(
 =======
     return status == 'selesai' || status == 'completed';
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
   }
@@ -262,6 +326,26 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 =======
     final message = await Navigator.push<String>(
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+  }
+
+  bool get _isWaiting {
+    final status = widget.data['status']?.toString().toLowerCase();
+    return status == 'menunggu' || status == 'waiting';
+  }
+
+  bool get _useEditScreen => _isCompleted;
+
+  bool get _canSaveWaiting {
+    return _reasonController.text.trim().isNotEmpty &&
+        _actionPlanController.text.trim().isNotEmpty &&
+        _preventivePlanController.text.trim().isNotEmpty;
+  }
+
+  Future<void> _openEditScreen() async {
+    final updated = await Navigator.push<bool>(
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
       context,
       MaterialPageRoute(
         builder: (context) => GsmEditScreen(data: widget.data),
@@ -270,15 +354,45 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     if (message != null && message.trim().isNotEmpty && mounted) {
       Navigator.pop(context, message);
 =======
     if (updated == true && mounted) {
       Navigator.pop(context, true);
+<<<<<<< HEAD
 =======
     if (message != null && message.trim().isNotEmpty && mounted) {
       Navigator.pop(context, message);
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+    }
+  }
+
+  Future<void> _saveWaitingForm() async {
+    if (_saving || !_canSaveWaiting) return;
+    setState(() => _saving = true);
+    try {
+      await _reportService.updateGsmDetail(
+        id: widget.data['id'],
+        reason: _reasonController.text,
+        actionPlan: _actionPlanController.text,
+        preventivePlan: _preventivePlanController.text,
+      );
+      if (!mounted) return;
+      Navigator.pop(context, true);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _saving = false);
+      await showAlertDialog(
+        context: context,
+        title: 'Gagal Menyimpan',
+        message: e.toString().replaceFirst(RegExp(r'^Exception:\s*'), ''),
+      );
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     }
   }
 
@@ -317,6 +431,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
         onReturn: () => Navigator.pop(context),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         onEdit: _isCompleted ? _openEditScreen : null,
 =======
         onEdit: _useEditScreen ? _openEditScreen : null,
@@ -324,6 +439,12 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 =======
         onEdit: _isCompleted ? _openEditScreen : null,
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+        onEdit: _isCompleted ? _openEditScreen : null,
+=======
+        onEdit: _useEditScreen ? _openEditScreen : null,
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
@@ -339,8 +460,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
               const SizedBox(height: 16),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
               _buildReadOnlyCard(
                 'Alasan dan Penyebab',
                 _reasonController.text,
@@ -389,6 +513,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 ),
               ),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
 =======
               if (_useEditScreen) ...[
                 _buildReadOnlyCard(
@@ -425,13 +552,17 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                   controller: _preventivePlanController,
                 ),
               ],
+<<<<<<< HEAD
 =======
               ),
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
               if (_histories.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 _buildHistoryCard(),
               ],
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
               _buildHistoryCard(),
@@ -442,10 +573,14 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
             ],
           ),
         ),
       ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -453,6 +588,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+=======
+      bottomNavigationBar: _isWaiting ? _buildSaveBar() : null,
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     );
   }
 
@@ -476,6 +616,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           _buildOverviewItem(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
             label: 'No. Packing',
             value: _value('packingNo'),
             valueColor: const Color(0xFF234393),
@@ -512,6 +655,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 =======
             label: 'Packing GSM',
             value: _formatGsmNumber(_raw('packingGsm')),
+<<<<<<< HEAD
 =======
             label: 'No. Packing',
             value: _value('packingNo'),
@@ -546,10 +690,22 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           ],
           const SizedBox(height: 12),
 <<<<<<< HEAD
+=======
+          ),
+          const SizedBox(height: 12),
+          _buildOverviewItem(
+            label: 'Material GSM',
+            value: _formatGsmNumber(_raw('materialGsm')),
+          ),
+          const SizedBox(height: 12),
+          _buildMaterialItem(),
+          const SizedBox(height: 12),
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
+<<<<<<< HEAD
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -572,16 +728,30 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                       ),
                     ),
                   ],
+=======
+                child: Text(
+                  _formatDateTime(
+                    _value(_isCompleted ? 'completedAt' : 'startedAt'),
+                  ),
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 16,
+                  ),
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
                 ),
               ),
               _buildStatusBadge(_value('status')),
             ],
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
           Align(
             alignment: Alignment.centerRight,
             child: _buildStatusBadge(_value('status')),
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
           ),
         ],
       ),
@@ -621,8 +791,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   Widget _buildSubmittedByItem() {
     final name = _value('submittedBy');
     final time = _formatDateTime(_value('completedAt'));
@@ -696,10 +869,15 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   Widget _buildMaterialItem() {
     final code = _value('topMaterialCode');
     final name = _value('topMaterialName');
@@ -757,6 +935,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
 =======
   Widget _buildSaveBar() {
     return SafeArea(
@@ -804,9 +985,13 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
         ),
       );
 
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   Widget _buildStatusBadge(String status) {
     final backgroundColor = _getStatusColor(status);
 
@@ -834,6 +1019,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     switch (status.toLowerCase()) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -843,6 +1031,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
       case 'selesai':
       case 'completed':
         return const Color(0xFFEBFDF4);
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
       case 'direview':
@@ -851,6 +1040,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
       case 'completed':
         return const Color(0xFFF2F7FF);
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
@@ -869,6 +1061,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     switch (status.toLowerCase()) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -878,6 +1073,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
       case 'waiting':
         return const Color(0xFF955B34);
 =======
+<<<<<<< HEAD
 =======
       case 'direview':
       case 'reviewed':
@@ -893,6 +1089,15 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 =======
         return const Color(0xFF955B34);
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFF15803D);
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFA16207);
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
       default:
         return _getStatusColor(status);
     }
@@ -900,8 +1105,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   Map<String, dynamic> get _packing {
     final packing = widget.data['packing'];
     return packing is Map ? Map<String, dynamic>.from(packing) : {};
@@ -970,10 +1178,15 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   String _formatDateTime(String value) {
     final date = DateTime.tryParse(value);
     if (date == null) return value;
@@ -998,6 +1211,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
 =======
   Widget _buildFormCard({required String label, required Widget child}) {
     return Padding(
@@ -1010,17 +1226,24 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     );
   }
 
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   Widget _buildReadOnlyCard(
     String label,
     String value, {
     String? updatedAt,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     String? historyField,
   }) {
     final hasUpdatedAt =
@@ -1046,6 +1269,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   }) {
     final hasUpdatedAt =
         updatedAt != null && updatedAt.trim().isNotEmpty && updatedAt != '-';
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
         : _previousHistoryItems(historyField);
@@ -1061,6 +1285,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -1075,6 +1302,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
               for (final previous in previousVersions) ...[
                 Text(
                   previous['value'].toString(),
@@ -1119,11 +1349,15 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 =======
               Text(
                 value.isEmpty ? '-' : value,
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
               Text(
                 current,
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
                 style: TextStyle(
                   fontSize: CustomTheme().fontSize('base'),
                   fontWeight: CustomTheme().fontWeight('semibold'),
@@ -1132,6 +1366,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
               ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
               if (latestMeta != null) ...[
                 const SizedBox(height: 8),
                 Text(
@@ -1141,6 +1378,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 const SizedBox(height: 8),
                 Text(
                   _formatDateTime(updatedAt),
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
               if (latestMeta != null) ...[
@@ -1148,6 +1386,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 Text(
                   latestMeta,
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -1187,6 +1428,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -1293,6 +1537,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     }
     return value.toString().trim();
 =======
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
   Widget _buildHistoryCard() {
@@ -1306,6 +1551,10 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     final items = histories.isEmpty
         ? <Map<String, dynamic>>[]
         : _historyItems(histories[selectedIndex]);
+=======
+  Widget _buildHistoryCard() {
+    final histories = _histories;
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -1313,6 +1562,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
         title: 'Riwayat Perubahan',
         icon: Icons.history_outlined,
         child: Column(
+<<<<<<< HEAD
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (histories.isEmpty)
@@ -1341,6 +1591,12 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 if (i > 0) const SizedBox(height: 12),
                 _buildHistoryItem(items[i]),
               ],
+=======
+          children: [
+            for (int i = 0; i < histories.length; i++) ...[
+              if (i > 0) const SizedBox(height: 12),
+              _buildHistoryItem(histories[i]),
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
             ],
           ],
         ),
@@ -1349,9 +1605,13 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   }
 
   Widget _buildHistoryItem(Map<String, dynamic> history) {
+<<<<<<< HEAD
     final oldValue = _historyDisplayValue(history['old_value']);
     final newValue = _historyDisplayValue(history['new_value']);
     final hasOldValue = history['old_value'] != null && oldValue.isNotEmpty;
+=======
+    final newValue = history['new_value']?.toString().trim();
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     final changedBy = history['changed_by'];
     final changedByName =
         changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
@@ -1368,6 +1628,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+<<<<<<< HEAD
           if (hasOldValue) ...[
             Text(
               oldValue,
@@ -1381,6 +1642,19 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           ],
           Text(
             newValue.isEmpty ? '-' : newValue,
+=======
+          Text(
+            _historyFieldLabel(history['field']?.toString()),
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade600,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            (newValue == null || newValue.isEmpty) ? '-' : newValue,
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
             style: TextStyle(
               fontSize: CustomTheme().fontSize('base'),
               fontWeight: CustomTheme().fontWeight('semibold'),
@@ -1414,6 +1688,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   Widget _buildEditorForm({
     required String label,
     required TextEditingController controller,
@@ -1428,6 +1705,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
         onChanged: (_) => setState(() {}),
       ),
     );
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
 =======
@@ -1439,5 +1717,8 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     }
     return value.toString().trim();
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   }
 }

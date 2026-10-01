@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:math' as math;
 
 =======
@@ -8,11 +9,18 @@ import 'dart:math' as math;
 import 'dart:math' as math;
 
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+import 'dart:math' as math;
+
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -29,6 +37,13 @@ import 'package:textile_tracking/helpers/util/format_number.dart';
 >>>>>>> 72ffc257 (fix:)
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
+import 'package:textile_tracking/helpers/util/format_number.dart';
+import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
 import 'package:textile_tracking/screens/report/service.dart';
 
 class GsmEditScreen extends StatefulWidget {
@@ -45,8 +60,11 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   final TextEditingController _reasonController = TextEditingController();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   final TextEditingController _preventivePlanController =
       TextEditingController();
   bool _saving = false;
@@ -67,18 +85,25 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
       TextEditingController();
   bool _saving = false;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
   int _visibleStep = 1;
 
   String get _draftType => 'gsm';
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
 
   @override
   void initState() {
     super.initState();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     _reasonController.text = _textValue(widget.data['reason']);
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
     _attachments = parseEvaluationAttachments(widget.data['attachments']);
@@ -91,6 +116,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
     _reasonController.text = _textValue(widget.data['reason']);
@@ -101,16 +127,23 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     _preventivePlanController.addListener(_persistDraft);
     _loadDraft();
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   }
 
   @override
   void dispose() {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     _reasonController.removeListener(_persistDraft);
     _preventivePlanController.removeListener(_persistDraft);
     _reasonController.dispose();
 =======
+<<<<<<< HEAD
 =======
     _reasonController.removeListener(_persistDraft);
     _preventivePlanController.removeListener(_persistDraft);
@@ -121,14 +154,22 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
+=======
+    _reasonController.dispose();
+    _actionPlanController.dispose();
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     _preventivePlanController.dispose();
     super.dispose();
   }
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   String _textValue(dynamic value) {
     final text = value?.toString().trim() ?? '';
     return text == '-' ? '' : text;
@@ -290,6 +331,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
       if (!mounted) return;
       Navigator.pop(context, message);
 =======
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
   Future<void> _save() async {
@@ -324,6 +366,23 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
       Navigator.pop(context, message);
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+  Future<void> _save() async {
+    if (_saving || !_canSave) return;
+    setState(() => _saving = true);
+
+    try {
+      await _reportService.updateGsmDetail(
+        id: widget.data['id'],
+        reason: _reasonController.text,
+        actionPlan: _actionPlanController.text,
+        preventivePlan: _preventivePlanController.text,
+      );
+
+      if (!mounted) return;
+      Navigator.pop(context, true);
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     } catch (e) {
       if (!mounted) return;
       setState(() => _saving = false);
@@ -342,6 +401,9 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   bool get _canSave {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     return _reasonController.text.trim().length >= 8 &&
         _preventivePlanController.text.trim().length >= 8;
   }
@@ -392,6 +454,11 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     if (invalid.isEmpty) return null;
     if (invalid.length == 1) return '${invalid.first} minimal 8 karakter.';
     return '${invalid[0]} dan ${invalid[1]} minimal 8 karakter.';
+=======
+    return _reasonController.text.trim().isNotEmpty &&
+        _actionPlanController.text.trim().isNotEmpty &&
+        _preventivePlanController.text.trim().isNotEmpty;
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
   }
 
   @override
@@ -406,6 +473,9 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         child: SingleChildScrollView(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
             children: [
@@ -454,6 +524,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
               ],
 =======
           padding: const EdgeInsets.all(16),
+<<<<<<< HEAD
 =======
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
@@ -517,6 +588,25 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
                 ),
               ],
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+          child: Column(
+            children: [
+              _buildEditorForm(
+                label: 'Alasan dan Penyebab',
+                controller: _reasonController,
+              ),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Rencana Tindakan',
+                controller: _actionPlanController,
+              ),
+              const SizedBox(height: 16),
+              _buildEditorForm(
+                label: 'Rencana Pencegahan',
+                controller: _preventivePlanController,
+              ),
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
             ],
           ),
         ),
@@ -592,8 +682,11 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         decoration: CustomTheme().inputDecoration('Masukkan $label'),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
       ),
     );
   }
@@ -910,6 +1003,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   }
 =======
         onChanged: (_) => setState(() {}),
+<<<<<<< HEAD
 =======
       height: 48,
       child: ElevatedButton(
@@ -1205,4 +1299,10 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
   }
 >>>>>>> 72ffc257 (fix:)
+=======
+      ),
+    );
+  }
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
 }

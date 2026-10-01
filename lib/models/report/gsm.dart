@@ -47,16 +47,23 @@ class GsmListItem {
   final material;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   final item;
   final topMaterialCode;
   final topMaterialName;
 =======
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
   final item;
   final topMaterialCode;
   final topMaterialName;
 >>>>>>> 5e38e0f3 (fix:)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
   final startDate;
   final endDate;
 
@@ -76,16 +83,23 @@ class GsmListItem {
       this.material,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
       this.item,
       this.topMaterialCode,
       this.topMaterialName,
 =======
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
       this.item,
       this.topMaterialCode,
       this.topMaterialName,
 >>>>>>> 5e38e0f3 (fix:)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
       this.endDate,
       this.startDate});
 
@@ -93,20 +107,28 @@ class GsmListItem {
     final packing = json['packing'] ?? {};
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     final wo = json['work_order'] ?? {};
     final woItems = wo is Map ? wo['items'] : null;
     final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
 =======
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
     final wo = json['work_order'] ?? {};
     final woItems = wo is Map ? wo['items'] : null;
     final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
 >>>>>>> 5e38e0f3 (fix:)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
     return GsmListItem(
         id: json['id'] ?? '',
         startDate: json['created_at'] ?? '',
         endDate: json['completed_at'] ?? '',
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         wo: wo,
@@ -116,6 +138,12 @@ class GsmListItem {
 =======
         wo: wo,
 >>>>>>> 5e38e0f3 (fix:)
+=======
+        wo: wo,
+=======
+        wo: json['work_order'] ?? {},
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
         actionPlan: json['action_plan'] ?? '',
         preventivePlan: json['preventive_plan'] ?? '',
         reason: json['reason'] ?? json['reasons'] ?? '',
@@ -133,16 +161,23 @@ class GsmListItem {
             '',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
         item: woItem ?? json['item'] ?? json['packing_item']?['item'] ?? {},
         topMaterialCode: json['top_material_code'] ?? '',
         topMaterialName: json['top_material_name'] ?? '',
 =======
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
         item: woItem ?? json['item'] ?? json['packing_item']?['item'] ?? {},
         topMaterialCode: json['top_material_code'] ?? '',
         topMaterialName: json['top_material_name'] ?? '',
 >>>>>>> 5e38e0f3 (fix:)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+>>>>>>> 25f345ae (fix: bs, gsm, rework)
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});
   }

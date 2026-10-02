@@ -43,6 +43,7 @@ class _SortingResultCompState extends State<SortingResultComp> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
     final listHeight = isTablet ? 210.0 : 200.0;
 =======
@@ -57,6 +58,10 @@ class _SortingResultCompState extends State<SortingResultComp> {
 >>>>>>> 0cdc2803 (feat: top bs, sorting per grade)
 =======
     const double listHeight = 180;
+=======
+    final isTablet = MediaQuery.sizeOf(context).width >= 600;
+    final listHeight = isTablet ? 210.0 : 200.0;
+>>>>>>> b01fb0fd (fix: responsive size for report)
 
 >>>>>>> 65038198 (feat:)
     return Padding(
@@ -186,14 +191,18 @@ class _SortingResultCompState extends State<SortingResultComp> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
+=======
+>>>>>>> b01fb0fd (fix: responsive size for report)
                               final cardWidth = (constraints.maxWidth *
                                       (isTablet ? 0.65 : 0.8))
                                   .clamp(
                                     isTablet ? 440.0 : 260.0,
                                     isTablet ? 520.0 : 300.0,
                                   )
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
                               final cardWidth = (constraints.maxWidth * 0.8)
@@ -205,6 +214,8 @@ class _SortingResultCompState extends State<SortingResultComp> {
                               final cardWidth = (constraints.maxWidth * 0.8)
                                   .clamp(260.0, 300.0)
 >>>>>>> 14df3077 (fix: report)
+=======
+>>>>>>> b01fb0fd (fix: responsive size for report)
                                   .toDouble();
 
                               return ListView.builder(

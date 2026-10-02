@@ -34,6 +34,7 @@ class SpkListComp extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
     final listHeight = isTablet ? 320.0 : 350.0;
 =======
@@ -49,6 +50,10 @@ class SpkListComp extends StatelessWidget {
 =======
     const double listHeight = 350;
 >>>>>>> 31883749 (fix: report)
+=======
+    final isTablet = MediaQuery.sizeOf(context).width >= 600;
+    final listHeight = isTablet ? 320.0 : 350.0;
+>>>>>>> b01fb0fd (fix: responsive size for report)
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -161,10 +166,20 @@ class SpkListComp extends StatelessWidget {
 =======
                       : LayoutBuilder(
                           builder: (context, constraints) {
+<<<<<<< HEAD
                             final cardWidth = (constraints.maxWidth * 0.8)
                                 .clamp(260.0, 300.0)
                                 .toDouble();
 >>>>>>> 14df3077 (fix: report)
+=======
+                            final cardWidth =
+                                (constraints.maxWidth * (isTablet ? 0.65 : 0.8))
+                                    .clamp(
+                                      isTablet ? 440.0 : 260.0,
+                                      isTablet ? 520.0 : 300.0,
+                                    )
+                                    .toDouble();
+>>>>>>> b01fb0fd (fix: responsive size for report)
 
                             return ScrollConfiguration(
                               behavior: ScrollConfiguration.of(context)
@@ -192,6 +207,7 @@ class SpkListComp extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                       isTablet: isTablet,
 =======
 >>>>>>> 2261585c (fix: report axis horizontal)
@@ -200,6 +216,9 @@ class SpkListComp extends StatelessWidget {
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
 =======
 >>>>>>> 14df3077 (fix: report)
+=======
+                                      isTablet: isTablet,
+>>>>>>> b01fb0fd (fix: responsive size for report)
                                       isLast: index == items.length - 1,
                                     ),
                                   );
@@ -250,13 +269,17 @@ class SpkListComp extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
+=======
+>>>>>>> b01fb0fd (fix: responsive size for report)
   Widget _buildSpkListCard(
     SpkListItem item, {
     required bool isTablet,
     isLast = false,
   }) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
   Widget _buildSpkListCard(SpkListItem item, {isLast = false}) {
@@ -266,6 +289,8 @@ class SpkListComp extends StatelessWidget {
 =======
   Widget _buildSpkListCard(SpkListItem item, {isLast = false}) {
 >>>>>>> 1d5490b7 (feat: spk)
+=======
+>>>>>>> b01fb0fd (fix: responsive size for report)
     return Padding(
       padding: EdgeInsets.fromLTRB(12, 0, isLast ? 16 : 0, 12),
       child: Container(
@@ -295,8 +320,11 @@ class SpkListComp extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
+=======
+>>>>>>> b01fb0fd (fix: responsive size for report)
             ..._buildInfoRows(
               [
                 MapEntry(
@@ -326,6 +354,7 @@ class SpkListComp extends StatelessWidget {
                 MapEntry('Total Berat', '${formatNumber(item.weight)} KG'),
               ],
               isTablet ? 3 : 2,
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 =======
@@ -422,6 +451,8 @@ class SpkListComp extends StatelessWidget {
               'Total Berat',
               '${formatNumber(item.weight)} KG',
 >>>>>>> 183ac4f1 (fix: report)
+=======
+>>>>>>> b01fb0fd (fix: responsive size for report)
             ),
           ],
         ),
@@ -429,6 +460,7 @@ class SpkListComp extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -493,6 +525,12 @@ class SpkListComp extends StatelessWidget {
     List<MapEntry<String, String>> items,
     int columnCount,
   ) {
+=======
+  List<Widget> _buildInfoRows(
+    List<MapEntry<String, String>> items,
+    int columnCount,
+  ) {
+>>>>>>> b01fb0fd (fix: responsive size for report)
     final rows = <Widget>[];
 
     for (var start = 0; start < items.length; start += columnCount) {
@@ -520,9 +558,12 @@ class SpkListComp extends StatelessWidget {
     }
 
     return rows;
+<<<<<<< HEAD
 >>>>>>> 5ea4dfbf (fix: responsive size for report)
 =======
 >>>>>>> 1d5490b7 (feat: spk)
+=======
+>>>>>>> b01fb0fd (fix: responsive size for report)
   }
 
   Widget _buildInfo(String label, dynamic value) {

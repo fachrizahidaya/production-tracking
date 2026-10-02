@@ -3,10 +3,13 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
 =======
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+=======
+>>>>>>> d9ba4836 (fix: detail evaluasi)
 import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
 >>>>>>> b2b87875 (feat: evaluasi bs)
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
@@ -44,6 +47,7 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
       if (!mounted) return;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
@@ -58,6 +62,16 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
         MaterialPageRoute(
           builder: (context) => BsDetailScreen(data: data),
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+      final status = data['status']?.toString().toLowerCase() ?? '';
+      final isWaiting = status == 'menunggu' || status == 'waiting';
+
+      final updated = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              isWaiting ? BsEditScreen(data: data) : BsDetailScreen(data: data),
+>>>>>>> d9ba4836 (fix: detail evaluasi)
         ),
       );
 
@@ -154,9 +168,12 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   final TextEditingController _actionPlanController = TextEditingController();
   final TextEditingController _preventivePlanController =
       TextEditingController();
+<<<<<<< HEAD
   final ReportService _reportService = ReportService();
   bool _saving = false;
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+>>>>>>> d9ba4836 (fix: detail evaluasi)
 
   @override
   void initState() {
@@ -196,19 +213,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     return status == 'selesai' || status == 'completed';
   }
 
-  bool get _isWaiting {
-    final status = widget.data['status']?.toString().toLowerCase();
-    return status == 'menunggu' || status == 'waiting';
-  }
-
-  bool get _useEditScreen => _isCompleted;
-
-  bool get _canSaveWaiting {
-    return _reasonController.text.trim().isNotEmpty &&
-        _actionPlanController.text.trim().isNotEmpty &&
-        _preventivePlanController.text.trim().isNotEmpty;
-  }
-
   Future<void> _openEditScreen() async {
     final updated = await Navigator.push<bool>(
 >>>>>>> b2b87875 (feat: evaluasi bs)
@@ -227,6 +231,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     }
   }
 
+<<<<<<< HEAD
   Future<void> _saveWaitingForm() async {
     if (_saving || !_canSaveWaiting) return;
     setState(() => _saving = true);
@@ -251,6 +256,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     }
   }
 
+=======
+>>>>>>> d9ba4836 (fix: detail evaluasi)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -258,10 +265,14 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         title: 'Detail Evaluasi BS',
         onReturn: () => Navigator.pop(context),
 <<<<<<< HEAD
+<<<<<<< HEAD
         onEdit: _isCompleted ? _openEditScreen : null,
 =======
         onEdit: _useEditScreen ? _openEditScreen : null,
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+        onEdit: _isCompleted ? _openEditScreen : null,
+>>>>>>> d9ba4836 (fix: detail evaluasi)
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
@@ -281,11 +292,23 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               ),
               const SizedBox(height: 16),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d9ba4836 (fix: detail evaluasi)
               _buildReadOnlyCard(
                 'Alasan dan Penyebab',
                 _reasonController.text,
                 updatedAt: widget.data['reason_updated_at']?.toString(),
+<<<<<<< HEAD
                 historyField: 'reason',
+=======
+              ),
+              const SizedBox(height: 16),
+              _buildReadOnlyCard(
+                'Rencana Tindakan',
+                _actionPlanController.text,
+                updatedAt: widget.data['action_plan_updated_at']?.toString(),
+>>>>>>> d9ba4836 (fix: detail evaluasi)
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -293,6 +316,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 _preventivePlanController.text,
                 updatedAt:
                     widget.data['preventive_plan_updated_at']?.toString(),
+<<<<<<< HEAD
                 historyField: 'preventive_plan',
               ),
               const SizedBox(height: 16),
@@ -338,6 +362,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                   controller: _preventivePlanController,
                 ),
               ],
+=======
+              ),
+>>>>>>> d9ba4836 (fix: detail evaluasi)
               if (_histories.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 _buildHistoryCard(),
@@ -348,9 +375,12 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         ),
       ),
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       bottomNavigationBar: _isWaiting ? _buildSaveBar() : null,
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+>>>>>>> d9ba4836 (fix: detail evaluasi)
     );
   }
 
@@ -607,6 +637,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   String _value(String key) => widget.data[key]?.toString() ?? '-';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Widget _buildCategoryCard() {
     final defects = _defects();
 
@@ -733,25 +764,67 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         ),
       );
 
+=======
+>>>>>>> d9ba4836 (fix: detail evaluasi)
   Widget _buildCategoryCard() {
     final defects = _defects();
 
-    return TemplateCard(
-      title: 'Tipe BS',
-      icon: Icons.local_offer_outlined,
+    return Container(
+      decoration: CustomTheme().cardTheme(),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Container(
+            padding: CustomTheme().padding('card'),
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: CustomTheme().padding('process-content'),
+                  decoration: BoxDecoration(
+                    color:
+                        CustomTheme().buttonColor('primary').withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.local_offer_outlined,
+                    size: 18,
+                    color: CustomTheme().buttonColor('primary'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Tipe BS',
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('md'),
+                    fontWeight: CustomTheme().fontWeight('semibold'),
+                    color: Colors.grey[800],
+                  ),
+                ),
+              ],
+            ),
+          ),
           if (defects.isEmpty)
-            Text(
-              '-',
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('md'),
-                fontWeight: CustomTheme().fontWeight('semibold'),
-                color: Colors.grey[800],
+            Padding(
+              padding: CustomTheme().padding('item-detail'),
+              child: Text(
+                '-',
+                style: TextStyle(
+                  fontSize: CustomTheme().fontSize('md'),
+                  fontWeight: CustomTheme().fontWeight('semibold'),
+                  color: Colors.grey[800],
+                ),
               ),
             )
           else
+<<<<<<< HEAD
             ...defects.asMap().entries.map(
                   (entry) => _buildDefectItem(
                     entry.value,
@@ -759,6 +832,26 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                   ),
                 ),
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: Row(
+                children: [
+                  for (int i = 0; i < defects.length; i++) ...[
+                    if (i > 0) const SizedBox(width: 10),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: i == 0 ? 12 : 0,
+                        right: i == defects.length - 1 ? 12 : 0,
+                      ),
+                      child: _buildDefectItem(defects[i]),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+>>>>>>> d9ba4836 (fix: detail evaluasi)
         ],
       ),
     );
@@ -773,6 +866,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         .toList();
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   Widget _buildDefectItem(Map<String, dynamic> defect) {
 =======
@@ -824,12 +918,36 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           ),
           Expanded(
             child: Text(
+=======
+  Widget _buildDefectItem(Map<String, dynamic> defect) {
+    final name = defect['defect_name']?.toString() ?? '-';
+    final qty = defect['qty']?.toString() ?? '-';
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: Container(
+        width: 140,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade50,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey.shade200),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+>>>>>>> d9ba4836 (fix: detail evaluasi)
               name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: Color(0xFF292A2F),
-                fontSize: 17,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
               ),
             ),
+<<<<<<< HEAD
           ),
 >>>>>>> b2b87875 (feat: evaluasi bs)
           Text(
@@ -842,9 +960,19 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               fontSize: 16,
               fontWeight: FontWeight.w600,
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+            const SizedBox(height: 8),
+            Text(
+              qty,
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+>>>>>>> d9ba4836 (fix: detail evaluasi)
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1016,6 +1144,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   Widget _buildFormCard({required String label, required Widget child}) {
     return Padding(
@@ -1029,6 +1158,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   }
 
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+>>>>>>> d9ba4836 (fix: detail evaluasi)
   Widget _buildReadOnlyCard(
     String label,
     String value, {
@@ -1230,7 +1361,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   }
 
   Widget _buildHistoryItem(Map<String, dynamic> history) {
-    final newValue = history['new_value']?.toString().trim();
+    final oldValue = _historyDisplayValue(history['old_value']);
+    final newValue = _historyDisplayValue(history['new_value']);
+    final hasOldValue = history['old_value'] != null && oldValue.isNotEmpty;
     final changedBy = history['changed_by'];
     final changedByName =
         changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
@@ -1256,8 +1389,19 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             ),
           ),
           const SizedBox(height: 6),
+          if (hasOldValue) ...[
+            Text(
+              oldValue,
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize('base'),
+                color: Colors.grey.shade500,
+                decoration: TextDecoration.lineThrough,
+              ),
+            ),
+            const SizedBox(height: 4),
+          ],
           Text(
-            (newValue == null || newValue.isEmpty) ? '-' : newValue,
+            newValue.isEmpty ? '-' : newValue,
             style: TextStyle(
               fontSize: CustomTheme().fontSize('base'),
               fontWeight: CustomTheme().fontWeight('semibold'),
@@ -1290,6 +1434,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildEditorForm({
     required String label,
     required TextEditingController controller,
@@ -1305,5 +1450,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       ),
     );
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+  String _historyDisplayValue(dynamic value) {
+    if (value == null) return '';
+    if (value is List) {
+      return value.map((item) => item.toString()).join(', ').trim();
+    }
+    return value.toString().trim();
+>>>>>>> d9ba4836 (fix: detail evaluasi)
   }
 }

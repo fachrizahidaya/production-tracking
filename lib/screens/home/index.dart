@@ -59,10 +59,14 @@ class _HomeState extends State<Home> {
 <<<<<<< HEAD
   int _bsNotificationCount = 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
   int _gsmNotificationCount = 0;
   bool _canViewReworkEvaluation = false;
   bool _canViewBsEvaluation = false;
   bool _canViewGsmEvaluation = false;
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
   int _reworkNotificationCount = 0;
@@ -84,7 +88,12 @@ class _HomeState extends State<Home> {
   bool _canViewReworkEvaluation = false;
   bool _canViewBsEvaluation = false;
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 92623572 (feat: notifikasi evaluasi bs)
+=======
+=======
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
+>>>>>>> 20fcb172 (fix: notification all evaluasi)
   late Future<String?> _tokenFuture;
 =======
   late Future<String?> _tokenFuture;
@@ -152,7 +161,14 @@ class _HomeState extends State<Home> {
       userMenu.menus,
       'Evaluasi BS',
     );
+<<<<<<< HEAD
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+    final canViewGsmEvaluation = _hasMobileMenu(
+      userMenu.menus,
+      'Evaluasi GSM',
+    );
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
 
     if (!mounted) return;
 
@@ -160,9 +176,13 @@ class _HomeState extends State<Home> {
       _canViewReworkEvaluation = canViewReworkEvaluation;
       _canViewBsEvaluation = canViewBsEvaluation;
 <<<<<<< HEAD
+<<<<<<< HEAD
       _canViewGsmEvaluation = canViewGsmEvaluation;
 =======
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+      _canViewGsmEvaluation = canViewGsmEvaluation;
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
     });
 
     await _refreshEvaluationNotifications();
@@ -693,6 +713,9 @@ class _HomeState extends State<Home> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
   Future<void> _fetchGsmNotificationCount() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -718,8 +741,11 @@ class _HomeState extends State<Home> {
     }
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
   Future<void> _refreshEvaluationNotifications() async {
     final futures = <Future>[];
     if (_canViewReworkEvaluation) {
@@ -729,17 +755,26 @@ class _HomeState extends State<Home> {
       futures.add(_fetchBsNotificationCount());
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (_canViewGsmEvaluation) {
       futures.add(_fetchGsmNotificationCount());
     }
 =======
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+    if (_canViewGsmEvaluation) {
+      futures.add(_fetchGsmNotificationCount());
+    }
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
     if (futures.isNotEmpty) {
       await Future.wait(futures);
     }
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
   int get _authorizedEvaluationCount {
     var count = 0;
     if (_canViewReworkEvaluation) count++;
@@ -804,7 +839,14 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
                 child: Text(
                   'Pilih Evaluasi',
+<<<<<<< HEAD
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+=======
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
                 ),
               ),
               if (_canViewReworkEvaluation)
@@ -862,6 +904,7 @@ class _HomeState extends State<Home> {
     );
   }
 
+<<<<<<< HEAD
   void _showDashboardWidgetSettings() {
     if (_dashboardWidgetOptions.isEmpty) {
       _fetchDashboardWidgets();
@@ -951,6 +994,8 @@ class _HomeState extends State<Home> {
 
 =======
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
   Future<void> _handleExit(
     BuildContext context,
     ValueNotifier<bool> isLoading,
@@ -1265,10 +1310,14 @@ class _HomeState extends State<Home> {
               appBar: CustomAppBar(
                 title: 'TexTrack',
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
                 isWithNotification: _hasEvaluationAccess,
                 notificationCount: _evaluationNotificationCount,
                 notificationTooltip: _singleEvaluationTooltip,
                 onNotifications: _onEvaluationNotificationsTap,
+<<<<<<< HEAD
 =======
                 isWithNotification: _canViewReworkEvaluation,
                 reworkNotificationCount: _reworkNotificationCount,
@@ -1281,6 +1330,8 @@ class _HomeState extends State<Home> {
                   Navigator.pushNamed(context, '/bs-evaluations');
                 },
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
                 handleLogout: () => _handleLogout(context),
                 isWithAccount: true,
                 user: user,

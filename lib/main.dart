@@ -72,6 +72,7 @@ import 'package:textile_tracking/screens/profile/index.dart';
 <<<<<<< HEAD
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -83,7 +84,13 @@ import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 =======
 =======
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 92623572 (feat: notifikasi evaluasi bs)
+=======
+=======
+import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
+>>>>>>> 20fcb172 (fix: notification all evaluasi)
 import 'package:textile_tracking/screens/report/index.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 <<<<<<< HEAD
@@ -266,7 +273,10 @@ class MyApp extends StatelessWidget {
         final bsMatch = RegExp(
           r'^/bs-evaluations/([^/]+)(?:/edit)?/?$',
         ).firstMatch(name);
-        if (reworkMatch != null || bsMatch != null) {
+        final gsmMatch = RegExp(
+          r'^/gsm-evaluations/([^/]+)(?:/edit)?/?$',
+        ).firstMatch(name);
+        if (reworkMatch != null || bsMatch != null || gsmMatch != null) {
           return MaterialPageRoute(
             settings: settings,
             // Let AuthCheck establish Login or Dashboard first. FCM's
@@ -317,6 +327,7 @@ class MyApp extends StatelessWidget {
         '/report-production': (context) => ReportScreen(),
         '/dyeing-rework-evaluations': (context) => ReworkList(),
         '/bs-evaluations': (context) => BsList(),
+        '/gsm-evaluations': (context) => GsmList(),
       },
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
 >>>>>>> 92623572 (feat: notifikasi evaluasi bs)

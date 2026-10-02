@@ -49,6 +49,7 @@ class _AppDrawerState extends State<AppDrawer> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     'Evaluasi GSM',
 =======
 >>>>>>> 7a6aa3b1 (feat: model for report)
@@ -65,6 +66,14 @@ class _AppDrawerState extends State<AppDrawer> {
 =======
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
 >>>>>>> 92623572 (feat: notifikasi evaluasi bs)
+=======
+    'Evaluasi GSM',
+=======
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+    'Evaluasi GSM',
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
+>>>>>>> 20fcb172 (fix: notification all evaluasi)
   ];
 
   final List<String> hiddenMenus = [
@@ -285,8 +294,11 @@ class _AppDrawerState extends State<AppDrawer> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 92623572 (feat: notifikasi evaluasi bs)
+=======
+>>>>>>> 20fcb172 (fix: notification all evaluasi)
                                                                                                                 : item.title == 'Evaluasi GSM'
                                                                                                                     ? Icons.inventory_outlined
                                                                                                                     : Icons.menu,
@@ -338,7 +350,15 @@ class _AppDrawerState extends State<AppDrawer> {
 =======
                                                                                                                 : Icons.menu,
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 92623572 (feat: notifikasi evaluasi bs)
+=======
+=======
+                                                                                                                : item.title == 'Evaluasi GSM'
+                                                                                                                    ? Icons.inventory_outlined
+                                                                                                                    : Icons.menu,
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
+>>>>>>> 20fcb172 (fix: notification all evaluasi)
                           ),
                           onTap: () {
                             Navigator.pop(context);

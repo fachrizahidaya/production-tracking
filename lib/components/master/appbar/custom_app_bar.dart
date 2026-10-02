@@ -21,6 +21,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 =======
   final bool isWithNotification;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final int notificationCount;
   final VoidCallback? onNotifications;
   final String notificationTooltip;
@@ -31,6 +32,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int bsNotificationCount;
   final VoidCallback? onBsNotifications;
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+  final int notificationCount;
+  final VoidCallback? onNotifications;
+  final String notificationTooltip;
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
   final bool isWithAccount;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -100,8 +106,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 92623572 (feat: notifikasi evaluasi bs)
+=======
+>>>>>>> 20fcb172 (fix: notification all evaluasi)
       this.notificationCount = 0,
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
@@ -136,7 +145,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.bsNotificationCount = 0,
       this.onBsNotifications,
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 92623572 (feat: notifikasi evaluasi bs)
+=======
+=======
+      this.notificationCount = 0,
+      this.onNotifications,
+      this.notificationTooltip = 'Evaluasi',
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
+>>>>>>> 20fcb172 (fix: notification all evaluasi)
       this.isWithAccount = false,
       this.handleDelete,
       this.handleUpdate,
@@ -209,6 +226,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         if (isWithNotification)
           _buildNotificationButton(
 <<<<<<< HEAD
+<<<<<<< HEAD
             tooltip: notificationTooltip,
             icon: Icons.assignment_late_outlined,
             count: notificationCount,
@@ -226,6 +244,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             count: bsNotificationCount,
             onPressed: onBsNotifications,
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+            tooltip: notificationTooltip,
+            icon: Icons.assignment_late_outlined,
+            count: notificationCount,
+            onPressed: onNotifications,
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
           ),
 =======
 >>>>>>> 7a6aa3b1 (feat: model for report)

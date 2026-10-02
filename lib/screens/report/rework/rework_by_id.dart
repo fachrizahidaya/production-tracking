@@ -20,17 +20,24 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 import 'package:textile_tracking/components/master/theme.dart';
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 import 'package:textile_tracking/components/master/theme.dart';
 >>>>>>> d9ba4836 (fix: detail evaluasi)
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+=======
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
 import 'package:textile_tracking/screens/report/rework/rework_edit.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 class ReworkDetailLoadingScreen extends StatefulWidget {
@@ -175,6 +182,8 @@ ButtonStyle _secondarySheetButtonStyle() => OutlinedButton.styleFrom(
 >>>>>>> d9ba4836 (fix: detail evaluasi)
 =======
 >>>>>>> 1de1dd1b (fix: flow submit form evaluasi rework)
+=======
+>>>>>>> b25dc8bc (fix: detail evaluasi)
 class ReworkDetailLoadingScreen extends StatefulWidget {
   final dynamic id;
   final bool returnToList;
@@ -210,7 +219,11 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
+<<<<<<< HEAD
       final message = await Navigator.push<String>(
+=======
+      final updated = await Navigator.push<bool>(
+>>>>>>> 85966df (fix: detail evaluasi)
         context,
         MaterialPageRoute(
           builder: (context) => isWaiting
@@ -293,11 +306,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
   final TextEditingController _preventivePlanController =
       TextEditingController();
-  final ReportService _reportService = ReportService();
-  List<Map<String, dynamic>> _reasonOptions = [];
-  List<Map<String, dynamic>> _selectedReasons = [];
-  bool _loadingReasons = false;
-  bool _saving = false;
 
   @override
   void initState() {
@@ -306,16 +314,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
-    final reasons = widget.data['reasons'];
-    if (reasons is List) {
-      _selectedReasons = reasons
-          .map((reason) => {
-                'value': reason.toString(),
-                'label': reason.toString(),
-              })
-          .toList();
-    }
-    if (_isWaiting) _loadReasonOptions();
   }
 
   @override
@@ -354,6 +352,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 <<<<<<< HEAD
   bool get _isCompleted {
     final status = widget.data['status']?.toString().toLowerCase();
+<<<<<<< HEAD
     return status == 'direview' ||
         status == 'reviewed' ||
         status == 'selesai' ||
@@ -471,6 +470,9 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         );
       },
     );
+=======
+    return status == 'selesai' || status == 'completed';
+>>>>>>> 85966df (fix: detail evaluasi)
   }
 
   Future<void> _openEditScreen() async {
@@ -533,6 +535,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         onEdit: _isCompleted ? _openEditScreen : null,
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
         title: 'Evaluasi Rework',
 =======
         title: 'Detail Rework',
@@ -549,6 +552,10 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         onEdit: _isCompleted ? _openEditScreen : null,
 >>>>>>> d9ba4836 (fix: detail evaluasi)
       ),
+=======
+      ),
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -576,7 +583,16 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 'Alasan dan Penyebab',
                 _reasonController.text,
                 updatedAt: widget.data['reason_updated_at']?.toString(),
+<<<<<<< HEAD
                 historyField: 'reason',
+=======
+              ),
+              const SizedBox(height: 16),
+              _buildReadOnlyCard(
+                'Rencana Tindakan',
+                _actionPlanController.text,
+                updatedAt: widget.data['action_plan_updated_at']?.toString(),
+>>>>>>> 85966df (fix: detail evaluasi)
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -584,6 +600,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 _preventivePlanController.text,
                 updatedAt:
                     widget.data['preventive_plan_updated_at']?.toString(),
+<<<<<<< HEAD
                 historyField: 'preventive_plan',
               ),
               const SizedBox(height: 16),
@@ -591,11 +608,17 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: _buildAttachmentCard(),
               ),
+=======
+              ),
+              if (_histories.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                _buildHistoryCard(),
+              ],
+>>>>>>> 85966df (fix: detail evaluasi)
             ],
           ),
         ),
       ),
-      bottomNavigationBar: _isWaiting ? _buildSaveBar() : null,
     );
   }
 
@@ -956,6 +979,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   String _value(String key) => widget.data[key]?.toString() ?? '-';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   Widget _buildSaveBar() {
     return SafeArea(
@@ -1097,6 +1121,8 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> 85966df (fix: detail evaluasi)
   Widget _buildCategoryCard() {
     final categories = _reworkCategories();
 
@@ -2070,6 +2096,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     return items;
   }
 
+<<<<<<< HEAD
   List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
     final raw = group['items'];
     if (raw is! List) return [];
@@ -2296,18 +2323,98 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
+=======
+=======
+  Widget _buildHistoryItem(Map<String, dynamic> history) {
+    final oldValue = _historyDisplayValue(history['old_value']);
+    final newValue = _historyDisplayValue(history['new_value']);
+    final hasOldValue = history['old_value'] != null && oldValue.isNotEmpty;
+    final changedBy = history['changed_by'];
+    final changedByName =
+        changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
+    final createdAt = history['created_at']?.toString();
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _historyFieldLabel(history['field']?.toString()),
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade600,
+            ),
+          ),
+          const SizedBox(height: 6),
+          if (hasOldValue) ...[
+            Text(
+              oldValue,
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize('base'),
+                color: Colors.grey.shade500,
+                decoration: TextDecoration.lineThrough,
+              ),
+            ),
+            const SizedBox(height: 4),
+          ],
+          Text(
+            newValue.isEmpty ? '-' : newValue,
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('base'),
+              fontWeight: CustomTheme().fontWeight('semibold'),
+              color: Colors.grey[800],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Text(
+                'oleh $changedByName, ',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey.shade700,
+                ),
+              ),
+              Text(
+                createdAt == null || createdAt.isEmpty
+                    ? '-'
+                    : _formatDateTime(createdAt),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
   String _historyDisplayValue(dynamic value) {
     if (value == null) return '';
     if (value is List) {
       return value.map((item) => item.toString()).join(', ').trim();
     }
     return value.toString().trim();
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
   Widget _buildEditorForm({
@@ -2413,6 +2520,8 @@ class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
     );
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+>>>>>>> b25dc8bc (fix: detail evaluasi)
   }
 }
 
@@ -2499,5 +2608,7 @@ class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
         ),
       ),
     );
+=======
+>>>>>>> 85966df (fix: detail evaluasi)
   }
 }

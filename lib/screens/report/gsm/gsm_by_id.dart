@@ -5,6 +5,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
 <<<<<<< HEAD
@@ -17,10 +18,14 @@ import 'package:textile_tracking/helpers/util/format_number.dart';
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 =======
+=======
+>>>>>>> b25dc8bc (fix: detail evaluasi)
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
 =======
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+=======
+>>>>>>> 85966df (fix: detail evaluasi)
 import 'package:textile_tracking/helpers/util/format_number.dart';
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
@@ -62,8 +67,11 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> b25dc8bc (fix: detail evaluasi)
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
@@ -93,7 +101,21 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
 >>>>>>> d9ba4836 (fix: detail evaluasi)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+      final status = data['status']?.toString().toLowerCase() ?? '';
+      final isWaiting = status == 'menunggu' || status == 'waiting';
+
+      final updated = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => isWaiting
+              ? GsmEditScreen(data: data)
+              : GsmDetailScreen(data: data),
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
         ),
       );
 
@@ -248,10 +270,16 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 =======
   final TextEditingController _preventivePlanController =
       TextEditingController();
+<<<<<<< HEAD
   final ReportService _reportService = ReportService();
   bool _saving = false;
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
 
   @override
   void initState() {
@@ -329,19 +357,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 =======
   }
 
-  bool get _isWaiting {
-    final status = widget.data['status']?.toString().toLowerCase();
-    return status == 'menunggu' || status == 'waiting';
-  }
-
-  bool get _useEditScreen => _isCompleted;
-
-  bool get _canSaveWaiting {
-    return _reasonController.text.trim().isNotEmpty &&
-        _actionPlanController.text.trim().isNotEmpty &&
-        _preventivePlanController.text.trim().isNotEmpty;
-  }
-
   Future<void> _openEditScreen() async {
     final updated = await Navigator.push<bool>(
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
@@ -371,6 +386,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     }
   }
 
+<<<<<<< HEAD
   Future<void> _saveWaitingForm() async {
     if (_saving || !_canSaveWaiting) return;
     setState(() => _saving = true);
@@ -396,6 +412,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     }
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   Future<void> _saveWaitingForm() async {
     if (_saving || !_canSaveWaiting) return;
@@ -423,6 +440,10 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+=======
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -432,6 +453,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         onEdit: _isCompleted ? _openEditScreen : null,
 =======
         onEdit: _useEditScreen ? _openEditScreen : null,
@@ -440,11 +462,19 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
         onEdit: _isCompleted ? _openEditScreen : null,
 >>>>>>> d9ba4836 (fix: detail evaluasi)
 =======
+=======
+>>>>>>> b25dc8bc (fix: detail evaluasi)
         onEdit: _isCompleted ? _openEditScreen : null,
 =======
         onEdit: _useEditScreen ? _openEditScreen : null,
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+        onEdit: _isCompleted ? _openEditScreen : null,
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
@@ -461,14 +491,20 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
               _buildReadOnlyCard(
                 'Alasan dan Penyebab',
                 _reasonController.text,
                 updatedAt: widget.data['reason_updated_at']?.toString(),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                 historyField: 'reason',
@@ -476,6 +512,17 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 =======
                 historyField: 'reason',
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
+=======
+                historyField: 'reason',
+=======
+              ),
+              const SizedBox(height: 16),
+              _buildReadOnlyCard(
+                'Rencana Tindakan',
+                _actionPlanController.text,
+                updatedAt: widget.data['action_plan_updated_at']?.toString(),
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -499,6 +546,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                     widget.data['preventive_plan_updated_at']?.toString(),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b25dc8bc (fix: detail evaluasi)
                 historyField: 'preventive_plan',
               ),
               const SizedBox(height: 16),
@@ -553,11 +603,17 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 ),
               ],
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
               ),
 >>>>>>> d9ba4836 (fix: detail evaluasi)
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+              ),
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
               if (_histories.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 _buildHistoryCard(),
@@ -583,6 +639,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       bottomNavigationBar: _isWaiting ? _buildSaveBar() : null,
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
@@ -593,6 +650,13 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
       bottomNavigationBar: _isWaiting ? _buildSaveBar() : null,
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+      bottomNavigationBar: _isWaiting ? _buildSaveBar() : null,
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
     );
   }
 
@@ -936,8 +1000,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> b25dc8bc (fix: detail evaluasi)
 =======
   Widget _buildSaveBar() {
     return SafeArea(
@@ -991,7 +1058,12 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> d9ba4836 (fix: detail evaluasi)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
   Widget _buildStatusBadge(String status) {
     final backgroundColor = _getStatusColor(status);
 
@@ -1212,8 +1284,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> b25dc8bc (fix: detail evaluasi)
 =======
   Widget _buildFormCard({required String label, required Widget child}) {
     return Padding(
@@ -1232,7 +1307,12 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> d9ba4836 (fix: detail evaluasi)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
   Widget _buildReadOnlyCard(
     String label,
     String value, {
@@ -1606,12 +1686,18 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 
   Widget _buildHistoryItem(Map<String, dynamic> history) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     final oldValue = _historyDisplayValue(history['old_value']);
     final newValue = _historyDisplayValue(history['new_value']);
     final hasOldValue = history['old_value'] != null && oldValue.isNotEmpty;
 =======
     final newValue = history['new_value']?.toString().trim();
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+    final oldValue = _historyDisplayValue(history['old_value']);
+    final newValue = _historyDisplayValue(history['new_value']);
+    final hasOldValue = history['old_value'] != null && oldValue.isNotEmpty;
+>>>>>>> b25dc8bc (fix: detail evaluasi)
     final changedBy = history['changed_by'];
     final changedByName =
         changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
@@ -1652,9 +1738,24 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
             ),
           ),
           const SizedBox(height: 6),
+          if (hasOldValue) ...[
+            Text(
+              oldValue,
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize('base'),
+                color: Colors.grey.shade500,
+                decoration: TextDecoration.lineThrough,
+              ),
+            ),
+            const SizedBox(height: 4),
+          ],
           Text(
+<<<<<<< HEAD
             (newValue == null || newValue.isEmpty) ? '-' : newValue,
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+            newValue.isEmpty ? '-' : newValue,
+>>>>>>> b25dc8bc (fix: detail evaluasi)
             style: TextStyle(
               fontSize: CustomTheme().fontSize('base'),
               fontWeight: CustomTheme().fontWeight('semibold'),
@@ -1689,8 +1790,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> b25dc8bc (fix: detail evaluasi)
   Widget _buildEditorForm({
     required String label,
     required TextEditingController controller,
@@ -1719,6 +1823,17 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> d9ba4836 (fix: detail evaluasi)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+  String _historyDisplayValue(dynamic value) {
+    if (value == null) return '';
+    if (value is List) {
+      return value.map((item) => item.toString()).join(', ').trim();
+    }
+    return value.toString().trim();
+>>>>>>> 85966df (fix: detail evaluasi)
+>>>>>>> b25dc8bc (fix: detail evaluasi)
   }
 }

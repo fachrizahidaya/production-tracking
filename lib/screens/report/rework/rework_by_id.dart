@@ -1,26 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
-import 'package:textile_tracking/components/master/form/multi_select_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/screens/report/rework/rework_edit.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
-
-ButtonStyle _primarySheetButtonStyle() => ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xFF4561DB),
-      foregroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-    );
-
-ButtonStyle _secondarySheetButtonStyle() => OutlinedButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-    );
 
 class ReworkDetailLoadingScreen extends StatefulWidget {
   final dynamic id;
@@ -54,10 +38,15 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
       final data = await _reportService.getReworkDetail(widget.id);
       if (!mounted) return;
 
+      final status = data['status']?.toString().toLowerCase() ?? '';
+      final isWaiting = status == 'menunggu' || status == 'waiting';
+
       final updated = await Navigator.push<bool>(
         context,
         MaterialPageRoute(
-          builder: (context) => ReworkDetailScreen(data: data),
+          builder: (context) => isWaiting
+              ? ReworkEditScreen(data: data)
+              : ReworkDetailScreen(data: data),
         ),
       );
 
@@ -136,11 +125,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   final TextEditingController _actionPlanController = TextEditingController();
   final TextEditingController _preventivePlanController =
       TextEditingController();
-  final ReportService _reportService = ReportService();
-  List<Map<String, dynamic>> _reasonOptions = [];
-  List<Map<String, dynamic>> _selectedReasons = [];
-  bool _loadingReasons = false;
-  bool _saving = false;
 
   @override
   void initState() {
@@ -149,16 +133,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
-    final reasons = widget.data['reasons'];
-    if (reasons is List) {
-      _selectedReasons = reasons
-          .map((reason) => {
-                'value': reason.toString(),
-                'label': reason.toString(),
-              })
-          .toList();
-    }
-    if (_isWaiting) _loadReasonOptions();
   }
 
   @override
@@ -172,231 +146,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   bool get _isCompleted {
     final status = widget.data['status']?.toString().toLowerCase();
     return status == 'selesai' || status == 'completed';
-  }
-
-  bool get _isWaiting {
-    final status = widget.data['status']?.toString().toLowerCase();
-    return status == 'menunggu' || status == 'waiting';
-  }
-
-  bool get _useEditScreen {
-    return _isCompleted;
-  }
-
-  bool get _canSaveWaiting {
-    return _selectedReasons.isNotEmpty &&
-        _actionPlanController.text.trim().isNotEmpty &&
-        _preventivePlanController.text.trim().isNotEmpty;
-  }
-
-  Future<void> _loadReasonOptions() async {
-    setState(() => _loadingReasons = true);
-    try {
-      final options = await _reportService.getReworkReasonOptions();
-      final optionValues = options.map((item) => item['value']).toSet();
-      final existing = _selectedReasons
-          .where((item) => !optionValues.contains(item['value']))
-          .toList();
-      if (!mounted) return;
-      setState(() {
-        _reasonOptions = [...options, ...existing];
-        _loadingReasons = false;
-      });
-    } catch (e) {
-      if (!mounted) return;
-      setState(() => _loadingReasons = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal mengambil pilihan alasan: $e')),
-      );
-    }
-  }
-
-  Future<void> _selectReason() async {
-    if (_loadingReasons) return;
-    final selectedValues =
-        _selectedReasons.map((item) => item['value']).toSet();
-    final available = _reasonOptions
-        .where((item) => !selectedValues.contains(item['value']))
-        .toList();
-    final selected = await _showReasonSelectionSheet(available);
-    if (selected == null || !mounted) return;
-
-    final updated = [..._selectedReasons];
-    for (final value in selected) {
-      final option = available.firstWhere(
-        (item) => item['value'] == value,
-        orElse: () => {'value': value, 'label': value},
-      );
-      if (!updated.any((item) => item['value'] == option['value'])) {
-        updated.add(option);
-      }
-    }
-    await _persistReasons(updated);
-  }
-
-  Future<void> _removeReason(Map<String, dynamic> item) async {
-    final updated = _selectedReasons
-        .where((reason) => reason['value'] != item['value'])
-        .toList();
-
-    if (updated.isEmpty) {
-      setState(() => _selectedReasons = updated);
-      return;
-    }
-
-    await _persistReasons(updated);
-  }
-
-  Future<void> _persistReasons(List<Map<String, dynamic>> reasons) async {
-    final previous = _selectedReasons;
-    setState(() => _selectedReasons = reasons);
-    try {
-      await _reportService.updateReworkReasons(
-        id: widget.data['id'],
-        reasons: reasons.map((item) => item['value'].toString()).toList(),
-      );
-    } catch (e) {
-      if (!mounted) return;
-      setState(() => _selectedReasons = previous);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal menyimpan alasan rework: $e')),
-      );
-    }
-  }
-
-  Future<void> _addReasonOption() async {
-    final label = await showModalBottomSheet<String>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (_) => const _ReasonOptionSheet(),
-    );
-
-    if (label == null || label.trim().isEmpty || !mounted) return;
-    try {
-      final option = await _reportService.createReworkReasonOption(label);
-      if (!mounted) return;
-      setState(() => _reasonOptions.add(option));
-      await _persistReasons([..._selectedReasons, option]);
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal menambah alasan: $e')),
-      );
-    }
-  }
-
-  Future<List<dynamic>?> _showReasonSelectionSheet(
-    List<Map<String, dynamic>> items,
-  ) {
-    return showModalBottomSheet<List<dynamic>>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (sheetContext) {
-        var filteredItems = List<Map<String, dynamic>>.from(items);
-        var selectedIds = <dynamic>[];
-
-        return StatefulBuilder(
-          builder: (context, setSheetState) {
-            return SafeArea(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.72,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(16, 0, 16, 12),
-                      child: Text(
-                        'Pilih Alasan Rework',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          hintText: 'Cari alasan',
-                          prefixIcon: Icon(Icons.search),
-                          border: OutlineInputBorder(),
-                        ),
-                        onChanged: (value) {
-                          final query = value.trim().toLowerCase();
-                          setSheetState(() {
-                            filteredItems = items
-                                .where((item) => item['label']
-                                    .toString()
-                                    .toLowerCase()
-                                    .contains(query))
-                                .toList();
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Expanded(
-                      child: filteredItems.isEmpty
-                          ? const Center(child: Text('Tidak ada alasan'))
-                          : ListView.separated(
-                              itemCount: filteredItems.length,
-                              separatorBuilder: (_, __) =>
-                                  const Divider(height: 1),
-                              itemBuilder: (context, index) {
-                                final item = filteredItems[index];
-                                final id = item['value'];
-                                return CheckboxListTile(
-                                  value: selectedIds.contains(id),
-                                  title: Text(item['label'].toString()),
-                                  activeColor: Colors.green,
-                                  onChanged: (_) {
-                                    setSheetState(() {
-                                      if (selectedIds.contains(id)) {
-                                        selectedIds = List.from(selectedIds)
-                                          ..remove(id);
-                                      } else {
-                                        selectedIds = List.from(selectedIds)
-                                          ..add(id);
-                                      }
-                                    });
-                                  },
-                                );
-                              },
-                            ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () => Navigator.pop(sheetContext),
-                              style: _secondarySheetButtonStyle(),
-                              child: const Text('Batal'),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () =>
-                                  Navigator.pop(sheetContext, selectedIds),
-                              style: _primarySheetButtonStyle(),
-                              child: const Text('Terapkan'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
   }
 
   Future<void> _openEditScreen() async {
@@ -418,7 +167,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       appBar: CustomAppBar(
         title: 'Detail Evaluasi Rework',
         onReturn: () => Navigator.pop(context),
-        onEdit: _useEditScreen ? _openEditScreen : null,
+        onEdit: _isCompleted ? _openEditScreen : null,
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
@@ -437,60 +186,24 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 child: _buildCategoryCard(),
               ),
               const SizedBox(height: 16),
-              if (_useEditScreen) ...[
-                _buildReadOnlyCard(
-                  'Alasan dan Penyebab',
-                  _reasonController.text,
-                  updatedAt: widget.data['reason_updated_at']?.toString(),
-                ),
-                const SizedBox(height: 16),
-                _buildReadOnlyCard(
-                  'Rencana Tindakan',
-                  _actionPlanController.text,
-                  updatedAt: widget.data['action_plan_updated_at']?.toString(),
-                ),
-                const SizedBox(height: 16),
-                _buildReadOnlyCard(
-                  'Rencana Pencegahan',
-                  _preventivePlanController.text,
-                  updatedAt:
-                      widget.data['preventive_plan_updated_at']?.toString(),
-                ),
-              ] else if (_isWaiting) ...[
-                _buildWaitingReasonSection(),
-                const SizedBox(height: 16),
-                _buildEditorForm(
-                  label: 'Rencana Tindakan',
-                  controller: _actionPlanController,
-                ),
-                const SizedBox(height: 16),
-                _buildEditorForm(
-                  label: 'Rencana Pencegahan',
-                  controller: _preventivePlanController,
-                ),
-              ] else ...[
-                _buildFormCard(
-                  label: 'Alasan',
-                  child: TextField(
-                    controller: _reasonController,
-                    minLines: 3,
-                    maxLines: 5,
-                    decoration: CustomTheme().inputDecoration(
-                      'Masukkan alasan rework',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                _buildEditorForm(
-                  label: 'Rencana Tindakan',
-                  controller: _actionPlanController,
-                ),
-                const SizedBox(height: 16),
-                _buildEditorForm(
-                  label: 'Rencana Pencegahan',
-                  controller: _preventivePlanController,
-                ),
-              ],
+              _buildReadOnlyCard(
+                'Alasan dan Penyebab',
+                _reasonController.text,
+                updatedAt: widget.data['reason_updated_at']?.toString(),
+              ),
+              const SizedBox(height: 16),
+              _buildReadOnlyCard(
+                'Rencana Tindakan',
+                _actionPlanController.text,
+                updatedAt: widget.data['action_plan_updated_at']?.toString(),
+              ),
+              const SizedBox(height: 16),
+              _buildReadOnlyCard(
+                'Rencana Pencegahan',
+                _preventivePlanController.text,
+                updatedAt:
+                    widget.data['preventive_plan_updated_at']?.toString(),
+              ),
               if (_histories.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 _buildHistoryCard(),
@@ -499,7 +212,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: _isWaiting ? _buildSaveBar() : null,
     );
   }
 
@@ -619,145 +331,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
   String _value(String key) => widget.data[key]?.toString() ?? '-';
-
-  Widget _buildSaveBar() {
-    return SafeArea(
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: ElevatedButton(
-            onPressed: _canSaveWaiting && !_saving ? _saveWaitingForm : null,
-            style: _primaryActionButtonStyle,
-            child: _saving
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : const Text('Simpan'),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWaitingReasonSection() {
-    return _buildFormCard(
-      label: 'Alasan',
-      child: Column(
-        children: [
-          if (_selectedReasons.isNotEmpty) ...[
-            _buildSelectedReasons(),
-            const SizedBox(height: 12),
-          ],
-          MultiSelectForm(
-            label: 'Alasan Rework',
-            selectedValues:
-                _selectedReasons.map((item) => item['value']).toList(),
-            selectedItems: const [],
-            selectedLabel: '',
-            onTap: _selectReason,
-          ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              onPressed: _addReasonOption,
-              icon: const Icon(Icons.add),
-              label: const Text('Tambah alasan baru'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSelectedReasons() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Alasan terpilih',
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _selectedReasons
-                .map(
-                  (item) => InputChip(
-                    label: Text(item['label'].toString()),
-                    onDeleted: () => _removeReason(item),
-                  ),
-                )
-                .toList(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  ButtonStyle get _primaryActionButtonStyle => ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF4561DB),
-        foregroundColor: Colors.white,
-        disabledBackgroundColor: Colors.grey.shade300,
-        disabledForegroundColor: Colors.grey.shade600,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      );
-
-  Future<void> _saveWaitingForm() async {
-    if (_saving || !_canSaveWaiting) return;
-    setState(() => _saving = true);
-    try {
-      await _reportService.updateReworkDetail(
-        id: widget.data['id'],
-        reasons: _selectedReasons
-            .map((reason) => reason['value'].toString())
-            .toList(),
-        actionPlan: _actionPlanController.text,
-        preventivePlan: _preventivePlanController.text,
-      );
-      if (!mounted) return;
-      Navigator.pop(context, true);
-    } catch (e) {
-      if (!mounted) return;
-      setState(() => _saving = false);
-      await showAlertDialog(
-        context: context,
-        title: 'Gagal Menyimpan',
-        message: e.toString().replaceFirst(RegExp(r'^Exception:\s*'), ''),
-      );
-    }
-  }
 
   Widget _buildCategoryCard() {
     final categories = _reworkCategories();
@@ -954,17 +527,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
   }
 
-  Widget _buildFormCard({required String label, required Widget child}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: TemplateCard(
-        title: label,
-        icon: Icons.description_outlined,
-        child: child,
-      ),
-    );
-  }
-
   Widget _buildReadOnlyCard(
     String label,
     String value, {
@@ -1051,7 +613,9 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
   Widget _buildHistoryItem(Map<String, dynamic> history) {
-    final newValue = history['new_value']?.toString().trim();
+    final oldValue = _historyDisplayValue(history['old_value']);
+    final newValue = _historyDisplayValue(history['new_value']);
+    final hasOldValue = history['old_value'] != null && oldValue.isNotEmpty;
     final changedBy = history['changed_by'];
     final changedByName =
         changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
@@ -1077,8 +641,19 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
             ),
           ),
           const SizedBox(height: 6),
+          if (hasOldValue) ...[
+            Text(
+              oldValue,
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize('base'),
+                color: Colors.grey.shade500,
+                decoration: TextDecoration.lineThrough,
+              ),
+            ),
+            const SizedBox(height: 4),
+          ],
           Text(
-            (newValue == null || newValue.isEmpty) ? '-' : newValue,
+            newValue.isEmpty ? '-' : newValue,
             style: TextStyle(
               fontSize: CustomTheme().fontSize('base'),
               fontWeight: CustomTheme().fontWeight('semibold'),
@@ -1111,105 +686,11 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     );
   }
 
-  Widget _buildEditorForm({
-    required String label,
-    required TextEditingController controller,
-  }) {
-    return _buildFormCard(
-      label: label,
-      child: TextField(
-        controller: controller,
-        minLines: 6,
-        maxLines: 12,
-        decoration: CustomTheme().inputDecoration('Masukkan $label'),
-        onChanged: (_) => setState(() {}),
-      ),
-    );
-  }
-}
-
-class _ReasonOptionSheet extends StatefulWidget {
-  const _ReasonOptionSheet();
-
-  @override
-  State<_ReasonOptionSheet> createState() => _ReasonOptionSheetState();
-}
-
-class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
-  final TextEditingController _controller = TextEditingController();
-  String? _errorMessage;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-
-    return AnimatedPadding(
-      duration: const Duration(milliseconds: 200),
-      padding: EdgeInsets.only(bottom: bottomInset),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Tambah Alasan',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _controller,
-                autofocus: true,
-                textInputAction: TextInputAction.done,
-                decoration: CustomTheme()
-                    .inputDecoration('Masukkan alasan rework')
-                    .copyWith(errorText: _errorMessage),
-                onChanged: (_) {
-                  if (_errorMessage != null) {
-                    setState(() => _errorMessage = null);
-                  }
-                },
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: _secondarySheetButtonStyle(),
-                      child: const Text('Batal'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final value = _controller.text.trim();
-                        if (value.length < 3) {
-                          setState(
-                            () => _errorMessage = 'Minimal 3 karakter',
-                          );
-                          return;
-                        }
-                        Navigator.pop(context, value);
-                      },
-                      style: _primarySheetButtonStyle(),
-                      child: const Text('Tambah'),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  String _historyDisplayValue(dynamic value) {
+    if (value == null) return '';
+    if (value is List) {
+      return value.map((item) => item.toString()).join(', ').trim();
+    }
+    return value.toString().trim();
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
@@ -38,10 +37,14 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
       final data = await _reportService.getBsDetail(widget.id);
       if (!mounted) return;
 
+      final status = data['status']?.toString().toLowerCase() ?? '';
+      final isWaiting = status == 'menunggu' || status == 'waiting';
+
       final updated = await Navigator.push<bool>(
         context,
         MaterialPageRoute(
-          builder: (context) => BsDetailScreen(data: data),
+          builder: (context) =>
+              isWaiting ? BsEditScreen(data: data) : BsDetailScreen(data: data),
         ),
       );
 
@@ -120,8 +123,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   final TextEditingController _actionPlanController = TextEditingController();
   final TextEditingController _preventivePlanController =
       TextEditingController();
-  final ReportService _reportService = ReportService();
-  bool _saving = false;
 
   @override
   void initState() {
@@ -145,19 +146,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     return status == 'selesai' || status == 'completed';
   }
 
-  bool get _isWaiting {
-    final status = widget.data['status']?.toString().toLowerCase();
-    return status == 'menunggu' || status == 'waiting';
-  }
-
-  bool get _useEditScreen => _isCompleted;
-
-  bool get _canSaveWaiting {
-    return _reasonController.text.trim().isNotEmpty &&
-        _actionPlanController.text.trim().isNotEmpty &&
-        _preventivePlanController.text.trim().isNotEmpty;
-  }
-
   Future<void> _openEditScreen() async {
     final updated = await Navigator.push<bool>(
       context,
@@ -171,36 +159,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     }
   }
 
-  Future<void> _saveWaitingForm() async {
-    if (_saving || !_canSaveWaiting) return;
-    setState(() => _saving = true);
-    try {
-      await _reportService.updateBsDetail(
-        id: widget.data['id'],
-        reason: _reasonController.text,
-        actionPlan: _actionPlanController.text,
-        preventivePlan: _preventivePlanController.text,
-      );
-      if (!mounted) return;
-      Navigator.pop(context, true);
-    } catch (e) {
-      if (!mounted) return;
-      setState(() => _saving = false);
-      await showAlertDialog(
-        context: context,
-        title: 'Gagal Menyimpan',
-        message: e.toString().replaceFirst(RegExp(r'^Exception:\s*'), ''),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Detail Evaluasi BS',
         onReturn: () => Navigator.pop(context),
-        onEdit: _useEditScreen ? _openEditScreen : null,
+        onEdit: _isCompleted ? _openEditScreen : null,
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
@@ -219,41 +184,24 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 child: _buildCategoryCard(),
               ),
               const SizedBox(height: 16),
-              if (_useEditScreen) ...[
-                _buildReadOnlyCard(
-                  'Alasan dan Penyebab',
-                  _reasonController.text,
-                  updatedAt: widget.data['reason_updated_at']?.toString(),
-                ),
-                const SizedBox(height: 16),
-                _buildReadOnlyCard(
-                  'Rencana Tindakan',
-                  _actionPlanController.text,
-                  updatedAt: widget.data['action_plan_updated_at']?.toString(),
-                ),
-                const SizedBox(height: 16),
-                _buildReadOnlyCard(
-                  'Rencana Pencegahan',
-                  _preventivePlanController.text,
-                  updatedAt:
-                      widget.data['preventive_plan_updated_at']?.toString(),
-                ),
-              ] else ...[
-                _buildEditorForm(
-                  label: 'Alasan dan Penyebab',
-                  controller: _reasonController,
-                ),
-                const SizedBox(height: 16),
-                _buildEditorForm(
-                  label: 'Rencana Tindakan',
-                  controller: _actionPlanController,
-                ),
-                const SizedBox(height: 16),
-                _buildEditorForm(
-                  label: 'Rencana Pencegahan',
-                  controller: _preventivePlanController,
-                ),
-              ],
+              _buildReadOnlyCard(
+                'Alasan dan Penyebab',
+                _reasonController.text,
+                updatedAt: widget.data['reason_updated_at']?.toString(),
+              ),
+              const SizedBox(height: 16),
+              _buildReadOnlyCard(
+                'Rencana Tindakan',
+                _actionPlanController.text,
+                updatedAt: widget.data['action_plan_updated_at']?.toString(),
+              ),
+              const SizedBox(height: 16),
+              _buildReadOnlyCard(
+                'Rencana Pencegahan',
+                _preventivePlanController.text,
+                updatedAt:
+                    widget.data['preventive_plan_updated_at']?.toString(),
+              ),
               if (_histories.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 _buildHistoryCard(),
@@ -262,7 +210,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: _isWaiting ? _buildSaveBar() : null,
     );
   }
 
@@ -394,77 +341,82 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 
   String _value(String key) => widget.data[key]?.toString() ?? '-';
 
-  Widget _buildSaveBar() {
-    return SafeArea(
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: ElevatedButton(
-            onPressed: _canSaveWaiting && !_saving ? _saveWaitingForm : null,
-            style: _primaryActionButtonStyle,
-            child: _saving
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : const Text('Simpan'),
-          ),
-        ),
-      ),
-    );
-  }
-
-  ButtonStyle get _primaryActionButtonStyle => ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF4561DB),
-        foregroundColor: Colors.white,
-        disabledBackgroundColor: Colors.grey.shade300,
-        disabledForegroundColor: Colors.grey.shade600,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      );
-
   Widget _buildCategoryCard() {
     final defects = _defects();
 
-    return TemplateCard(
-      title: 'Tipe BS',
-      icon: Icons.local_offer_outlined,
+    return Container(
+      decoration: CustomTheme().cardTheme(),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Container(
+            padding: CustomTheme().padding('card'),
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: CustomTheme().padding('process-content'),
+                  decoration: BoxDecoration(
+                    color:
+                        CustomTheme().buttonColor('primary').withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.local_offer_outlined,
+                    size: 18,
+                    color: CustomTheme().buttonColor('primary'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Tipe BS',
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('md'),
+                    fontWeight: CustomTheme().fontWeight('semibold'),
+                    color: Colors.grey[800],
+                  ),
+                ),
+              ],
+            ),
+          ),
           if (defects.isEmpty)
-            Text(
-              '-',
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('md'),
-                fontWeight: CustomTheme().fontWeight('semibold'),
-                color: Colors.grey[800],
+            Padding(
+              padding: CustomTheme().padding('item-detail'),
+              child: Text(
+                '-',
+                style: TextStyle(
+                  fontSize: CustomTheme().fontSize('md'),
+                  fontWeight: CustomTheme().fontWeight('semibold'),
+                  color: Colors.grey[800],
+                ),
               ),
             )
           else
-            ...defects.asMap().entries.map(
-                  (entry) => _buildDefectItem(
-                    entry.value,
-                    isLast: entry.key == defects.length - 1,
-                  ),
-                ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: Row(
+                children: [
+                  for (int i = 0; i < defects.length; i++) ...[
+                    if (i > 0) const SizedBox(width: 10),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: i == 0 ? 12 : 0,
+                        right: i == defects.length - 1 ? 12 : 0,
+                      ),
+                      child: _buildDefectItem(defects[i]),
+                    ),
+                  ],
+                ],
+              ),
+            ),
         ],
       ),
     );
@@ -479,46 +431,44 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         .toList();
   }
 
-  Widget _buildDefectItem(
-    Map<String, dynamic> defect, {
-    required bool isLast,
-  }) {
+  Widget _buildDefectItem(Map<String, dynamic> defect) {
     final name = defect['defect_name']?.toString() ?? '-';
     final qty = defect['qty']?.toString() ?? '-';
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-      decoration: BoxDecoration(
-        border: isLast
-            ? null
-            : Border(bottom: BorderSide(color: Colors.grey.shade200)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            width: 18,
-            child: Text('•', style: TextStyle(fontSize: 20)),
-          ),
-          Expanded(
-            child: Text(
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: Container(
+        width: 140,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade50,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey.shade200),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
               name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: Color(0xFF292A2F),
-                fontSize: 17,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
               ),
             ),
-          ),
-          Text(
-            qty,
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
+            const SizedBox(height: 8),
+            Text(
+              qty,
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -598,17 +548,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     ];
     return '${local.day} ${months[local.month - 1]} ${local.year}, '
         '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
-  }
-
-  Widget _buildFormCard({required String label, required Widget child}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: TemplateCard(
-        title: label,
-        icon: Icons.description_outlined,
-        child: child,
-      ),
-    );
   }
 
   Widget _buildReadOnlyCard(
@@ -697,7 +636,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   }
 
   Widget _buildHistoryItem(Map<String, dynamic> history) {
-    final newValue = history['new_value']?.toString().trim();
+    final oldValue = _historyDisplayValue(history['old_value']);
+    final newValue = _historyDisplayValue(history['new_value']);
+    final hasOldValue = history['old_value'] != null && oldValue.isNotEmpty;
     final changedBy = history['changed_by'];
     final changedByName =
         changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
@@ -723,8 +664,19 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             ),
           ),
           const SizedBox(height: 6),
+          if (hasOldValue) ...[
+            Text(
+              oldValue,
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize('base'),
+                color: Colors.grey.shade500,
+                decoration: TextDecoration.lineThrough,
+              ),
+            ),
+            const SizedBox(height: 4),
+          ],
           Text(
-            (newValue == null || newValue.isEmpty) ? '-' : newValue,
+            newValue.isEmpty ? '-' : newValue,
             style: TextStyle(
               fontSize: CustomTheme().fontSize('base'),
               fontWeight: CustomTheme().fontWeight('semibold'),
@@ -757,19 +709,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     );
   }
 
-  Widget _buildEditorForm({
-    required String label,
-    required TextEditingController controller,
-  }) {
-    return _buildFormCard(
-      label: label,
-      child: TextField(
-        controller: controller,
-        minLines: 6,
-        maxLines: 12,
-        decoration: CustomTheme().inputDecoration('Masukkan $label'),
-        onChanged: (_) => setState(() {}),
-      ),
-    );
+  String _historyDisplayValue(dynamic value) {
+    if (value == null) return '';
+    if (value is List) {
+      return value.map((item) => item.toString()).join(', ').trim();
+    }
+    return value.toString().trim();
   }
 }

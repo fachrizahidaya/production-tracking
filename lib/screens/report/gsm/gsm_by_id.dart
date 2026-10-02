@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_edit.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
@@ -39,10 +38,15 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
       final data = await _reportService.getGsmDetail(widget.id);
       if (!mounted) return;
 
+      final status = data['status']?.toString().toLowerCase() ?? '';
+      final isWaiting = status == 'menunggu' || status == 'waiting';
+
       final updated = await Navigator.push<bool>(
         context,
         MaterialPageRoute(
-          builder: (context) => GsmDetailScreen(data: data),
+          builder: (context) => isWaiting
+              ? GsmEditScreen(data: data)
+              : GsmDetailScreen(data: data),
         ),
       );
 
@@ -121,8 +125,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   final TextEditingController _actionPlanController = TextEditingController();
   final TextEditingController _preventivePlanController =
       TextEditingController();
-  final ReportService _reportService = ReportService();
-  bool _saving = false;
 
   @override
   void initState() {
@@ -146,19 +148,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     return status == 'selesai' || status == 'completed';
   }
 
-  bool get _isWaiting {
-    final status = widget.data['status']?.toString().toLowerCase();
-    return status == 'menunggu' || status == 'waiting';
-  }
-
-  bool get _useEditScreen => _isCompleted;
-
-  bool get _canSaveWaiting {
-    return _reasonController.text.trim().isNotEmpty &&
-        _actionPlanController.text.trim().isNotEmpty &&
-        _preventivePlanController.text.trim().isNotEmpty;
-  }
-
   Future<void> _openEditScreen() async {
     final updated = await Navigator.push<bool>(
       context,
@@ -172,36 +161,13 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     }
   }
 
-  Future<void> _saveWaitingForm() async {
-    if (_saving || !_canSaveWaiting) return;
-    setState(() => _saving = true);
-    try {
-      await _reportService.updateGsmDetail(
-        id: widget.data['id'],
-        reason: _reasonController.text,
-        actionPlan: _actionPlanController.text,
-        preventivePlan: _preventivePlanController.text,
-      );
-      if (!mounted) return;
-      Navigator.pop(context, true);
-    } catch (e) {
-      if (!mounted) return;
-      setState(() => _saving = false);
-      await showAlertDialog(
-        context: context,
-        title: 'Gagal Menyimpan',
-        message: e.toString().replaceFirst(RegExp(r'^Exception:\s*'), ''),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Detail Evaluasi GSM',
         onReturn: () => Navigator.pop(context),
-        onEdit: _useEditScreen ? _openEditScreen : null,
+        onEdit: _isCompleted ? _openEditScreen : null,
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
@@ -215,41 +181,24 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 child: _buildOverviewCard(),
               ),
               const SizedBox(height: 16),
-              if (_useEditScreen) ...[
-                _buildReadOnlyCard(
-                  'Alasan dan Penyebab',
-                  _reasonController.text,
-                  updatedAt: widget.data['reason_updated_at']?.toString(),
-                ),
-                const SizedBox(height: 16),
-                _buildReadOnlyCard(
-                  'Rencana Tindakan',
-                  _actionPlanController.text,
-                  updatedAt: widget.data['action_plan_updated_at']?.toString(),
-                ),
-                const SizedBox(height: 16),
-                _buildReadOnlyCard(
-                  'Rencana Pencegahan',
-                  _preventivePlanController.text,
-                  updatedAt:
-                      widget.data['preventive_plan_updated_at']?.toString(),
-                ),
-              ] else ...[
-                _buildEditorForm(
-                  label: 'Alasan dan Penyebab',
-                  controller: _reasonController,
-                ),
-                const SizedBox(height: 16),
-                _buildEditorForm(
-                  label: 'Rencana Tindakan',
-                  controller: _actionPlanController,
-                ),
-                const SizedBox(height: 16),
-                _buildEditorForm(
-                  label: 'Rencana Pencegahan',
-                  controller: _preventivePlanController,
-                ),
-              ],
+              _buildReadOnlyCard(
+                'Alasan dan Penyebab',
+                _reasonController.text,
+                updatedAt: widget.data['reason_updated_at']?.toString(),
+              ),
+              const SizedBox(height: 16),
+              _buildReadOnlyCard(
+                'Rencana Tindakan',
+                _actionPlanController.text,
+                updatedAt: widget.data['action_plan_updated_at']?.toString(),
+              ),
+              const SizedBox(height: 16),
+              _buildReadOnlyCard(
+                'Rencana Pencegahan',
+                _preventivePlanController.text,
+                updatedAt:
+                    widget.data['preventive_plan_updated_at']?.toString(),
+              ),
               if (_histories.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 _buildHistoryCard(),
@@ -258,7 +207,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: _isWaiting ? _buildSaveBar() : null,
     );
   }
 
@@ -399,52 +347,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     return formatNumber(parsed);
   }
 
-  Widget _buildSaveBar() {
-    return SafeArea(
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: ElevatedButton(
-            onPressed: _canSaveWaiting && !_saving ? _saveWaitingForm : null,
-            style: _primaryActionButtonStyle,
-            child: _saving
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : const Text('Simpan'),
-          ),
-        ),
-      ),
-    );
-  }
-
-  ButtonStyle get _primaryActionButtonStyle => ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF4561DB),
-        foregroundColor: Colors.white,
-        disabledBackgroundColor: Colors.grey.shade300,
-        disabledForegroundColor: Colors.grey.shade600,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      );
-
   Widget _buildStatusBadge(String status) {
     final backgroundColor = _getStatusColor(status);
 
@@ -520,17 +422,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     ];
     return '${local.day} ${months[local.month - 1]} ${local.year}, '
         '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
-  }
-
-  Widget _buildFormCard({required String label, required Widget child}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: TemplateCard(
-        title: label,
-        icon: Icons.description_outlined,
-        child: child,
-      ),
-    );
   }
 
   Widget _buildReadOnlyCard(
@@ -619,7 +510,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   }
 
   Widget _buildHistoryItem(Map<String, dynamic> history) {
-    final newValue = history['new_value']?.toString().trim();
+    final oldValue = _historyDisplayValue(history['old_value']);
+    final newValue = _historyDisplayValue(history['new_value']);
+    final hasOldValue = history['old_value'] != null && oldValue.isNotEmpty;
     final changedBy = history['changed_by'];
     final changedByName =
         changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
@@ -645,8 +538,19 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
             ),
           ),
           const SizedBox(height: 6),
+          if (hasOldValue) ...[
+            Text(
+              oldValue,
+              style: TextStyle(
+                fontSize: CustomTheme().fontSize('base'),
+                color: Colors.grey.shade500,
+                decoration: TextDecoration.lineThrough,
+              ),
+            ),
+            const SizedBox(height: 4),
+          ],
           Text(
-            (newValue == null || newValue.isEmpty) ? '-' : newValue,
+            newValue.isEmpty ? '-' : newValue,
             style: TextStyle(
               fontSize: CustomTheme().fontSize('base'),
               fontWeight: CustomTheme().fontWeight('semibold'),
@@ -679,19 +583,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     );
   }
 
-  Widget _buildEditorForm({
-    required String label,
-    required TextEditingController controller,
-  }) {
-    return _buildFormCard(
-      label: label,
-      child: TextField(
-        controller: controller,
-        minLines: 6,
-        maxLines: 12,
-        decoration: CustomTheme().inputDecoration('Masukkan $label'),
-        onChanged: (_) => setState(() {}),
-      ),
-    );
+  String _historyDisplayValue(dynamic value) {
+    if (value == null) return '';
+    if (value is List) {
+      return value.map((item) => item.toString()).join(', ').trim();
+    }
+    return value.toString().trim();
   }
 }

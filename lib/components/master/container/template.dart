@@ -19,17 +19,8 @@ class TemplateCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
+      decoration: CustomTheme().cardTheme(),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           /// Header

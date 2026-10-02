@@ -20,11 +20,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showAvatar;
 =======
   final bool isWithNotification;
-  final int reworkNotificationCount;
-  final VoidCallback? onReworkNotifications;
-  final bool isWithBsNotification;
-  final int bsNotificationCount;
-  final VoidCallback? onBsNotifications;
+  final int notificationCount;
+  final VoidCallback? onNotifications;
+  final String notificationTooltip;
   final bool isWithAccount;
 <<<<<<< HEAD
 >>>>>>> 632c9e3 (fix: show logged in name di appbar)
@@ -81,6 +79,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 <<<<<<< HEAD
       this.isWithNotification = false,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.notificationCount = 0,
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
@@ -102,6 +101,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.bsNotificationCount = 0,
       this.onBsNotifications,
 >>>>>>> 58857212 (feat: notifikasi evaluasi bs)
+=======
+      this.notificationCount = 0,
+      this.onNotifications,
+      this.notificationTooltip = 'Evaluasi',
+>>>>>>> e2884b8b (fix: notification all evaluasi)
       this.isWithAccount = false,
       this.showAvatar = true,
       this.tab,
@@ -185,17 +189,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 =======
         if (isWithNotification)
           _buildNotificationButton(
-            tooltip: 'Evaluasi Rework',
+            tooltip: notificationTooltip,
             icon: Icons.assignment_late_outlined,
-            count: reworkNotificationCount,
-            onPressed: onReworkNotifications,
-          ),
-        if (isWithBsNotification)
-          _buildNotificationButton(
-            tooltip: 'Evaluasi BS',
-            icon: Icons.report_gmailerrorred_outlined,
-            count: bsNotificationCount,
-            onPressed: onBsNotifications,
+            count: notificationCount,
+            onPressed: onNotifications,
           ),
 >>>>>>> 9dacc402 (fix: responsive UI to mobile)
         if (isDashboardSettingsLoading)

@@ -72,9 +72,12 @@ import 'package:textile_tracking/screens/profile/index.dart';
 <<<<<<< HEAD
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 >>>>>>> 58857212 (feat: notifikasi evaluasi bs)
+=======
+>>>>>>> e2884b8b (fix: notification all evaluasi)
 import 'package:textile_tracking/screens/report/index.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 <<<<<<< HEAD

@@ -47,6 +47,7 @@ class _AppDrawerState extends State<AppDrawer> {
     'Evaluasi Rework',
     'Evaluasi BS',
 <<<<<<< HEAD
+<<<<<<< HEAD
     'Evaluasi GSM',
 =======
 >>>>>>> 7a6aa3b1 (feat: model for report)
@@ -55,6 +56,9 @@ class _AppDrawerState extends State<AppDrawer> {
 >>>>>>> 41ded02d (fix: rework)
 =======
 >>>>>>> 58857212 (feat: notifikasi evaluasi bs)
+=======
+    'Evaluasi GSM',
+>>>>>>> e2884b8b (fix: notification all evaluasi)
   ];
 
   final List<String> hiddenMenus = [
@@ -248,6 +252,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                             : item.title == 'Evaluasi BS'
                                                                                                                 ? Icons.production_quantity_limits_outlined
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                                                                                 : item.title == 'Evaluasi GSM'
                                                                                                                     ? Icons.inventory_outlined
                                                                                                                     : Icons.menu,
@@ -290,6 +295,11 @@ class _AppDrawerState extends State<AppDrawer> {
 =======
                                                                                                                 : Icons.menu,
 >>>>>>> 58857212 (feat: notifikasi evaluasi bs)
+=======
+                                                                                                                : item.title == 'Evaluasi GSM'
+                                                                                                                    ? Icons.inventory_outlined
+                                                                                                                    : Icons.menu,
+>>>>>>> e2884b8b (fix: notification all evaluasi)
                           ),
                           onTap: () {
                             Navigator.pop(context);

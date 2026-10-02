@@ -55,6 +55,7 @@ import 'package:textile_tracking/screens/press-tumbler/index.dart';
 import 'package:textile_tracking/screens/printing/index.dart';
 import 'package:textile_tracking/screens/profile/index.dart';
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
+import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 import 'package:textile_tracking/screens/report/index.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/sewing/index.dart';
@@ -164,7 +165,10 @@ class MyApp extends StatelessWidget {
         final bsMatch = RegExp(
           r'^/bs-evaluations/([^/]+)(?:/edit)?/?$',
         ).firstMatch(name);
-        if (reworkMatch != null || bsMatch != null) {
+        final gsmMatch = RegExp(
+          r'^/gsm-evaluations/([^/]+)(?:/edit)?/?$',
+        ).firstMatch(name);
+        if (reworkMatch != null || bsMatch != null || gsmMatch != null) {
           return MaterialPageRoute(
             settings: settings,
             // Let AuthCheck establish Login or Dashboard first. FCM's
@@ -203,6 +207,7 @@ class MyApp extends StatelessWidget {
         '/report-production': (context) => ReportScreen(),
         '/dyeing-rework-evaluations': (context) => ReworkList(),
         '/bs-evaluations': (context) => BsList(),
+        '/gsm-evaluations': (context) => GsmList(),
       },
     );
   }

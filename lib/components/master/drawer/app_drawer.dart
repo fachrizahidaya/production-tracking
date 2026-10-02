@@ -37,6 +37,7 @@ class _AppDrawerState extends State<AppDrawer> {
     'Laporan Produksi',
     'Evaluasi Rework',
     'Evaluasi BS',
+    'Evaluasi GSM',
   ];
 
   final List<String> hiddenMenus = [
@@ -194,7 +195,9 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                             ? Icons.restart_alt_outlined
                                                                                                             : item.title == 'Evaluasi BS'
                                                                                                                 ? Icons.production_quantity_limits_outlined
-                                                                                                                : Icons.menu,
+                                                                                                                : item.title == 'Evaluasi GSM'
+                                                                                                                    ? Icons.inventory_outlined
+                                                                                                                    : Icons.menu,
                           ),
                           onTap: () {
                             Navigator.pop(context);

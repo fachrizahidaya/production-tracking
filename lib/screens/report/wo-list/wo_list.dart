@@ -32,7 +32,8 @@ class WoListComp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double listHeight = 280;
+    final isTablet = MediaQuery.sizeOf(context).width >= 600;
+    final listHeight = isTablet ? 250.0 : 280.0;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -114,9 +115,13 @@ class WoListComp extends StatelessWidget {
                       ? const NoData()
                       : LayoutBuilder(
                           builder: (context, constraints) {
-                            final cardWidth = (constraints.maxWidth * 0.8)
-                                .clamp(260.0, 300.0)
-                                .toDouble();
+                            final cardWidth =
+                                (constraints.maxWidth * (isTablet ? 0.65 : 0.8))
+                                    .clamp(
+                                      isTablet ? 440.0 : 260.0,
+                                      isTablet ? 520.0 : 300.0,
+                                    )
+                                    .toDouble();
 
                             return ScrollConfiguration(
                               behavior: ScrollConfiguration.of(context)
@@ -141,6 +146,7 @@ class WoListComp extends StatelessWidget {
                                     width: cardWidth,
                                     child: _buildWoListCard(
                                       items[index],
+                                      isTablet: isTablet,
                                       isLast: index == items.length - 1,
                                     ),
                                   );
@@ -157,7 +163,11 @@ class WoListComp extends StatelessWidget {
     );
   }
 
-  Widget _buildWoListCard(WoListItem item, {isLast = false}) {
+  Widget _buildWoListCard(
+    WoListItem item, {
+    required bool isTablet,
+    isLast = false,
+  }) {
     return Padding(
       padding: EdgeInsets.fromLTRB(12, 0, isLast ? 16 : 0, 12),
       child: Container(
@@ -184,85 +194,71 @@ class WoListComp extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: _buildInfoItem(
-                    'Tanggal',
-                    formatDate(DateTime.parse(item.date)),
-                  ),
+            ..._buildInfoRows(
+              [
+                MapEntry(
+                  'Tanggal',
+                  formatDate(DateTime.parse(item.date)),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildInfoItem(
-                    'Qty WO',
-                    '${formatNumber(item.woQty)} PCS',
-                  ),
+                MapEntry('Qty WO', '${formatNumber(item.woQty)} PCS'),
+                MapEntry(
+                  'Total Sortir',
+                  '${formatNumber(item.sortingQty)} PCS',
                 ),
+                MapEntry(
+                  'Total Packing',
+                  '${formatNumber(item.packingQty)} PCS',
+                ),
+                MapEntry(
+                  'Berat 1 Lusin',
+                  '${formatNumber(item.weightPerDozen)} KG',
+                ),
+                MapEntry('Gramasi', '${formatNumber(item.gsm)} GSM'),
+                MapEntry(
+                  'Berat Grade A',
+                  '${formatNumber(item.gradeAWeight)} KG',
+                ),
+                MapEntry('Total Berat', '${formatNumber(item.weight)} KG'),
               ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: _buildInfoItem(
-                    'Total Sortir',
-                    '${formatNumber(item.sortingQty)} PCS',
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildInfoItem(
-                    'Total Packing',
-                    '${formatNumber(item.packingQty)} PCS',
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: _buildInfoItem(
-                    'Berat 1 Lusin',
-                    '${formatNumber(item.weightPerDozen)} KG',
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildInfoItem(
-                    'Gramasi',
-                    '${formatNumber(item.gsm)} GSM',
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: _buildInfoItem(
-                    'Berat Grade A',
-                    '${formatNumber(item.gradeAWeight)} KG',
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildInfoItem(
-                    'Total Berat',
-                    '${formatNumber(item.weight)} KG',
-                  ),
-                ),
-              ],
+              isTablet ? 3 : 2,
             ),
           ],
         ),
       ),
     );
+  }
+
+  List<Widget> _buildInfoRows(
+    List<MapEntry<String, String>> items,
+    int columnCount,
+  ) {
+    final rows = <Widget>[];
+
+    for (var start = 0; start < items.length; start += columnCount) {
+      if (rows.isNotEmpty) {
+        rows.add(const SizedBox(height: 12));
+      }
+
+      rows.add(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: List.generate(columnCount * 2 - 1, (position) {
+            if (position.isOdd) {
+              return const SizedBox(width: 16);
+            }
+
+            final index = start + (position ~/ 2);
+            return Expanded(
+              child: index < items.length
+                  ? _buildInfoItem(items[index].key, items[index].value)
+                  : const SizedBox.shrink(),
+            );
+          }),
+        ),
+      );
+    }
+
+    return rows;
   }
 
   Widget _buildInfoItem(String label, String value) {
@@ -295,7 +291,7 @@ class WoListComp extends StatelessWidget {
         vertical: 5,
       ),
       decoration: BoxDecoration(
-        color: _getStatusColor(status).withOpacity(0.1),
+        color: _getStatusColor(status).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(

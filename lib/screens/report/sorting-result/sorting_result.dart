@@ -39,7 +39,8 @@ class SortingResultComp extends StatefulWidget {
 class _SortingResultCompState extends State<SortingResultComp> {
   @override
   Widget build(BuildContext context) {
-    const double listHeight = 180;
+    final isTablet = MediaQuery.sizeOf(context).width >= 600;
+    final listHeight = isTablet ? 210.0 : 200.0;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -137,8 +138,12 @@ class _SortingResultCompState extends State<SortingResultComp> {
                             builder: (context, constraints) {
                               // Keep the next card partially visible so the
                               // horizontal scrolling behavior is discoverable.
-                              final cardWidth = (constraints.maxWidth * 0.8)
-                                  .clamp(260.0, 300.0)
+                              final cardWidth = (constraints.maxWidth *
+                                      (isTablet ? 0.65 : 0.8))
+                                  .clamp(
+                                    isTablet ? 440.0 : 260.0,
+                                    isTablet ? 520.0 : 300.0,
+                                  )
                                   .toDouble();
 
                               return ListView.builder(

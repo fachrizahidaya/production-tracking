@@ -23,7 +23,8 @@ class TopBsComp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double listHeight = 120;
+    final isTablet = MediaQuery.sizeOf(context).width >= 600;
+    final listHeight = isTablet ? 130.0 : 150.0;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 8),

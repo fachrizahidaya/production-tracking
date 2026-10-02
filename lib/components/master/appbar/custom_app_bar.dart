@@ -8,11 +8,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onReturn;
   final List<Widget>? actions;
   final bool isWithNotification;
-  final int reworkNotificationCount;
-  final VoidCallback? onReworkNotifications;
-  final bool isWithBsNotification;
-  final int bsNotificationCount;
-  final VoidCallback? onBsNotifications;
+  final int notificationCount;
+  final VoidCallback? onNotifications;
+  final String notificationTooltip;
   final bool isWithAccount;
   final bool showAvatar;
   final bool showNameWithAvatar;
@@ -43,11 +41,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onReturn,
       this.actions,
       this.isWithNotification = false,
-      this.reworkNotificationCount = 0,
-      this.onReworkNotifications,
-      this.isWithBsNotification = false,
-      this.bsNotificationCount = 0,
-      this.onBsNotifications,
+      this.notificationCount = 0,
+      this.onNotifications,
+      this.notificationTooltip = 'Evaluasi',
       this.isWithAccount = false,
       this.showAvatar = true,
       this.tab,
@@ -95,17 +91,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         if (isWithNotification)
           _buildNotificationButton(
-            tooltip: 'Evaluasi Rework',
+            tooltip: notificationTooltip,
             icon: Icons.assignment_late_outlined,
-            count: reworkNotificationCount,
-            onPressed: onReworkNotifications,
-          ),
-        if (isWithBsNotification)
-          _buildNotificationButton(
-            tooltip: 'Evaluasi BS',
-            icon: Icons.report_gmailerrorred_outlined,
-            count: bsNotificationCount,
-            onPressed: onBsNotifications,
+            count: notificationCount,
+            onPressed: onNotifications,
           ),
         if (isDashboardSettingsLoading)
           const Padding(

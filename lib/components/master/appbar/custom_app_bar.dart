@@ -9,6 +9,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final bool isWithNotification;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final int notificationCount;
   final VoidCallback? onNotifications;
   final String notificationTooltip;
@@ -19,6 +20,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int bsNotificationCount;
   final VoidCallback? onBsNotifications;
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+  final int notificationCount;
+  final VoidCallback? onNotifications;
+  final String notificationTooltip;
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
   final bool isWithAccount;
   final bool showAvatar;
   final bool showNameWithAvatar;
@@ -51,6 +57,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.actions,
       this.isWithNotification = false,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.notificationCount = 0,
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
@@ -61,6 +68,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.bsNotificationCount = 0,
       this.onBsNotifications,
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+      this.notificationCount = 0,
+      this.onNotifications,
+      this.notificationTooltip = 'Evaluasi',
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
       this.isWithAccount = false,
       this.handleDelete,
       this.handleUpdate,
@@ -105,6 +117,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         if (isWithNotification)
           _buildNotificationButton(
 <<<<<<< HEAD
+<<<<<<< HEAD
             tooltip: notificationTooltip,
             icon: Icons.assignment_late_outlined,
             count: notificationCount,
@@ -122,6 +135,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             count: bsNotificationCount,
             onPressed: onBsNotifications,
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+            tooltip: notificationTooltip,
+            icon: Icons.assignment_late_outlined,
+            count: notificationCount,
+            onPressed: onNotifications,
+>>>>>>> 07c9d40 (fix: notification all evaluasi)
           ),
         if (isDashboardSettingsLoading)
           const Padding(

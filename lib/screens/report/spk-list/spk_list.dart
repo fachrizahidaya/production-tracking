@@ -31,11 +31,16 @@ class SpkListComp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
     final listHeight = isTablet ? 320.0 : 350.0;
 =======
     const double listHeight = 350;
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+    final isTablet = MediaQuery.sizeOf(context).width >= 600;
+    final listHeight = isTablet ? 320.0 : 350.0;
+>>>>>>> 5ea4dfbf (fix: responsive size for report)
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -121,10 +126,20 @@ class SpkListComp extends StatelessWidget {
 =======
                       : LayoutBuilder(
                           builder: (context, constraints) {
+<<<<<<< HEAD
                             final cardWidth = (constraints.maxWidth * 0.8)
                                 .clamp(260.0, 300.0)
                                 .toDouble();
 >>>>>>> 2261585c (fix: report axis horizontal)
+=======
+                            final cardWidth =
+                                (constraints.maxWidth * (isTablet ? 0.65 : 0.8))
+                                    .clamp(
+                                      isTablet ? 440.0 : 260.0,
+                                      isTablet ? 520.0 : 300.0,
+                                    )
+                                    .toDouble();
+>>>>>>> 5ea4dfbf (fix: responsive size for report)
 
                             return ScrollConfiguration(
                               behavior: ScrollConfiguration.of(context)
@@ -150,9 +165,13 @@ class SpkListComp extends StatelessWidget {
                                     child: _buildSpkListCard(
                                       items[index],
 <<<<<<< HEAD
+<<<<<<< HEAD
                                       isTablet: isTablet,
 =======
 >>>>>>> 2261585c (fix: report axis horizontal)
+=======
+                                      isTablet: isTablet,
+>>>>>>> 5ea4dfbf (fix: responsive size for report)
                                       isLast: index == items.length - 1,
                                     ),
                                   );
@@ -186,14 +205,20 @@ class SpkListComp extends StatelessWidget {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5ea4dfbf (fix: responsive size for report)
   Widget _buildSpkListCard(
     SpkListItem item, {
     required bool isTablet,
     isLast = false,
   }) {
+<<<<<<< HEAD
 =======
   Widget _buildSpkListCard(SpkListItem item, {isLast = false}) {
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+>>>>>>> 5ea4dfbf (fix: responsive size for report)
     return Padding(
       padding: EdgeInsets.fromLTRB(12, 0, isLast ? 16 : 0, 12),
       child: Container(
@@ -221,6 +246,9 @@ class SpkListComp extends StatelessWidget {
             ),
             const SizedBox(height: 14),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5ea4dfbf (fix: responsive size for report)
             ..._buildInfoRows(
               [
                 MapEntry(
@@ -250,6 +278,7 @@ class SpkListComp extends StatelessWidget {
                 MapEntry('Total Berat', '${formatNumber(item.weight)} KG'),
               ],
               isTablet ? 3 : 2,
+<<<<<<< HEAD
 =======
             _buildInfoPair(
               'Tanggal',
@@ -285,6 +314,8 @@ class SpkListComp extends StatelessWidget {
               'Total Berat',
               '${formatNumber(item.weight)} KG',
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+>>>>>>> 5ea4dfbf (fix: responsive size for report)
             ),
           ],
         ),
@@ -292,6 +323,7 @@ class SpkListComp extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   List<Widget> _buildInfoRows(
     List<MapEntry<String, String>> items,
@@ -340,6 +372,39 @@ class SpkListComp extends StatelessWidget {
       ],
     );
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+  List<Widget> _buildInfoRows(
+    List<MapEntry<String, String>> items,
+    int columnCount,
+  ) {
+    final rows = <Widget>[];
+
+    for (var start = 0; start < items.length; start += columnCount) {
+      if (rows.isNotEmpty) {
+        rows.add(const SizedBox(height: 14));
+      }
+
+      rows.add(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: List.generate(columnCount * 2 - 1, (position) {
+            if (position.isOdd) {
+              return const SizedBox(width: 16);
+            }
+
+            final index = start + (position ~/ 2);
+            return Expanded(
+              child: index < items.length
+                  ? _buildInfo(items[index].key, items[index].value)
+                  : const SizedBox.shrink(),
+            );
+          }),
+        ),
+      );
+    }
+
+    return rows;
+>>>>>>> 5ea4dfbf (fix: responsive size for report)
   }
 
   Widget _buildInfo(String label, dynamic value) {

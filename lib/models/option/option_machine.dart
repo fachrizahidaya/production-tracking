@@ -23,10 +23,7 @@ class OptionMachine {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'value': value,
-      'label': label,
-    };
+    return {'value': value, 'label': label};
   }
 }
 
@@ -42,8 +39,10 @@ class OptionMachineService extends BaseService<OptionMachine> {
   List<dynamic> get dataListOption => _dataListOption;
 
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {}
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {}
 
   @override
   Future<void> refetchItems() async {
@@ -53,11 +52,16 @@ class OptionMachineService extends BaseService<OptionMachine> {
 
   @override
   Future<void> addItem(
-      OptionMachine item, ValueNotifier<bool> isSubmitting) async {}
+    OptionMachine item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> updateItem(
-      String id, OptionMachine item, ValueNotifier<bool> isSubmitting) async {}
+    String id,
+    OptionMachine item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -97,9 +101,10 @@ class OptionMachineService extends BaseService<OptionMachine> {
       final uri = Uri.parse('${dotenv.env['API_URL']}/machine/option')
           .replace(queryParameters: queryParams);
 
-      final response = await http.get(uri, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
@@ -113,9 +118,8 @@ class OptionMachineService extends BaseService<OptionMachine> {
         throw Exception('Failed to load machines: ${response.statusCode}');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context as BuildContext).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
+      ScaffoldMessenger.of(context as BuildContext)
+          .showSnackBar(SnackBar(content: Text("$e")));
       rethrow;
     } finally {
       _isLoading = false;
@@ -131,8 +135,9 @@ class OptionMachineService extends BaseService<OptionMachine> {
     await _fetchOptionsGeneric(process: 'dyeing', currentMachineIds: null);
   }
 
-  Future<void> fetchOptionsPressTumbler(
-      {List<dynamic>? currentMachineIds}) async {
+  Future<void> fetchOptionsPressTumbler({
+    List<dynamic>? currentMachineIds,
+  }) async {
     await _fetchOptionsGeneric(process: 'press', currentMachineIds: null);
   }
 
@@ -144,46 +149,65 @@ class OptionMachineService extends BaseService<OptionMachine> {
     await _fetchOptionsGeneric(process: 'stenter', currentMachineIds: null);
   }
 
-  Future<void> fetchOptionsLongSitting(
-      {List<dynamic>? currentMachineIds}) async {
+  Future<void> fetchOptionsLongSitting({
+    List<dynamic>? currentMachineIds,
+  }) async {
     await _fetchOptionsGeneric(
-        process: 'long_slitting', currentMachineIds: null);
+      process: 'long_slitting',
+      currentMachineIds: null,
+    );
   }
 
-  Future<void> fetchOptionsLongHemming(
-      {List<dynamic>? currentMachineIds}) async {
+  Future<void> fetchOptionsLongHemming({
+    List<dynamic>? currentMachineIds,
+  }) async {
     await _fetchOptionsGeneric(
-        process: 'long_hemming', currentMachineIds: currentMachineIds);
+      process: 'long_hemming',
+      currentMachineIds: currentMachineIds,
+    );
   }
 
-  Future<void> fetchOptionsCrossCutting(
-      {List<dynamic>? currentMachineIds}) async {
+  Future<void> fetchOptionsCrossCutting({
+    List<dynamic>? currentMachineIds,
+  }) async {
     await _fetchOptionsGeneric(
-        process: 'cross_cutting', currentMachineIds: currentMachineIds);
+      process: 'cross_cutting',
+      currentMachineIds: currentMachineIds,
+    );
   }
 
   Future<void> fetchOptionsSewing({List<dynamic>? currentMachineIds}) async {
     await _fetchOptionsGeneric(
-        process: 'sewing', currentMachineIds: currentMachineIds);
+      process: 'sewing',
+      currentMachineIds: currentMachineIds,
+    );
   }
 
   Future<void> fetchOptionsSizing({List<dynamic>? currentMachineIds}) async {
     await _fetchOptionsGeneric(
-        process: 'sizing', currentMachineIds: currentMachineIds);
+      process: 'sizing',
+      currentMachineIds: currentMachineIds,
+    );
   }
 
   Future<void> fetchOptionsWeaving({List<dynamic>? currentMachineIds}) async {
     await _fetchOptionsGeneric(
-        process: 'weaving', currentMachineIds: currentMachineIds);
+      process: 'weaving',
+      currentMachineIds: currentMachineIds,
+    );
   }
 
   Future<void> fetchOptionsShearing({List<dynamic>? currentMachineIds}) async {
     await _fetchOptionsGeneric(
-        process: 'shearing', currentMachineIds: currentMachineIds);
+      process: 'shearing',
+      currentMachineIds: currentMachineIds,
+    );
   }
 
   Future<void> fetchOptionsWarping({List<dynamic>? currentMachineIds}) async {
     await _fetchOptionsGeneric(
-        process: 'warping', currentMachineIds: currentMachineIds);
+      process: 'warping',
+      currentMachineIds: currentMachineIds,
+    );
   }
 }

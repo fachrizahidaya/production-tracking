@@ -22,10 +22,7 @@ class OptionItemSemiFinished {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'value': value,
-      'label': label,
-    };
+    return {'value': value, 'label': label};
   }
 }
 
@@ -73,10 +70,7 @@ class OptionItemSemiFinishedService
   ) async {}
 
   @override
-  Future<void> deleteItem(
-    String id,
-    ValueNotifier<bool> isSubmitting,
-  ) async {}
+  Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
 
   Future<void> _fetchOptionsGeneric({
     bool isInitialLoad = false,
@@ -123,9 +117,7 @@ class OptionItemSemiFinishedService
 
       final response = await http.get(
         uri,
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
+        headers: {'Authorization': 'Bearer $token'},
       );
 
       if (response.statusCode == 200) {

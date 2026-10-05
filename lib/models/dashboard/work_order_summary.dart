@@ -42,8 +42,10 @@ class WorkOrderSummaryService extends BaseService {
   }
 
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {}
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {}
 
   @override
   Future<void> refetchItems() async {
@@ -56,7 +58,10 @@ class WorkOrderSummaryService extends BaseService {
 
   @override
   Future<void> updateItem(
-      String id, item, ValueNotifier<bool> isSubmitting) async {}
+    String id,
+    item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -71,7 +76,9 @@ class WorkOrderSummaryService extends BaseService {
   }
 
   Future<void> getDataList(
-      BuildContext context, Map<String, String> params) async {
+    BuildContext context,
+    Map<String, String> params,
+  ) async {
     final url = Uri.parse(baseUrl).replace(queryParameters: params);
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -85,10 +92,7 @@ class WorkOrderSummaryService extends BaseService {
       _dataList.clear();
       notifyListeners();
 
-      final response = await ApiClient.instance.get(
-        context,
-        url,
-      );
+      final response = await ApiClient.instance.get(context, url);
 
       final responseData = jsonDecode(response.body);
 
@@ -109,7 +113,9 @@ class WorkOrderSummaryService extends BaseService {
   }
 
   Future<void> getPreDataList(
-      BuildContext context, Map<String, String> params) async {
+    BuildContext context,
+    Map<String, String> params,
+  ) async {
     final url = Uri.parse(preWoBaseUrl).replace(queryParameters: params);
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -123,10 +129,7 @@ class WorkOrderSummaryService extends BaseService {
       _preDataList.clear();
       notifyListeners();
 
-      final response = await ApiClient.instance.get(
-        context,
-        url,
-      );
+      final response = await ApiClient.instance.get(context, url);
 
       final responseData = jsonDecode(response.body);
 

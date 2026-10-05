@@ -15,17 +15,11 @@ class OptionItemType {
   OptionItemType({this.value, this.label});
 
   factory OptionItemType.fromJson(Map<String, dynamic> json) {
-    return OptionItemType(
-      value: json['id'],
-      label: json['name'] ?? '',
-    );
+    return OptionItemType(value: json['id'], label: json['name'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': value,
-      'name': label,
-    };
+    return {'id': value, 'name': label};
   }
 }
 
@@ -63,11 +57,16 @@ class OptionItemTypeService extends BaseService<OptionItemType> {
 
   @override
   Future<void> addItem(
-      OptionItemType item, ValueNotifier<bool> isSubmitting) async {}
+    OptionItemType item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> updateItem(
-      String id, OptionItemType item, ValueNotifier<bool> isSubmitting) async {}
+    String id,
+    OptionItemType item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -95,9 +94,10 @@ class OptionItemTypeService extends BaseService<OptionItemType> {
 
       final uri = Uri.parse(baseUrl);
 
-      final response = await http.get(uri, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
@@ -111,8 +111,10 @@ class OptionItemTypeService extends BaseService<OptionItemType> {
         /// OPTIONAL SEARCH (frontend filter)
         if (searchQuery.isNotEmpty) {
           final filtered = fetched
-              .where((e) =>
-                  e.label!.toLowerCase().contains(searchQuery.toLowerCase()))
+              .where(
+                (e) =>
+                    e.label!.toLowerCase().contains(searchQuery.toLowerCase()),
+              )
               .toList();
 
           _items.addAll(filtered);
@@ -122,10 +124,12 @@ class OptionItemTypeService extends BaseService<OptionItemType> {
 
         /// ✅ ALSO PROVIDE GENERIC FORMAT (for your dialog)
         _dataListOption = data
-            .map((e) => {
-                  'id': e['id'] ?? e['value'],
-                  'name': e['name'] ?? e['label'] ?? '',
-                })
+            .map(
+              (e) => {
+                'id': e['id'] ?? e['value'],
+                'name': e['name'] ?? e['label'] ?? '',
+              },
+            )
             .toList();
 
         notifyListeners();

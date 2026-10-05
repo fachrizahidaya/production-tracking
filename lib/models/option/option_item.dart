@@ -15,17 +15,11 @@ class OptionItem {
   OptionItem({this.value, this.label});
 
   factory OptionItem.fromJson(Map<String, dynamic> json) {
-    return OptionItem(
-      value: json['value'] as int,
-      label: json['label'] ?? '',
-    );
+    return OptionItem(value: json['value'] as int, label: json['label'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'value': value,
-      'label': label,
-    };
+    return {'value': value, 'label': label};
   }
 }
 
@@ -47,8 +41,10 @@ class OptionItemService extends BaseService<OptionItem> {
   List<OptionItem> get options => _item;
 
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {}
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {}
 
   @override
   Future<void> refetchItems() async {
@@ -58,11 +54,16 @@ class OptionItemService extends BaseService<OptionItem> {
 
   @override
   Future<void> addItem(
-      OptionItem item, ValueNotifier<bool> isSubmitting) async {}
+    OptionItem item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> updateItem(
-      String id, OptionItem item, ValueNotifier<bool> isSubmitting) async {}
+    String id,
+    OptionItem item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -89,17 +90,21 @@ class OptionItemService extends BaseService<OptionItem> {
       final token = prefs.getString('access_token');
       if (token == null) throw Exception('Access token is missing');
 
-      final uri = Uri.parse('${dotenv.env['API_URL']}/greige-item/option')
-          .replace(queryParameters: {
-        if (process != null && process.isNotEmpty) 'process': process,
-        if (colorCode != null && colorCode.isNotEmpty) 'color_code': colorCode,
-        if (baseCode != null && baseCode.isNotEmpty) 'base_code': baseCode,
-        if (searchQuery.isNotEmpty) 'search': searchQuery,
-      });
+      final uri =
+          Uri.parse('${dotenv.env['API_URL']}/greige-item/option').replace(
+        queryParameters: {
+          if (process != null && process.isNotEmpty) 'process': process,
+          if (colorCode != null && colorCode.isNotEmpty)
+            'color_code': colorCode,
+          if (baseCode != null && baseCode.isNotEmpty) 'base_code': baseCode,
+          if (searchQuery.isNotEmpty) 'search': searchQuery,
+        },
+      );
 
-      final response = await http.get(uri, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);

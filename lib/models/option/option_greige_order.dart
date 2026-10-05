@@ -22,10 +22,7 @@ class OptionGreigeOrder {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'value': value,
-      'label': label,
-    };
+    return {'value': value, 'label': label};
   }
 }
 
@@ -49,8 +46,10 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
   List<OptionGreigeOrder> get options => _wo;
 
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {}
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {}
 
   @override
   Future<void> refetchItems() async {
@@ -60,11 +59,16 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
 
   @override
   Future<void> addItem(
-      OptionGreigeOrder item, ValueNotifier<bool> isSubmitting) async {}
+    OptionGreigeOrder item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
-  Future<void> updateItem(String id, OptionGreigeOrder item,
-      ValueNotifier<bool> isSubmitting) async {}
+  Future<void> updateItem(
+    String id,
+    OptionGreigeOrder item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -80,9 +84,10 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       _dataView = {};
       notifyListeners();
 
-      final response = await http.get(uri, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
       final decoded = jsonDecode(response.body);
 
@@ -100,10 +105,11 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
     }
   }
 
-  Future<void> _fetchOptionsGeneric(
-      {bool isInitialLoad = false,
-      String searchQuery = '',
-      required String endpoint}) async {
+  Future<void> _fetchOptionsGeneric({
+    bool isInitialLoad = false,
+    String searchQuery = '',
+    required String endpoint,
+  }) async {
     if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
@@ -119,9 +125,8 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       final token = prefs.getString('access_token');
       if (token == null) throw Exception('Access token is missing');
 
-      final uri = Uri.parse(
-        '${dotenv.env['API_URL']}/order-greige/option',
-      ).replace(
+      final uri =
+          Uri.parse('${dotenv.env['API_URL']}/order-greige/option').replace(
         queryParameters: {
           'per_page': '100',
           'type': endpoint,
@@ -129,9 +134,10 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
         },
       );
 
-      final response = await http.get(uri, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);

@@ -76,21 +76,20 @@ class FcmService with WidgetsBindingObserver {
   }
 
   Future<void> _initializeLocalNotifications() async {
-    const androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     const iosSettings = DarwinInitializationSettings();
     await _localNotifications.initialize(
-      const InitializationSettings(
-        android: androidSettings,
-        iOS: iosSettings,
-      ),
+      const InitializationSettings(android: androidSettings, iOS: iosSettings),
       onDidReceiveNotificationResponse: (response) {
         final payload = response.payload;
         if (payload == null || payload.isEmpty) return;
         final data = jsonDecode(payload);
         if (data is Map) {
           _handleMessageTap(
-              RemoteMessage(data: Map<String, dynamic>.from(data)));
+            RemoteMessage(data: Map<String, dynamic>.from(data)),
+          );
         }
       },
     );
@@ -254,37 +253,34 @@ class FcmService with WidgetsBindingObserver {
     } else if (type == 'gsm_evaluation_reminder') {
       navigator.pushNamed('/gsm-evaluations');
     } else if (type == 'dyeing_rework_evaluation' && id != null) {
-      navigator.push(MaterialPageRoute(
-        builder: (_) => ReworkDetailLoadingScreen(
-          id: id,
-          returnToList: true,
+      navigator.push(
+        MaterialPageRoute(
+          builder: (_) => ReworkDetailLoadingScreen(id: id, returnToList: true),
         ),
-      ));
+      );
     } else if (type == 'bs_evaluation' && id != null) {
-      navigator.push(MaterialPageRoute(
-        builder: (_) => BsDetailLoadingScreen(
-          id: id,
-          returnToList: true,
+      navigator.push(
+        MaterialPageRoute(
+          builder: (_) => BsDetailLoadingScreen(id: id, returnToList: true),
         ),
-      ));
+      );
     } else if (type == 'gsm_evaluation' && id != null) {
-      navigator.push(MaterialPageRoute(
-        builder: (_) => GsmDetailLoadingScreen(
-          id: id,
-          returnToList: true,
+      navigator.push(
+        MaterialPageRoute(
+          builder: (_) => GsmDetailLoadingScreen(id: id, returnToList: true),
         ),
-      ));
+      );
     } else if (route != null &&
         route.startsWith('/dyeing-rework-evaluations/')) {
       final segments = route.split('/');
       final routeId = segments.length > 2 ? segments[2] : null;
       if (routeId != null && routeId.isNotEmpty) {
-        navigator.push(MaterialPageRoute(
-          builder: (_) => ReworkDetailLoadingScreen(
-            id: routeId,
-            returnToList: true,
+        navigator.push(
+          MaterialPageRoute(
+            builder: (_) =>
+                ReworkDetailLoadingScreen(id: routeId, returnToList: true),
           ),
-        ));
+        );
       } else {
         navigator.pushNamed('/dyeing-rework-evaluations');
       }
@@ -292,12 +288,12 @@ class FcmService with WidgetsBindingObserver {
       final segments = route.split('/');
       final routeId = segments.length > 2 ? segments[2] : null;
       if (routeId != null && routeId.isNotEmpty) {
-        navigator.push(MaterialPageRoute(
-          builder: (_) => BsDetailLoadingScreen(
-            id: routeId,
-            returnToList: true,
+        navigator.push(
+          MaterialPageRoute(
+            builder: (_) =>
+                BsDetailLoadingScreen(id: routeId, returnToList: true),
           ),
-        ));
+        );
       } else {
         navigator.pushNamed('/bs-evaluations');
       }
@@ -305,18 +301,20 @@ class FcmService with WidgetsBindingObserver {
       final segments = route.split('/');
       final routeId = segments.length > 2 ? segments[2] : null;
       if (routeId != null && routeId.isNotEmpty) {
-        navigator.push(MaterialPageRoute(
-          builder: (_) => GsmDetailLoadingScreen(
-            id: routeId,
-            returnToList: true,
+        navigator.push(
+          MaterialPageRoute(
+            builder: (_) =>
+                GsmDetailLoadingScreen(id: routeId, returnToList: true),
           ),
-        ));
+        );
       } else {
         navigator.pushNamed('/gsm-evaluations');
       }
     } else {
-      navigator.pushNamed(route ?? '/notification',
-          arguments: {'id': id, 'type': type});
+      navigator.pushNamed(
+        route ?? '/notification',
+        arguments: {'id': id, 'type': type},
+      );
     }
   }
 }

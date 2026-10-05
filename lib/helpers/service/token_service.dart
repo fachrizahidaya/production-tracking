@@ -69,11 +69,7 @@ class TokenService {
     await Provider.of<UserProvider>(context, listen: false).handleLogout();
 
     if (context.mounted) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/',
-        (route) => false,
-      );
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     }
   }
 }

@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
@@ -52,12 +53,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
     try {
       final url = Uri.parse(
-          '$baseUrl/$endpoint?page=$_currentPage&search=$searchQuery');
-
-      final response = await ApiClient.instance.get(
-        context,
-        url,
+        '$baseUrl/$endpoint?page=$_currentPage&search=$searchQuery',
       );
+
+      final response = await ApiClient.instance.get(context, url);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
@@ -86,10 +85,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
   Future<void> refetchItems(BuildContext context) async {
     _hasMoreData = true;
-    await fetchItems(
-      context: context,
-      isInitialLoad: true,
-    );
+    await fetchItems(context: context, isInitialLoad: true);
   }
 
   Future<void> getDataView(BuildContext context, dynamic id) async {
@@ -99,10 +95,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       _dataView = {};
       notifyListeners();
 
-      final response = await ApiClient.instance.get(
-        context,
-        url,
-      );
+      final response = await ApiClient.instance.get(context, url);
 
       if (response.statusCode == 200) {
         _dataView = jsonDecode(response.body);
@@ -160,10 +153,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       items.clear();
       notifyListeners();
 
-      final response = await ApiClient.instance.get(
-        context,
-        url,
-      );
+      final response = await ApiClient.instance.get(context, url);
 
       final responseData = jsonDecode(response.body);
       switch (response.statusCode) {
@@ -217,7 +207,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
   }
 
   Future<String> addItem(
-      BuildContext context, T newItem, ValueNotifier<bool> isSubmitting) async {
+    BuildContext context,
+    T newItem,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
     isSubmitting.value = true;
     try {
       final uri = Uri.parse('$baseUrl/$endpoint');
@@ -301,10 +294,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         for (final file in attachments) {
           if (file is File) {
             request.files.add(
-              await http.MultipartFile.fromPath(
-                'attachments[]',
-                file.path,
-              ),
+              await http.MultipartFile.fromPath('attachments[]', file.path),
             );
           } else if (file is XFile) {
             request.files.add(
@@ -335,10 +325,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final res = jsonDecode(response.body);
 
-        await getDyeingPreparationDataList(
-          context,
-          {'page': '1', 'search': ''},
-        );
+        await getDyeingPreparationDataList(context, {
+          'page': '1',
+          'search': '',
+        });
 
         return '${res['message']}.';
       }
@@ -425,10 +415,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         for (final file in attachments) {
           if (file is File) {
             request.files.add(
-              await http.MultipartFile.fromPath(
-                'attachments[]',
-                file.path,
-              ),
+              await http.MultipartFile.fromPath('attachments[]', file.path),
             );
           } else if (file is XFile) {
             request.files.add(
@@ -459,10 +446,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final res = jsonDecode(response.body);
 
-        await getDyeingPreparationDataList(
-          context,
-          {'page': '1', 'search': ''},
-        );
+        await getDyeingPreparationDataList(context, {
+          'page': '1',
+          'search': '',
+        });
 
         return res['message']?.toString() ?? 'Persiapan Dyeing berhasil diubah';
       }
@@ -476,8 +463,12 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     }
   }
 
-  Future<String> updateItem(BuildContext context, String id, T updatedItem,
-      ValueNotifier<bool> isSubmitting) async {
+  Future<String> updateItem(
+    BuildContext context,
+    String id,
+    T updatedItem,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
     isSubmitting.value = true;
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -486,10 +477,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       final data = toJson(updatedItem);
 
       {
-        final body = {
-          ...data,
-          '_method': 'PATCH',
-        };
+        final body = {...data, '_method': 'PATCH'};
 
         final response = await http.post(
           Uri.parse('$baseUrl/$endpoint/$id'),
@@ -551,9 +539,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       /// ITEMS
       if (data['items'] != null && data['items'] is List) {
-        final items = List<Map<String, dynamic>>.from(
-          data['items'],
-        );
+        final items = List<Map<String, dynamic>>.from(data['items']);
 
         for (int i = 0; i < items.length; i++) {
           final item = items[i];
@@ -592,10 +578,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         for (final file in attachments) {
           if (file is File) {
             request.files.add(
-              await http.MultipartFile.fromPath(
-                'attachments[]',
-                file.path,
-              ),
+              await http.MultipartFile.fromPath('attachments[]', file.path),
             );
           } else if (file is XFile) {
             request.files.add(
@@ -729,14 +712,9 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       final String? token = prefs.getString('access_token');
 
-      final uri = Uri.parse(
-        '$baseUrl/$endpoint/$id',
-      );
+      final uri = Uri.parse('$baseUrl/$endpoint/$id');
 
-      final request = http.MultipartRequest(
-        'POST',
-        uri,
-      );
+      final request = http.MultipartRequest('POST', uri);
 
       request.headers.addAll({
         'Authorization': 'Bearer $token',
@@ -757,44 +735,23 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     |--------------------------------------------------------------------------
     */
 
-      void addField(
-        String key,
-        dynamic value,
-      ) {
+      void addField(String key, dynamic value) {
         if (value == null) return;
 
         request.fields[key] = value.toString();
       }
 
-      addField(
-        'wo_id',
-        data['wo_id'],
-      );
+      addField('wo_id', data['wo_id']);
 
-      addField(
-        'unit_id',
-        data['unit_id'],
-      );
+      addField('unit_id', data['unit_id']);
 
-      addField(
-        'qty',
-        data['qty'],
-      );
+      addField('qty', data['qty']);
 
-      addField(
-        'notes',
-        data['notes'],
-      );
+      addField('notes', data['notes']);
 
-      addField(
-        'rework',
-        data['rework'],
-      );
+      addField('rework', data['rework']);
 
-      addField(
-        'rework_category',
-        data['rework_category'],
-      );
+      addField('rework_category', data['rework_category']);
 
       /*
     |--------------------------------------------------------------------------
@@ -815,10 +772,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       if (reworkTypes is List) {
         for (int i = 0; i < reworkTypes.length; i++) {
-          addField(
-            'rework_type[$i]',
-            reworkTypes[i],
-          );
+          addField('rework_type[$i]', reworkTypes[i]);
         }
       }
 
@@ -840,10 +794,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       if (reworkMethods is List) {
         for (int i = 0; i < reworkMethods.length; i++) {
-          addField(
-            'rework_method[$i]',
-            reworkMethods[i],
-          );
+          addField('rework_method[$i]', reworkMethods[i]);
         }
       }
 
@@ -857,10 +808,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       if (machineIds is List) {
         for (int i = 0; i < machineIds.length; i++) {
-          addField(
-            'machine_ids[$i]',
-            machineIds[i],
-          );
+          addField('machine_ids[$i]', machineIds[i]);
         }
       }
 
@@ -876,10 +824,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         for (final file in attachments) {
           if (file is File) {
             request.files.add(
-              await http.MultipartFile.fromPath(
-                'attachments[]',
-                file.path,
-              ),
+              await http.MultipartFile.fromPath('attachments[]', file.path),
             );
           } else if (file is XFile) {
             request.files.add(
@@ -911,9 +856,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       final streamedResponse = await request.send();
 
-      final response = await http.Response.fromStream(
-        streamedResponse,
-      );
+      final response = await http.Response.fromStream(streamedResponse);
 
       /*
     |--------------------------------------------------------------------------
@@ -944,9 +887,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       try {
         final error = jsonDecode(response.body);
 
-        throw Exception(
-          error['message'] ?? 'Gagal mengubah rework Dyeing',
-        );
+        throw Exception(error['message'] ?? 'Gagal mengubah rework Dyeing');
       } catch (_) {
         throw Exception(
           'Gagal mengubah rework Dyeing '
@@ -978,10 +919,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       final uri = Uri.parse('$baseUrl/$endpoint/$id/complete');
 
-      final request = http.MultipartRequest(
-        'POST',
-        uri,
-      );
+      final request = http.MultipartRequest('POST', uri);
 
       request.headers.addAll({
         'Authorization': 'Bearer $token',
@@ -1015,10 +953,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         for (var file in attachments) {
           if (file is File) {
             request.files.add(
-              await http.MultipartFile.fromPath(
-                'attachments[]',
-                file.path,
-              ),
+              await http.MultipartFile.fromPath('attachments[]', file.path),
             );
           } else if (file is Map &&
               file['path'] != null &&
@@ -1069,10 +1004,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       final uri = Uri.parse('$baseUrl/$endpoint/$id/complete');
 
-      final request = http.MultipartRequest(
-        'POST',
-        uri,
-      );
+      final request = http.MultipartRequest('POST', uri);
 
       request.headers.addAll({
         'Authorization': 'Bearer $token',
@@ -1106,10 +1038,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         for (var file in attachments) {
           if (file is File) {
             request.files.add(
-              await http.MultipartFile.fromPath(
-                'attachments[]',
-                file.path,
-              ),
+              await http.MultipartFile.fromPath('attachments[]', file.path),
             );
           } else if (file is Map &&
               file['path'] != null &&
@@ -1161,10 +1090,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
       final uri = Uri.parse('$baseUrl/$endpoint/$id/complete');
 
-      final request = http.MultipartRequest(
-        'POST',
-        uri,
-      );
+      final request = http.MultipartRequest('POST', uri);
 
       request.headers.addAll({
         'Authorization': 'Bearer $token',
@@ -1195,10 +1121,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       addField('weight', data['weight']);
       addField('spraying', data['spraying']);
       addField('combing', data['combing']);
-      addField(
-        'rework_long_hemming',
-        data['rework_long_hemming'],
-      );
+      addField('rework_long_hemming', data['rework_long_hemming']);
 
       /*
     |--------------------------------------------------------------------------
@@ -1211,25 +1134,16 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       for (int i = 0; i < grades.length; i++) {
         final grade = grades[i];
 
-        addField(
-          'grades[$i][item_grade_id]',
-          grade['item_grade_id'],
-        );
+        addField('grades[$i][item_grade_id]', grade['item_grade_id']);
 
-        addField(
-          'grades[$i][notes]',
-          grade['notes'],
-        );
+        addField('grades[$i][notes]', grade['notes']);
 
         final items = grade['items'] ?? [];
 
         for (int j = 0; j < items.length; j++) {
           final item = items[j];
 
-          addField(
-            'grades[$i][items][$j][item_id]',
-            item['item_id'],
-          );
+          addField('grades[$i][items][$j][item_id]', item['item_id']);
 
           addField(
             'grades[$i][items][$j][semifinished_product_id]',
@@ -1242,10 +1156,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         |--------------------------------------------------------------------------
         */
 
-          addField(
-            'grades[$i][items][$j][qty]',
-            (item['qty'] ?? 0).toInt(),
-          );
+          addField('grades[$i][items][$j][qty]', (item['qty'] ?? 0).toInt());
 
           addField(
             'grades[$i][items][$j][spraying]',
@@ -1294,13 +1205,9 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
   */
         if (file is File) {
           request.files.add(
-            await http.MultipartFile.fromPath(
-              'attachments[]',
-              file.path,
-            ),
+            await http.MultipartFile.fromPath('attachments[]', file.path),
           );
         }
-
         /*
   |--------------------------------------------------------------------------
   | MAP
@@ -1315,7 +1222,6 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
             ),
           );
         }
-
         /*
   |--------------------------------------------------------------------------
   | XFILE
@@ -1361,9 +1267,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
     try {
       final uri = Uri.parse('$baseUrl/$endpoint/$id/rework');
 
-      final body = {
-        ...reworkedItem.toJson(),
-      };
+      final body = {...reworkedItem.toJson()};
 
       final response = await ApiClient.instance.post(
         context,
@@ -1390,7 +1294,10 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
   }
 
   Future<String> deleteItem(
-      BuildContext context, String id, ValueNotifier<bool> isSubmitting) async {
+    BuildContext context,
+    String id,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
     isSubmitting.value = true;
     try {
       final response = await ApiClient.instance.delete(

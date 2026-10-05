@@ -40,8 +40,9 @@ class _HomeState extends State<Home> {
   void initState() {
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
     super.initState();
-    _tokenFuture = SharedPreferences.getInstance()
-        .then((prefs) => prefs.getString('access_token'));
+    _tokenFuture = SharedPreferences.getInstance().then(
+      (prefs) => prefs.getString('access_token'),
+    );
 
     setState(() {
       user = loggedInUser?.username ?? '';
@@ -61,14 +62,8 @@ class _HomeState extends State<Home> {
       userMenu.menus,
       'Evaluasi Rework',
     );
-    final canViewBsEvaluation = _hasMobileMenu(
-      userMenu.menus,
-      'Evaluasi BS',
-    );
-    final canViewGsmEvaluation = _hasMobileMenu(
-      userMenu.menus,
-      'Evaluasi GSM',
-    );
+    final canViewBsEvaluation = _hasMobileMenu(userMenu.menus, 'Evaluasi BS');
+    final canViewGsmEvaluation = _hasMobileMenu(userMenu.menus, 'Evaluasi GSM');
 
     if (!mounted) return;
 
@@ -252,10 +247,7 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
                 child: Text(
                   'Pilih Evaluasi',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
               if (_canViewReworkEvaluation)
@@ -314,7 +306,9 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _handleExit(
-      BuildContext context, ValueNotifier<bool> isLoading) async {
+    BuildContext context,
+    ValueNotifier<bool> isLoading,
+  ) async {
     String url = '${dotenv.env['API_URL']}/logout';
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -324,20 +318,28 @@ class _HomeState extends State<Home> {
       try {
         isLoading.value = true;
 
-        final res = await http.post(Uri.parse(url),
-            headers: {'Authorization': 'Bearer $token'}, body: null);
+        final res = await http.post(
+          Uri.parse(url),
+          headers: {'Authorization': 'Bearer $token'},
+          body: null,
+        );
 
         if (res.statusCode == 200) {
           if (context.mounted) {
-            await Provider.of<UserProvider>(context, listen: false)
-                .handleLogout();
+            await Provider.of<UserProvider>(
+              context,
+              listen: false,
+            ).handleLogout();
 
             await Future.delayed(Duration(milliseconds: 200));
             Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
           } else {
             if (context.mounted) {
               showAlertDialog(
-                  context: context, title: 'Error', message: 'Logout failed');
+                context: context,
+                title: 'Error',
+                message: 'Logout failed',
+              );
             }
           }
         }
@@ -348,21 +350,25 @@ class _HomeState extends State<Home> {
       }
     } else {
       showAlertDialog(
-          context: context, title: 'Error', message: 'Logout failed');
+        context: context,
+        title: 'Error',
+        message: 'Logout failed',
+      );
     }
   }
 
   Future<void> _handleLogout(BuildContext context) async {
     if (context.mounted) {
       showConfirmationDialog(
-          context: context,
-          isLoading: _isLoading,
-          onConfirm: () {
-            _handleExit(context, _isLoading);
-          },
-          title: 'Log Out',
-          message: 'Anda yakin ingin keluar aplikasi?',
-          buttonBackground: CustomTheme().buttonColor('danger'));
+        context: context,
+        isLoading: _isLoading,
+        onConfirm: () {
+          _handleExit(context, _isLoading);
+        },
+        title: 'Log Out',
+        message: 'Anda yakin ingin keluar aplikasi?',
+        buttonBackground: CustomTheme().buttonColor('danger'),
+      );
     }
   }
 
@@ -374,18 +380,20 @@ class _HomeState extends State<Home> {
       List<dynamic> menuData = userMenu.menus;
 
       final filteredData = menuData
-          .where((menu) =>
-              menu['name'] != 'SPK & Work Order' &&
-              menu['name'] != 'Pelanggan' &&
-              menu['name'] != 'Mesin' &&
-              menu['name'] != 'Barang' &&
-              menu['name'] != 'Satuan' &&
-              menu['name'] != 'Grade Barang' &&
-              menu['name'] != 'Material' &&
-              menu['name'] != 'Grade Material' &&
-              menu['name'] != 'Master Data' &&
-              menu['name'] != 'User Management' &&
-              menu['name'] != 'Persiapan Dyeing')
+          .where(
+            (menu) =>
+                menu['name'] != 'SPK & Work Order' &&
+                menu['name'] != 'Pelanggan' &&
+                menu['name'] != 'Mesin' &&
+                menu['name'] != 'Barang' &&
+                menu['name'] != 'Satuan' &&
+                menu['name'] != 'Grade Barang' &&
+                menu['name'] != 'Material' &&
+                menu['name'] != 'Grade Material' &&
+                menu['name'] != 'Master Data' &&
+                menu['name'] != 'User Management' &&
+                menu['name'] != 'Persiapan Dyeing',
+          )
           .toList();
 
       return filteredData
@@ -404,53 +412,50 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String?>(
-        future: _tokenFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasError || !snapshot.hasData) {
-            return Center(
-              child: Text('Error fetch token'),
-            );
-          }
+      future: _tokenFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError || !snapshot.hasData) {
+          return Center(child: Text('Error fetch token'));
+        }
 
-          return PopScope(
-            canPop: false,
-            onPopInvokedWithResult: (didPop, result) {
-              if (!didPop) {
-                SystemNavigator.pop();
-              }
-            },
-            child: Scaffold(
-              appBar: CustomAppBar(
-                title: 'TexTrack',
-                isWithNotification: _hasEvaluationAccess,
-                notificationCount: _evaluationNotificationCount,
-                notificationTooltip: _singleEvaluationTooltip,
-                onNotifications: _onEvaluationNotificationsTap,
-                handleLogout: () => _handleLogout(context),
-                isWithAccount: true,
-                user: user,
-                name: name,
-                showAvatar: MediaQuery.sizeOf(context).shortestSide >= 600,
-                showNameWithAvatar:
-                    MediaQuery.sizeOf(context).shortestSide >= 600,
-              ),
-              drawer: AppDrawer(
-                handleLogout: () => _handleLogout(context),
-                handleFetchMenu: () => _handleFetchMenu(),
-              ),
-              body: SafeArea(
-                child: Dashboard(
-                  onRefreshReworkNotifications: _refreshEvaluationNotifications,
-                ),
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (!didPop) {
+              SystemNavigator.pop();
+            }
+          },
+          child: Scaffold(
+            appBar: CustomAppBar(
+              title: 'TexTrack',
+              isWithNotification: _hasEvaluationAccess,
+              notificationCount: _evaluationNotificationCount,
+              notificationTooltip: _singleEvaluationTooltip,
+              onNotifications: _onEvaluationNotificationsTap,
+              handleLogout: () => _handleLogout(context),
+              isWithAccount: true,
+              user: user,
+              name: name,
+              showAvatar: MediaQuery.sizeOf(context).shortestSide >= 600,
+              showNameWithAvatar:
+                  MediaQuery.sizeOf(context).shortestSide >= 600,
+            ),
+            drawer: AppDrawer(
+              handleLogout: () => _handleLogout(context),
+              handleFetchMenu: () => _handleFetchMenu(),
+            ),
+            body: SafeArea(
+              child: Dashboard(
+                onRefreshReworkNotifications: _refreshEvaluationNotifications,
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -485,11 +490,7 @@ class SubMenuItem {
   final String? route;
   final bool allowMobile;
 
-  SubMenuItem({
-    required this.title,
-    this.route,
-    required this.allowMobile,
-  });
+  SubMenuItem({required this.title, this.route, required this.allowMobile});
 
   factory SubMenuItem.fromJson(Map<String, dynamic> json) {
     return SubMenuItem(

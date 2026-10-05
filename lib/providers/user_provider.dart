@@ -64,6 +64,7 @@ class UserProvider with ChangeNotifier {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 38fd9bd2 (fix: logout)
 =======
@@ -71,6 +72,13 @@ class UserProvider with ChangeNotifier {
     await FcmService.instance.unregisterCurrentDevice();
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
 >>>>>>> 92623572 (feat: notifikasi evaluasi bs)
+=======
+=======
+    await FcmService.instance.unregisterCurrentDevice();
+>>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
+=======
+>>>>>>> 8eae832 (fix: logout)
+>>>>>>> 62ea8f9a (fix: logout)
     FcmService.instance.clearPendingNavigation();
 =======
     await FcmService.instance.unregisterCurrentDevice();

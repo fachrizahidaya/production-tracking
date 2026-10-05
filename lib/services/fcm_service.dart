@@ -308,10 +308,22 @@ class FcmService with WidgetsBindingObserver {
   Future<Map<String, String?>> getCurrentDeviceData() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('fcm_token');
+<<<<<<< HEAD
     final deviceId = await _getDeviceId();
 <<<<<<< HEAD
 
     return {'token': token, 'device_id': deviceId};
+=======
+    final deviceId = prefs.getString('fcm_device_id') ?? await _getDeviceId();
+
+    return {'token': token, 'device_id': deviceId};
+  }
+
+  Future<void> clearCurrentDeviceData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('fcm_token');
+    await prefs.remove('fcm_device_id');
+>>>>>>> 8eae832 (fix: logout)
   }
 
   Future<void> clearCurrentDeviceData() async {

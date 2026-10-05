@@ -27,10 +27,7 @@ import 'package:textile_tracking/screens/auth/user_menu.dart';
 class Dashboard extends StatefulWidget {
   final Future<void> Function()? onRefreshReworkNotifications;
 
-  const Dashboard({
-    super.key,
-    this.onRefreshReworkNotifications,
-  });
+  const Dashboard({super.key, this.onRefreshReworkNotifications});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -90,10 +87,7 @@ class _DashboardState extends State<Dashboard> {
     dariTanggalSummary = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
     sampaiTanggalSummary = DateFormat('yyyy-MM-dd').format(now);
 
-    params = {
-      'search': _search,
-      'page': '0',
-    };
+    params = {'search': _search, 'page': '0'};
 
     summaryParams = {
       'start_date': dariTanggalSummary,
@@ -151,9 +145,11 @@ class _DashboardState extends State<Dashboard> {
           widget['value']?.toString() ?? '': widget['is_visible'] == true,
       };
       final supportedOptions = keyData
-          .where((widget) => _supportedDashboardWidgets.contains(
-                widget['value']?.toString(),
-              ))
+          .where(
+            (widget) => _supportedDashboardWidgets.contains(
+              widget['value']?.toString(),
+            ),
+          )
           .toList();
 
       if (!mounted) return;
@@ -168,9 +164,8 @@ class _DashboardState extends State<Dashboard> {
       });
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
       }
     } finally {
       if (mounted) setState(() => _isDashboardWidgetsLoading = false);
@@ -178,7 +173,9 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _updateDashboardWidget(
-      String widgetValue, bool isVisible) async {
+    String widgetValue,
+    bool isVisible,
+  ) async {
     final baseUrl = dotenv.env['API_URL'] ?? '';
     final response = await http.patch(
       Uri.parse('$baseUrl/dashboard/widgets'),
@@ -197,9 +194,11 @@ class _DashboardState extends State<Dashboard> {
       } catch (_) {
         responseData = null;
       }
-      throw Exception(responseData is Map
-          ? responseData['message'] ?? 'Gagal mengubah widget dashboard'
-          : 'Gagal mengubah widget dashboard');
+      throw Exception(
+        responseData is Map
+            ? responseData['message'] ?? 'Gagal mengubah widget dashboard'
+            : 'Gagal mengubah widget dashboard',
+      );
     }
   }
 
@@ -250,15 +249,17 @@ class _DashboardState extends State<Dashboard> {
                               await _updateDashboardWidget(value, isVisible);
                             } catch (e) {
                               if (!mounted) return;
-                              setState(() =>
-                                  _dashboardWidgets[value] = previousValue);
+                              setState(
+                                () => _dashboardWidgets[value] = previousValue,
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(e.toString())),
                               );
                             } finally {
                               if (mounted) {
                                 setState(
-                                    () => _isDashboardWidgetsUpdating = false);
+                                  () => _isDashboardWidgetsUpdating = false,
+                                );
                                 if (modalContext.mounted) setModalState(() {});
                               }
                             }
@@ -326,7 +327,8 @@ class _DashboardState extends State<Dashboard> {
 
   bool _checkIsFiltered() {
     return params.keys.any(
-        (key) => key != 'page' && key != 'search' && params[key]!.isNotEmpty);
+      (key) => key != 'page' && key != 'search' && params[key]!.isNotEmpty,
+    );
   }
 
   Future<void> _loadDashboardData() async {
@@ -426,8 +428,10 @@ class _DashboardState extends State<Dashboard> {
     });
 
     try {
-      final service =
-          Provider.of<WorkOrderSummaryService>(context, listen: false);
+      final service = Provider.of<WorkOrderSummaryService>(
+        context,
+        listen: false,
+      );
 
       await Future.wait([
         service.getDataList(context, summaryParams),
@@ -517,8 +521,10 @@ class _DashboardState extends State<Dashboard> {
     params['page'] = (currentPage + 1).toString();
 
     try {
-      final service =
-          Provider.of<WorkOrderProcessService>(context, listen: false);
+      final service = Provider.of<WorkOrderProcessService>(
+        context,
+        listen: false,
+      );
 
       await service.getDataList(context, params);
 
@@ -554,10 +560,7 @@ class _DashboardState extends State<Dashboard> {
   _refetch() {
     if (!mounted) return;
     setState(() {
-      params = {
-        'search': _search,
-        'page': '0',
-      };
+      params = {'search': _search, 'page': '0'};
     });
     _loadMore();
   }
@@ -587,57 +590,65 @@ class _DashboardState extends State<Dashboard> {
                 SliverPadding(
                   padding: CustomTheme().padding('content'),
                   sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                    _buildDashboardSettingsButton(),
-                    WorkOrderStats(data: statsList, isFetching: isStatsLoading),
-                    if (_dashboardWidgets['process_summary'] ?? false)
-                      WorkOrderSummary(
-                        data: summaryList,
-                        greigeData: greigeSummaryList,
-                        handleRefetch: _handleFetchSummary,
-                        isFetching: isSummaryLoading,
-                        filterWidget: SummaryFilter(
-                          dariTanggal: dariTanggalSummary,
-                          sampaiTanggal: sampaiTanggalSummary,
-                          onHandleFilter: _handleSummaryFilter,
-                          params: summaryParams,
+                    delegate: SliverChildListDelegate(
+                      [
+                        _buildDashboardSettingsButton(),
+                        WorkOrderStats(
+                          data: statsList,
+                          isFetching: isStatsLoading,
                         ),
-                      ),
-                    if ((_dashboardWidgets['machine_status'] ?? false) &&
-                        !shouldHideActiveMachine)
-                      ActiveMachine(
-                        data: machineList,
-                        available: machineList['available'],
-                        unavailable: machineList['unavailable'],
-                        handleRefetch: _handleFetchMachine,
-                        isFetching: isMachineLoading,
-                        processNames: menuProcessNames,
-                      ),
-                    if (_dashboardWidgets['wo_list'] ?? false)
-                      WorkOrderProcessScreen(
-                        data: _dataList,
-                        search: _search,
-                        handleSearch: _handleSearch,
-                        firstLoading: _firstLoading,
-                        hasMore: _hasMore,
-                        handleLoadMore: _loadMore,
-                        handleRefetch: _refetch,
-                        isLoadMore: _isLoadMore,
-                        filterWidget: ProcessFilter(
-                          params: params,
-                          onHandleFilter: _handleProcessFilter,
-                        ),
-                        handleFetchData: (params) async {
-                          final service = Provider.of<WorkOrderProcessService>(
-                              context,
-                              listen: false);
-                          await service.getDataList(context, params);
-                          return service.items;
-                        },
-                        service: WorkOrderProcessService(),
-                        isFiltered: _isFiltered,
-                      ),
-                  ].separatedBy(CustomTheme().vGap('2xl')))),
+                        if (_dashboardWidgets['process_summary'] ?? false)
+                          WorkOrderSummary(
+                            data: summaryList,
+                            greigeData: greigeSummaryList,
+                            handleRefetch: _handleFetchSummary,
+                            isFetching: isSummaryLoading,
+                            filterWidget: SummaryFilter(
+                              dariTanggal: dariTanggalSummary,
+                              sampaiTanggal: sampaiTanggalSummary,
+                              onHandleFilter: _handleSummaryFilter,
+                              params: summaryParams,
+                            ),
+                          ),
+                        if ((_dashboardWidgets['machine_status'] ?? false) &&
+                            !shouldHideActiveMachine)
+                          ActiveMachine(
+                            data: machineList,
+                            available: machineList['available'],
+                            unavailable: machineList['unavailable'],
+                            handleRefetch: _handleFetchMachine,
+                            isFetching: isMachineLoading,
+                            processNames: menuProcessNames,
+                          ),
+                        if (_dashboardWidgets['wo_list'] ?? false)
+                          WorkOrderProcessScreen(
+                            data: _dataList,
+                            search: _search,
+                            handleSearch: _handleSearch,
+                            firstLoading: _firstLoading,
+                            hasMore: _hasMore,
+                            handleLoadMore: _loadMore,
+                            handleRefetch: _refetch,
+                            isLoadMore: _isLoadMore,
+                            filterWidget: ProcessFilter(
+                              params: params,
+                              onHandleFilter: _handleProcessFilter,
+                            ),
+                            handleFetchData: (params) async {
+                              final service =
+                                  Provider.of<WorkOrderProcessService>(
+                                context,
+                                listen: false,
+                              );
+                              await service.getDataList(context, params);
+                              return service.items;
+                            },
+                            service: WorkOrderProcessService(),
+                            isFiltered: _isFiltered,
+                          ),
+                      ].separatedBy(CustomTheme().vGap('2xl')),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -659,10 +670,7 @@ class _DashboardState extends State<Dashboard> {
             const Expanded(
               child: Text(
                 'Widget Dashboard',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
             _isDashboardWidgetsLoading

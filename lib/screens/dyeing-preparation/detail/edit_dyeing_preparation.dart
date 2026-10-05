@@ -22,10 +22,7 @@ import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_prepara
 class EditDyeingPreparationScreen extends StatefulWidget {
   final dynamic id;
 
-  const EditDyeingPreparationScreen({
-    super.key,
-    required this.id,
-  });
+  const EditDyeingPreparationScreen({super.key, required this.id});
 
   @override
   State<EditDyeingPreparationScreen> createState() =>
@@ -56,20 +53,13 @@ class _EditDyeingPreparationScreenState
   final ValueNotifier<bool> _attachmentLoading = ValueNotifier(false);
 
   void _syncAttachmentsToForm() {
-    final attachments = allAttachments
-        .where(
-          (e) => e['is_add_button'] != true,
-        )
-        .toList();
+    final attachments =
+        allAttachments.where((e) => e['is_add_button'] != true).toList();
 
     _form['attachments'] = attachments;
     _form['attachment_ids'] = attachments
-        .where(
-          (e) => e['isNew'] != true && e['id'] != null,
-        )
-        .map(
-          (e) => e['id'],
-        )
+        .where((e) => e['isNew'] != true && e['id'] != null)
+        .map((e) => e['id'])
         .toList();
   }
 
@@ -159,9 +149,7 @@ class _EditDyeingPreparationScreenState
 
         final response = await http.get(
           uri,
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
+          headers: {'Authorization': 'Bearer $token'},
         );
 
         final responseData = jsonDecode(response.body);
@@ -175,25 +163,27 @@ class _EditDyeingPreparationScreenState
 
       final data = optionCache[baseCode] ?? [];
 
-      options.addAll(data.map<Map<String, dynamic>>((rawOption) {
-        final option = Map<String, dynamic>.from(rawOption);
+      options.addAll(
+        data.map<Map<String, dynamic>>((rawOption) {
+          final option = Map<String, dynamic>.from(rawOption);
 
-        return {
-          "work_order_item_id": item["id"],
-          "spk_item_id": item["spk_item_id"],
-          "source_item_id": _workOrderItemId(item),
-          "item_id": option["value"],
-          "item_code": option["code"],
-          "item_name": option["label"],
-          "spk_no": null,
-          "qty": item["qty"],
-          "weight": item["weight"],
-          "qty_tolerance": 0,
-          "unit_id": item["unit_id"] ?? item["unit"]?["id"] ?? 1,
-          "weight_unit_id":
-              item["weight_unit_id"] ?? item["weight_unit"]?["id"] ?? 2,
-        };
-      }));
+          return {
+            "work_order_item_id": item["id"],
+            "spk_item_id": item["spk_item_id"],
+            "source_item_id": _workOrderItemId(item),
+            "item_id": option["value"],
+            "item_code": option["code"],
+            "item_name": option["label"],
+            "spk_no": null,
+            "qty": item["qty"],
+            "weight": item["weight"],
+            "qty_tolerance": 0,
+            "unit_id": item["unit_id"] ?? item["unit"]?["id"] ?? 1,
+            "weight_unit_id":
+                item["weight_unit_id"] ?? item["weight_unit"]?["id"] ?? 2,
+          };
+        }),
+      );
     }
 
     return options;
@@ -277,8 +267,10 @@ class _EditDyeingPreparationScreenState
     });
 
     try {
-      final service =
-          Provider.of<DyeingPreparationService>(context, listen: false);
+      final service = Provider.of<DyeingPreparationService>(
+        context,
+        listen: false,
+      );
       await service.fetchPreparationDetail(context, widget.id);
 
       final response = service.dataView;
@@ -286,9 +278,7 @@ class _EditDyeingPreparationScreenState
           ? Map<String, dynamic>.from(response['data'])
           : Map<String, dynamic>.from(response);
 
-      woData = Map<String, dynamic>.from(
-        detail["work_orders"] ?? {},
-      );
+      woData = Map<String, dynamic>.from(detail["work_orders"] ?? {});
 
       _form
         ..clear()
@@ -360,9 +350,7 @@ class _EditDyeingPreparationScreenState
   Future<void> _pickAttachments(ImageSource source) async {
     try {
       final picker = ImagePicker();
-      final XFile? image = await picker.pickImage(
-        source: source,
-      );
+      final XFile? image = await picker.pickImage(source: source);
 
       if (image == null) return;
 
@@ -371,9 +359,7 @@ class _EditDyeingPreparationScreenState
       if (compressedFile == null) return;
 
       setState(() {
-        allAttachments.removeWhere(
-          (e) => e['is_add_button'] == true,
-        );
+        allAttachments.removeWhere((e) => e['is_add_button'] == true);
 
         allAttachments.add({
           'name': compressedFile.path.split('/').last,
@@ -382,9 +368,7 @@ class _EditDyeingPreparationScreenState
           'isNew': true,
         });
 
-        allAttachments.add({
-          'is_add_button': true,
-        });
+        allAttachments.add({'is_add_button': true});
 
         _syncAttachmentsToForm();
       });
@@ -399,11 +383,7 @@ class _EditDyeingPreparationScreenState
     }
   }
 
-  void showImageDialog(
-    BuildContext context,
-    bool isNew,
-    String filePath,
-  ) {
+  void showImageDialog(BuildContext context, bool isNew, String filePath) {
     showDialog(
       context: context,
       builder: (context) {
@@ -421,14 +401,8 @@ class _EditDyeingPreparationScreenState
               minScale: 1,
               maxScale: 4,
               child: isNew
-                  ? Image.file(
-                      File(filePath),
-                      fit: BoxFit.contain,
-                    )
-                  : Image.network(
-                      filePath,
-                      fit: BoxFit.contain,
-                    ),
+                  ? Image.file(File(filePath), fit: BoxFit.contain)
+                  : Image.network(filePath, fit: BoxFit.contain),
             ),
           ),
         );
@@ -448,9 +422,7 @@ class _EditDyeingPreparationScreenState
       message: 'Apakah Anda yakin ingin menghapus lampiran ini?',
       buttonBackground: CustomTheme().buttonColor('danger'),
       onConfirm: () async {
-        await Future.delayed(
-          const Duration(milliseconds: 200),
-        );
+        await Future.delayed(const Duration(milliseconds: 200));
 
         if (!mounted) {
           completer.complete(false);
@@ -488,9 +460,10 @@ class _EditDyeingPreparationScreenState
     );
 
     try {
-      final message =
-          await Provider.of<DyeingPreparationService>(context, listen: false)
-              .updatePreparation(
+      final message = await Provider.of<DyeingPreparationService>(
+        context,
+        listen: false,
+      ).updatePreparation(
         context,
         widget.id.toString(),
         dyeingPreparation,
@@ -505,10 +478,10 @@ class _EditDyeingPreparationScreenState
 
       if (!mounted) return;
 
-// keluar dari Edit
+      // keluar dari Edit
       Navigator.pop(context, true);
 
-// keluar dari Detail
+      // keluar dari Detail
       Navigator.pop(context, true);
     } catch (e) {
       await showAlertDialog(
@@ -543,11 +516,7 @@ class _EditDyeingPreparationScreenState
       onAddAttachment: _pickAttachments,
       onDeleteAttachment: _handleDeleteAttachment,
       onPreviewImage: (isNew, filePath) {
-        showImageDialog(
-          context,
-          isNew,
-          filePath,
-        );
+        showImageDialog(context, isNew, filePath);
       },
     );
   }

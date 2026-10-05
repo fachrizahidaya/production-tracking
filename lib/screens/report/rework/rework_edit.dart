@@ -297,6 +297,10 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              _buildOverviewCard(),
+              const SizedBox(height: 16),
+              _buildCategoryCard(),
+              const SizedBox(height: 16),
               _buildReasonForm(),
               const SizedBox(height: 16),
               _buildEditorForm(
@@ -458,6 +462,302 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         onChanged: (_) => setState(() {}),
       ),
     );
+  }
+
+  bool get _isCompleted {
+    final status = widget.data['status']?.toString().toLowerCase();
+    return status == 'selesai' || status == 'completed';
+  }
+
+  String _value(String key) => widget.data[key]?.toString() ?? '-';
+
+  String get _detailReferenceNo {
+    final dyeing = widget.data['dyeing'];
+    final raw = widget.data['rework_reference'] ??
+        (dyeing is Map ? dyeing['rework_reference'] : null);
+    final reference = raw is Map ? raw : <String, dynamic>{};
+    final value =
+        reference['dyeing_no'] ?? reference['no'] ?? reference['reference_no'];
+    return value?.toString().trim().isNotEmpty == true ? value.toString() : '-';
+  }
+
+  Widget _buildOverviewCard() {
+    return Container(
+      decoration: CustomTheme().cardTheme(),
+      clipBehavior: Clip.antiAlias,
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _value('woNo'),
+            style: const TextStyle(
+              color: Color(0xFF234393),
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          _buildDyeingReferenceLine(),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text(
+                  _formatDateTime(
+                    _value(_isCompleted ? 'completedAt' : 'startedAt'),
+                  ),
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              _buildStatusBadge(_value('status')),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDyeingReferenceLine() {
+    return Column(
+      children: [
+        _buildDyeingReferenceItem(
+          label: 'Rework Dyeing',
+          value: _value('dyeingProcessNo'),
+          valueColor: const Color(0xFF234393),
+        ),
+        const SizedBox(height: 12),
+        _buildDyeingReferenceItem(
+          label: 'Referensi Dyeing',
+          value: _detailReferenceNo,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDyeingReferenceItem({
+    required String label,
+    required String value,
+    Color? valueColor,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          value,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: valueColor ?? const Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCategoryCard() {
+    final categories = _reworkCategories();
+
+    return TemplateCard(
+      title: 'Kategori Rework',
+      icon: Icons.local_offer_outlined,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _categoryTitle(categories),
+            style: TextStyle(
+              fontSize: CustomTheme().fontSize('md'),
+              fontWeight: CustomTheme().fontWeight('semibold'),
+              color: Colors.grey[800],
+            ),
+          ),
+          if (categories.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            ...categories.asMap().entries.map(
+                  (entry) => _buildCategoryItem(
+                    entry.value,
+                    isLast: entry.key == categories.length - 1,
+                  ),
+                ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  List<Map<String, dynamic>> _reworkCategories() {
+    final dyeing = widget.data['dyeing'];
+    final raw = widget.data['rework_categories'] ??
+        (dyeing is Map ? dyeing['rework_categories'] : null);
+    if (raw is! List) return [];
+    return raw
+        .whereType<Map>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .toList();
+  }
+
+  String _categoryTitle(List<Map<String, dynamic>> categories) {
+    const repairTypes = {
+      'perbaikan_warna',
+      'perbaikan_noda',
+      'pelemas_ulang',
+    };
+    if (categories.isNotEmpty &&
+        categories.every(
+          (item) => repairTypes.contains(item['type']?.toString()),
+        )) {
+      return 'Perbaikan';
+    }
+    return _value('category');
+  }
+
+  Widget _buildCategoryItem(
+    Map<String, dynamic> category, {
+    required bool isLast,
+  }) {
+    final label = category['label']?.toString() ?? '-';
+    final methods = category['methods'] is List
+        ? (category['methods'] as List)
+            .whereType<Map>()
+            .map((method) => method['label']?.toString() ?? '')
+            .where((method) => method.isNotEmpty)
+            .toList()
+        : <String>[];
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+      decoration: BoxDecoration(
+        border: isLast
+            ? null
+            : Border(bottom: BorderSide(color: Colors.grey.shade200)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildBulletText(label),
+          for (final method in methods)
+            Padding(
+              padding: const EdgeInsets.only(left: 16, top: 12),
+              child: _buildBulletText(
+                method,
+                color: Colors.grey.shade600,
+                fontSize: 16,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBulletText(
+    String text, {
+    Color color = const Color(0xFF292A2F),
+    double fontSize = 17,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(
+          width: 18,
+          child: Text('•', style: TextStyle(fontSize: 20)),
+        ),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(color: color, fontSize: fontSize),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatusBadge(String status) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: _getStatusColor(status),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        status,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: _getStatusTextColor(status),
+        ),
+      ),
+    );
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFFEBFDF4);
+      case 'diproses':
+      case 'in_progress':
+        return Colors.orange;
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFFFFBEA);
+      case 'dilewati':
+      case 'skipped':
+        return Colors.grey;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  Color _getStatusTextColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFF15803D);
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFA16207);
+      default:
+        return _getStatusColor(status);
+    }
+  }
+
+  String _formatDateTime(String value) {
+    final date = DateTime.tryParse(value);
+    if (date == null) return value;
+    final local = date.toLocal();
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Agu',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Des',
+    ];
+    return '${local.day} ${months[local.month - 1]} ${local.year}, '
+        '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
   }
 }
 

@@ -247,9 +247,13 @@ class FcmService with WidgetsBindingObserver {
     final route = navigation['route'] as String?;
     final type = navigation['type'] as String?;
     final id = navigation['id'] as String?;
-    // Rework/BS/GSM notifications always open the detail screen using the ID from
-    // message.data, regardless of the route string sent by the backend.
-    if (type == 'dyeing_rework_evaluation' && id != null) {
+    if (type == 'dyeing_rework_reminder') {
+      navigator.pushNamed('/dyeing-rework-evaluations');
+    } else if (type == 'bs_evaluation_reminder') {
+      navigator.pushNamed('/bs-evaluations');
+    } else if (type == 'gsm_evaluation_reminder') {
+      navigator.pushNamed('/gsm-evaluations');
+    } else if (type == 'dyeing_rework_evaluation' && id != null) {
       navigator.push(MaterialPageRoute(
         builder: (_) => ReworkDetailLoadingScreen(
           id: id,

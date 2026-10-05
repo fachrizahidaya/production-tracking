@@ -11,17 +11,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/screens/report/bs/bs_by_id.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/screens/report/gsm/gsm_by_id.dart';
-=======
-=======
-import 'package:textile_tracking/screens/report/gsm/gsm_by_id.dart';
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-import 'package:textile_tracking/screens/report/rework/rework_by_id.dart';
-
-final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -248,11 +238,6 @@ class FcmService with WidgetsBindingObserver {
     final route = navigation['route'] as String?;
     final type = navigation['type'] as String?;
     final id = navigation['id'] as String?;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7c2cdb6 (fix:)
     if (type == 'dyeing_rework_reminder') {
       navigator.pushNamed('/dyeing-rework-evaluations');
     } else if (type == 'bs_evaluation_reminder') {
@@ -260,7 +245,6 @@ class FcmService with WidgetsBindingObserver {
     } else if (type == 'gsm_evaluation_reminder') {
       navigator.pushNamed('/gsm-evaluations');
     } else if (type == 'dyeing_rework_evaluation' && id != null) {
-<<<<<<< HEAD
       navigator.push(
         MaterialPageRoute(
           builder: (_) => ReworkDetailLoadingScreen(id: id, returnToList: true),
@@ -278,39 +262,6 @@ class FcmService with WidgetsBindingObserver {
           builder: (_) => GsmDetailLoadingScreen(id: id, returnToList: true),
         ),
       );
-=======
-    // Rework/BS notifications always open the detail screen using the ID from
-=======
-    // Rework/BS/GSM notifications always open the detail screen using the ID from
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-    // message.data, regardless of the route string sent by the backend.
-    if (type == 'dyeing_rework_evaluation' && id != null) {
-=======
->>>>>>> 7c2cdb6 (fix:)
-      navigator.push(MaterialPageRoute(
-        builder: (_) => ReworkDetailLoadingScreen(
-          id: id,
-          returnToList: true,
-        ),
-      ));
-    } else if (type == 'bs_evaluation' && id != null) {
-      navigator.push(MaterialPageRoute(
-        builder: (_) => BsDetailLoadingScreen(
-          id: id,
-          returnToList: true,
-        ),
-      ));
-<<<<<<< HEAD
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-=======
-    } else if (type == 'gsm_evaluation' && id != null) {
-      navigator.push(MaterialPageRoute(
-        builder: (_) => GsmDetailLoadingScreen(
-          id: id,
-          returnToList: true,
-        ),
-      ));
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
     } else if (route != null &&
         route.startsWith('/dyeing-rework-evaluations/')) {
       final segments = route.split('/');
@@ -329,7 +280,6 @@ class FcmService with WidgetsBindingObserver {
       final segments = route.split('/');
       final routeId = segments.length > 2 ? segments[2] : null;
       if (routeId != null && routeId.isNotEmpty) {
-<<<<<<< HEAD
         navigator.push(
           MaterialPageRoute(
             builder: (_) =>
@@ -352,33 +302,6 @@ class FcmService with WidgetsBindingObserver {
       } else {
         navigator.pushNamed('/gsm-evaluations');
       }
-=======
-        navigator.push(MaterialPageRoute(
-          builder: (_) => BsDetailLoadingScreen(
-            id: routeId,
-            returnToList: true,
-          ),
-        ));
-      } else {
-        navigator.pushNamed('/bs-evaluations');
-      }
-<<<<<<< HEAD
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-=======
-    } else if (route != null && route.startsWith('/gsm-evaluations/')) {
-      final segments = route.split('/');
-      final routeId = segments.length > 2 ? segments[2] : null;
-      if (routeId != null && routeId.isNotEmpty) {
-        navigator.push(MaterialPageRoute(
-          builder: (_) => GsmDetailLoadingScreen(
-            id: routeId,
-            returnToList: true,
-          ),
-        ));
-      } else {
-        navigator.pushNamed('/gsm-evaluations');
-      }
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
     } else {
       navigator.pushNamed(
         route ?? '/notification',

@@ -163,15 +163,21 @@ class WorkOrderService extends BaseService<WorkOrder> {
 
     try {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4d9d5b40 (fix: model)
       final response = await http.get(
         url,
         headers: {'Authorization': 'Bearer $token'},
       );
+<<<<<<< HEAD
 =======
       final response = await http.get(url, headers: {
         'Authorization': 'Bearer $token',
       });
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> 4d9d5b40 (fix: model)
 
       final responseData = json.decode(response.body);
 

@@ -23,6 +23,7 @@ class OptionGreigeOrder {
 
   Map<String, dynamic> toJson() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     return {'value': value, 'label': label};
 =======
     return {
@@ -30,6 +31,9 @@ class OptionGreigeOrder {
       'label': label,
     };
 >>>>>>> a1ea7df (feat: warping)
+=======
+    return {'value': value, 'label': label};
+>>>>>>> 4d9d5b40 (fix: model)
   }
 }
 
@@ -68,14 +72,20 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
 
   @override
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4d9d5b40 (fix: model)
   Future<void> fetchItems({
     bool isInitialLoad = false,
     String? searchQuery = '',
   }) async {}
+<<<<<<< HEAD
 =======
   Future<void> fetchItems(
       {bool isInitialLoad = false, String? searchQuery = ''}) async {}
 >>>>>>> a1ea7df (feat: warping)
+=======
+>>>>>>> 4d9d5b40 (fix: model)
 
   @override
   Future<void> refetchItems() async {
@@ -85,6 +95,7 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
 
   @override
   Future<void> addItem(
+<<<<<<< HEAD
 <<<<<<< HEAD
     OptionGreigeOrder item,
     ValueNotifier<bool> isSubmitting,
@@ -103,6 +114,18 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
   Future<void> updateItem(String id, OptionGreigeOrder item,
       ValueNotifier<bool> isSubmitting) async {}
 >>>>>>> a1ea7df (feat: warping)
+=======
+    OptionGreigeOrder item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
+
+  @override
+  Future<void> updateItem(
+    String id,
+    OptionGreigeOrder item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
+>>>>>>> 4d9d5b40 (fix: model)
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -123,15 +146,21 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       notifyListeners();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4d9d5b40 (fix: model)
       final response = await http.get(
         uri,
         headers: {'Authorization': 'Bearer $token'},
       );
+<<<<<<< HEAD
 =======
       final response = await http.get(uri, headers: {
         'Authorization': 'Bearer $token',
       });
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+>>>>>>> 4d9d5b40 (fix: model)
 
       final decoded = jsonDecode(response.body);
 
@@ -150,11 +179,15 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4d9d5b40 (fix: model)
   Future<void> _fetchOptionsGeneric({
     bool isInitialLoad = false,
     String searchQuery = '',
     required String endpoint,
   }) async {
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 230afad3 (feat: greige order detail)
@@ -163,6 +196,8 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       String searchQuery = '',
       required String endpoint}) async {
 >>>>>>> a1ea7df (feat: warping)
+=======
+>>>>>>> 4d9d5b40 (fix: model)
     if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
@@ -179,6 +214,7 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       if (token == null) throw Exception('Access token is missing');
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       final uri =
           Uri.parse('${dotenv.env['API_URL']}/order-greige/option').replace(
         queryParameters: {
@@ -188,6 +224,10 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       final uri = Uri.parse(
         '${dotenv.env['API_URL']}/order-greige/option',
       ).replace(
+=======
+      final uri =
+          Uri.parse('${dotenv.env['API_URL']}/order-greige/option').replace(
+>>>>>>> 4d9d5b40 (fix: model)
         queryParameters: {
           'per_page': '100',
 <<<<<<< HEAD
@@ -200,15 +240,21 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       );
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4d9d5b40 (fix: model)
       final response = await http.get(
         uri,
         headers: {'Authorization': 'Bearer $token'},
       );
+<<<<<<< HEAD
 =======
       final response = await http.get(uri, headers: {
         'Authorization': 'Bearer $token',
       });
 >>>>>>> a1ea7df (feat: warping)
+=======
+>>>>>>> 4d9d5b40 (fix: model)
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);

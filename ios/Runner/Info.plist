@@ -30,10 +30,14 @@
 	<string>We need camera access to scan QR codes</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 <<<<<<< HEAD
+<<<<<<< HEAD
 	<string>This app needs photos access to get photo library</string>
 =======
 	<string>This app needs photos access to get QR code from photo library</string>
 >>>>>>> 593bbd5e (chore: for iOS)
+=======
+	<string>This app needs photos access to get photo library</string>
+>>>>>>> 58f548c8 (chore: ios)
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

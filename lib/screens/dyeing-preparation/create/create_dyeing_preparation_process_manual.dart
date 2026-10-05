@@ -575,9 +575,7 @@ class _CreateDyeingPreparationProcessManualState
 
         final response = await http.get(
           uri,
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
+          headers: {'Authorization': 'Bearer $token'},
         );
 
         final responseData = jsonDecode(response.body);
@@ -591,26 +589,28 @@ class _CreateDyeingPreparationProcessManualState
 
       final data = optionCache[baseCode] ?? [];
 
-      options.addAll(data.map<Map<String, dynamic>>((rawOption) {
-        final option = Map<String, dynamic>.from(rawOption);
+      options.addAll(
+        data.map<Map<String, dynamic>>((rawOption) {
+          final option = Map<String, dynamic>.from(rawOption);
 
-        return {
-          "work_order_item_id": item["id"],
-          "spk_item_id": item["spk_item_id"],
-          "source_item_id": item["item_id"],
-          "source_item_code": item["item_code"],
-          "source_item_name": item["item_name"],
-          "item_id": option["value"],
-          "item_code": option["code"],
-          "item_name": option["label"],
-          "spk_no": null,
-          "qty": item["qty"],
-          "weight": item["weight"],
-          "qty_tolerance": 0,
-          "unit_id": item["unit"]?["id"] ?? 1,
-          "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
-        };
-      }));
+          return {
+            "work_order_item_id": item["id"],
+            "spk_item_id": item["spk_item_id"],
+            "source_item_id": item["item_id"],
+            "source_item_code": item["item_code"],
+            "source_item_name": item["item_name"],
+            "item_id": option["value"],
+            "item_code": option["code"],
+            "item_name": option["label"],
+            "spk_no": null,
+            "qty": item["qty"],
+            "weight": item["weight"],
+            "qty_tolerance": 0,
+            "unit_id": item["unit"]?["id"] ?? 1,
+            "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
+          };
+        }),
+      );
     }
 
     return options;
@@ -682,7 +682,7 @@ class _CreateDyeingPreparationProcessManualState
             "qty_tolerance": 0,
             "unit_id": item["unit"]?["id"] ?? 1,
             "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
-          }
+          },
         ];
       }
 
@@ -916,6 +916,7 @@ class _CreateDyeingPreparationProcessManualState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
 =======
       ScaffoldMessenger.of(context).showSnackBar(
@@ -930,6 +931,9 @@ class _CreateDyeingPreparationProcessManualState
         SnackBar(content: Text("$e")),
       );
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
+>>>>>>> a486612b (fix: persiapan dyeing)
     } finally {
       setState(() {
         _isFetchingWorkOrder = false;
@@ -1026,11 +1030,8 @@ class _CreateDyeingPreparationProcessManualState
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1115,6 +1116,7 @@ class _CreateDyeingPreparationProcessManualState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         builder: (context) => const Center(child: CircularProgressIndicator()),
 =======
         builder: (context) => const Center(
@@ -1129,6 +1131,9 @@ class _CreateDyeingPreparationProcessManualState
           child: CircularProgressIndicator(),
         ),
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+>>>>>>> a486612b (fix: persiapan dyeing)
       );
       return;
     }
@@ -1253,6 +1258,7 @@ class _CreateDyeingPreparationProcessManualState
 
       final XFile? image = await picker.pickImage(source: source);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   Future<void> _pickAttachments() async {
 =======
@@ -1282,6 +1288,8 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> 812c53d8 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
       );
 >>>>>>> e467a136 (fix: attachment for dyeing preparation)
+=======
+>>>>>>> a486612b (fix: persiapan dyeing)
 
       if (image == null) return;
 
@@ -1290,6 +1298,7 @@ class _CreateDyeingPreparationProcessManualState
       if (compressedFile == null) return;
 
       setState(() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1307,6 +1316,9 @@ class _CreateDyeingPreparationProcessManualState
           (e) => e['is_add_button'] == true,
         );
 >>>>>>> e467a136 (fix: attachment for dyeing preparation)
+=======
+        allAttachments.removeWhere((e) => e['is_add_button'] == true);
+>>>>>>> a486612b (fix: persiapan dyeing)
 
         final newFile = {
           'name': compressedFile.path.split('/').last,
@@ -1317,6 +1329,7 @@ class _CreateDyeingPreparationProcessManualState
 
         allAttachments.add(newFile);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1346,6 +1359,12 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> ae89df7c (fix: persiapan dyeing)
 =======
 >>>>>>> e467a136 (fix: attachment for dyeing preparation)
+=======
+        allAttachments.add({'is_add_button': true});
+
+        widget.form?['attachments'] =
+            allAttachments.where((e) => e['is_add_button'] != true).toList();
+>>>>>>> a486612b (fix: persiapan dyeing)
       });
     } catch (e) {
       if (!mounted) return;
@@ -1358,6 +1377,7 @@ class _CreateDyeingPreparationProcessManualState
     }
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1377,6 +1397,9 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> ae89df7c (fix: persiapan dyeing)
 =======
 >>>>>>> e467a136 (fix: attachment for dyeing preparation)
+=======
+  void showImageDialog(BuildContext context, bool isNew, String filePath) {
+>>>>>>> a486612b (fix: persiapan dyeing)
     showDialog(
       context: context,
       builder: (context) {
@@ -1394,6 +1417,7 @@ class _CreateDyeingPreparationProcessManualState
               minScale: 1,
               maxScale: 4,
               child: isNew
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1418,6 +1442,10 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> ae89df7c (fix: persiapan dyeing)
 =======
 >>>>>>> e467a136 (fix: attachment for dyeing preparation)
+=======
+                  ? Image.file(File(filePath), fit: BoxFit.contain)
+                  : Image.network(filePath, fit: BoxFit.contain),
+>>>>>>> a486612b (fix: persiapan dyeing)
             ),
           ),
         );
@@ -1440,6 +1468,7 @@ class _CreateDyeingPreparationProcessManualState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         await Future.delayed(const Duration(milliseconds: 200));
 =======
         await Future.delayed(
@@ -1454,6 +1483,9 @@ class _CreateDyeingPreparationProcessManualState
           const Duration(milliseconds: 200),
         );
 >>>>>>> e467a136 (fix: attachment for dyeing preparation)
+=======
+        await Future.delayed(const Duration(milliseconds: 200));
+>>>>>>> a486612b (fix: persiapan dyeing)
 
         if (!mounted) {
           completer.complete(false);
@@ -1463,6 +1495,7 @@ class _CreateDyeingPreparationProcessManualState
         setState(() {
           allAttachments.remove(item);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1484,6 +1517,10 @@ class _CreateDyeingPreparationProcessManualState
 >>>>>>> ae89df7c (fix: persiapan dyeing)
 =======
 >>>>>>> e467a136 (fix: attachment for dyeing preparation)
+=======
+          widget.form?['attachments'] =
+              allAttachments.where((e) => e['is_add_button'] != true).toList();
+>>>>>>> a486612b (fix: persiapan dyeing)
         });
 
         Navigator.pop(context);
@@ -1586,6 +1623,7 @@ class _CreateDyeingPreparationProcessManualState
       onPreviewImage: (isNew, filePath) {
         showImageDialog(context, isNew, filePath);
 <<<<<<< HEAD
+<<<<<<< HEAD
       },
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
@@ -1651,6 +1689,8 @@ class _CreateDyeingPreparationProcessManualState
           isNew,
           filePath,
         );
+=======
+>>>>>>> a486612b (fix: persiapan dyeing)
       },
 >>>>>>> e467a136 (fix: attachment for dyeing preparation)
     );

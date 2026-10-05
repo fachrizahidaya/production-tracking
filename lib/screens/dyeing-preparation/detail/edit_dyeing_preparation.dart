@@ -93,6 +93,7 @@ class EditDyeingPreparationScreen extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   const EditDyeingPreparationScreen({super.key, required this.id});
 =======
 =======
@@ -108,6 +109,9 @@ class EditDyeingPreparationScreen extends StatefulWidget {
 >>>>>>> ae89df7c (fix: persiapan dyeing)
 =======
 >>>>>>> b70754b7 (feat: persiapan dyeing)
+=======
+  const EditDyeingPreparationScreen({super.key, required this.id});
+>>>>>>> a486612b (fix: persiapan dyeing)
 
   @override
   State<EditDyeingPreparationScreen> createState() =>
@@ -171,6 +175,7 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final attachments =
         allAttachments.where((e) => e['is_add_button'] != true).toList();
 
@@ -210,15 +215,15 @@ class _EditDyeingPreparationScreenState
 =======
 >>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
 =======
+=======
+    final attachments =
+        allAttachments.where((e) => e['is_add_button'] != true).toList();
+>>>>>>> a486612b (fix: persiapan dyeing)
 
     _form['attachments'] = attachments;
     _form['attachment_ids'] = attachments
-        .where(
-          (e) => e['isNew'] != true && e['id'] != null,
-        )
-        .map(
-          (e) => e['id'],
-        )
+        .where((e) => e['isNew'] != true && e['id'] != null)
+        .map((e) => e['id'])
         .toList();
   }
 >>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
@@ -358,6 +363,7 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           headers: {'Authorization': 'Bearer $token'},
 =======
           headers: {
@@ -372,6 +378,9 @@ class _EditDyeingPreparationScreenState
             'Authorization': 'Bearer $token',
           },
 >>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
+=======
+          headers: {'Authorization': 'Bearer $token'},
+>>>>>>> a486612b (fix: persiapan dyeing)
         );
 
         final responseData = jsonDecode(response.body);
@@ -385,6 +394,7 @@ class _EditDyeingPreparationScreenState
 
       final data = optionCache[baseCode] ?? [];
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -438,6 +448,12 @@ class _EditDyeingPreparationScreenState
         data.map<Map<String, dynamic>>((rawOption) {
           final option = Map<String, dynamic>.from(rawOption);
 
+=======
+      options.addAll(
+        data.map<Map<String, dynamic>>((rawOption) {
+          final option = Map<String, dynamic>.from(rawOption);
+
+>>>>>>> a486612b (fix: persiapan dyeing)
           return {
             "work_order_item_id": item["id"],
             "spk_item_id": item["spk_item_id"],
@@ -455,9 +471,12 @@ class _EditDyeingPreparationScreenState
           };
         }),
       );
+<<<<<<< HEAD
 >>>>>>> ae89df7c (fix: persiapan dyeing)
 =======
 >>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
+=======
+>>>>>>> a486612b (fix: persiapan dyeing)
     }
 
     return options;
@@ -570,12 +589,16 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ae89df7c (fix: persiapan dyeing)
+=======
+>>>>>>> a486612b (fix: persiapan dyeing)
       final service = Provider.of<DyeingPreparationService>(
         context,
         listen: false,
       );
+<<<<<<< HEAD
 <<<<<<< HEAD
       await service.fetchPreparationDetail(context, widget.id);
 =======
@@ -587,6 +610,8 @@ class _EditDyeingPreparationScreenState
 =======
 =======
 >>>>>>> ae89df7c (fix: persiapan dyeing)
+=======
+>>>>>>> a486612b (fix: persiapan dyeing)
       await service.fetchPreparationDetail(context, widget.id);
 >>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 =======
@@ -604,6 +629,7 @@ class _EditDyeingPreparationScreenState
           ? Map<String, dynamic>.from(response['data'])
           : Map<String, dynamic>.from(response);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -631,6 +657,9 @@ class _EditDyeingPreparationScreenState
         detail["work_orders"] ?? {},
       );
 >>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
+=======
+      woData = Map<String, dynamic>.from(detail["work_orders"] ?? {});
+>>>>>>> a486612b (fix: persiapan dyeing)
 
       _form
         ..clear()
@@ -800,6 +829,7 @@ class _EditDyeingPreparationScreenState
       final picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: source);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   Future<void> _pickAttachments() async {
 =======
@@ -824,6 +854,8 @@ class _EditDyeingPreparationScreenState
         source: source,
       );
 >>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
+=======
+>>>>>>> a486612b (fix: persiapan dyeing)
 
       if (image == null) return;
 
@@ -835,6 +867,7 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         allAttachments.removeWhere((e) => e['is_add_button'] == true);
 =======
         allAttachments.removeWhere(
@@ -849,6 +882,9 @@ class _EditDyeingPreparationScreenState
           (e) => e['is_add_button'] == true,
         );
 >>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
+=======
+        allAttachments.removeWhere((e) => e['is_add_button'] == true);
+>>>>>>> a486612b (fix: persiapan dyeing)
 
         allAttachments.add({
           'name': compressedFile.path.split('/').last,
@@ -860,6 +896,7 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         allAttachments.add({'is_add_button': true});
 =======
         allAttachments.add({
@@ -874,6 +911,9 @@ class _EditDyeingPreparationScreenState
           'is_add_button': true,
         });
 >>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
+=======
+        allAttachments.add({'is_add_button': true});
+>>>>>>> a486612b (fix: persiapan dyeing)
 
         _syncAttachmentsToForm();
       });
@@ -888,6 +928,7 @@ class _EditDyeingPreparationScreenState
     }
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -907,6 +948,9 @@ class _EditDyeingPreparationScreenState
 >>>>>>> ae89df7c (fix: persiapan dyeing)
 =======
 >>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
+=======
+  void showImageDialog(BuildContext context, bool isNew, String filePath) {
+>>>>>>> a486612b (fix: persiapan dyeing)
     showDialog(
       context: context,
       builder: (context) {
@@ -924,6 +968,7 @@ class _EditDyeingPreparationScreenState
               minScale: 1,
               maxScale: 4,
               child: isNew
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -948,6 +993,10 @@ class _EditDyeingPreparationScreenState
 >>>>>>> ae89df7c (fix: persiapan dyeing)
 =======
 >>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
+=======
+                  ? Image.file(File(filePath), fit: BoxFit.contain)
+                  : Image.network(filePath, fit: BoxFit.contain),
+>>>>>>> a486612b (fix: persiapan dyeing)
             ),
           ),
         );
@@ -970,6 +1019,7 @@ class _EditDyeingPreparationScreenState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         await Future.delayed(const Duration(milliseconds: 200));
 =======
         await Future.delayed(
@@ -984,6 +1034,9 @@ class _EditDyeingPreparationScreenState
           const Duration(milliseconds: 200),
         );
 >>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
+=======
+        await Future.delayed(const Duration(milliseconds: 200));
+>>>>>>> a486612b (fix: persiapan dyeing)
 
         if (!mounted) {
           completer.complete(false);
@@ -1059,10 +1112,17 @@ class _EditDyeingPreparationScreenState
     );
 
     try {
+<<<<<<< HEAD
       final message =
           await Provider.of<DyeingPreparationService>(context, listen: false)
               .updatePreparation(
 >>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
+=======
+      final message = await Provider.of<DyeingPreparationService>(
+        context,
+        listen: false,
+      ).updatePreparation(
+>>>>>>> a486612b (fix: persiapan dyeing)
         context,
         widget.id.toString(),
         dyeingPreparation,
@@ -1146,10 +1206,10 @@ class _EditDyeingPreparationScreenState
 =======
       if (!mounted) return;
 
-// keluar dari Edit
+      // keluar dari Edit
       Navigator.pop(context, true);
 
-// keluar dari Detail
+      // keluar dari Detail
       Navigator.pop(context, true);
 >>>>>>> 4369aaa7 (feat: edit persiapan dyeing)
     } catch (e) {
@@ -1288,11 +1348,7 @@ class _EditDyeingPreparationScreenState
       onAddAttachment: _pickAttachments,
       onDeleteAttachment: _handleDeleteAttachment,
       onPreviewImage: (isNew, filePath) {
-        showImageDialog(
-          context,
-          isNew,
-          filePath,
-        );
+        showImageDialog(context, isNew, filePath);
       },
     );
   }

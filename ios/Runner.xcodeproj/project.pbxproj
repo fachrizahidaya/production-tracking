@@ -203,6 +203,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 			name = Pods;
 >>>>>>> 309725d4 (chore: ios)
@@ -211,6 +212,8 @@
 =======
 			name = Pods;
 >>>>>>> ec16694a (chore: ios)
+=======
+>>>>>>> 7795fb4e (chore: ios)
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -391,19 +394,27 @@
 			);
 			inputPaths = (
 			);
+<<<<<<< HEAD
 =======
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 >>>>>>> 387ff36b (fix: ios)
+=======
+>>>>>>> 7795fb4e (chore: ios)
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 <<<<<<< HEAD
+<<<<<<< HEAD
 			outputPaths = (
 			);
 =======
 >>>>>>> 387ff36b (fix: ios)
+=======
+			outputPaths = (
+			);
+>>>>>>> 7795fb4e (chore: ios)
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
@@ -465,9 +476,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -658,6 +673,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 =======
@@ -667,15 +683,25 @@
 				CODE_SIGN_STYLE = Automatic;
 >>>>>>> 58f548c8 (chore: ios)
 =======
+=======
+>>>>>>> 7795fb4e (chore: ios)
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 =======
 >>>>>>> 66c7a59 (fix: ios)
+<<<<<<< HEAD
 >>>>>>> 387ff36b (fix: ios)
+=======
+=======
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+>>>>>>> 3c9129a (chore: ios)
+>>>>>>> 7795fb4e (chore: ios)
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = RP9L4Q9H5J;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -695,6 +721,14 @@
 =======
 >>>>>>> 66c7a59 (fix: ios)
 >>>>>>> 387ff36b (fix: ios)
+=======
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
+=======
+>>>>>>> 66c7a59 (fix: ios)
+=======
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
+>>>>>>> 3c9129a (chore: ios)
+>>>>>>> 7795fb4e (chore: ios)
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -895,6 +929,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 =======
@@ -904,15 +939,25 @@
 				CODE_SIGN_STYLE = Automatic;
 >>>>>>> 58f548c8 (chore: ios)
 =======
+=======
+>>>>>>> 7795fb4e (chore: ios)
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 =======
 >>>>>>> 66c7a59 (fix: ios)
+<<<<<<< HEAD
 >>>>>>> 387ff36b (fix: ios)
+=======
+=======
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+>>>>>>> 3c9129a (chore: ios)
+>>>>>>> 7795fb4e (chore: ios)
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = RP9L4Q9H5J;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -932,6 +977,14 @@
 =======
 >>>>>>> 66c7a59 (fix: ios)
 >>>>>>> 387ff36b (fix: ios)
+=======
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
+=======
+>>>>>>> 66c7a59 (fix: ios)
+=======
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
+>>>>>>> 3c9129a (chore: ios)
+>>>>>>> 7795fb4e (chore: ios)
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -965,6 +1018,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 =======
@@ -974,15 +1028,25 @@
 				CODE_SIGN_STYLE = Automatic;
 >>>>>>> 58f548c8 (chore: ios)
 =======
+=======
+>>>>>>> 7795fb4e (chore: ios)
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 =======
 >>>>>>> 66c7a59 (fix: ios)
+<<<<<<< HEAD
 >>>>>>> 387ff36b (fix: ios)
+=======
+=======
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+>>>>>>> 3c9129a (chore: ios)
+>>>>>>> 7795fb4e (chore: ios)
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = RP9L4Q9H5J;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1002,6 +1066,14 @@
 =======
 >>>>>>> 66c7a59 (fix: ios)
 >>>>>>> 387ff36b (fix: ios)
+=======
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
+=======
+>>>>>>> 66c7a59 (fix: ios)
+=======
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
+>>>>>>> 3c9129a (chore: ios)
+>>>>>>> 7795fb4e (chore: ios)
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

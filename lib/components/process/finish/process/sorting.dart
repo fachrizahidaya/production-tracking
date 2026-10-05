@@ -2487,6 +2487,7 @@ class _SortingSectionState extends State<SortingSection> {
     );
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2494,6 +2495,9 @@ class _SortingSectionState extends State<SortingSection> {
 =======
 =======
 >>>>>>> 16aa2dc3 (chore)
+=======
+
+>>>>>>> 4694f297 (chore)
   Widget _buildSortingWarning() {
     String? warning;
 
@@ -2510,11 +2514,14 @@ class _SortingSectionState extends State<SortingSection> {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   Widget _buildQtyWarning(String warning) {
 >>>>>>> 87510740 (fix: finish proses)
 =======
 >>>>>>> 16aa2dc3 (chore)
+=======
+>>>>>>> 4694f297 (chore)
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
@@ -2547,6 +2554,7 @@ class _SortingSectionState extends State<SortingSection> {
     );
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 =======
 >>>>>>> 16aa2dc3 (chore)
@@ -2554,4 +2562,6 @@ class _SortingSectionState extends State<SortingSection> {
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
 >>>>>>> 288ca806 (fix: warning qty sorting)
+=======
+>>>>>>> 4694f297 (chore)
 }

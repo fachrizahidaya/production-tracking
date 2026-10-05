@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:textile_tracking/screens/dashboard/index.dart';
+import 'package:textile_tracking/services/fcm_service.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -317,14 +318,20 @@ class _HomeState extends State<Home> {
     if (token != null) {
       try {
         isLoading.value = true;
+        final deviceData = await FcmService.instance.getCurrentDeviceData();
 
         final res = await http.post(
           Uri.parse(url),
-          headers: {'Authorization': 'Bearer $token'},
-          body: null,
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: jsonEncode(deviceData),
         );
 
         if (res.statusCode == 200) {
+          await FcmService.instance.clearCurrentDeviceData();
           if (context.mounted) {
             await Provider.of<UserProvider>(
               context,
@@ -344,7 +351,13 @@ class _HomeState extends State<Home> {
           }
         }
       } catch (e) {
-        throw Exception(e);
+        if (context.mounted) {
+          showAlertDialog(
+            context: context,
+            title: 'Error',
+            message: 'Logout failed',
+          );
+        }
       } finally {
         isLoading.value = false;
       }

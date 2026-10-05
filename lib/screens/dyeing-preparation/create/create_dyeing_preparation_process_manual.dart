@@ -101,9 +101,7 @@ class _CreateDyeingPreparationProcessManualState
 
         final response = await http.get(
           uri,
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
+          headers: {'Authorization': 'Bearer $token'},
         );
 
         final responseData = jsonDecode(response.body);
@@ -117,26 +115,28 @@ class _CreateDyeingPreparationProcessManualState
 
       final data = optionCache[baseCode] ?? [];
 
-      options.addAll(data.map<Map<String, dynamic>>((rawOption) {
-        final option = Map<String, dynamic>.from(rawOption);
+      options.addAll(
+        data.map<Map<String, dynamic>>((rawOption) {
+          final option = Map<String, dynamic>.from(rawOption);
 
-        return {
-          "work_order_item_id": item["id"],
-          "spk_item_id": item["spk_item_id"],
-          "source_item_id": item["item_id"],
-          "source_item_code": item["item_code"],
-          "source_item_name": item["item_name"],
-          "item_id": option["value"],
-          "item_code": option["code"],
-          "item_name": option["label"],
-          "spk_no": null,
-          "qty": item["qty"],
-          "weight": item["weight"],
-          "qty_tolerance": 0,
-          "unit_id": item["unit"]?["id"] ?? 1,
-          "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
-        };
-      }));
+          return {
+            "work_order_item_id": item["id"],
+            "spk_item_id": item["spk_item_id"],
+            "source_item_id": item["item_id"],
+            "source_item_code": item["item_code"],
+            "source_item_name": item["item_name"],
+            "item_id": option["value"],
+            "item_code": option["code"],
+            "item_name": option["label"],
+            "spk_no": null,
+            "qty": item["qty"],
+            "weight": item["weight"],
+            "qty_tolerance": 0,
+            "unit_id": item["unit"]?["id"] ?? 1,
+            "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
+          };
+        }),
+      );
     }
 
     return options;
@@ -208,7 +208,7 @@ class _CreateDyeingPreparationProcessManualState
             "qty_tolerance": 0,
             "unit_id": item["unit"]?["id"] ?? 1,
             "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
-          }
+          },
         ];
       }
 
@@ -327,9 +327,7 @@ class _CreateDyeingPreparationProcessManualState
         workOrderOption = service.dataListOption;
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
     } finally {
       setState(() {
         _isFetchingWorkOrder = false;
@@ -375,11 +373,8 @@ class _CreateDyeingPreparationProcessManualState
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       if (mounted) {
         setState(() {
@@ -394,9 +389,7 @@ class _CreateDyeingPreparationProcessManualState
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        builder: (context) => const Center(child: CircularProgressIndicator()),
       );
       return;
     }
@@ -467,9 +460,7 @@ class _CreateDyeingPreparationProcessManualState
     try {
       final picker = ImagePicker();
 
-      final XFile? image = await picker.pickImage(
-        source: source,
-      );
+      final XFile? image = await picker.pickImage(source: source);
 
       if (image == null) return;
 
@@ -478,9 +469,7 @@ class _CreateDyeingPreparationProcessManualState
       if (compressedFile == null) return;
 
       setState(() {
-        allAttachments.removeWhere(
-          (e) => e['is_add_button'] == true,
-        );
+        allAttachments.removeWhere((e) => e['is_add_button'] == true);
 
         final newFile = {
           'name': compressedFile.path.split('/').last,
@@ -491,15 +480,10 @@ class _CreateDyeingPreparationProcessManualState
 
         allAttachments.add(newFile);
 
-        allAttachments.add({
-          'is_add_button': true,
-        });
+        allAttachments.add({'is_add_button': true});
 
-        widget.form?['attachments'] = allAttachments
-            .where(
-              (e) => e['is_add_button'] != true,
-            )
-            .toList();
+        widget.form?['attachments'] =
+            allAttachments.where((e) => e['is_add_button'] != true).toList();
       });
     } catch (e) {
       if (!mounted) return;
@@ -512,11 +496,7 @@ class _CreateDyeingPreparationProcessManualState
     }
   }
 
-  void showImageDialog(
-    BuildContext context,
-    bool isNew,
-    String filePath,
-  ) {
+  void showImageDialog(BuildContext context, bool isNew, String filePath) {
     showDialog(
       context: context,
       builder: (context) {
@@ -534,14 +514,8 @@ class _CreateDyeingPreparationProcessManualState
               minScale: 1,
               maxScale: 4,
               child: isNew
-                  ? Image.file(
-                      File(filePath),
-                      fit: BoxFit.contain,
-                    )
-                  : Image.network(
-                      filePath,
-                      fit: BoxFit.contain,
-                    ),
+                  ? Image.file(File(filePath), fit: BoxFit.contain)
+                  : Image.network(filePath, fit: BoxFit.contain),
             ),
           ),
         );
@@ -561,9 +535,7 @@ class _CreateDyeingPreparationProcessManualState
       message: 'Apakah Anda yakin ingin menghapus lampiran ini?',
       buttonBackground: CustomTheme().buttonColor('danger'),
       onConfirm: () async {
-        await Future.delayed(
-          const Duration(milliseconds: 200),
-        );
+        await Future.delayed(const Duration(milliseconds: 200));
 
         if (!mounted) {
           completer.complete(false);
@@ -573,11 +545,8 @@ class _CreateDyeingPreparationProcessManualState
         setState(() {
           allAttachments.remove(item);
 
-          widget.form?['attachments'] = allAttachments
-              .where(
-                (e) => e['is_add_button'] != true,
-              )
-              .toList();
+          widget.form?['attachments'] =
+              allAttachments.where((e) => e['is_add_button'] != true).toList();
         });
 
         Navigator.pop(context);
@@ -624,11 +593,7 @@ class _CreateDyeingPreparationProcessManualState
       onAddAttachment: _pickAttachments,
       onDeleteAttachment: _handleDeleteAttachment,
       onPreviewImage: (isNew, filePath) {
-        showImageDialog(
-          context,
-          isNew,
-          filePath,
-        );
+        showImageDialog(context, isNew, filePath);
       },
     );
   }

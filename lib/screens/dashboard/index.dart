@@ -28,11 +28,15 @@ class Dashboard extends StatefulWidget {
   final bool isMobile;
   final Future<void> Function()? onRefreshReworkNotifications;
 
+<<<<<<< HEAD
   const Dashboard({
     super.key,
     required this.isMobile,
     this.onRefreshReworkNotifications,
   });
+=======
+  const Dashboard({super.key, this.onRefreshReworkNotifications});
+>>>>>>> 2dccfd5 (fix: home, dashboard)
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -185,9 +189,11 @@ class _DashboardState extends State<Dashboard> {
           widget['value']?.toString() ?? '': widget['is_visible'] == true,
       };
       final supportedOptions = keyData
-          .where((widget) => _supportedDashboardWidgets.contains(
-                widget['value']?.toString(),
-              ))
+          .where(
+            (widget) => _supportedDashboardWidgets.contains(
+              widget['value']?.toString(),
+            ),
+          )
           .toList();
 
       if (!mounted) return;
@@ -202,9 +208,8 @@ class _DashboardState extends State<Dashboard> {
       });
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
       }
     } finally {
       if (mounted) setState(() => _isDashboardWidgetsLoading = false);
@@ -212,7 +217,9 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _updateDashboardWidget(
-      String widgetValue, bool isVisible) async {
+    String widgetValue,
+    bool isVisible,
+  ) async {
     final baseUrl = dotenv.env['API_URL'] ?? '';
     final response = await http.patch(
       Uri.parse('$baseUrl/dashboard/widgets'),
@@ -231,9 +238,11 @@ class _DashboardState extends State<Dashboard> {
       } catch (_) {
         responseData = null;
       }
-      throw Exception(responseData is Map
-          ? responseData['message'] ?? 'Gagal mengubah widget dashboard'
-          : 'Gagal mengubah widget dashboard');
+      throw Exception(
+        responseData is Map
+            ? responseData['message'] ?? 'Gagal mengubah widget dashboard'
+            : 'Gagal mengubah widget dashboard',
+      );
     }
   }
 
@@ -284,15 +293,17 @@ class _DashboardState extends State<Dashboard> {
                               await _updateDashboardWidget(value, isVisible);
                             } catch (e) {
                               if (!mounted) return;
-                              setState(() =>
-                                  _dashboardWidgets[value] = previousValue);
+                              setState(
+                                () => _dashboardWidgets[value] = previousValue,
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(e.toString())),
                               );
                             } finally {
                               if (mounted) {
                                 setState(
-                                    () => _isDashboardWidgetsUpdating = false);
+                                  () => _isDashboardWidgetsUpdating = false,
+                                );
                                 if (modalContext.mounted) setModalState(() {});
                               }
                             }
@@ -360,6 +371,7 @@ class _DashboardState extends State<Dashboard> {
 
   bool _checkIsFiltered() {
     return params.keys.any(
+<<<<<<< HEAD
       (key) {
         if (key == 'page' || key == 'search' || key == 'per_page') {
           return false;
@@ -369,6 +381,9 @@ class _DashboardState extends State<Dashboard> {
         }
         return params[key]!.isNotEmpty;
       },
+=======
+      (key) => key != 'page' && key != 'search' && params[key]!.isNotEmpty,
+>>>>>>> 2dccfd5 (fix: home, dashboard)
     );
   }
 
@@ -469,8 +484,10 @@ class _DashboardState extends State<Dashboard> {
     });
 
     try {
-      final service =
-          Provider.of<WorkOrderSummaryService>(context, listen: false);
+      final service = Provider.of<WorkOrderSummaryService>(
+        context,
+        listen: false,
+      );
 
       await Future.wait([
         service.getDataList(context, summaryParams),
@@ -603,8 +620,10 @@ class _DashboardState extends State<Dashboard> {
     params['page'] = (currentPage + 1).toString();
 
     try {
-      final service =
-          Provider.of<WorkOrderProcessService>(context, listen: false);
+      final service = Provider.of<WorkOrderProcessService>(
+        context,
+        listen: false,
+      );
 
       await service.getDataList(context, params);
 
@@ -640,6 +659,7 @@ class _DashboardState extends State<Dashboard> {
   _refetch() {
     if (!mounted) return;
     setState(() {
+<<<<<<< HEAD
       if (_isMobile) {
         params['search'] = _search;
         params['page'] = '0';
@@ -647,6 +667,9 @@ class _DashboardState extends State<Dashboard> {
       } else {
         params = {'search': _search, 'page': '0'};
       }
+=======
+      params = {'search': _search, 'page': '0'};
+>>>>>>> 2dccfd5 (fix: home, dashboard)
     });
     _loadMore();
   }
@@ -693,7 +716,10 @@ class _DashboardState extends State<Dashboard> {
                         WorkOrderStats(
                           data: statsList,
                           isFetching: isStatsLoading,
+<<<<<<< HEAD
                           isMobile: _isMobile,
+=======
+>>>>>>> 2dccfd5 (fix: home, dashboard)
                         ),
                         if (_dashboardWidgets['process_summary'] ?? false)
                           WorkOrderSummary(
@@ -701,6 +727,7 @@ class _DashboardState extends State<Dashboard> {
                             greigeData: greigeSummaryList,
                             handleRefetch: _handleFetchSummary,
                             isFetching: isSummaryLoading,
+<<<<<<< HEAD
                             isMobile: _isMobile,
                             dariTanggal: summaryParams['start_date'] ??
                                 dariTanggalSummary,
@@ -708,6 +735,8 @@ class _DashboardState extends State<Dashboard> {
                                 sampaiTanggalSummary,
                             onDateRangeSelected:
                                 _isMobile ? _handleSummaryDateRange : null,
+=======
+>>>>>>> 2dccfd5 (fix: home, dashboard)
                             filterWidget: SummaryFilter(
                               dariTanggal: dariTanggalSummary,
                               sampaiTanggal: sampaiTanggalSummary,
@@ -724,7 +753,10 @@ class _DashboardState extends State<Dashboard> {
                             handleRefetch: _handleFetchMachine,
                             isFetching: isMachineLoading,
                             processNames: menuProcessNames,
+<<<<<<< HEAD
                             isMobile: _isMobile,
+=======
+>>>>>>> 2dccfd5 (fix: home, dashboard)
                           ),
                         if (_dashboardWidgets['wo_list'] ?? false)
                           WorkOrderProcessScreen(
@@ -736,12 +768,18 @@ class _DashboardState extends State<Dashboard> {
                             handleLoadMore: _loadMore,
                             handleRefetch: _refetch,
                             isLoadMore: _isLoadMore,
+<<<<<<< HEAD
                             isMobile: _isMobile,
                             filterWidget: ProcessFilter(
                               params: params,
                               onHandleFilter: _handleProcessFilter,
                               onDateRangeSelected:
                                   _isMobile ? _handleProcessDateRange : null,
+=======
+                            filterWidget: ProcessFilter(
+                              params: params,
+                              onHandleFilter: _handleProcessFilter,
+>>>>>>> 2dccfd5 (fix: home, dashboard)
                             ),
                             handleFetchData: (params) async {
                               final service =
@@ -757,6 +795,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                       ].separatedBy(CustomTheme().vGap('2xl')),
                     ),
+<<<<<<< HEAD
                     if (!shouldHideActiveMachine)
                       ActiveMachine(
                         data: machineList,
@@ -791,6 +830,9 @@ class _DashboardState extends State<Dashboard> {
                         isFiltered: _isFiltered,
                       ),
                   ].separatedBy(CustomTheme().vGap('2xl')))),
+=======
+                  ),
+>>>>>>> 2dccfd5 (fix: home, dashboard)
                 ),
               ],
             ),
@@ -801,6 +843,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buildDashboardSettingsButton() {
+<<<<<<< HEAD
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: InkWell(
@@ -816,6 +859,20 @@ class _DashboardState extends State<Dashboard> {
                   'Widget Dashboard',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
+=======
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: _isDashboardWidgetsLoading ? null : _showDashboardWidgetSettings,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: CustomTheme().cardTheme(),
+        child: Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Widget Dashboard',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+>>>>>>> 2dccfd5 (fix: home, dashboard)
               ),
               _isDashboardWidgetsLoading
                   ? SizedBox(

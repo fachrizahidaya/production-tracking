@@ -343,9 +343,7 @@ class _CreateDyeingPreparationProcessManualState
 
         final response = await http.get(
           uri,
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
+          headers: {'Authorization': 'Bearer $token'},
         );
 
         final responseData = jsonDecode(response.body);
@@ -359,26 +357,28 @@ class _CreateDyeingPreparationProcessManualState
 
       final data = optionCache[baseCode] ?? [];
 
-      options.addAll(data.map<Map<String, dynamic>>((rawOption) {
-        final option = Map<String, dynamic>.from(rawOption);
+      options.addAll(
+        data.map<Map<String, dynamic>>((rawOption) {
+          final option = Map<String, dynamic>.from(rawOption);
 
-        return {
-          "work_order_item_id": item["id"],
-          "spk_item_id": item["spk_item_id"],
-          "source_item_id": item["item_id"],
-          "source_item_code": item["item_code"],
-          "source_item_name": item["item_name"],
-          "item_id": option["value"],
-          "item_code": option["code"],
-          "item_name": option["label"],
-          "spk_no": null,
-          "qty": item["qty"],
-          "weight": item["weight"],
-          "qty_tolerance": 0,
-          "unit_id": item["unit"]?["id"] ?? 1,
-          "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
-        };
-      }));
+          return {
+            "work_order_item_id": item["id"],
+            "spk_item_id": item["spk_item_id"],
+            "source_item_id": item["item_id"],
+            "source_item_code": item["item_code"],
+            "source_item_name": item["item_name"],
+            "item_id": option["value"],
+            "item_code": option["code"],
+            "item_name": option["label"],
+            "spk_no": null,
+            "qty": item["qty"],
+            "weight": item["weight"],
+            "qty_tolerance": 0,
+            "unit_id": item["unit"]?["id"] ?? 1,
+            "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
+          };
+        }),
+      );
     }
 
     return options;
@@ -450,7 +450,7 @@ class _CreateDyeingPreparationProcessManualState
             "qty_tolerance": 0,
             "unit_id": item["unit"]?["id"] ?? 1,
             "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
-          }
+          },
         ];
       }
 
@@ -624,12 +624,16 @@ class _CreateDyeingPreparationProcessManualState
       });
     } catch (e) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
 =======
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("$e")),
       );
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
+>>>>>>> ae89df7c (fix: persiapan dyeing)
     } finally {
       setState(() {
         _isFetchingWorkOrder = false;
@@ -726,11 +730,8 @@ class _CreateDyeingPreparationProcessManualState
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
 <<<<<<< HEAD
       setState(() {
@@ -753,12 +754,16 @@ class _CreateDyeingPreparationProcessManualState
         context: context,
         barrierDismissible: false,
 <<<<<<< HEAD
+<<<<<<< HEAD
         builder: (context) => const Center(child: CircularProgressIndicator()),
 =======
         builder: (context) => const Center(
           child: CircularProgressIndicator(),
         ),
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
+=======
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+>>>>>>> ae89df7c (fix: persiapan dyeing)
       );
       return;
     }
@@ -856,6 +861,7 @@ class _CreateDyeingPreparationProcessManualState
       final picker = ImagePicker();
 
       final XFile? image = await picker.pickImage(source: source);
+<<<<<<< HEAD
 =======
   Future<void> _pickAttachments() async {
 =======
@@ -868,6 +874,8 @@ class _CreateDyeingPreparationProcessManualState
         source: source,
       );
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
+=======
+>>>>>>> ae89df7c (fix: persiapan dyeing)
 
       if (image == null) return;
 
@@ -877,12 +885,16 @@ class _CreateDyeingPreparationProcessManualState
 
       setState(() {
 <<<<<<< HEAD
+<<<<<<< HEAD
         allAttachments.removeWhere((e) => e['is_add_button'] == true);
 =======
         allAttachments.removeWhere(
           (e) => e['is_add_button'] == true,
         );
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
+=======
+        allAttachments.removeWhere((e) => e['is_add_button'] == true);
+>>>>>>> ae89df7c (fix: persiapan dyeing)
 
         final newFile = {
           'name': compressedFile.path.split('/').last,
@@ -893,6 +905,7 @@ class _CreateDyeingPreparationProcessManualState
 
         allAttachments.add(newFile);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         allAttachments.add({'is_add_button': true});
 
@@ -909,6 +922,12 @@ class _CreateDyeingPreparationProcessManualState
             )
             .toList();
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
+=======
+        allAttachments.add({'is_add_button': true});
+
+        widget.form?['attachments'] =
+            allAttachments.where((e) => e['is_add_button'] != true).toList();
+>>>>>>> ae89df7c (fix: persiapan dyeing)
       });
     } catch (e) {
       if (!mounted) return;
@@ -922,6 +941,7 @@ class _CreateDyeingPreparationProcessManualState
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   void showImageDialog(BuildContext context, bool isNew, String filePath) {
 =======
   void showImageDialog(
@@ -930,6 +950,9 @@ class _CreateDyeingPreparationProcessManualState
     String filePath,
   ) {
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
+=======
+  void showImageDialog(BuildContext context, bool isNew, String filePath) {
+>>>>>>> ae89df7c (fix: persiapan dyeing)
     showDialog(
       context: context,
       builder: (context) {
@@ -948,6 +971,7 @@ class _CreateDyeingPreparationProcessManualState
               maxScale: 4,
               child: isNew
 <<<<<<< HEAD
+<<<<<<< HEAD
                   ? Image.file(File(filePath), fit: BoxFit.contain)
                   : Image.network(filePath, fit: BoxFit.contain),
 =======
@@ -960,6 +984,10 @@ class _CreateDyeingPreparationProcessManualState
                       fit: BoxFit.contain,
                     ),
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
+=======
+                  ? Image.file(File(filePath), fit: BoxFit.contain)
+                  : Image.network(filePath, fit: BoxFit.contain),
+>>>>>>> ae89df7c (fix: persiapan dyeing)
             ),
           ),
         );
@@ -980,12 +1008,16 @@ class _CreateDyeingPreparationProcessManualState
       buttonBackground: CustomTheme().buttonColor('danger'),
       onConfirm: () async {
 <<<<<<< HEAD
+<<<<<<< HEAD
         await Future.delayed(const Duration(milliseconds: 200));
 =======
         await Future.delayed(
           const Duration(milliseconds: 200),
         );
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
+=======
+        await Future.delayed(const Duration(milliseconds: 200));
+>>>>>>> ae89df7c (fix: persiapan dyeing)
 
         if (!mounted) {
           completer.complete(false);
@@ -996,6 +1028,7 @@ class _CreateDyeingPreparationProcessManualState
           allAttachments.remove(item);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
           widget.form?['attachments'] =
               allAttachments.where((e) => e['is_add_button'] != true).toList();
 =======
@@ -1005,6 +1038,10 @@ class _CreateDyeingPreparationProcessManualState
               )
               .toList();
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
+=======
+          widget.form?['attachments'] =
+              allAttachments.where((e) => e['is_add_button'] != true).toList();
+>>>>>>> ae89df7c (fix: persiapan dyeing)
         });
 
         Navigator.pop(context);
@@ -1079,6 +1116,7 @@ class _CreateDyeingPreparationProcessManualState
       onDeleteAttachment: _handleDeleteAttachment,
       onPreviewImage: (isNew, filePath) {
         showImageDialog(context, isNew, filePath);
+<<<<<<< HEAD
       },
 =======
 >>>>>>> 57f45d55 (feat: persiapan dyeing)
@@ -1110,6 +1148,8 @@ class _CreateDyeingPreparationProcessManualState
           isNew,
           filePath,
         );
+=======
+>>>>>>> ae89df7c (fix: persiapan dyeing)
       },
 >>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
     );

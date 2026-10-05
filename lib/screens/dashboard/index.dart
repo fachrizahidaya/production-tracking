@@ -34,6 +34,7 @@ class Dashboard extends StatefulWidget {
 >>>>>>> 9dacc402 (fix: responsive UI to mobile)
   final Future<void> Function()? onRefreshReworkNotifications;
 
+<<<<<<< HEAD
   const Dashboard({
     super.key,
 <<<<<<< HEAD
@@ -69,6 +70,9 @@ class Dashboard extends StatefulWidget {
     this.onRefreshReworkNotifications,
   });
 >>>>>>> 9dacc402 (fix: responsive UI to mobile)
+=======
+  const Dashboard({super.key, this.onRefreshReworkNotifications});
+>>>>>>> 99705a2c (fix: home, dashboard)
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -471,9 +475,11 @@ class _DashboardState extends State<Dashboard> {
           widget['value']?.toString() ?? '': widget['is_visible'] == true,
       };
       final supportedOptions = keyData
-          .where((widget) => _supportedDashboardWidgets.contains(
-                widget['value']?.toString(),
-              ))
+          .where(
+            (widget) => _supportedDashboardWidgets.contains(
+              widget['value']?.toString(),
+            ),
+          )
           .toList();
 
       if (!mounted) return;
@@ -488,9 +494,8 @@ class _DashboardState extends State<Dashboard> {
       });
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
       }
     } finally {
       if (mounted) setState(() => _isDashboardWidgetsLoading = false);
@@ -498,7 +503,9 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _updateDashboardWidget(
-      String widgetValue, bool isVisible) async {
+    String widgetValue,
+    bool isVisible,
+  ) async {
     final baseUrl = dotenv.env['API_URL'] ?? '';
     final response = await http.patch(
       Uri.parse('$baseUrl/dashboard/widgets'),
@@ -517,9 +524,11 @@ class _DashboardState extends State<Dashboard> {
       } catch (_) {
         responseData = null;
       }
-      throw Exception(responseData is Map
-          ? responseData['message'] ?? 'Gagal mengubah widget dashboard'
-          : 'Gagal mengubah widget dashboard');
+      throw Exception(
+        responseData is Map
+            ? responseData['message'] ?? 'Gagal mengubah widget dashboard'
+            : 'Gagal mengubah widget dashboard',
+      );
     }
   }
 
@@ -570,15 +579,17 @@ class _DashboardState extends State<Dashboard> {
                               await _updateDashboardWidget(value, isVisible);
                             } catch (e) {
                               if (!mounted) return;
-                              setState(() =>
-                                  _dashboardWidgets[value] = previousValue);
+                              setState(
+                                () => _dashboardWidgets[value] = previousValue,
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(e.toString())),
                               );
                             } finally {
                               if (mounted) {
                                 setState(
-                                    () => _isDashboardWidgetsUpdating = false);
+                                  () => _isDashboardWidgetsUpdating = false,
+                                );
                                 if (modalContext.mounted) setModalState(() {});
                               }
                             }
@@ -658,6 +669,7 @@ class _DashboardState extends State<Dashboard> {
 
   bool _checkIsFiltered() {
     return params.keys.any(
+<<<<<<< HEAD
       (key) {
         if (key == 'page' || key == 'search' || key == 'per_page') {
           return false;
@@ -667,6 +679,9 @@ class _DashboardState extends State<Dashboard> {
         }
         return params[key]!.isNotEmpty;
       },
+=======
+      (key) => key != 'page' && key != 'search' && params[key]!.isNotEmpty,
+>>>>>>> 99705a2c (fix: home, dashboard)
     );
   }
 
@@ -1048,10 +1063,14 @@ class _DashboardState extends State<Dashboard> {
     try {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 99705a2c (fix: home, dashboard)
       final service = Provider.of<WorkOrderProcessService>(
         context,
         listen: false,
       );
+<<<<<<< HEAD
 =======
       final service =
           Provider.of<WorkOrderProcessService>(context, listen: false);
@@ -1060,6 +1079,8 @@ class _DashboardState extends State<Dashboard> {
       final service =
           Provider.of<WorkOrderProcessService>(context, listen: false);
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+>>>>>>> 99705a2c (fix: home, dashboard)
 
       await service.getDataList(context, params);
 
@@ -1113,6 +1134,7 @@ class _DashboardState extends State<Dashboard> {
   _refetch() {
     if (!mounted) return;
     setState(() {
+<<<<<<< HEAD
       if (_isMobile) {
         params['search'] = _search;
         params['page'] = '0';
@@ -1120,6 +1142,9 @@ class _DashboardState extends State<Dashboard> {
       } else {
         params = {'search': _search, 'page': '0'};
       }
+=======
+      params = {'search': _search, 'page': '0'};
+>>>>>>> 99705a2c (fix: home, dashboard)
     });
     _loadMore();
   }
@@ -1405,21 +1430,14 @@ class _DashboardState extends State<Dashboard> {
                   padding: CustomTheme().padding('content'),
 >>>>>>> 908fd21b (fix: UI dashboard)
                   sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                    _buildDashboardSettingsButton(),
-                    WorkOrderStats(data: statsList, isFetching: isStatsLoading),
-                    if (_dashboardWidgets['process_summary'] ?? false)
-                      WorkOrderSummary(
-                        data: summaryList,
-                        greigeData: greigeSummaryList,
-                        handleRefetch: _handleFetchSummary,
-                        isFetching: isSummaryLoading,
-                        filterWidget: SummaryFilter(
-                          dariTanggal: dariTanggalSummary,
-                          sampaiTanggal: sampaiTanggalSummary,
-                          onHandleFilter: _handleSummaryFilter,
-                          params: summaryParams,
+                    delegate: SliverChildListDelegate(
+                      [
+                        _buildDashboardSettingsButton(),
+                        WorkOrderStats(
+                          data: statsList,
+                          isFetching: isStatsLoading,
                         ),
+<<<<<<< HEAD
                       ),
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1474,6 +1492,60 @@ class _DashboardState extends State<Dashboard> {
                         isFiltered: _isFiltered,
                       ),
                   ].separatedBy(CustomTheme().vGap('2xl')))),
+=======
+                        if (_dashboardWidgets['process_summary'] ?? false)
+                          WorkOrderSummary(
+                            data: summaryList,
+                            greigeData: greigeSummaryList,
+                            handleRefetch: _handleFetchSummary,
+                            isFetching: isSummaryLoading,
+                            filterWidget: SummaryFilter(
+                              dariTanggal: dariTanggalSummary,
+                              sampaiTanggal: sampaiTanggalSummary,
+                              onHandleFilter: _handleSummaryFilter,
+                              params: summaryParams,
+                            ),
+                          ),
+                        if ((_dashboardWidgets['machine_status'] ?? false) &&
+                            !shouldHideActiveMachine)
+                          ActiveMachine(
+                            data: machineList,
+                            available: machineList['available'],
+                            unavailable: machineList['unavailable'],
+                            handleRefetch: _handleFetchMachine,
+                            isFetching: isMachineLoading,
+                            processNames: menuProcessNames,
+                          ),
+                        if (_dashboardWidgets['wo_list'] ?? false)
+                          WorkOrderProcessScreen(
+                            data: _dataList,
+                            search: _search,
+                            handleSearch: _handleSearch,
+                            firstLoading: _firstLoading,
+                            hasMore: _hasMore,
+                            handleLoadMore: _loadMore,
+                            handleRefetch: _refetch,
+                            isLoadMore: _isLoadMore,
+                            filterWidget: ProcessFilter(
+                              params: params,
+                              onHandleFilter: _handleProcessFilter,
+                            ),
+                            handleFetchData: (params) async {
+                              final service =
+                                  Provider.of<WorkOrderProcessService>(
+                                context,
+                                listen: false,
+                              );
+                              await service.getDataList(context, params);
+                              return service.items;
+                            },
+                            service: WorkOrderProcessService(),
+                            isFiltered: _isFiltered,
+                          ),
+                      ].separatedBy(CustomTheme().vGap('2xl')),
+                    ),
+                  ),
+>>>>>>> 99705a2c (fix: home, dashboard)
                 ),
               ],
             ),
@@ -1522,10 +1594,7 @@ class _DashboardState extends State<Dashboard> {
             const Expanded(
               child: Text(
                 'Widget Dashboard',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
             _isDashboardWidgetsLoading

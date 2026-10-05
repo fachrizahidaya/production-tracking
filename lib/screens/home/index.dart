@@ -96,6 +96,7 @@ class _HomeState extends State<Home> {
     final loggedInUser = Provider.of<UserProvider>(context, listen: false).user;
     super.initState();
 <<<<<<< HEAD
+<<<<<<< HEAD
     _tokenFuture = SharedPreferences.getInstance().then(
       (prefs) => prefs.getString('access_token'),
     );
@@ -103,6 +104,11 @@ class _HomeState extends State<Home> {
     _tokenFuture = SharedPreferences.getInstance()
         .then((prefs) => prefs.getString('access_token'));
 >>>>>>> 5e1caa7c (feat: widget controller)
+=======
+    _tokenFuture = SharedPreferences.getInstance().then(
+      (prefs) => prefs.getString('access_token'),
+    );
+>>>>>>> 99705a2c (fix: home, dashboard)
 
     setState(() {
       user = loggedInUser?.username ?? '';
@@ -173,14 +179,8 @@ class _HomeState extends State<Home> {
       userMenu.menus,
       'Evaluasi Rework',
     );
-    final canViewBsEvaluation = _hasMobileMenu(
-      userMenu.menus,
-      'Evaluasi BS',
-    );
-    final canViewGsmEvaluation = _hasMobileMenu(
-      userMenu.menus,
-      'Evaluasi GSM',
-    );
+    final canViewBsEvaluation = _hasMobileMenu(userMenu.menus, 'Evaluasi BS');
+    final canViewGsmEvaluation = _hasMobileMenu(userMenu.menus, 'Evaluasi GSM');
 
     if (!mounted) return;
 
@@ -774,10 +774,7 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
                 child: Text(
                   'Pilih Evaluasi',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
               if (_canViewReworkEvaluation)
@@ -850,6 +847,7 @@ class _HomeState extends State<Home> {
         final deviceData = await FcmService.instance.getCurrentDeviceData();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         final res = await http.post(
           Uri.parse(url),
           headers: {
@@ -863,19 +861,32 @@ class _HomeState extends State<Home> {
         final res = await http.post(Uri.parse(url),
             headers: {'Authorization': 'Bearer $token'}, body: null);
 >>>>>>> 264bcd0f (fix: evaluasi rework)
+=======
+        final res = await http.post(
+          Uri.parse(url),
+          headers: {'Authorization': 'Bearer $token'},
+          body: null,
+        );
+>>>>>>> 99705a2c (fix: home, dashboard)
 
         if (res.statusCode == 200) {
           await FcmService.instance.clearCurrentDeviceData();
           if (context.mounted) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 99705a2c (fix: home, dashboard)
             await Provider.of<UserProvider>(
               context,
               listen: false,
             ).handleLogout();
+<<<<<<< HEAD
 =======
             await Provider.of<UserProvider>(context, listen: false)
                 .handleLogout();
 >>>>>>> 264bcd0f (fix: evaluasi rework)
+=======
+>>>>>>> 99705a2c (fix: home, dashboard)
 
             await Future.delayed(Duration(milliseconds: 200));
             Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
@@ -933,6 +944,9 @@ class _HomeState extends State<Home> {
 
       final filteredData = menuData
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 99705a2c (fix: home, dashboard)
           .where(
             (menu) =>
                 menu['name'] != 'SPK & Work Order' &&
@@ -947,6 +961,7 @@ class _HomeState extends State<Home> {
                 menu['name'] != 'User Management' &&
                 menu['name'] != 'Persiapan Dyeing',
           )
+<<<<<<< HEAD
 =======
           .where((menu) =>
               menu['name'] != 'SPK & Work Order' &&
@@ -961,6 +976,8 @@ class _HomeState extends State<Home> {
               menu['name'] != 'User Management' &&
               menu['name'] != 'Persiapan Dyeing')
 >>>>>>> a1ea7df (feat: warping)
+=======
+>>>>>>> 99705a2c (fix: home, dashboard)
           .toList();
 
       return filteredData
@@ -980,6 +997,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return FutureBuilder<String?>(
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 99705a2c (fix: home, dashboard)
       future: _tokenFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -988,6 +1008,7 @@ class _HomeState extends State<Home> {
         if (snapshot.hasError || !snapshot.hasData) {
           return Center(child: Text('Error fetch token'));
         }
+<<<<<<< HEAD
 =======
         future: _tokenFuture,
         builder: (context, snapshot) {
@@ -1072,6 +1093,38 @@ class _HomeState extends State<Home> {
                   isMobile: isMobile,
                   onRefreshReworkNotifications: _refreshEvaluationNotifications,
                 ),
+=======
+
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (!didPop) {
+              SystemNavigator.pop();
+            }
+          },
+          child: Scaffold(
+            appBar: CustomAppBar(
+              title: 'TexTrack',
+              isWithNotification: _hasEvaluationAccess,
+              notificationCount: _evaluationNotificationCount,
+              notificationTooltip: _singleEvaluationTooltip,
+              onNotifications: _onEvaluationNotificationsTap,
+              handleLogout: () => _handleLogout(context),
+              isWithAccount: true,
+              user: user,
+              name: name,
+              showAvatar: MediaQuery.sizeOf(context).shortestSide >= 600,
+              showNameWithAvatar:
+                  MediaQuery.sizeOf(context).shortestSide >= 600,
+            ),
+            drawer: AppDrawer(
+              handleLogout: () => _handleLogout(context),
+              handleFetchMenu: () => _handleFetchMenu(),
+            ),
+            body: SafeArea(
+              child: Dashboard(
+                onRefreshReworkNotifications: _refreshEvaluationNotifications,
+>>>>>>> 99705a2c (fix: home, dashboard)
               ),
 =======
           return Scaffold(
@@ -1130,9 +1183,16 @@ class _HomeState extends State<Home> {
 >>>>>>> e30538ab (fix: notification dan evaluasi rework)
               ),
             ),
+<<<<<<< HEAD
           );
         });
 >>>>>>> 5e1caa7c (feat: widget controller)
+=======
+          ),
+        );
+      },
+    );
+>>>>>>> 99705a2c (fix: home, dashboard)
   }
 }
 

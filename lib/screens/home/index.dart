@@ -154,6 +154,7 @@ class _HomeState extends State<Home> {
       'Evaluasi Rework',
     );
 <<<<<<< HEAD
+<<<<<<< HEAD
     final canViewBsEvaluation = _hasMobileMenu(userMenu.menus, 'Evaluasi BS');
     final canViewGsmEvaluation = _hasMobileMenu(userMenu.menus, 'Evaluasi GSM');
 =======
@@ -169,6 +170,10 @@ class _HomeState extends State<Home> {
       'Evaluasi GSM',
     );
 >>>>>>> 07c9d40 (fix: notification all evaluasi)
+=======
+    final canViewBsEvaluation = _hasMobileMenu(userMenu.menus, 'Evaluasi BS');
+    final canViewGsmEvaluation = _hasMobileMenu(userMenu.menus, 'Evaluasi GSM');
+>>>>>>> 2dccfd5 (fix: home, dashboard)
 
     if (!mounted) return;
 
@@ -840,6 +845,7 @@ class _HomeState extends State<Home> {
                 child: Text(
                   'Pilih Evaluasi',
 <<<<<<< HEAD
+<<<<<<< HEAD
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
 =======
                   style: TextStyle(
@@ -847,6 +853,9 @@ class _HomeState extends State<Home> {
                     fontWeight: FontWeight.w600,
                   ),
 >>>>>>> 07c9d40 (fix: notification all evaluasi)
+=======
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+>>>>>>> 2dccfd5 (fix: home, dashboard)
                 ),
               ),
               if (_canViewReworkEvaluation)
@@ -1014,12 +1023,17 @@ class _HomeState extends State<Home> {
 <<<<<<< HEAD
         final res = await http.post(
           Uri.parse(url),
+<<<<<<< HEAD
           headers: {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
             'Accept': 'application/json',
           },
           body: jsonEncode(deviceData),
+=======
+          headers: {'Authorization': 'Bearer $token'},
+          body: null,
+>>>>>>> 2dccfd5 (fix: home, dashboard)
         );
 =======
         final res = await http.post(Uri.parse(url),
@@ -1194,6 +1208,7 @@ class _HomeState extends State<Home> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         final isMobile = AppLayout.resolveIsMobile(context);
 
         return AppLayout(
@@ -1295,6 +1310,8 @@ class _HomeState extends State<Home> {
                 onRefreshReworkNotifications: _refreshEvaluationNotifications,
 >>>>>>> 99705a2c (fix: home, dashboard)
 =======
+=======
+>>>>>>> e16df531 (fix: home, dashboard)
         final isMobile = AppLayout.resolveIsMobile(context);
 
         return AppLayout(
@@ -1351,7 +1368,41 @@ class _HomeState extends State<Home> {
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
                   onRefreshReworkNotifications: _refreshEvaluationNotifications,
                 ),
+<<<<<<< HEAD
 >>>>>>> 025659bb (fix: dashboard mobile)
+=======
+=======
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (!didPop) {
+              SystemNavigator.pop();
+            }
+          },
+          child: Scaffold(
+            appBar: CustomAppBar(
+              title: 'TexTrack',
+              isWithNotification: _hasEvaluationAccess,
+              notificationCount: _evaluationNotificationCount,
+              notificationTooltip: _singleEvaluationTooltip,
+              onNotifications: _onEvaluationNotificationsTap,
+              handleLogout: () => _handleLogout(context),
+              isWithAccount: true,
+              user: user,
+              name: name,
+              showAvatar: MediaQuery.sizeOf(context).shortestSide >= 600,
+              showNameWithAvatar:
+                  MediaQuery.sizeOf(context).shortestSide >= 600,
+            ),
+            drawer: AppDrawer(
+              handleLogout: () => _handleLogout(context),
+              handleFetchMenu: () => _handleFetchMenu(),
+            ),
+            body: SafeArea(
+              child: Dashboard(
+                onRefreshReworkNotifications: _refreshEvaluationNotifications,
+>>>>>>> 2dccfd5 (fix: home, dashboard)
+>>>>>>> e16df531 (fix: home, dashboard)
               ),
 =======
           return Scaffold(

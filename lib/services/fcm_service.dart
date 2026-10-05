@@ -250,6 +250,9 @@ class FcmService with WidgetsBindingObserver {
     final id = navigation['id'] as String?;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7c2cdb6 (fix:)
     if (type == 'dyeing_rework_reminder') {
       navigator.pushNamed('/dyeing-rework-evaluations');
     } else if (type == 'bs_evaluation_reminder') {
@@ -257,6 +260,7 @@ class FcmService with WidgetsBindingObserver {
     } else if (type == 'gsm_evaluation_reminder') {
       navigator.pushNamed('/gsm-evaluations');
     } else if (type == 'dyeing_rework_evaluation' && id != null) {
+<<<<<<< HEAD
       navigator.push(
         MaterialPageRoute(
           builder: (_) => ReworkDetailLoadingScreen(id: id, returnToList: true),
@@ -281,6 +285,8 @@ class FcmService with WidgetsBindingObserver {
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
     // message.data, regardless of the route string sent by the backend.
     if (type == 'dyeing_rework_evaluation' && id != null) {
+=======
+>>>>>>> 7c2cdb6 (fix:)
       navigator.push(MaterialPageRoute(
         builder: (_) => ReworkDetailLoadingScreen(
           id: id,

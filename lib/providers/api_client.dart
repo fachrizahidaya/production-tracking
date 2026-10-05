@@ -65,27 +65,23 @@ class ApiClient {
     await Provider.of<UserProvider>(context, listen: false).handleLogout();
 
     if (context.mounted) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/',
-        (route) => false,
-      );
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     }
   }
 
   /* ---------------- HTTP METHODS ---------------- */
 
-  Future<http.Response> get(
-    BuildContext context,
-    Uri url,
-  ) async {
+  Future<http.Response> get(BuildContext context, Uri url) async {
     final token = await getValidToken(context);
     if (token == null) throw Exception('Unauthenticated');
 
-    return http.get(url, headers: {
-      'Authorization': 'Bearer $token',
-      'Content-Type': 'application/json',
-    });
+    return http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
   }
 
   Future<http.Response> post(
@@ -106,17 +102,17 @@ class ApiClient {
     );
   }
 
-  Future<http.Response> delete(
-    BuildContext context,
-    Uri url,
-  ) async {
+  Future<http.Response> delete(BuildContext context, Uri url) async {
     final token = await getValidToken(context);
     if (token == null) throw Exception('Unauthenticated');
 
-    return http.delete(url, headers: {
-      'Authorization': 'Bearer $token',
-      'Content-Type': 'application/json',
-    });
+    return http.delete(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
   }
 
   Future<http.StreamedResponse> multipart(

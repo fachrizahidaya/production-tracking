@@ -34,20 +34,16 @@ class ReportService {
 
     String? token = prefs.getString('access_token');
 
-    final uri = Uri.parse(
-      '$baseUrl/report/production/summary',
-    ).replace(
+    final uri = Uri.parse('$baseUrl/report/production/summary').replace(
       queryParameters: {
         'start_date': startDateString,
-        'end_date': endDateString
+        'end_date': endDateString,
       },
     );
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -55,41 +51,40 @@ class ReportService {
       return ProductionSummary.fromJson(data);
     }
 
-    throw Exception('Failed to load production summary : '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load production summary : '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
-  Future<SortingResult> getSortingResult(
-      {DateTime? startDate,
-      DateTime? endDate,
-      String? sort,
-      int page = 1,
-      int perPage = 20,
-      String? search}) async {
+  Future<SortingResult> getSortingResult({
+    DateTime? startDate,
+    DateTime? endDate,
+    String? sort,
+    int page = 1,
+    int perPage = 20,
+    String? search,
+  }) async {
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? token = prefs.getString('access_token');
 
-    final uri = Uri.parse(
-      '$baseUrl/report/production/sorting-result',
-    ).replace(
+    final uri = Uri.parse('$baseUrl/report/production/sorting-result').replace(
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
         'sort': sort,
         'page': page.toString(),
         'per_page': perPage.toString(),
-        'search': search
+        'search': search,
       },
     );
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -97,26 +92,27 @@ class ReportService {
       return SortingResult.fromJson(data);
     }
 
-    throw Exception('Failed to load sorting result : '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load sorting result : '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
-  Future<TopBs> getTopBs(
-      {DateTime? startDate,
-      DateTime? endDate,
-      String? sort,
-      int page = 1,
-      int perPage = 20,
-      String? search}) async {
+  Future<TopBs> getTopBs({
+    DateTime? startDate,
+    DateTime? endDate,
+    String? sort,
+    int page = 1,
+    int perPage = 20,
+    String? search,
+  }) async {
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? token = prefs.getString('access_token');
 
-    final uri = Uri.parse(
-      '$baseUrl/report/production/top-bs-wo',
-    ).replace(
+    final uri = Uri.parse('$baseUrl/report/production/top-bs-wo').replace(
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
@@ -125,9 +121,7 @@ class ReportService {
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -135,8 +129,10 @@ class ReportService {
       return TopBs.fromJson(data);
     }
 
-    throw Exception('Failed to load top BS : '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load top BS : '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
   Future<SpkSummary> getSpkSummary({
@@ -149,20 +145,16 @@ class ReportService {
 
     String? token = prefs.getString('access_token');
 
-    final uri = Uri.parse(
-      '$baseUrl/report/production/spk-summary',
-    ).replace(
+    final uri = Uri.parse('$baseUrl/report/production/spk-summary').replace(
       queryParameters: {
         'start_date': startDateString,
-        'end_date': endDateString
+        'end_date': endDateString,
       },
     );
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -170,26 +162,28 @@ class ReportService {
       return SpkSummary.fromJson(data);
     }
 
-    throw Exception('Failed to load spk summary : '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load spk summary : '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
-  Future<ProductionTrend> getProductionTrend(
-      {DateTime? startDate,
-      DateTime? endDate,
-      String? sort,
-      int page = 1,
-      int perPage = 20,
-      String? search}) async {
+  Future<ProductionTrend> getProductionTrend({
+    DateTime? startDate,
+    DateTime? endDate,
+    String? sort,
+    int page = 1,
+    int perPage = 20,
+    String? search,
+  }) async {
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? token = prefs.getString('access_token');
 
-    final uri = Uri.parse(
-      '$baseUrl/report/production/production-trend',
-    ).replace(
+    final uri =
+        Uri.parse('$baseUrl/report/production/production-trend').replace(
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
@@ -198,9 +192,7 @@ class ReportService {
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -208,26 +200,28 @@ class ReportService {
       return ProductionTrend.fromJson(data);
     }
 
-    throw Exception('Failed to load production trend : '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load production trend : '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
-  Future<ReworkComparison> getReworkComparison(
-      {DateTime? startDate,
-      DateTime? endDate,
-      String? sort,
-      int page = 1,
-      int perPage = 20,
-      String? search}) async {
+  Future<ReworkComparison> getReworkComparison({
+    DateTime? startDate,
+    DateTime? endDate,
+    String? sort,
+    int page = 1,
+    int perPage = 20,
+    String? search,
+  }) async {
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? token = prefs.getString('access_token');
 
-    final uri = Uri.parse(
-      '$baseUrl/report/production/rework-comparison',
-    ).replace(
+    final uri =
+        Uri.parse('$baseUrl/report/production/rework-comparison').replace(
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
@@ -236,9 +230,7 @@ class ReportService {
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -246,41 +238,40 @@ class ReportService {
       return ReworkComparison.fromJson(data);
     }
 
-    throw Exception('Failed to load rework comparison : '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load rework comparison : '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
-  Future<WoList> getWoList(
-      {DateTime? startDate,
-      DateTime? endDate,
-      String? sort,
-      int page = 1,
-      int perPage = 20,
-      String? search}) async {
+  Future<WoList> getWoList({
+    DateTime? startDate,
+    DateTime? endDate,
+    String? sort,
+    int page = 1,
+    int perPage = 20,
+    String? search,
+  }) async {
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? token = prefs.getString('access_token');
 
-    final uri = Uri.parse(
-      '$baseUrl/report/production/list',
-    ).replace(
+    final uri = Uri.parse('$baseUrl/report/production/list').replace(
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
         'sort': sort,
         'page': page.toString(),
         'per_page': perPage.toString(),
-        'search': search
+        'search': search,
       },
     );
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -288,41 +279,40 @@ class ReportService {
       return WoList.fromJson(data);
     }
 
-    throw Exception('Failed to load sorting result : '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load sorting result : '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
-  Future<SpkList> getSpkList(
-      {DateTime? startDate,
-      DateTime? endDate,
-      String? sort,
-      int page = 1,
-      int perPage = 20,
-      String? search}) async {
+  Future<SpkList> getSpkList({
+    DateTime? startDate,
+    DateTime? endDate,
+    String? sort,
+    int page = 1,
+    int perPage = 20,
+    String? search,
+  }) async {
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? token = prefs.getString('access_token');
 
-    final uri = Uri.parse(
-      '$baseUrl/report/production/spk-list',
-    ).replace(
+    final uri = Uri.parse('$baseUrl/report/production/spk-list').replace(
       queryParameters: {
         'start_date': startDateString,
         'end_date': endDateString,
         'sort': sort,
         'page': page.toString(),
         'per_page': perPage.toString(),
-        'search': search
+        'search': search,
       },
     );
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -330,18 +320,21 @@ class ReportService {
       return SpkList.fromJson(data);
     }
 
-    throw Exception('Failed to load sorting result : '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load sorting result : '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
-  Future<ReworkList> getReworkList(
-      {DateTime? startDate,
-      DateTime? endDate,
-      String? sort,
-      int page = 1,
-      int perPage = 20,
-      String? search,
-      String? status}) async {
+  Future<ReworkList> getReworkList({
+    DateTime? startDate,
+    DateTime? endDate,
+    String? sort,
+    int page = 1,
+    int perPage = 20,
+    String? search,
+    String? status,
+  }) async {
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -360,15 +353,12 @@ class ReportService {
       queryParameters['status'] = status;
     }
 
-    final uri = Uri.parse('$baseUrl/dyeing-rework-evaluations').replace(
-      queryParameters: queryParameters,
-    );
+    final uri = Uri.parse('$baseUrl/dyeing-rework-evaluations')
+        .replace(queryParameters: queryParameters);
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -376,8 +366,10 @@ class ReportService {
       return ReworkList.fromJson(data);
     }
 
-    throw Exception('Failed to load sorting result : '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load sorting result : '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
   Future<int> getReworkPendingCount() async {
@@ -392,9 +384,7 @@ class ReportService {
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -415,15 +405,13 @@ class ReportService {
           ) ??
           pending + completed;
 
-      return {
-        'pending': pending,
-        'completed': completed,
-        'all': total,
-      };
+      return {'pending': pending, 'completed': completed, 'all': total};
     }
 
-    throw Exception('Failed to load rework summary: '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load rework summary: '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
   Future<Map<String, dynamic>> getReworkDetail(dynamic id) async {
@@ -441,8 +429,10 @@ class ReportService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to load rework detail: '
-          '${response.statusCode} ${response.body}');
+      throw Exception(
+        'Failed to load rework detail: '
+        '${response.statusCode} ${response.body}',
+      );
     }
 
     final decoded = jsonDecode(response.body);
@@ -475,12 +465,10 @@ class ReportService {
       'qty': _first(data, ['qty', 'quantity']) ??
           _first(dyeing, ['qty', 'quantity']) ??
           '-',
-      'semiFinishedProduct': _first(data, [
-            'semi_finished_product',
-            'semiFinishedProduct',
-          ]) ??
-          _first(dyeing, ['semi_finished_product', 'name']) ??
-          '-',
+      'semiFinishedProduct':
+          _first(data, ['semi_finished_product', 'semiFinishedProduct']) ??
+              _first(dyeing, ['semi_finished_product', 'name']) ??
+              '-',
       'category': _formatReworkCategories(categories),
       'submittedBy': _formatSubmittedBy(data['submitted_by']),
       'reasons': _formatReasons(data['reasons'] ?? data['reason']),
@@ -517,10 +505,9 @@ class ReportService {
     );
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception(_apiErrorMessage(
-        response.body,
-        'Gagal memperbarui evaluasi rework',
-      ));
+      throw Exception(
+        _apiErrorMessage(response.body, 'Gagal memperbarui evaluasi rework'),
+      );
     }
   }
 
@@ -545,8 +532,10 @@ class ReportService {
     );
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception('Failed to update rework reasons: '
-          '${response.statusCode} ${response.body}');
+      throw Exception(
+        'Failed to update rework reasons: '
+        '${response.statusCode} ${response.body}',
+      );
     }
   }
 
@@ -560,8 +549,10 @@ class ReportService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to load rework reason options: '
-          '${response.statusCode} ${response.body}');
+      throw Exception(
+        'Failed to load rework reason options: '
+        '${response.statusCode} ${response.body}',
+      );
     }
 
     final decoded = jsonDecode(response.body);
@@ -570,11 +561,13 @@ class ReportService {
 
     return items
         .whereType<Map>()
-        .map((item) => {
-              'value': item['value']?.toString() ?? '',
-              'label':
-                  item['label']?.toString() ?? item['value']?.toString() ?? '',
-            })
+        .map(
+          (item) => {
+            'value': item['value']?.toString() ?? '',
+            'label':
+                item['label']?.toString() ?? item['value']?.toString() ?? '',
+          },
+        )
         .where((item) => item['value']!.toString().isNotEmpty)
         .toList();
   }
@@ -596,8 +589,10 @@ class ReportService {
     );
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception('Failed to create rework reason option: '
-          '${response.statusCode} ${response.body}');
+      throw Exception(
+        'Failed to create rework reason option: '
+        '${response.statusCode} ${response.body}',
+      );
     }
 
     final decoded = jsonDecode(response.body);
@@ -610,14 +605,15 @@ class ReportService {
     };
   }
 
-  Future<BsList> getBsList(
-      {DateTime? startDate,
-      DateTime? endDate,
-      String? sort,
-      int page = 1,
-      int perPage = 20,
-      String? search,
-      String? status}) async {
+  Future<BsList> getBsList({
+    DateTime? startDate,
+    DateTime? endDate,
+    String? sort,
+    int page = 1,
+    int perPage = 20,
+    String? search,
+    String? status,
+  }) async {
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -636,15 +632,12 @@ class ReportService {
       queryParameters['status'] = status;
     }
 
-    final uri = Uri.parse('$baseUrl/bs-evaluations').replace(
-      queryParameters: queryParameters,
-    );
+    final uri = Uri.parse('$baseUrl/bs-evaluations')
+        .replace(queryParameters: queryParameters);
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -652,8 +645,10 @@ class ReportService {
       return BsList.fromJson(data);
     }
 
-    throw Exception('Failed to load BS list : '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load BS list : '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
   Future<Map<String, int>> getBsStatusCounts() async {
@@ -663,9 +658,7 @@ class ReportService {
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -686,15 +679,13 @@ class ReportService {
           ) ??
           pending + completed;
 
-      return {
-        'pending': pending,
-        'completed': completed,
-        'all': total,
-      };
+      return {'pending': pending, 'completed': completed, 'all': total};
     }
 
-    throw Exception('Failed to load BS summary: '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load BS summary: '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
   Future<Map<String, dynamic>> getBsDetail(dynamic id) async {
@@ -712,8 +703,10 @@ class ReportService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to load BS detail: '
-          '${response.statusCode} ${response.body}');
+      throw Exception(
+        'Failed to load BS detail: '
+        '${response.statusCode} ${response.body}',
+      );
     }
 
     final decoded = jsonDecode(response.body);
@@ -780,21 +773,21 @@ class ReportService {
     );
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception(_apiErrorMessage(
-        response.body,
-        'Gagal memperbarui evaluasi BS',
-      ));
+      throw Exception(
+        _apiErrorMessage(response.body, 'Gagal memperbarui evaluasi BS'),
+      );
     }
   }
 
-  Future<GsmList> getGsmList(
-      {DateTime? startDate,
-      DateTime? endDate,
-      String? sort,
-      int page = 1,
-      int perPage = 20,
-      String? search,
-      String? status}) async {
+  Future<GsmList> getGsmList({
+    DateTime? startDate,
+    DateTime? endDate,
+    String? sort,
+    int page = 1,
+    int perPage = 20,
+    String? search,
+    String? status,
+  }) async {
     final startDateString = _formatDate(startDate!);
     final endDateString = _formatDate(endDate!);
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -813,15 +806,12 @@ class ReportService {
       queryParameters['status'] = status;
     }
 
-    final uri = Uri.parse('$baseUrl/gsm-evaluations').replace(
-      queryParameters: queryParameters,
-    );
+    final uri = Uri.parse('$baseUrl/gsm-evaluations')
+        .replace(queryParameters: queryParameters);
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -829,8 +819,10 @@ class ReportService {
       return GsmList.fromJson(data);
     }
 
-    throw Exception('Failed to load GSM list : '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load GSM list : '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
   Future<Map<String, int>> getGsmStatusCounts() async {
@@ -840,9 +832,7 @@ class ReportService {
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -863,15 +853,13 @@ class ReportService {
           ) ??
           pending + completed;
 
-      return {
-        'pending': pending,
-        'completed': completed,
-        'all': total,
-      };
+      return {'pending': pending, 'completed': completed, 'all': total};
     }
 
-    throw Exception('Failed to load GSM summary: '
-        '${response.statusCode} ${response.body}');
+    throw Exception(
+      'Failed to load GSM summary: '
+      '${response.statusCode} ${response.body}',
+    );
   }
 
   Future<Map<String, dynamic>> getGsmDetail(dynamic id) async {
@@ -889,8 +877,10 @@ class ReportService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to load GSM detail: '
-          '${response.statusCode} ${response.body}');
+      throw Exception(
+        'Failed to load GSM detail: '
+        '${response.statusCode} ${response.body}',
+      );
     }
 
     final decoded = jsonDecode(response.body);
@@ -968,10 +958,9 @@ class ReportService {
     );
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception(_apiErrorMessage(
-        response.body,
-        'Gagal memperbarui evaluasi GSM',
-      ));
+      throw Exception(
+        _apiErrorMessage(response.body, 'Gagal memperbarui evaluasi GSM'),
+      );
     }
   }
 
@@ -1002,11 +991,7 @@ class ReportService {
     if (value is! List || value.isEmpty) return value?.toString() ?? '-';
 
     final categories = value.whereType<Map>().toList();
-    final repairTypes = {
-      'perbaikan_warna',
-      'perbaikan_noda',
-      'pelemas_ulang',
-    };
+    final repairTypes = {'perbaikan_warna', 'perbaikan_noda', 'pelemas_ulang'};
     final isRepair = categories.isNotEmpty &&
         categories.every(
           (item) => repairTypes.contains(item['type']?.toString()),
@@ -1029,7 +1014,8 @@ class ReportService {
           : <String>[];
 
       lines.add(
-          methodLabels.isEmpty ? label : '$label: ${methodLabels.join(', ')}');
+        methodLabels.isEmpty ? label : '$label: ${methodLabels.join(', ')}',
+      );
     }
 
     return lines.isEmpty ? '-' : lines.join('\n');

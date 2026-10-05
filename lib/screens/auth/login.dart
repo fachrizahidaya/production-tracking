@@ -49,12 +49,15 @@ class _LoginState extends State<Login> {
   }
 
   void _proceedLogin(
-      BuildContext context, String username, String name, String token) {
-    Provider.of<UserProvider>(context, listen: false).handleLogin(
-      username,
-      name,
-      token,
-    );
+    BuildContext context,
+    String username,
+    String name,
+    String token,
+  ) {
+    Provider.of<UserProvider>(
+      context,
+      listen: false,
+    ).handleLogin(username, name, token);
 
     Navigator.pushReplacementNamed(context, '/dashboard');
     FcmService.instance.registerForCurrentUser();
@@ -101,10 +104,7 @@ class _LoginState extends State<Login> {
       final res = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'username': username,
-          'password': password,
-        }),
+        body: jsonEncode({'username': username, 'password': password}),
       );
 
       if (res.statusCode != 200) {
@@ -133,7 +133,11 @@ class _LoginState extends State<Login> {
       if (!context.mounted) return;
 
       _proceedLogin(
-          context, response['username'] ?? '', response['name'] ?? '', token);
+        context,
+        response['username'] ?? '',
+        response['name'] ?? '',
+        token,
+      );
 
       _username.clear();
       _password.clear();
@@ -146,11 +150,7 @@ class _LoginState extends State<Login> {
 
   void _showError(BuildContext context, String message) {
     if (!context.mounted) return;
-    showAlertDialog(
-      context: context,
-      title: 'Error',
-      message: message,
-    );
+    showAlertDialog(context: context, title: 'Error', message: message);
   }
 
   @override
@@ -170,10 +170,7 @@ class _LoginState extends State<Login> {
       child: Stack(
         children: [
           Positioned.fill(
-            child: Image.asset(
-              'assets/images/login-bg.jpg',
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset('assets/images/login-bg.jpg', fit: BoxFit.cover),
           ),
           Scaffold(
             backgroundColor: Colors.transparent,

@@ -12,10 +12,7 @@ class MenuService {
     try {
       final url = Uri.parse('${dotenv.env['API_URL']}/menus');
 
-      final response = await ApiClient.instance.get(
-        context,
-        url,
-      );
+      final response = await ApiClient.instance.get(context, url);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

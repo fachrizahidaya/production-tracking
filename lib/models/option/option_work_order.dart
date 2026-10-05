@@ -23,10 +23,7 @@ class OptionWorkOrder {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'value': value,
-      'label': label,
-    };
+    return {'value': value, 'label': label};
   }
 }
 
@@ -48,8 +45,10 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
   List<OptionWorkOrder> get options => _wo;
 
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {}
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {}
 
   @override
   Future<void> refetchItems() async {
@@ -59,11 +58,16 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
 
   @override
   Future<void> addItem(
-      OptionWorkOrder item, ValueNotifier<bool> isSubmitting) async {}
+    OptionWorkOrder item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
-  Future<void> updateItem(String id, OptionWorkOrder item,
-      ValueNotifier<bool> isSubmitting) async {}
+  Future<void> updateItem(
+    String id,
+    OptionWorkOrder item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -88,15 +92,17 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
       final token = prefs.getString('access_token');
       if (token == null) throw Exception('Access token is missing');
 
-      final uri = Uri.parse('${dotenv.env['API_URL']}/wo/option')
-          .replace(queryParameters: {
-        if (type != null && type.isNotEmpty) 'type': type,
-        if (searchQuery.isNotEmpty) 'search': searchQuery,
-      });
+      final uri = Uri.parse('${dotenv.env['API_URL']}/wo/option').replace(
+        queryParameters: {
+          if (type != null && type.isNotEmpty) 'type': type,
+          if (searchQuery.isNotEmpty) 'search': searchQuery,
+        },
+      );
 
-      final response = await http.get(uri, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
@@ -108,9 +114,8 @@ class OptionWorkOrderService extends BaseService<OptionWorkOrder> {
         throw Exception('Failed to load work order: ${response.statusCode}');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context as BuildContext).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
+      ScaffoldMessenger.of(context as BuildContext)
+          .showSnackBar(SnackBar(content: Text("$e")));
       rethrow;
     } finally {
       _isLoading = false;

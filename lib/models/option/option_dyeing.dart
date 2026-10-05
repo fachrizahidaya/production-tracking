@@ -22,10 +22,7 @@ class OptionDyeing {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'value': value,
-      'label': label,
-    };
+    return {'value': value, 'label': label};
   }
 }
 
@@ -45,8 +42,10 @@ class OptionDyeingService extends BaseService<OptionDyeing> {
   List<OptionDyeing> get options => _dyeing;
 
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {}
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {}
 
   @override
   Future<void> refetchItems() async {
@@ -56,11 +55,16 @@ class OptionDyeingService extends BaseService<OptionDyeing> {
 
   @override
   Future<void> addItem(
-      OptionDyeing item, ValueNotifier<bool> isSubmitting) async {}
+    OptionDyeing item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> updateItem(
-      String id, OptionDyeing item, ValueNotifier<bool> isSubmitting) async {}
+    String id,
+    OptionDyeing item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -87,10 +91,10 @@ class OptionDyeingService extends BaseService<OptionDyeing> {
         throw Exception('Access token is missing');
       }
 
-      final response = await http
-          .get(Uri.parse('${dotenv.env['API_URL']}/dyeing/option'), headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        Uri.parse('${dotenv.env['API_URL']}/dyeing/option'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);

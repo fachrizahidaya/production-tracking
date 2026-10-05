@@ -19,8 +19,10 @@ class WorkOrderChartService extends BaseService {
   List<dynamic> get dataPie => _dataPie;
 
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {}
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {}
 
   @override
   Future<void> refetchItems() async {
@@ -33,7 +35,10 @@ class WorkOrderChartService extends BaseService {
 
   @override
   Future<void> updateItem(
-      String id, item, ValueNotifier<bool> isSubmitting) async {}
+    String id,
+    item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -57,9 +62,10 @@ class WorkOrderChartService extends BaseService {
       _dataList.clear();
       notifyListeners();
 
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+      );
       final responseData = jsonDecode(response.body);
       switch (response.statusCode) {
         case 200:
@@ -85,9 +91,10 @@ class WorkOrderChartService extends BaseService {
       _dataPie.clear();
       notifyListeners();
 
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+      );
       final responseData = jsonDecode(response.body);
       switch (response.statusCode) {
         case 200:

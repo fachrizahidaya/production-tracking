@@ -14,12 +14,7 @@ class Machine {
   final String? name;
   final String? status;
 
-  Machine({
-    this.id,
-    required this.name,
-    this.code,
-    this.status,
-  });
+  Machine({this.id, required this.name, this.code, this.status});
 
   factory Machine.fromJson(Map<String, dynamic> json) {
     return Machine(
@@ -31,19 +26,12 @@ class Machine {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'code': code,
-      'name': name,
-      'status': status,
-    };
+    return {'id': id, 'code': code, 'name': name, 'status': status};
   }
 
   /// 🔥 Special payload for PATCH status only
   Map<String, dynamic> toStatusJson() {
-    return {
-      'status': status,
-    };
+    return {'status': status};
   }
 }
 
@@ -171,9 +159,7 @@ class MachineMasterService extends BaseService<Machine> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({
-          'status': status,
-        }),
+        body: jsonEncode({'status': status}),
       );
 
       if (response.statusCode == 200) {
@@ -192,7 +178,10 @@ class MachineMasterService extends BaseService<Machine> {
 
   @override
   Future<void> updateItem(
-      String id, Machine item, ValueNotifier<bool> isSubmitting) async {
+    String id,
+    Machine item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
     try {
       isSubmitting.value = true;
 

@@ -52,8 +52,10 @@ class UnitService extends BaseService<Unit> {
   List<Unit> get options => _units;
 
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {
     if (isLoading || (!hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
@@ -145,7 +147,10 @@ class UnitService extends BaseService<Unit> {
 
   @override
   Future<void> updateItem(
-      String id, Unit item, ValueNotifier<bool> isSubmitting) async {
+    String id,
+    Unit item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
     try {
       isSubmitting.value = true;
 
@@ -232,11 +237,13 @@ class UnitService extends BaseService<Unit> {
         throw Exception('Access token is missing');
       }
 
-      final response = await http
-          .get(Uri.parse('${dotenv.env['API_URL']}/unit/option'), headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      });
+      final response = await http.get(
+        Uri.parse('${dotenv.env['API_URL']}/unit/option'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);

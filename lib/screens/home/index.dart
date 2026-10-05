@@ -19,9 +19,12 @@ import 'package:http/http.dart' as http;
 import 'package:textile_tracking/helpers/layout/app_layout.dart';
 import 'package:textile_tracking/screens/dashboard/index.dart';
 import 'package:textile_tracking/services/fcm_service.dart';
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/screens/dashboard/index.dart';
 >>>>>>> 1155687b (fix: widget dashboard)
+=======
+>>>>>>> 38fd9bd2 (fix: logout)
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -864,8 +867,12 @@ class _HomeState extends State<Home> {
 =======
         final res = await http.post(
           Uri.parse(url),
-          headers: {'Authorization': 'Bearer $token'},
-          body: null,
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: jsonEncode(deviceData),
         );
 >>>>>>> 99705a2c (fix: home, dashboard)
 

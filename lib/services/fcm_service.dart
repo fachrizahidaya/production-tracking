@@ -135,7 +135,7 @@ class FcmService with WidgetsBindingObserver {
 >>>>>>> 64eaac94 (fix: firebase messaging)
   Future<void> _initializeLocalNotifications() async {
     const androidSettings = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
+      'ic_stat_notification',
     );
     const iosSettings = DarwinInitializationSettings();
     await _localNotifications.initialize(
@@ -210,10 +210,14 @@ class FcmService with WidgetsBindingObserver {
           importance: Importance.high,
           priority: Priority.high,
 <<<<<<< HEAD
+<<<<<<< HEAD
           icon: 'ic_stat_notification',
 =======
           icon: '@mipmap/ic_launcher',
 >>>>>>> 16778356 (feat: fcm notification)
+=======
+          icon: 'ic_stat_notification',
+>>>>>>> 38fd9bd2 (fix: logout)
         ),
         iOS: DarwinNotificationDetails(
           presentAlert: true,
@@ -275,6 +279,7 @@ class FcmService with WidgetsBindingObserver {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Future<Map<String, String?>> getCurrentDeviceData() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('fcm_token');
@@ -305,31 +310,20 @@ class FcmService with WidgetsBindingObserver {
       final info = DeviceInfoPlugin();
 =======
   Future<void> unregisterCurrentDevice() async {
+=======
+  Future<Map<String, String?>> getCurrentDeviceData() async {
+>>>>>>> 38fd9bd2 (fix: logout)
     final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('access_token');
-    String? token = prefs.getString('fcm_token');
-    if (token == null && _initialized) {
-      token = await _messaging.getToken();
-    }
+    final token = prefs.getString('fcm_token');
     final deviceId = prefs.getString('fcm_device_id') ?? await _getDeviceId();
-    if (accessToken == null || accessToken.isEmpty || token == null) return;
 
-    try {
-      await http.delete(
-        Uri.parse('${dotenv.env['API_URL']}/device-tokens'),
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: jsonEncode({'token': token, 'device_id': deviceId}),
-      );
-    } catch (error) {
-      debugPrint('FCM token removal failed: $error');
-    } finally {
-      await prefs.remove('fcm_token');
-      await prefs.remove('fcm_device_id');
-    }
+    return {'token': token, 'device_id': deviceId};
+  }
+
+  Future<void> clearCurrentDeviceData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('fcm_token');
+    await prefs.remove('fcm_device_id');
   }
 
   Future<String> _getDeviceId() async {

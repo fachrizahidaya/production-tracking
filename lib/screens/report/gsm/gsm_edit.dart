@@ -3,6 +3,7 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 
 class GsmEditScreen extends StatefulWidget {
@@ -87,6 +88,8 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              _buildOverviewCard(),
+              const SizedBox(height: 16),
               _buildEditorForm(
                 label: 'Alasan dan Penyebab',
                 controller: _reasonController,
@@ -177,5 +180,219 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         onChanged: (_) => setState(() {}),
       ),
     );
+  }
+
+  bool get _isCompleted {
+    final status = widget.data['status']?.toString().toLowerCase();
+    return status == 'selesai' || status == 'completed';
+  }
+
+  String _value(String key) => widget.data[key]?.toString() ?? '-';
+
+  dynamic _raw(String key) => widget.data[key];
+
+  String _formatGsmNumber(dynamic value) {
+    if (value == null || value.toString().trim().isEmpty || value == '-') {
+      return '-';
+    }
+    final parsed = num.tryParse(value.toString().replaceAll(',', '.'));
+    if (parsed == null) return value.toString();
+    return formatNumber(parsed);
+  }
+
+  Widget _buildOverviewCard() {
+    return Container(
+      decoration: CustomTheme().cardTheme(),
+      clipBehavior: Clip.antiAlias,
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _value('woNo'),
+            style: const TextStyle(
+              color: Color(0xFF234393),
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          _buildOverviewItem(
+            label: 'Packing GSM',
+            value: _formatGsmNumber(_raw('packingGsm')),
+          ),
+          const SizedBox(height: 12),
+          _buildOverviewItem(
+            label: 'Material GSM',
+            value: _formatGsmNumber(_raw('materialGsm')),
+          ),
+          const SizedBox(height: 12),
+          _buildMaterialItem(),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text(
+                  _formatDateTime(
+                    _value(_isCompleted ? 'completedAt' : 'startedAt'),
+                  ),
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              _buildStatusBadge(_value('status')),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOverviewItem({
+    required String label,
+    required String value,
+    Color? valueColor,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          value,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: valueColor ?? const Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMaterialItem() {
+    final code = _value('topMaterialCode');
+    final name = _value('topMaterialName');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Material',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          code == '-' ? _value('material') : code,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (name != '-') ...[
+          const SizedBox(height: 2),
+          Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildStatusBadge(String status) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: _getStatusColor(status),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        status,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: _getStatusTextColor(status),
+        ),
+      ),
+    );
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFFEBFDF4);
+      case 'diproses':
+      case 'in_progress':
+        return Colors.orange;
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFFFFBEA);
+      case 'dilewati':
+      case 'skipped':
+        return Colors.grey;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  Color _getStatusTextColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFF15803D);
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFA16207);
+      default:
+        return _getStatusColor(status);
+    }
+  }
+
+  String _formatDateTime(String value) {
+    final date = DateTime.tryParse(value);
+    if (date == null) return value;
+    final local = date.toLocal();
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Agu',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Des',
+    ];
+    return '${local.day} ${months[local.month - 1]} ${local.year}, '
+        '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
   }
 }

@@ -2323,7 +2323,10 @@ class _SortingSectionState extends State<SortingSection> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 16aa2dc3 (chore)
   Widget _buildSortingWarning() {
     String? warning;
 
@@ -2339,9 +2342,12 @@ class _SortingSectionState extends State<SortingSection> {
       return const SizedBox.shrink();
     }
 
+<<<<<<< HEAD
 =======
   Widget _buildQtyWarning(String warning) {
 >>>>>>> 87510740 (fix: finish proses)
+=======
+>>>>>>> 16aa2dc3 (chore)
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
@@ -2373,5 +2379,8 @@ class _SortingSectionState extends State<SortingSection> {
       ),
     );
   }
+<<<<<<< HEAD
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+>>>>>>> 16aa2dc3 (chore)
 }

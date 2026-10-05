@@ -486,16 +486,22 @@ class _HomeState extends State<Home> {
         final res = await http.post(
           Uri.parse(url),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8eae832 (fix: logout)
           headers: {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
             'Accept': 'application/json',
           },
           body: jsonEncode(deviceData),
+<<<<<<< HEAD
 =======
           headers: {'Authorization': 'Bearer $token'},
           body: null,
 >>>>>>> 2dccfd5 (fix: home, dashboard)
+=======
+>>>>>>> 8eae832 (fix: logout)
         );
 
         if (res.statusCode == 200) {

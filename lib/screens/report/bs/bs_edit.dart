@@ -1,18 +1,27 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:math' as math;
 
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+import 'dart:math' as math;
+
+>>>>>>> d256f82 (fix: UI evaluasi)
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
+>>>>>>> d256f82 (fix: UI evaluasi)
 import 'package:textile_tracking/screens/report/service.dart';
 
 class BsEditScreen extends StatefulWidget {
@@ -40,11 +49,18 @@ class _BsEditScreenState extends State<BsEditScreen> {
   final TextEditingController _preventivePlanController =
       TextEditingController();
   bool _saving = false;
+<<<<<<< HEAD
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+  int _visibleStep = 1;
+
+  String get _draftType => 'bs';
+>>>>>>> d256f82 (fix: UI evaluasi)
 
   @override
   void initState() {
     super.initState();
+<<<<<<< HEAD
 <<<<<<< HEAD
     _reasonController.text = _textValue(widget.data['reason']);
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
@@ -59,15 +75,31 @@ class _BsEditScreenState extends State<BsEditScreen> {
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+    _reasonController.text = _textValue(widget.data['reason']);
+    _actionPlanController.text = _textValue(widget.data['actionPlan']);
+    _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
+    _visibleStep = _stepFromValues();
+    _reasonController.addListener(_persistDraft);
+    _actionPlanController.addListener(_persistDraft);
+    _preventivePlanController.addListener(_persistDraft);
+    _loadDraft();
+>>>>>>> d256f82 (fix: UI evaluasi)
   }
 
   @override
   void dispose() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     _reasonController.removeListener(_persistDraft);
     _preventivePlanController.removeListener(_persistDraft);
     _reasonController.dispose();
 =======
+=======
+    _reasonController.removeListener(_persistDraft);
+    _actionPlanController.removeListener(_persistDraft);
+    _preventivePlanController.removeListener(_persistDraft);
+>>>>>>> d256f82 (fix: UI evaluasi)
     _reasonController.dispose();
     _actionPlanController.dispose();
 >>>>>>> aa02f1b (feat: evaluasi bs)
@@ -76,13 +108,21 @@ class _BsEditScreenState extends State<BsEditScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
   String _textValue(dynamic value) {
     final text = value?.toString().trim() ?? '';
     return text == '-' ? '' : text;
   }
 
   int _stepFromValues() {
+<<<<<<< HEAD
     if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
+=======
+    if (_textValue(_preventivePlanController.text).isNotEmpty) return 3;
+    if (_textValue(_actionPlanController.text).isNotEmpty) return 2;
+>>>>>>> d256f82 (fix: UI evaluasi)
     return 1;
   }
 
@@ -94,10 +134,17 @@ class _BsEditScreenState extends State<BsEditScreen> {
       if (draft.containsKey('reason')) {
         _reasonController.text = draft['reason']?.toString() ?? '';
       }
+<<<<<<< HEAD
+=======
+      if (draft.containsKey('actionPlan')) {
+        _actionPlanController.text = draft['actionPlan']?.toString() ?? '';
+      }
+>>>>>>> d256f82 (fix: UI evaluasi)
       if (draft.containsKey('preventivePlan')) {
         _preventivePlanController.text =
             draft['preventivePlan']?.toString() ?? '';
       }
+<<<<<<< HEAD
       if (draft.containsKey('attachments')) {
         final parsed = parseEvaluationAttachments(draft['attachments']);
         _attachments = parsed;
@@ -108,6 +155,12 @@ class _BsEditScreenState extends State<BsEditScreen> {
       _visibleStep = math.max(
         _stepFromValues(),
         parsedStep.clamp(1, 2),
+=======
+      final savedStep = draft['visibleStep'];
+      _visibleStep = math.max(
+        _stepFromValues(),
+        savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1,
+>>>>>>> d256f82 (fix: UI evaluasi)
       );
     });
   }
@@ -115,19 +168,30 @@ class _BsEditScreenState extends State<BsEditScreen> {
   Future<void> _persistDraft() async {
     await EvaluationDraft.save(_draftType, widget.data['id'], {
       'reason': _reasonController.text,
+<<<<<<< HEAD
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
       'attachments': _attachments,
+=======
+      'actionPlan': _actionPlanController.text,
+      'preventivePlan': _preventivePlanController.text,
+      'visibleStep': _visibleStep,
+>>>>>>> d256f82 (fix: UI evaluasi)
     });
     if (mounted) setState(() {});
   }
 
   void _goNext() {
+<<<<<<< HEAD
     if (_visibleStep >= 2 || !_canGoNext) return;
+=======
+    if (_visibleStep >= 3 || !_canGoNext) return;
+>>>>>>> d256f82 (fix: UI evaluasi)
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
 
+<<<<<<< HEAD
   Future<void> _save() async {
     if (_saving || !_canSave) return;
 
@@ -156,6 +220,8 @@ class _BsEditScreenState extends State<BsEditScreen> {
       if (!mounted) return;
       Navigator.pop(context, message);
 =======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
   Future<void> _save() async {
     if (_saving || !_canSave) return;
     setState(() => _saving = true);
@@ -167,6 +233,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
         actionPlan: _actionPlanController.text,
         preventivePlan: _preventivePlanController.text,
       );
+      await EvaluationDraft.clear(_draftType, widget.data['id']);
 
       if (!mounted) return;
       Navigator.pop(context, true);
@@ -230,6 +297,12 @@ class _BsEditScreenState extends State<BsEditScreen> {
 >>>>>>> aa02f1b (feat: evaluasi bs)
   }
 
+  bool get _canGoNext {
+    if (_visibleStep == 1) return _reasonController.text.trim().isNotEmpty;
+    if (_visibleStep == 2) return _actionPlanController.text.trim().isNotEmpty;
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -240,6 +313,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
         child: SingleChildScrollView(
+<<<<<<< HEAD
 <<<<<<< HEAD
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
@@ -293,27 +367,59 @@ class _BsEditScreenState extends State<BsEditScreen> {
               ],
 =======
           padding: const EdgeInsets.all(16),
+=======
+          padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+>>>>>>> d256f82 (fix: UI evaluasi)
           child: Column(
             children: [
-              _buildOverviewCard(),
-              const SizedBox(height: 16),
-              _buildCategoryCard(),
-              const SizedBox(height: 16),
-              _buildEditorForm(
-                label: 'Alasan dan Penyebab',
-                controller: _reasonController,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: _buildOverviewCard(),
               ),
               const SizedBox(height: 16),
-              _buildEditorForm(
-                label: 'Rencana Tindakan',
-                controller: _actionPlanController,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: _buildCategoryCard(),
               ),
               const SizedBox(height: 16),
-              _buildEditorForm(
-                label: 'Rencana Pencegahan',
-                controller: _preventivePlanController,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: _buildEditorForm(
+                  label: 'Alasan dan Penyebab',
+                  controller: _reasonController,
+                ),
               ),
+<<<<<<< HEAD
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+              if (_visibleStep >= 2) ...[
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: _buildEditorForm(
+                    label: 'Rencana Tindakan',
+                    controller: _actionPlanController,
+                  ),
+                ),
+              ],
+              if (_visibleStep >= 3) ...[
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: _buildEditorForm(
+                    label: 'Rencana Pencegahan',
+                    controller: _preventivePlanController,
+                  ),
+                ),
+              ],
+              if (_visibleStep < 3) ...[
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: _buildNextButton(),
+                ),
+              ],
+>>>>>>> d256f82 (fix: UI evaluasi)
             ],
           ),
         ),
@@ -388,6 +494,9 @@ class _BsEditScreenState extends State<BsEditScreen> {
         maxLines: 12,
         decoration: CustomTheme().inputDecoration('Masukkan $label'),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
       ),
     );
   }
@@ -395,6 +504,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
   Widget _buildNextButton() {
     return SizedBox(
       width: double.infinity,
+<<<<<<< HEAD
       child: ElevatedButton(
         onPressed: _canGoNext ? _goNext : null,
         style: _primaryActionButtonStyle.copyWith(
@@ -856,6 +966,13 @@ class _BsEditScreenState extends State<BsEditScreen> {
   }
 =======
         onChanged: (_) => setState(() {}),
+=======
+      height: 48,
+      child: ElevatedButton(
+        onPressed: _canGoNext ? _goNext : null,
+        style: _primaryActionButtonStyle,
+        child: const Text('Selanjutnya'),
+>>>>>>> d256f82 (fix: UI evaluasi)
       ),
     );
   }
@@ -865,7 +982,10 @@ class _BsEditScreenState extends State<BsEditScreen> {
 
   bool get _isCompleted {
     final status = widget.data['status']?.toString().toLowerCase();
-    return status == 'selesai' || status == 'completed';
+    return status == 'direview' ||
+        status == 'reviewed' ||
+        status == 'selesai' ||
+        status == 'completed';
   }
 
   String _value(String key) => widget.data[key]?.toString() ?? '-';
@@ -893,10 +1013,18 @@ class _BsEditScreenState extends State<BsEditScreen> {
             valueColor: const Color(0xFF234393),
           ),
           const SizedBox(height: 12),
-          _buildOverviewItem(
-            label: 'Qty BS',
-            value: '${_value('qtyBs')} PCS',
-            valueColor: const Color(0xFF234393),
+          _buildQtyBsItem(),
+          const SizedBox(height: 12),
+          _buildProcessTimeItem(
+            label: 'Mulai',
+            person: _sorting['start_by'],
+            time: _sorting['start_time']?.toString(),
+          ),
+          const SizedBox(height: 12),
+          _buildProcessTimeItem(
+            label: 'Selesai',
+            person: _sorting['end_by'],
+            time: _sorting['end_time']?.toString(),
           ),
           const SizedBox(height: 12),
           _buildMaterialItem(),
@@ -905,14 +1033,28 @@ class _BsEditScreenState extends State<BsEditScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Text(
-                  _formatDateTime(
-                    _value(_isCompleted ? 'completedAt' : 'startedAt'),
-                  ),
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 16,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Tanggal BS',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      _formatDateTime(
+                        _value(_isCompleted ? 'completedAt' : 'startedAt'),
+                      ),
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               _buildStatusBadge(_value('status')),
@@ -920,6 +1062,56 @@ class _BsEditScreenState extends State<BsEditScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildQtyBsItem() {
+    final rate = _value('bsRate');
+    final hasRate = rate != '-' && rate.trim().isNotEmpty;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Qty BS',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Row(
+          children: [
+            Text(
+              '${_value('qtyBs')} PCS',
+              style: const TextStyle(
+                color: Color(0xFFB42318),
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (hasRate) ...[
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFEF3F2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  '$rate %',
+                  style: const TextStyle(
+                    color: Color(0xFFB42318),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ],
     );
   }
 
@@ -1054,19 +1246,22 @@ class _BsEditScreenState extends State<BsEditScreen> {
               ),
             )
           else
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-              child: Row(
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+              child: Column(
                 children: [
-                  for (int i = 0; i < defects.length; i++) ...[
-                    if (i > 0) const SizedBox(width: 10),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: i == 0 ? 12 : 0,
-                        right: i == defects.length - 1 ? 12 : 0,
-                      ),
-                      child: _buildDefectItem(defects[i]),
+                  for (int i = 0; i < defects.length; i += 2) ...[
+                    if (i > 0) const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(child: _buildDefectItem(defects[i])),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: i + 1 < defects.length
+                              ? _buildDefectItem(defects[i + 1])
+                              : const SizedBox.shrink(),
+                        ),
+                      ],
                     ),
                   ],
                 ],
@@ -1091,33 +1286,35 @@ class _BsEditScreenState extends State<BsEditScreen> {
     final qty = defect['qty']?.toString() ?? '-';
 
     return Container(
-      width: 140,
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(6),
         border: Border.all(color: Colors.grey.shade200),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: Color(0xFF292A2F),
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+          Expanded(
+            flex: 3,
+            child: Text(
+              name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Color(0xFF292A2F),
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            qty,
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              qty,
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ],
@@ -1145,9 +1342,11 @@ class _BsEditScreenState extends State<BsEditScreen> {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
-        return const Color(0xFFEBFDF4);
+        return const Color(0xFFF2F7FF);
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
@@ -1164,15 +1363,84 @@ class _BsEditScreenState extends State<BsEditScreen> {
 
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
-        return const Color(0xFFA16207);
+        return const Color(0xFF955B34);
       default:
         return _getStatusColor(status);
     }
+  }
+
+  Map<String, dynamic> get _sorting {
+    final sorting = widget.data['sorting'];
+    return sorting is Map ? Map<String, dynamic>.from(sorting) : {};
+  }
+
+  Widget _buildProcessTimeItem({
+    required String label,
+    required dynamic person,
+    required String? time,
+  }) {
+    final name = _personName(person);
+    final formattedTime = _formatProcessTime(time);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Row(
+          children: [
+            if (name != '-' || formattedTime == null)
+              Text(
+                name == '-' ? '-' : '$name${formattedTime != null ? ', ' : ''}',
+                style: const TextStyle(
+                  color: Color(0xFF3E3F49),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            if (formattedTime != null)
+              Text(
+                formattedTime,
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 16,
+                ),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  String _personName(dynamic person) {
+    if (person is Map) {
+      final name = person['name'] ?? person['full_name'];
+      if (name != null && name.toString().trim().isNotEmpty) {
+        return name.toString();
+      }
+    }
+    return '-';
+  }
+
+  String? _formatProcessTime(String? value) {
+    if (value == null || value.trim().isEmpty || value.trim() == '-') {
+      return null;
+    }
+    return _formatDateTime(value);
   }
 
   String _formatDateTime(String value) {

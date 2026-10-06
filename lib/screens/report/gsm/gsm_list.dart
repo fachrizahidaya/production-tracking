@@ -73,10 +73,14 @@ class _GsmListState extends State<GsmList> {
     _sort = widget.sort;
     _search = widget.search;
 <<<<<<< HEAD
+<<<<<<< HEAD
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
 =======
     _status = widget.status.trim();
+=======
+    _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
+>>>>>>> d256f82 (fix: UI evaluasi)
     _showSavedDialogAfterLoad = widget.savedWoNo != null;
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
     _searchController.text = widget.search;
@@ -191,10 +195,14 @@ class _GsmListState extends State<GsmList> {
       setState(() {
         _pendingCount = counts['pending'];
 <<<<<<< HEAD
+<<<<<<< HEAD
         _completedCount = counts['reviewed'];
 =======
         _completedCount = counts['completed'];
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+        _completedCount = counts['reviewed'];
+>>>>>>> d256f82 (fix: UI evaluasi)
         _allCount = counts['all'];
       });
     } catch (_) {
@@ -390,12 +398,17 @@ class _GsmListState extends State<GsmList> {
               const SizedBox(width: 8),
               _buildStatusTab(
 <<<<<<< HEAD
+<<<<<<< HEAD
                 label: 'Direview',
                 status: 'Direview',
 =======
                 label: 'Selesai',
                 status: 'Selesai',
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+                label: 'Direview',
+                status: 'Direview',
+>>>>>>> d256f82 (fix: UI evaluasi)
                 count: _completedCountLoading ? null : _completedCount,
               ),
               const SizedBox(width: 8),
@@ -417,11 +430,15 @@ class _GsmListState extends State<GsmList> {
     int? count,
   }) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     final selected = _status == status;
 =======
     final selected =
         _status == status || (status == 'Menunggu' && _status.isEmpty);
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+    final selected = _status == status;
+>>>>>>> d256f82 (fix: UI evaluasi)
     final color = CustomTheme().colors('primary');
 
     return InkWell(
@@ -540,11 +557,18 @@ class _GsmListState extends State<GsmList> {
                       children: [
                         Expanded(
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
+<<<<<<< HEAD
                                 'Tanggal Packing',
+=======
+                                'Tanggal GSM',
+>>>>>>> d256f82 (fix: UI evaluasi)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,
@@ -553,13 +577,18 @@ class _GsmListState extends State<GsmList> {
                               ),
                               const SizedBox(height: 3),
                               Text(
+<<<<<<< HEAD
                                 _formatDateTime(item.startDate),
+=======
+                                _formatDateTime(date),
+>>>>>>> d256f82 (fix: UI evaluasi)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 16,
                                 ),
                               ),
                             ],
+<<<<<<< HEAD
 =======
                           child: Text(
                             _formatDateTime(date),
@@ -568,6 +597,8 @@ class _GsmListState extends State<GsmList> {
                               fontSize: 16,
                             ),
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
                           ),
                         ),
                         _buildStatusBadge(status),
@@ -844,12 +875,18 @@ class _GsmListState extends State<GsmList> {
   bool _isCompleted(String status) {
     final normalized = status.toLowerCase();
 <<<<<<< HEAD
+<<<<<<< HEAD
     return normalized == 'direview' ||
         normalized == 'reviewed' ||
         normalized == 'selesai' ||
 =======
     return normalized == 'selesai' ||
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+    return normalized == 'direview' ||
+        normalized == 'reviewed' ||
+        normalized == 'selesai' ||
+>>>>>>> d256f82 (fix: UI evaluasi)
         normalized == 'completed' ||
         normalized == 'complete';
   }
@@ -975,10 +1012,16 @@ class _GsmListState extends State<GsmList> {
 =======
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
+<<<<<<< HEAD
         return const Color(0xFFEBFDF4);
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+        return const Color(0xFFF2F7FF);
+>>>>>>> d256f82 (fix: UI evaluasi)
       case 'menunggu':
       case 'waiting':
         return const Color(0xFFFFFBEA);
@@ -994,12 +1037,14 @@ class _GsmListState extends State<GsmList> {
 
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
-        return const Color(0xFFA16207);
+        return const Color(0xFF955B34);
       default:
         return _getStatusColor(status);
     }

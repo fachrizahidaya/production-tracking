@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import 'dart:io';
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -48,10 +51,18 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   List<Map<String, dynamic>> _selectedReasons = [];
 
   String get _draftType => 'rework';
+<<<<<<< HEAD
+=======
+
+  @override
+  void initState() {
+    super.initState();
+>>>>>>> d256f82 (fix: UI evaluasi)
     final reasons = widget.data['reasons'];
     if (reasons is List) {
       _selectedReasons = reasons
           .where((reason) => reason.toString().trim().isNotEmpty)
+<<<<<<< HEAD
           .map(
             (reason) => <String, dynamic>{
               'id': reason.toString(),
@@ -64,6 +75,18 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
     _attachments = _parseAttachments(widget.data['attachments']);
     _visibleStep = _stepFromValues();
+=======
+          .map((reason) => {
+                'value': reason.toString(),
+                'label': reason.toString(),
+              })
+          .toList();
+    }
+    _actionPlanController.text = _textValue(widget.data['actionPlan']);
+    _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
+    _visibleStep = _stepFromValues();
+    _actionPlanController.addListener(_persistDraft);
+>>>>>>> d256f82 (fix: UI evaluasi)
     _preventivePlanController.addListener(_persistDraft);
     _loadDraft();
     _loadReasonOptions();
@@ -71,7 +94,13 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
   @override
   void dispose() {
+<<<<<<< HEAD
     _preventivePlanController.removeListener(_persistDraft);
+=======
+    _actionPlanController.removeListener(_persistDraft);
+    _preventivePlanController.removeListener(_persistDraft);
+    _actionPlanController.dispose();
+>>>>>>> d256f82 (fix: UI evaluasi)
     _preventivePlanController.dispose();
     super.dispose();
   }
@@ -82,7 +111,12 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   }
 
   int _stepFromValues() {
+<<<<<<< HEAD
     if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
+=======
+    if (_textValue(_preventivePlanController.text).isNotEmpty) return 3;
+    if (_textValue(_actionPlanController.text).isNotEmpty) return 2;
+>>>>>>> d256f82 (fix: UI evaluasi)
     return 1;
   }
 
@@ -93,16 +127,27 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     setState(() {
       final reasons = draft['reasons'];
       if (reasons is List) {
+<<<<<<< HEAD
         _selectedReasons = List<Map<String, dynamic>>.from(
           reasons
               .whereType<Map>()
               .map((item) => Map<String, dynamic>.from(item)),
         );
+=======
+        _selectedReasons = reasons
+            .whereType<Map>()
+            .map((item) => Map<String, dynamic>.from(item))
+            .toList();
+      }
+      if (draft.containsKey('actionPlan')) {
+        _actionPlanController.text = draft['actionPlan']?.toString() ?? '';
+>>>>>>> d256f82 (fix: UI evaluasi)
       }
       if (draft.containsKey('preventivePlan')) {
         _preventivePlanController.text =
             draft['preventivePlan']?.toString() ?? '';
       }
+<<<<<<< HEAD
       if (draft.containsKey('attachments')) {
         final parsed = _parseAttachments(draft['attachments']);
         _attachments = parsed;
@@ -113,6 +158,12 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       _visibleStep = math.max(
         _stepFromValues(),
         parsedStep.clamp(1, 2),
+=======
+      final savedStep = draft['visibleStep'];
+      _visibleStep = math.max(
+        _stepFromValues(),
+        savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1,
+>>>>>>> d256f82 (fix: UI evaluasi)
       );
     });
   }
@@ -120,15 +171,25 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   Future<void> _persistDraft() async {
     await EvaluationDraft.save(_draftType, widget.data['id'], {
       'reasons': _selectedReasons,
+<<<<<<< HEAD
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
       'attachments': _attachments,
+=======
+      'actionPlan': _actionPlanController.text,
+      'preventivePlan': _preventivePlanController.text,
+      'visibleStep': _visibleStep,
+>>>>>>> d256f82 (fix: UI evaluasi)
     });
     if (mounted) setState(() {});
   }
 
   void _goNext() {
+<<<<<<< HEAD
     if (_visibleStep >= 2 || !_canGoNext) return;
+=======
+    if (_visibleStep >= 3 || !_canGoNext) return;
+>>>>>>> d256f82 (fix: UI evaluasi)
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
@@ -190,6 +251,12 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   String? _planLengthWarning() {
     if (_preventivePlanController.text.trim().length >= 8) return null;
     return 'Rencana Pencegahan minimal 8 karakter.';
+  }
+
+  bool get _canGoNext {
+    if (_visibleStep == 1) return _selectedReasons.isNotEmpty;
+    if (_visibleStep == 2) return _actionPlanController.text.trim().isNotEmpty;
+    return false;
   }
 
   Future<void> _loadReasonOptions() async {
@@ -514,9 +581,12 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         _selectedReasons = nextSelected;
       });
       _persistDraft();
+<<<<<<< HEAD
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Alasan berhasil ditambahkan')),
       );
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -539,6 +609,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
           child: Column(
             children: [
 <<<<<<< HEAD
+<<<<<<< HEAD
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: _buildOverviewCard(),
@@ -553,6 +624,11 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                 label: 'Rencana Tindakan',
                 controller: _actionPlanController,
 >>>>>>> 7c2cdb6 (fix:)
+=======
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: _buildOverviewCard(),
+>>>>>>> d256f82 (fix: UI evaluasi)
               ),
               const SizedBox(height: 16),
               Padding(
@@ -569,10 +645,24 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: _buildEditorForm(
+<<<<<<< HEAD
+=======
+                    label: 'Rencana Tindakan',
+                    controller: _actionPlanController,
+                  ),
+                ),
+              ],
+              if (_visibleStep >= 3) ...[
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: _buildEditorForm(
+>>>>>>> d256f82 (fix: UI evaluasi)
                     label: 'Rencana Pencegahan',
                     controller: _preventivePlanController,
                   ),
                 ),
+<<<<<<< HEAD
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -580,6 +670,10 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                 ),
               ],
               if (_visibleStep < 2) ...[
+=======
+              ],
+              if (_visibleStep < 3) ...[
+>>>>>>> d256f82 (fix: UI evaluasi)
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -732,26 +826,97 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         minLines: 6,
         maxLines: 12,
         decoration: CustomTheme().inputDecoration('Masukkan $label'),
-        onChanged: (_) => setState(() {}),
+      ),
+    );
+  }
+
+  Widget _buildNextButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: ElevatedButton(
+        onPressed: _canGoNext ? _goNext : null,
+        style: _primaryActionButtonStyle,
+        child: const Text('Selanjutnya'),
       ),
     );
   }
 
   bool get _isCompleted {
     final status = widget.data['status']?.toString().toLowerCase();
-    return status == 'selesai' || status == 'completed';
+    return status == 'direview' ||
+        status == 'reviewed' ||
+        status == 'selesai' ||
+        status == 'completed';
   }
 
   String _value(String key) => widget.data[key]?.toString() ?? '-';
 
-  String get _detailReferenceNo {
+  Map<String, dynamic> get _dyeing {
     final dyeing = widget.data['dyeing'];
-    final raw = widget.data['rework_reference'] ??
-        (dyeing is Map ? dyeing['rework_reference'] : null);
-    final reference = raw is Map ? raw : <String, dynamic>{};
-    final value =
-        reference['dyeing_no'] ?? reference['no'] ?? reference['reference_no'];
-    return value?.toString().trim().isNotEmpty == true ? value.toString() : '-';
+    return dyeing is Map ? Map<String, dynamic>.from(dyeing) : {};
+  }
+
+  Widget _buildProcessTimeItem({
+    required String label,
+    required dynamic person,
+    required String? time,
+  }) {
+    final name = _personName(person);
+    final formattedTime = _formatProcessTime(time);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Row(
+          children: [
+            if (name != '-' || formattedTime == null)
+              Text(
+                name == '-' ? '-' : '$name${formattedTime != null ? ', ' : ''}',
+                style: const TextStyle(
+                  color: Color(0xFF3E3F49),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            if (formattedTime != null)
+              Text(
+                formattedTime,
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 16,
+                ),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  String _personName(dynamic person) {
+    if (person is Map) {
+      final name = person['name'] ?? person['full_name'];
+      if (name != null && name.toString().trim().isNotEmpty) {
+        return name.toString();
+      }
+    }
+    return '-';
+  }
+
+  String? _formatProcessTime(String? value) {
+    if (value == null || value.trim().isEmpty || value.trim() == '-') {
+      return null;
+    }
+    return _formatDateTime(value);
   }
 
   Widget _buildOverviewCard() {
@@ -777,14 +942,28 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Text(
-                  _formatDateTime(
-                    _value(_isCompleted ? 'completedAt' : 'startedAt'),
-                  ),
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 16,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Tanggal Rework',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      _formatDateTime(
+                        _value(_isCompleted ? 'completedAt' : 'startedAt'),
+                      ),
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               _buildStatusBadge(_value('status')),
@@ -797,6 +976,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
   Widget _buildDyeingReferenceLine() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildDyeingReferenceItem(
           label: 'Rework Dyeing',
@@ -804,9 +984,16 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
           valueColor: const Color(0xFF234393),
         ),
         const SizedBox(height: 12),
-        _buildDyeingReferenceItem(
-          label: 'Referensi Dyeing',
-          value: _detailReferenceNo,
+        _buildProcessTimeItem(
+          label: 'Mulai',
+          person: _dyeing['start_by'],
+          time: _dyeing['start_time']?.toString(),
+        ),
+        const SizedBox(height: 12),
+        _buildProcessTimeItem(
+          label: 'Selesai',
+          person: _dyeing['end_by'],
+          time: _dyeing['end_time']?.toString(),
         ),
       ],
     );
@@ -981,9 +1168,11 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
-        return const Color(0xFFEBFDF4);
+        return const Color(0xFFF2F7FF);
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
@@ -1000,12 +1189,14 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
-        return const Color(0xFFA16207);
+        return const Color(0xFF955B34);
       default:
         return _getStatusColor(status);
     }
